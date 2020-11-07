@@ -585,17 +585,17 @@
 
 				vm.inputsWithCalculations.forEach(function (inputWithCalc) {
 
-				  vm.userInputs.forEach(function (userInput) {
+					vm.userInputs.forEach(function (userInput) {
 
-				  	if (userInput.name === inputWithCalc.name) {
+				  		if (userInput.name === inputWithCalc.name) {
 
-						if (!userInput.buttons) {
-							userInput.buttons = [];
-						}
+							if (!userInput.buttons) {
+								userInput.buttons = [];
+							}
 
                             if (inputWithCalc.can_recalculate === true) {
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    iconObj: {type: 'angular-material', icon: 'refresh'},
                                     tooltip: 'Recalculate this field',
                                     caption: '',
                                     classes: '',
@@ -612,7 +612,7 @@
                             	var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
 
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    iconObj: {type: 'angular-material', icon: 'loop'},
                                     tooltip: 'Recalculate linked fields',
                                     caption: '',
                                     classes: '',
@@ -624,12 +624,13 @@
                                 })
                             }
 
-                            if (recalculationInfo && recalculationInfo.recalculatedInputs.indexOf(userInput.name) > -1) { // mark userInputs that were recalculated
+                            if (recalculationInfo && recalculationInfo.recalculatedInputs.includes(userInput.name)) { // mark userInputs that were recalculated
 								// mark userInputs that were recalculated
-								userInput.frontOptions.recalculated = recalculationInfo.recalculationData;
+								userInput.frontOptions.recalculated = recalculationInfo.recalculationData
                             }
 
                         }
+
                     })
 
                 });
@@ -701,7 +702,7 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            transactionHelper.removeDeletedUserInputs(inputs, vm.transactionInputs);
+            transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
                 rebookComplexTransaction(inputs, recalculationData);

@@ -25,7 +25,7 @@
                 entityType: '=',
                 evEditorDataService: '=',
                 evEditorEventService: '=',
-                itemChange: '&'
+                itemChange: '&?'
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs) {
@@ -471,8 +471,13 @@
                                 scope.ciEventObj.event = {key: 'set_style_preset2'};
 
                             } */
-                            if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
-                                scope.ciEventObj.event = {key: 'set_style_preset1'};
+                            if (scope.item.frontOptions.recalculated) {
+
+								// setTimeout removes delay before applying preset1 to custom input
+								setTimeout(function () {
+									scope.ciEventObj.event = {key: 'set_style_preset1'};
+								}, 50);
+
                             }
 
                         }
@@ -500,7 +505,8 @@
                 };
 
                 scope.init = function () {
-                    scope.getData();
+
+                	scope.getData();
 
                     if (scope.evEditorEventService) {
                         initListeners();
@@ -546,6 +552,8 @@
 
                     scope.fieldValue = {value: scope.entity[scope.fieldKey]};
                     scope.inputText = scope.getInputTextForEntitySearch()
+
+					scope.modelKeyEntity = scope.getModelKeyEntity();
 
                 };
 

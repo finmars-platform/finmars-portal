@@ -534,7 +534,7 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            transactionHelper.removeDeletedUserInputs(inputs, vm.transactionType.inputs);
+            transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
                 bookComplexTransaction(inputs, recalculationData);

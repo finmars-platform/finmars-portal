@@ -10,7 +10,8 @@
                                   custom-styles="customStyles"
                                   event-signal="ciEventObj.event"
                                   small-options="{notNull: options.notNull, tooltipText: tooltipText}"
-                                  entity-type="getModelKeyEntity()"></entity-search-select>
+                                  entity-type="modelKeyEntity"
+                                  on-change-callback="changeHandler()"></entity-search-select>
         </div>
 
         <div data-ng-if="!isSpecialSearchRelation()">
@@ -109,6 +110,7 @@
                                          menu-options="sortedFields"
                                          small-options="{tooltipText: '{{getName()}}'}"
                                          sorted="sorted"
+                                         on-change-callback="changeHandler()"
                                          style="{{inputBackgroundColor()}}">
                         </dropdown-select>
 
@@ -163,6 +165,7 @@
                                      menu-options="schemeSortedFields"
                                      small-options="{tooltipText: '{{getName()}}'}"
                                      sorted="sorted"
+                                     on-change-callback="changeHandler()"
                                      style="{{inputBackgroundColor()}}">
                     </dropdown-select>
 
@@ -225,7 +228,8 @@
                                     model="entity[fieldKey]"
                                     items="sortedFields"
                                     name-property="bindFieldsName"
-                                    data-selected-items-indication="array"></two-fields-multiselect>
+                                    data-selected-items-indication="array"
+                                    on-change-callback="changeHandler()"></two-fields-multiselect>
 
         </div>
 
@@ -267,7 +271,8 @@
                                         model="entity[fieldKey]"
                                         name-property="bindFieldsName"
                                         items="sortedFields"
-                                        data-selected-items-indication="array"></two-fields-multiselect>
+                                        data-selected-items-indication="array"
+                                        on-change-callback="changeHandler()"></two-fields-multiselect>
 
 
                 <!--        <md-input-container class="md-block no-error-spacer">
@@ -342,15 +347,16 @@
                           </md-select>
                         </md-input-container>-->
 
-                <dropdown-select class="p-r-8" label="{{getName()}}"
+                <dropdown-select class="p-r-8"
+                                 label="{{getName()}}"
                                  model="entity[fieldKey]"
                                  placeholder-text="{{getName()}}"
                                  menu-options="sortedFields"
                                  small-options="{tooltipText: '{{getName()}}'}"
                                  sorted="sorted"
+                                 on-change-callback="changeHandler()"
                                  style="{{inputBackgroundColor()}}">
                 </dropdown-select>
-
 
             </div>
         </div>
