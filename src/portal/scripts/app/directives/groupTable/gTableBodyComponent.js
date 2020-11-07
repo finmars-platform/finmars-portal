@@ -430,6 +430,10 @@
 
                     window.addEventListener('resize', onWindowResize);
 
+                    if (!isReport) {
+						scope.scrollManager = new EvScrollManager();
+					}
+
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
                     	calculateElemsWrapsSizes();
@@ -457,11 +461,15 @@
 							var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
 
 							if (flatList.length > 1) {
+
 								progressBar.style.display = 'none';
+
 								if (isReport) {
 									contentElem.style.opacity = '1';
 								}
+
 								updateTableContent();
+
 							}
 
 							//  If we already have data (e.g. viewType changed) end
@@ -472,8 +480,6 @@
 							});*/
 
 						} else {
-
-							scope.scrollManager =  new EvScrollManager();
 
 							evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
