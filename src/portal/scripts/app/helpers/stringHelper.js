@@ -5,17 +5,64 @@
 
     'use strict';
 
-    var md5Helper = require('./md5.helper');
-    var sha1Helper = require('./sha1.helper');
+    let md5Helper = require('./md5.helper');
+	let sha1Helper = require('./sha1.helper');
 
-    var toHash = function (str) {
+	let toHash = (str) => {
 
         return md5Helper.md5(str);
         // return sha1Helper.sha1(str);
     };
 
+	let aElemAttrs;
+
+	let insertHyperlinks = (substring) => {
+
+		let linkElem = "";
+		let linkElemStart = "<a ";
+
+		if (substring.indexOf(" ") === 0) { // if substring have space
+
+			substring = substring.replace(/\s/, ""); // remove first space if it exist
+
+			linkElem = " "; // add space before link
+
+		}
+
+		if (aElemAttrs) {
+			linkElemStart += aElemAttrs + " ";
+		}
+
+		linkElem += linkElemStart + "href='" + substring + "'>" + substring + "</a>"
+
+		return linkElem;
+
+	};
+
+    let parseAndInsertHyperlinks = (str, elemAttrs) => {
+
+		if (str) {
+
+			aElemAttrs = elemAttrs;
+
+			/*
+			(?:^|\s) : start of text or white space
+			(?:http|ftp|mailto|file|data|irc) : uri schemes
+			:[^\s]+ : colon and any character before white space or end of text
+			*/
+			let stringWithHyperlink = str.replaceAll(/(?:^|\s)(?:http|https|ftp|mailto|file|data|irc):[^\s]+/g, insertHyperlinks);
+
+			return stringWithHyperlink;
+
+		}
+
+		return '';
+
+	};
+
     module.exports = {
-        toHash: toHash
+        toHash: toHash,
+		parseAndInsertHyperlinks: parseAndInsertHyperlinks
     }
 
 }());

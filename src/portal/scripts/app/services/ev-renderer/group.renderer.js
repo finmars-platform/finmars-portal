@@ -1,6 +1,7 @@
 (function () {
 
     var renderHelper = require('../../helpers/render.helper');
+	var stringHelper = require('../../helpers/stringHelper');
 
     var checkIcon = renderHelper.getIconByKey('checkIcon');
 
@@ -21,8 +22,10 @@
         var rowSelection;
 
         if (group.___is_activated) {
-            classList.push('selected');
+
+        	classList.push('selected');
             rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
+
         } else {
             rowSelection = '<div class="g-row-selection"></div>';
         }
@@ -31,12 +34,24 @@
 
         var additionalText = '';
 
-        if(groupType.value_type === 'field') {
+        if (groupType.value_type === 'field') {
+
             additionalText = additionalText + ' (' + group.___group_identifier + ')'
+			additionalText = stringHelper.parseAndInsertHyperlinks(additionalText);
+
         }
 
+        var groupName = group.___group_name;
+
+        if (groupName && typeof groupName === 'string') {
+
+        	groupName = stringHelper.parseAndInsertHyperlinks(groupName);
+
+		}
+
         return '<div class="' + classes + '" data-type="group" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
-            rowSelection + foldButton + group.___group_name + additionalText +'</div>'
+            		rowSelection + foldButton + groupName + additionalText
+				+ '</div>'
 
     };
 

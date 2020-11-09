@@ -1,6 +1,7 @@
 (function () {
 
     var renderHelper = require('../../helpers/render.helper');
+    var stringHelper = require('../../helpers/stringHelper');
 
     /* var checkIcon = renderHelper.getCheckIcon();
     var lockIcon = renderHelper.getLockIcon();
@@ -105,7 +106,7 @@
         if (obj[column.key]) {
 
             if (typeof obj[column.key] === 'string') {
-                return obj[column.key]
+                return stringHelper.parseAndInsertHyperlinks(obj[column.key]);
             }
 
             if (typeof obj[column.key] === 'number') {
@@ -135,12 +136,15 @@
                 }
 
                 if (column.key === 'status') {
-                    if (obj[column.key] === 1) {
+
+                	if (obj[column.key] === 1) {
                         return 'Booked'
                     }
+
                     if (obj[column.key] === 2) {
                         return 'Pending'
                     }
+
                 }
 
                 return obj[column.key]
@@ -177,7 +181,7 @@
 
                         if (column.value_type === 10 && item.value_string) {
 
-                            result = item.value_string;
+                            result = stringHelper.parseAndInsertHyperlinks(item.value_string);
 
                         }
 
