@@ -9,6 +9,21 @@
          data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">
         <div layout="row"
              class="entity-editor-row">
+
+            <div popup
+                 popup-template-url="'views/entity-viewer/entity-viewer-fixed-area-popup-view.html'"
+                 popup-y="top"
+                 popup-data="vm.fixedAreaPopup"
+                 on-save-callback="vm.onPopupSaveCallback()">
+                <text-input
+                        label="Name"
+                        placeholder-text="Text"
+                        small-options="{noIndicatorBtn: true}"
+                ></text-input>
+
+            </div>
+
+
             <div class="ev-data-field"
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                  flex="50">

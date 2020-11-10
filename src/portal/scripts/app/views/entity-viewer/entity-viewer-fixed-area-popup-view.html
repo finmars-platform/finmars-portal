@@ -1,0 +1,118 @@
+<div class="fixed-area-popup-content">
+    <div data-ng-if="vm.name">
+        <text-input
+                label="Name"
+                placeholder-text="Name"
+                model="vm.name.value"></text-input>
+    </div>
+
+    <div data-ng-if="vm.public_name">
+        <text-input
+                label="Public name"
+                placeholder-text="Public name"
+                model="vm.public_name.value"></text-input>
+    </div>
+
+
+    <div data-ng-if="vm.short_name">
+        <text-input
+                label="Short name"
+                placeholder-text="Short name"
+                model="vm.short_name.value"></text-input>
+    </div>
+
+    <div data-ng-if="vm.user_code">
+        <text-input
+                label="User code"
+                placeholder-text="User code"
+                model="vm.user_code.value"></text-input>
+    </div>
+
+    <div data-ng-if="vm.status">
+        <dropdown-select label="Status"
+                         model="vm.status.value"
+                         placeholder-text="System List"
+                         menu-options="vm.status.options"
+                         small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                         class="ev-editor-field"></dropdown-select>
+    </div>
+
+    <div data-ng-if="vm.instrument_type">
+        <dropdown-select label="Instrument type"
+                         model="vm.instrument_type.value"
+                         placeholder-text="Instrument type"
+                         menu-options="vm.instrument_type.options"
+                         small-options="{tooltipText: 'Instrument type', indicatorBtnIcon: 'type1'}"
+                         class="ev-editor-field"></dropdown-select>
+    </div>
+
+<!--    <div class="ev-data-field"
+         flex="100">
+        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
+                            entity-type="vm.entityType"
+                            entity="vm.entity"
+                            event-signal="vm.evEditorEvent"
+                            ev-editor-event-service="vm.evEditorEventService"
+                            ev-editor-data-service="vm.evEditorDataService"
+                            item="vm.fixedFieldsAttributes[0]"
+                            entity-change="vm.onFieldChange(fieldKey)"
+                            on-field-blur="vm.onNameInputBlur()"></bind-field-control>
+    </div>
+
+    <div class="ev-data-field"
+         flex="100">
+        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]"
+                            entity-type="vm.entityType"
+                            entity="vm.entity"
+                            event-signal="vm.evEditorEvent"
+                            ev-editor-event-service="vm.evEditorEventService"
+                            ev-editor-data-service="vm.evEditorDataService"
+                            item="vm.fixedFieldsAttributes[1]"
+                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
+    </div>
+
+    <div class="ev-data-field"
+         flex="100">
+        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]"
+                            entity-type="vm.entityType"
+                            entity="vm.entity"
+                            ev-editor-event-service="vm.evEditorEventService"
+                            ev-editor-data-service="vm.evEditorDataService"
+                            item="vm.fixedFieldsAttributes[2]"
+                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
+    </div>
+
+
+    <div class="ev-data-field"
+         flex="100">
+        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]"
+                            entity-type="vm.entityType"
+                            entity="vm.entity"
+                            ev-editor-event-service="vm.evEditorEventService"
+                            ev-editor-data-service="vm.evEditorDataService"
+                            item="vm.fixedFieldsAttributes[3]"
+                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
+    </div>
+
+    <div class="ev-data-field"
+         flex="100">
+        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]"
+                            entity-type="vm.entityType"
+                            entity="vm.entity"
+                            ev-editor-event-service="vm.evEditorEventService"
+                            ev-editor-data-service="vm.evEditorDataService"
+                            item="vm.fixedFieldsAttributes[4]"
+                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
+    </div>
+
+    <div class="ev-data-field"
+         flex="100">
+        <dropdown-select label="Status"
+                         model="vm.entityStatus"
+                         placeholder-text="System List"
+                         menu-options="vm.statusSelectorOptions"
+                         small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                         on-change-callback="vm.entityStatusChanged()"
+                         class="ev-editor-field"></dropdown-select>
+    </div>-->
+</div>
