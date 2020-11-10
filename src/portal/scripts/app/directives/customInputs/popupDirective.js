@@ -68,24 +68,61 @@
 
                     if (positionX + popupWidth > windowWidth) {
                         popUpElem.style.right = '0';
+                        popUpElem.style.left = null;
 
                     } else if (positionX < 20) {
                         popUpElem.style.left = '0';
+                        popUpElem.style.right = null;
 
                     } else {
                         popUpElem.style.left = positionX + 'px';
+                        popUpElem.style.right = null;
                     }
 
                     if (positionY + popupHeight > windowHeight) {
                         popUpElem.style.bottom = '0';
+                        popUpElem.style.top = null;
 
                     } else if (positionY < 20) {
                         popUpElem.style.top = '0';
+                        popUpElem.style.bottom = null;
 
                     } else {
                         popUpElem.style.top = positionY + 'px';
+                        popUpElem.style.bottom = null;
                     }
 
+                };
+
+                var keyUpHandler = function (event) {
+                    scope.isPopupOpen &&  event.key === "Escape" && removePopUp();
+                };
+
+
+                var resizeTimeout;
+                var resizeThrottler = function () {
+
+                    if ( !resizeTimeout ) {
+                        resizeTimeout = setTimeout(function() {
+                            resizeTimeout = null;
+                            resizeHandler();
+                        }, 66);
+                    }
+
+                };
+
+                var resizeHandler = function (event) {
+                    setPopupPosition();
+                }
+
+                var addListeners = function () {
+                    document.addEventListener('keyup', keyUpHandler, {once: true});
+                    window.addEventListener('resize', resizeThrottler);
+                };
+
+                var removeListeners = function () {
+                    document.removeEventListener('keyup', keyUpHandler);
+                    window.removeEventListener('resize', resizeThrottler);
                 };
 
                 var createPopup = function () {
@@ -106,11 +143,9 @@
 
                     $(bodyElem).append($(popupTemplate));
 
-                    setPopupPosition();
+                    setTimeout(setPopupPosition, 0) // append is async. setPopupPosition must be called after append
 
-                    document.addEventListener('keyup', function (event) {
-                        scope.isPopupOpen &&  event.key === "Escape" && removePopUp();
-                    }, {once: true});
+                    addListeners();
 
                     scope.isPopupOpen = true;
 
@@ -120,6 +155,8 @@
 
                     bodyElem.removeChild(popupBackdropElem);
                     bodyElem.removeChild(popUpElem);
+
+                    removeListeners();
 
                     scope.isPopupOpen = false;
 
