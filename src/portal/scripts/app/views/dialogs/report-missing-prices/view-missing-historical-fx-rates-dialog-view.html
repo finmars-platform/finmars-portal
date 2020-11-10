@@ -1,0 +1,42 @@
+<md-dialog aria-label="" ng-cloak class="warning-dialog draggable-dialog width-70" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Missing Historical FX Rates</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="p-24">
+
+        <div>
+
+            <div>
+
+                <div>
+                    Date: {{vm.reportOptions.report_date}}
+                </div>
+
+                <div>
+                    Pricing Policy: {{vm.reportOptions.pricing_policy_object.name}}
+                </div>
+
+                <div>
+                    Report Type: {{vm.entityType}}
+                </div>
+
+                <div>
+                    Layout name: {{vm.layout.name}}
+                </div>
+
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Ok
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
