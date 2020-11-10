@@ -340,11 +340,14 @@
 
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
-                        templateUrl: 'views/dialogs/report-price-checker-dialog-view.html',
+                        templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {
-                            data: scope.missingPricesData
+                            data: {
+                                missingPricesData: scope.missingPricesData,
+                                evDataService: scope.evDataService
+                            }
                         }
                     })
 
