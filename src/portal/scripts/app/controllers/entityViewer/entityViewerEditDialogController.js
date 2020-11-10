@@ -1861,7 +1861,14 @@
 
         vm.isEntityTabActive = function () {
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
-        }
+        };
+
+        vm.onPopupSaveCallback = function () {
+            Object.keys(vm.fixedAreaPopup).forEach((key) => {
+                vm.entity[key] = vm.fixedAreaPopup[key].value;
+            })
+
+        };
 
         vm.init = function () {
             setTimeout(function () {
@@ -1933,6 +1940,23 @@
 
             vm.getItem().then(function () {
                 getEntityStatus();
+
+                vm.fixedAreaPopup = keysOfFixedFieldsAttrs.reduce((acc,key) => {
+                    const attr = vm.entityAttrs.find(entityAttr => entityAttr.key === key);
+
+                    return attr ? {...acc, [key]: {name: attr.name, value: vm.entity[key]}} : acc;
+                }, {})
+
+                vm.fixedAreaPopup.status = {key: 'Status', value: vm.entityStatus, options: vm.statusSelectorOptions}
+
+                if (vm.fixedAreaPopup.hasOwnProperty('instrument_type')) {
+
+                    instrumentTypeService.getListLight().then(function (data) {
+                        vm.fixedAreaPopup.instrument_type.options = data.results;
+                    })
+
+                }
+
             });
         };
 
