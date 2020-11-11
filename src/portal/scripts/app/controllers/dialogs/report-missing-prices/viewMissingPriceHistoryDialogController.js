@@ -22,6 +22,21 @@
             vm.entityType = vm.evDataService.getEntityType();
             vm.layout = vm.evDataService.getListLayout()
 
+            vm.items = vm.items.map(function (item) {
+
+                item.instrument_object.pricing_policies.forEach(function (policy) {
+
+                    if (policy.pricing_policy === vm.reportOptions.pricing_policy) {
+                        item.pricing_scheme_name = policy.pricing_scheme_object.name;
+                        item.pricing_scheme = policy.pricing_scheme;
+                    }
+
+                });
+
+                return item
+
+            })
+
         };
 
         vm.viewPositions = function($event, item) {
@@ -31,6 +46,7 @@
                 templateUrl: 'views/dialogs/report-missing-prices/view-missing-price-history-view-positions-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                multiple: true,
                 locals: {
                     data: {
                         item: item,
@@ -39,6 +55,46 @@
                     }
                 }
             });
+
+        };
+
+        vm.viewInstrument = function($event, item) {
+
+            $mdDialog.show({
+                controller: 'EntityViewerEditDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    entityType: 'instrument',
+                    entityId: item.id,
+                    data: {}
+                }
+            })
+
+        };
+
+        vm.addPriceHistory = function($event, item) {
+
+            $mdDialog.show({
+                controller: 'EntityViewerAddDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    entityType: 'price-history',
+                    entity: {
+                        instrument: item.id,
+                        instrument_object: item.instrument_object,
+                        pricing_policy: vm.reportOptions.pricing_policy,
+                        pricing_policy_object: vm.reportOptions.pricing_policy_object,
+                        date: vm.reportOptions.report_date
+                    },
+                    data: {}
+                }
+            })
 
         };
 

@@ -11,10 +11,26 @@
 
         <div>
 
-            <div>
+            <div class="m-b-24">
 
-                <div>
-                    Date: {{vm.reportOptions.report_date}}
+                <div data-ng-if="vm.entityType === 'balance-report'">
+
+                    <div>
+                        Date: {{vm.reportOptions.report_date}}
+                    </div>
+
+                </div>
+
+                <div data-ng-if="vm.entityType === 'pl-report'">
+
+                    <div>
+                        Date from: {{vm.reportOptions.pl_first_date}}
+                    </div>
+
+                    <div>
+                        Date to: {{vm.reportOptions.report_date}}
+                    </div>
+
                 </div>
 
                 <div>
@@ -31,6 +47,19 @@
 
             </div>
 
+            <div class="m-b-24">
+
+
+                <div>
+                    Instrument: {{vm.item.name}} <md-button class="md-raised" data-ng-click="vm.viewInstrument($event, vm.item)">View Instrument</md-button>
+                </div>
+
+                <div>
+                    Pricing Scheme: {{vm.item.pricing_scheme_name}} <md-button class="md-raised" data-ng-click="vm.viewInstrumentPricingScheme($event, vm.item)">View Pricing Scheme</md-button>
+                </div>
+
+            </div>
+
             <div>
 
                 <table>
@@ -39,49 +68,37 @@
 
                         <tr>
                             <th>
-                                Instrument Name
+                                Portfolio
                             </th>
                             <th>
-                                Short Name
+                                Account
                             </th>
                             <th>
-                                User Code
+                                Strategy
                             </th>
                             <th>
-                                Pricing Scheme
+                                Position Size
                             </th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+
                         </tr>
 
                     </thead>
 
                     <tbody>
 
-                        <tr data-ng-repeat="item in vm.items">
+                        <tr data-ng-repeat="item in vm.positions">
                             <td>
-                                {{item.instrument_object.name}}
+                                {{item['portfolio.name']}}
                             </td>
                             <td>
-                                {{item.instrument_object.short_name}}
+                                {{item['account.name']}}
                             </td>
                             <td>
-                                {{item.instrument_object.user_code}}
+                                {{item['strategy1.name']}}
                             </td>
                             <td>
-                                -
+                                {{item.position_size}}
                             </td>
-                            <td>
-                                <md-button class="md-raised" data-ng-click="vm.viewInstrument($event, item)">View Instrument</md-button>
-                            </td>
-                            <td>
-                                <md-button class="md-raised" data-ng-click="vm.addPriceHistory($event, item)">Add Price</md-button>
-                            </td>
-                            <td>
-                                <md-button class="md-raised" data-ng-click="vm.viewPositions($event, item)">View Positions</md-button>
-                            </td>
-
                         </tr>
 
                     </tbody>
