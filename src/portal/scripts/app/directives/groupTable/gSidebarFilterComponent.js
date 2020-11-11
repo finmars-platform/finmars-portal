@@ -1118,7 +1118,7 @@
 
                         scope.missingPricesData = scope.evDataService.getMissingPrices()
 
-                    })
+                    });
 
                     uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 

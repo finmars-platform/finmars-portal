@@ -83,6 +83,7 @@
                 templateUrl: 'views/dialogs/report-missing-prices/view-missing-price-history-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                multiple: true,
                 locals: {
                     data: {
                         items: vm.missingHistoryPrices,
@@ -100,6 +101,7 @@
                 templateUrl: 'views/dialogs/report-missing-prices/view-missing-fx-rates-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                multiple: true,
                 locals: {
                     data: {
                         items: vm.missingFxRates,
@@ -117,6 +119,7 @@
                 templateUrl: 'views/dialogs/report-missing-prices/view-missing-historical-fx-rates-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                multiple: true,
                 locals: {
                     data: {
                         items: vm.missingHistoricalFxRates,
@@ -143,13 +146,14 @@
             });
 
             vm.missingFxRates = vm.data.missingPricesData.items.filter(function (item) {
-                return ['missing_instrument_pricing_currency_fx_rate', 'missing_instrument_accrued_currency_fx_rate', 'missing_report_currency_fx_rate'].indexOf(item.type) !== -1;
+                return ['missing_instrument_currency_fx_rate', 'missing_report_currency_fx_rate'].indexOf(item.type) !== -1;
             });
 
             vm.missingFxRates = vm.missingFxRates.map(function (item) {
 
                 item.date = vm.data.missingPricesData.report_date;
                 item.pricing_policy_user_code = vm.data.missingPricesData.pricing_policy_object.user_code;
+                item.user_code = item.currency_object.user_code; // important replace
 
                 return item
 
