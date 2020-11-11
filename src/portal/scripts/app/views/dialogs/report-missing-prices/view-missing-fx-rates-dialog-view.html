@@ -11,10 +11,26 @@
 
         <div>
 
-            <div>
+            <div class="m-b-24">
 
-                <div>
-                    Date: {{vm.reportOptions.report_date}}
+                <div data-ng-if="vm.entityType === 'balance-report'">
+
+                    <div>
+                        Date: {{vm.reportOptions.report_date}}
+                    </div>
+
+                </div>
+
+                <div data-ng-if="vm.entityType === 'pl-report'">
+
+                    <div>
+                        Date from: {{vm.reportOptions.pl_first_date}}
+                    </div>
+
+                    <div>
+                        Date to: {{vm.reportOptions.report_date}}
+                    </div>
+
                 </div>
 
                 <div>
@@ -53,8 +69,8 @@
                             <td>{{item.currency_object.name}}</td>
                             <td>{{item.currency_object.short_name}}</td>
                             <td>{{item.currency_object.user_code}}</td>
-                            <td><md-button data-ng-click="vm.viewCurrency($event, item)">View Currency</md-button></td>
-                            <td><md-button data-ng-click="vm.addFXRate($event, item)">Add FX Rate</md-button></td>
+                            <td><md-button class="md-raised" data-ng-click="vm.viewCurrency($event, item)">View Currency</md-button></td>
+                            <td><md-button class="md-raised" data-ng-click="vm.addFXRate($event, item)">Add FX Rate</md-button></td>
                         </tr>
 
                     </tbody>
