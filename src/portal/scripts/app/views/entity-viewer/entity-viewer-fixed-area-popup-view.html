@@ -1,47 +1,47 @@
 <div class="fixed-area-popup-content">
-    <div data-ng-if="vm.name">
+    <div data-ng-if="vm.fields.name">
         <text-input
                 label="Name"
                 placeholder-text="Name"
-                model="vm.name.value"></text-input>
+                model="vm.fields.name.value"></text-input>
     </div>
 
-    <div data-ng-if="vm.public_name">
+    <div data-ng-if="vm.fields.public_name">
         <text-input
                 label="Public name"
                 placeholder-text="Public name"
-                model="vm.public_name.value"></text-input>
+                model="vm.fields.public_name.value"></text-input>
     </div>
 
 
-    <div data-ng-if="vm.short_name">
+    <div data-ng-if="vm.fields.short_name">
         <text-input
                 label="Short name"
                 placeholder-text="Short name"
-                model="vm.short_name.value"></text-input>
+                model="vm.fields.short_name.value"></text-input>
     </div>
 
-    <div data-ng-if="vm.user_code">
+    <div data-ng-if="vm.fields.user_code">
         <text-input
                 label="User code"
                 placeholder-text="User code"
-                model="vm.user_code.value"></text-input>
+                model="vm.fields.user_code.value"></text-input>
     </div>
 
-    <div data-ng-if="vm.status">
+    <div data-ng-if="vm.fields.status && vm.tabColumns < 6">
         <dropdown-select label="Status"
-                         model="vm.status.value"
+                         model="vm.fields.status.value"
                          placeholder-text="System List"
-                         menu-options="vm.status.options"
+                         menu-options="vm.fields.status.options"
                          small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
                          class="ev-editor-field"></dropdown-select>
     </div>
 
-    <div data-ng-if="vm.instrument_type">
+    <div data-ng-if="vm.fields.instrument_type && vm.tabColumns < 3">
         <dropdown-select label="Instrument type"
-                         model="vm.instrument_type.value"
+                         model="vm.fields.instrument_type.value"
                          placeholder-text="Instrument type"
-                         menu-options="vm.instrument_type.options"
+                         menu-options="vm.fields.instrument_type.options"
                          small-options="{tooltipText: 'Instrument type', indicatorBtnIcon: 'type1'}"
                          class="ev-editor-field"></dropdown-select>
     </div>

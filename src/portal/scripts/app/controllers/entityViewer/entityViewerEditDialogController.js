@@ -88,6 +88,12 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
+        vm.fixedAreaPopup = {
+            fields: {},
+            tabColumns: 6
+        }
+        vm.instrumentTypeSelectorOptions = [];
+
         vm.currentMember = null;
 
         vm.hasEditPermission = false;
@@ -580,6 +586,8 @@
                         tab.tabOrder = index;
                     });
                 }
+
+                vm.fixedAreaPopup.tabColumns = getFixedAreaColumns(vm.tabs);
 
                 vm.getAttributeTypes().then(function () {
 
@@ -1859,14 +1867,26 @@
 
         };
 
+        var getFixedAreaColumns = function (tabs) {
+            const widths = tabs.map(tab => tab.layout && tab.layout.columns).filter(num => Boolean(Number(num)));
+            const maxWidth = Math.max(...widths)
+
+            return  maxWidth > 0 ? maxWidth : 6;
+        };
+
         vm.isEntityTabActive = function () {
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
 
         vm.onPopupSaveCallback = function () {
-            Object.keys(vm.fixedAreaPopup).forEach((key) => {
-                vm.entity[key] = vm.fixedAreaPopup[key].value;
+            Object.keys(vm.fixedAreaPopup.fields).forEach((key) => {
+                vm.entity[key] = vm.fixedAreaPopup.fields[key].value;
             })
+
+            if (vm.entityStatus !== vm.fixedAreaPopup.fields.status.value) {
+                vm.entityStatus = vm.fixedAreaPopup.fields.status.value;
+                vm.entityStatusChanged();
+            }
 
         };
 
@@ -1941,18 +1961,19 @@
             vm.getItem().then(function () {
                 getEntityStatus();
 
-                vm.fixedAreaPopup = keysOfFixedFieldsAttrs.reduce((acc,key) => {
+                vm.fixedAreaPopup.fields = keysOfFixedFieldsAttrs.reduce((acc,key) => {
                     const attr = vm.entityAttrs.find(entityAttr => entityAttr.key === key);
 
                     return attr ? {...acc, [key]: {name: attr.name, value: vm.entity[key]}} : acc;
                 }, {})
 
-                vm.fixedAreaPopup.status = {key: 'Status', value: vm.entityStatus, options: vm.statusSelectorOptions}
+                vm.fixedAreaPopup.fields.status = {key: 'Status', value: vm.entityStatus, options: vm.statusSelectorOptions}
 
-                if (vm.fixedAreaPopup.hasOwnProperty('instrument_type')) {
+                if (vm.fixedAreaPopup.fields.hasOwnProperty('instrument_type')) {
 
                     instrumentTypeService.getListLight().then(function (data) {
-                        vm.fixedAreaPopup.instrument_type.options = data.results;
+                        vm.instrumentTypeSelectorOptions = data.results
+                        vm.fixedAreaPopup.fields.instrument_type.options = vm.instrumentTypeSelectorOptions;
                     })
 
                 }

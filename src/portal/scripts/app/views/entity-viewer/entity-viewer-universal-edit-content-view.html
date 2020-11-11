@@ -10,7 +10,12 @@
         <div layout="row"
              class="entity-editor-row">
 
-            <div popup
+            <div data-ng-class="{
+                        'width-33': vm.fixedAreaPopup.tabColumns === 6,
+                        'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
+                        'width-66': vm.fixedAreaPopup.tabColumns === 3,
+                        'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
+                    }"
                  popup-template-url="'views/entity-viewer/entity-viewer-fixed-area-popup-view.html'"
                  popup-y="top"
                  popup-data="vm.fixedAreaPopup"
@@ -23,8 +28,32 @@
 
             </div>
 
+            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 2"
+                 data-ng-class="{
+                        'width-33': vm.fixedAreaPopup.tabColumns === 6 || vm.fixedAreaPopup.tabColumns === 3,
+                        'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
+                        'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
+                    }">
+                <dropdown-select label="Instrument type"
+                                 model="vm.entity.instrument_type"
+                                 placeholder-text="Instrument type"
+                                 menu-options="vm.instrumentTypeSelectorOptions"
+                                 small-options="{tooltipText: 'Instrument type', indicatorBtnIcon: 'type1'}"
+                                 class="ev-editor-field"></dropdown-select>
+            </div>
 
-            <div class="ev-data-field"
+            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
+                 class="width-33">
+                <dropdown-select label="Status"
+                                 model="vm.entityStatus"
+                                 placeholder-text="System List"
+                                 menu-options="vm.statusSelectorOptions"
+                                 small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                                 on-change-callback="vm.entityStatusChanged()"
+                                 class="ev-editor-field"></dropdown-select>
+            </div>
+
+<!--            <div class="ev-data-field"
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                  flex="50">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
@@ -36,9 +65,9 @@
                                     item="vm.fixedFieldsAttributes[0]"
                                     entity-change="vm.onFieldChange(fieldKey)"
                                     on-field-blur="vm.onNameInputBlur()"></bind-field-control>
-            </div>
+            </div>-->
 
-            <div class="ev-data-field"
+<!--            <div class="ev-data-field"
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                  flex="35">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]"
@@ -49,9 +78,9 @@
                                     ev-editor-data-service="vm.evEditorDataService"
                                     item="vm.fixedFieldsAttributes[1]"
                                     entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-            </div>
+            </div>-->
 
-            <div class="ev-data-field"
+<!--            <div class="ev-data-field"
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                  flex="15">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]"
@@ -61,12 +90,13 @@
                                     ev-editor-data-service="vm.evEditorDataService"
                                     item="vm.fixedFieldsAttributes[2]"
                                     entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-            </div>
+            </div>-->
         </div>
 
         <div layout="row"
              class="entity-editor-row">
-            <div class="ev-data-field"
+
+<!--            <div class="ev-data-field"
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                  flex="50">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]"
@@ -76,9 +106,9 @@
                                     ev-editor-data-service="vm.evEditorDataService"
                                     item="vm.fixedFieldsAttributes[3]"
                                     entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-            </div>
+            </div>-->
 
-            <div class="ev-data-field"
+<!--            <div class="ev-data-field"
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                  flex="35">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]"
@@ -88,9 +118,9 @@
                                     ev-editor-data-service="vm.evEditorDataService"
                                     item="vm.fixedFieldsAttributes[4]"
                                     entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-            </div>
+            </div>-->
 
-            <div class="ev-data-field"
+<!--            <div class="ev-data-field"
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                  flex="15">
                 <dropdown-select label="Status"
@@ -100,7 +130,8 @@
                                  small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
                                  on-change-callback="vm.entityStatusChanged()"
                                  class="ev-editor-field"></dropdown-select>
-                <!--<md-input-container class="md-block">
+
+                &lt;!&ndash;<md-input-container class="md-block">
                     <label>Status</label>
                     <md-select data-ng-model="vm.entityStatus"
                                data-ng-change="vm.entityStatusChanged()">
@@ -112,9 +143,9 @@
                         <md-option value="disabled">Disabled</md-option>
                         <md-option value="deleted">Deleted</md-option>
                     </md-select>
-                </md-input-container>-->
+                </md-input-container>&ndash;&gt;
 
-            </div>
+            </div>-->
         </div>
 
         <div class="entity-editor-divider-holder">
