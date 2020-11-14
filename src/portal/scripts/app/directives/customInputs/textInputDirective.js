@@ -54,21 +54,20 @@
 					var classes = "";
 
 					if (scope.isDisabled) {
-					classes += "custom-input-is-disabled";
+						classes += "custom-input-is-disabled";
 
 					} else if (scope.error) {
-					classes = 'custom-input-error';
+						classes = 'custom-input-error';
 
 					} else if (stylePreset) {
-					classes = 'custom-input-preset' + stylePreset;
+						classes = 'custom-input-preset' + stylePreset;
 
 					} else if (scope.valueIsValid) {
-					classes = 'custom-input-is-valid';
-
+						classes = 'custom-input-is-valid';
 					}
 
 					if (scope.noIndicatorBtn) {
-					classes += " no-indicator-btn";
+						classes += " no-indicator-btn";
 					}
 
 					return classes;
@@ -82,37 +81,41 @@
 					scope.valueIsValid = false;
 
 					if (scope.model) {
-					scope.valueIsValid = true;
+						scope.valueIsValid = true;
 
 					} else {
-					if (scope.smallOptions && scope.smallOptions.notNull) {
-						scope.error = "Field should not be null";
-					}
+
+						if (scope.smallOptions && scope.smallOptions.notNull) {
+							scope.error = "Field should not be null";
+						}
+
 					}
 
 					if (scope.onChangeCallback) {
-					setTimeout(function () {
-						scope.onChangeCallback();
-					}, 0);
+
+						setTimeout(function () {
+							scope.onChangeCallback();
+						}, 0);
+
 					}
 				};
 
 				var applyCustomStyles = function () {
 
-					Object.keys(scope.customStyles).forEach(function (className) {
+				Object.keys(scope.customStyles).forEach(function (className) {
 
-						var elemClass = "." + className;
-						var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
+					var elemClass = "." + className;
+					var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-						if (elemToApplyStyles.length) {
+					if (elemToApplyStyles.length) {
 
-							elemToApplyStyles.forEach(function (htmlNode) {
-								htmlNode.style.cssText = scope.customStyles[className];
-							});
+						elemToApplyStyles.forEach(function (htmlNode) {
+							htmlNode.style.cssText = scope.customStyles[className];
+						})
 
-						}
+					}
 
-					});
+				});
 
 				};
 
@@ -184,38 +187,40 @@
 
 						scope.$watch("eventSignal", function () {
 
-						if (scope.eventSignal && scope.eventSignal.key) {
+							if (scope.eventSignal && scope.eventSignal.key) {
 
-						switch (scope.eventSignal.key) {
+								switch (scope.eventSignal.key) {
 
-							case "mark_not_valid_fields":
-							if (scope.smallOptions &&
-								scope.smallOptions.notNull &&
-								!scope.model) {
+									case "mark_not_valid_fields":
+										if (scope.smallOptions &&
+											scope.smallOptions.notNull &&
+											!scope.model) {
 
-								scope.error = "Field should not be null";
+											scope.error = "Field should not be null";
 
+										}
+
+										break;
+
+								case "error":
+									scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+									break;
+
+								case "set_style_preset1":
+									stylePreset = 1;
+									break;
+
+								case "set_style_preset2":
+									stylePreset = 2;
+									break;
+								}
+
+								scope.eventSignal = {};
 							}
+						});
 
-							break;
-
-							case "error":
-							scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
-							break;
-
-							case "set_style_preset1":
-							stylePreset = 1;
-							break;
-
-							case "set_style_preset2":
-							stylePreset = 2;
-							break;
-						}
-
-						scope.eventSignal = {};
-						}
-					});
 					}
+
 				};
 
 				var initEventListeners = function () {

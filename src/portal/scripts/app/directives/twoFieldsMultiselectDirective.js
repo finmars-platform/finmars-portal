@@ -23,6 +23,8 @@
 				nameProperty: "@",
 				smallOptions: "=",
 				getDataMethod: "&?", // needed for downloading items on opening multiselector
+				strictOrder: "=",
+				optionsCheckboxes: "=",
 				onChangeCallback: "&?",
 			},
 			require: "?ngModel",
@@ -69,78 +71,72 @@
 
 				};
 
-				let arrayLikeInputText = function () {
+					var arrayLikeInputText = function () {
 
-					var propName = scope.nameProperty || 'name';
+						var propName = scope.nameProperty || 'name';
 
-					if (scope.model && scope.model.length) {
+						if (scope.model && scope.model.length) {
 
-						if (items.length) {
+							if (scope.items && scope.items.length) {
 
-							scope.inputText = '[';
-							scope.tooltipText = 'Values selected:';
+								scope.inputText = '[';
+								scope.tooltipText = 'Values selected:';
+								var selItemsIds = scope.model;
 
-							scope.model.forEach(function (sItemId, index) {
+								if (typeof selItemsIds[0] === 'object') { // multiselector returns array of objects
 
-								for (var i = 0; i < items.length; i++) {
-
-									if (items[i].id === sItemId) {
-
-										if (index > 0) { // add comma between selected items
-
-											scope.inputText = scope.inputText + ',';
-											scope.tooltipText = scope.tooltipText + ',';
-
-										}
-
-										scope.inputText = scope.inputText + ' ' + items[i][propName];
-										scope.tooltipText = scope.tooltipText + ' ' + items[i][propName];
-
-										break;
-
-									}
-
+									selItemsIds = selItemsIds.map(function (sItem) {
+										return sItem.id;
+									});
 								}
 
-							});
+								selItemsIds.forEach(function (sItemId, index) {
 
-							scope.inputText = scope.inputText + ' ]';
+									for (var i = 0; i < scope.items.length; i++) {
 
-						} else { // in case of error
-							scope.inputText = scope.model.length + ' items selected';
+										if (scope.items[i].id === sItemId) {
+
+											if (index > 0) { // add comma between selected items
+
+												scope.inputText = scope.inputText + ',';
+												scope.tooltipText = scope.tooltipText + ',';
+
+											}
+
+											scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
+											scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
+
+											break;
+										}
+									}
+								});
+
+								scope.inputText = scope.inputText + ' ]';
+
+							} else { // in case of error
+								scope.inputText = scope.model.length + ' items selected';
+							}
+
+						} else if (scope.nothingSelectedText) {
+							scope.inputText = scope.nothingSelectedText;
+
+						} else {
+							scope.inputText = "[ ]";
 						}
+					};
 
-						//scope.inputText = '[' + scope.model.join(', ') + ']';
+				var setInputText = function () {
 
-					} else if (scope.nothingSelectedText) {
+				  if (scope.selectedItemsIndication === "array") {
+					arrayLikeInputText();
 
-						scope.inputText = scope.nothingSelectedText;
-
-					} else {
-
-						scope.inputText = "[ ]";
-
-					}
+				  } else {
+					defaultInputText();
+				  }
 
 				};
 
-				let setInputText = function () {
-
-					if (scope.selectedItemsIndication) {
-
-						switch (scope.selectedItemsIndication) {
-							case "array":
-								arrayLikeInputText();
-								break;
-						}
-
-					} else {
-						defaultInputText();
-					}
-
-				};
-
-				//setInputText();
+				// setInputText();
 
 				let getItems = function () {
 
@@ -186,21 +182,22 @@
 
 						items = data;
 
-						$mdDialog.show({
-							controller: "TwoFieldsMultiselectDialogController as vm",
-							templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-							targetEvent: event,
-							multiple: true,
-							locals: {
-								data: {
-									items: items,
-									model: scope.model,
-									title: dialogTitle,
-									nameProperty: scope.nameProperty
-								}
+					$mdDialog.show({
+						controller: "TwoFieldsMultiselectDialogController as vm",
+						templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
+						targetEvent: event,
+						multiple: true,
+						locals: {
+							data: {
+								items: items,
+								model: scope.model,
+								title: dialogTitle,
+								nameProperty: scope.nameProperty,
+								strictOrder: scope.strictOrder,
+								optionsCheckboxes: scope.optionsCheckboxes
 							}
-
-						}).then(function (res) {
+						}
+					}).then(function (res) {
 
 							if (res.status === "agree") {
 
@@ -347,7 +344,7 @@
 
 				init();
 
-			},
+			}
 		};
 	};
 })();
