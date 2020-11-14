@@ -649,6 +649,8 @@ app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/number
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
+app.directive('chipsList', [require('./app/directives/chipsListDirective')]);
+app.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
 // Inputs
 

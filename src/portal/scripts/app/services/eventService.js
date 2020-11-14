@@ -34,23 +34,27 @@
 
         }
 
-        function dispatchEvent(eventName) {
-
-            console.log('Event dispatched: ' + eventName);
+        function dispatchEvent(eventName, argumentsObj) {
 
             // console.log('events[eventName]', events[eventName]);
 
             if (events.hasOwnProperty(eventName)) {
 
                 events[eventName].forEach(function (callback) {
-                    callback();
+
+                	if (argumentsObj) {
+						callback(argumentsObj);
+					} else {
+						callback();
+					}
+
                 })
 
-            } else {
+            } /* else {
 
                 // console.warn('Event ' + eventName + ' is not listened');
                 // throw "Event is not listened"
-            }
+            } */
 
         }
 
