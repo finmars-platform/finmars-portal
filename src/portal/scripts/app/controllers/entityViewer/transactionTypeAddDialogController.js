@@ -32,7 +32,7 @@
     var GridTableEventService = require('../../services/gridTableEventService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
-    var TransactionTypeEditorSharedLogicHelper = require('../../helpers/transactionTypeEditorSharedLogicHelper');
+    var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 

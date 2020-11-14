@@ -2,6 +2,10 @@
 
 	'use strict';
 
+    var ScrollHelper = require('../helpers/scrollHelper');
+
+    var scrollHelper = new ScrollHelper();
+
 	module.exports = function () {
 		return {
 			restrict: 'E',
@@ -9,22 +13,59 @@
 				allOptions: "=",
 				selectedOptions: "=",
 				nameProperty: "@",
-				classes: "="
+				classes: "=",
+                strictOrder: "=", // enable order change for selected items
+				optionsCheckboxes: "=" // contains object with properties optionsCheckbox, selectedOptions
 			},
 			templateUrl: 'views/directives/two-fields-options-view.html',
 			link: function (scope, elem, attr) {
 
+                scope.selOptionsFilter = ""
+                scope.initDnDEnabled = scope.strictOrder // if true scope.selOptionsDragAndDrop.init() will be called
+                scope.selOptionsOrderSettings = scope.nameProperty
+
+                if (scope.strictOrder) {
+                    scope.selOptionsOrderSettings = null
+                }
+
+                scope.unselOptionsCheckboxes = false
+				scope.selOptionsCheckboxes = false
+
+                if (scope.optionsCheckboxes) {
+
+                	scope.unselOptionsCheckboxes = scope.optionsCheckboxes.unselectedOptions
+					scope.selOptionsCheckboxes = scope.optionsCheckboxes.selectedOptions
+
+				}
+
+				let dragIconGrabbed = false;
+
 				scope.highlightOption = function (ev) {
 
 					var clickedOption = ev.currentTarget;
+
 					if ($(clickedOption).hasClass('active-option')) {
 						$(clickedOption).removeClass('active-option');
-					}
-					else {
+
+					} else {
 						$(clickedOption).addClass('active-option');
 					}
 
 				};
+
+				let resetDnD = function () {
+
+				    if (scope.selOptionsDragAndDrop.initialized) {
+
+				        scope.selOptionsDragAndDrop.destroy();
+
+                        setTimeout(function () {
+                            scope.selOptionsDragAndDrop.init();
+                        }, 500);
+
+                    }
+
+                };
 
 				// switch options to selected
 				scope.switchOptions = function (mode) {
@@ -49,24 +90,28 @@
 					}
 
 					// var fieldOptions = elem.find('.active-option' + optionsType);
-					var fieldOptions = elem[0].querySelectorAll('.active-option' + optionsType);
+					var fieldOptions = elem[0].querySelectorAll(optionsType + '.active-option');
 
 					if (fieldOptions && fieldOptions.length > 0) {
 
-						for (var i = 0; i < fieldOptions.length; i++) {
+					    for (var i = 0; i < fieldOptions.length; i++) {
 
 							var hOption = fieldOptions[i];
-							var hOptionId = hOption.dataset.memberGroupId;
+							var hOptionId = hOption.dataset.optionId;
 
 							removeFrom.forEach(function(option, optionIndex) {
 
-								if (option.id == hOptionId) {
+							    option.isActive = false;
+
+                                if (option.id == hOptionId) {
 									removeFrom.splice(optionIndex, 1); //remove options from available
 									addTo.push(option); // add options to selected
 								}
 
 							});
 						}
+
+                        resetDnD();
 
 					}
 				};
@@ -91,34 +136,300 @@
 
 					var i;
 					for (i = 0; i < removeFrom.length; i++) {
-						var option = removeFrom[i];
-						if (optionToSwitchId === option.id) {
-							removeFrom.splice(i, 1);
+
+					    var option = removeFrom[i];
+
+					    if (optionToSwitchId === option.id) {
+
+					        option.isActive = false;
+
+                            removeFrom.splice(i, 1);
 							addTo.push(option);
+
 						}
+
 					}
+
+                    resetDnD();
 
 				};
 
 				scope.selectAll = function () {
-					var mergedArray = [];
 
-					mergedArray = scope.selectedOptions.concat(scope.allOptions);
-					scope.selectedOptions = mergedArray;
-					scope.allOptions = [];
+				    scope.selectedOptions = scope.selectedOptions.concat(scope.allOptions);
+                    scope.selectedOptions.forEach(function (options) {
+                        options.isActive = false
+                    });
+
+                    scope.allOptions = [];
+
+                    resetDnD();
 
 				};
 
 				scope.deselectAll = function () {
-					var mergedArray = [];
 
-					mergedArray = scope.allOptions.concat(scope.selectedOptions);
-					scope.allOptions = mergedArray;
+					scope.allOptions = scope.allOptions.concat(scope.selectedOptions);
+                    scope.allOptions.forEach(function (options) {
+                        options.isActive = false
+                    });
+
 					scope.selectedOptions = [];
+
+                    resetDnD();
 
 				}
 
+                let changeItemOrder = function (activeOption, changingOrder) {
 
+                    let activeOptionsId = activeOption.dataset.optionId;
+
+                    for (let i = 0; i < scope.selectedOptions.length; i++) {
+
+                        if (scope.selectedOptions[i].id == activeOptionsId) {
+
+                            let moveFromItem = Object.assign({}, scope.selectedOptions[i]);
+
+                            // !moveToItem.isActive check prevents active option from moving adjacent active options
+                            if (changingOrder === 'up') { // move up the order
+
+                                let moveToIndex = i - 1;
+                                let moveToItem = scope.selectedOptions[moveToIndex];
+
+                                if (moveToIndex >= 0 && !moveToItem.isActive) {
+
+                                    moveToItem = Object.assign({}, moveToItem);
+                                    scope.selectedOptions[i] = moveToItem
+                                    scope.selectedOptions[moveToIndex] = moveFromItem
+
+                                }
+
+                            } else { // move down the order
+
+                                let moveToIndex = i + 1;
+                                let moveToItem = scope.selectedOptions[moveToIndex];
+
+                                if (moveToItem && !moveToItem.isActive) {
+
+                                    moveToItem = Object.assign({}, moveToItem);
+                                    scope.selectedOptions[i] = moveToItem
+                                    scope.selectedOptions[moveToIndex] = moveFromItem
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                    }
+
+                };
+
+				scope.changeOrder = function (changingOrder) {
+
+                    let selOptionsElems = elem[0].querySelectorAll('.two-fields-selected-option.active-option');
+
+                    let i;
+
+                    // if decreasing options index, start from the end of nodeList to make adjacent options change correctly
+                    if (changingOrder === 'up') {
+
+                        for (i = 0; i < selOptionsElems.length; i++) {
+                            changeItemOrder(selOptionsElems[i], changingOrder);
+                        }
+
+                    } else {
+
+                        for (i = selOptionsElems.length - 1; i >= 0; i--) {
+                            changeItemOrder(selOptionsElems[i], changingOrder);
+                        }
+
+                    }
+
+
+
+                    /* selOptionsElems.forEach(function (soElem) {
+
+                        for (let i = 0; i < scope.selectedOptions.length; i++) {
+
+                            if (scope.selectedOptions[i].id == soElem.id) {
+
+                                let moveFromItem = Object.assign({}, scope.selectedOptions[i]);
+
+                                if (changingOrder === 'up') {
+
+                                    let moveToIndex = i + 1;
+
+                                    if (scope.selectedOptions[moveToIndex]) {
+
+                                        let moveToItem = Object.assign({}, scope.selectedOptions[moveToIndex]);
+
+                                        scope.selectedOptions[i] = moveToItem
+                                        scope.selectedOptions[moveToIndex] = moveFromItem
+
+                                    }
+
+                                    break;
+
+                                } else {
+
+                                    let moveToIndex = i - 1;
+
+                                    if (moveToIndex >= 0) {
+
+                                        let moveToItem = Object.assign({}, scope.selectedOptions[moveToIndex]);
+
+                                        scope.selectedOptions[i] = moveToItem
+                                        scope.selectedOptions[moveToIndex] = moveFromItem
+
+                                    }
+
+                                    break;
+
+                                }
+
+                            }
+
+                        }
+
+                    }); */
+
+                };
+
+				let turnOffDragging = function () {
+                    dragIconGrabbed = false;
+                };
+
+                scope.turnOnDragging = function () {
+                    dragIconGrabbed = true;
+                    document.body.addEventListener('mouseup', turnOffDragging, {once: true});
+                };
+
+                scope.selOptionsDragAndDrop = {
+
+                    initialized: false,
+
+                    init: function () {
+
+                        this.dragulaInit();
+                        this.eventListeners();
+
+                        scope.initDnDEnabled = true
+                        this.initialized = true
+
+                    },
+
+                    eventListeners: function () {
+
+                        var drake = this.dragula;
+
+                        drake.on('drag', function () {
+                            document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+                        });
+
+                        drake.on('drop', function (elem, target, source, nextSibling) {
+
+                            let selItemId = elem.dataset.optionId;
+                            let siblingId = null;
+
+                            if (nextSibling) {
+                                siblingId = nextSibling.dataset.optionId;
+                            }
+
+                            let itemToInsert;
+                            let selItemOrder;
+                            for (selItemOrder = 0; selItemOrder < scope.selectedOptions.length; selItemOrder++) {
+
+                                if (scope.selectedOptions[selItemOrder].id == selItemId) {
+
+                                    itemToInsert = Object.assign({}, scope.selectedOptions[selItemOrder]);
+                                    break;
+
+                                }
+
+                            }
+
+                            scope.selectedOptions.splice(selItemOrder, 1);
+
+                            if (siblingId) {
+
+                                // insert dragged item before next sibling
+                                for (let i = 0; i < scope.selectedOptions.length; i++) {
+                                    if (scope.selectedOptions[i].id == siblingId) {
+
+                                        scope.selectedOptions.splice(i, 0, itemToInsert);
+                                        break;
+
+                                    }
+                                }
+
+                            } else {
+                                scope.selectedOptions.push(itemToInsert);
+                            }
+
+                        });
+
+                        drake.on('dragend', function (elem) {
+                            document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+                        });
+
+                    },
+
+                    dragulaInit: function () {
+
+                        let items = [
+                            elem[0].querySelector('.twoFieldsSelRowsContainer')
+                        ];
+
+                        this.dragula = dragula(items, {
+                            moves: function () {
+                                // drag and drop works if filter is inactive
+                                if (dragIconGrabbed && !scope.selOptionsFilter) {
+                                    return true;
+                                }
+
+                                return false;
+                            },
+                            revertOnSpill: true
+                        });
+                    },
+
+                    destroy: function () {
+                        scope.initDnDEnabled = false
+                        this.initialized = false
+
+                        this.dragula.destroy();
+                    }
+                };
+
+				let init = function () {
+
+                    setTimeout(function () {
+                        var DnDScrollElem = elem[0].querySelector('.twoFieldsSelRowsContainer');
+                        scrollHelper.setDnDScrollElem(DnDScrollElem);
+                    }, 500);
+
+				    scope.allOptions.forEach(function (allOption) {
+                        allOption.isActive = false
+                    });
+
+                    scope.selectedOptions.forEach(function (allOption) {
+                        allOption.isActive = false
+                    });
+
+                };
+
+                init();
+
+                scope.$on("$destroy", function () {
+
+                    if (scope.selOptionsDragAndDrop.initialized) {
+                        scope.selOptionsDragAndDrop.destroy();
+                    }
+
+                })
 			}
 		}
 	}
