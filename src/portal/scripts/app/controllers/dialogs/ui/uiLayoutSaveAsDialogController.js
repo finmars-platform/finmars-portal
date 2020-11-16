@@ -15,9 +15,9 @@
 
     var vm = this;
 
-        vm.complexSaveAsLayoutDialog = false;
-        vm.userCodeIsTouched = false;
-        vm.userCodeError = false;
+    vm.complexSaveAsLayoutDialog = false;
+    vm.userCodeIsTouched = false;
+    vm.userCodeError = false;
 
     var layoutsUserCodes = ["New Layout"];
 
@@ -99,10 +99,10 @@
 
                         });
 
-            break;
-          }
-        }
-      }
+                        break;
+                    }
+                }
+            }
 
       if (!layoutNameOccupied) {
         $mdDialog.hide({ status: 'agree', data: { name: vm.layoutName, user_code: vm.layoutUserCode } });
@@ -110,18 +110,26 @@
 
     };
 
-        vm.validateUserCode = function () {
+		vm.change = function ($event) {
+			if (vm.layoutName.length != 0) {
+				vm.userCodeIsTouched = true;
+			}
+		};
 
-            var expression = /^\w+$/;
+		vm.validateUserCode = function () {
 
-            if (expression.test(vm.layoutUserCode)) {
-                vm.userCodeError = false;
-            } else {
-                vm.userCodeError = true;
-            }
+			var expression = /^\w+$/;
+			vm.userCodeIsTouched = true;
 
-        };
+			if (expression.test(vm.layoutUserCode)) {
 
-    }
+				vm.userCodeError = false;
 
-}());
+			} else {
+				vm.userCodeError = true;
+			}
+
+		};
+
+  };
+})();

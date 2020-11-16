@@ -9,6 +9,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
     var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
+	var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
@@ -49,6 +50,10 @@
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.viewContext = scope.evDataService.getViewContext();
                 scope.isLayoutDefault = false;
+
+                scope.missingPricesData = {
+                    items: []
+                }
 
                 scope.isReportFilterFromDashboard = scope.evDataService.dashboard.isReportDateFromDashboard();
 
@@ -329,6 +334,23 @@
                     setTimeout(function () {
                         scope.$apply();
                     }, 200)
+                };
+
+                scope.openMissingPricesDialog = function($event) {
+
+                    $mdDialog.show({
+                        controller: 'ReportPriceCheckerDialogController as vm',
+                        templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {
+                                missingPricesData: scope.missingPricesData,
+                                evDataService: scope.evDataService
+                            }
+                        }
+                    })
+
                 };
 
                 scope.openPeriodsDialog = function ($event) {
@@ -757,7 +779,7 @@
 
                             uiService.updateListLayout(listLayout.id, listLayout).then(function () {
 
-                                scope.evDataService.setListLayout(listLayout);
+                            	scope.evDataService.setListLayout(listLayout);
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                 checkIsLayoutDefault();
@@ -823,10 +845,11 @@
 
                             var listLayout = scope.evDataService.getListLayout();
                             listLayout.name = res.name;
-                            scope.evDataService.setListLayout(listLayout);
 
-                            uiService.updateListLayout(listLayout.id, listLayout).then(function () {
+                            uiService.updateListLayout(listLayout.id, listLayout).then(function (updatedLayoutData) {
 
+								listLayout.modified = updatedLayoutData.modified
+								scope.evDataService.setListLayout(listLayout);
                                 // Give signal to update layout name in the toolbar
                                 if (scope.isRootEntityViewer) {
                                     middlewareService.setNewEntityViewerLayoutName(listLayout.name);
@@ -845,23 +868,8 @@
 
                 };
 
-                scope.saveLayoutList = function ($event) {
-
-                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
-                    if (listLayout.hasOwnProperty('id')) {
-                        uiService.updateListLayout(listLayout.id, listLayout).then(function () {
-                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-                        });
-                    }
-
-                    $mdDialog.show({
-                        controller: 'SaveLayoutDialogController as vm',
-                        templateUrl: 'views/save-layout-dialog-view.html',
-                        targetEvent: $event,
-                        clickOutsideToClose: false
-                    })
-
+                scope.saveLayoutList = function () {
+					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
                 };
 
                 scope.openLayoutList = function ($event) {
@@ -1105,6 +1113,12 @@
                 };
 
                 var init = function () {
+
+                    scope.evEventService.addEventListener(evEvents.MISSING_PRICES_LOAD_END, function () {
+
+                        scope.missingPricesData = scope.evDataService.getMissingPrices()
+
+                    });
 
                     uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 

@@ -1,6 +1,7 @@
 /**
  * Created by mevstratov on 25.06.2019.
  */
+// TO DELETE: commented 2020-11-04
 (function () {
 
     'use strict';

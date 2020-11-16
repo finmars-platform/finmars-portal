@@ -108,6 +108,10 @@
 
   .g-row {
 
+    &.deleted {
+      background-color: #cecece;
+    }
+
     &.selected {
       background: #ffeee8;
 
@@ -272,7 +276,7 @@
   cursor: pointer;
   border-right: 1px solid rgba(158,158,158,.2);
   border-bottom: 1px solid rgba(158, 158, 158, 0.2);
-  border-bottom: 1px solid rgba(158, 158, 158, 0.2);
+  border-left: 1px solid rgba(158,158,158,.2);
   padding: 8px 0 0 24px;
   text-decoration: none;
   color: #000;
@@ -295,7 +299,6 @@
     text-decoration: none;
     color: #000;
   }
-
 }
 
 .ev-dropdown-submenu {
@@ -345,12 +348,6 @@
 
 }
 /***** < Popup menu > *****/
-
-
-.g-content-wrap-right {
-  position: absolute;
-  left: 50%;
-}
 
 .control-error-message {
   display: inline-block;

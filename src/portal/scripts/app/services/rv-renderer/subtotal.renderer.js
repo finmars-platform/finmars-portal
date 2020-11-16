@@ -6,7 +6,7 @@
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
-    var checkIcon = renderHelper.getCheckIcon();
+    var checkIcon = renderHelper.getIconByKey('checkIcon');
 
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
     var REPORT_GRAND_TOTAL_CSS_SELECTOR = 'report-grand-total-bg';

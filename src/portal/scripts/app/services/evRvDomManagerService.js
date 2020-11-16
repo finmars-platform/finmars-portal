@@ -31,7 +31,7 @@
 
                 var interfaceLayout = evDataService.getInterfaceLayout();
                 var rootWrapElemWidth = rootWrapElem.clientWidth;
-                var contentWrapElementWidth = rootWrapElemWidth - interfaceLayout.verticalSplitPanel.width;
+                var contentWrapElementWidth = rootWrapElemWidth - interfaceLayout.verticalSplitPanel.width - 1;
 
                 contentWrapElement.style.width = contentWrapElementWidth + "px"
 
