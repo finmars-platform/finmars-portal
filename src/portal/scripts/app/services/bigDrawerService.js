@@ -14,17 +14,17 @@
         _this.drawersPromise = null;
 
         let backdropElem, drawerElem, drawerWrap, drawerContainer, drawerPin;
-		let sidenavWidth = 330, viewportWidth, drawerMaxWidth, drawerCurrentWidth, drawerHeight,
+		let sidenavWidth = 330, viewportWidth, drawerMaxWidth, currentWidthPercent = 100, drawerCurrentWidth, drawerHeight,
 			drawerWidthAnimationDuration = 500; // same as width transition duration
 
 		let calcDrawerContainerSize = function () {
 
 			viewportWidth = window.innerWidth;
 			drawerMaxWidth = (viewportWidth - sidenavWidth) * 0.9;
-            drawerCurrentWidth = drawerMaxWidth;
+            drawerCurrentWidth = drawerMaxWidth * currentWidthPercent / 100;
 			drawerHeight = window.innerHeight;
 
-			drawerContainer.style.width = drawerMaxWidth + 'px';
+			drawerContainer.style.width = drawerCurrentWidth + 'px';
 			drawerContainer.style.height = drawerHeight + 'px';
 
 		};
@@ -34,7 +34,7 @@
 			calcDrawerContainerSize();
 
 			// drawerWrap.classList.add('no-drawer-animation');
-			drawerWrap.style.width = drawerMaxWidth + 'px';
+			drawerWrap.style.width = drawerCurrentWidth + 'px';
 			/* setTimeout(function () {
 				drawerWrap.classList.remove('no-drawer-animation');
 			}, drawerWidthAnimationDuration); */
@@ -42,10 +42,11 @@
 		}
 
 		function setWidthPercent (percent = 100) {
-            const drawerTargetWidth = drawerMaxWidth * percent / 100;
+		    currentWidthPercent = percent
+            drawerCurrentWidth = drawerMaxWidth * currentWidthPercent / 100;
 
-            drawerCurrentWidth = drawerTargetWidth;
             drawerContainer.style.width = drawerCurrentWidth + 'px';
+            drawerWrap.style.width = drawerCurrentWidth + 'px';
         }
 
         this.setWidthPercent = setWidthPercent;

@@ -993,6 +993,12 @@
 
             }
 
+            if (vm.fixedAreaPopup.fields.status) {
+
+                vm.fixedAreaPopup.fields.status.value = vm.entityStatus;
+
+            }
+
         };
 
         vm.save = function ($event, isAutoExitAfterSave) {
