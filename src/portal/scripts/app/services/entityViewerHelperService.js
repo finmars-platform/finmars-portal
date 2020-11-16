@@ -235,13 +235,60 @@
 
     };
 
+
+    /**
+     * Get max columns from tabs of Edit Layout
+     * @param {Array} editLayoutTabs
+     * @memberOf module:EntityViewerHelperService
+     * @returns {number}
+     */
+    var getEditLayoutMaxColumns = function (editLayoutTabs) {
+        // const widths = tabs.map(tab => tab.layout && tab.layout.columns).filter(num => Boolean(Number(num)));
+        const widths = editLayoutTabs
+            .map(function (tab) {
+                return tab.layout && tab.layout.columns
+            })
+            .filter(function (num) {
+                return Boolean(Number(num))
+            });
+
+        const maxWidth = Math.max(...widths)
+
+        return  maxWidth > 0 ? maxWidth : 6;
+
+    }
+
+    /**
+     * Get big drawer width percentage by fixed area columns
+     * @param {number} columns
+     * @returns {number}
+     */
+    var getBigDrawerWidthPercent = function (columns) {
+        switch (columns) {
+            case 5:
+            case 4:
+                return 66;
+            case 3:
+                return 52;
+            case 2:
+            case 1:
+                return 36;
+            default:
+                return 100;
+
+        }
+    }
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
-        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode
+        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
+
+        getEditLayoutMaxColumns: getEditLayoutMaxColumns,
+        getBigDrawerWidthPercent: getBigDrawerWidthPercent
     }
 
 }());

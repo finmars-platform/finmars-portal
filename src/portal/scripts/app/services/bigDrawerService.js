@@ -13,17 +13,18 @@
 
         _this.drawersPromise = null;
 
-        let backdropElem, drawerElem, drawerWrap, drawerContainer;
-		let sidenavWidth = 330, viewportWidth, drawerWidth, drawerHeight,
+        let backdropElem, drawerElem, drawerWrap, drawerContainer, drawerPin;
+		let sidenavWidth = 330, viewportWidth, drawerMaxWidth, drawerCurrentWidth, drawerHeight,
 			drawerWidthAnimationDuration = 500; // same as width transition duration
 
 		let calcDrawerContainerSize = function () {
 
 			viewportWidth = window.innerWidth;
-			drawerWidth = (viewportWidth - sidenavWidth) * 0.9;
+			drawerMaxWidth = (viewportWidth - sidenavWidth) * 0.9;
+            drawerCurrentWidth = drawerMaxWidth;
 			drawerHeight = window.innerHeight;
 
-			drawerContainer.style.width = drawerWidth + 'px';
+			drawerContainer.style.width = drawerMaxWidth + 'px';
 			drawerContainer.style.height = drawerHeight + 'px';
 
 		};
@@ -33,12 +34,21 @@
 			calcDrawerContainerSize();
 
 			// drawerWrap.classList.add('no-drawer-animation');
-			drawerWrap.style.width = drawerWidth + 'px';
+			drawerWrap.style.width = drawerMaxWidth + 'px';
 			/* setTimeout(function () {
 				drawerWrap.classList.remove('no-drawer-animation');
 			}, drawerWidthAnimationDuration); */
 
 		}
+
+		function setWidthPercent (percent = 100) {
+            const drawerTargetWidth = drawerMaxWidth * percent / 100;
+
+            drawerCurrentWidth = drawerTargetWidth;
+            drawerContainer.style.width = drawerCurrentWidth + 'px';
+        }
+
+        this.setWidthPercent = setWidthPercent;
 
         this.show = function (options) {
 
@@ -78,13 +88,24 @@
 
                 drawerContainer = document.createElement('div');
                 drawerContainer.classList.add('big-drawer-container');
+
+                drawerPin = document.createElement('div');
+                drawerPin.classList.add('big-drawer-pin');
+                // drawerPin.innerHTML = `<p><span><ng-md-icon icon="keyboard_arrow_left"></ng-md-icon></span></p>`
+                drawerPin.innerHTML = `<ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>`
+
 				calcDrawerContainerSize();
+				if (options.widthPercent) {
+				    setWidthPercent(options.widthPercent);
+                }
                 /*drawerContainer.style.width = drawerWidth + 'px';
                 drawerContainer.style.height = drawerHeight + 'px';*/
                 drawerWrap.appendChild(drawerContainer);
+                //drawerElem.appendChild(drawerPin);
 
                 $(drawerContainer).html(tpl);
                 $(drawerContainer).children().data('$ngControllerController', ctrl);
+                $(drawerContainer).append(drawerPin)
 
                 // in case of multiple drawers
                 /*let firstChild = $(drawerElem).contents()[0];
@@ -151,7 +172,8 @@
 
         return {
             show: service.show,
-            hide: service.hide
+            hide: service.hide,
+            setWidthPercent: service.setWidthPercent
         }
 
     }
