@@ -40,6 +40,7 @@
 
                 var setPopupPosition = function () {
                     const coords = targetElement.getBoundingClientRect();
+                    popUpElem.style.width = coords.width + 'px';
 
                     let positionX = coords.left; // default X
                     let positionY = coords.bottom; // default Y

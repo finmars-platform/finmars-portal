@@ -16,13 +16,16 @@
                         'width-66': vm.fixedAreaPopup.tabColumns === 3,
                         'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
                     }"
+                 popup
                  popup-template-url="'views/entity-viewer/entity-viewer-fixed-area-popup-view.html'"
                  popup-y="top"
+                 offset-y="-24"
                  popup-data="vm.fixedAreaPopup"
                  on-save-callback="vm.onPopupSaveCallback()">
                 <text-input
-                        label="Name"
-                        placeholder-text="Text"
+                        label="{{vm.entityTypeSlug()}}"
+                        model="vm.getEntityPropertyByDefault()"
+                        placeholder-text=""
                         small-options="{noIndicatorBtn: true}"
                 ></text-input>
 

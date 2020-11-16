@@ -87,11 +87,19 @@
         vm.fixedFieldsAttributes = [];
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
+        vm.showByDefaultOptions = [
+            {id: 'name', name: 'Name'},
+            {id: 'public_name', name: 'Public Name'},
+            {id: 'short_name', name: 'Short Name'},
+            {id: 'user_code', name: 'User Code'},
+        ];
+        vm.showByDefault = vm.showByDefaultOptions[0].id;
 
         vm.fixedAreaPopup = {
             fields: {},
-            tabColumns: 6
-        }
+            tabColumns: data.fixedAreaColumns,
+        };
+
         vm.instrumentTypeSelectorOptions = [];
 
         vm.currentMember = null;
@@ -561,17 +569,17 @@
 
         vm.getFormLayout = function () {
 
-            uiService.getEditLayout(vm.entityType).then(function (data) {
+            uiService.getEditLayout(vm.entityType).then(function (editLayout) {
 
-                if (data.results.length && data.results.length > 0 && data.results[0].data) {
+                if (editLayout.results.length && editLayout.results.length > 0 && editLayout.results[0].data) {
 
-                    dataConstructorLayout = JSON.parse(JSON.stringify(data.results[0]));
+                    dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
 
-                    if (Array.isArray(data.results[0].data)) {
-                        vm.tabs = data.results[0].data;
+                    if (Array.isArray(editLayout.results[0].data)) {
+                        vm.tabs = editLayout.results[0].data;
                     } else {
-                        vm.tabs = data.results[0].data.tabs;
-                        vm.fixedArea = data.results[0].data.fixedArea;
+                        vm.tabs = editLayout.results[0].data.tabs;
+                        vm.fixedArea = editLayout.results[0].data.fixedArea;
                     }
 
                 } else {
@@ -587,7 +595,13 @@
                     });
                 }
 
-                vm.fixedAreaPopup.tabColumns = getFixedAreaColumns(vm.tabs);
+                const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+
+                if (vm.fixedAreaPopup.tabColumns !== columns) {
+                    vm.fixedAreaPopup.tabColumns = columns;
+                    const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+                    $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
+                }
 
                 vm.getAttributeTypes().then(function () {
 
@@ -1867,25 +1881,26 @@
 
         };
 
-        var getFixedAreaColumns = function (tabs) {
-            const widths = tabs.map(tab => tab.layout && tab.layout.columns).filter(num => Boolean(Number(num)));
-            const maxWidth = Math.max(...widths)
-
-            return  maxWidth > 0 ? maxWidth : 6;
-        };
-
         vm.isEntityTabActive = function () {
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
 
+        vm.getEntityPropertyByDefault = function () {
+            return vm.entity[vm.showByDefault];
+        };
+
         vm.onPopupSaveCallback = function () {
-            Object.keys(vm.fixedAreaPopup.fields).forEach((key) => {
+            keysOfFixedFieldsAttrs.forEach((key) => {
                 vm.entity[key] = vm.fixedAreaPopup.fields[key].value;
             })
 
             if (vm.entityStatus !== vm.fixedAreaPopup.fields.status.value) {
                 vm.entityStatus = vm.fixedAreaPopup.fields.status.value;
                 vm.entityStatusChanged();
+            }
+
+            if (vm.showByDefault !== vm.fixedAreaPopup.fields.showByDefault.value) {
+                vm.showByDefault = vm.fixedAreaPopup.fields.showByDefault.value
             }
 
         };
@@ -1968,6 +1983,8 @@
                 }, {})
 
                 vm.fixedAreaPopup.fields.status = {key: 'Status', value: vm.entityStatus, options: vm.statusSelectorOptions}
+
+                vm.fixedAreaPopup.fields.showByDefault = {key: 'Show by default', value: vm.showByDefault, options: vm.showByDefaultOptions}
 
                 if (vm.fixedAreaPopup.fields.hasOwnProperty('instrument_type')) {
 
