@@ -97,7 +97,7 @@
 
         vm.fixedAreaPopup = {
             fields: {},
-            tabColumns: data.fixedAreaColumns,
+            tabColumns: null,
         };
 
         vm.instrumentTypeSelectorOptions = [];
@@ -601,6 +601,7 @@
                     vm.fixedAreaPopup.tabColumns = columns;
                     const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
                     $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
+                    $bigDrawer.showPin(vm.fixedAreaPopup.tabColumns !== 6)
                 }
 
                 vm.getAttributeTypes().then(function () {
