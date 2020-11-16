@@ -2770,6 +2770,36 @@ md-dialog.two-rows-dialog-actions {
   }
 }
 
+@keyframes bigDrawerPinShow {
+  0% {
+    opacity: 0;
+  }
+
+  99% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+
+}
+
+@keyframes bigDrawerPinHide {
+  0% {
+    opacity: 1;
+  }
+
+  1% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+
+}
+
 .big-drawer-div {
   position: absolute;
   top: 0;
@@ -2789,11 +2819,21 @@ md-dialog.two-rows-dialog-actions {
     }*/
     &.big-drawer-opens {
       animation-name: bigDrawerOpening;
+
+      .big-drawer-pin {
+        animation-duration: 0.5s;
+        animation-name: bigDrawerPinShow;
+      }
     }
 
     &.big-drawer-closes {
       overflow: hidden;
       animation-name: bigDrawerClosing;
+
+      .big-drawer-pin {
+        animation-duration: 0.5s;
+        animation-name: bigDrawerPinHide;
+      }
     }
 
   }

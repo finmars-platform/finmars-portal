@@ -50,6 +50,24 @@
 
         this.setWidthPercent = setWidthPercent;
 
+		function showPin (isShowPin) {
+
+		    if (!drawerPin) {
+		        return ;
+            }
+
+		    if (isShowPin) {
+		        drawerPin.classList.remove('display-none');
+		        drawerPin.classList.add('display-block');
+            } else {
+                drawerPin.classList.add('display-none');
+                drawerPin.classList.remove('display-block');
+            }
+
+        }
+
+		this.showPin = showPin;
+
         this.show = function (options) {
 
             return new Promise(function (resolve, reject) {
@@ -91,21 +109,26 @@
 
                 drawerPin = document.createElement('div');
                 drawerPin.classList.add('big-drawer-pin');
-                // drawerPin.innerHTML = `<p><span><ng-md-icon icon="keyboard_arrow_left"></ng-md-icon></span></p>`
                 drawerPin.innerHTML = `<ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>`
 
 				calcDrawerContainerSize();
 				if (options.widthPercent) {
 				    setWidthPercent(options.widthPercent);
                 }
-                /*drawerContainer.style.width = drawerWidth + 'px';
-                drawerContainer.style.height = drawerHeight + 'px';*/
                 drawerWrap.appendChild(drawerContainer);
-                //drawerElem.appendChild(drawerPin);
 
                 $(drawerContainer).html(tpl);
                 $(drawerContainer).children().data('$ngControllerController', ctrl);
+
+                drawerPin = document.createElement('div');
+                drawerPin.classList.add('big-drawer-pin');
+                drawerPin.innerHTML = `<ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>`
+                showPin(options.showPin);
                 $(drawerContainer).append(drawerPin)
+
+                if (options.onPinClickCallback) {
+                    drawerPin.addEventListener('click', options.onPinClickCallback)
+                }
 
                 // in case of multiple drawers
                 /*let firstChild = $(drawerElem).contents()[0];
@@ -173,7 +196,8 @@
         return {
             show: service.show,
             hide: service.hide,
-            setWidthPercent: service.setWidthPercent
+            setWidthPercent: service.setWidthPercent,
+            showPin: service.showPin
         }
 
     }
