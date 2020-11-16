@@ -7,6 +7,7 @@
 
     var fieldResolverService = require('../../services/fieldResolverService');
     var evEvents = require('../../services/entityViewerEvents');
+	var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
@@ -460,9 +461,11 @@
                 };
 
                 // Methods for report viewer inside dashboard
-                scope.saveLayoutList = function ($event) {
+                /* scope.saveLayoutList = function ($event) {
 
-                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+
+                    /!* var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
                     if (listLayout.hasOwnProperty('id')) {
                         uiService.updateListLayout(listLayout.id, listLayout).then(function () {
@@ -475,9 +478,9 @@
                         templateUrl: 'views/save-layout-dialog-view.html',
                         targetEvent: $event,
                         clickOutsideToClose: false
-                    })
+                    }) *!/
 
-                };
+                }; */
 
                 scope.openReportSettings = function ($event) {
 

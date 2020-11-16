@@ -9,6 +9,7 @@
     var dataProvidersService = require('../../../services/import/dataProvidersService');
 
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService')
+    var csvImportSchemeService = require('../../../services/import/csvImportSchemeService')
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -19,14 +20,26 @@
         vm.readyStatus = {procedure: false};
 
         vm.item = {};
-        vm.schemes = [];
+        vm.transactionImportSchemes = [];
         vm.providers = [];
 
-        vm.getSchemes = function(){
+        vm.getTransactionImportSchemes = function(){
 
             transactionImportSchemeService.getListLight().then(function (data) {
 
-                vm.schemes = data.results;
+                vm.transactionImportSchemes = data.results;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getSimpleImportSchemes = function(){
+
+            csvImportSchemeService.getListLight().then(function (data) {
+
+                vm.simpleImportSchemes = data.results;
 
                 $scope.$apply();
 
@@ -77,7 +90,8 @@
         vm.init = function () {
 
             vm.getItem();
-            vm.getSchemes();
+            vm.getTransactionImportSchemes();
+            vm.getSimpleImportSchemes();
             vm.getProviders();
 
         };

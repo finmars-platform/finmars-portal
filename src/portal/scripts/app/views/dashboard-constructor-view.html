@@ -356,6 +356,21 @@
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>
+                    <div class="p-t-24">
+
+                        <input type="text"
+                               aria-label="name filter"
+                               ng-model="nameFilterContext"
+                               placeholder="(o) Search by name"
+                               class="forms-data-constructor-filter-input">
+
+                        <input type="text"
+                               aria-label="type filter"
+                               ng-model="typeFilterContext"
+                               placeholder="(o) Search by type"
+                               class="forms-data-constructor-filter-input">
+
+                    </div>
 
                     <p class="dashboard-constructor-comp-cards-top-text">
                         Drag fields from here
@@ -363,7 +378,7 @@
 
                     <div class="dashboard-constructor-comp-cards-container">
                         <div class="dashboard-constructor-draggable-card"
-                             data-ng-repeat="item in vm.availableComponentsTypes track by item.id" style="padding: 4px">
+                             data-ng-repeat="item in vm.availableComponentsTypes | filter: {name: nameFilterContext, type: typeFilterContext} track by item.id" style="padding: 4px">
 
                             <md-card class=" dashboard-field-card" class="p-l-16" data-index="{{$index}}"
                                      data-component-id="{{item.id}}" layout="row">
@@ -403,7 +418,7 @@
                     <md-button ng-click="vm.goToDashboard($event)" class="md-raised">
                         Go to Dashboard
                     </md-button>
-                    <md-button ng-click="vm.saveLayout($event)" ng-class="{'disabled-btn': !vm.layout.name}"
+                    <md-button ng-click="vm.saveLayout()" ng-class="{'disabled-btn': !vm.layout.name}"
                                class="md-raised">
                         Save
                     </md-button>

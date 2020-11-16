@@ -65,7 +65,7 @@
                 return;
             }
 
-            let loadRelationRes = relationItemsResolver(vm.contentType);
+            var loadRelationRes = relationItemsResolver(vm.contentType);
 
             if (loadRelationRes && loadRelationRes.status === 'item_exist') {
 

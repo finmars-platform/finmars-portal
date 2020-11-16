@@ -428,64 +428,69 @@
 
                 var init = function () {
 
-                    var shellViewElem = document.querySelector('.shell-view');
-                    shellViewElem.style.overflow = 'hidden'; // scroll of this element interfere with tables sizes calculation
-
                     window.addEventListener('resize', onWindowResize);
 
-                    calculateElemsWrapsSizes();
+                    if (!isReport) {
+						scope.scrollManager = new EvScrollManager();
+					}
 
-                    if (isReport) {
+                    setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
-                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                    	calculateElemsWrapsSizes();
 
-                        rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-                        rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+						if (isReport) {
 
+							rvDomManager.calculateScroll(elements, scope.evDataService);
 
-                        rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
-
-                        scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_START, function () {
-                            clearOverflowingCells();
-                        });
-
-                        scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
-                            cellContentOverflow();
-                        });
+							rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+							rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
 
-                        // If we already have data (e.g. viewType changed)
-                        var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+							rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
 
-                        if (flatList.length > 1) {
-                            progressBar.style.display = 'none';
-                            if (isReport) {
-                                contentElem.style.opacity = '1';
-                            }
-                            updateTableContent();
-                        }
+							scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_START, function () {
+								clearOverflowingCells();
+							});
 
-                        //  If we already have data (e.g. viewType changed) end
+							scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
+								cellContentOverflow();
+							});
 
 
-                        /*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
-                            cellContentOverflow();
-                        });*/
+							// If we already have data (e.g. viewType changed)
+							var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
 
-                    } else {
+							if (flatList.length > 1) {
 
-                        scope.scrollManager =  new EvScrollManager();
+								progressBar.style.display = 'none';
 
-                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+								if (isReport) {
+									contentElem.style.opacity = '1';
+								}
 
-                        evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-                        evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+								updateTableContent();
 
-                        evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
+							}
 
-                    }
+							//  If we already have data (e.g. viewType changed) end
 
-                    shellViewElem.style.overflow = '';
+
+							/*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
+								cellContentOverflow();
+							});*/
+
+						} else {
+
+							evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+
+							evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+							evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+
+							evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
+
+						}
+
+					}, 500);
 
                     toggleBookmarksBtn.addEventListener('click', function () {
 

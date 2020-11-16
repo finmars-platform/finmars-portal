@@ -28,8 +28,8 @@
             vm.key = vm.provider.credential.key;
         } else {
             vm.id = null;
-            vm.name = '';
-            vm.user_code = '';
+            vm.name = 'Config for ' + vm.provider.name;
+            vm.user_code = 'Config for ' + vm.provider.name;
             vm.type = credentialTypes.USERNAME_WITH_PASSWORD_AND_PRIVATE_KEY;
             vm.username = '';
             vm.password = '';

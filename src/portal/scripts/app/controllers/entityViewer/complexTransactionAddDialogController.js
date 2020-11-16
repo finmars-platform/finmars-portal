@@ -26,7 +26,8 @@
 
     var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
-    var transactionHelper = require('../../helpers/transaction.helper');
+	var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
+	var transactionHelper = require('../../helpers/transaction.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -36,6 +37,8 @@
 	) {
 
         var vm = this;
+		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
+
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
         vm.entityType = entityType;
 
@@ -62,8 +65,8 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
-        var tabsWithErrors = {};
-        var errorFieldsList = [];
+		vm.tabsWithErrors = {};
+		vm.errorFieldsList = [];
         var notCopiedTransaction = true;
         var inputsWithCalculations;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
@@ -534,7 +537,11 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            bookComplexTransaction(inputs, recalculationData);
+            transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+
+            if (inputs && inputs.length) {
+                bookComplexTransaction(inputs, recalculationData);
+            }
 
         };
 
@@ -708,7 +715,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
@@ -846,7 +853,7 @@
 
             if (errors.length) {
 
-                tabsWithErrors = {};
+				vm.tabsWithErrors = {};
 
                 errors.forEach(function (errorObj) {
 
@@ -860,15 +867,15 @@
                         var tabNameElem = document.querySelector(selectorString);
                         tabNameElem.classList.add('error-tab');
 
-                        if (!tabsWithErrors.hasOwnProperty(tabName)) {
-                            tabsWithErrors[tabName] = [errorObj.key];
+                        if (!vm.tabsWithErrors.hasOwnProperty(tabName)) {
+							vm.tabsWithErrors[tabName] = [errorObj.key];
 
-                        } else if (tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
-                            tabsWithErrors[tabName].push(errorObj.key);
+                        } else if (vm.tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+							vm.tabsWithErrors[tabName].push(errorObj.key);
 
                         }
 
-                        errorFieldsList.push(errorObj.key);
+                        vm.errorFieldsList.push(errorObj.key);
 
                     }
 
@@ -1452,9 +1459,9 @@
             console.log('changedInput', changedInput);
             console.log('resultInput', resultInput);
 
-        };*/
+        }; */
 
-        vm.onFieldChange = function (fieldKey) {
+        /* vm.onFieldChange = function (fieldKey) {
 
             if (fieldKey) {
 
@@ -1504,7 +1511,8 @@
                     vm.entity, vm.entityType, vm.tabs);
             }
 
-        };
+        }; */
+		vm.onFieldChange = sharedLogicHelper.onFieldChange;
 
 
         vm.init();

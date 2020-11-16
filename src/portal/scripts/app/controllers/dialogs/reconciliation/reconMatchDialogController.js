@@ -1612,14 +1612,15 @@
 
             var flatList = vm.reconViewerDataService.getFlatList();
 
+            // same code in reconciliationMatchEditorController.js
             vm.complexTransactionList = parentFlatList.filter(function (item) {
-                return item.___is_activated && !item.is_canceled && item.___type !== "group";
+				return item.___is_activated && !item.is_canceled && item.___type === "object";
             });
 
             vm.bankLinesList = flatList.filter(function (item) {
-                return item.___is_activated && item.___type !== "group";
+                return item.___is_activated && item.___type === "object";
             });
-
+			// < same code in reconciliationMatchEditorController.js >
 
             vm.syncStatuses();
 

@@ -15,6 +15,7 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
+                sorted: '=',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/customInputs/dropdown-select-view.html',
@@ -60,7 +61,8 @@
                 }*/
 
                 scope.getInputContainerClasses = function () {
-                    var classes = '';
+
+                	var classes = '';
 
                     if (scope.isDisabled) {
                         classes += "custom-input-is-disabled";
@@ -81,6 +83,7 @@
                     }
 
                     return classes;
+
                 };
 
                 scope.callFnForCustomBtn = function (actionData) {
@@ -227,7 +230,7 @@
                                 if (scope.menuOptions[i].id === scope.model) {
 
                                     scope.inputText = scope.menuOptions[i].name
-                                    scope.valueIsValid = true
+                                    // scope.valueIsValid = true
                                     break;
 
                                 }
@@ -236,7 +239,7 @@
 
                         } else {
                             scope.inputText = ""
-                            scope.valueIsValid = false
+                            // scope.valueIsValid = false
                         }
 
                     });
@@ -312,8 +315,8 @@
 
                     inputElem.addEventListener('focus', function () {
 
-                        inputContainer.classList.add('custom-input-focused');
-
+						scope.inputText = "";
+						inputContainer.classList.add('custom-input-focused');
                         scope.dropdownMenuHidden = true;
 
                         window.addEventListener('click', closeDDMenuOnClick);

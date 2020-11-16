@@ -1450,7 +1450,7 @@
                             result = false;
 
                             if (item.hasOwnProperty('key')) {
-                                if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel') {
+                                if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel' || item.key === 'layoutPlainText') {
                                     result = true;
                                 }
                             }

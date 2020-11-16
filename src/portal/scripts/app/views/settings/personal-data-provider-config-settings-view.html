@@ -10,40 +10,40 @@
     <md-dialog-content>
         <form class="p-24" name="credentialForm">
 
-            <div class="p-r-24 p-t-24" style="width: 300px;">
+            <!--<div class="p-r-24 p-t-24" style="width: 300px;">-->
 
-                <md-input-container class="width-100">
-                    <label for="">Config Name</label>
-                    <input type="text"
-                           required
-                           name="name"
-                           data-ng-model="vm.name">
-                    <div ng-messages="credentialForm.name.$error">
-                        <div ng-message="required">This is required.</div>
-                    </div>
-                </md-input-container>
+                <!--<md-input-container class="width-100">-->
+                    <!--<label for="">Config Name</label>-->
+                    <!--<input type="text"-->
+                           <!--required-->
+                           <!--name="name"-->
+                           <!--data-ng-model="vm.name">-->
+                    <!--<div ng-messages="credentialForm.name.$error">-->
+                        <!--<div ng-message="required">This is required.</div>-->
+                    <!--</div>-->
+                <!--</md-input-container>-->
 
-            </div>
+            <!--</div>-->
 
-            <div class="p-r-24" style="width: 300px;">
+            <!--<div class="p-r-24" style="width: 300px;">-->
 
-                <md-input-container class="width-100" data-ng-class="{'md-input-invalid': vm.userCodeIsTouched && vm.userCodeError}">
-                    <label data-ng-class="{'color-danger': vm.userCodeIsTouched && vm.userCodeError}">User Code</label>
-                    <input data-ng-class="{'ng-invalid': vm.userCodeIsTouched && vm.userCodeError}"
-                           required
-                           data-ng-model="vm.user_code"
-                           name="userCode"
-                           data-ng-keydown="vm.userCodeIsTouched = true"
-                           data-ng-keyup="vm.validateUserCode()">
-                    <div class="color-danger f-s-12" data-ng-if="vm.userCodeIsTouched && vm.userCodeError">
-                        Only alphabet, numbers and underscores allowed
-                    </div>
-                    <div ng-messages="credentialForm.userCode.$error">
-                        <div ng-message="required">This is required.</div>
-                    </div>
+                <!--<md-input-container class="width-100" data-ng-class="{'md-input-invalid': vm.userCodeIsTouched && vm.userCodeError}">-->
+                    <!--<label data-ng-class="{'color-danger': vm.userCodeIsTouched && vm.userCodeError}">User Code</label>-->
+                    <!--<input data-ng-class="{'ng-invalid': vm.userCodeIsTouched && vm.userCodeError}"-->
+                           <!--required-->
+                           <!--data-ng-model="vm.user_code"-->
+                           <!--name="userCode"-->
+                           <!--data-ng-keydown="vm.userCodeIsTouched = true"-->
+                           <!--data-ng-keyup="vm.validateUserCode()">-->
+                    <!--<div class="color-danger f-s-12" data-ng-if="vm.userCodeIsTouched && vm.userCodeError">-->
+                        <!--Only alphabet, numbers and underscores allowed-->
+                    <!--</div>-->
+                    <!--<div ng-messages="credentialForm.userCode.$error">-->
+                        <!--<div ng-message="required">This is required.</div>-->
+                    <!--</div>-->
 
-                </md-input-container>
-            </div>
+                <!--</md-input-container>-->
+            <!--</div>-->
 
             <div class="p-r-24" style="width: 300px;">
                 <md-input-container class="width-100">

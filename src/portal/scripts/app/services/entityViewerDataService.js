@@ -144,7 +144,7 @@
             viewSettings: {},
             lastViewSettings: {},
             ev_options: {},
-            activeLayoutConfiguration: {},
+            activeLayoutConfiguration: {}, // used to check layout for changes
             interfaceLayout: null,
             requestParameters: {},
             activeRequestParametersId: null,
@@ -1294,6 +1294,14 @@
         }
         // END: Methods for dashboard
 
+        function setMissingPrices(prices) {
+            data.missingPrices = prices;
+        }
+
+        function getMissingPrices() {
+            return data.missingPrices;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1499,6 +1507,9 @@
 
             setDataLoadStatus: setDataLoadStatus,
             didDataLoadEnd: didDataLoadEnd,
+
+            setMissingPrices: setMissingPrices,
+            getMissingPrices: getMissingPrices,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,
