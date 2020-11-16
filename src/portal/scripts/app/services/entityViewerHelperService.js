@@ -356,9 +356,8 @@
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
-        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
         getLayoutByUserCode: getLayoutByUserCode,
-        getDefaultLayout: getDefaultLayout
+        getDefaultLayout: getDefaultLayout,
         getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
 
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
