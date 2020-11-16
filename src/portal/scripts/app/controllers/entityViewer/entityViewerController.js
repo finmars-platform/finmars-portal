@@ -169,6 +169,7 @@
                                     });
 
                                     vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                 } else {
 
@@ -322,6 +323,7 @@
                                     });
 
                                     vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                 } else {
 
@@ -501,6 +503,7 @@
                                     });
 
                                     vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                 } else {
 
@@ -902,7 +905,7 @@
 
 													vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                                                     vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
-                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
+/*                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
 												} else {
 
@@ -1058,7 +1061,7 @@
 
 													vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                                                     vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
-                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
+ /*                                                   updateTableAfterEntitiesDeletion([activeObject.id]);
 
 												} else {
 
@@ -1305,7 +1308,7 @@
 
 													vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                                                     vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
-                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
+/*                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
 												} else {
 
