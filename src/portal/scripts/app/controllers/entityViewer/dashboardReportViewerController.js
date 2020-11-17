@@ -1960,12 +1960,17 @@
                 Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
 
                     vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
+                    vm.dashboardComponentDataService.setEntityViewerEventService(vm.entityViewerEventService);
 
                     vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED);
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET);
 
                     var columns = vm.entityViewerDataService.getColumns();
                     vm.dashboardComponentDataService.setViewerTableColumns(columns);
+
+
+
                     //vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
                 }).catch(function (error) {
