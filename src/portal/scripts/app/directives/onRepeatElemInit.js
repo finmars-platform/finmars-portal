@@ -12,7 +12,7 @@
 				isLast: "="
 			},
 			link: function (scope, elem, attr) {
-				console.log("testing onRepeatElem elem", elem, scope.isLast);
+
 				if (scope.onInit) {
 
 					// if onLastInit declared dont call onInit for last element
