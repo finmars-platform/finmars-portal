@@ -4,7 +4,7 @@
 
 	let directivesEvents = require("../services/directivesEvents");
 
-	module.exports = function () {
+	module.exports = function ($filter) {
 		return {
 			restrict: "E",
 			scope: {
@@ -12,16 +12,25 @@
 				eventService: "=",
 				chipsDeletion: "@",
 				onChipDeletion: "=",
+				orderChips: "@",
+				isDisabled: "=",
 				onChipClick: "=" // pass function with argument that contains object with next properties: chipsList
 			},
 			templateUrl: "views/directives/chips-list-view.html",
 			link: function (scope, elem, attr) {
-				console.log("testing chipsList", scope.chipsList);
-				console.log("testing eventService", scope.eventService);
+				// console.log("testing chipsList", scope.chipsList);
+				// console.log("testing eventService", scope.eventService);
+				// console.log("testing orderChips", scope.orderChips);
 				// scope.chipsToDisplay = [];
 				scope.hiddenChips = [];
 				scope.hiddenChipsTexts = "";
 
+				scope.orderOptions = null;
+
+				if (scope.orderChips) {
+					scope.orderOptions = "text"
+				}
+				// console.log("testing orderOptions", scope.orderOptions);
 				let chipsContainer, chipsContainerWidth = 0;
 
 				scope.getChipsListClasses = function () {
@@ -55,7 +64,7 @@
 				/* scope.$watch('chipsList', function () {
 
 					scope.chipsToDisplay = [];
-					console.log("testing chipsList changed", scope.chipsList);
+					// console.log("testing chipsList changed", scope.chipsList);
 					if (scope.chipsList) {
 
 						scope.chipsToDisplay = JSON.parse(JSON.stringify(scope.chipsList));
@@ -68,12 +77,16 @@
 
 					scope.hiddenChipsTexts = "";
 
-					scope.hiddenChips.forEach(function (hChip) {
+					let hiddenChips = scope.hiddenChips;
+
+                    if (scope.orderOptions) {
+                        hiddenChips = $filter('orderBy')(hiddenChips, scope.orderOptions);
+                    }
+
+                    hiddenChips.forEach(function (hChip) {
 
 						if (hChip.text) {
-
 							scope.hiddenChipsTexts = scope.hiddenChipsTexts + hChip.text + "; ";
-
 						}
 
 					});
@@ -96,21 +109,21 @@
 					setTimeout(function () { // wait for ng-repeat to finish rendering
 
 						scope.hiddenChips = [];
-						console.log("testing chipsContainer data", chipsContainer, chipsContainerWidth, updateScope);
+						// console.log("testing chipsContainer data", chipsContainer, chipsContainerWidth, updateScope);
 
 						let chipsElemsList = elem[0].querySelectorAll('.chipWrapElem');
 						let expandChipWidth = 74;
 						let chipsWidth = 0; // size of .expand-chip (width + margins)
 
 						if (chipsElemsList.length) {
-							console.log("testing hideOverflow chipsElemsList1", chipsElemsList);
+							// console.log("testing hideOverflow chipsElemsList1", chipsElemsList);
 						}
 
 						let hideChips = function (index) {
 							// scope.chipsToDisplay = scope.chipsList.slice(0, i);
-							console.log("testing hideOverflow hideChips", JSON.parse(JSON.stringify(scope.chipsList)));
+							// console.log("testing hideOverflow hideChips", JSON.parse(JSON.stringify(scope.chipsList)));
 							scope.hiddenChips = scope.chipsList.slice(index);
-							console.log("testing hideOverflow hideChips index", index);
+							// console.log("testing hideOverflow hideChips index", index);
 							getHiddenChipsTexts();
 							// scope.$apply();
 						}
@@ -122,7 +135,7 @@
 						for (let i = 0; i < chipsElemsList.length; i++) {
 
 							let cElem = chipsElemsList[i];
-							console.log("testing hideOverflow cElem.clientWidth", cElem.clientWidth);
+							// console.log("testing hideOverflow cElem.clientWidth", cElem.clientWidth);
 							chipsWidth += cElem.clientWidth;
 
 							if (i + 1 === chipsElemsList.length) { // for the last chip
@@ -130,7 +143,7 @@
 								if (chipsWidth > chipsContainerWidth) {
 
 									hideChips(i);
-									console.log("testing hideOverflowingChips triggered1");
+									// console.log("testing hideOverflowingChips triggered1");
 									break;
 
 								}
@@ -139,16 +152,16 @@
 							} else if (chipsWidth + expandChipWidth > chipsContainerWidth) {
 
 								hideChips(i);
-								console.log("testing hideOverflowingChips triggered2");
+								// console.log("testing hideOverflowingChips triggered2");
 								break;
 
 							}
 
-							console.log("testing hideOverflowingChips triggered3");
+							// console.log("testing hideOverflowingChips triggered3");
 							cElem.classList.remove('chip-hidden');
 
 						}
-						console.log("testing hideOverflowingChips hiddenChips", scope.hiddenChips);
+						// console.log("testing hideOverflowingChips hiddenChips", scope.hiddenChips);
 						if (updateScope) {
 							scope.$apply();
 						}
@@ -164,16 +177,25 @@
 					if (!Array.isArray(chipsForDeletion)) { // one chip deletion
 
 						chipsForDeletion = [chipsForDeletion]
-						scope.chipsList.splice(index, 1);
 
 					} else { // hidden chips deletion
-
-						let hiddenChipsStartIndex = scope.chipsList.length - scope.hiddenChips.length;
-						scope.chipsList.splice(hiddenChipsStartIndex);
-
 						scope.hiddenChips = [];
-
 					}
+
+					chipsForDeletion.forEach(function (chipData) {
+
+						for (let i = 0; i < scope.chipsList.length; i++) {
+
+							if (scope.chipsList[i].id === chipData.id) {
+
+								scope.chipsList.splice(i, 1);
+								break;
+
+							}
+
+						}
+
+					})
 
 					scope.hideOverflowingChips();
 
@@ -194,10 +216,7 @@
 
 					chipsContainer = elem[0].querySelector('.chipsListContainer');
 					chipsContainerWidth = chipsContainer.clientWidth;
-					console.log("testing chipsList", scope.chipsList);
-					/* if (scope.chipsList && scope.chipsList.length) {
-						scope.chipsToDisplay = JSON.parse(JSON.stringify(scope.chipsList));
-					} */
+					// console.log("testing chipsList", scope.chipsList);
 					if (scope.eventService) {
 
 						scope.eventService.addEventListener(directivesEvents.CHIPS_LIST_CHANGED, function (argumentsObj) {
@@ -208,7 +227,7 @@
 							*/
 							scope.chipsList = argumentsObj.chipsList;
 							scope.hideOverflowingChips(argumentsObj.updateScope);
-
+							// console.log("testing CHIPS_LIST_CHANGED chipsList", scope.chipsList);
 						});
 
 						scope.eventService.addEventListener(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED, function () {

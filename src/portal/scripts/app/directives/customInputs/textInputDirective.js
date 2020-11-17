@@ -42,10 +42,7 @@
 					scope.tooltipText = scope.smallOptions.tooltipText
 					scope.isReadonly = scope.smallOptions.readonly
 					scope.dialogParent = scope.smallOptions.dialogParent
-
-					if (scope.smallOptions.noIndicatorBtn) {
-						scope.noIndicatorBtn = true
-					}
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
 
 				}
 

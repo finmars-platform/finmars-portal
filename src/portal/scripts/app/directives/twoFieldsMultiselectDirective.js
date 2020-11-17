@@ -5,7 +5,7 @@
 
 	"use strict";
 
-	var ChipsListEventService = require('../services/eventService');
+	let ChipsListEventService = require('../services/eventService');
 	let directivesEvents = require("../services/directivesEvents");
 
 	module.exports = function ($mdDialog) {
@@ -38,13 +38,42 @@
 					scope.nameProperty = 'name';
 				}
 
-				let dialogTitle = scope.dialogTitle || scope.title;
+				// let dialogTitle = scope.dialogTitle || scope.title;
 				let items;
+				let orderOptions = {
+					options: true,
+					selectedOptions: true
+				}
+
+				scope.orderSelectedOpts = '';
 
 				// TIPS
 				// scope.smallOptions probable properties
 					// tooltipText: custom tolltip text
 					// noIndicatorBtn: whether to show button at the right part of input
+					// optionsOrdering: default alphabetical ordering for options; true by default
+					// selectedOptionsOrdering: default alphabetical ordering for selected options
+
+				if (scope.smallOptions) {
+
+					scope.tooltipText = scope.smallOptions.tooltipText
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
+
+					if (scope.smallOptions.optionsOrdering === false) {
+						orderOptions.options = false
+					}
+
+					if (scope.smallOptions.selectedOptionsOrdering === false) {
+						orderOptions.selectedOptions = false
+					}
+
+				}
+
+				scope.chipsOrderSettings = 'true';
+
+				if (scope.strictOrder || !orderOptions.selectedOptions) {
+					scope.chipsOrderSettings = ''
+				}
 
 				let defaultInputText = function () {
 
@@ -71,68 +100,68 @@
 
 				};
 
-					var arrayLikeInputText = function () {
+				var arrayLikeInputText = function () {
 
-						var propName = scope.nameProperty || 'name';
+					var propName = scope.nameProperty || 'name';
 
-						if (scope.model && scope.model.length) {
+					if (scope.model && scope.model.length) {
 
-							if (scope.items && scope.items.length) {
+						if (scope.items && scope.items.length) {
 
-								scope.inputText = '[';
-								scope.tooltipText = 'Values selected:';
-								var selItemsIds = scope.model;
+							scope.inputText = '[';
+							scope.tooltipText = 'Values selected:';
+							var selItemsIds = scope.model;
 
-								if (typeof selItemsIds[0] === 'object') { // multiselector returns array of objects
+							if (typeof selItemsIds[0] === 'object') { // multiselector returns array of objects
 
-									selItemsIds = selItemsIds.map(function (sItem) {
-										return sItem.id;
-									});
-								}
-
-								selItemsIds.forEach(function (sItemId, index) {
-
-									for (var i = 0; i < scope.items.length; i++) {
-
-										if (scope.items[i].id === sItemId) {
-
-											if (index > 0) { // add comma between selected items
-
-												scope.inputText = scope.inputText + ',';
-												scope.tooltipText = scope.tooltipText + ',';
-
-											}
-
-											scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
-											scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
-
-											break;
-										}
-									}
+								selItemsIds = selItemsIds.map(function (sItem) {
+									return sItem.id;
 								});
-
-								scope.inputText = scope.inputText + ' ]';
-
-							} else { // in case of error
-								scope.inputText = scope.model.length + ' items selected';
 							}
 
-						} else if (scope.nothingSelectedText) {
-							scope.inputText = scope.nothingSelectedText;
+							selItemsIds.forEach(function (sItemId, index) {
 
-						} else {
-							scope.inputText = "[ ]";
+								for (var i = 0; i < scope.items.length; i++) {
+
+									if (scope.items[i].id === sItemId) {
+
+										if (index > 0) { // add comma between selected items
+
+											scope.inputText = scope.inputText + ',';
+											scope.tooltipText = scope.tooltipText + ',';
+
+										}
+
+										scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
+										scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
+
+										break;
+									}
+								}
+							});
+
+							scope.inputText = scope.inputText + ' ]';
+
+						} else { // in case of error
+							scope.inputText = scope.model.length + ' items selected';
 						}
-					};
+
+					} else if (scope.nothingSelectedText) {
+						scope.inputText = scope.nothingSelectedText;
+
+					} else {
+						scope.inputText = "[ ]";
+					}
+				};
 
 				var setInputText = function () {
 
-				  if (scope.selectedItemsIndication === "array") {
-					arrayLikeInputText();
+					if (scope.selectedItemsIndication === "array") {
+						arrayLikeInputText();
 
-				  } else {
-					defaultInputText();
-				  }
+					} else {
+						defaultInputText();
+					}
 
 				};
 
@@ -155,7 +184,6 @@
 							scope.getDataMethod().then(function (resData) {
 
 								items = resData.results;
-								console.log("testing getItems2", items);
 								resolve(items);
 
 							}).catch(function (error) {
@@ -182,54 +210,56 @@
 
 						items = data;
 
-					$mdDialog.show({
-						controller: "TwoFieldsMultiselectDialogController as vm",
-						templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-						targetEvent: event,
-						multiple: true,
-						locals: {
-							data: {
-								items: items,
-								model: scope.model,
-								title: dialogTitle,
-								nameProperty: scope.nameProperty,
-								strictOrder: scope.strictOrder,
-								optionsCheckboxes: scope.optionsCheckboxes
+						$mdDialog.show({
+							controller: "TwoFieldsMultiselectDialogController as vm",
+							templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
+							targetEvent: event,
+							multiple: true,
+							locals: {
+								data: {
+									items: items,
+									model: scope.model,
+									// title: dialogTitle,
+									nameProperty: scope.nameProperty,
+									orderOptions: orderOptions,
+									strictOrder: scope.strictOrder,
+									optionsCheckboxes: scope.optionsCheckboxes
+								}
 							}
-						}
-					}).then(function (res) {
 
-							if (res.status === "agree") {
+						}).then(function (res) {
 
-								scope.model = res.selectedItems;
+								if (res.status === "agree") {
 
-								if (scope.selectedItemsIndication === 'chips') {
+									scope.model = res.selectedItems
 
-									formatDataForChips();
-									let chipsList = JSON.parse(JSON.stringify(scope.chipsList));
+									if (scope.selectedItemsIndication === 'chips') {
 
-									scope.chipsListEventService.dispatchEvent(
-										directivesEvents.CHIPS_LIST_CHANGED,
-										{chipsList: chipsList, updateScope: true}
-									);
+										formatDataForChips();
+										let chipsList = JSON.parse(JSON.stringify(scope.chipsList));
+
+										scope.chipsListEventService.dispatchEvent(
+											directivesEvents.CHIPS_LIST_CHANGED,
+											{chipsList: chipsList, updateScope: true}
+										);
+
+									}
+
+									if (scope.onChangeCallback) {
+
+										setTimeout(function () {
+
+											scope.onChangeCallback();
+
+										}, 500);
+
+									} else if (ngModel) { // old method but still used in some places
+										ngModel.$setViewValue(res.selectedItems);
+									}
 
 								}
 
-								if (scope.onChangeCallback) {
-
-									setTimeout(function () {
-
-										scope.onChangeCallback();
-
-									}, 500);
-
-								} else if (ngModel) { // old method but still used in some places
-									ngModel.$setViewValue(res.selectedItems);
-								}
-
-							}
-
-						});
+							});
 
 					});
 
@@ -263,7 +293,7 @@
 						});
 
 					}
-					console.log("testing formatDataForChips", scope.chipsList);
+
 				};
 
 				let init = function () {
@@ -285,7 +315,7 @@
 									}
 
 									if (optionId === chipData.id) {
-										console.log("testing onChipDeletion option to delete", scope.model[i], chipData);
+
 										scope.model.splice(i, 1);
 										break;
 
@@ -294,8 +324,6 @@
 								}
 
 							});
-
-							console.log("testing onChipRemove after", scope.model, scope.chipsList);
 
 						};
 
@@ -333,12 +361,6 @@
 						}
 
 					});
-
-
-					scope.resizeInput = function () {
-						let customInputCont = elem[0].querySelector('.custom-input-container');
-						customInputCont.style.width = '500px';
-					};
 
 				};
 

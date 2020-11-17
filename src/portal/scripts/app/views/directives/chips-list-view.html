@@ -3,8 +3,9 @@
 
     <!--<div ng-repeat="chip in chipsToDisplay | orderBy: 'order' track by chip.id"
          class="chip-wrap">-->
-    <div ng-repeat="chip in chipsList track by chip.id"
-         class="chip-wrap chip-hidden chipWrapElem" ng-init="$last && hideOverflowingChips(true)">
+    <div ng-repeat="chip in chipsList | orderBy: orderOptions track by chip.id"
+         class="chip-wrap chip-hidden chipWrapElem"
+         ng-init="$last && hideOverflowingChips(true)">
 
         <div class="chip-div chipDivElem"
              ng-click="onChipClickMethod(chip)">
@@ -13,7 +14,7 @@
                   class="chip-list-text"></div>
 
             <md-button ng-if="chipsDeletion"
-                       ng-click="deleteChips(chip, $index)"
+                       ng-click="deleteChips(chip)"
                        class="chip-deletion-btn">
                 <span class="material-icons">cancel</span>
             </md-button>
@@ -33,8 +34,8 @@
             <div class="chip-list-text">+{{hiddenChips.length}}</div>
 
              <md-button ng-if="chipsDeletion"
-                       ng-click="deleteChips(hiddenChips)"
-                       class="chip-deletion-btn">
+                        ng-click="deleteChips(hiddenChips)"
+                        class="chip-deletion-btn">
                 <span class="material-icons">cancel</span>
             </md-button>
 

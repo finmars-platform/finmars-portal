@@ -2710,6 +2710,10 @@ md-checkbox.md-indeterminate .md-icon:after {
     background-color: rgba(216, 216, 216, 1);
   }
 
+  &:focus {
+    outline: none;
+  }
+
   .chip-deletion-btn {
     position: absolute;
     display: flex;
@@ -2731,7 +2735,7 @@ md-checkbox.md-indeterminate .md-icon:after {
     }
 
     .material-icons {
-      color: @grey;
+      color: @gray;
       font-size: 16px;
     }
 
@@ -2764,5 +2768,19 @@ md-checkbox.md-indeterminate .md-icon:after {
 .chip-hidden {
   position: absolute;
   visibility: hidden;
+}
+
+.chips-list-container.chips-list-disabled {
+
+  .chip-div {
+    &:hover {
+      background-color: rgb(235, 235, 235);
+    }
+
+    .chip-deletion-btn:hover {
+      opacity: 1;
+    }
+  }
+
 }
 // < chips >
