@@ -5,7 +5,7 @@
 <div data-ng-if="vm.checkReadyStatus()">
 
     <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
-         class="entity-editor-fixed-fields-container"
+         class="entity-editor-fixed-area"
          data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">
         <div layout="row"
              class="entity-editor-row">
@@ -96,8 +96,8 @@
             </div>-->
         </div>
 
-        <div layout="row"
-             class="entity-editor-row">
+<!--        <div layout="row"
+             class="entity-editor-row">-->
 
 <!--            <div class="ev-data-field"
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
@@ -149,11 +149,11 @@
                 </md-input-container>&ndash;&gt;
 
             </div>-->
-        </div>
+<!--        </div>-->
 
-        <div class="entity-editor-divider-holder">
+<!--        <div class="entity-editor-divider-holder">
             <div></div>
-        </div>
+        </div>-->
     </div>
 
     <!--<div data-ng-if="vm.fixedArea.isActive"
