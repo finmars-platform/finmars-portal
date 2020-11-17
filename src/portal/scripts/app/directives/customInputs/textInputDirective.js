@@ -39,80 +39,83 @@
 
 				if (scope.smallOptions) {
 
-				scope.tooltipText = scope.smallOptions.tooltipText
-				scope.isReadonly = scope.smallOptions.readonly
-				scope.dialogParent = scope.smallOptions.dialogParent
+					scope.tooltipText = scope.smallOptions.tooltipText
+					scope.isReadonly = scope.smallOptions.readonly
+					scope.dialogParent = scope.smallOptions.dialogParent
 
-				if (scope.smallOptions.noIndicatorBtn) {
-					scope.noIndicatorBtn = true
+					if (scope.smallOptions.noIndicatorBtn) {
+						scope.noIndicatorBtn = true
+					}
+
 				}
-
-			}
 
 				scope.getInputContainerClasses = function () {
 
-		  var classes = "";
+					var classes = "";
 
-		  if (scope.isDisabled) {
-			classes += "custom-input-is-disabled";
+					if (scope.isDisabled) {
+						classes += "custom-input-is-disabled";
 
-		  } else if (scope.error) {
-			classes = 'custom-input-error';
+					} else if (scope.error) {
+						classes = 'custom-input-error';
 
-		  } else if (stylePreset) {
-			classes = 'custom-input-preset' + stylePreset;
+					} else if (stylePreset) {
+						classes = 'custom-input-preset' + stylePreset;
 
-		  } else if (scope.valueIsValid) {
-			classes = 'custom-input-is-valid';
+					} else if (scope.valueIsValid) {
+						classes = 'custom-input-is-valid';
+					}
 
-		  }
+					if (scope.noIndicatorBtn) {
+						classes += " no-indicator-btn";
+					}
 
-		  if (scope.noIndicatorBtn) {
-			classes += " no-indicator-btn";
-		  }
+					return classes;
 
-		  return classes;
-
-		};
+				};
 
 				scope.onInputChange = function () {
 
-		  scope.error = "";
-		  stylePreset = "";
-		  scope.valueIsValid = false;
+					scope.error = "";
+					stylePreset = "";
+					scope.valueIsValid = false;
 
-		  if (scope.model) {
-			scope.valueIsValid = true;
+					if (scope.model) {
+						scope.valueIsValid = true;
 
-		  } else {
-			if (scope.smallOptions && scope.smallOptions.notNull) {
-			  scope.error = "Field should not be null";
-			}
-		  }
+					} else {
 
-		  if (scope.onChangeCallback) {
-			setTimeout(function () {
-			  scope.onChangeCallback();
-			}, 0);
-		  }
-		};
+						if (scope.smallOptions && scope.smallOptions.notNull) {
+							scope.error = "Field should not be null";
+						}
+
+					}
+
+					if (scope.onChangeCallback) {
+
+						setTimeout(function () {
+							scope.onChangeCallback();
+						}, 0);
+
+					}
+				};
 
 				var applyCustomStyles = function () {
 
-		  Object.keys(scope.customStyles).forEach(function (className) {
+				Object.keys(scope.customStyles).forEach(function (className) {
 
-			var elemClass = "." + className;
-			var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
+					var elemClass = "." + className;
+					var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-			if (elemToApplyStyles.length) {
+					if (elemToApplyStyles.length) {
 
-			  elemToApplyStyles.forEach(function (htmlNode) {
-				htmlNode.style.cssText = scope.customStyles[className];
-			  })
+						elemToApplyStyles.forEach(function (htmlNode) {
+							htmlNode.style.cssText = scope.customStyles[className];
+						})
 
-			}
+					}
 
-		  });
+				});
 
 		};
 
@@ -171,50 +174,52 @@
 
 				var initScopeWatchers = function () {
 
-		  scope.$watch("model", function () {
-			if (scope.error && scope.model) {
-			  scope.error = "";
-			}
-		  });
+					scope.$watch("model", function () {
+						if (scope.error && scope.model) {
+							scope.error = "";
+						}
+					});
 
-		  if (scope.eventSignal) {
-			// this if prevents watcher below from running without need
+					if (scope.eventSignal) {
+					// this if prevents watcher below from running without need
 
-			scope.$watch("eventSignal", function () {
+						scope.$watch("eventSignal", function () {
 
-			  if (scope.eventSignal && scope.eventSignal.key) {
+							if (scope.eventSignal && scope.eventSignal.key) {
 
-				switch (scope.eventSignal.key) {
+								switch (scope.eventSignal.key) {
 
-				  case "mark_not_valid_fields":
-					if (scope.smallOptions &&
-						scope.smallOptions.notNull &&
-						!scope.model) {
+									case "mark_not_valid_fields":
+										if (scope.smallOptions &&
+											scope.smallOptions.notNull &&
+											!scope.model) {
 
-					  scope.error = "Field should not be null";
+											scope.error = "Field should not be null";
+
+										}
+
+										break;
+
+								case "error":
+									scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+									break;
+
+								case "set_style_preset1":
+									stylePreset = 1;
+									break;
+
+								case "set_style_preset2":
+									stylePreset = 2;
+									break;
+								}
+
+								scope.eventSignal = {};
+							}
+						});
 
 					}
 
-					break;
-
-				  case "error":
-					scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
-					break;
-
-				  case "set_style_preset1":
-					stylePreset = 1;
-					break;
-
-				  case "set_style_preset2":
-					stylePreset = 2;
-					break;
-				}
-
-				scope.eventSignal = {};
-			  }
-			});
-		  }
-		};
+				};
 
 				var initEventListeners = function () {
 
