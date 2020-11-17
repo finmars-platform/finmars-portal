@@ -228,7 +228,7 @@
                                 if (scope.menuOptions[i].id === scope.model) {
 
                                     scope.inputText = scope.menuOptions[i].name
-                                    scope.valueIsValid = true
+                                    // scope.valueIsValid = true
                                     break;
 
                                 }
@@ -237,7 +237,7 @@
 
                         } else {
                             scope.inputText = ""
-                            scope.valueIsValid = false
+                            // scope.valueIsValid = false
                         }
 
                     });
