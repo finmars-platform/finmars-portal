@@ -8,6 +8,7 @@
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
 
+    // DEPRECATED
     module.exports = function ($mdDialog) {
         return {
             restriction: 'E',

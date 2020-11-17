@@ -3,6 +3,7 @@
     'use strict';
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+    var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
     var uiService = require('../../services/uiService');
@@ -268,6 +269,38 @@
                         scope.readyStatus.disabled = false;
 
                     });
+
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET, function () {
+
+                        var entityViewerDataService = scope.dashboardComponentDataService.getEntityViewerDataService();
+                        var entityViewerEventService = scope.dashboardComponentDataService.getEntityViewerEventService();
+
+                        scope.missingPricesData = entityViewerDataService.getMissingPrices();
+
+                        entityViewerEventService.addEventListener(evEvents.MISSING_PRICES_LOAD_END, function () {
+
+                            scope.missingPricesData = entityViewerDataService.getMissingPrices()
+
+                        });
+
+                    })
+
+                };
+
+                scope.openMissingPricesDialog = function($event){
+
+                    $mdDialog.show({
+                        controller: 'ReportPriceCheckerDialogController as vm',
+                        templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {
+                                missingPricesData: scope.missingPricesData,
+                                evDataService: scope.evDataService
+                            }
+                        }
+                    })
 
                 };
 

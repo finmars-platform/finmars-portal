@@ -12,6 +12,8 @@
 
     var reportHelper = require('../../helpers/reportHelper');
 
+    var pricesCheckerService = require('../../services/reports/pricesCheckerService');
+
     var requestData = function (evDataService) {
 
         return new Promise(function (resolve, reject) {
@@ -153,7 +155,7 @@
 
         reportOptions.task_id = null;
 
-        if(entityType === 'pl-report') {
+        if (entityType === 'pl-report') {
             reportOptions.date_field = 'accounting_date';
         }
 
@@ -189,6 +191,55 @@
 
         });
 
+
+        // Price checker below
+
+        if (entityType !== 'transaction-report') {
+
+            pricesCheckerService.check(reportOptions).then(function (data) {
+
+                data.items = data.items.map(function (item) {
+
+                    if (item.type === 'missing_principal_pricing_history' || item.type === 'missing_accrued_pricing_history') {
+
+                        data.item_instruments.forEach(function (instrument) {
+
+                            if (item.id === instrument.id) {
+                                item.instrument_object = instrument;
+                            }
+
+                        })
+
+                    }
+
+
+                    if (item.type === 'fixed_calc' || item.type === 'stl_cur_fx' || item.type === 'missing_instrument_currency_fx_rate') {
+
+                        data.item_currencies.forEach(function (currency) {
+
+                            if (item.transaction_currency_id === currency.id) {
+                                item.currency_object = currency;
+                            }
+
+                            if (item.id === currency.id) {
+                                item.currency_object = currency;
+                            }
+
+                        })
+
+                    }
+
+                    return item
+
+                });
+
+                entityViewerDataService.setMissingPrices(data);
+
+                entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END)
+
+            });
+
+        }
     };
 
 
