@@ -125,6 +125,27 @@
         var errorFieldsList = [];
         var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
+        var bigDrawerResizeButton;
+
+        var onBigDrawerResizeButtonClick = function () {
+            if (vm.fixedAreaPopup.tabColumns === 6) {
+                return;
+            }
+
+            vm.fixedAreaPopup.tabColumns = 6;
+            $scope.$apply();
+            const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+            $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
+            bigDrawerResizeButton.classList.add('display-none');
+            bigDrawerResizeButton.classList.remove('display-block');
+        };
+
+        setTimeout(() => {
+            bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
+            bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick)
+        }, 0);
+
+
         vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
 
@@ -610,7 +631,13 @@
                     vm.fixedAreaPopup.tabColumns = columns;
                     const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
                     $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
-                    $bigDrawer.showPin(vm.fixedAreaPopup.tabColumns !== 6)
+                    if (vm.fixedAreaPopup.tabColumns !== 6) {
+                        bigDrawerResizeButton.classList.remove('display-none');
+                        bigDrawerResizeButton.classList.add('display-block');
+                    } else {
+                        bigDrawerResizeButton.classList.remove('display-block');
+                        bigDrawerResizeButton.classList.add('display-none');
+                    }
                 }
 
                 vm.getAttributeTypes().then(function () {

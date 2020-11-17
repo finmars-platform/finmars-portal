@@ -8,12 +8,11 @@
 
         let _this = this;
 
-
         _this._id = 'root';
 
         _this.drawersPromise = null;
 
-        let backdropElem, drawerElem, drawerWrap, drawerContainer, drawerPin;
+        let backdropElem, drawerElem, drawerWrap, drawerContainer, resizeButton = null;
 		let sidenavWidth = 330, viewportWidth, drawerMaxWidth, currentWidthPercent = 100, drawerCurrentWidth, drawerHeight,
 			drawerWidthAnimationDuration = 500; // same as width transition duration
 
@@ -50,24 +49,6 @@
         }
 
         this.setWidthPercent = setWidthPercent;
-
-		function showPin (isShowPin) {
-
-		    if (!drawerPin) {
-		        return ;
-            }
-
-		    if (isShowPin) {
-		        drawerPin.classList.remove('display-none');
-		        drawerPin.classList.add('display-block');
-            } else {
-                drawerPin.classList.add('display-none');
-                drawerPin.classList.remove('display-block');
-            }
-
-        }
-
-		this.showPin = showPin;
 
         this.show = function (options) {
 
@@ -108,10 +89,6 @@
                 drawerContainer = document.createElement('div');
                 drawerContainer.classList.add('big-drawer-container');
 
-                drawerPin = document.createElement('div');
-                drawerPin.classList.add('big-drawer-pin');
-                drawerPin.innerHTML = `<ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>`
-
 				calcDrawerContainerSize();
 				if (options.widthPercent) {
 				    setWidthPercent(options.widthPercent);
@@ -121,14 +98,11 @@
                 $(drawerContainer).html(tpl);
                 $(drawerContainer).children().data('$ngControllerController', ctrl);
 
-                drawerPin = document.createElement('div');
-                drawerPin.classList.add('big-drawer-pin');
-                drawerPin.innerHTML = `<ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>`
-                showPin(options.showPin);
-                $(drawerContainer).append(drawerPin)
-
-                if (options.onPinClickCallback) {
-                    drawerPin.addEventListener('click', options.onPinClickCallback)
+                if (options.addResizeButton) {
+                    resizeButton = document.createElement('div');
+                    resizeButton.classList.add('big-drawer-resize-button', 'onResizeButtonClick');
+                    resizeButton.innerHTML = `<ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>`
+                    $(drawerContainer).append(resizeButton)
                 }
 
                 // in case of multiple drawers
@@ -198,7 +172,6 @@
             show: service.show,
             hide: service.hide,
             setWidthPercent: service.setWidthPercent,
-            showPin: service.showPin
         }
 
     }
