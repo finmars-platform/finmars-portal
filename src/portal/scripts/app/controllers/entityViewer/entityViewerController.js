@@ -462,9 +462,7 @@
                             controller: 'EntityViewerEditDialogController as vm',
                             templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
                             widthPercent: bigDrawerWidthPercent,
-                            onPinClickCallback: function () {
-                                console.log('onPinClickCallback')
-                            },
+                            addResizeButton: true,
                             locals: {
                                 entityType: entitytype,
                                 entityId: activeObject.id,
