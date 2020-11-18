@@ -187,11 +187,7 @@
 
 					if (scope.onChipDeletion) {
 
-						setTimeout(function () {
-
-							scope.onChipDeletion(chipsForDeletion);
-
-						}, 500);
+						scope.onChipDeletion(chipsForDeletion);
 
 					}
 
