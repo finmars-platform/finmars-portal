@@ -100,7 +100,7 @@
             tabColumns: null,
         };
 
-        vm.instrumentTypeSelectorOptions = [];
+        vm.typeSelectorOptions = [];
 
         vm.currentMember = null;
 
@@ -120,6 +120,7 @@
         vm.activeTab = null;
 
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+        console.log('keysOfFixedFieldsAttrs', keysOfFixedFieldsAttrs)
 
         var tabsWithErrors = {};
         var errorFieldsList = [];
@@ -142,6 +143,11 @@
 
         setTimeout(() => {
             bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
+
+            if (!bigDrawerResizeButton) {
+                return;
+            }
+
             bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick)
         }, 0);
 
@@ -632,11 +638,11 @@
                     const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
                     $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
                     if (vm.fixedAreaPopup.tabColumns !== 6) {
-                        bigDrawerResizeButton.classList.remove('display-none');
-                        bigDrawerResizeButton.classList.add('display-block');
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
                     } else {
-                        bigDrawerResizeButton.classList.remove('display-block');
-                        bigDrawerResizeButton.classList.add('display-none');
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
                     }
                 }
 
@@ -673,6 +679,8 @@
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
                     vm.entity = data;
+
+                    console.log('vm.entity', vm.entity)
 
                     vm.entity.$_isValid = true;
                     vm.readyStatus.entity = true;
@@ -2029,14 +2037,29 @@
 
                 vm.fixedAreaPopup.fields.showByDefault = {key: 'Show by default', value: vm.showByDefault, options: vm.showByDefaultOptions}
 
+                if (vm.fixedAreaPopup.fields.hasOwnProperty('type')) {
+                    const attr = vm.entityAttrs.find(attr => attr.key === 'type')
+
+                    attr && attr.value_entity && entityResolverService.getListLight(attr.value_entity).then((data) => {
+                        console.log('entityResolverService.getListLight', data);
+                        vm.typeSelectorOptions = data.results
+                        vm.fixedAreaPopup.fields.type.options = vm.typeSelectorOptions;
+                    })
+                }
+
                 if (vm.fixedAreaPopup.fields.hasOwnProperty('instrument_type')) {
 
                     instrumentTypeService.getListLight().then(function (data) {
-                        vm.instrumentTypeSelectorOptions = data.results
-                        vm.fixedAreaPopup.fields.instrument_type.options = vm.instrumentTypeSelectorOptions;
+                        vm.typeSelectorOptions = data.results
+                        vm.fixedAreaPopup.fields.instrument_type.options = vm.typeSelectorOptions;
                     })
 
                 }
+
+                console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
+                console.log('vm.entityAttrs', vm.entityAttrs)
+
+
 
             });
         };

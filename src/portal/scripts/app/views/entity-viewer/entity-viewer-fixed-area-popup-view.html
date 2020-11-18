@@ -55,6 +55,15 @@
                          class="ev-editor-field"></dropdown-select>
     </div>
 
+    <div data-ng-if="vm.fields.type && vm.tabColumns < 3">
+        <dropdown-select label="{{vm.fields.type.name}}"
+                         model="vm.fields.type.value"
+                         placeholder-text="{{vm.fields.type.name}}"
+                         menu-options="vm.fields.type.options"
+                         small-options="{tooltipText: '{{vm.fields.type.name}}', indicatorBtnIcon: 'type1'}"
+                         class="ev-editor-field"></dropdown-select>
+    </div>
+
 <!--    <div class="ev-data-field"
          flex="100">
         <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"

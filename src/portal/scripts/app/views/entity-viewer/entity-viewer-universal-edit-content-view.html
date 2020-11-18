@@ -37,11 +37,20 @@
                         'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
                         'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
                     }">
-                <dropdown-select label="Instrument type"
+                <dropdown-select data-ng-if="vm.entityType === 'instrument'"
+                                 label="Instrument type"
                                  model="vm.entity.instrument_type"
                                  placeholder-text="Instrument type"
-                                 menu-options="vm.instrumentTypeSelectorOptions"
+                                 menu-options="vm.typeSelectorOptions"
                                  small-options="{tooltipText: 'Instrument type', indicatorBtnIcon: 'type1'}"
+                                 class="ev-editor-field"></dropdown-select>
+
+                <dropdown-select data-ng-if="vm.entityType === 'account'"
+                                 label="Type"
+                                 model="vm.entity.type"
+                                 placeholder-text="Type"
+                                 menu-options="vm.typeSelectorOptions"
+                                 small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
                                  class="ev-editor-field"></dropdown-select>
             </div>
 
