@@ -51,7 +51,8 @@
                                             event-service="chipsListEventService"
                                             chips-deletion="'true'"
                                             on-chip-deletion="onChipDeletion"
-                                            order-chips="{{chipsOrderSettings}}"></chips-list>
+                                            order-chips="{{chipsOrderSettings}}"
+                                            dropdown-menu-options="dropdownMenuOptions"></chips-list>
 
                             </div>
 
@@ -93,6 +94,27 @@
 
                     </div>
                 </div>
+            </div>
+
+            <div ng-show="dropdownMenuShown"
+                 class="custom-input-sel-menu-container custom-input-dropdown-div multiselectorMenuContainer">
+
+                <div class="custom-input-sel-menu-block">
+
+                    <input type="text"
+                           placeholder="Looking for "
+                           ng-model="menuFilterTerms"
+                           class="custom-input-dropdown-menu-filter dropdownMenuFilter"
+                           ng-init="addDropdownMenuListeners()"
+                           ng-blur="onDropdownMenuFilterBlur()" />
+
+                    <div data-ng-repeat="option in dropdownMenuOptions | orderBy: orderMenuOptions | filter: menuFilterTerms"
+                         data-ng-mousedown="selectOption(option, $index)"
+                         data-ng-bind="option[nameProperty]"
+                         class="custom-input-sel-option"></div>
+                    <!--  data-ng-repeat="option in menuOptions | filter: inputText | orderBy:'-'+option.name"-->
+                </div>
+
             </div>
 
         </div>

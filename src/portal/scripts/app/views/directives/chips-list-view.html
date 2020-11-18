@@ -1,14 +1,12 @@
 <div class="chips-list-container overflow-hidden chipsListContainer"
      ng-class="getChipsListClasses()">
 
-    <!--<div ng-repeat="chip in chipsToDisplay | orderBy: 'order' track by chip.id"
-         class="chip-wrap">-->
     <div ng-repeat="chip in chipsList | orderBy: orderOptions track by chip.id"
          class="chip-wrap chip-hidden chipWrapElem"
          ng-init="$last && hideOverflowingChips(true)">
 
         <div class="chip-div chipDivElem"
-             ng-click="onChipClickMethod(chip)">
+             ng-click="onChipClickMethod(chip, $event)">
 
             <div ng-bind-html="chip.text"
                   class="chip-list-text"></div>

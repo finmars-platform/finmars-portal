@@ -79,10 +79,12 @@
 			if (vm.optionsCheckboxes) {
 
 				vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+
 					return {
 						id: selItem.id,
 						isChecked: selItem.isChecked || false
 					};
+
 				});
 
 			} else {

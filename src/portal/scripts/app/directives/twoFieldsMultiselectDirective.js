@@ -33,19 +33,20 @@
 
 				scope.inputText = '';
 				scope.error = '';
+				scope.orderOptions = {
+					options: true,
+					selectedOptions: true
+				};
 
 				if (!scope.nameProperty) {
 					scope.nameProperty = 'name';
 				}
 
+				scope.orderSelectedOpts = '';
+
 				// let dialogTitle = scope.dialogTitle || scope.title;
 				let items;
-				let orderOptions = {
-					options: true,
-					selectedOptions: true
-				}
-
-				scope.orderSelectedOpts = '';
+				let selOptionsIdsList = [];
 
 				// TIPS
 				// scope.smallOptions probable properties
@@ -60,20 +61,36 @@
 					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
 
 					if (scope.smallOptions.optionsOrdering === false) {
-						orderOptions.options = false
+						scope.orderOptions.options = false
 					}
 
 					if (scope.smallOptions.selectedOptionsOrdering === false) {
-						orderOptions.selectedOptions = false
+						scope.orderOptions.selectedOptions = false
 					}
 
 				}
 
 				scope.chipsOrderSettings = 'true';
 
-				if (scope.strictOrder || !orderOptions.selectedOptions) {
+				if (scope.strictOrder || !scope.orderOptions.selectedOptions) {
 					scope.chipsOrderSettings = ''
 				}
+
+				let getSelectedOptionsIds = function () {
+
+					selOptionsIdsList = scope.model.map(function (selOption) {
+
+						let optionId = selOption;
+
+						if (typeof selOption === 'object') {
+							optionId = selOption.id;
+						}
+
+						return optionId;
+
+					});
+
+				};
 
 				let defaultInputText = function () {
 
@@ -110,7 +127,7 @@
 
 							scope.inputText = '[';
 							scope.tooltipText = 'Values selected:';
-							var selItemsIds = scope.model;
+							/*var selItemsIds = scope.model;
 
 							if (typeof selItemsIds[0] === 'object') { // multiselector returns array of objects
 
@@ -119,7 +136,8 @@
 								});
 							}
 
-							selItemsIds.forEach(function (sItemId, index) {
+							selItemsIds.forEach(function (sItemId, index) { */
+							selOptionsIdsList.forEach(function (sItemId, index) {
 
 								for (var i = 0; i < scope.items.length; i++) {
 
@@ -221,7 +239,7 @@
 									model: scope.model,
 									// title: dialogTitle,
 									nameProperty: scope.nameProperty,
-									orderOptions: orderOptions,
+									orderOptions: scope.orderOptions,
 									strictOrder: scope.strictOrder,
 									optionsCheckboxes: scope.optionsCheckboxes
 								}
@@ -232,15 +250,16 @@
 								if (res.status === "agree") {
 
 									scope.model = res.selectedItems
+									getSelectedOptionsIds();
 
 									if (scope.selectedItemsIndication === 'chips') {
 
 										formatDataForChips();
-										let chipsList = JSON.parse(JSON.stringify(scope.chipsList));
+										getAvailableOptions();
 
 										scope.chipsListEventService.dispatchEvent(
 											directivesEvents.CHIPS_LIST_CHANGED,
-											{chipsList: chipsList, updateScope: true}
+											{chipsList: scope.chipsList, updateScope: true}
 										);
 
 									}
@@ -265,17 +284,25 @@
 
 				};
 
+				let getAvailableOptions = function () {
+
+				    if (items) {
+
+				        scope.dropdownMenuOptions = items.filter(function (item) {
+
+				            return !selOptionsIdsList.includes(item.id);
+
+                        });
+
+                    }
+
+                };
+
 				let formatDataForChips = function () {
 
 					if (scope.model && items) {
 
-						scope.chipsList = scope.model.map(function (selOption) {
-
-							let selOptId = selOption;
-
-							if (typeof selOptId === 'object') {
-								selOptId = selOption.id;
-							}
+						scope.chipsList = selOptionsIdsList.map(function (selOptId) {
 
 							for (let i = 0; i < items.length; i++) {
 
@@ -302,21 +329,49 @@
 
 					if (scope.selectedItemsIndication === 'chips') {
 
+						scope.dropdownMenuShown = false
+						scope.menuFilterTerms = ""
+						scope.dropdownMenuOptions = []
+						scope.orderMenuOptions = scope.nameProperty
+
+						if (scope.orderOptions.options === false) {
+							scope.orderMenuOptions = null
+						}
+
+						scope.onDropdownMenuFilterBlur = function () {
+							scope.dropdownMenuShown = false
+							scope.menuFilterTerms = ""
+						}
+
+						scope.addDropdownMenuListeners = function () {
+
+							let customInputContent = elem[0].querySelector(".customInputContent");
+							let dropdownMenuFilter = elem[0].querySelector('.dropdownMenuFilter');
+
+							customInputContent.addEventListener("click", function () {
+
+								scope.dropdownMenuShown = true
+								scope.$apply();
+
+								dropdownMenuFilter.focus();
+
+							});
+
+						};
+
 						scope.onChipDeletion = function (chipsData) {
 
 							chipsData.forEach(function (chipData) {
 
-								for (let i = 0; i < scope.model.length; i++) {
+								for (let i = 0; i < selOptionsIdsList.length; i++) {
 
-									let optionId = scope.model[i];
-
-									if (typeof scope.model[i] === 'object') {
-										optionId = scope.model[i].id;
-									}
+									let optionId = selOptionsIdsList[i];
 
 									if (optionId === chipData.id) {
 
 										scope.model.splice(i, 1);
+										selOptionsIdsList.splice(i, 1);
+
 										break;
 
 									}
@@ -327,11 +382,43 @@
 
 						};
 
+						scope.selectOption = function (option) {
+
+							let selOption = option.id;
+
+							if (scope.optionsCheckboxes) {
+
+								selOption = {
+									id: option.id,
+									isChecked: false
+								}
+
+							}
+
+							scope.model.push(selOption);
+							selOptionsIdsList.push(option.id);
+							formatDataForChips();
+
+							getAvailableOptions();
+
+							scope.chipsListEventService.dispatchEvent(
+								directivesEvents.CHIPS_LIST_CHANGED,
+								{chipsList: scope.chipsList, updateScope: true}
+							);
+
+						};
+
 						if (scope.model || scope.model.length) {
 
 							getItems().then(function () {
 
+                                getAvailableOptions();
 								formatDataForChips();
+
+								/* scope.chipsListEventService.dispatchEvent(
+								    directivesEvents.DROPDOWN_MENU_OPTIONS_CHANGED,
+                                    {optionsList: scope.dropdownMenuOptions}); */
+
 								scope.$apply();
 
 							});
@@ -345,7 +432,10 @@
 					}
 
 					scope.$watch('model', function () {
+
+						getSelectedOptionsIds();
 						setInputText();
+
 					});
 
 					scope.$watch('items', function () {
@@ -353,6 +443,7 @@
 						if (scope.items) {
 
 							items = JSON.parse(JSON.stringify(scope.items));
+							getAvailableOptions();
 
 							if (scope.selectedItemsIndication === 'chips') {
 								formatDataForChips();
