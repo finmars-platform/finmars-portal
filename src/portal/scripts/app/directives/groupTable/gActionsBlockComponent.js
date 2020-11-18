@@ -1761,7 +1761,10 @@
 
                     var data = {
                         entityType: scope.entityType,
-                        columns: scope.evDataService.getColumns(),
+                        contentSettings: {
+                            columns: scope.evDataService.getColumns(),
+                            groups: scope.evDataService.getGroups()
+                        },
                         content: scope.evDataService.getFlatList()
                     };
 
