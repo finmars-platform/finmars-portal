@@ -47,6 +47,7 @@
 				// let dialogTitle = scope.dialogTitle || scope.title;
 				let items;
 				let selOptionsIdsList = [];
+				let chipElem;
 
 				// TIPS
 				// scope.smallOptions probable properties
@@ -323,6 +324,37 @@
 
 				};
 
+				scope.callFnForCustomBtn = function (actionData, event) {
+
+					event.stopPropagation();
+
+					if (actionData.parameters) {
+						actionData.callback(actionData.parameters);
+					} else {
+						actionData.callback();
+					}
+
+				};
+
+				let applyCustomStyles = function () {
+
+					Object.keys(scope.customStyles).forEach(function (className) {
+
+						let elemClass = "." + className;
+						let elemToApplyStyles = elem[0].querySelectorAll(elemClass);
+
+						if (elemToApplyStyles.length) {
+
+							elemToApplyStyles.forEach(function (htmlNode) {
+								htmlNode.style.cssText = scope.customStyles[className]
+							})
+
+						}
+
+					});
+
+				};
+
 				let init = function () {
 
 					scope.chipsListEventService = new ChipsListEventService();
@@ -338,6 +370,8 @@
 							scope.orderMenuOptions = null
 						}
 
+						chipElem = elem[0].querySelector("chips-list");
+
 						scope.onDropdownMenuFilterBlur = function () {
 							scope.dropdownMenuShown = false
 							scope.menuFilterTerms = ""
@@ -345,15 +379,21 @@
 
 						scope.addDropdownMenuListeners = function () {
 
-							let customInputContent = elem[0].querySelector(".customInputContent");
+							let customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
 							let dropdownMenuFilter = elem[0].querySelector('.dropdownMenuFilter');
 
-							customInputContent.addEventListener("click", function () {
+							customInputContent.addEventListener("click", function (event) {
 
-								scope.dropdownMenuShown = true
-								scope.$apply();
+								let targetElem = event.target;
 
-								dropdownMenuFilter.focus();
+								if (customInputContent === targetElem) {
+
+									scope.dropdownMenuShown = true
+									scope.$apply();
+
+									dropdownMenuFilter.focus();
+
+								}
 
 							});
 
@@ -379,6 +419,8 @@
 								}
 
 							});
+
+							getAvailableOptions();
 
 						};
 
@@ -429,6 +471,10 @@
 
 						$(elem).click(scope.openMultiselectorDialog);
 
+					}
+
+					if (scope.customStyles) {
+						applyCustomStyles();
 					}
 
 					scope.$watch('model', function () {
