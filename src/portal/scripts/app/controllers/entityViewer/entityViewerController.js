@@ -457,6 +457,8 @@
                         break;
 
                     case 'instrument' :
+                    // case 'portfolio' :
+                    case 'account':
                         console.log('vm', vm)
                         $bigDrawer.show({
                             controller: 'EntityViewerEditDialogController as vm',
