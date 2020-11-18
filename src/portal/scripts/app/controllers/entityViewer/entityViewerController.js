@@ -456,12 +456,15 @@
 
                         break;
 
-                    case 'instrument' :
-                    case 'portfolio' :
+                    case 'instrument':
+                    case 'portfolio':
                     case 'account':
                     case 'counterparty':
                     case 'responsible':
                     case 'currency':
+                    case 'strategy-1':
+                    case 'strategy-2':
+                    case 'strategy-3':
 
                         console.log('vm', vm)
                         $bigDrawer.show({
