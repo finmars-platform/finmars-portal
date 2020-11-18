@@ -97,6 +97,7 @@
 
         vm.fixedAreaPopup = {
             fields: {},
+            entityType: vm.entityType,
             tabColumns: null,
         };
 
