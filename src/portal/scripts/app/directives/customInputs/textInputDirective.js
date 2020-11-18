@@ -99,20 +99,20 @@
 
 				var applyCustomStyles = function () {
 
-				Object.keys(scope.customStyles).forEach(function (className) {
+					Object.keys(scope.customStyles).forEach(function (className) {
 
-					var elemClass = "." + className;
-					var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
+						var elemClass = "." + className;
+						var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-					if (elemToApplyStyles.length) {
+						if (elemToApplyStyles.length) {
 
-						elemToApplyStyles.forEach(function (htmlNode) {
-							htmlNode.style.cssText = scope.customStyles[className];
-						})
+							elemToApplyStyles.forEach(function (htmlNode) {
+								htmlNode.style.cssText = scope.customStyles[className];
+							})
 
-					}
+						}
 
-				});
+					});
 
 				};
 
@@ -267,6 +267,7 @@
 					if (scope.customStyles) {
 						applyCustomStyles();
 					}
+
 				};
 
 				init();

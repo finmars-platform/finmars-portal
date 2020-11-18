@@ -1,4 +1,4 @@
-<div class="multiselect-input-container">
+<div class="multiselector-input-container">
 
     <div ng-if="selectedItemsIndication !== 'chips'">
         <md-input-container class="two-fields-multiselect-input"
@@ -27,9 +27,9 @@
 
             <div class="custom-input-main-container customInputBackgroundColor">
                 <div class="custom-input-borders">
-                    <div class="custom-input-content customInputContent">
+                    <div class="custom-input-content customInputContent" style="padding-right: 0;">
 
-                        <div class="flex-row flex-i-center">
+                        <div class="flex-row flex-i-center height-100">
 
                             <div style="flex: 0 0 36px;">
                                 <button data-ng-if="!noIndicatorBtn"
@@ -41,8 +41,7 @@
                                 </button>
                             </div>
 
-
-                            <div class="flex-0-1-100">
+                            <div class="multiselector-input-chips-wrap twoFieldsChipsWrap">
 
                                 <span ng-show="!chipsList.length" ng-bind="nothingSelectedText"></span>
 
@@ -52,7 +51,8 @@
                                             chips-deletion="'true'"
                                             on-chip-deletion="onChipDeletion"
                                             order-chips="{{chipsOrderSettings}}"
-                                            dropdown-menu-options="dropdownMenuOptions"></chips-list>
+                                            dropdown-menu-options="dropdownMenuOptions"
+                                            on-chip-click=""></chips-list>
 
                             </div>
 
@@ -63,7 +63,7 @@
                             <div class="custom-input-custom-btns-holder">
                                 <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
                                     <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
-                                            data-ng-click="callFnForCustomBtn(button.action)">
+                                            data-ng-click="callFnForCustomBtn(button.action, $event)">
                                         {{button.caption}}
                                         <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
                                                     size="24"
