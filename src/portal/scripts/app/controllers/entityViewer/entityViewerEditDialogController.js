@@ -54,6 +54,9 @@
         }
 
         vm.entityType = entityType;
+        vm.typeFieldName = vm.entityType === 'instrument' ? 'instrument_type' : 'type';
+        vm.typeFieldLabel = vm.entityType === 'instrument' ? 'Instrument type' : 'Type';
+
         vm.entityId = entityId;
 
         vm.entity = {$_isValid: true};
@@ -1943,7 +1946,8 @@
 
         vm.onPopupSaveCallback = function () {
             keysOfFixedFieldsAttrs.forEach((key) => {
-                vm.entity[key] = vm.fixedAreaPopup.fields[key].value;
+                const fieldKey = key === 'instrument_type' ? 'type' : key
+                vm.entity[key] = vm.fixedAreaPopup.fields[fieldKey].value;
             })
 
             if (vm.entityStatus !== vm.fixedAreaPopup.fields.status.value) {
@@ -1955,6 +1959,10 @@
                 vm.showByDefault = vm.fixedAreaPopup.fields.showByDefault.value
             }
 
+        };
+
+        vm.setTypeSelectorOptions = function (options) {
+            vm.typeSelectorOptions = options;
         };
 
         vm.init = function () {
@@ -2027,46 +2035,8 @@
 
             vm.getItem().then(function () {
                 getEntityStatus();
-
-                vm.fixedAreaPopup.fields = keysOfFixedFieldsAttrs.reduce((acc,key) => {
-                    const attr = vm.entityAttrs.find(entityAttr => entityAttr.key === key);
-
-                    return attr ?
-                        {
-                            ...acc,
-                            [key]: {name: attr.name, value: vm.entity[key]}
-                        } :
-                        acc;
-                }, {})
-
-                vm.fixedAreaPopup.fields.status = {key: 'Status', value: vm.entityStatus, options: vm.statusSelectorOptions}
-
-                vm.fixedAreaPopup.fields.showByDefault = {key: 'Show by default', value: vm.showByDefault, options: vm.showByDefaultOptions}
-
-                if (vm.fixedAreaPopup.fields.hasOwnProperty('type')) {
-                    const attr = vm.entityAttrs.find(attr => attr.key === 'type')
-
-                    attr && attr.value_entity && entityResolverService.getListLight(attr.value_entity).then((data) => {
-                        console.log('entityResolverService.getListLight', data);
-                        vm.typeSelectorOptions = data.results
-                        vm.fixedAreaPopup.fields.type.options = vm.typeSelectorOptions;
-                    })
-                }
-
-                if (vm.fixedAreaPopup.fields.hasOwnProperty('instrument_type')) {
-
-                    instrumentTypeService.getListLight().then(function (data) {
-                        vm.typeSelectorOptions = data.results
-                        vm.fixedAreaPopup.fields.instrument_type.options = vm.typeSelectorOptions;
-                    })
-
-                }
-
-                console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
-                console.log('vm.entityAttrs', vm.entityAttrs)
-
-
-
+                vm.fixedAreaPopup.fields = entityViewerHelperService.getFieldsForFixedAreaPopup(vm, keysOfFixedFieldsAttrs);
+                console.log('vm.fixedAreaPopup.fields', vm.fixedAreaPopup.fields)
             });
         };
 

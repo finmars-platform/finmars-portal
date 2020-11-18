@@ -46,15 +46,6 @@
                          class="ev-editor-field"></dropdown-select>
     </div>
 
-    <div data-ng-if="vm.fields.instrument_type && vm.tabColumns < 3">
-        <dropdown-select label="Instrument type"
-                         model="vm.fields.instrument_type.value"
-                         placeholder-text="Instrument type"
-                         menu-options="vm.fields.instrument_type.options"
-                         small-options="{tooltipText: 'Instrument type', indicatorBtnIcon: 'type1'}"
-                         class="ev-editor-field"></dropdown-select>
-    </div>
-
     <div data-ng-if="vm.fields.type && vm.tabColumns < 3">
         <dropdown-select label="{{vm.fields.type.name}}"
                          model="vm.fields.type.value"
@@ -64,73 +55,4 @@
                          class="ev-editor-field"></dropdown-select>
     </div>
 
-<!--    <div class="ev-data-field"
-         flex="100">
-        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
-                            entity-type="vm.entityType"
-                            entity="vm.entity"
-                            event-signal="vm.evEditorEvent"
-                            ev-editor-event-service="vm.evEditorEventService"
-                            ev-editor-data-service="vm.evEditorDataService"
-                            item="vm.fixedFieldsAttributes[0]"
-                            entity-change="vm.onFieldChange(fieldKey)"
-                            on-field-blur="vm.onNameInputBlur()"></bind-field-control>
-    </div>
-
-    <div class="ev-data-field"
-         flex="100">
-        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]"
-                            entity-type="vm.entityType"
-                            entity="vm.entity"
-                            event-signal="vm.evEditorEvent"
-                            ev-editor-event-service="vm.evEditorEventService"
-                            ev-editor-data-service="vm.evEditorDataService"
-                            item="vm.fixedFieldsAttributes[1]"
-                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-    </div>
-
-    <div class="ev-data-field"
-         flex="100">
-        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]"
-                            entity-type="vm.entityType"
-                            entity="vm.entity"
-                            ev-editor-event-service="vm.evEditorEventService"
-                            ev-editor-data-service="vm.evEditorDataService"
-                            item="vm.fixedFieldsAttributes[2]"
-                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-    </div>
-
-
-    <div class="ev-data-field"
-         flex="100">
-        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]"
-                            entity-type="vm.entityType"
-                            entity="vm.entity"
-                            ev-editor-event-service="vm.evEditorEventService"
-                            ev-editor-data-service="vm.evEditorDataService"
-                            item="vm.fixedFieldsAttributes[3]"
-                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-    </div>
-
-    <div class="ev-data-field"
-         flex="100">
-        <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]"
-                            entity-type="vm.entityType"
-                            entity="vm.entity"
-                            ev-editor-event-service="vm.evEditorEventService"
-                            ev-editor-data-service="vm.evEditorDataService"
-                            item="vm.fixedFieldsAttributes[4]"
-                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-    </div>
-
-    <div class="ev-data-field"
-         flex="100">
-        <dropdown-select label="Status"
-                         model="vm.entityStatus"
-                         placeholder-text="System List"
-                         menu-options="vm.statusSelectorOptions"
-                         small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
-                         on-change-callback="vm.entityStatusChanged()"
-                         class="ev-editor-field"></dropdown-select>
-    </div>-->
 </div>
