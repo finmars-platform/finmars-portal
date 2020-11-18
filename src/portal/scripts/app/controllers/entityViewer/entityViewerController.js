@@ -460,6 +460,9 @@
                     case 'portfolio' :
                     case 'account':
                     case 'counterparty':
+                    case 'responsible':
+                    case 'currency':
+
                         console.log('vm', vm)
                         $bigDrawer.show({
                             controller: 'EntityViewerEditDialogController as vm',
