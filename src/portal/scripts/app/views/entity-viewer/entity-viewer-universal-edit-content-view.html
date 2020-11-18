@@ -52,6 +52,14 @@
                                  menu-options="vm.typeSelectorOptions"
                                  small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
                                  class="ev-editor-field"></dropdown-select>
+
+                <div data-ng-if="vm.entityType === 'portfolio' || vm.entityType === 'counterparty'"
+                     class="ev-editor-field">
+                    <text-input
+                            label="Short name"
+                            placeholder-text="Short name"
+                            model="vm.entity.short_name"></text-input>
+                </div>
             </div>
 
             <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
