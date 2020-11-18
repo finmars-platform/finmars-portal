@@ -2031,7 +2031,12 @@
                 vm.fixedAreaPopup.fields = keysOfFixedFieldsAttrs.reduce((acc,key) => {
                     const attr = vm.entityAttrs.find(entityAttr => entityAttr.key === key);
 
-                    return attr ? {...acc, [key]: {name: attr.name, value: vm.entity[key]}} : acc;
+                    return attr ?
+                        {
+                            ...acc,
+                            [key]: {name: attr.name, value: vm.entity[key]}
+                        } :
+                        acc;
                 }, {})
 
                 vm.fixedAreaPopup.fields.status = {key: 'Status', value: vm.entityStatus, options: vm.statusSelectorOptions}

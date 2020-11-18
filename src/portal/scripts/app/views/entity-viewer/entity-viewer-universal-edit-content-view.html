@@ -53,7 +53,7 @@
                                  small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
                                  class="ev-editor-field"></dropdown-select>
 
-                <div data-ng-if="vm.entityType === 'portfolio' || vm.entityType === 'counterparty' || vm.entityType === 'responsible' || vm.entityType === 'currency'"
+                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account'"
                      class="ev-editor-field">
                     <text-input
                             label="Short name"
