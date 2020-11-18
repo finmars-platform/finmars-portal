@@ -10,28 +10,34 @@
 			scope: {
 				chipsList: "=",
 				eventService: "=",
-				chipsDeletion: "@",
-				onChipDeletion: "=",
+				chipsDeletion: "@", // whether allow chips deletion
 				orderChips: "@",
 				isDisabled: "=",
+                // dropdownMenuOptions: "=",
+                onChipDeletion: "=", // pass function with argument that is array of deleted inputs
 				onChipClick: "=" // pass function with argument that contains object with next properties: chipsList
 			},
 			templateUrl: "views/directives/chips-list-view.html",
 			link: function (scope, elem, attr) {
-				// console.log("testing chipsList", scope.chipsList);
-				// console.log("testing eventService", scope.eventService);
-				// console.log("testing orderChips", scope.orderChips);
+
 				// scope.chipsToDisplay = [];
 				scope.hiddenChips = [];
 				scope.hiddenChipsTexts = "";
 
-				scope.orderOptions = null;
+				scope.orderOptions = null
 
 				if (scope.orderChips) {
 					scope.orderOptions = "text"
 				}
-				// console.log("testing orderOptions", scope.orderOptions);
+
+				/* scope.orderMenuOptions = null
+
+                if (scope.orderMenuOptions) {
+                    scope.orderMenuOptions = "name"
+                } */
+
 				let chipsContainer, chipsContainerWidth = 0;
+                let dropdownMenuFilter;
 
 				scope.getChipsListClasses = function () {
 
@@ -45,7 +51,9 @@
 
 				};
 
-				scope.onChipClickMethod = function (chipData) {
+				scope.onChipClickMethod = function (chipData, $event) {
+
+                    $event.stopPropagation();
 
 					let chipsList = chipData;
 
@@ -60,18 +68,6 @@
 					}
 
 				};
-
-				/* scope.$watch('chipsList', function () {
-
-					scope.chipsToDisplay = [];
-					// console.log("testing chipsList changed", scope.chipsList);
-					if (scope.chipsList) {
-
-						scope.chipsToDisplay = JSON.parse(JSON.stringify(scope.chipsList));
-
-					}
-
-				}); */
 
 				let getHiddenChipsTexts = function () {
 
@@ -109,23 +105,16 @@
 					setTimeout(function () { // wait for ng-repeat to finish rendering
 
 						scope.hiddenChips = [];
-						// console.log("testing chipsContainer data", chipsContainer, chipsContainerWidth, updateScope);
 
 						let chipsElemsList = elem[0].querySelectorAll('.chipWrapElem');
 						let expandChipWidth = 74;
 						let chipsWidth = 0; // size of .expand-chip (width + margins)
 
-						if (chipsElemsList.length) {
-							// console.log("testing hideOverflow chipsElemsList1", chipsElemsList);
-						}
-
 						let hideChips = function (index) {
-							// scope.chipsToDisplay = scope.chipsList.slice(0, i);
-							// console.log("testing hideOverflow hideChips", JSON.parse(JSON.stringify(scope.chipsList)));
+
 							scope.hiddenChips = scope.chipsList.slice(index);
-							// console.log("testing hideOverflow hideChips index", index);
 							getHiddenChipsTexts();
-							// scope.$apply();
+
 						}
 
 						chipsElemsList.forEach(function (cElem) {
@@ -135,7 +124,7 @@
 						for (let i = 0; i < chipsElemsList.length; i++) {
 
 							let cElem = chipsElemsList[i];
-							// console.log("testing hideOverflow cElem.clientWidth", cElem.clientWidth);
+
 							chipsWidth += cElem.clientWidth;
 
 							if (i + 1 === chipsElemsList.length) { // for the last chip
@@ -143,7 +132,6 @@
 								if (chipsWidth > chipsContainerWidth) {
 
 									hideChips(i);
-									// console.log("testing hideOverflowingChips triggered1");
 									break;
 
 								}
@@ -152,16 +140,14 @@
 							} else if (chipsWidth + expandChipWidth > chipsContainerWidth) {
 
 								hideChips(i);
-								// console.log("testing hideOverflowingChips triggered2");
 								break;
 
 							}
 
-							// console.log("testing hideOverflowingChips triggered3");
 							cElem.classList.remove('chip-hidden');
 
 						}
-						// console.log("testing hideOverflowingChips hiddenChips", scope.hiddenChips);
+
 						if (updateScope) {
 							scope.$apply();
 						}
@@ -170,7 +156,7 @@
 
 				};
 
-				scope.deleteChips = function (chipsData, index) {
+				scope.deleteChips = function (chipsData) {
 
 					let chipsForDeletion = JSON.parse(JSON.stringify(chipsData));
 
@@ -212,14 +198,27 @@
 
 				};
 
+                /* scope.selectOption = function (option) {
+
+                    let newChip = {
+                        id: option.id,
+                        text: option.name
+                    };
+
+                    scope.chipsList.push(newChip);
+                    scope.hideOverflowingChips();
+
+                }; */
+
 				let init = function () {
 
 					chipsContainer = elem[0].querySelector('.chipsListContainer');
 					chipsContainerWidth = chipsContainer.clientWidth;
-					// console.log("testing chipsList", scope.chipsList);
+
 					if (scope.eventService) {
 
 						scope.eventService.addEventListener(directivesEvents.CHIPS_LIST_CHANGED, function (argumentsObj) {
+
 							/*
 							argumentsObj properties
 							chipsList: new array of chips
@@ -227,7 +226,7 @@
 							*/
 							scope.chipsList = argumentsObj.chipsList;
 							scope.hideOverflowingChips(argumentsObj.updateScope);
-							// console.log("testing CHIPS_LIST_CHANGED chipsList", scope.chipsList);
+
 						});
 
 						scope.eventService.addEventListener(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED, function () {
@@ -237,7 +236,40 @@
 
 						});
 
+                        /* scope.eventService.addEventListener(directivesEvents.DROPDOWN_MENU_OPTIONS_CHANGED, function (argumentsObj) {
+
+                            if (argumentsObj.optionsList) {
+
+                                scope.dropdownMenuOptions = argumentsObj.optionsList
+                                scope.menuOptions = JSON.parse(JSON.stringify(scope.dropdownMenuOptions));
+
+                            }
+
+                        }); */
+
 					}
+
+					/* if (scope.dropdownMenuOptions) {
+
+					    scope.menuOptions = JSON.parse(JSON.stringify(scope.dropdownMenuOptions));
+
+                        scope.addDropdownMenuListeners = function () {
+
+							chipsContainer.addEventListener("click", function () {
+								scope.dropdownMenuShown = true
+							});
+
+                        	dropdownMenuFilter = elem[0].querySelector('.dropdownMenuFilter');
+
+							dropdownMenuFilter.addEventListener('blur', function () {
+								scope.dropdownMenuShown = false
+							});
+
+						}
+
+
+
+                    } */
 
 				};
 
