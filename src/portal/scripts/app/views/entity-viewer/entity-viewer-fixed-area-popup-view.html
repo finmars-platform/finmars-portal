@@ -28,7 +28,7 @@
                 model="vm.fields.user_code.value"></text-input>
     </div>
 
-    <div>
+    <div data-ng-if="vm.fields.showByDefault">
         <dropdown-select label="Show by default"
                          model="vm.fields.showByDefault.value"
                          placeholder-text="Show by default"
