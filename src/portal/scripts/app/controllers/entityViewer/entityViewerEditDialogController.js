@@ -1963,7 +1963,7 @@
 
         vm.setTypeSelectorOptions = function (options) {
             vm.typeSelectorOptions = options;
-        };
+        }
 
         vm.init = function () {
             setTimeout(function () {
@@ -2036,7 +2036,6 @@
             vm.getItem().then(function () {
                 getEntityStatus();
                 vm.fixedAreaPopup.fields = entityViewerHelperService.getFieldsForFixedAreaPopup(vm, keysOfFixedFieldsAttrs);
-                console.log('vm.fixedAreaPopup.fields', vm.fixedAreaPopup.fields)
             });
         };
 
