@@ -356,7 +356,7 @@
                 return acc;
             }
 
-            const fieldKey = key === 'instrument_type' ? 'type' : key;
+            const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
             const field = {
                 [fieldKey]: {name: attr.name, value: viewModel.entity[key]}
             };
@@ -373,7 +373,7 @@
 
         // get options for 'type' or 'instrument type' fields
         fields.hasOwnProperty('type') && entityResolverService.getListLight(fields.type.value_entity).then((data) => {
-            const options = data.results;
+            const options = Array.isArray(data) ? data : data.results;
             fields.type.options = options;
             viewModel.setTypeSelectorOptions(options)
         });

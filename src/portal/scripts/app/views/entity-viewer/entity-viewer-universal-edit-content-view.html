@@ -38,14 +38,15 @@
                         'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
                     }">
 
-                <dropdown-select label="{{vm.typeFieldLabel}}"
+                <dropdown-select data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
+                                 label="{{vm.typeFieldLabel}}"
                                  model="vm.entity[vm.typeFieldName]"
                                  placeholder-text="{{vm.typeFieldLabel}}"
                                  menu-options="vm.typeSelectorOptions"
                                  small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
                                  class="ev-editor-field"></dropdown-select>
 
-                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account'"
+                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
                      class="ev-editor-field">
                     <text-input
                             label="Short name"

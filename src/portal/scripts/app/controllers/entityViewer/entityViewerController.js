@@ -123,6 +123,7 @@
 
             var editEntity = async function (entitytype, activeObject) {
                 const editLayout = await uiService.getEditLayout(entitytype);
+                console.log('editLayout', editLayout, entitytype)
                 const tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
 
                 const fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
@@ -465,6 +466,8 @@
                     case 'strategy-1':
                     case 'strategy-2':
                     case 'strategy-3':
+                    case 'account-type':
+                    case 'instrument-type':
 
                         console.log('vm', vm)
                         $bigDrawer.show({

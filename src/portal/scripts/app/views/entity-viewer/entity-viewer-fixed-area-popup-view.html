@@ -37,6 +37,13 @@
                          class="ev-editor-field"></dropdown-select>
     </div>
 
+    <div data-ng-if="vm.fields.transaction_details_expr">
+        <text-input
+                label="Transaction details expr"
+                placeholder-text="Transaction details expr"
+                model="vm.fields.transaction_details_expr.value"></text-input>
+    </div>
+
     <div data-ng-if="vm.fields.status && vm.tabColumns < 6">
         <dropdown-select label="Status"
                          model="vm.fields.status.value"
