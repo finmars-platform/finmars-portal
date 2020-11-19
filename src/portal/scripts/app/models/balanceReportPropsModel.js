@@ -176,7 +176,7 @@
             //},
             {
                 "key": "gross_cost_price_loc",
-                "name": "Gross cost price (LOC)",
+                "name": "Gross cost price (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -196,7 +196,7 @@
             //},
             {
                 "key": "net_cost_price_loc",
-                "name": "Net cost price (LOC)",
+                "name": "Net cost price (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -255,7 +255,7 @@
             },
             {
                 "key": "principal_invested_loc",
-                "name": "Principal invested (LOC)",
+                "name": "Principal invested (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -265,7 +265,7 @@
             },
             {
                 "key": "amount_invested_loc",
-                "name": "Amount invested (LOC)",
+                "name": "Amount invested (Pricing Currency)",
                 "value_type": 20
             },
 
@@ -276,7 +276,7 @@
             },
             {
                 "key": "market_value_loc",
-                "name": "Market value (LOC)",
+                "name": "Market value (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -296,7 +296,7 @@
             },
             {
                 "key": "exposure_loc",
-                "name": "Exposure (LOC)",
+                "name": "Exposure (Pricing Currency)",
                 "value_type": 20
             },
             {
