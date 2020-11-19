@@ -1063,7 +1063,8 @@
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
                 // linked_inputs_names
-                rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
+                // TODO input.settings is null
+                rowObj.columns[8].settings.value = input.settings && input.settings.linked_inputs_names && input.settings.linked_inputs_names.map(function (linkedInputName) {
 
                 	var linkedInput = {
                 		id: linkedInputName,

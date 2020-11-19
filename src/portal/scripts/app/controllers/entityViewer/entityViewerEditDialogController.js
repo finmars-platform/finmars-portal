@@ -54,8 +54,19 @@
         }
 
         vm.entityType = entityType;
-        vm.typeFieldName = vm.entityType === 'instrument' ? 'instrument_type' : 'type';
-        vm.typeFieldLabel = vm.entityType === 'instrument' ? 'Instrument type' : 'Type';
+
+        vm.typeFieldName = 'type';
+        vm.typeFieldLabel = 'Type';
+
+        if (vm.entityType === 'instrument') {
+            vm.typeFieldName = 'instrument_type';
+            vm.typeFieldLabel = 'Instrument type';
+        }
+
+        if (vm.entityType === 'instrument-type') {
+            vm.typeFieldName = 'instrument_class';
+            vm.typeFieldLabel = 'Instrument class';
+        }
 
         vm.entityId = entityId;
 
@@ -426,7 +437,8 @@
 
             Promise.all(promises).then(function (data) {
 
-                vm.entity.object_permissions.forEach(function (perm) {
+                // TODO object_permissions is undefined
+                vm.entity.object_permissions && vm.entity.object_permissions.forEach(function (perm) {
 
                     if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
 
@@ -1946,7 +1958,7 @@
 
         vm.onPopupSaveCallback = function () {
             keysOfFixedFieldsAttrs.forEach((key) => {
-                const fieldKey = key === 'instrument_type' ? 'type' : key
+                const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
                 vm.entity[key] = vm.fixedAreaPopup.fields[fieldKey].value;
             })
 
@@ -2036,6 +2048,7 @@
             vm.getItem().then(function () {
                 getEntityStatus();
                 vm.fixedAreaPopup.fields = entityViewerHelperService.getFieldsForFixedAreaPopup(vm, keysOfFixedFieldsAttrs);
+                console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
             });
         };
 
