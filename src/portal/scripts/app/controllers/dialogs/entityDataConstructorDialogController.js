@@ -651,6 +651,7 @@
 
             } else {
 
+                console.log('vm.fieldsTree[tab.tabOrder]', vm.fieldsTree[tab.tabOrder], row)
                 for (i = 0; i < vm.fieldsTree[tab.tabOrder][row].length; i++) {
                     var colFromRow = vm.fieldsTree[tab.tabOrder][row][i];
                     totalColspans = totalColspans + parseInt(colFromRow.colspan, 10);

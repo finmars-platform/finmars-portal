@@ -122,12 +122,7 @@
             };
 
             var editEntity = async function (entitytype, activeObject) {
-                const editLayout = await uiService.getEditLayout(entitytype);
-                console.log('editLayout', editLayout, entitytype)
-                const tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
 
-                const fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
-                const bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
 
                 switch (entitytype) {
                     case 'transaction-type':
@@ -468,6 +463,14 @@
                     case 'strategy-3':
                     case 'account-type':
                     case 'instrument-type':
+                    case 'pricing-policy':
+
+                        const editLayout = await uiService.getEditLayout(entitytype);
+                        console.log('editLayout', editLayout, entitytype)
+                        const tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
+
+                        const fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                        const bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
 
                         console.log('vm', vm)
                         $bigDrawer.show({
