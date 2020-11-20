@@ -36,7 +36,7 @@
 
         if (group.___group_name && typeof group.___group_name === 'string') {
 
-        	groupName = stringHelper.parseAndInsertHyperlinks(groupName);
+        	groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
 
 		}
 

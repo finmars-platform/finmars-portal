@@ -143,11 +143,26 @@
         });
     }
 
+    let openLinkInNewTab = function (event) {
+
+		event.preventDefault();
+		let targetElem = event.target;
+
+		if (targetElem.classList.contains('openLinkInNewTab')) {
+
+			let url = targetElem.href;
+			window.open(url);
+
+		}
+
+	};
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
-        textWithDashSort: textWithDashSort
+        textWithDashSort: textWithDashSort,
+		openLinkInNewTab: openLinkInNewTab
     }
 
 }());

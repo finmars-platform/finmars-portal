@@ -8,7 +8,7 @@
     let md5Helper = require('./md5.helper');
 	let sha1Helper = require('./sha1.helper');
 
-	let toHash = (str) => {
+	let toHash = str => {
 
         return md5Helper.md5(str);
         // return sha1Helper.sha1(str);
@@ -16,7 +16,7 @@
 
 	let aElemAttrs;
 
-	let insertHyperlinks = (substring) => {
+	let insertHyperlinks = substring => {
 
 		let linkElem = "";
 		let linkElemStart = "<a ";

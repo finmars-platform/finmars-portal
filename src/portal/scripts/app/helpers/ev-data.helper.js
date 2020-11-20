@@ -813,10 +813,10 @@
         if (bodyHeight < menuPosition.positionY + menuHeight) {
 
             popup.classList.add('ev-dropdown-opens-top');
-            popup.style.bottom = 0;
+            popup.style.bottom = 0
 
         } else {
-            popup.style.top = menuPosition.positionY + 'px';
+            popup.style.top = menuPosition.positionY + 'px'
         }
 
         //popup.style.cssText = menuPosition;

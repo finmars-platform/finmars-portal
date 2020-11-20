@@ -106,7 +106,7 @@
         if (obj[column.key]) {
 
             if (typeof obj[column.key] === 'string') {
-                return stringHelper.parseAndInsertHyperlinks(obj[column.key]);
+                return stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
             }
 
             if (typeof obj[column.key] === 'number') {
@@ -181,7 +181,7 @@
 
                         if (column.value_type === 10 && item.value_string) {
 
-                            result = stringHelper.parseAndInsertHyperlinks(item.value_string);
+                            result = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
 
                         }
 

@@ -5,10 +5,10 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var utilsHelper = require('../../helpers/utils.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+	var metaHelper = require('../../helpers/meta.helper');
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
-
 
     var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
 
@@ -480,30 +480,37 @@
         var clickData = {};
         var rowElem = event.target.closest('.g-row');
 
-
-        clickData.isShiftPressed = event.shiftKey;
-        clickData.isCtrlPressed = event.ctrlKey;
-        clickData.target = event.target;
+        clickData.isShiftPressed = event.shiftKey
+        clickData.isCtrlPressed = event.ctrlKey
+        clickData.target = event.target
 
         if (rowElem) {
 
-            clickData.___type = rowElem.dataset.type;
-            clickData.___id = rowElem.dataset.objectId;
+        	if (clickData.target.classList.contains('openLinkInNewTab')) {
 
-            clickData.___parentId = rowElem.dataset.parentGroupHashId;
+        		clickData.___type = 'hyperlink'
+
+			} else {
+
+				clickData.___type = rowElem.dataset.type;
+				clickData.___id = rowElem.dataset.objectId;
+
+				clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 
-            if (event.target.classList.contains('ev-fold-button')) {
-                clickData.isFoldButtonPressed = true;
-            }
+				if (event.target.classList.contains('ev-fold-button')) {
+					clickData.isFoldButtonPressed = true;
+				}
 
-            if (rowElem.dataset.subtotalType) {
-                clickData.___subtotal_type = rowElem.dataset.subtotalType;
-            }
+				if (rowElem.dataset.subtotalType) {
+					clickData.___subtotal_type = rowElem.dataset.subtotalType;
+				}
 
-            if (rowElem.dataset.subtotalSubtype) {
-                clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-            }
+				if (rowElem.dataset.subtotalSubtype) {
+					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
+				}
+
+			}
 
         }
 
@@ -520,14 +527,18 @@
             var clickData = getClickData(event);
 
             console.log('clickData', clickData);
-
             console.log('detail', event.detail);
 
             var selection = window.getSelection().toString();
 
             console.log('selection', selection);
+            if (clickData.___type === 'hyperlink') {
 
-            if (event.detail === 2) { // double click handler
+				metaHelper.openLinkInNewTab(event);
+
+			}
+
+            else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -547,32 +558,27 @@
 
             }
 
-            if (!selection.length) {
+            else if (!selection.length) {
 
                 if (event.detail === 1) {
 
                     if (clickData.___type === 'group') {
-
                         handleGroupClick(clickData, evDataService, evEventService);
-
                     }
 
-                    if (clickData.___type === 'control') {
+                    else if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
                     }
 
-                    if (clickData.___type === 'object') {
-
+                    else if (clickData.___type === 'object') {
                         handleObjectClick(clickData, evDataService, evEventService);
-
                     }
-                }
 
+                }
 
 
             }
         });
-
 
     };
 
@@ -762,7 +768,7 @@
 
         if (!metaService.isReport(entityType)) {
 
-            function sendContextMenuActionToActiveObj(event) {
+            /* function sendContextMenuActionToActiveObj(event) {
 
                 var objectId = event.target.dataset.objectId;
                 var parentGroupHashId = event.target.dataset.parentGroupHashId;
@@ -793,30 +799,30 @@
 
                 }
 
-            }
+            } */
 
             elem.addEventListener('contextmenu', function (ev) {
 
                 var objectId;
                 var parentGroupHashId;
 
-                if (event.target.offsetParent.classList.contains('ev-viewport')) {
+                if (ev.target.offsetParent.classList.contains('ev-viewport')) {
 
-                    objectId = event.target.dataset.objectId;
-                    parentGroupHashId = event.target.dataset.parentGroupHashId;
+                    objectId = ev.target.dataset.objectId;
+                    parentGroupHashId = ev.target.dataset.parentGroupHashId;
 
                 } else {
 
-                    if (event.target.offsetParent.classList.contains('g-row')) {
+                    if (ev.target.offsetParent.classList.contains('g-row')) {
 
-                        objectId = event.target.offsetParent.dataset.objectId;
-                        parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+                        objectId = ev.target.offsetParent.dataset.objectId;
+                        parentGroupHashId = ev.target.offsetParent.dataset.parentGroupHashId;
 
                     }
 
                 }
 
-                console.log('initContextMenuEventDelegation.event', event);
+                console.log('initContextMenuEventDelegation.event', ev);
 
                 console.log('initContextMenuEventDelegation.objectId', objectId);
 
@@ -840,7 +846,7 @@
                 clearDropdowns();
             });
 
-            /*window.addEventListener('click', function (event) {
+            /* window.addEventListener('click', function (event) {
 
                 if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
 
@@ -960,7 +966,7 @@
 
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
-        /*if (!isRootEntityViewer) {
+        /* if (!isRootEntityViewer) {
 
             if (components.groupingArea) {
                 viewportTop = viewportTop + interfaceLayout.groupingArea.height
@@ -977,7 +983,7 @@
 
             viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
 
-        }*/
+        } */
 
         evScrollManager.setViewportHeight(viewportHeight);
 

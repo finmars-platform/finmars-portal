@@ -17,20 +17,20 @@
     ></number-input>
   </div>
 
-  <div data-ng-if="fieldType['display_name'] === 'String'">
+    <div ng-if="fieldType['display_name'] === 'String'">
 
-    <text-input
-      label="{{getName()}}"
-      placeholder-text="text"
-      model="entity[fieldKey]"
-      custom-buttons="item.buttons"
-      custom-styles="customStyles"
-      event-signal="ciEventObj.event"
-      small-options="{tooltipText: tooltipText, notNull: options.notNull}"
-      on-change-callback="itemChange()"
-      on-blur-callback="inputBlur()"
-    ></text-input>
-  </div>
+        <text-input label="{{getName()}}"
+                    placeholder-text="text"
+                    model="entity[fieldKey]"
+                    custom-buttons="item.buttons"
+                    custom-styles="customStyles"
+                    event-signal="ciEventObj.event"
+                    small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                    render-hyperlinks="item.options.isHyperlink"
+                    on-change-callback="itemChange()"
+                    on-blur-callback="inputBlur()"></text-input>
+
+    </div>
 
   <div data-ng-if="fieldType['display_name'] === 'Field'">
     <div>

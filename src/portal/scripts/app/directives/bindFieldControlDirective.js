@@ -297,9 +297,7 @@
           if (scope.options.backgroundColor) {
             styleValue =
               styleValue +
-              "background-color: " +
-              scope.options.backgroundColor +
-              ";";
+              "background-color: " + scope.options.backgroundColor + ";";
           }
 
           return styleValue;
@@ -472,30 +470,31 @@
         };
 
         var getFieldBackgroundColor = function () {
-          if (scope.item.backgroundColor) {
-            if (typeof scope.item.backgroundColor === "string") {
-              // allows old layouts keep its background color
-              scope.options.backgroundColor = scope.item.backgroundColor;
-            } else if (typeof scope.item.backgroundColor === "object") {
-              var paletteData = scope.item.backgroundColor;
-              var paletteNotFound = true;
 
-              var i, a;
-              loop1: for (i = 0; i < palettesList.length; i++) {
-                if (palettesList[i].user_code === paletteData.paletteUserCode) {
-                  paletteNotFound = false;
+        	if (scope.item.backgroundColor) {
 
-                  for (a = 0; a < palettesList[i].colors.length; a++) {
-                    if (
-                      palettesList[i].colors[a].order === paletteData.colorOrder
-                    ) {
-                      scope.options.backgroundColor =
-                        palettesList[i].colors[a].value;
-                      break loop1;
-                    }
-                  }
-                }
-              }
+        		if (typeof scope.item.backgroundColor === "string") {
+				  // allows old layouts keep its background color
+				  scope.options.backgroundColor = scope.item.backgroundColor;
+				} else if (typeof scope.item.backgroundColor === "object") {
+				  var paletteData = scope.item.backgroundColor;
+				  var paletteNotFound = true;
+
+				  var i, a;
+				  loop1: for (i = 0; i < palettesList.length; i++) {
+					if (palettesList[i].user_code === paletteData.paletteUserCode) {
+					  paletteNotFound = false;
+
+					  for (a = 0; a < palettesList[i].colors.length; a++) {
+						if (
+						  palettesList[i].colors[a].order === paletteData.colorOrder
+						) {
+						  scope.options.backgroundColor = palettesList[i].colors[a].value;
+						  break loop1;
+						}
+					  }
+					}
+				  }
 
               if (paletteNotFound) {
                 // if palette was not found, use default palette
@@ -714,20 +713,20 @@
           }
 
           if (scope.fieldKey === "tags") {
-            scope.options = {
+
+          	scope.options = {
               entityType: scope.entityType,
             };
+
           } else {
-            if (
-              metaService
-                .getEntitiesWithSimpleFields()
-                .indexOf(scope.entityType) !== -1
-            ) {
+
+          	if (metaService.getEntitiesWithSimpleFields().indexOf(scope.entityType) !== -1) {
               scope.options = {
                 entityType: scope.entityType,
                 key: scope.fieldKey,
               };
             }
+
           }
 
           var tooltipsList = [];
