@@ -107,7 +107,7 @@
                            ng-model="menuFilterTerms[nameProperty]"
                            class="custom-input-dropdown-menu-filter dropdownMenuFilter"
                            ng-init="addDropdownMenuListeners()"
-                           ng-blur="onDropdownMenuFilterBlur(menuFilterTerms)" />
+                           ng-blur="onDropdownMenuFilterBlur()" />
 
                     <div data-ng-repeat="option in dropdownMenuOptions | orderBy: orderMenuOptions | filter: menuFilterTerms"
                          data-ng-mousedown="selectOption(option, $index)"
