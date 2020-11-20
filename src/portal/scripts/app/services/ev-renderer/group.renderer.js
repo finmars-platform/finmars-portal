@@ -37,7 +37,7 @@
         if (groupType.value_type === 'field') {
 
             additionalText = additionalText + ' (' + group.___group_identifier + ')'
-			additionalText = stringHelper.parseAndInsertHyperlinks(additionalText);
+			additionalText = stringHelper.parseAndInsertHyperlinks(additionalText, "class='openLinkInNewTab'");
 
         }
 
@@ -45,7 +45,7 @@
 
         if (groupName && typeof groupName === 'string') {
 
-        	groupName = stringHelper.parseAndInsertHyperlinks(groupName);
+        	groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
 
 		}
 

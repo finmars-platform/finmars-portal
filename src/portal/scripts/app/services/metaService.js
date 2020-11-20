@@ -144,7 +144,6 @@
             case "complex-transaction":
             case "strategies":
                 return true;
-                break;
             default:
                 return false;
         }

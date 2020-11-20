@@ -44,7 +44,7 @@
 
                     else if (column.value_type === 10 && item.value_string) {
 
-                        result.html_result = stringHelper.parseAndInsertHyperlinks(item.value_string);
+                        result.html_result = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
                         result.raw_text_result = item.value_string;
 
                     }
@@ -87,7 +87,7 @@
 
         if (typeof obj[column.key] === 'string') {
 
-			result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key]);
+			result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
             result.raw_text_result = obj[column.key];
 
         } else {
@@ -100,7 +100,11 @@
 
                 if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
 
-                    result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key + '_object'].name);
+                    result.html_result = stringHelper.parseAndInsertHyperlinks(
+                    	obj[column.key + '_object'].name,
+						"class='openLinkInNewTab'"
+					);
+
                     result.raw_text_result = obj[column.key + '_object'].name;
 
                 } else {
@@ -186,7 +190,7 @@
 
 					if (groupName && typeof groupName === 'string') {
 
-						groupName = stringHelper.parseAndInsertHyperlinks(groupName);
+						groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
 
 					}
 

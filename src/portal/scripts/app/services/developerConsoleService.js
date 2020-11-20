@@ -185,7 +185,7 @@
 
         console.log("Init Developer Console");
 
-        document.addEventListener('keypress', function (event) {
+        document.addEventListener('keyup', function (event) {
 
             if (event.keyCode === 96 || event.key === '`' || event.keyCode === 1105 || event.key === 'ё') {
 

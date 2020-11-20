@@ -164,7 +164,7 @@
 
 						if (groupName && typeof groupName === 'string') {
 
-							groupName = stringHelper.parseAndInsertHyperlinks(groupName);
+							groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
 
 						}
 
@@ -207,7 +207,7 @@
 
 				if (groupName && typeof groupName === 'string') {
 
-					groupName = stringHelper.parseAndInsertHyperlinks(groupName);
+					groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
 
 				}
 
