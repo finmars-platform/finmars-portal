@@ -14,7 +14,7 @@
     </div>
 
 
-    <div data-ng-if="vm.fields.short_name && (vm.tabColumns < 3 || vm.entityType === 'instrument' || vm.entityType === 'account')">
+    <div data-ng-if="vm.fields.short_name">
         <text-input
                 label="Short name"
                 placeholder-text="Short name"
@@ -44,16 +44,17 @@
                 model="vm.fields.transaction_details_expr.value"></text-input>
     </div>
 
-    <div data-ng-if="vm.fields.status && vm.tabColumns < 6">
+<!--            Add dialog have not status field-->
+<!--    <div data-ng-if="vm.fields.status && vm.tabColumns < 6">
         <dropdown-select label="Status"
                          model="vm.fields.status.value"
                          placeholder-text="System List"
                          menu-options="vm.fields.status.options"
                          small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
                          class="ev-editor-field"></dropdown-select>
-    </div>
+    </div>-->
 
-    <div data-ng-if="vm.fields.type && vm.tabColumns < 3">
+    <div data-ng-if="vm.fields.type">
         <dropdown-select label="{{vm.fields.type.name}}"
                          model="vm.fields.type.value"
                          placeholder-text="{{vm.fields.type.name}}"
