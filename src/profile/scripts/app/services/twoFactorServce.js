@@ -24,6 +24,21 @@
         })
     };
 
+    var pachByKey = function (id, token) {
+        return window.fetch(baseUrl + 'users/two-factor/' + id + '/', {
+            method: 'PATCH',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(token)
+        }).then(function (data) {
+            return data.json();
+        })
+    };
+
 
     var generateCode = function (data) {
         return window.fetch(baseUrl + 'users/two-factor/generate-code/', {
@@ -76,7 +91,8 @@
         getList: getList,
         generateCode: generateCode,
         validateCode: validateCode,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        pachByKey: pachByKey
     }
 
 }());
