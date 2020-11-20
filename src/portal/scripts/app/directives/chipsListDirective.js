@@ -14,6 +14,7 @@
 				orderChips: "@",
 				isDisabled: "=",
                 // dropdownMenuOptions: "=",
+				chipsContainerWidth: "=",
                 onChipDeletion: "=", // pass function with argument that is array of deleted inputs
 				onChipClick: "=" // pass function with argument that contains object with next properties: chipsList
 			},
@@ -124,7 +125,6 @@
 						for (let i = 0; i < chipsElemsList.length; i++) {
 
 							let cElem = chipsElemsList[i];
-
 							chipsWidth += cElem.clientWidth;
 
 							if (i + 1 === chipsElemsList.length) { // for the last chip
@@ -208,8 +208,16 @@
 
 				let init = function () {
 
-					chipsContainer = elem[0].querySelector('.chipsListContainer');
-					chipsContainerWidth = chipsContainer.clientWidth;
+					if (scope.chipsContainerWidth) {
+
+						chipsContainerWidth = scope.chipsContainerWidth;
+
+					} else {
+
+						chipsContainer = elem[0].querySelector('.chipsListContainer');
+						chipsContainerWidth = chipsContainer.clientWidth;
+
+					}
 
 					if (scope.eventService) {
 
@@ -266,7 +274,6 @@
 
 
                     } */
-
 				};
 
 				init();
