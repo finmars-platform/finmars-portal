@@ -41,7 +41,8 @@
                                 </button>
                             </div>
 
-                            <div class="multiselector-input-chips-wrap twoFieldsChipsWrap">
+                            <div class="multiselector-input-chips-wrap twoFieldsChipsWrap"
+                                 ng-init="getChipsContainerWidth()">
 
                                 <span ng-show="!chipsList.length" ng-bind="nothingSelectedText"></span>
 
@@ -52,7 +53,7 @@
                                             on-chip-deletion="onChipDeletion"
                                             order-chips="{{chipsOrderSettings}}"
                                             dropdown-menu-options="dropdownMenuOptions"
-                                            on-chip-click=""></chips-list>
+                                            chips-container-width="chipsContainerWidth"></chips-list>
 
                             </div>
 
@@ -103,10 +104,10 @@
 
                     <input type="text"
                            placeholder="Looking for "
-                           ng-model="menuFilterTerms"
+                           ng-model="menuFilterTerms[nameProperty]"
                            class="custom-input-dropdown-menu-filter dropdownMenuFilter"
                            ng-init="addDropdownMenuListeners()"
-                           ng-blur="onDropdownMenuFilterBlur()" />
+                           ng-blur="onDropdownMenuFilterBlur(menuFilterTerms)" />
 
                     <div data-ng-repeat="option in dropdownMenuOptions | orderBy: orderMenuOptions | filter: menuFilterTerms"
                          data-ng-mousedown="selectOption(option, $index)"

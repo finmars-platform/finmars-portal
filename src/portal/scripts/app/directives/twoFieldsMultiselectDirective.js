@@ -362,7 +362,9 @@
 					if (scope.selectedItemsIndication === 'chips') {
 
 						scope.dropdownMenuShown = false
-						scope.menuFilterTerms = ""
+						scope.menuFilterTerms = {}
+						scope.menuFilterTerms[scope.nameProperty] = ""
+
 						scope.dropdownMenuOptions = []
 						scope.orderMenuOptions = scope.nameProperty
 
@@ -372,10 +374,17 @@
 
 						chipElem = elem[0].querySelector("chips-list");
 
-						scope.onDropdownMenuFilterBlur = function () {
+						scope.onDropdownMenuFilterBlur = function (terms) {
 							scope.dropdownMenuShown = false
-							scope.menuFilterTerms = ""
+							scope.menuFilterTerms[scope.nameProperty] = ""
 						}
+
+						scope.getChipsContainerWidth = function () {
+
+							let customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
+							scope.chipsContainerWidth = customInputContent.clientWidth - 8; // padding size is '8px'
+
+						};
 
 						scope.addDropdownMenuListeners = function () {
 
