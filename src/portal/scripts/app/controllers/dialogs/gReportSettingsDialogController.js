@@ -7,6 +7,7 @@
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
+    var customFieldService = require('../../services/reports/customFieldService');
 
     var portfolioService = require('../../services/portfolioService');
     var accountService = require('../../services/accountService');
@@ -250,14 +251,7 @@
             return ready;
         };
 
-        vm.getPricingPolicies();
-        vm.getCurrencies();
-        // vm.getPortfolios();
-        // vm.getAccounts();
-        vm.getTransactionClasses();
-        // vm.getStrategies1();
-        // vm.getStrategies2();
-        // vm.getStrategies3();
+
 
         vm.saveSettings = function () {
 
@@ -283,6 +277,52 @@
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
+
+        vm.selectedCustomFieldsChanged = function () {
+
+            console.log('vm.selectedCustomFields', vm.selectedCustomFields);
+
+            vm.reportOptions.custom_fields_to_calculate = vm.selectedCustomFields.join(',')
+
+        };
+
+        vm.getCustomFields = function(){
+
+            customFieldService.getList(vm.entityType).then(function (data) {
+
+                if (vm.reportOptions.custom_fields_to_calculate) {
+                    vm.selectedCustomFields = vm.reportOptions.custom_fields_to_calculate.split(',')
+                }
+                vm.customFields = data.results;
+                vm.customFieldsNames = data.results.map(function (item) {
+                    return {
+                        id: item.name,
+                        name: item.name
+                    }
+                });
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.init = function () {
+
+            vm.getPricingPolicies();
+            vm.getCurrencies();
+            // vm.getPortfolios();
+            // vm.getAccounts();
+            vm.getTransactionClasses();
+            // vm.getStrategies1();
+            // vm.getStrategies2();
+            // vm.getStrategies3();
+
+            vm.getCustomFields();
+
+        };
+
+        vm.init()
 
     }
 
