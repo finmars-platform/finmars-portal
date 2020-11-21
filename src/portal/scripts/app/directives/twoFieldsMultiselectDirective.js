@@ -289,11 +289,16 @@
 
 				    if (items) {
 
-				        scope.dropdownMenuOptions = items.filter(function (item) {
+				    	for (let i = 0; i < items.length && i < 20; i++) {
 
-				            return !selOptionsIdsList.includes(item.id);
+				    		if (!selOptionsIdsList.includes(items[i].id)) {
 
-                        });
+				    			let availableOpt = Object.assign({}, items[i]);
+				    			scope.dropdownMenuOptions.push(availableOpt);
+
+							}
+
+						}
 
                     }
 
