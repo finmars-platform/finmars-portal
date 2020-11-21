@@ -289,6 +289,8 @@
 
 				    if (items) {
 
+						scope.dropdownMenuOptions = []
+
 				    	for (let i = 0; i < items.length && i < 20; i++) {
 
 				    		if (!selOptionsIdsList.includes(items[i].id)) {
