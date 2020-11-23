@@ -89,6 +89,104 @@
 
         vm.currencies = []; // need for instrument pricing tab;
 
+        // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
+        vm.typeFieldName = 'type';
+        vm.typeFieldLabel = 'Type';
+
+        if (vm.entityType === 'instrument') {
+            vm.typeFieldName = 'instrument_type';
+            vm.typeFieldLabel = 'Instrument type';
+        }
+
+        if (vm.entityType === 'instrument-type') {
+            vm.typeFieldName = 'instrument_class';
+            vm.typeFieldLabel = 'Instrument class';
+        }
+        vm.showByDefaultOptions = [
+            {id: 'name', name: 'Name'},
+            {id: 'public_name', name: 'Public Name'},
+            {id: 'short_name', name: 'Short Name'},
+            {id: 'user_code', name: 'User Code'},
+        ];
+        vm.showByDefault = vm.showByDefaultOptions[0].id;
+
+        vm.fixedAreaPopup = {
+            fields: {},
+            entityType: vm.entityType,
+            tabColumns: null,
+        };
+
+        vm.typeSelectorOptions = [];
+
+        vm.pricingConditions = [
+            {id: 1, name: "Don't Run Valuation"},
+            {id: 2, name: "Run Valuation: if non-zero position"},
+            {id: 3, name: "Run Valuation: always"},
+        ];
+
+        vm.activeTab = null;
+
+        var bigDrawerResizeButton;
+
+        var onBigDrawerResizeButtonClick = function () {
+            if (vm.fixedAreaPopup.tabColumns === 6) {
+                return;
+            }
+
+            vm.fixedAreaPopup.tabColumns = 6;
+            $scope.$apply();
+            const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+            $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
+            bigDrawerResizeButton.classList.add('display-none');
+            bigDrawerResizeButton.classList.remove('display-block');
+        };
+
+        setTimeout(() => {
+            bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
+
+            if (!bigDrawerResizeButton) {
+                return;
+            }
+
+            bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick)
+        }, 0);
+
+        vm.isEntityTabActive = function () {
+            return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
+        };
+
+        vm.getEntityPropertyByDefault = function () {
+            return vm.entity[vm.showByDefault];
+        };
+
+        vm.onPopupSaveCallback = function () {
+            keysOfFixedFieldsAttrs.forEach((key) => {
+                const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
+                vm.entity[key] = vm.fixedAreaPopup.fields[fieldKey].value;
+            })
+
+            if (vm.entityStatus !== vm.fixedAreaPopup.fields.status.value) {
+                vm.entityStatus = vm.fixedAreaPopup.fields.status.value;
+                vm.entityStatusChanged();
+            }
+
+            if (vm.showByDefault !== vm.fixedAreaPopup.fields.showByDefault.value) {
+                vm.showByDefault = vm.fixedAreaPopup.fields.showByDefault.value;
+                // save layout settings
+                dataConstructorLayout.data.fixedArea.showByDefault = vm.showByDefault;
+                uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+            }
+
+
+
+        };
+
+        vm.setTypeSelectorOptions = function (options) {
+            vm.typeSelectorOptions = options;
+            $scope.$apply();
+        }
+        // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
+
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
         var tabsWithErrors = {};
@@ -741,6 +839,27 @@
                     });
                 }
 
+                // Victor 2020.11.20 #59 Fixed area popup
+
+                vm.showByDefault = vm.fixedArea.showByDefault;
+                vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+
+                const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+
+                if (vm.fixedAreaPopup.tabColumns !== columns) {
+                    vm.fixedAreaPopup.tabColumns = columns;
+                    const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+                    $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
+                    if (vm.fixedAreaPopup.tabColumns !== 6) {
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
+                    } else {
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+                    }
+                }
+                // <Victor 2020.11.20 #59 Fixed area popup>
+
                 vm.getAttributeTypes().then(function (value) {
 
                     entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
@@ -938,7 +1057,7 @@
 
         };*/
 
-        vm.save = function ($event) {
+        vm.save = function ($event, isAutoExitAfterSave) {
 
             vm.updateEntityBeforeSave();
 
@@ -1010,7 +1129,7 @@
 
                 vm.processing = true;
 
-                entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
+                entityResolverService.create(vm.entityType, resultEntity).then(function (responseData) {
 
                     vm.processing = false;
 
@@ -1018,9 +1137,11 @@
 
                     toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully created');
 
-                    // $mdDialog.hide({res: 'agree', data: data});
-					let responseObj = {res: 'agree', data: data};
-					metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                    if(isAutoExitAfterSave) {
+                        // $mdDialog.hide({res: 'agree', data: data});
+                        let responseObj = {res: 'agree', data: responseData};
+                        metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                    }
 
                 }).catch(function (data) {
 
@@ -1445,6 +1566,11 @@
             } else {
                 vm.loadPermissions();
             }
+
+            // Victor 2020.11.20 #59 fixed area popup
+            vm.fixedAreaPopup.fields = entityViewerHelperService.getFieldsForFixedAreaPopup(vm, keysOfFixedFieldsAttrs);
+            console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
+            // <Victor 2020.11.20 #59 fixed area popup>
 
         };
 
