@@ -108,6 +108,11 @@
             {id: 'short_name', name: 'Short Name'},
             {id: 'user_code', name: 'User Code'},
         ];
+
+        if (vm.entityType === 'currency') {
+            vm.showByDefaultOptions = vm.showByDefaultOptions.filter((item) => item.id !== 'public_name')
+        }
+
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
         vm.fixedAreaPopup = {
@@ -161,6 +166,10 @@
 
         vm.onPopupSaveCallback = function () {
             keysOfFixedFieldsAttrs.forEach((key) => {
+                if (!key) {
+                    return;
+                }
+
                 const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
                 vm.entity[key] = vm.fixedAreaPopup.fields[fieldKey].value;
             })
@@ -477,6 +486,8 @@
 
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;
+
+                vm.systemCurrencies = [data.system_currency_object];
 
                 $scope.$apply();
 
