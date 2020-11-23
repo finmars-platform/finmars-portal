@@ -1,33 +1,53 @@
 (function () {
 
+	var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var colorPalettesService = require('../../services/colorPalettesService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
+        if (data && data.openedInside) {
+        	vm.openedInside = data.openedInside
+		}
+
         vm.openedPalette = null;
         vm.openedPaletteId = null;
+        var openedPaletteOriginal = null;
+
         vm.palettesList = [];
         vm.readyStatus = false;
         vm.palettesList = [];
 
-        var openDefaultPalette = function () {
+		var openPalette = function (property, value) {
 
-            for (var i = 0; i < vm.palettesList.length; i++) {
-                if (vm.palettesList[i].is_default) {
+			let isLookedForPalette = (palette) => {
 
-                    vm.openedPalette = vm.palettesList[i];
-                    vm.openedPaletteId = vm.palettesList[i].id;
-                    break;
+				if (property === 'is_default') {
+					return palette.is_default;
 
-                }
-            }
+				} else {
+					return palette[property] === value;
+				}
 
-        };
+			}
 
-        var selectPalette = function (paletteToSelectUC) {
+			for (var i = 0; i < vm.palettesList.length; i++) {
+
+				if (isLookedForPalette(vm.palettesList[i])) {
+
+					vm.openedPalette = vm.palettesList[i];
+					openedPaletteOriginal = JSON.parse(JSON.stringify(vm.palettesList[i]));
+					vm.openedPaletteId = vm.palettesList[i].id;
+					break;
+
+				}
+			}
+
+		};
+
+        /* var selectPaletteByUserCode = function (paletteToSelectUC) {
 
             for (var i = 0; i < vm.palettesList.length; i++) {
                 if (vm.palettesList[i].user_code === paletteToSelectUC) {
@@ -39,7 +59,7 @@
                 }
             }
 
-        }
+        } */
 
         var getPalettesList = function (paletteToSelectUC) {
 
@@ -48,14 +68,15 @@
                 vm.palettesList = data.results;
 
                 if (paletteToSelectUC) {
-                    selectPalette(paletteToSelectUC);
+					openPalette('user_code', paletteToSelectUC);
 
                 } else {
-                    openDefaultPalette();
+					openPalette('is_default');
                 }
 
                 vm.readyStatus = true;
                 $scope.$apply();
+
             });
         }
 
@@ -89,10 +110,6 @@
                     }
                 }
             }
-
-            /*if (selPaletteUserCode === 'Default Palette') {
-                localsData.secondInput.disabled = true;
-            }*/
 
             $mdDialog.show({
                 controller: 'TwoInputsDialogController as vm',
@@ -209,25 +226,27 @@
             }).then(function (res) {
 
                 if (res.status === 'agree') {
-                    if (colorName !== res.data.name || tooltipText !== res.data.tooltipText) {
 
-                        color.name = res.data.name;
-                        color.tooltip = res.data.tooltipText;
-                        vm.onColorChange();
+                	if (colorName !== res.data.name || tooltipText !== res.data.tooltipText) {
+
+						color.name = res.data.name;
+						color.tooltip = res.data.tooltipText;
+                        // vm.onColorChange();
 
                     }
+
                 }
 
             })
 
-        }
+        };
 
         //vm.openColorPicker = function (paletteId, colorOrder) {
         vm.openColorPicker = function (color, $event) {
-            /*var selectorValue = ".colorPaletteColorPicker[data-color-palette='" + paletteId + "'][data-color-order='" + colorOrder + "']";
+            /* var selectorValue = ".colorPaletteColorPicker[data-color-palette='" + paletteId + "'][data-color-order='" + colorOrder + "']";
             var colorInput = document.querySelector(selectorValue);
 
-            colorInput.click();*/
+            colorInput.click(); */
             var colorValue = color.value;
 
             $mdDialog.show({
@@ -248,7 +267,7 @@
                     if (color.value !== res.data.color) {
 
                         color.value = res.data.color;
-                        vm.onColorChange();
+                        // vm.onColorChange();
 
                     }
                 }
@@ -256,10 +275,98 @@
             })
         };
 
-        vm.onColorChange = function () {
+        /* vm.onColorChange = function () {
             var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
             colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate);
-        };
+        }; */
+
+		vm.beforeShowingPaletteChange = function (paletteId, $event) {
+
+			vm.openedPaletteId = paletteId
+			var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
+
+			if (objectComparisonHelper.areObjectsTheSame(paletteToUpdate, openedPaletteOriginal)) {
+
+				openPalette('id', vm.openedPaletteId);
+
+			} else {
+
+				let warningDescription = "All unsaved changes for " +
+					openedPaletteOriginal.name +
+					" will be lost after switch. Do you still want to proceed?";
+
+				$mdDialog.show({
+					controller: 'WarningDialogController as vm',
+					templateUrl: 'views/dialogs/warning-dialog-view.html',
+					parent: angular.element(document.body),
+					targetEvent: $event,
+					clickOutsideToClose: false,
+					locals: {
+						warning: {
+							title: 'Warning',
+							description: warningDescription,
+							actionsButtons: [
+								{
+									name: "Save Layout",
+									response: {status: 'save'}
+								},
+								{
+									name: "Don't Save",
+									response: {status: 'do_not_save'}
+								},
+								{
+									name: "Cancel",
+									response: {status: 'disagree'}
+								}
+							]
+						}
+					}
+
+				}).then(function (res) {
+
+					switch (res.status) {
+
+						case 'save':
+							vm.savePaletteSettings();
+
+						case 'do_not_save':
+							openPalette('id', vm.openedPaletteId);
+							break;
+
+						case 'disagree':
+							vm.openedPaletteId = openedPaletteOriginal.id
+							break;
+
+					}
+
+				});
+
+			}
+
+		};
+
+		vm.savePaletteSettings = function () {
+
+			var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
+			colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate).then(function () {
+				toastNotificationService.success('Palette ' + vm.openedPalette.name + 'was saved');
+			});
+
+		};
+
+		if (vm.openedInside === 'dialog') {
+
+			vm.cancel = function () {
+				$mdDialog.hide({status: 'disagree'});
+			}
+
+			vm.agree = function () {
+
+				vm.savePaletteSettings()
+				$mdDialog.hide({status: 'agree', data: {palettesList: vm.palettesList}});
+			};
+
+		}
 
         var init = function () {
 

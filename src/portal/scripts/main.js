@@ -244,7 +244,7 @@ app.controller('TransactionImportSchemeSelectorValuesDialogController', ['$scope
 
 // Color palettes
 
-app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', require('./app/controllers/colorPicker/colorPalettesSettingsController')]);
+app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', 'data', require('./app/controllers/colorPicker/colorPalettesSettingsController')]);
 app.controller('ColorPalettesSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/colorPicker/colorPalettesSettingsDialogController')]);
 app.controller('TwoInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoInputsDialogController')]);
 app.controller('RenameColorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameColorDialogController')]);
@@ -577,7 +577,7 @@ app.directive('useFromAboveButton', ['$mdDialog', require('./app/controls/use-fr
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
 app.directive('groupTableBody', ['evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
-app.directive('groupSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
+app.directive('gSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/groupTable/gDashboardFilterComponent')]);
 app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
