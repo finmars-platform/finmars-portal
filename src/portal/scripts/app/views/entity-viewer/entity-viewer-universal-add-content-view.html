@@ -96,7 +96,8 @@
         <div layout="row"
              class="entity-editor-row">
 
-            <div data-ng-class="{
+            <div data-ng-if="vm.entityType !== 'currency' || vm.fixedAreaPopup.tabColumns < 6"
+                 data-ng-class="{
                         'width-33': vm.fixedAreaPopup.tabColumns === 6,
                         'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
                         'width-66': vm.fixedAreaPopup.tabColumns === 3,
@@ -114,6 +115,21 @@
                         placeholder-text=""
                         small-options="{noIndicatorBtn: true}"
                 ></text-input>
+
+            </div>
+
+            <div data-ng-if="vm.entityType === 'currency' && vm.fixedAreaPopup.tabColumns === 6"
+                 data-ng-class="{
+                        'width-33': vm.fixedAreaPopup.tabColumns === 6,
+                        'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
+                        'width-66': vm.fixedAreaPopup.tabColumns === 3,
+                        'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
+                    }">
+
+                <text-input
+                        label="Name"
+                        placeholder-text="Name"
+                        model="vm.entity.name"></text-input>
 
             </div>
 
