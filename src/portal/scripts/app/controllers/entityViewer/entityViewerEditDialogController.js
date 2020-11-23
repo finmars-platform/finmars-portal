@@ -55,19 +55,6 @@
 
         vm.entityType = entityType;
 
-        vm.typeFieldName = 'type';
-        vm.typeFieldLabel = 'Type';
-
-        if (vm.entityType === 'instrument') {
-            vm.typeFieldName = 'instrument_type';
-            vm.typeFieldLabel = 'Instrument type';
-        }
-
-        if (vm.entityType === 'instrument-type') {
-            vm.typeFieldName = 'instrument_class';
-            vm.typeFieldLabel = 'Instrument class';
-        }
-
         vm.entityId = entityId;
 
         vm.entity = {$_isValid: true};
@@ -101,6 +88,29 @@
         vm.fixedFieldsAttributes = [];
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
+
+        vm.currentMember = null;
+
+        vm.hasEditPermission = false;
+        vm.canManagePermissions = false;
+
+        vm.attributeTypesByValueTypes = {}; // need for pricing tab
+
+        vm.currencies = []; // need for instrument pricing tab;
+
+        // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
+        vm.typeFieldName = 'type';
+        vm.typeFieldLabel = 'Type';
+
+        if (vm.entityType === 'instrument') {
+            vm.typeFieldName = 'instrument_type';
+            vm.typeFieldLabel = 'Instrument type';
+        }
+
+        if (vm.entityType === 'instrument-type') {
+            vm.typeFieldName = 'instrument_class';
+            vm.typeFieldLabel = 'Instrument class';
+        }
         vm.showByDefaultOptions = [
             {id: 'name', name: 'Name'},
             {id: 'public_name', name: 'Public Name'},
@@ -117,29 +127,13 @@
 
         vm.typeSelectorOptions = [];
 
-        vm.currentMember = null;
-
-        vm.hasEditPermission = false;
-        vm.canManagePermissions = false;
-
-        vm.attributeTypesByValueTypes = {}; // need for pricing tab
-
-        vm.currencies = []; // need for instrument pricing tab;
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
             {id: 2, name: "Run Valuation: if non-zero position"},
             {id: 3, name: "Run Valuation: always"},
         ];
-        //vm.currenciesSorted = [];
 
         vm.activeTab = null;
-
-        var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
-        console.log('keysOfFixedFieldsAttrs', keysOfFixedFieldsAttrs)
-
-        var tabsWithErrors = {};
-        var errorFieldsList = [];
-        var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
         var bigDrawerResizeButton;
 
@@ -166,6 +160,47 @@
             bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick)
         }, 0);
 
+        vm.isEntityTabActive = function () {
+            return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
+        };
+
+        vm.getEntityPropertyByDefault = function () {
+            return vm.entity[vm.showByDefault];
+        };
+
+        vm.onPopupSaveCallback = function () {
+            keysOfFixedFieldsAttrs.forEach((key) => {
+                const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
+                vm.entity[key] = vm.fixedAreaPopup.fields[fieldKey].value;
+            })
+
+            if (vm.entityStatus !== vm.fixedAreaPopup.fields.status.value) {
+                vm.entityStatus = vm.fixedAreaPopup.fields.status.value;
+                vm.entityStatusChanged();
+            }
+
+            if (vm.showByDefault !== vm.fixedAreaPopup.fields.showByDefault.value) {
+                vm.showByDefault = vm.fixedAreaPopup.fields.showByDefault.value
+                // save layout settings
+                dataConstructorLayout.data.fixedArea.showByDefault = vm.showByDefault;
+                uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+            }
+
+        };
+
+        vm.setTypeSelectorOptions = function (options) {
+            vm.typeSelectorOptions = options;
+        }
+        // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
+
+        //vm.currenciesSorted = [];
+
+        var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+        console.log('keysOfFixedFieldsAttrs', keysOfFixedFieldsAttrs)
+
+        var tabsWithErrors = {};
+        var errorFieldsList = [];
+        var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
         vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
@@ -647,6 +682,11 @@
                     });
                 }
 
+                // Victor 2020.11.20 #59 Fixed area popup
+
+                vm.showByDefault = vm.fixedArea.showByDefault;
+                vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+
                 const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
 
                 if (vm.fixedAreaPopup.tabColumns !== columns) {
@@ -661,6 +701,7 @@
                         bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
                     }
                 }
+                // <Victor 2020.11.20 #59 Fixed area popup>
 
                 vm.getAttributeTypes().then(function () {
 
@@ -1053,11 +1094,13 @@
 
             }
 
+            // Victor 2020.11.20 #59 fixed fields popup
             if (vm.fixedAreaPopup.fields.status) {
 
                 vm.fixedAreaPopup.fields.status.value = vm.entityStatus;
 
             }
+            // <Victor 2020.11.20 #59 fixed fields popup>
 
         };
 
@@ -1948,35 +1991,6 @@
 
         };
 
-        vm.isEntityTabActive = function () {
-            return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
-        };
-
-        vm.getEntityPropertyByDefault = function () {
-            return vm.entity[vm.showByDefault];
-        };
-
-        vm.onPopupSaveCallback = function () {
-            keysOfFixedFieldsAttrs.forEach((key) => {
-                const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
-                vm.entity[key] = vm.fixedAreaPopup.fields[fieldKey].value;
-            })
-
-            if (vm.entityStatus !== vm.fixedAreaPopup.fields.status.value) {
-                vm.entityStatus = vm.fixedAreaPopup.fields.status.value;
-                vm.entityStatusChanged();
-            }
-
-            if (vm.showByDefault !== vm.fixedAreaPopup.fields.showByDefault.value) {
-                vm.showByDefault = vm.fixedAreaPopup.fields.showByDefault.value
-            }
-
-        };
-
-        vm.setTypeSelectorOptions = function (options) {
-            vm.typeSelectorOptions = options;
-        }
-
         vm.init = function () {
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
@@ -2047,8 +2061,10 @@
 
             vm.getItem().then(function () {
                 getEntityStatus();
+                // Victor 2020.11.20 #59 fixed area popup
                 vm.fixedAreaPopup.fields = entityViewerHelperService.getFieldsForFixedAreaPopup(vm, keysOfFixedFieldsAttrs);
                 console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
+                // <Victor 2020.11.20 #59 fixed area popup>
             });
         };
 

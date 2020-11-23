@@ -479,7 +479,8 @@
 							}).then(postAddEntityFn); */
 							$bigDrawer.show({
 								controller: 'EntityViewerAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/entity-viewer-add-drawer-view.html',
+								templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
+                                addResizeButton: true,
 								locals: {
 									entityType: scope.entityType,
 									entity: {},
