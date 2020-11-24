@@ -39,6 +39,13 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+    var SHOW_BY_DEFAULT_OPTIONS = [
+        {id: 'name', name: 'Name'},
+        {id: 'public_name', name: 'Public Name'},
+        {id: 'short_name', name: 'Short Name'},
+        {id: 'user_code', name: 'User Code'},
+    ];
+
     module.exports = function entityViewerEditDialogController(
     	$scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data
 	) {
@@ -111,12 +118,7 @@
             vm.typeFieldName = 'instrument_class';
             vm.typeFieldLabel = 'Instrument class';
         }
-        vm.showByDefaultOptions = [
-            {id: 'name', name: 'Name'},
-            {id: 'public_name', name: 'Public Name'},
-            {id: 'short_name', name: 'Short Name'},
-            {id: 'user_code', name: 'User Code'},
-        ];
+        vm.showByDefaultOptions = SHOW_BY_DEFAULT_OPTIONS;
 
         if (vm.entityType === 'currency') {
             vm.showByDefaultOptions = vm.showByDefaultOptions.filter((item) => item.id !== 'public_name')
@@ -140,6 +142,15 @@
 
         vm.activeTab = null;
 
+        var getShowByDefaultOptions = function (columns, entityType) {
+            if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
+                return vm.showByDefaultOptions.filter(option => option.id !== 'short_name')
+            }
+
+            return vm.showByDefaultOptions;
+
+        };
+
         var bigDrawerResizeButton;
 
         var onBigDrawerResizeButtonClick = function () {
@@ -148,6 +159,7 @@
             }
 
             vm.fixedAreaPopup.tabColumns = 6;
+            vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
             $scope.$apply();
             const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
             $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
@@ -700,7 +712,10 @@
                 const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
 
                 if (vm.fixedAreaPopup.tabColumns !== columns) {
+
                     vm.fixedAreaPopup.tabColumns = columns;
+                    vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+
                     const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
                     $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
                     if (vm.fixedAreaPopup.tabColumns !== 6) {
