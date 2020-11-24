@@ -136,11 +136,9 @@
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                body: JSON.stringify(data)
+                body: data
             })
 
     };
@@ -152,11 +150,9 @@
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                body: JSON.stringify(credential)
+                body: credential
             })
 
     };
