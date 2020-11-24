@@ -103,13 +103,24 @@
                         <input type="text" data-ng-model="vm.item.data.filename">
                     </md-input-container>
 
-                    <div>
-                        <md-checkbox ng-model="vm.item.data.hasNoDelete">
-                            No delete
-                        </md-checkbox>
-                    </div>
 
                 </div>
+
+                <div data-ng-if="vm.item.provider == 3">
+
+                    <md-input-container>
+                        <label>Archive password</label>
+                        <input type="text" data-ng-model="vm.item.data.archivepassword">
+                    </md-input-container>
+
+                </div>
+
+                <div>
+                    <md-checkbox ng-model="vm.item.data.hasNoDelete">
+                        No delete
+                    </md-checkbox>
+                </div>
+
 
 
             </div>
