@@ -161,6 +161,16 @@
                 "value_type": 20
             },
             {
+                "key": "ytm_at_cost",
+                "name": "YTM a cost",
+                "value_type": 20
+            },
+            {
+                "key": "return_annually",
+                "name": "Return annually",
+                "value_type": 20
+            },
+            {
                 "key": "modified_duration",
                 "name": "Modified duration",
                 "value_type": 20
