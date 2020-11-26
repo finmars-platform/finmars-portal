@@ -1,6 +1,9 @@
 (function () {
     'use strict';
 
+    var metaService = require('../services/metaService');
+    var entityEditorHelper = require('./entity-editor.helper');
+
     var isUserInputUsedInTTypeExpr = function (userInput, transactionsTypeActions) {
 
         var i, a, b;
@@ -56,6 +59,11 @@
 
         return false;
 
+    };
+
+    var getTransactionUserInputsNotPlacedInTheForm = function (userInputs, ttype) {
+        const formFieldsNames = userInputs.map(input => input.name)
+        return ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
     };
 
     // updating user inputs from input form editor layout using user inputs inside transaction type
@@ -143,12 +151,88 @@
 
         // return inputsList;
 
+    };
+
+    var fillMissingFieldsByDefaultValues = function (entity, userInputsNotPlacedInTheForm) {
+        userInputsNotPlacedInTheForm.forEach(input => {
+            console.log('entity[input.name] before filling', entity[input.name], input.value)
+            if (input.value === null) {
+                return;
+            }
+            entity[input.name] = input.value;
+            console.log('entity[input.name] after filling', entity[input.name])
+        })
+
     }
+
+    var updateEntityBeforeSave = function (viewModel) {
+        console.log('updateEntityBeforeSave')
+        const vm = viewModel
+
+        if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
+            vm.entity.attributes = [];
+        }
+
+        if (vm.entity.attributes) {
+            var i, a, c;
+            var keys = Object.keys(vm.entity), attrExist;
+            for (i = 0; i < vm.attrs.length; i = i + 1) {
+                for (a = 0; a < keys.length; a = a + 1) {
+                    if (vm.attrs[i].name === keys[a]) {
+                        attrExist = false;
+                        for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
+                            if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
+                                attrExist = true;
+                                vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
+                            }
+                        }
+                        if (!attrExist) {
+                            vm.entity.attributes.push(entityEditorHelper.appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
+                        }
+                    }
+                }
+            }
+        }
+
+        if (vm.entity.attributes) {
+            vm.entity = entityEditorHelper.checkEntityAttrTypes(vm.entity, vm.entityAttrs);
+            vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
+        }
+
+        vm.entity.object_permissions = [];
+
+        if (vm.groups) {
+            vm.groups.forEach(function (group) {
+
+                if (group.objectPermissions && group.objectPermissions.manage === true) {
+                    vm.entity.object_permissions.push({
+                        member: null,
+                        group: group.id,
+                        permission: "manage_" + vm.entityType.split('-').join('')
+                    })
+                }
+
+                if (group.objectPermissions && group.objectPermissions.change === true) {
+                    vm.entity.object_permissions.push({
+                        member: null,
+                        group: group.id,
+                        permission: "change_" + vm.entityType.split('-').join('')
+                    })
+                }
+
+            });
+        }
+
+        fillMissingFieldsByDefaultValues(vm.entity, vm.userInputsNotPlacedInTheForm);
+
+    };
 
     module.exports = {
         isUserInputUsedInTTypeExpr: isUserInputUsedInTTypeExpr,
         updateTransactionUserInputs: updateTransactionUserInputs,
-		removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation
+		removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
+        getTransactionUserInputsNotPlacedInTheForm: getTransactionUserInputsNotPlacedInTheForm,
+        updateEntityBeforeSave: updateEntityBeforeSave
     }
 
 }());
