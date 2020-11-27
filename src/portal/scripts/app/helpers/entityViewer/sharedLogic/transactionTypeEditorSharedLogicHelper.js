@@ -4,10 +4,11 @@
 
     let metaHelper = require('../../meta.helper');
 
-    var uiService = require('../../../services/uiService');
+    let uiService = require('../../../services/uiService');
     let gridTableEvents = require('../../../services/gridTableEvents');
 
     let GridTableHelperService = require('../../gridTableHelperService');
+    let helpExpressionsService = require('../../../services/helpExpressionsService');
 
     'use strict';
     module.exports = function (viewModel, $scope, $mdDialog) {
@@ -229,30 +230,60 @@
         };
 
         // TRANSACTION VALIDATION
-        var checkFieldExprForDeletedInput = function (inputsToDelete, actionFieldValue, actionItemKey, actionNotes) {
+        var checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, location) {
 
-            for (var a = 0; a < inputsToDelete.length; a++) {
+			var actionFieldLocation = {
+				action_notes: location,
+				key: itemKey, // for actions errors
+				name: itemKey // for entity errors
+			};
 
-                var dInputName = inputsToDelete[a];
+			var validationResult = helpExpressionsService.validateExpressionOnFrontend(
+				{expression: fieldValue},
+				viewModel.expressionData
+			);
 
-                var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
-                var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])';
+			if (validationResult.status) {
 
-                var dInputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
+				for (var a = 0; a < inputsToDelete.length; a++) { // if input was deleted
 
-                if (actionFieldValue.match(dInputRegExpObj)) {
+					var dInputName = inputsToDelete[a];
 
-                    var actionFieldLocation = {
-                        action_notes: actionNotes,
-                        key: actionItemKey, // for actions errors
-                        name: actionItemKey, // for entity errors
-                        message: "The deleted input is used in the Expression."
-                    };
+					/* var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
+					var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])'; */
+					var dInputRegExpObj = new RegExp('(?:^|[^A-Za-z_.])' + dInputName + '(?![A-Za-z1-9_])', 'g');
 
-                    return actionFieldLocation;
+					if (fieldValue.match(dInputRegExpObj)) {
 
-                }
-            }
+						actionFieldLocation.message = "The deleted input " + dInputName + " is used in the Expression."
+
+						return actionFieldLocation;
+
+					}
+
+				}
+
+				switch (validationResult.status) {
+					case 'error':
+						actionFieldLocation.message = 'Invalid expression. ' + validationResult.result;
+						break;
+
+					case 'functions-error':
+						actionFieldLocation.message = 'Not all variables are identified expression. ' + validationResult.result;
+						break;
+
+					case 'inputs-error':
+						actionFieldLocation.message = 'Not all variables are identified inputs. ' + validationResult.result;
+						break;
+
+					case 'bracket-error':
+						actionFieldLocation.message = 'Mismatch in the opening and closing braces. ' + validationResult.result;
+						break;
+				}
+
+				return actionFieldLocation;
+
+			}
 
         };
 
@@ -279,17 +310,18 @@
 
                         actionItemKeys.forEach(function (actionItemKey) {
 
+							var fieldWithInvalidExpr;
+
                             if (actionItemKey === 'notes') {
 
                                 if (actionItem[actionItemKey]) {
-                                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(viewModel.inputsToDelete,
-                                                                                             actionItem[actionItemKey],
-                                                                                             actionItemKey,
-                                                                                             action.action_notes);
+                                    fieldWithInvalidExpr = checkFieldExpr(
+                                    	viewModel.inputsToDelete,
+										actionItem[actionItemKey],
+										actionItemKey,
+										action.action_notes
+									);
 
-                                    if (fieldWithInvalidExpr) {
-                                        result.push(fieldWithInvalidExpr);
-                                    }
                                 }
 
                             } else {
@@ -342,20 +374,20 @@
 
                                     } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // deleted inputs use
 
-                                        var fieldWithInvalidExpr = checkFieldExprForDeletedInput(viewModel.inputsToDelete,
-                                                                                                 actionItem[actionItemKey],
-                                                                                                 actionItemKey,
-                                                                                                 action.action_notes);
-
-                                        if (fieldWithInvalidExpr) {
-                                            result.push(fieldWithInvalidExpr);
-                                        }
+                                        fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
+                                                                                             actionItem[actionItemKey],
+                                                                                             actionItemKey,
+                                                                                             action.action_notes);
 
                                     }
 
                                 }
 
                             }
+
+							if (fieldWithInvalidExpr) {
+								result.push(fieldWithInvalidExpr);
+							}
 
                         })
 
@@ -384,14 +416,15 @@
 
             entityKeys.forEach(function (entityKey) {
 
-                if (entityKey.indexOf('user_text_') === 0 ||
+                if ((entityKey.indexOf('user_text_') === 0 ||
                     entityKey.indexOf('user_number_') === 0 ||
-                    entityKey.indexOf('user_date_') === 0) {
+                    entityKey.indexOf('user_date_') === 0) &&
+					entity[entityKey]) {
 
-                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(inputsToDelete,
-                                                                             entity[entityKey],
-                                                                             entityKey,
-                                                                             'FIELDS');
+                    var fieldWithInvalidExpr = checkFieldExpr(inputsToDelete,
+                                                              entity[entityKey],
+                                                              entityKey,
+                                                              'FIELDS');
 
                     if (fieldWithInvalidExpr) {
                         result.push(fieldWithInvalidExpr);
@@ -456,6 +489,42 @@
             return result;
 
         };
+
+        var validateInputs = function (inputs) {
+
+        	var errors = [];
+
+        	inputs.forEach(function (input) {
+
+				var location;
+
+        		if (input.value_type !== 100 && input.value) {
+
+        			location = 'INPUTS: ' + input.name;
+					var defaultExprError = checkFieldExpr(viewModel.inputsToDelete, input.value, 'Default value', location);
+
+					if (defaultExprError) {
+						errors.push(defaultExprError);
+					}
+
+				}
+
+				if (input.value_expr) {
+
+					location = 'INPUTS: ' + input.name;
+					var inputExprError = checkFieldExpr(viewModel.inputsToDelete, input.value_expr, 'Input expr', location);
+
+					if (inputExprError) {
+						errors.push(inputExprError);
+					}
+
+				}
+
+			});
+
+        	return errors;
+
+		};
         // < TRANSACTION VALIDATION >
 
 
@@ -611,7 +680,7 @@
                     if (defaultValue.cellType === 'selector') {
 
                         defaultValue.cellType = 'expression'
-                        defaultValue.settings = {value: ''}
+                        defaultValue.settings = {value: '', exprData: viewModel.expressionData}
 
                     }
 
@@ -652,7 +721,7 @@
                     if (defaultValue.cellType === 'selector') {
 
                         defaultValue.cellType = 'expression'
-                        defaultValue.settings = {value: ''}
+                        defaultValue.settings = {value: '', exprData: viewModel.expressionData}
 
                     }
 
@@ -950,6 +1019,7 @@
                         cellType: 'expression',
                         settings: {
                             value: '',
+							exprData: null,
                             closeOnMouseOut: false
                         },
                         styles: {
@@ -1057,11 +1127,13 @@
                 rowObj.columns[5].settings.value = input.context_property
                 // default_value
                 rowObj.columns[6].settings.value = input.value
+				rowObj.columns[6].settings.exprData = viewModel.expressionData
 
-                changeCellsBasedOnValueType(rowObj);
+				changeCellsBasedOnValueType(rowObj);
 
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
+				rowObj.columns[7].settings.exprData = viewModel.expressionData;
                 // linked_inputs_names
                 rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
 
@@ -1115,6 +1187,7 @@
             resolveRelation: resolveRelation,
             checkActionsForEmptyFields: checkActionsForEmptyFields,
             checkEntityForEmptyFields: checkEntityForEmptyFields,
+			validateInputs: validateInputs,
 
             initGridTableEvents: initGridTableEvents,
             createDataForInputsTableGrid: createDataForInputsTableGrid,
