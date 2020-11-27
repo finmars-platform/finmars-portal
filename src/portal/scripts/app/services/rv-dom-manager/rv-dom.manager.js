@@ -1037,6 +1037,10 @@
             return true;
         }
 
+        if (option.action === 'mark_row') {
+            return true;
+        }
+
         return false;
     };
 
@@ -1134,6 +1138,10 @@
 
             }
 
+            if (item.action === 'mark_row') {
+                ttype_specific_attr = ' data-ev-dropdown-action-data-color="' + item.action_data + '"'
+            }
+
             if (item.action === 'open_layout') {
 
                 result = result +
@@ -1204,20 +1212,6 @@
             result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
         });
 
-        result = result + '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="mark_row"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Red';
-
-        result = result + '</div>';
-
-        result = result + '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="mark_row_green"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Green';
-
-        result = result + '</div>';
-
         result = result + '</div>';
 
         return result;
@@ -1238,23 +1232,13 @@
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
             }
 
-            console.log('sendContextMenuActionToActiveObj.dropdownAction', dropdownAction);
+            if (dropdownAction === 'mark_row') {
 
-            if (dropdownAction === 'mark_row_red' || dropdownAction === 'mark_row_green') {
+                var color = event.target.dataset.evDropdownActionDataColor;
 
-                if (objectId && dropdownAction && parentGroupHashId) {
+                if (objectId && color && parentGroupHashId) {
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                    var color;
-
-                    if (dropdownAction === 'mark_row_red') {
-                        color = 'red'
-                    }
-
-                    if (dropdownAction === 'mark_row_green') {
-                        color = 'green'
-                    }
 
                     var markedReportRows = localStorage.getItem("marked_report_rows");
 
@@ -1264,13 +1248,17 @@
                         markedReportRows = {};
                     }
 
-                    markedReportRows[obj.id] = {
-                        color: color
-                    };
+                    if (color === 'undo_mark_row') {
+                        delete markedReportRows[obj.id]
+                    } else {
+                        markedReportRows[obj.id] = {
+                            color: color
+                        };
+                    }
 
                     localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
 
-                    console.log('markedReportRows', markedReportRows);
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
 
