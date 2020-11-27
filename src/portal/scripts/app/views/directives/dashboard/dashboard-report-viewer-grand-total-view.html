@@ -14,6 +14,11 @@
                 <!--<md-tooltip data-md-direction="top">Collapse Component</md-tooltip>-->
             <!--</md-button>-->
 
+            <md-button  data-ng-if="missingPricesData.items.length" class="md-raised md-warn" data-ng-click="openMissingPricesDialog($event)">
+                <ng-md-icon size="24" icon="warning"></ng-md-icon>
+                <md-tooltip data-md-direction="top"> Warning ({{missingPricesData.items.length}})</md-tooltip>
+            </md-button>
+
             <md-button data-ng-click="clearUseFromAboveFilters()">
                 <ng-md-icon size="24" icon="leak_remove"></ng-md-icon>
                 <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>

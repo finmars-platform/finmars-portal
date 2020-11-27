@@ -27,56 +27,38 @@
         }
 
         vm.nameProperty = data.nameProperty;
+        vm.strictOrder = data.strictOrder;
+        vm.optionsCheckboxes = data.optionsCheckboxes;
         vm.readyStatus = false;
-
         vm.selectedItems = [];
 
         var separateUnselectedItems = function (items, selectedItems) {
-
-            console.log('separateUnselectedItems.items', items);
-            console.log('separateUnselectedItems.selectedItems', selectedItems);
 
             selectedItems.forEach(function (selItem) {
 
                 items.forEach(function (item, itemIndex) {
 
-                    if (item.id === selItem) {
+                	let selItemId = selItem;
+
+                	if (typeof selItem === 'object') {
+						selItemId = selItem.id;
+					}
+
+                    if (item.id === selItemId) {
+
+                    	if (typeof selItem === 'object') {
+							item = Object.assign(item, selItem);
+						}
 
                         vm.selectedItems.push(item);
                         items.splice(itemIndex, 1);
+
                     }
 
                 });
             })
 
         };
-
-        /*if (getDataMethod) {
-
-            getDataMethod().then(function (resData) {
-
-                vm.items = JSON.parse(JSON.stringify(resData.results));
-
-                if (vm.items && selectedItems) {
-                    separateUnselectedItems(vm.items, selectedItems);
-                }
-
-                vm.readyStatus = true;
-                $scope.$apply();
-
-            });
-
-        } else {
-
-            vm.items = data.items;
-
-            if (vm.items && selectedItems) {
-                separateUnselectedItems(vm.items, selectedItems);
-            }
-
-            vm.readyStatus = true;
-
-        }*/
 
         vm.items = JSON.parse(JSON.stringify(data.items));
 
@@ -92,11 +74,22 @@
 
         vm.agree = function () {
 
-            vm.selectedItemsId = [];
+			if (vm.optionsCheckboxes) {
 
-            vm.selectedItems.map(function (selItem) {
-               vm.selectedItemsId.push(selItem.id);
-            });
+				vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+					return {
+						id: selItem.id,
+						isChecked: selItem.isChecked || false
+					};
+				});
+
+			} else {
+
+				vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+					return selItem.id;
+				});
+
+			}
 
             $mdDialog.hide({status: "agree", selectedItems: vm.selectedItemsId});
 

@@ -29,6 +29,7 @@
     var uiService = require('../../services/uiService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
+    var metaHelper = require('../../helpers/meta.helper');
 
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
@@ -94,6 +95,12 @@
         vm.attributeTypesByValueTypes = {}; // need for pricing tab
 
         vm.currencies = []; // need for instrument pricing tab;
+        vm.pricingConditions = [
+            {id: 1, name: "Don't Run Valuation"},
+            {id: 2, name: "Run Valuation: if non-zero position"},
+            {id: 3, name: "Run Valuation: always"},
+        ];
+        //vm.currenciesSorted = [];
 
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
@@ -151,7 +158,10 @@
 
             entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data) {
 
-                vm.currencies = data.results;
+                // Victor 19.10.2020
+                //vm.currencies = data.results;
+                vm.currencies = metaHelper.textWithDashSort(data.results);
+                console.log('vm.currencies', vm.currencies)
 
                 $scope.$apply();
 
@@ -637,7 +647,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attributeTypes = data.results;
             });
         };
@@ -1021,7 +1031,9 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var deepCopyOfEntity = metaHelper.recursiveDeepCopy(vm.entity, true);
+
+                var result = entityEditorHelper.clearEntityBeforeSave(deepCopyOfEntity, vm.entityType);
 
                 if (dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);

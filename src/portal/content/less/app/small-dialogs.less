@@ -226,3 +226,65 @@ md-card.tab-editor-tab-card {
   margin: 19px 0px 0px 11px;
 }
 // < expandable-items-selector-dialog-view >
+
+// items selector with groups
+@selectorWgItemsLeftSpace: 50px;
+
+.i-selector-wg-filter-container {
+  padding: 0 10px;
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 10px;
+
+  input {
+    width: 100%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #cecece;
+    box-sizing: border-box;
+  }
+}
+
+.i-selector-wg-group {
+  margin-bottom: 12px;
+
+  h3 {
+    margin-left: 10px;
+  }
+
+  .i-selector-wg-row {
+    position: relative;
+    padding-left: @selectorWgItemsLeftSpace;
+    padding-top: 2px;
+    margin-bottom: 8px;
+    cursor: pointer;
+
+    &:not(.i-selector-wg-active):hover {
+      background-color: rgba(116, 116, 116, 0.2);
+    }
+  }
+
+}
+
+.i-selector-wg-active {
+  background-color: #f7b28d;
+}
+
+md-checkbox.i-selector-wg-toggle-all {
+  margin-left: 8px;
+}
+
+md-checkbox.i-selector-wg-toggle-group {
+  margin-left: @selectorWgItemsLeftSpace;
+  margin-bottom: 8px;
+}
+
+.i-selector-wg-folding-btn {
+  border: 1px solid #000000;
+  padding: 0;
+  margin: 19px 0px 0px 8px;
+}
+// < items selector with groups >

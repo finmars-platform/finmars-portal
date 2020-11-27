@@ -164,6 +164,7 @@
         };
 
         vm.moveUp = function (itemIndex) {
+
             var prevItemIndex = itemIndex - 1;
             var menuRoot = vm.layout.data.menu.root;
 
@@ -242,7 +243,8 @@
 
         vm.getLayouts = function () {
 
-            uiService.getListLayoutDefault({pageSize: 1000}).then(function (data) {
+            // uiService.getListLayoutDefault({pageSize: 1000}).then(function (data) {
+            uiService.getListLayout(null, {pageSize: 1000}).then(function (data) {
 
                 vm.layouts = data.results;
 

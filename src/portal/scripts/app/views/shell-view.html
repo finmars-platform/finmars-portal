@@ -4,7 +4,7 @@
 
         <div class="height-100 shellViewDnDDiv">
 
-            <div data-ng-if="vm.isIdentified" class="min-height">
+            <div data-ng-if="vm.isIdentified && vm.readyStatus.masters" class="min-height">
 
                 <div data-ng-if="vm.currentGlobalState == 'profile'" class="min-height">
 
@@ -74,10 +74,9 @@
                             </div>
                         </div>
                     </md-toolbar>
+
                     <md-content flex class="app-md-content min-height">
-
                         <div data-ui-view class="shell-view min-height"></div>
-
                     </md-content>
 
                 </div>
@@ -143,6 +142,12 @@
                                                 <span data-ng-show="vm.unreadedNotificationsAmount"
                                                       data-ng-bind="vm.unreadedNotificationsAmount"
                                                       class="unreaded-notifications-number"></span>
+                                            </md-button>
+
+                                            <md-button style="margin-left: 0"
+                                                       data-ui-sref="app.system-messages"
+                                                       aria-label="System Messages">
+                                                <ng-md-icon icon="email"></ng-md-icon>
                                             </md-button>
 
                                             <div class="header-masteruser">
@@ -249,11 +254,11 @@
                                 </div>
                                 <!-- ----------------------------------------- -->
                             </md-toolbar>
+
                             <md-content flex class="app-md-content min-height space-for-sidenav">
-
                                 <div data-ui-view class="shell-view min-height"></div>
-
                             </md-content>
+
                         </div>
                     </div>
 
@@ -280,7 +285,7 @@
 
     </div>
 
-    <div data-ng-if="!vm.isAuthenticated" style="padding-top: 120px;">
+    <div data-ng-if="!vm.isAuthenticated && !vm.readyStatus.masters" style="padding-top: 120px;">
 
         <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
             <progress-linear></progress-linear>
