@@ -98,6 +98,11 @@
                 "allow_null": false
             },
             {
+                "key": "has_second_exposure_currency",
+                "name": "Has second exposure currency",
+                "value_type": "boolean"
+            },
+            {
                 "key": "tags",
                 "name": "Tags",
                 "value_type": "mc_field",
