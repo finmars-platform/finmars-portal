@@ -2,30 +2,80 @@
 
     var rvSubtotalService = require('./rv-subtotal.service');
 
-    function getMatrixUniqueValues(itemList, key) {
+    function getMatrixUniqueValues(itemList, key, valueKey) {
 
         var result = [];
+        var foundItems = [];
 
         itemList.forEach(function (item) {
 
-            /*var itemKey = item[key];
+            var itemKey = item[key] || '-';
+            var itemTotal = null;
 
-            if (!item[key]) {
-                itemKey = '-';
-            }*/
-            if (result.indexOf(item[key]) === -1) {
-                if (item[key]) {
-                    result.push(item[key])
-                }
+            if (item[valueKey] !== null) {
+                itemTotal = item[valueKey];
             }
 
-            /*if (result.indexOf(itemKey) === -1) {
-                /!*if (item[key]) {
-                    result.push(item[key])
-                }*!/
-                result.push(itemKey);
+            var itemIndex = foundItems.indexOf(itemKey);
 
-            }*/
+            if (itemIndex === -1) {
+
+                var itemObj = {
+                    key: itemKey,
+                    total: itemTotal
+                }
+
+                result.push(itemObj);
+                foundItems.push(itemObj.key);
+
+            } else {
+
+                if ((itemTotal || itemTotal === 0) && result[itemIndex].total === null) {
+                    result[itemIndex].total = 0;
+                }
+
+                if (itemTotal) {
+                    result[itemIndex].total += itemTotal;
+                }
+
+            }
+
+        });
+
+        result = result.sort(function (a, b) {
+
+            if (a.key.indexOf('-') !== 0 && b.key.indexOf('-') === 0) {
+                return 1;
+            }
+
+            if (a.key.indexOf('-') === 0 && b.key.indexOf('-') !== 0) {
+                return -1;
+            }
+
+            if (a.key.indexOf('-') === 0 && b.key.indexOf('-') === 0) { // if both words starts with '-', filter as usual
+
+                var aWithoutDash = a.key.slice(1);
+                var bWithoutDash = b.key.slice(1);
+
+                if (aWithoutDash > bWithoutDash) {
+                    return 1;
+                }
+
+                if (aWithoutDash < bWithoutDash) {
+                    return -1;
+                }
+
+            }
+
+            if (a.key > b.key) {
+                return 1;
+            }
+
+            if (a.key < b.key) {
+                return -1;
+            }
+
+            return 0;
 
         });
 
@@ -38,19 +88,19 @@
 
         var result = [];
 
-        rows.forEach(function (rowName) { // creating data structure for matrix
+        rows.forEach(function (row) { // creating data structure for matrix
 
             var matrixRowData = {
                 index: result.length,
-                row_name: rowName,
+                row_name: row.key,
                 items: []
             };
 
-            columns.forEach(function (colName) {
+            columns.forEach(function (column) {
 
                 var matrixColumnData = {
                     index: matrixRowData.items.length,
-                    column_name: colName,
+                    column_name: column.key,
                     data: {
                         flatListItems: [],
                         value: 0
@@ -67,10 +117,10 @@
 
         itemList.forEach(function (item) { // find items for matrix cells
 
-            var rowName = item[rowsKey];
-            var colName = item[columnsKey];
+            var rowName = item[rowsKey] || '-';
+            var colName = item[columnsKey] || '-';
 
-            if (rowName && colName) {
+            /*if (rowName && colName) {
 
                 var r, c;
                 rowsLoop: for (r = 0; r < result.length; r++) {
@@ -93,6 +143,27 @@
                     }
                 }
 
+            }*/
+
+            var r, c;
+            rowsLoop: for (r = 0; r < result.length; r++) {
+                var row = result[r];
+
+                if (row.row_name === rowName) {
+
+                    for (c = 0; c < row.items.length; c++) {
+                        var column = row.items[c];
+
+                        if (column.column_name === colName) {
+
+                            column.data.flatListItems.push(item);
+                            break rowsLoop;
+
+                        }
+
+                    }
+
+                }
             }
 
         });
@@ -101,18 +172,41 @@
 
             row.items.forEach(function (column) {
 
+                var cellHasNumericVal = false;
+
                 if (column.data.flatListItems.length) {
 
-                    var columnData = {
-                        key: valueKey,
-                        report_settings: {
-                            subtotal_formula_id: subtotal_formula_id
+                    for (var i = 0; i < column.data.flatListItems.length; i++) { // check if at least one flatListItem has number in valueKey
+
+                        var flItem = column.data.flatListItems[i];
+
+                        if (flItem[valueKey] || flItem[valueKey] === 0) {
+
+                            cellHasNumericVal = true;
+                            break;
+
                         }
-                    };
 
-                    var colValueObj = rvSubtotalService.calculateColumn(column.data.flatListItems, columnData);
-                    column.data.value = colValueObj[valueKey];
+                    }
 
+                    if (cellHasNumericVal) {
+
+                        var columnData = {
+                            key: valueKey,
+                            report_settings: {
+                                subtotal_formula_id: subtotal_formula_id
+                            }
+                        };
+
+                        var colValueObj = rvSubtotalService.calculateColumn(column.data.flatListItems, columnData);
+                        column.data.value = colValueObj[valueKey];
+
+                    } else {
+                        column.data.value = null;
+                    }
+
+                } else {
+                    column.data.value = null;
                 }
 
                 delete column.data.flatListItems;
@@ -125,7 +219,7 @@
 
     }
 
-    function getMatrixTotals(matrix) {
+    /*function getMatrixTotals(matrix) {
 
         var result = {
             rows: [],
@@ -165,13 +259,75 @@
 
         return result
 
+    }*/
+
+    /*function hideEmptyRows (matrix) {
+
+        matrix.forEach(function (row, rowIndex) {
+
+            var removeRow = true;
+
+            row.items.forEach(function (column) {
+
+                if (column.data.value) {
+                    removeRow = false;
+                }
+
+            });
+
+            if (removeRow) {
+                matrix.splice(rowIndex, 1);
+            }
+
+        });
+
     }
+
+    function hideEmptyCols (matrix, columns) {
+
+        var colsToDelete = [];
+
+        matrix.forEach(function (row) {
+
+            var i;
+            for (i = 0; i < columns.length; i++) {
+
+                if (colsToDelete.indexOf(columns[i]) < 0 && !row.items[i].data.value) {
+
+                    columns.splice();
+                    colsToDelete.push(columns[i]);
+
+                }
+
+            }
+
+        });
+
+        matrix.forEach(function (row) {
+
+            row.items.forEach(function (column, colIndex) {
+
+                if (colsToDelete.indexOf(column.column_name) > -1) {
+                    row.items.splice(colIndex, 1)
+                }
+
+            });
+
+        });
+
+        return columns;
+    }*/
 
 
     module.exports = {
+
         getMatrixUniqueValues: getMatrixUniqueValues,
-        getMatrix: getMatrix,
-        getMatrixTotals: getMatrixTotals
+        getMatrix: getMatrix
+        //getMatrixTotals: getMatrixTotals,
+
+        /*hideEmptyRows: hideEmptyRows,
+        hideEmptyCols: hideEmptyCols*/
+
     }
 
 

@@ -25,6 +25,17 @@
     </md-input-container>
 </div>
 
+<div layout="row" class="">
+    <md-input-container class="dashboard-constructor-field1">
+        <label for="">Pie Size (%)</label>
+        <input data-ng-model="vm.item.settings.pie_size_percent"
+               type="number"
+               max="100"
+               class="no-input-arrows">
+
+    </md-input-container>
+</div>
+
 <md-checkbox data-ng-model="vm.item.settings.show_legends"
              ng-change=""
              style="margin-left: 10px;">Show legends</md-checkbox>

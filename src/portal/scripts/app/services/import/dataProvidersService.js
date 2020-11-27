@@ -24,12 +24,32 @@
     };
 
     var createConfig = function (provider) {
-        return dataProvidersRepository.createConfig(provider)
+        return dataProvidersRepository.createConfig(provider);
     };
 
     var bloombergTestCertificate = function(data) {
-        return dataProvidersRepository.bloombergTestCertificate(data)
+        return dataProvidersRepository.bloombergTestCertificate(data);
     }
+
+    var getPersonalProvidersList = function () {
+        return dataProvidersRepository.getPersonalProvidersList();
+    }
+
+    var getCredentials = function () {
+        return dataProvidersRepository.getCredentials();
+    };
+
+    var createCredential = function (data) {
+        return dataProvidersRepository.createCredential(data);
+    };
+
+    var editCredential = function (id, data) {
+        return dataProvidersRepository.editCredential(id, data);
+    };
+
+    var deleteCredential = function (id) {
+        return dataProvidersRepository.deleteCredential(id);
+    };
 
     module.exports = {
         getList: getList,
@@ -37,7 +57,13 @@
         getConfig: getConfig,
         setConfig: setConfig,
         createConfig: createConfig,
-        bloombergTestCertificate: bloombergTestCertificate
+        bloombergTestCertificate: bloombergTestCertificate,
+
+        getPersonalProvidersList: getPersonalProvidersList,
+        getCredentials: getCredentials,
+        createCredential: createCredential,
+        editCredential: editCredential,
+        deleteCredential: deleteCredential
     }
 
 }());

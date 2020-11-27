@@ -271,7 +271,7 @@
 
         vm.init = function () {
 
-            instrumentDownloadSchemeService.getList(vm.providerId).then(function (data) {
+            instrumentDownloadSchemeService.getListLight(vm.providerId).then(function (data) {
                 vm.instrumentSchemes = data.results;
                 vm.readyStatus.schemes = true;
                 $scope.$apply();

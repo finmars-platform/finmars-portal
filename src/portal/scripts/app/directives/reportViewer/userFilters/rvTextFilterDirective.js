@@ -23,7 +23,6 @@
 
                 scope.filters = scope.evDataService.getFilters();
 
-                scope.filterValue = undefined;
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 

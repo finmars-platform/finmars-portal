@@ -15,7 +15,7 @@
     var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
     var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
-    var pricingScheduleService = require('../pricing/pricingScheduleService');
+    var scheduleService = require('../scheduleService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
     var uiRepository = require('../../repositories/uiRepository');
@@ -461,9 +461,6 @@
                         case 'instruments.instrumenttype':
                             resolve(getAndUpdate(contentType, item, settings, cacheContainer));
                             break;
-                        case 'integrations.pricingautomatedschedule':
-                            resolve(pricingScheduleService.updateSchedule(item));
-                            break;
                         case 'complex_import.compleximportscheme':
                             resolve(new Promise(function (resolveLocal, reject) {
 
@@ -800,12 +797,21 @@
                         case 'ui.listlayout':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /* uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
-                                }).then(function (data) {
+                                }) */
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     if (data.results.length) {
 
@@ -980,12 +986,21 @@
                         case 'ui.reportlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /* uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
-                                }).then(function (data) {
+                                }) */
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     if (data.results.length) {
 
@@ -1609,30 +1624,6 @@
                         case 'instruments.instrumenttype':
                             resolve(createIfNotExists(entity, item, settings, cacheContainer, errors));
                             break;
-                        case 'integrations.pricingautomatedschedule':
-                            resolve(new Promise(function (resolveLocal, reject) {
-
-                                pricingScheduleService.updateSchedule(item).then(function (data) {
-
-                                    console.log('pricingautomatedschedule here?', data);
-
-                                    resolveLocal(data)
-                                }).catch(function (reason) {
-
-                                    errors.push({
-                                        item: item,
-                                        error: {
-                                            message: reason
-                                        }
-                                    });
-
-                                    console.log('pricingautomatedscheduleerror ', reason);
-
-                                    resolveLocal(reason);
-                                })
-
-                            }));
-                            break;
                         case 'ui.editlayout':
                             resolve(new Promise(function (resolve, reject) {
 
@@ -1681,12 +1672,21 @@
                         case 'ui.listlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /* uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
-                                }).then(function (data) {
+                                }) */
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     if (data.results.length) {
 
@@ -1866,12 +1866,21 @@
                         case 'ui.reportlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /* uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
-                                }).then(function (data) {
+                                }) */
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     if (data.results.length) {
 
@@ -1975,12 +1984,21 @@
                         case 'ui.bookmark':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /*uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.___layout_name,
                                         content_type: item.___content_type
                                     }
-                                }).then(function (data) {
+                                })*/
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.___layout_name,
+                                            content_type: item.___content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     console.log('BOOKMARK', data);
 
@@ -1998,12 +2016,21 @@
 
                                             promises.push(new Promise(function (localResolve) {
 
-                                                uiRepository.getListLayoutDefault({
+                                                /* uiRepository.getListLayoutDefault({
                                                     filters: {
                                                         name: child.___layout_name,
                                                         content_type: child.___content_type
                                                     }
-                                                }).then(function (data) {
+                                                }) */
+                                                uiRepository.getListLayout(
+                                                    null,
+                                                    {
+                                                        filters: {
+                                                            name: child.___layout_name,
+                                                            content_type: child.___content_type
+                                                        }
+                                                    }
+                                                ).then(function (data) {
 
                                                     if (data.results.length) {
 

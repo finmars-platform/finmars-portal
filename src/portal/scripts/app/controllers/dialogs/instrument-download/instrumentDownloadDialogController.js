@@ -248,7 +248,7 @@
                     autoWrap: true,
                     skipHide: true
                 }).then(function () {
-                    $mdDialog.hide({res: 'agree'});
+                    $mdDialog.hide({res: 'agree', data: data});
                 });
 
             }).catch(function (reason) {

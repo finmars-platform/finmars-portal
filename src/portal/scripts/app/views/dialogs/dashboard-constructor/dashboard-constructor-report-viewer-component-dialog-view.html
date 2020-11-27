@@ -340,12 +340,19 @@
         <div data-ng-if="!vm.launchedFromDashboard"
              layout="row"
              layout-align="space-between center">
+
+            <md-button ng-click="vm.exportToDashboards()" style="margin-right:20px;">
+                Export to dashboards
+            </md-button>
+
             <md-button data-ng-click="vm.cancel()" style="margin-right:20px;">
                 Cancel
             </md-button>
+
             <md-button data-ng-click="vm.agree()" style="margin-right:20px;">
                 OK
             </md-button>
+
         </div>
 
         <div data-ng-if="vm.launchedFromDashboard"

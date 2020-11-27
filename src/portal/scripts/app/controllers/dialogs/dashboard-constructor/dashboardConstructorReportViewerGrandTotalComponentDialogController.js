@@ -186,6 +186,11 @@
 
         };
 
+        // Victor 2020.10.26 Issue #47
+        vm.exportToDashboards = function () {
+            dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
+        };
+
         vm.init = function () {
 
             console.log('dataService', dataService);

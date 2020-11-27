@@ -339,9 +339,6 @@
             case 'schedules.pricingschedule':
                 result = 'Pricing Schedule';
                 break;
-            case 'integrations.pricingautomatedschedule':
-                result = 'Automated Schedule';
-                break;
         }
 
         if (!result) {
