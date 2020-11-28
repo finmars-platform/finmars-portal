@@ -394,50 +394,51 @@
 				}
 
 				$(elem).click(function (event) {
-				  event.preventDefault();
-				  event.stopPropagation();
 
-				  getItems().then(function (data) {
+					event.preventDefault();
+					event.stopPropagation();
 
-					items = data;
+					getItems().then(function (data) {
 
-					$mdDialog.show({
-						controller: "TwoFieldsMultiselectDialogController as vm",
-						templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-						targetEvent: event,
-						multiple: true,
-						locals: {
-							data: {
-								items: items,
-								model: scope.model,
-								title: dialogTitle,
-								nameProperty: scope.nameProperty,
-								strictOrder: scope.strictOrder,
-								optionsCheckboxes: scope.optionsCheckboxes
+						items = data;
+
+						$mdDialog.show({
+							controller: "TwoFieldsMultiselectDialogController as vm",
+							templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
+							targetEvent: event,
+							multiple: true,
+							locals: {
+								data: {
+									items: items,
+									model: scope.model,
+									title: dialogTitle,
+									nameProperty: scope.nameProperty,
+									strictOrder: scope.strictOrder,
+									optionsCheckboxes: scope.optionsCheckboxes
+								}
 							}
-						}
-					}).then(function (res) {
+						}).then(function (res) {
 
-					  if (res.status === "agree") {
+						  if (res.status === "agree") {
 
-						  scope.model = res.selectedItems;
-
-						  if (scope.onChangeCallback) {
 							  scope.model = res.selectedItems;
 
-							  setTimeout(function () {
-								scope.onChangeCallback();
-							  }, 500);
+							  if (scope.onChangeCallback) {
+								  scope.model = res.selectedItems;
 
-						  } else if (ngModel) {
-							  ngModel.$setViewValue(res.selectedItems);
+								  setTimeout(function () {
+									scope.onChangeCallback();
+								  }, 500);
+
+							  } else if (ngModel) {
+								  ngModel.$setViewValue(res.selectedItems);
+							  }
+
 						  }
 
-					  }
+						});
 
 					});
-
-				  });
 
 				});
 
