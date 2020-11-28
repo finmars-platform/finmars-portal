@@ -5,13 +5,9 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
-
-        logService.controller('TwoFieldsOptionsDialogController', 'initialized');
 
         var getDataMethod = data.getDataMethod;
         var selectedItems = data.model;
