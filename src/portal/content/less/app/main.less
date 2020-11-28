@@ -2675,15 +2675,13 @@ md-dialog.two-rows-dialog-actions {
   z-index: 50;
 
   .big-drawer-wrap {
-    // width: 0;
+    width: 0;
     height: 100%;
-    // overflow: hidden;
     float: right;
     animation-duration: .5s;
     border-left: 2px solid #a2a2a2;
-    /*&:not(.no-drawer-animation) {
-      transition: width 0.5s linear;
-    }*/
+    transition: width 0.5s linear;
+
     &.big-drawer-opens {
       animation-name: bigDrawerOpening;
 

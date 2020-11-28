@@ -12,18 +12,23 @@
 
         _this.drawersPromise = null;
 
-        let backdropElem, drawerElem, drawerWrap, drawerContainer, resizeButton = null;
-		let sidenavWidth = 330, viewportWidth, drawerMaxWidth, currentWidthPercent = 100, drawerCurrentWidth, drawerHeight,
+        let backdropElem, drawerElem, drawerWrap, drawerContainer, resizeButton;
+		let sidenavWidth = 330, viewportWidth, drawerWidth, drawerHeight, drawerOptions = {},
 			drawerWidthAnimationDuration = 500; // same as width transition duration
 
 		let calcDrawerContainerSize = function () {
 
 			viewportWidth = window.innerWidth;
-			drawerMaxWidth = (viewportWidth - sidenavWidth) * 0.9;
-            drawerCurrentWidth = drawerMaxWidth * currentWidthPercent / 100;
+
+			drawerWidth = (viewportWidth - sidenavWidth) * 0.9;
+
+			if (drawerOptions.drawerWidth) {
+				drawerWidth = drawerOptions.drawerWidth;
+			}
+
 			drawerHeight = window.innerHeight;
 
-			drawerContainer.style.width = drawerCurrentWidth + 'px';
+			drawerContainer.style.width = drawerWidth + 'px';
 			drawerContainer.style.height = drawerHeight + 'px';
 
 		};
@@ -31,24 +36,32 @@
 		function bigDrawerOnWindowResize () {
 
 			calcDrawerContainerSize();
-
-			// drawerWrap.classList.add('no-drawer-animation');
-			drawerWrap.style.width = drawerCurrentWidth + 'px';
-			/* setTimeout(function () {
-				drawerWrap.classList.remove('no-drawer-animation');
-			}, drawerWidthAnimationDuration); */
+			drawerWrap.style.width = drawerWidth + 'px';
 
 		}
 
-		function setWidthPercent (percent = 100) {
-		    currentWidthPercent = percent
-            drawerCurrentWidth = drawerMaxWidth * currentWidthPercent / 100;
+		/* let setWidthPercent = function (percent = 100) {
 
-            drawerContainer.style.width = drawerCurrentWidth + 'px';
-            drawerWrap.style.width = drawerCurrentWidth + 'px';
-        }
+			currentWidthPercent = percent;
+			drawerCurrentWidth = drawerMaxWidth * currentWidthPercent / 100;
 
-        this.setWidthPercent = setWidthPercent;
+			drawerContainer.style.width = drawerCurrentWidth + 'px'
+			drawerWrap.style.width = drawerCurrentWidth + 'px'
+
+		}; */
+		let setDrawerWidth = function (widthVal) {
+
+			viewportWidth = window.innerWidth;
+			drawerWidth = widthVal;
+
+			drawerContainer.style.width = widthVal
+			drawerWrap.style.width = widthVal
+
+		};
+
+		this.setDrawerWidth = setDrawerWidth
+
+        /* this.setWidthPercent = setWidthPercent */
 
         this.show = function (options) {
 
@@ -57,14 +70,15 @@
                 let tpl;
                 let templateScope;
                 let ctrl;
+                drawerOptions = options;
 
                 tpl = $templateCache.get(options.templateUrl);
 
                 templateScope = $rootScope.$new();
 
                 let defaultLocals = {
-                    $scope: templateScope,
-                    $customDialog: Object.assign({}, _this, {_id: lastId})
+                    $scope: templateScope
+                    // $bigDrawer: Object.assign({}, _this, {_id: lastId})
                 };
 
                 let locals = Object.assign(defaultLocals, options.locals);
@@ -89,21 +103,32 @@
                 drawerContainer = document.createElement('div');
                 drawerContainer.classList.add('big-drawer-container');
 
-				calcDrawerContainerSize();
-				if (options.widthPercent) {
-				    setWidthPercent(options.widthPercent);
-                }
+				/*calcDrawerContainerSize();
+
+				if (options.drawerWidth) {
+					setDrawerWidth(options.drawerWidth);
+                }*/
+
                 drawerWrap.appendChild(drawerContainer);
 
                 $(drawerContainer).html(tpl);
                 $(drawerContainer).children().data('$ngControllerController', ctrl);
 
-                if (options.addResizeButton) {
-                    resizeButton = document.createElement('div');
-                    resizeButton.classList.add('big-drawer-resize-button', 'onResizeButtonClick');
-                    resizeButton.innerHTML = `<ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>`
-                    $(drawerContainer).append(resizeButton)
-                }
+				calcDrawerContainerSize();
+
+				if (options.drawerWidth) {
+					setDrawerWidth(options.drawerWidth);
+				}
+
+				if (options.addResizeButton) {
+
+					resizeButton = document.createElement('div');
+					resizeButton.classList.add('big-drawer-resize-button', 'onResizeButtonClick');
+					resizeButton.innerHTML = '<ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>'
+
+					$(drawerContainer).append(resizeButton);
+
+				}
 
                 // in case of multiple drawers
                 /*let firstChild = $(drawerElem).contents()[0];
@@ -116,15 +141,11 @@
                 //$(_this.rootElement).append($(elem).contents());
                 $(_this.rootElement).append($(backdropElem), $(drawerElem));
 
-                /* setTimeout(function () {
+				/* setTimeout(function () { // remove overflow: hidden; at the end of animation
 
-                     drawerWrap.style.width = drawerWidth + 'px';
+					drawerWrap.classList.remove('overflow-hidden');
 
-                    setTimeout(function () { // remove overflow: hidden; at the end of animation
-                        drawerWrap.style.overflow = 'visible';
-                    }, drawerWidthAnimationDuration);
-
-                }, 50); */
+				}, drawerWidthAnimationDuration); */
 
                 _this.drawersPromise = resolve;
 
@@ -138,8 +159,6 @@
 
         this.hide = function (data) {
 
-            /* drawerWrap.style.overflow = '';
-            drawerWrap.style.width = ''; */
 			drawerWrap.classList.remove('big-drawer-opens');
 			drawerWrap.classList.add('big-drawer-closes');
 
@@ -152,7 +171,7 @@
 
                 $(_this.rootElement).removeClass('overflow-hidden');
 
-            }, 500);
+            }, drawerWidthAnimationDuration);
 
 			window.removeEventListener("resize", bigDrawerOnWindowResize);
 
@@ -171,7 +190,8 @@
         return {
             show: service.show,
             hide: service.hide,
-            setWidthPercent: service.setWidthPercent,
+			setWidth: service.setDrawerWidth
+            // setWidthPercent: service.setWidthPercent
         }
 
     }

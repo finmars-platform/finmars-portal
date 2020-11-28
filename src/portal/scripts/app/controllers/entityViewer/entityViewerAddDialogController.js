@@ -162,7 +162,7 @@
             vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
             $scope.$apply();
             const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-            $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
+            $bigDrawer.setWidth(bigDrawerWidthPercent);
             bigDrawerResizeButton.classList.add('display-none');
             bigDrawerResizeButton.classList.remove('display-block');
         };
@@ -884,7 +884,7 @@
                     vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
 
                     const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-                    $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
+                    $bigDrawer.setWidth(bigDrawerWidthPercent);
                     if (vm.fixedAreaPopup.tabColumns !== 6) {
                         bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
                         bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');

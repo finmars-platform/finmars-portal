@@ -476,14 +476,13 @@
                         $bigDrawer.show({
                             controller: 'EntityViewerEditDialogController as vm',
                             templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
-                            widthPercent: bigDrawerWidthPercent,
                             addResizeButton: true,
+							drawerWidth: bigDrawerWidthPercent,
                             locals: {
                                 entityType: entitytype,
                                 entityId: activeObject.id,
                                 data: {
                                     openedIn: 'big-drawer',
-                                    widthPercentage: bigDrawerWidthPercent,
                                     fixedAreaColumns: fixedAreaColumns
                                 }
                             }

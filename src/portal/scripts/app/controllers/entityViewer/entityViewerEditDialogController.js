@@ -153,30 +153,6 @@
 
         var bigDrawerResizeButton;
 
-        var onBigDrawerResizeButtonClick = function () {
-            if (vm.fixedAreaPopup.tabColumns === 6) {
-                return;
-            }
-
-            vm.fixedAreaPopup.tabColumns = 6;
-            vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
-            $scope.$apply();
-            const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-            $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
-            bigDrawerResizeButton.classList.add('display-none');
-            bigDrawerResizeButton.classList.remove('display-block');
-        };
-
-        setTimeout(() => {
-            bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
-
-            if (!bigDrawerResizeButton) {
-                return;
-            }
-
-            bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick)
-        }, 0);
-
         vm.isEntityTabActive = function () {
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
@@ -717,7 +693,8 @@
                     vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
 
                     const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-                    $bigDrawer.setWidthPercent(bigDrawerWidthPercent);
+                    $bigDrawer.setWidth(bigDrawerWidthPercent);
+
                     if (vm.fixedAreaPopup.tabColumns !== 6) {
                         bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
                         bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
@@ -725,6 +702,7 @@
                         bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
                         bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
                     }
+
                 }
                 // <Victor 2020.11.20 #59 Fixed area popup>
 
@@ -2017,8 +1995,32 @@
         };
 
         vm.init = function () {
-            setTimeout(function () {
-                vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
+
+        	setTimeout(function () {
+
+            	vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
+
+				bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
+
+				if (bigDrawerResizeButton) {
+
+					bigDrawerResizeButton.addEventListener('click', function () {
+
+						// vm.fixedAreaPopup.tabColumns = 6;
+						vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, vm.entityType);
+
+						$scope.$apply();
+						const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(6);
+
+						$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+						bigDrawerResizeButton.classList.add('display-none');
+						bigDrawerResizeButton.classList.remove('display-block');
+
+					});
+
+				}
+
             }, 100);
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
