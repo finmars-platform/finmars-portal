@@ -130,11 +130,15 @@
                     var popupTemplate = templateElem.content.cloneNode(true);
 
                     if (scope.popupTemplateUrl) {
-                        var contentElem = popupTemplate.querySelector('.popup-content-template-url');
-                        contentElem.setAttribute('data-ng-include', scope.popupTemplateUrl)
+
+                    	var contentElem = popupTemplate.querySelector('.popup-content-template-url');
+                        contentElem.setAttribute('data-ng-include', scope.popupTemplateUrl);
+
                     } else if (scope.popupTemplate) {
-                        var contentElem = popupTemplate.querySelector('.popup-content-template');
+
+                    	var contentElem = popupTemplate.querySelector('.popup-content-template');
                         contentElem.innerHTML = scope.popupTemplate;
+
                     }
 
                     $compile($(popupTemplate))(scope);

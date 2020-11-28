@@ -329,28 +329,46 @@
     /**
      * Get big drawer width percentage by fixed area columns
      * @param {number} columns
-     * @returns {number}
+     * @returns {string}
      */
     var getBigDrawerWidthPercent = function (columns) {
-        switch (columns) {
+
+    	let viewportWidth = window.innerWidth;
+
+    	let widthPercent = 75;
+
+    	switch (columns) {
             case 5:
             case 4:
-                return 66;
+				widthPercent = 49;
+				break;
             case 3:
-                return 52;
+                widthPercent = 39;
+                break;
             case 2:
             case 1:
-                return 36;
-            default:
-                return 100;
+				widthPercent = 27;
+				break;
 
         }
+
+		let drawerWidth = (viewportWidth * widthPercent / 100) + 'px';
+
+    	return drawerWidth;
+
     }
 
+	/**
+	 * Format data for popupDirective in fixed area
+	 * @param {object} viewModel - of add / edit controller
+	 * @param {array} keysOfFixedFieldsAttrs - array of strings that are keys of entity attributes
+	 * @returns {object} object where each property corresponding to field inside popup
+	 */
     var getFieldsForFixedAreaPopup = function (viewModel, keysOfFixedFieldsAttrs) {
 
-        const fields =  keysOfFixedFieldsAttrs.reduce((acc,key) => {
-            const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
+        const fields = keysOfFixedFieldsAttrs.reduce((acc,key) => {
+
+        	const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
 
             if (!attr) {
                 return acc;
@@ -366,6 +384,7 @@
             }
 
             return {...acc, ...field};
+
         }, {});
 
         fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
@@ -373,11 +392,12 @@
 
         // get options for 'type' or 'instrument type' fields
         fields.hasOwnProperty('type') && entityResolverService.getListLight(fields.type.value_entity).then((data) => {
-            const options = Array.isArray(data) ? data : data.results;
-            fields.type.options = options;
-            viewModel.setTypeSelectorOptions(options)
-        });
 
+        	const options = Array.isArray(data) ? data : data.results;
+            fields.type.options = options;
+            viewModel.setTypeSelectorOptions(options);
+
+        });
 
         return fields;
 
