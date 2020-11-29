@@ -32,19 +32,32 @@
 
                 <div class="flex-row">
 
-                  <button data-ng-if="!noIndicatorBtn"
+                    <button data-ng-if="!noIndicatorBtn"
                           class="custom-input-indicator-btn"
                           data-ng-click="openTextInDialog($event)"
                           data-ng-disabled="isReadonly"
                           ng-disabled="isDisabled">
-                    <span class="material-icons">edit</span>
-                  </button>
+                        <span class="material-icons">edit</span>
+                    </button>
 
-                  <input data-ng-model="model"
-                         data-ng-model-options="{debounce: 500}"
-                         placeholder="{{placeholderText}}" class="custom-input text-input textInputElem"
+
+                    <input ng-if="!renderHyperlinks"
+                           ng-model="model"
+                           ng-model-options="{debounce: 500}"
+                           ng-readonly="isReadonly"
+                           ng-disabled="isDisabled"
+                           ng-init="elemInited()"
+                           type="text"
+                           placeholder="{{placeholderText}}"
+                           class="custom-input text-input textInputElem" />
+
+                    <div ng-if="renderHyperlinks"
                          ng-readonly="isReadonly"
-                         ng-disabled="isDisabled" />
+                         ng-disabled="isDisabled"
+                         ng-init="elemInited()"
+                         class="custom-input text-input textInputElem">
+                        <span ng-bind-html="getHyperlinks()"></span>
+                    </div>
 
                   <!--<input type="text"
                                    data-ng-model="model"
@@ -96,16 +109,19 @@
 
         <div class="custom-input-full-text-container customInputFullTextWrapper">
 
-            <textarea ng-if="!renderHyperlinks"
-                      ng-model="model"
-                      ng-change="onInputChange()"
-                      class="custom-input-full-text customInputBackgroundColor customInputFullText"
-                      ng-init="init()"></textarea>
+            <div ng-if="!renderHyperlinks">
+                <textarea
+                        ng-model="model"
+                        ng-model-options="{debounce: 500}"
+                        ng-change="onInputChange(model)"
+                        class="custom-input-full-text customInputBackgroundColor customInputFullText"
+                        ng-init="elemInited()"></textarea>
+            </div>
 
             <div ng-if="renderHyperlinks"
                  class="custom-input-full-text customInputBackgroundColor customInputFullText"
                  ng-bind-html="getHyperlinks()"
-                 ng-init="init()"></div>
+                 ng-init="elemInited()"></div>
         </div>
 
     </div>

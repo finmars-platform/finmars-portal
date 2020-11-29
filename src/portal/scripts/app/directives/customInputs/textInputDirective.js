@@ -24,15 +24,16 @@
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {
 
-				var inputContainer = elem[0].querySelector(".textInputContainer");
+				var inputContainer; // = elem[0].querySelector(".textInputContainer");
 
-				var inputElem = elem[0].querySelector(".textInputElem");
+				var inputElem; // = elem[0].querySelector(".textInputElem");
 				var fullTextWrapper;
 				var fullTextElem;
 				var stylePreset;
 
 				scope.isReadonly = false;
 				scope.fullTextEnabled = false;
+				scope.fullText = {value: scope.model}
 
 				// TIPS
 				// scope.smallOptions probable properties
@@ -84,7 +85,11 @@
 
 				};
 
-				scope.onInputChange = function () {
+				scope.onInputChange = function (modelVal) {
+
+					if (modelVal !== undefined) { // needed for textarea.customInputFullText
+						scope.model = modelVal
+					}
 
 					scope.error = "";
 					stylePreset = "";
@@ -136,7 +141,7 @@
 				};
 
 				scope.getHyperlinks = () => {
-					return stringHelper.parseAndInsertHyperlinks(scope.model, "class='openLinkInNewTab'")
+					return stringHelper.parseAndInsertHyperlinks(scope.model, "class='openLinkInNewTab'");
 				};
 
 				scope.openTextInDialog = function ($event) {
@@ -145,7 +150,7 @@
 
 					  if (scope.dialogParent) {
 
-						var dialogParentElem = document.querySelector(scope.dialogParent);
+						let dialogParentElem = document.querySelector(scope.dialogParent);
 
 						if (dialogParentElem) {
 						  dialogParent = dialogParentElem
@@ -154,17 +159,17 @@
 					  }
 
 					$mdDialog.show({
-					  controller: "TextEditorDialogController as vm",
-					  templateUrl: "views/dialogs/text-editor-dialog-view.html",
-					  parent: dialogParent,
-					  targetEvent: $event,
-					  multiple: true,
-					  locals: {
-						data: {
-						  title: "Text",
-						  text: scope.model,
+						controller: "TextEditorDialogController as vm",
+						templateUrl: "views/dialogs/text-editor-dialog-view.html",
+						parent: dialogParent,
+						targetEvent: $event,
+						multiple: true,
+						locals: {
+							data: {
+								title: "Text",
+								text: scope.model
+							},
 						},
-					  },
 
 					}).then(function (res) {
 
@@ -185,7 +190,7 @@
 					});
 				};
 
-				var initScopeWatchers = function () {
+				let initScopeWatchers = function () {
 
 					scope.$watch("model", function () {
 						if (scope.error && scope.model) {
@@ -252,7 +257,7 @@
 
 				};
 
-				var initEventListeners = function () {
+				let initEventListeners = function () {
 
 					elem[0].addEventListener("mouseover", function () {
 						inputContainer.classList.add("custom-input-hovered");
@@ -262,23 +267,39 @@
 						inputContainer.classList.remove("custom-input-hovered");
 					});
 
-					inputElem.addEventListener("focus", function () {
-
-						inputContainer.classList.add("custom-input-full-text-focused");
-						fullTextElem.focus();
-
-						if (scope.renderHyperlinks) {
-							document.addEventListener("keyup", closeFulltext);
-						}
-
-					});
-
 					if (scope.renderHyperlinks) {
+
+						inputElem.addEventListener("click", function (event) {
+
+							if (event.target.classList.contains('openLinkInNewTab')) {
+
+								metaHelper.openLinkInNewTab(event);
+
+							} else {
+
+								inputContainer.classList.add("custom-input-full-text-focused");
+								fullTextElem.focus();
+
+								if (scope.renderHyperlinks) {
+									document.addEventListener("keyup", closeFulltext);
+								}
+
+							}
+
+
+						});
 
 						fullTextWrapper.addEventListener("mouseleave", closeFulltext);
 						fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab);
 
 					} else {
+
+						inputElem.addEventListener("focus", function () {
+
+							inputContainer.classList.add("custom-input-full-text-focused");
+							fullTextElem.focus();
+
+						});
 
 						fullTextWrapper.addEventListener("mouseleave", function () {
 							fullTextElem.blur();
@@ -290,7 +311,22 @@
 
 				};
 
+				let elemsInintedNum = 0;
+
+				scope.elemInited = function () {
+
+					elemsInintedNum++;
+
+					if (elemsInintedNum === 2) { // textInputElem, customInputFullText
+						scope.init();
+					}
+
+				};
+
 				scope.init = function () { // called from view by ngInit
+
+					inputContainer = elem[0].querySelector(".textInputContainer");
+					inputElem = elem[0].querySelector(".textInputElem");
 
 					fullTextWrapper = elem[0].querySelector(".customInputFullTextWrapper");
 					fullTextElem = fullTextWrapper.querySelector(".customInputFullText");
