@@ -411,9 +411,15 @@
 }
 
 .custom-input-container.render-hyperlinks {
-  .custom-input {
-    cursor: pointer;
+
+  .custom-input.text-input {
+    cursor: text;
+
+    & > span {
+      white-space: nowrap;
+    }
   }
+
 }
 
 // When input focused
