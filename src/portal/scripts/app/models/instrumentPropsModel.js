@@ -51,14 +51,6 @@
                 "value_type": 10
             },
             {
-                "key": "price_download_scheme",
-                "name": "Price download scheme",
-                "value_content_type": "integrations.pricedownloadscheme",
-                "value_entity": "price-download-scheme",
-                "code": "user_code",
-                "value_type": "field"
-            },
-            {
                 "key": "pricing_currency",
                 "name": "Pricing currency",
                 "value_content_type": "currencies.currency",
@@ -93,14 +85,6 @@
                 "key": "accrued_multiplier",
                 "name": "Accrued multiplier",
                 "value_type": 20
-            },
-            {
-                "key": "daily_pricing_model",
-                "name": "Daily pricing model",
-                "value_content_type": "instruments.dailypricingmodel",
-                "value_entity": "daily-pricing-model",
-                "code": "system_code",
-                "value_type": "field"
             },
             {
                 "key": "pricing_condition",
@@ -144,18 +128,8 @@
                 "value_type": 10
             },
             {
-                "key": "object_permissions_user",
-                "name": "Users permissions",
-                "value_type": "mc_field"
-            },
-            {
-                "key": "object_permissions_group",
-                "name": "Groups permissions",
-                "value_type": "mc_field"
-            },
-            {
-                "key": "tags",
-                "name": "Tags",
+                "key": "object_permissions",
+                "name": "Object permissions",
                 "value_type": "mc_field"
             }
         ]
