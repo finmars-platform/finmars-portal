@@ -230,6 +230,37 @@
         };
 
         // TRANSACTION VALIDATION
+		var hasInputInExprs = function (inputs, expr, namesOnly) {
+
+			var inputsList = [];
+			/* var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
+					var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])'; */
+			for (var i = 0; i < inputs.length; i++) {
+
+				var inputName = inputs[i];
+
+				if (!namesOnly) {
+					inputName = inputs[i].name;
+				}
+
+				var inputRegExp = new RegExp('(?:^|[^A-Za-z_.])' + inputName + '(?![A-Za-z1-9_])', 'g');
+
+				if (expr.match(inputRegExp)) {
+
+					inputsList.push(inputs[i]);
+
+				}
+
+			}
+
+			if (inputsList.length) {
+				return inputsList;
+			}
+
+			return false;
+
+		};
+
         var checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, location) {
 
 			var actionFieldLocation = {
@@ -245,40 +276,39 @@
 
 			if (validationResult.status) {
 
-				for (var a = 0; a < inputsToDelete.length; a++) { // if input was deleted
+				var dInputsNames = hasInputInExprs(inputsToDelete, fieldValue, true);
 
-					var dInputName = inputsToDelete[a];
+				if (dInputsNames) {
 
-					/* var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
-					var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])'; */
-					var dInputRegExpObj = new RegExp('(?:^|[^A-Za-z_.])' + dInputName + '(?![A-Za-z1-9_])', 'g');
+					var dInputsNames = dInputsNames.join(", ");
+					var stringStart = "The deleted input";
 
-					if (fieldValue.match(dInputRegExpObj)) {
-
-						actionFieldLocation.message = "The deleted input " + dInputName + " is used in the Expression."
-
-						return actionFieldLocation;
-
+					if (dInputsNames.length > 1) {
+						stringStart += "s";
 					}
 
-				}
+					actionFieldLocation.message = stringStart + " " + dInputsNames + " is used in the Expression."
 
-				switch (validationResult.status) {
-					case 'error':
-						actionFieldLocation.message = 'Invalid expression. ' + validationResult.result;
-						break;
+				} else {
 
-					case 'functions-error':
-						actionFieldLocation.message = 'Not all variables are identified expression. ' + validationResult.result;
-						break;
+					switch (validationResult.status) {
+						case 'error':
+							actionFieldLocation.message = 'Invalid expression. ' + validationResult.result;
+							break;
 
-					case 'inputs-error':
-						actionFieldLocation.message = 'Not all variables are identified inputs. ' + validationResult.result;
-						break;
+						case 'functions-error':
+							actionFieldLocation.message = 'Not all variables are identified expression. ' + validationResult.result;
+							break;
 
-					case 'bracket-error':
-						actionFieldLocation.message = 'Mismatch in the opening and closing braces. ' + validationResult.result;
-						break;
+						case 'inputs-error':
+							actionFieldLocation.message = 'Not all variables are identified inputs. ' + validationResult.result;
+							break;
+
+						case 'bracket-error':
+							actionFieldLocation.message = 'Mismatch in the opening and closing braces. ' + validationResult.result;
+							break;
+					}
+
 				}
 
 				return actionFieldLocation;
@@ -498,10 +528,28 @@
 
 				var location;
 
-        		if (input.value_type !== 100 && input.value) {
+        		if (input.value_type !== 100 && input.value) { // Default value
 
-        			location = 'INPUTS: ' + input.name;
-					var defaultExprError = checkFieldExpr(viewModel.inputsToDelete, input.value, 'Default value', location);
+					var defaultExprError;
+
+					var inputsList = hasInputInExprs(viewModel.entity.inputs, input.value);
+
+					if (inputsList.length) {
+
+						defaultExprError = {
+							action_notes: 'INPUTS: ' + input.name,
+							key: 'Default value',
+							name: 'Default value'
+						}
+
+						defaultExprError.message = "Using Inputs in expression for the default value is forbidden. Please use the formula which you are using in the Input (to which you are referring) instead."
+
+					} else {
+
+						location = 'INPUTS: ' + input.name;
+						defaultExprError = checkFieldExpr(viewModel.inputsToDelete, input.value, 'Default value', location);
+
+					}
 
 					if (defaultExprError) {
 						errors.push(defaultExprError);
