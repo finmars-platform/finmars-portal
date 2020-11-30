@@ -474,7 +474,6 @@
 
 							//  If we already have data (e.g. viewType changed) end
 
-
 							/*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
 								cellContentOverflow();
 							});*/
@@ -489,6 +488,8 @@
 							evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
 
 						}
+
+						scope.$apply();
 
 					}, 500);
 
