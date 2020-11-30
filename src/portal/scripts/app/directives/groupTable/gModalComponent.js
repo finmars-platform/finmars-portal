@@ -381,6 +381,10 @@
         var selectedFilters = [];
 
         var separateSelectedAttrs = function (attributes, attrsVmKey) {
+            console.log('#66 separateSelectedAttrs attributes', attributes)
+            console.log('#66 separateSelectedAttrs attrsVmKey', attrsVmKey)
+            console.log('#66 separateSelectedAttrs selectedGroups', selectedGroups)
+            console.log('#66 separateSelectedAttrs vm.selectedGroups', vm.selectedGroups)
 
             for (var i = 0; i < attributes.length; i++) {
                 var attribute = JSON.parse(angular.toJson(attributes[i]));
@@ -388,21 +392,63 @@
 
                 // attrsVmKey used in vm.updateAttrs and selectedDnD
                 if (attribute.columns) {
-                    selectedColumns.push(attribute);
+                    const existingColumnIndex = selectedColumns.findIndex(col => col.key === attribute.key);
+                    if (existingColumnIndex < 0) {
+                        selectedColumns.push(attribute);
+                    } else {
+                        selectedColumns[existingColumnIndex] = attribute;
+                    }
+                    // console.log('#66 separateSelectedAttrs selectedColumns', selectedColumns, attribute)
                 } else if (attribute.groups) {
-                    selectedGroups.push(attribute);
+                    const existingGroupIndex = selectedGroups.findIndex(group => group.key === attribute.key);
+                    if (existingGroupIndex < 0) {
+                        selectedGroups.push(attribute);
+                    } else {
+                        selectedGroups[existingGroupIndex] = attribute;
+                    }
+                    console.log('#66 separateSelectedAttrs selectedGroups', selectedGroups, attribute)
                 }
 
                 if (attribute.filters) {
-                    selectedFilters.push(attribute);
+                    const existingFilterIndex = selectedFilters.findIndex(filter => filter.key === attribute.key);
+                    if (existingFilterIndex < 0) {
+                        selectedFilters.push(attribute);
+                    } else {
+                        selectedFilters[existingFilterIndex] = attribute;
+                    }
+                    // console.log('#66 separateSelectedAttrs selectedFilters', selectedFilters, attribute)
                 }
             }
 
         };
 
-        var groupSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
+        var orderSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
+            //console.log('#66 orderSelectedGroups', insideTable, selectedAttrs)
 
-            var orderedSelAttrs = [];
+            // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
+
+            const selectedAttrsHash = selectedAttrs.reduce((acc, item) => ({...acc, [item.key]: item}), {});
+
+            // console.log('#66 selectedAttrsHash', selectedAttrsHash)
+
+            const orderedSelAttrs = insideTable.reduce((acc, item) => {
+                if (selectedAttrsHash.hasOwnProperty(item.key)) {
+                    const selectedItem = selectedAttrsHash[item.key];
+                    delete selectedAttrsHash[item.key];
+
+                    return [...acc, selectedItem];
+                }
+
+                return acc;
+            },[])
+
+            const res = [...orderedSelAttrs, ...Object.values(selectedAttrsHash)];
+            // const res = [...orderedSelAttrs];
+            //console.log('#66 orderSelectedGroups', insideTable, selectedAttrs, res);
+
+            return res;
+
+/*            var orderedSelAttrs = [];
 
             var a;
             for (a = 0; a < insideTable.length; a++) {
@@ -418,10 +464,43 @@
                 }
 
             }
-
-            return orderedSelAttrs;
-
+            console.log('#66 orderSelectedGroups', insideTable, selectedAttrs, orderedSelAttrs);
+            return orderedSelAttrs;*/
         };
+
+        var removeDuplicateFields = function (groups, columns) {
+            return columns.filter(column => !groups.find(group => group.key === column.key));
+        };
+
+        const getSelectedAttrsByAreas = function (viewModel) {
+            const attrTypes = ['entityAttrs', 'attrs', 'userTextFields', 'userDateFields'];
+
+            const selectedAttributes = attrTypes.reduce((acc, attrsVmKey) => {
+                const attributes = viewModel[attrsVmKey];
+                const attributesCopies = attributes.map(attribute => JSON.parse(angular.toJson(attribute)))
+                const selectedAttrs = attributesCopies.filter(attribute => attribute.groups || attribute.columns || attribute.filters)
+
+                return [...acc, ...selectedAttrs];
+            }, []);
+
+            const selectedAttrsByAreas =  selectedAttributes.reduce((acc,attribute) => {
+                if (attribute.filters) {
+                    acc.selectedFilters.push(attribute)
+                }
+
+                if (attribute.columns) {
+                    acc.selectedColumns.push(attribute)
+                } else if (attribute.groups) {
+                    acc.selectedGroups.push(attribute);
+                }
+
+                return acc;
+            }, {selectedGroups: [], selectedColumns:[], selectedFilters: []})
+
+            //console.log('#66 getSelectedAttrsByAreas', selectedAttrsByAreas)
+
+
+        }
 
         vm.selectedGroups = [];
         vm.selectedColumns = [];
@@ -429,9 +508,20 @@
 
         var getSelectedAttrs = function () {
 
-            selectedGroups = [];
+            getSelectedAttrsByAreas(vm);
+            // console.log('#66 getSelectedAttrs groups', selectedGroups, vm.selectedGroups)
+            // console.log('#66 getSelectedAttrs columns', selectedColumns, vm.selectedColumns)
+            // console.log('#66 getSelectedAttrs filters', filters, selectedFilters, vm.selectedFilters)
+
+/*            selectedGroups = [];
             selectedColumns = [];
-            selectedFilters = [];
+            selectedFilters = [];*/
+
+            selectedGroups = vm.selectedGroups;
+            selectedColumns = vm.selectedColumns;
+            selectedFilters = vm.selectedFilters;
+
+
 
             separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
             separateSelectedAttrs(vm.attrs, 'attrs');
@@ -440,15 +530,32 @@
             separateSelectedAttrs(vm.userNumberFields, 'userNumberFields');
             separateSelectedAttrs(vm.userDateFields, 'userDateFields');
 
-            vm.selectedGroups = groupSelectedGroups(groups, selectedGroups);
-            vm.selectedColumns = groupSelectedGroups(columns, selectedColumns);
-            vm.selectedFilters = groupSelectedGroups(filters, selectedFilters);
+            // selectedColumns = removeDuplicateFields(groups, selectedColumns);
+            //console.log('#66 filtered selectedColumns', selectedColumns)
+
+
+            // Order selected as they are inside the table
+            // if (groups.length > 0) {
+                vm.selectedGroups = orderSelectedGroups(groups, selectedGroups);
+            // }
+            // if (columns.length > 0) {
+                vm.selectedColumns = orderSelectedGroups(columns, selectedColumns);
+            // }
+            // if (filters.length > 0) {
+                vm.selectedFilters = orderSelectedGroups(filters, selectedFilters);
+            // }
+
+
+            console.log('#66 getSelectedAttrs groups', groups, selectedGroups, vm.selectedGroups)
+            console.log('#66 getSelectedAttrs columns', columns, selectedColumns, vm.selectedColumns)
+            console.log('#66 getSelectedAttrs filters', filters, selectedFilters, vm.selectedFilters)
 
         };
 
         // < format data for SELECTED tab >
 
         vm.onSelectedAttrsChange = function (attributesList, selectedAttr) {
+            console.log('onSelectedAttrsChange', attributesList, selectedAttr)
 
             for (var i = 0; i < attributesList.length; i++) {
                 if (attributesList[i].key === selectedAttr.key) {

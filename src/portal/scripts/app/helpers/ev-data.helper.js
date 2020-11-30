@@ -860,6 +860,152 @@
 
     }
 
+    // format data for SELECTED tab
+    // Victor 2020.11.30 This block transferred from gModalReportComponent to use in gModalReportTransactionComponent and gModalReportPnlComponent (DRY)
+    var selectedGroups = [];
+    var selectedColumns = [];
+    var selectedFilters = [];
+
+    var separateSelectedAttrs = function (attributes, attrsVmKey) {
+
+        for (var i = 0; i < attributes.length; i++) {
+            var attribute = JSON.parse(angular.toJson(attributes[i]));
+            attribute['attrsVmKey'] = attrsVmKey;
+
+            // attrsVmKey used in vm.updateAttrs and selectedDnD
+            /*if (attribute.groups) {
+                selectedGroups.push(attribute);
+            } else if (attribute.columns) {
+                selectedColumns.push(attribute);
+            } else if (attribute.filters) {
+                selectedFilters.push(attribute);
+            };*/
+
+            if (attribute.groups) {
+                const existingGroupIndex = selectedGroups.findIndex((group => group.key === attribute.key));
+                if (existingGroupIndex < 0) {
+                    selectedGroups.push(attribute);
+                } else {
+                    selectedGroups[existingGroupIndex] = attribute;
+                }
+            }
+
+            if (attribute.columns) {
+                const existingColumnIndex = selectedColumns.findIndex(col => col.key === attribute.key);
+                if (existingColumnIndex < 0) {
+                    selectedColumns.push(attribute);
+                } else {
+                    selectedColumns[existingColumnIndex] = attribute;
+                }
+            }
+
+            if (attribute.filters) {
+                const existingFilterIndex = selectedFilters.findIndex(filter => filter.key === attribute.key)
+                if (existingFilterIndex < 0) {
+                    selectedFilters.push(attribute);
+                } else {
+                    selectedFilters[existingFilterIndex] = attribute;
+                }
+            }
+
+        }
+    };
+
+    var orderSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
+
+        // Victor 2020.11.30 #66
+        // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
+
+        const selectedAttrsHash = selectedAttrs.reduce((acc, item) => ({...acc, [item.key]: item}), {});
+
+        const orderedSelAttrs = insideTable.reduce((acc, item) => {
+
+            if (selectedAttrsHash.hasOwnProperty(item.key)) {
+                const selectedItem = selectedAttrsHash[item.key];
+                delete selectedAttrsHash[item.key];
+
+                return [...acc, selectedItem];
+            }
+
+            return acc;
+        }, [])
+
+        const remainingSelectedAttrs = Object.values(selectedAttrsHash);
+
+        return [...orderedSelAttrs, ...remainingSelectedAttrs];
+
+
+    /*            var orderedSelAttrs = [];
+
+                var a;
+                for (a = 0; a < insideTable.length; a++) {
+                    var attr = insideTable[a];
+
+                    for (var i = 0; i < selectedAttrs.length; i++) {
+                        var sAttr = selectedAttrs[i];
+
+                        if (sAttr.key === attr.key) {
+                            orderedSelAttrs.push(sAttr);
+                            break;
+                        }
+
+                    }
+
+                }
+
+                return orderedSelAttrs;*/
+            // <Victor 20201130 #66>
+
+    };
+
+    var getSelectedAttrs = function (viewModel, attributes, groups, columns, filters) {
+        var vm = viewModel;
+
+        // Victor 2020.11.30 #66 If user uncheck item, it doesn't disappear from view constructor
+        selectedGroups = vm.selectedGroups;
+        selectedColumns = vm.selectedColumns;
+        selectedFilters = vm.selectedFilters;
+
+        /*          selectedGroups = [];
+                    selectedColumns = [];
+                    selectedFilters = [];*/
+
+        attributes.forEach(attribute => separateSelectedAttrs(vm[attribute], attribute))
+/*        separateSelectedAttrs(vm.balanceAttrs, 'balanceAttrs');
+        separateSelectedAttrs(vm.balancePerformanceAttrs, 'balancePerformanceAttrs');
+        separateSelectedAttrs(vm.balanceMismatchAttrs, 'balanceMismatchAttrs');
+        separateSelectedAttrs(vm.custom, 'custom');
+        separateSelectedAttrs(vm.allocationAttrs, 'allocationAttrs');
+        separateSelectedAttrs(vm.allocationDynamicAttrs, 'allocationDynamicAttrs');
+
+        separateSelectedAttrs(vm.instrumentAttrs, 'instrumentAttrs');
+        separateSelectedAttrs(vm.instrumentDynamicAttrs, 'instrumentDynamicAttrs');
+
+        separateSelectedAttrs(vm.linkedInstrumentAttrs, 'linkedInstrumentAttrs');
+        separateSelectedAttrs(vm.linkedInstrumentDynamicAttrs, 'linkedInstrumentDynamicAttrs');
+
+        separateSelectedAttrs(vm.accountAttrs, 'accountAttrs');
+        separateSelectedAttrs(vm.accountDynamicAttrs, 'accountDynamicAttrs');
+
+        separateSelectedAttrs(vm.portfolioAttrs, 'portfolioAttrs');
+        separateSelectedAttrs(vm.portfolioDynamicAttrs, 'portfolioDynamicAttrs');
+
+        separateSelectedAttrs(vm.strategy1attrs, 'strategy1attrs');
+        separateSelectedAttrs(vm.strategy2attrs, 'strategy2attrs');
+        separateSelectedAttrs(vm.strategy3attrs, 'strategy3attrs');*/
+
+
+        vm.selectedGroups = orderSelectedGroups(groups, selectedGroups);
+        vm.selectedColumns =orderSelectedGroups(columns, selectedColumns);
+        vm.selectedFilters =orderSelectedGroups(filters, selectedFilters);
+
+/*        console.log('#66 getSelectedAttrs groups', groups, selectedGroups, vm.selectedGroups)
+        console.log('#66 getSelectedAttrs columns', columns, selectedColumns, vm.selectedColumns)
+        console.log('#66 getSelectedAttrs filters', filters, selectedFilters, vm.selectedFilters)*/
+
+    };
+    // < format data for SELECTED tab >
+
     module.exports = {
 
         getGroupNameFromParent: getGroupNameFromParent,
@@ -902,7 +1048,9 @@
         isSelected: isSelected,
 
         getGroupsTypesToLevel: getGroupsTypesToLevel,
-        getGroupsValuesByItem: getGroupsValuesByItem
+        getGroupsValuesByItem: getGroupsValuesByItem,
+
+        getSelectedAttrs: getSelectedAttrs
     }
 
 
