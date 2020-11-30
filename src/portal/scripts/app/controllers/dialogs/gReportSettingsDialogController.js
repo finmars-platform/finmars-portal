@@ -64,6 +64,17 @@
             }
         ];
 
+        vm.tableFontSizeOptions = [
+            {id: 'small', name: 'Small'},
+            {id: 'medium', name: 'Medium'},
+            {id: 'large', name: 'Large'},
+        ];
+
+        if (vm.reportOptions.table_font_size) {
+            vm.tableFontSize = vm.reportOptions.table_font_size;
+        } else {
+            vm.tableFontSize = vm.tableFontSizeOptions[0].id;
+        }
 
         vm.entityType = options.entityType;
         vm.disableChangesSaving = options.disableChangesSaving; // when opened inside dashboard
@@ -270,6 +281,8 @@
             } else {
                 vm.reportOptions.accounts_position = [];
             }
+
+            vm.reportOptions.table_font_size = vm.tableFontSize;
 
             $mdDialog.hide({status: 'agree', data: vm.reportOptions});
         };
