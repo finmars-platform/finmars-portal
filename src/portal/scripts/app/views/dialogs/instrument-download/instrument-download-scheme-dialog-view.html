@@ -1,4 +1,6 @@
-<md-dialog aria-label="" ng-cloak class="instrument-scheme-manager-dialog-view draggable-dialog" drag-dialog>
+<md-dialog aria-label="instrument download scheme dialog"
+           class="instrument-scheme-manager-dialog-view draggable-dialog"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -7,6 +9,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
+
     <md-dialog-content style="background: #E5E5E5;">
         <div data-ng-if="vm.readyStatus.scheme">
             <div layout="row" layout-align="center center">
@@ -65,6 +68,7 @@
                     </md-card-content>
                 </md-card>
             </div>
+
             <div layout="row">
                 <div layout="column" flex="33">
                     <div layout="row">
@@ -170,6 +174,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div>
                                     <div data-ng-repeat="item in vm.mappedFieldsDefaults"
                                          class="{{item.hasBackground ? 'instrument-import-field-bg' : 'instrument-import-field'}}"
@@ -353,6 +358,7 @@
                                                                data-ng-click="vm.openMapping($event, field)">
                                                         <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                     </md-button>
+
                                                     <div ng-if="field.value" style="display: inline-block">
                                                         <md-button data-ng-click="vm.openClassifierMapping(field.value.id, $event)"
                                                                    class="md-raised md-primary import-mapping-small-btn"
@@ -360,6 +366,7 @@
                                                             <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                         </md-button>
                                                     </div>
+
                                                     <md-button
                                                             class="custom-small-icon-btn md-raised"
                                                             data-ng-click="vm.removeMappingField(item, $index)"
@@ -480,6 +487,7 @@
             </div>
         </div>
     </md-dialog-content>
+
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
@@ -488,4 +496,5 @@
             Save
         </md-button>
     </md-dialog-actions>
+
 </md-dialog>

@@ -56,6 +56,9 @@
                 top: headerToolbarHeight,
                 width: filterAreaWidth
             },
+            verticalSplitPanel: {
+                width: 0
+            },
             splitPanel: {
                 height: 0
             }
@@ -110,8 +113,11 @@
                 data: null
             },
             allRowsSelected: false,
+            activeGroupTypeSort: null,
+            activeColumnSort: null,
             rootEntityViewer: false,
             splitPanelIsActive: false,
+            verticalSplitPanelIsActive: false,
             splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
             splitPanelLayoutToOpen: null,
             additions: {},
@@ -138,7 +144,7 @@
             viewSettings: {},
             lastViewSettings: {},
             ev_options: {},
-            activeLayoutConfiguration: {},
+            activeLayoutConfiguration: {}, // used to check layout for changes
             interfaceLayout: null,
             requestParameters: {},
             activeRequestParametersId: null,
@@ -213,6 +219,14 @@
 
         function isSplitPanelActive() {
             return data.splitPanelIsActive;
+        }
+
+        function setVerticalSplitPanelStatus(status) {
+            data.verticalSplitPanelIsActive = status;
+        }
+
+        function isVerticalSplitPanelActive() {
+            return data.verticalSplitPanelIsActive;
         }
 
         function setEntityType(entityType) {
@@ -604,8 +618,6 @@
         }
 
         function getRequestParameters(id) {
-
-            // console.log('data.requestParameters', data.requestParameters);
 
             if (data.requestParameters[id]) {
                 return data.requestParameters[id]
@@ -1282,6 +1294,14 @@
         }
         // END: Methods for dashboard
 
+        function setMissingPrices(prices) {
+            data.missingPrices = prices;
+        }
+
+        function getMissingPrices() {
+            return data.missingPrices;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1434,6 +1454,8 @@
 
             setSplitPanelStatus: setSplitPanelStatus,
             isSplitPanelActive: isSplitPanelActive,
+            setVerticalSplitPanelStatus: setVerticalSplitPanelStatus,
+            isVerticalSplitPanelActive: isVerticalSplitPanelActive,
             setSplitPanelDefaultLayout: setSplitPanelDefaultLayout,
             getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
             setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,
@@ -1485,6 +1507,9 @@
 
             setDataLoadStatus: setDataLoadStatus,
             didDataLoadEnd: didDataLoadEnd,
+
+            setMissingPrices: setMissingPrices,
+            getMissingPrices: getMissingPrices,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

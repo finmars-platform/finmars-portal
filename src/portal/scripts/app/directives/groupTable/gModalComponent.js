@@ -63,14 +63,12 @@
                 vm.entityAttrs = columns.map(function (item) {
                     return item
                 });*/
-
                 vm.entityAttrs = vm.attributeDataService.getReconciliationAttributes();
 
                 syncAttrs();
                 getSelectedAttrs();
 
                 vm.readyStatus.content = true;
-
 
             } else {
 
@@ -84,9 +82,8 @@
                     if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
                         item.name = 'Group';
                     }
+
                     item.entity = vm.entityType;
-
-
 
                     if (vm.entityType === 'instrument') {
 
@@ -213,8 +210,14 @@
         };
 
         var syncAttrs = function () {
+
             syncTypeAttrs(vm.entityAttrs);
             syncTypeAttrs(vm.attrs);
+
+            syncTypeAttrs(vm.userTextFields);
+            syncTypeAttrs(vm.userNumberFields);
+            syncTypeAttrs(vm.userDateFields);
+
         };
 
         function syncTypeAttrs(attrs) {
@@ -432,6 +435,10 @@
 
             separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
             separateSelectedAttrs(vm.attrs, 'attrs');
+
+            separateSelectedAttrs(vm.userTextFields, 'userTextFields');
+            separateSelectedAttrs(vm.userNumberFields, 'userNumberFields');
+            separateSelectedAttrs(vm.userDateFields, 'userDateFields');
 
             vm.selectedGroups = groupSelectedGroups(groups, selectedGroups);
             vm.selectedColumns = groupSelectedGroups(columns, selectedColumns);

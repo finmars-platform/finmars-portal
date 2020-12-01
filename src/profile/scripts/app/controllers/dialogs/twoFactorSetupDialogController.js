@@ -59,11 +59,18 @@
 
             if (vm.securityCode && vm.securityCode.length === 6) {
 
-                twoFactorService.validateCode({code: vm.securityCode, username: vm.user.username}).then(function (data) {
+                twoFactorService.validateCode({
+                    code: vm.securityCode,
+                    username: vm.user.username
+                }).then(function (data) {
 
                     vm.codeIsValid = data.match;
 
-                    $scope.$apply();
+                    twoFactorService.pachByKey(data.id, {is_active: true}).then(function (value) {
+
+                        $scope.$apply();
+
+                    })
 
                     if (vm.token_id) {
 

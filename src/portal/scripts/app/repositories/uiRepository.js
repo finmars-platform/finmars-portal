@@ -15,17 +15,28 @@
 
     var baseUrl = baseUrlService.resolve();
 
+    var getRequestParams = {
+        method: 'GET',
+            credentials: 'include',
+        headers: {
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    };
+
+    var getRequestParams2 = {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    };
+
     var getPortalInterfaceAccess = function (uiLayoutId) {
         return xhrService.fetch(baseUrl + 'ui/portal-interface-access/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2)
     };
 
     var getEditLayout = function (entity) {
@@ -74,99 +85,99 @@
 
     var getListLayout = function (entity, options) {
 
-        if (entity == 'all') {
-            // return xhrService.fetch(baseUrl + 'ui/list-layout/',
-            //     {
-            //         method: 'GET',
-            //         credentials: 'include',
-            //         headers: {
-            //             Accept: 'application/json',
-            //             'Content-type': 'application/json'
-            //         }
-            //     })
+        /* if (entity == 'all') {
+
             return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-type': 'application/json'
-                    }
-                })
+                getRequestParams)
+
         } else {
 
-            var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            if (!options) {
+                options = {}
+            }
 
-            return xhrService.fetch(baseUrl + 'ui/list-layout/?content_type=' + contentType,
-                {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
-                        'Content-type': 'application/json'
-                    }
-                })
+            if (!options.content_type) {
+                options.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+                getRequestParams);
+        } */
+
+        if (!options) {
+            options = {}
         }
+
+        if (entity !== 'all') {
+
+            if (!options.filters) {
+                options.filters = {}
+            }
+
+            if (!options.filters.content_type) {
+                options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+                getRequestParams);
+
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+            getRequestParams);
+
+    };
+
+    var getListLayoutLight = function (entity, options) {
+
+        if (!options) {
+            options = {}
+        }
+
+        if (entity !== 'all') {
+
+            if (!options.filters) {
+                options.filters = {}
+            }
+
+            if (!options.filters.content_type) {
+                options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout-light/', options),
+                getRequestParams);
+
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout-light/', options),
+            getRequestParams);
+
     };
 
     var getListLayoutByKey = function (uiLayoutId) {
         return xhrService.fetch(baseUrl + 'ui/list-layout/' + uiLayoutId + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2);
     };
 
-    var getListLayoutDefault = function (options) {
-
+    /* var getListLayoutDefault = function (options) {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams);
+    }; */
 
-    };
-
-    var getActiveListLayout = function (entity) {
+    /* var getActiveListLayout = function (entity) {
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return xhrService.fetch(baseUrl + 'ui/list-layout/?is_active=2&content_type=' + contentType,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+            getRequestParams2)
+    }; */
 
     var getDefaultListLayout = function (entity) {
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return xhrService.fetch(baseUrl + 'ui/list-layout/?is_default=2&content_type=' + contentType,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2)
     };
 
     var createListLayout = function (ui) {
@@ -215,6 +226,11 @@
         })
     };
 
+    var pingListLayoutByKey = function (layoutId) {
+        return xhrService.fetch(baseUrl + 'ui/list-layout/' + layoutId + '/ping/',
+            getRequestParams2)
+    };
+
     var getDefaultEditLayout = function (entityType) {
 
         console.log('entityType', entityType);
@@ -222,7 +238,7 @@
         var fields;
         var entitiesWithoutBaseAttrs = metaRestrictionsRepository.getEntitiesWithoutBaseAttrsList();
 
-        /*if (entitiesWithoutBaseAttrs.indexOf(entityType) !== -1) {
+        /* if (entitiesWithoutBaseAttrs.indexOf(entityType) !== -1) {
             fields = []
         } else {
             fields = [
@@ -247,7 +263,7 @@
                     "key": null
                 }
             ];
-        }*/
+        } */
 
         console.log('fields', fields);
 
@@ -302,14 +318,7 @@
     var getConfigurationList = function () {
 
         return xhrService.fetch(baseUrl + 'ui/configuration/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams)
     };
 
     var createConfiguration = function (data) {
@@ -361,14 +370,7 @@
     var getConfigurationExportLayoutList = function () {
 
         return xhrService.fetch(baseUrl + 'ui/configuration-export-layout/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams)
     };
 
     var createConfigurationExportLayout = function (data) {
@@ -422,14 +424,7 @@
         console.log('options', options);
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/transaction-user-field/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams)
 
     };
 
@@ -465,14 +460,7 @@
     var getInstrumentFieldList = function (options) {
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/instrument-user-field/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams)
 
     };
 
@@ -508,55 +496,24 @@
     var getDashboardLayoutList = function (entity, options) {
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/dashboard-layout/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams)
     };
 
     var getDashboardLayoutByKey = function (id) {
         return xhrService.fetch(baseUrl + 'ui/dashboard-layout/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2)
     };
 
     var getActiveDashboardLayout = function () {
 
         return xhrService.fetch(baseUrl + 'ui/dashboard-layout/?is_active=2',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2)
     };
 
     var getDefaultDashboardLayout = function () {
 
         return xhrService.fetch(baseUrl + 'ui/dashboard-layout/?is_default=2',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2)
     };
 
     var createDashboardLayout = function (data) {
@@ -611,41 +568,18 @@
         console.log('options', options);
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/template-layout/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams)
     };
 
     var getTemplateLayoutByKey = function (id) {
         return xhrService.fetch(baseUrl + 'ui/template-layout/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2)
     };
 
     var getDefaultTemplateLayout = function () {
 
         return xhrService.fetch(baseUrl + 'ui/template-layout/?is_default=2',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2)
     };
 
     var createTemplateLayout = function (data) {
@@ -699,27 +633,12 @@
         console.log('options', options);
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/context-menu-layout/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams)
     };
 
     var getContextMenuLayoutByKey = function (id) {
         return xhrService.fetch(baseUrl + 'ui/context-menu-layout/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams2)
     };
 
     var createContextMenuLayout = function (data) {
@@ -774,14 +693,7 @@
         console.log('options', options);
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/entity-tooltip/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+            getRequestParams)
     };
 
     var createEntityTooltip = function (data) {
@@ -813,7 +725,6 @@
             })
     };
 
-
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -821,7 +732,7 @@
         getDefaultEditLayout: getDefaultEditLayout,
         getDefaultListLayout: getDefaultListLayout,
 
-        getActiveListLayout: getActiveListLayout,
+        // getActiveListLayout: getActiveListLayout,
 
         getListLayoutTemplate: getListLayoutTemplate,
 
@@ -830,11 +741,14 @@
         updateEditLayout: updateEditLayout,
 
         getListLayout: getListLayout,
+        getListLayoutLight: getListLayoutLight,
         getListLayoutByKey: getListLayoutByKey,
-        getListLayoutDefault: getListLayoutDefault,
+        // getListLayoutDefault: getListLayoutDefault,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
         deleteListLayoutByKey: deleteListLayoutByKey,
+
+        pingListLayoutByKey: pingListLayoutByKey,
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

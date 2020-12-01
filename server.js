@@ -8,8 +8,35 @@ var url = require('url');
 var proxy = require('proxy-middleware');
 var app = express();
 
+// app.use(function (req, res, next) {
+//
+//     var host = process.env.HOSTNAME || 'none';
+//
+//     console.info('host', host);
+//
+//     res.header("Access-Control-Expose-Headers", "x-hostname");
+//     res.header('x-hostname', host);
+//
+//     next()
+// });
+
+
+app.use('/build/:uid/*', function(req, res, next) {
+
+    console.info(req.originalUrl);
+
+    var uid = req.params.uid;
+
+    path = req.params[0] ? req.params[0] : 'index.html';
+
+    res.sendFile(path, {root: './dist'});
+
+});
+
+
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/portal', express.static('dist'));
+
 
 app.use('/healthcheck', function (req, res) {
 
@@ -26,6 +53,11 @@ app.use('/healthcheck', function (req, res) {
 
 });
 
+
+
+
+
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // WARNING ONLY FOR DEV PURPOSE
 // var pdfProxyOptions = url.parse('http://0.0.0.0:80');

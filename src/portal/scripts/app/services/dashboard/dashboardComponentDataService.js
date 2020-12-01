@@ -24,6 +24,15 @@
             return viewerTableData.entityViewerDataService;
         }
 
+        function setEntityViewerEventService (entityViewerEventService) {
+            viewerTableData.entityViewerEventService = entityViewerEventService;
+        }
+
+        function getEntityViewerEventService () {
+            return viewerTableData.entityViewerEventService;
+        }
+
+
         function setAttributeDataService (attrDataService) {
             viewerTableData.attributeDataService = attrDataService
         }
@@ -35,6 +44,10 @@
         return {
             setEntityViewerDataService: setEntityViewerDataService,
             getEntityViewerDataService: getEntityViewerDataService,
+
+            setEntityViewerEventService: setEntityViewerEventService,
+            getEntityViewerEventService: getEntityViewerEventService,
+
             setAttributeDataService: setAttributeDataService,
             getAttributeDataService: getAttributeDataService,
             setViewerTableColumns: setViewerTableColumns,
