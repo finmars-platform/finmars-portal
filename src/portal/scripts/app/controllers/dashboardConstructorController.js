@@ -1058,7 +1058,7 @@
 
         };
 
-        vm.saveLayout = function ($event) {
+        vm.saveLayout = function () {
 
             var layout = JSON.parse(angular.toJson(vm.layout)); // removing angular properties
 
@@ -1069,19 +1069,8 @@
 
                 uiService.updateDashboardLayout(layout.id, layout).then(function (data) {
 
-                    /*$mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        locals: {
-                            info: {
-                                title: 'Success',
-                                description: "Dashboard Layout is Saved"
-                            }
-                        }
-                    });*/
+					vm.layout.modified = data.modified
+
                     toastNotificationService.success('Dashboard layout ' + layout.name + ' was successfully saved');
 
                 }).catch(function (error) {

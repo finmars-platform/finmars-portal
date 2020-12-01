@@ -98,6 +98,7 @@
 
                 if (ttype.inputs[i].name === userInput.name) {
 
+                	userInput.key = ttype.inputs[i].name; // needed for work of add / edit entity viewer
                     userInput.tooltip = ttype.inputs[i].tooltip;
                     userInput.verbose_name = ttype.inputs[i].verbose_name;
                     userInput.reference_table = ttype.inputs[i].reference_table;
@@ -111,9 +112,43 @@
     };
     // < updating user inputs from input form editor layout using user inputs inside transaction type >
 
+    var removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
+
+        inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+
+            let inputInvalid = true;
+
+            for (let i = 0; i < actualUserInputs.length; i++) {
+
+                if (inputName === actualUserInputs[i].name) { // whether input actually exist
+
+                	if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+
+                		inputInvalid = false;
+
+					}
+
+
+                    break;
+
+                }
+
+            }
+
+            if (inputInvalid) {
+                inputsList.splice(index, 1);
+            }
+
+        });
+
+        // return inputsList;
+
+    }
+
     module.exports = {
         isUserInputUsedInTTypeExpr: isUserInputUsedInTTypeExpr,
-        updateTransactionUserInputs: updateTransactionUserInputs
+        updateTransactionUserInputs: updateTransactionUserInputs,
+		removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation
     }
 
 }());

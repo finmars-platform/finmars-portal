@@ -69,12 +69,20 @@
     data-ng-if="dropdownMenuHidden"
     class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
     <div class="custom-input-sel-menu-block">
-      <div
-        data-ng-repeat="option in menuOptions | filter: inputText"
+      <div data-ng-if="!sorted"
+           data-ng-repeat="option in menuOptions | filter: inputText | orderBy:'-'+option.name"
         data-ng-mousedown="selectOption(option)"
         data-ng-bind="option.name"
         class="custom-input-sel-option"
       ></div>
+      <div data-ng-if="sorted"
+           data-ng-repeat="option in menuOptions | filter: inputText"
+           data-ng-mousedown="selectOption(option)"
+           data-ng-bind="option.name"
+           class="custom-input-sel-option"
+      ></div>
+
+      <!--        data-ng-repeat="option in menuOptions | filter: inputText | orderBy:'-'+option.name"-->
     </div>
   </div>
 

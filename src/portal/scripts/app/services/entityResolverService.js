@@ -619,6 +619,9 @@
             case 'pricing-policy':
                 return pricingPolicyService.deleteByKey(id);
                 break;
+            case 'currency':
+                return currencyService.deleteByKey(id);
+                break;
             case 'currency-history':
                 return currencyHistoryService.deleteByKey(id);
                 break;

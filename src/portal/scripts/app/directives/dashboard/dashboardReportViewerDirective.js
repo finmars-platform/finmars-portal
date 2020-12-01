@@ -3,12 +3,15 @@
     'use strict';
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+    var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
     var uiService = require('../../services/uiService');
 
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
+
+    var dashboardHelper = require('../../helpers/dashboard.helper');
 
     module.exports = function ($mdDialog) {
         return {
@@ -65,48 +68,6 @@
                     scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
                 }
 
-                var saveComponentSettings = function () {
-
-                    var listLayout = scope.dashboardDataService.getListLayout();
-
-                    if (listLayout) {
-
-                        var layoutData = listLayout.data;
-
-                        for (var i = 0; i < layoutData.components_types.length; i++) {
-
-                            if (layoutData.components_types[i].id === componentData.id) {
-
-                                layoutData.components_types[i] = JSON.parse(JSON.stringify(componentData));
-                                scope.dashboardDataService.setListLayout(listLayout);
-
-                                uiService.updateDashboardLayout(listLayout.id, listLayout).then(function (data) {
-
-                                    $mdDialog.show({
-                                        controller: 'InfoDialogController as vm',
-                                        templateUrl: 'views/info-dialog-view.html',
-                                        parent: angular.element(document.body),
-                                        clickOutsideToClose: false,
-                                        locals: {
-                                            info: {
-                                                title: 'Success',
-                                                description: "Dashboard component settings saved."
-                                            }
-                                        }
-                                    });
-
-                                });
-
-                                break;
-
-                            }
-
-                        }
-
-                    }
-
-                };
-
                 scope.openComponentSettingsEditorDialog = function ($event) {
 
                     var dashboardComponents = scope.dashboardDataService.getComponents();
@@ -138,7 +99,7 @@
                             }*/
 
                             if (res.action === 'save') {
-                                saveComponentSettings();
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
                             }
 
                             if (scope.fillInModeData) {
@@ -314,6 +275,38 @@
                         scope.readyStatus.disabled = false;
 
                     });
+
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET, function () {
+
+                        var entityViewerDataService = scope.dashboardComponentDataService.getEntityViewerDataService();
+                        var entityViewerEventService = scope.dashboardComponentDataService.getEntityViewerEventService();
+
+                        scope.missingPricesData = entityViewerDataService.getMissingPrices();
+
+                        entityViewerEventService.addEventListener(evEvents.MISSING_PRICES_LOAD_END, function () {
+
+                            scope.missingPricesData = entityViewerDataService.getMissingPrices()
+
+                        });
+
+                    })
+
+                };
+
+                scope.openMissingPricesDialog = function($event){
+
+                    $mdDialog.show({
+                        controller: 'ReportPriceCheckerDialogController as vm',
+                        templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {
+                                missingPricesData: scope.missingPricesData,
+                                evDataService: scope.evDataService
+                            }
+                        }
+                    })
 
                 };
 
