@@ -329,9 +329,11 @@
                 var statusesObject = metaHelper.recursiveDeepCopy(vm.dashboardDataService.getComponentStatusesAll());
 
                 if (statusesObject[compId] === dashboardComponentStatuses.PROCESSING || statusesObject[compId] === dashboardComponentStatuses.START) {
+
                     vm.dashboardDataService.setComponentStatus(compId, dashboardComponentStatuses.ERROR);
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     throw "id of defective dashboard component " + compId;
+
                 }
 
             }, 60000);
@@ -426,7 +428,9 @@
                         }
 
                     }
+
                 }
+
             });
 
         };

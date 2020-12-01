@@ -52,11 +52,6 @@
                 "key": "default_fx_rate",
                 "name": "Default FX rate",
                 "value_type": 20
-            },
-            {
-                "key": "tags",
-                "name": "Tags",
-                "value_type": "mc_field"
             }
         ]
     };

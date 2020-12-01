@@ -316,7 +316,7 @@
 
             clearSubtotalActiveState(evDataService);
             clearObjectActiveState(evDataService);
-            console.log("select row activated_ids", activated_ids);
+
             list.forEach(function (object) {
 
                 if (activated_ids.indexOf(object.___id) !== -1) {
@@ -855,6 +855,7 @@
         // console.log('calculateScroll.viewportWidth', viewportWidth);
 
         rvScrollManager.setViewportHeight(viewportHeight);
+
         if (viewportWidth) {
             rvScrollManager.setViewportWidth(viewportWidth);
         }
@@ -1036,6 +1037,10 @@
             return true;
         }
 
+        if (option.action === 'mark_row') {
+            return true;
+        }
+
         return false;
     };
 
@@ -1133,6 +1138,10 @@
 
             }
 
+            if (item.action === 'mark_row') {
+                ttype_specific_attr = ' data-ev-dropdown-action-data-color="' + item.action_data + '"'
+            }
+
             if (item.action === 'open_layout') {
 
                 result = result +
@@ -1197,25 +1206,11 @@
 
     var generateContextMenu = function (evDataService, menu, ttypes, obj, objectId, parentGroupHashId) {
 
-        var result = '<div>';
+        var result = '<div class="ev-dropdown-container">';
 
         menu.root.items.forEach(function (item) {
             result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
         });
-
-        result = result + '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="mark_row"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Red';
-
-        result = result + '</div>';
-
-        result = result + '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="mark_row_green"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Green';
-
-        result = result + '</div>';
 
         result = result + '</div>';
 
@@ -1237,23 +1232,13 @@
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
             }
 
-            console.log('sendContextMenuActionToActiveObj.dropdownAction', dropdownAction);
+            if (dropdownAction === 'mark_row') {
 
-            if (dropdownAction === 'mark_row_red' || dropdownAction === 'mark_row_green') {
+                var color = event.target.dataset.evDropdownActionDataColor;
 
-                if (objectId && dropdownAction && parentGroupHashId) {
+                if (objectId && color && parentGroupHashId) {
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                    var color;
-
-                    if (dropdownAction === 'mark_row_red') {
-                        color = 'red'
-                    }
-
-                    if (dropdownAction === 'mark_row_green') {
-                        color = 'green'
-                    }
 
                     var markedReportRows = localStorage.getItem("marked_report_rows");
 
@@ -1263,13 +1248,17 @@
                         markedReportRows = {};
                     }
 
-                    markedReportRows[obj.id] = {
-                        color: color
-                    };
+                    if (color === 'undo_mark_row') {
+                        delete markedReportRows[obj.id]
+                    } else {
+                        markedReportRows[obj.id] = {
+                            color: color
+                        };
+                    }
 
                     localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
 
-                    console.log('markedReportRows', markedReportRows);
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
 
@@ -1314,6 +1303,8 @@
 
         clearDropdowns();
 
+        /*var dropdownWidth = 320;
+        var dropdownOptionHeight = 24;
         var popup = document.createElement('div');
 
         clearObjectActiveState(evDataService);
@@ -1328,10 +1319,16 @@
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
 
+        popup.style.cssText = menuPosition;
+        popup.style.position = 'absolute';*/
+
+        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, true);
+        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
         popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
-        popup.style.cssText = menuPosition;
-        popup.style.position = 'absolute';
+        /*popup.style.cssText = menuPosition;*/
+        evDataHelper.calculateMenuPosition(popup, menuPosition);
 
         document.body.appendChild(popup);
 
@@ -1629,7 +1626,8 @@
                         ev.preventDefault();
                         ev.stopPropagation();
 
-                        var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                        //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                        var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
                         createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
@@ -1704,7 +1702,7 @@
         createPopupMenu: createPopupMenu,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         calculateTotalHeight: calculateTotalHeight,
-        calculateContentWrapHeight: calculateContentWrapHeight,
+        //calculateContentWrapHeight: calculateContentWrapHeight,
         calculateScroll: calculateScroll
     }
 

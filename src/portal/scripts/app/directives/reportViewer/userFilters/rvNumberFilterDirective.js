@@ -25,7 +25,6 @@
 
                 scope.filters = scope.evDataService.getFilters();
 
-                scope.filterValue = undefined;
                 scope.filterSelectOptions = [];
                 scope.columnRowsContent = [];
                 scope.nItemsValue = null;
