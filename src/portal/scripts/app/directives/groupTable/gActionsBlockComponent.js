@@ -30,6 +30,9 @@
 
     var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
 
+    var exportExcelService = require('../../services/exportExcelService');
+
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
@@ -58,7 +61,73 @@
 
                 var dleEventIndex;
 
+                // TMP LOGIC FOR REPORT DEBUG STARTS
+                // scope.isSqlReport = window.location.search.indexOf('sql=true') !== -1;
 
+                scope.loadingDiff = false
+
+                scope.downloadSqlDiff = function () {
+
+                    var flatList = scope.evDataService.getFlatList();
+                    var columns = scope.evDataService.getColumns();
+                    var groups = scope.evDataService.getGroups();
+                    var reportOptions = scope.evDataService.getReportOptions();
+                    var entityType = scope.evDataService.getEntityType();
+
+                    scope.loadingDiff = true
+
+                    return new Promise(function (resolve, reject) {
+
+                        var reportRepository = require('../../repositories/reportRepository');
+
+                        if (entityType === 'balance-report') {
+
+                            reportRepository.getBalanceReport(reportOptions, false).then(function (data) {
+
+                                resolve(data)
+
+                            })
+
+                        }
+
+                        if (entityType === 'pl-report') {
+
+                            reportRepository.getPnlReport(reportOptions, false).then(function (data) {
+
+                                resolve(data)
+
+                            })
+
+                        }
+
+                        if (entityType === 'transaction-report') {
+
+                            reportRepository.getTransactionReport(reportOptions, false).then(function (data) {
+
+                                resolve(data)
+
+                            })
+
+                        }
+
+                    }).then(function (data) {
+
+                        scope.loadingDiff = false;
+                        scope.$apply();
+
+                        console.log("Old report data", data);
+
+                        var blobPart = convertReportHelper.convertFlatListToCSV(flatList, columns, scope.isReport, groups.length);
+                        downloadFileHelper.downloadFile(blobPart, "text/plain", "report_sql.csv");
+
+                        var blobPartOld = convertReportHelper.convertFlatListToCSV(data.items, columns, scope.isReport, groups.length);
+                        downloadFileHelper.downloadFile(blobPartOld, "text/plain", "report_old.csv");
+
+                    })
+
+                };
+
+                // TMP LOGIC FOR DEBUG ENDS
                 /*var checkIsLayoutDefault = function () {
 
                     var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
@@ -173,7 +242,7 @@
                     } else {
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
-                            templateUrl: 'views/directives/groupTable/modal-view.html',
+                            templateUrl: 'views/directives/groupTable/g-modal-view.html',
                             parent: angular.element(document.body),
                             targetEvent: ev,
                             locals: {
@@ -435,7 +504,7 @@
                     scope.currentAdditions = scope.evDataService.getAdditions();
 
                     scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+                    // delete scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                 }
@@ -486,12 +555,13 @@
 
                     if (scope.currentAdditions.type === type) {
 
-                        clearAdditions();
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
                         middlewareService.setNewSplitPanelLayoutName(false);
+
+                        clearAdditions();
 
                     } else {
 
@@ -508,19 +578,9 @@
                         if (entityType) { // in case of choosing entity viewer layout
 
                             getListLayoutByEntity(entityType).then(function (layoutsList) {
+
                                 var layouts = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(layoutsList);
-                                //var layouts = rvHelper data;
-                                /*$mdDialog.show({
-                                                                controller: 'SelectLayoutDialogController as vm',
-                                                                templateUrl: 'views/dialogs/select-layout-dialog-view.html',
-                                                                targetEvent: $event,
-                                                                locals: {
-                                                                    options: {
-                                                                        dialogTitle: 'Choose layout to open Split Panel with',
-                                                                        entityType: entityType,
-                                                                        noFolding: true
-                                                                    }
-                                                                }*/
+
                                 $mdDialog.show({
                                     controller: "ExpandableItemsSelectorDialogController as vm",
                                     templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
@@ -678,20 +738,63 @@
                             entityViewerDataService: scope.evDataService,
                             entityViewerEventService: scope.evEventService
                         }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            scope.evEventService.dispatchEvent(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED);
+                        }
+
                     });
 
                 };
 
-                scope.openReconDialog = function ($event) {
+                scope.toggleRecon = function ($event) {
 
                     var additions = scope.evDataService.getVerticalAdditions();
 
                     if (additions.type === 'reconciliation') {
 
-                        scope.evDataService.setVerticalAdditions({});
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            targetEvent: $event,
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Warning',
+                                    description: "Reconciliation will be closed and it's tables settings will be reset.",
+                                    actionButtons: [
+                                        {
+                                            name: 'CANCEL',
+                                            response: {status: 'disagree'}
+                                        },
+                                        {
+                                            name: 'OK',
+                                            response: {status: 'agree'}
+                                        }
+                                    ]
+                                }
+                            }
 
-                        scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
-                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        }).then(function (res) {
+
+                            if (res.status === 'agree') {
+
+                                var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                                interfaceLayout.verticalSplitPanel.width = 0;
+
+                                scope.evDataService.setVerticalSplitPanelStatus(false);
+                                scope.evDataService.setVerticalAdditions({});
+
+                                scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            }
+
+                        });
 
                     } else {
 
@@ -717,6 +820,7 @@
                                 additions.isOpen = true;
                                 additions.type = 'reconciliation';
 
+                                scope.evDataService.setVerticalSplitPanelStatus(true);
                                 scope.evDataService.setVerticalAdditions(additions);
 
                                 scope.evEventService.dispatchEvent(evEvents.VERTICAL_ADDITIONS_CHANGE);
@@ -775,7 +879,7 @@
 
                             if (typeof data1 === 'object' && typeof data2 === 'object') {
 
-                                return objectComparisonHelper.comparePropertiesOfObjects(data1, data2);
+                                return objectComparisonHelper.areObjectsTheSame(data1, data2);
 
                             } else {
 
@@ -1002,6 +1106,7 @@
                             });
 
                             var viewTypeChangedEI = scope.evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
+
                                 var originalViewType = activeLayoutConfig.data.viewType;
                                 var originalViewSettings = activeLayoutConfig.data.viewSettings;
 
@@ -1026,6 +1131,20 @@
 
                             });
 
+                        } else {
+
+                            var evSettingsIndex = scope.evEventService.addEventListener(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED, function () {
+
+                                var originalEvSettings = activeLayoutConfig.data.ev_options;
+                                var evSettings = scope.evDataService.getEntityViewerOptions();
+
+                                if (!isLayoutTheSame(originalEvSettings, evSettings)) {
+                                    scope.layoutChanged = true;
+                                    removeChangesTrackingEventListeners();
+                                }
+
+                            });
+
                         }
 
                         changesTrackingEvents.GROUPS_CHANGE = groupsChangeEventIndex;
@@ -1038,10 +1157,13 @@
                         changesTrackingEvents.TOGGLE_FILTER_AREA = tfaEventIndex;
                         changesTrackingEvents.REPORT_OPTIONS_CHANGE = roChangeEventIndex;
                         changesTrackingEvents.REPORT_TABLE_VIEW_CHANGED = rtvChangedEventIndex;
+                        // Report viewer specific tracking
                         changesTrackingEvents.REPORT_EXPORT_OPTIONS_CHANGED = reoChangeEventIndex;
                         changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
                         changesTrackingEvents.ENTITY_VIEWER_PAGINATION_CHANGED = evpcEventIndex;
                         changesTrackingEvents.VIEW_TYPE_CHANGED = viewTypeChangedEI;
+                        // Entity viewer specific tracking
+                        changesTrackingEvents.ENTITY_VIEWER_SETTINGS_CHANGED = evSettingsIndex;
                     }
 
                 };
@@ -1086,8 +1208,6 @@
                             }
 
                         }
-
-                        //checkIsLayoutDefault();
 
                     })
                 };
@@ -1144,8 +1264,8 @@
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                    clearAdditions();
                     middlewareService.setNewSplitPanelLayoutName(false);
+                    clearAdditions();
 
                     if (scope.isReport) {
 
@@ -1315,13 +1435,17 @@
                                     var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
 
                                         if (spChangedLayout.hasOwnProperty('id')) {
-                                            uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
+
+                                        	uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
                                                 spLayoutSaveRes(true);
                                             });
+
                                         } else {
-                                            uiService.createListLayout(scope.entityType, spChangedLayout).then(function () {
+
+                                        	uiService.createListLayout(scope.entityType, spChangedLayout).then(function () {
                                                 spLayoutSaveRes(true);
                                             });
+
                                         }
 
                                     });
@@ -1360,6 +1484,7 @@
                                                 layoutCurrentConfig.name = res.data.layoutName;
                                             }
 
+                                            /* When saving is_default: true layout on backend, others become is_default: false
                                             uiService.getDefaultListLayout(scope.entityType).then(function (data) {
 
                                                 layoutCurrentConfig.is_default = true;
@@ -1382,7 +1507,11 @@
                                                     });
                                                 }
 
-                                            });
+                                            }); */
+
+											uiService.createListLayout(scope.entityType, layoutCurrentConfig).then(function () {
+												saveLayoutRes(true);
+											});
 
                                         }
 
@@ -1406,28 +1535,8 @@
                     }
                 };
 
-                scope.saveLayoutList = function ($event) {
-
-                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
-                    if (listLayout.hasOwnProperty('id')) {
-
-                        uiService.updateListLayout(listLayout.id, listLayout).then(function () {
-
-                            scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-
-                            toastNotificationService.success("Success. Page was saved.");
-
-                        });
-
-                    }
-
-                    /*$mdDialog.show({
-                        controller: 'SaveLayoutDialogController as vm',
-                        templateUrl: 'views/save-layout-dialog-view.html',
-                        targetEvent: $event,
-                        clickOutsideToClose: false
-                    })*/
+                scope.saveLayoutList = function () {
+					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
                 };
 
                 scope.saveAsLayoutList = function ($event) {
@@ -1440,9 +1549,14 @@
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {
-                            options: {}
+                            options: {
+                                complexSaveAsLayoutDialog: {
+                                    entityType: scope.entityType
+                                }
+                            }
                         },
                         clickOutsideToClose: false
+
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
@@ -1455,26 +1569,7 @@
                                 uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
 
                                     listLayout.id = data.id;
-
-                                    if (scope.isRootEntityViewer) {
-
-                                        middlewareService.setNewEntityViewerLayoutName(listLayout.name);
-
-                                    } else  {
-                                        scope.evDataService.setSplitPanelDefaultLayout(listLayout.id);
-                                        scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-                                        middlewareService.setNewSplitPanelLayoutName(listLayout.name); // Give signal to update active split panel layout name in the toolbar
-                                    }
-
-                                    scope.evDataService.setListLayout(listLayout);
-                                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
-
-                                    scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
-
-                                    toastNotificationService.success("New layout with name '" + listLayout.name + "' created");
-
-                                    scope.isNewLayout = false;
-                                    scope.$apply();
+                                    applyLayout(listLayout);
 
                                 }).catch(function (error) {
                                     toastNotificationService.error("Error occurred");
@@ -1486,7 +1581,7 @@
 
                                 if (scope.isRootEntityViewer) {
 
-                                    uiService.getDefaultListLayout(scope.entityType).then(function (openedLayoutData) {
+                                    /* uiService.getDefaultListLayout(scope.entityType).then(function (openedLayoutData) {
 
                                         var currentlyOpenLayout = openedLayoutData.results[0];
                                         currentlyOpenLayout.is_default = false;
@@ -1504,15 +1599,20 @@
 
                                     }).catch(function (error) {
                                         toastNotificationService.error("Error occurred");
-                                    });
+                                    }); */
 
-                                } else {
+									listLayout.is_default = true;
 
-                                    delete listLayout.id;
-                                    listLayout.is_default = false;
-                                    saveAsLayout();
+                                } else { // for split panel
+
+									listLayout.is_default = false;
+                                    /*delete listLayout.id;
+                                    saveAsLayout();*/
 
                                 }
+
+								delete listLayout.id;
+								saveAsLayout();
 
                             } else { // if layout was not based on another layout
 
@@ -1524,8 +1624,89 @@
                             }
                         }
 
+                        if (res.status === 'overwrite') {
+
+                            var userCode = res.data.user_code;
+
+                            listLayout.name = res.data.name;
+                            listLayout.user_code = userCode;
+
+                            scope.getLayoutByUserCode(userCode).then(function (changeableLayoutData) {
+
+								var changeableLayout = changeableLayoutData.results[0];
+								overwriteLayout(changeableLayout, listLayout).then(function (updatedLayoutData) {
+
+									listLayout.is_default = true;
+									listLayout.modified = updatedLayoutData.modified;
+									applyLayout(listLayout);
+
+								});
+
+							});
+
+                        }
+
                     });
 
+                };
+
+                scope.getLayoutByUserCode = function (userCode) {
+
+                    var contentType = metaContentTypesService.findContentTypeByEntity(scope.entityType, 'ui');
+
+                    /* return uiService.getListLayoutDefault({
+                        pageSize: 1000,
+                        filters: {
+                            content_type: contentType,
+                            user_code: userCode
+                        }
+                    }); */
+                    return uiService.getListLayout(
+                        null,
+                        {
+                            pageSize: 1000,
+                            filters: {
+                                content_type: contentType,
+                                user_code: userCode
+                            }
+                        }
+                    );
+
+                };
+
+                var overwriteLayout = function (changeableLayout, listLayout) {
+
+                    var id = changeableLayout.id;
+
+                    listLayout.id = id;
+                    changeableLayout.data = listLayout.data;
+                    changeableLayout.name = listLayout.name;
+
+                    return uiService.updateListLayout(id, changeableLayout);
+
+                };
+
+                var applyLayout = function (layout) {
+
+                    if (scope.isRootEntityViewer) {
+
+                        middlewareService.setNewEntityViewerLayoutName(layout.name);
+
+                    } else {
+                        scope.evDataService.setSplitPanelDefaultLayout(layout.id);
+                        scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+                        middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active split panel layout name in the toolbar
+                    }
+
+                    scope.evDataService.setListLayout(layout);
+                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
+
+                    scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+
+                    toastNotificationService.success("New layout with name '" + layout.name + "' created");
+
+                    scope.isNewLayout = false;
+                    scope.$apply();
 
                 };
 
@@ -1574,6 +1755,27 @@
 
                     var blobPart = convertReportHelper.convertFlatListToCSV(flatList, columns, scope.isReport, groups.length);
                     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
+                };
+
+                scope.exportAsExcel = function(){
+
+                    var data = {
+                        entityType: scope.entityType,
+                        contentSettings: {
+                            columns: scope.evDataService.getColumns(),
+                            groups: scope.evDataService.getGroups()
+                        },
+                        content: scope.evDataService.getFlatList()
+                    };
+
+                    exportExcelService.generatePdf(data).then(function (blob) {
+
+                        downloadFileHelper.downloadFile(blob, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
+
+                        $mdDialog.hide();
+
+                    })
+
                 };
 
                 /*scope.copyReport = function ($event) {
@@ -1694,15 +1896,11 @@
                     scope.evEventService.dispatchEvent(evEvents.RECON_TOGGLE_MATCH_EDITOR);
                 };
 
-                scope.reconBookSelected = function ($event) {
-
-                    console.log('reconBookSelected');
-
+                scope.reconBookSelected = function () {
                     scope.evEventService.dispatchEvent(evEvents.RECON_BOOK_SELECTED)
-
                 };
 
-                scope.saveReconLayout = function($event) {
+                scope.saveReconLayout = function ($event) {
 
                     scope.savingReconLayout = true;
 
@@ -1759,9 +1957,7 @@
                 };
 
                 scope.openDashboardComponentConstructor = function () {
-
                     scope.evEventService.dispatchEvent(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR);
-
                 };
 
                 scope.init = function () {
@@ -1813,16 +2009,14 @@
 
                         scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
-
                         scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
 
                             scope.verticalAdditions = scope.evDataService.getVerticalAdditions();
 
                         })
 
-                    }
 
-                    //checkIsLayoutDefault();
+                    }
 
                 };
 

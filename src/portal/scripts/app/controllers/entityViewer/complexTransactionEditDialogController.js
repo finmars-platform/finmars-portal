@@ -24,16 +24,17 @@
     var colorPalettesService = require('../../services/colorPalettesService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
-    var transactionHelper = require('../../helpers/transaction.helper');
+	var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
+	var transactionHelper = require('../../helpers/transaction.helper');
     var transactionTypeService = require('../../services/transactionTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
 
     module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data) {
 
         var vm = this;
+		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
-        vm.entityType = entityType;
+		vm.entityType = entityType;
         vm.entityId = entityId;
 
         vm.entity = {$_isValid: true};
@@ -73,10 +74,11 @@
         vm.baseTransactions = [];
         vm.reconFields = [];
 
-        var tabsWithErrors = {};
-        var errorFieldsList = [];
-        var inputsWithCalculations;
-        var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
+    vm.tabsWithErrors = {};
+    vm.errorFieldsList = [];
+    vm.inputsWithCalculations = null;
+
+    var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 
         /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
@@ -530,7 +532,8 @@
             dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
             vm.userInputs = [];
-            vm.tabs.forEach(function (tab) {
+            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+            /*vm.tabs.forEach(function (tab) {
                 tab.layout.fields.forEach(function (field) {
                     if (field.attribute_class === 'userInput') {
                         vm.userInputs.push(field.attribute);
@@ -566,29 +569,33 @@
                 for (var i = 0; i < vm.transactionType.inputs.length; i++) {
 
                     if (vm.transactionType.inputs[i].name === userInput.name) {
+
                         userInput.tooltip = vm.transactionType.inputs[i].tooltip;
+                        userInput.verbose_name = vm.transactionType.inputs[i].verbose_name;
+
                     }
 
                 }
 
-            });
+            });*/
 
-            inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
+			vm.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
-            if (inputsWithCalculations) {
-                inputsWithCalculations.forEach(function (inputWithCalc) {
+			if (vm.inputsWithCalculations) {
 
-                    vm.userInputs.forEach(function (userInput) {
+				vm.inputsWithCalculations.forEach(function (inputWithCalc) {
 
-                        if (userInput.name === inputWithCalc.name) {
+					vm.userInputs.forEach(function (userInput) {
 
-                            if (!userInput.buttons) {
-                                userInput.buttons = [];
-                            }
+				  		if (userInput.name === inputWithCalc.name) {
+
+							if (!userInput.buttons) {
+								userInput.buttons = [];
+							}
 
                             if (inputWithCalc.can_recalculate === true) {
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    iconObj: {type: 'angular-material', icon: 'refresh'},
                                     tooltip: 'Recalculate this field',
                                     caption: '',
                                     classes: '',
@@ -601,10 +608,11 @@
                             }
 
                             if (inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
-                                var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
+
+                            	var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
 
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    iconObj: {type: 'angular-material', icon: 'loop'},
                                     tooltip: 'Recalculate linked fields',
                                     caption: '',
                                     classes: '',
@@ -616,17 +624,18 @@
                                 })
                             }
 
-                            if (recalculationInfo && recalculationInfo.recalculatedInputs.indexOf(userInput.name) > -1) { // mark userInputs that were recalculated
-                                userInput.frontOptions.recalculated = recalculationInfo.recalculationData;
+                            if (recalculationInfo && recalculationInfo.recalculatedInputs.includes(userInput.name)) { // mark userInputs that were recalculated
+								// mark userInputs that were recalculated
+								userInput.frontOptions.recalculated = recalculationInfo.recalculationData
                             }
 
                         }
+
                     })
 
                 });
 
             }
-
 
             mapAttributesAndFixFieldsLayout();
 
@@ -693,7 +702,11 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            rebookComplexTransaction(inputs, recalculationData);
+            transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+
+            if (inputs && inputs.length) {
+                rebookComplexTransaction(inputs, recalculationData);
+            }
 
         };
 
@@ -780,7 +793,8 @@
                 var exists_in_ttype = false;
 
                 if (vm.transactionType.inputs) {
-                    vm.transactionType.inputs.forEach(function (ttypeInput) {
+
+                	vm.transactionType.inputs.forEach(function (ttypeInput) {
 
                         if (ttypeInput.name === key) {
 
@@ -806,10 +820,20 @@
                             if (input.value_type === 100) {
                                 input.verbose_value_type = 'Relation';
 
-                                if (vm.complexTransactionData.values[key + '_object'].name) {
+                                /*if (vm.complexTransactionData.values[key + '_object'].name) {
                                     input.value = vm.complexTransactionData.values[key + '_object'].name
                                 } else {
                                     input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                }*/
+
+                                if (vm.complexTransactionData.values[key + '_object']) {
+
+                                    if (vm.complexTransactionData.values[key + '_object'].name) {
+                                        input.value = vm.complexTransactionData.values[key + '_object'].name
+                                    } else {
+                                        input.value = vm.complexTransactionData.values[key + '_object'].public_name
+                                    }
+
                                 }
 
                             }
@@ -905,16 +929,8 @@
         };
 
         vm.bindFlex = function (tab, field) {
-            /*var totalColspans = 0;
-            var i;
-            for (i = 0; i < tab.layout.fields.length; i = i + 1) {
-                if (tab.layout.fields[i].row === row) {
-                    totalColspans = totalColspans + tab.layout.fields[i].colspan;
-                }
-            }*/
             var flexUnit = 100 / tab.layout.columns;
             return Math.floor(field.colspan * flexUnit);
-
         };
 
         vm.checkFieldRender = function (tab, row, field) {
@@ -1187,7 +1203,7 @@
 
             if (errors.length) {
 
-                tabsWithErrors = {};
+                vm.tabsWithErrors = {};
 
                 errors.forEach(function (errorObj) {
 
@@ -1201,15 +1217,15 @@
                         var tabNameElem = document.querySelector(selectorString);
                         tabNameElem.classList.add('error-tab');
 
-                        if (!tabsWithErrors.hasOwnProperty(tabName)) {
-                            tabsWithErrors[tabName] = [errorObj.key];
+                        if (!vm.tabsWithErrors.hasOwnProperty(tabName)) {
+                            vm.tabsWithErrors[tabName] = [errorObj.key];
 
-                        } else if (tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
-                            tabsWithErrors[tabName].push(errorObj.key);
+                        } else if (vm.tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+							vm.tabsWithErrors[tabName].push(errorObj.key);
 
                         }
 
-                        errorFieldsList.push(errorObj.key);
+                        vm.errorFieldsList.push(errorObj.key);
 
                     }
 
@@ -1229,7 +1245,7 @@
                     }
                 })
 
-            } /*else {
+            } else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -1294,25 +1310,96 @@
                             resolve(data);
                         }).catch(function (data) {
 
-                            console.log('data', data);
+                            if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
-                            vm.processing = false;
+                                vm.processing = false;
 
-                            $mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                parent: angular.element(document.body),
-                                multiple: true,
-                                locals: {
-                                    validationData: {
-                                        errorData: data,
-                                        tableColumnsNames: ['Name of fields', 'Error Cause']
+                                $mdDialog.show({
+                                    controller: 'BookUniquenessWarningDialogController as vm',
+                                    templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    multiple: true,
+                                    locals: {
+                                        data: {
+                                            errorData: data
+                                        }
                                     }
-                                }
-                            });
+                                }).then(function (response) {
 
-                            reject(data);
+                                    if(response.reaction === 'cancel') {
+                                        // do nothing
+                                    }
+
+                                    if(response.reaction === 'skip') {
+                                        $mdDialog.hide({res: 'agree', data: null});
+                                    }
+
+                                    if(response.reaction === 'book_without_unique_code') {
+
+                                        // TODO refactor here
+                                        // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+
+                                        res.uniqueness_reaction = 2;
+
+                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                            vm.processing = false;
+
+                                            toastNotificationService.success('Transaction was successfully booked');
+
+                                            resolve(data);
+
+                                        })
+
+                                    }
+
+                                    if(response.reaction === 'overwrite') {
+
+                                        // TODO refactor here
+                                        //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+
+                                        res.uniqueness_reaction = 3;
+
+                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                            vm.processing = false;
+
+                                            toastNotificationService.success('Transaction was successfully booked');
+
+                                            resolve(data);
+
+                                        })
+
+                                    }
+
+
+                                })
+
+
+                            } else {
+
+                                console.log('data', data);
+
+                                vm.processing = false;
+
+                                $mdDialog.show({
+                                    controller: 'ValidationDialogController as vm',
+                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                    targetEvent: $event,
+                                    parent: angular.element(document.body),
+                                    multiple: true,
+                                    locals: {
+                                        validationData: {
+                                            errorData: data,
+                                            tableColumnsNames: ['Name of fields', 'Error Cause']
+                                        }
+                                    }
+                                });
+
+                                reject(data);
+
+                            }
 
                         });
                     });
@@ -1336,7 +1423,7 @@
 
                 })
 
-            }*/
+            }
 
         };
 
@@ -1571,58 +1658,7 @@
             console.log('resultInput', resultInput);
 
         };*/
-        vm.onFieldChange = function (fieldKey) {
-
-            if (fieldKey) {
-
-                if (inputsWithCalculations) {
-
-                    var i,a;
-                    for (i = 0; i < vm.userInputs.length; i++) {
-
-                        if (vm.userInputs[i].key === fieldKey) {
-
-                            var uInputName = vm.userInputs[i].name;
-
-                            for (a = 0; a < inputsWithCalculations.length; a++) {
-                                var inputWithCalc = inputsWithCalculations[a];
-
-                                if (inputWithCalc.name === uInputName &&
-                                    inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
-
-                                    var changedUserInputData = JSON.parse(JSON.stringify(vm.userInputs[i]));
-
-                                    changedUserInputData.frontOptions.linked_inputs_names = JSON.parse(JSON.stringify(inputWithCalc.settings.linked_inputs_names.split(',')));
-
-                                    vm.evEditorDataService.setChangedUserInputData(changedUserInputData);
-                                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELD_CHANGED);
-
-                                    break;
-
-                                }
-                            }
-
-                            break;
-
-                        }
-
-                    }
-                }
-
-
-                var attributes = {
-                    entityAttrs: vm.entityAttrs,
-                    attrsTypes: vm.attrs,
-                    userInputs: vm.userInputs
-                }
-
-                entityEditorHelper.checkTabsForErrorFields(fieldKey, errorFieldsList, tabsWithErrors,
-                    attributes,
-                    vm.entity, vm.entityType, vm.tabs);
-            }
-
-        };
-
-    }
+		vm.onFieldChange = sharedLogicHelper.onFieldChange;
+  };
 
 }());

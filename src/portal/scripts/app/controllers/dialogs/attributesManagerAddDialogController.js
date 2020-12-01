@@ -160,12 +160,12 @@
 
         vm.loadPermissions();
 
-        vm.onAttrNameChange = function () {
+        vm.onAttrNameBlur = function () {
 
             if (!vm.attribute.user_code && vm.attribute.name ) {
 
-                var attrName = vm.attribute.name;
-                attrName = attrName.replace(/[^0-9a-zA-Z_]/, '_');
+                var attrName = vm.attribute.name.toLowerCase();
+                attrName = attrName.replace(/[^0-9a-zA-Z_]/g, '_');
 
                 vm.attribute.user_code = attrName;
 

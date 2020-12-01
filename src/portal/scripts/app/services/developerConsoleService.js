@@ -187,10 +187,6 @@
 
         document.addEventListener('keypress', function (event) {
 
-            console.log('event', event);
-            console.log('requestCounter', requestCounter);
-            console.log('requests', requests);
-
             if (event.keyCode === 96 || event.key === '`' || event.keyCode === 1105 || event.key === 'ё') {
 
                 if (consoleStatus === 'hidden') {

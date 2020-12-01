@@ -27,7 +27,10 @@
                         window.developerConsoleService.resolveRequest(requestId, response.clone())
                     }
 
-                    if (response.status >= 400 && response.status < 500) {
+                    if (response.status === 204) { // No content
+                        resolve(response);
+                    }
+                    else if (response.status >= 400 && response.status < 500) {
 
                         response.json().then(function (data) {
 

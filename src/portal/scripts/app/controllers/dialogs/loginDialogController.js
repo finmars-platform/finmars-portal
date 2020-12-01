@@ -35,7 +35,7 @@
                 $scope.$apply();
 
                 $mdDialog.show({
-                    controller: 'twoFactorLoginDialogController as vm',
+                    controller: 'TwoFactorLoginDialogController as vm',
                     templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
                     parent: angular.element(document.body),
                     locals: {

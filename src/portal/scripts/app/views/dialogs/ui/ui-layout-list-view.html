@@ -58,8 +58,8 @@
                  layout="row"
                  layout-align="space-between center"
                  style="padding: 10px"
+                 ng-dblclick="vm.openLayout(item, $event)"
                  ng-click="vm.selectLayout(item, $event)">
-                <!--                <div layout="row" class="ll-name" data-ng-click="vm.selectLayout(item)">-->
                 <div layout="row" class="ll-name">
                     <ng-md-icon ng-if="item.hasUseFromAboveFilter"
                                 icon="flag"
@@ -109,7 +109,7 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
-        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button ng-click="vm.agree()" data-ng-disabled="!vm.selectedLayout" style="margin-right:20px;">
             Open
         </md-button>
     </md-dialog-actions>

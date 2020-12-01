@@ -214,11 +214,14 @@
                 entityResolverService.getList(vm.mapEntityType, options).then(function (data, error) {
 
                     if (entitiesWithoutCount.indexOf(vm.mapEntityType) === -1) {
-                        console.log('mapping data to concat', data.results, vm.entityItems);
+
                         vm.entityItems = vm.entityItems.concat(data.results);
+
                     } else {
+
                         vm.entityItems = vm.entityItems.concat(data);
                         lastPageReached = true;
+
                     }
 
                     if (data.count) {

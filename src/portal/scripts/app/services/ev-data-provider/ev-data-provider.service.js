@@ -208,8 +208,6 @@
         var obj;
         var i;
 
-        console.log('event', event);
-
         if (!event.___id) {
 
             var rootGroupData = entityViewerDataService.getRootGroupData();

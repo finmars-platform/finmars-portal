@@ -205,13 +205,19 @@
         </div>
     </md-dialog-content>
 
-    <md-dialog-actions layout="row" layout-align="space-between">
+<!--    <md-dialog-actions layout="row" layout-align="space-between">-->
+    <md-dialog-actions layout="row">
+
+        <md-button ng-click="vm.exportToDashboards()" style="margin-right:20px;">
+            Export to dashboards
+        </md-button>
+
         <md-button ng-click="vm.cancel()" style="margin-right:20px;">
             Cancel
         </md-button>
         <md-button ng-click="vm.agree()"
                    style="margin-right:20px;"
-                   ng-disabled="!vm.item.type">
+                   ng-disabled="!vm.isFormValid()">
             OK
         </md-button>
 

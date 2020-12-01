@@ -91,7 +91,6 @@
                     }
                 }).then(function (res) {
                     if (res.status === 'agree') {
-                        console.log("res", res.data);
                         item[options.key] = res.data.item.expression;
                     }
                     // console.log('item', item);

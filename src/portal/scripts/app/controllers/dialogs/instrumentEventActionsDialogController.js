@@ -17,8 +17,6 @@
 
         vm.readyStatus = {transactionTypes: false};
 
-        console.log('eventActions', eventActions);
-
         vm.eventActions = eventActions || [];
 
         vm.toggleQuery = function () {
@@ -168,7 +166,6 @@
 
             }
 
-            console.log('eventActions', vm.eventActions);
         };
 
         vm.getRangeOfNumbers = function (number) {

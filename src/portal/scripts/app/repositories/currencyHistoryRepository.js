@@ -75,9 +75,9 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                resolve({status: 'deleted'});
-            });
+                return new Promise(function (resolve, reject) {
+                    resolve({status: 'deleted'});
+                });
             //return data.json();
         })
     };
