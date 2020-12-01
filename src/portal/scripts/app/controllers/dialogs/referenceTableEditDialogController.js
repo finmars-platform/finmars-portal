@@ -21,7 +21,7 @@
         vm.validationEnabled = false;
         vm.dragAndDropInited = false;
 
-        vm.filterTerms = {
+        vm.filterTerms = { // for angularjs ng-repeat filter
             key: "",
             value: ""
         };
@@ -144,6 +144,7 @@
 
                 this.dragula = dragula(items, {
                     moves: function () {
+                        // drag and drop works if filter is inactive
                         if (vm.dragIconGrabbed && !vm.filterTerms.key && !vm.filterTerms.value) {
                             return true;
                         }

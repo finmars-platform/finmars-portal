@@ -126,7 +126,7 @@
 
         vm.getCurrencies = function () {
 
-            entityResolverService.getList('currency').then(function (data) {
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data) {
 
                 vm.currencies = data.results;
 
@@ -759,7 +759,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attributeTypes = data.results;
             });
         };
@@ -1114,7 +1114,14 @@
 
         };
 
+        var instrumentPricingCurrencyChanged = false; // only once
+
         vm.entityChange = function (fieldKey) {
+
+            console.log('vm.entityType', vm.entityType);
+            console.log('vm.entity', vm.entity);
+            console.log('fieldKey', fieldKey);
+
 
             if (vm.lastAccountType !== vm.entity.type) {
                 vm.lastAccountType = vm.entity.type;
@@ -1216,6 +1223,22 @@
 
             }
 
+
+            if (vm.entityType === 'instrument' ) {
+
+                if (vm.entity.pricing_currency && !instrumentPricingCurrencyChanged) {
+
+                    instrumentPricingCurrencyChanged = true;
+
+                    vm.entity.accrued_currency = vm.entity.pricing_currency;
+                    vm.entity.exposure_currency_1 = vm.entity.pricing_currency;
+                    vm.entity.exposure_currency_2 = vm.entity.pricing_currency;
+
+                }
+
+                console.log("Hello?", vm.entity)
+
+            }
         };
 
         vm.generateCurrencyAttributeTypesByValueTypes = function () {

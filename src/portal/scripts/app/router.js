@@ -350,6 +350,12 @@
                 controller: 'ProcessesController as vm'
             })
 
+            .state('app.system-messages', {
+                url: '/system-messages',
+                templateUrl: 'views/pages/system-messages-view.html',
+                controller: 'SystemMessagesController as vm'
+            })
+
             .state('app.pricing-policy', {
                 url: '/pricing-policies',
                 templateUrl: 'views/pages/pricing-policy-page-view.html',
@@ -362,16 +368,22 @@
                 controller: 'PricingSchemePageController as vm'
             })
 
-            .state('app.pricing-schedules', {
-                url: '/pricing-schedules',
-                templateUrl: 'views/pages/pricing-schedule-page-view.html',
-                controller: 'PricingSchedulePageController as vm'
+            .state('app.schedules', {
+                url: '/schedules',
+                templateUrl: 'views/pages/schedule-page-view.html',
+                controller: 'SchedulePageController as vm'
             })
 
             .state('app.pricing-procedure', {
                 url: '/pricing-procedures',
                 templateUrl: 'views/pages/pricing-procedure-page-view.html',
                 controller: 'PricingProcedurePageController as vm'
+            })
+
+            .state('app.data-procedure', {
+                url: '/data-procedures',
+                templateUrl: 'views/pages/data-procedure-page-view.html',
+                controller: 'DataProcedurePageController as vm'
             })
 
             .state('app.pricing-parent-procedure', {
@@ -384,6 +396,11 @@
                 url: '/run-pricing-procedures',
                 templateUrl: 'views/pages/run-pricing-procedure-page-view.html',
                 controller: 'RunPricingProcedurePageController as vm'
+            })
+            .state('app.run-data-procedure', {
+                url: '/run-data-procedures',
+                templateUrl: 'views/pages/run-data-procedure-page-view.html',
+                controller: 'RunDataProcedurePageController as vm'
             })
             .state('app.import', {
                 url: '/import',
@@ -605,11 +622,6 @@
                 url: '/instrument-import',
                 templateUrl: 'views/settings/instrument-import-settings-view.html',
                 controller: 'SettingsGeneralInstrumentImportController as vm'
-            })
-            .state('app.settings.automated-uploads-history', {
-                url: '/automated-price-schedule',
-                templateUrl: 'views/pages/automated-uploads-history-view.html',
-                controller: 'AutomatedUploadsHistoryController as vm'
             })
             .state('app.settings.simple-entity-import', {
                 url: '/data-import',
