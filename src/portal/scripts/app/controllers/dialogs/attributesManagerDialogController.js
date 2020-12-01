@@ -40,7 +40,7 @@
         };*/
 
         vm.getList = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
 
                 $scope.$apply();

@@ -39,6 +39,24 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     console.log('Project environment: ' + '__PROJECT_ENV__');
     console.log('Project build date: ' + '__BUILD_DATE__');
 
+    var controllersCount = 0;
+    var directivesCount = 0;
+
+    app._invokeQueue.forEach(function (item) {
+
+        if (item[0] === '$controllerProvider') {
+            controllersCount = controllersCount + 1;
+        }
+
+        if (item[0] === '$compileProvider' && item[1] === 'directive') {
+            directivesCount = directivesCount + 1;
+        }
+
+    });
+
+    console.log("angular.js info: " + controllersCount + ' controllers registered');
+    console.log("angular.js info: " + directivesCount + ' directives registered');
+
     var developerConsoleService = require('./app/services/developerConsoleService');
 
     window.developerConsoleService = developerConsoleService;
@@ -112,7 +130,7 @@ app.directive('dashboardEntityViewerSplitPanel', [require('./app/directives/dash
 app.directive('dashboardInputForm', [require('./app/directives/dashboard/dashboardInputFormDirective')]);
 app.directive('dashboardReportViewer', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerDirective')]);
 app.directive('dashboardReportViewerSplitPanel', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerSplitPanelDirective')]);
-app.directive('dashboardReportViewerGrandTotal', [require('./app/directives/dashboard/dashboardReportViewerGrandTotalDirective')]);
+app.directive('dashboardReportViewerGrandTotal', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerGrandTotalDirective')]);
 app.directive('dashboardReportViewerMatrix', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerMatrixDirective')]);
 app.directive('dashboardReportViewerCharts', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerChartsDirective')]);
 
@@ -196,6 +214,7 @@ app.controller('FileReportsController', ['$scope', '$mdDialog', require('./app/c
 app.controller('LoginDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/loginDialogController')]);
 app.controller('HealthcheckController', ['$scope', require('./app/controllers/pages/healthcheckController')]);
 
+app.controller('TwoFactorLoginDialogController', ['$scope', '$mdDialog', 'username', require('./app/controllers/dialogs/twoFactorLoginDialogController')]);
 
 // System Dialogs
 
@@ -380,6 +399,14 @@ app.controller('CustomFieldController', ['$scope', '$stateParams', '$mdDialog', 
 app.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldAddDialogController')]);
 app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldEditDialogController')]);
 
+// Reports Missing Prices
+
+app.controller('ReportPriceCheckerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/reportPriceCheckerDialogController')]);
+app.controller('ViewMissingPriceHistoryDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingPriceHistoryDialogController')]);
+app.controller('ViewMissingFxRatesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingFxRatesDialogController')]);
+app.controller('ViewMissingHistoricalFxRatesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingHistoricalFxRatesDialogController')]);
+app.controller('ViewMissingPriceHistoryViewPositionsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingPriceHistoryViewPositionsDialogController')]);
+
 
 // Settings
 
@@ -472,6 +499,7 @@ app.controller('InstrumentDownloadController', ['$scope', '$mdDialog', require('
 app.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
 app.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
 app.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
+app.controller('SystemMessagesController', ['$scope', '$mdDialog', require('./app/controllers/pages/systemMessagesController')]);
 
 // Procedures
 
@@ -536,7 +564,9 @@ app.controller('ReferenceTableExportDialogController', ['$scope', '$mdDialog', '
 app.controller('FormsDataConstructor', ['$scope', '$mdDialog', require('./app/controllers/pages/formsDataConstructorController')]);
 app.controller('LayoutsSettingsController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/layoutsSettingsController')]);
 
-app.controller('LayoutsListDialogController', ['$scope', '$mdDialog', '$state', 'data', require('./app/controllers/dialogs/layoutsListDialogController')]);
+/*
+TO DELETE: commented 2020-11-04
+app.controller('LayoutsListDialogController', ['$scope', '$mdDialog', '$state', 'data', require('./app/controllers/dialogs/layoutsListDialogController')]); */
 app.controller('EntitiesCustomAttributesController', ['$scope', '$mdDialog', require('./app/controllers/pages/entitiesCustomAttributesController')]);
 app.controller('PriceDownloadSchemeController', ['$scope', require('./app/controllers/pages/priceDownloadSchemeController')]);
 app.controller('TemplateFieldsController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateFieldsController')]);
@@ -683,7 +713,7 @@ app.directive('ngRightClick', ['$parse', function ($parse) {
     };
 }]);
 
-require('./templates.min.js');
+// require('./templates.min.js');
 
 String.prototype.capitalizeFirstLetter = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);

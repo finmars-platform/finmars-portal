@@ -2,7 +2,7 @@
 
     var renderHelper = require('../../helpers/render.helper');
 
-    var checkIcon = renderHelper.getCheckIcon();
+        var checkIcon = renderHelper.getIconByKey('checkIcon');
 
     var render = function (group) {
 

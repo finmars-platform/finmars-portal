@@ -110,23 +110,26 @@
 
     };
 
-    vm.change = function ($event) {
-      if (vm.layoutName.length != 0) {
-        vm.userCodeIsTouched = true;
-      }
-      console.log(vm.layoutUserCode, "cool");
-      console.log(vm.userCodeIsTouched, "касание до");
+		vm.change = function ($event) {
+			if (vm.layoutName.length != 0) {
+				vm.userCodeIsTouched = true;
+			}
+		};
 
-      console.log(vm.userCodeIsTouched, "касание после");
-    };
-    vm.validateUserCode = function () {
-      var expression = /^\w+$/;
-      vm.userCodeIsTouched = true;
-      if (expression.test(vm.layoutUserCode)) {
-        vm.userCodeError = false;
-      } else {
-        vm.userCodeError = true;
-      }
-    };
+		vm.validateUserCode = function () {
+
+			var expression = /^\w+$/;
+			vm.userCodeIsTouched = true;
+
+			if (expression.test(vm.layoutUserCode)) {
+
+				vm.userCodeError = false;
+
+			} else {
+				vm.userCodeError = true;
+			}
+
+		};
+
   };
 })();

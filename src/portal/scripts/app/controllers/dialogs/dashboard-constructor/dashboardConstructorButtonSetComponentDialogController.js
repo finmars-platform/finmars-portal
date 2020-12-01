@@ -14,6 +14,7 @@
 
     var uiService = require('../../../services/uiService');
     var metaContentTypesService = require('../../../services/metaContentTypesService');
+    var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
 
     module.exports = function dashboardConstructorButtonSetComponentDialogController($scope, $mdDialog, item, dataService, eventService) {
 
@@ -646,6 +647,11 @@
 
             return result
 
+        };
+
+        // Victor 2020.10.26 Issue #47
+        vm.exportToDashboards = function () {
+            dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
         };
 
         vm.init = function () {

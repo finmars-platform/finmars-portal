@@ -28,8 +28,8 @@
             vm.key = vm.provider.credential.key;
         } else {
             vm.id = null;
-            vm.name = '';
-            vm.user_code = '';
+            vm.name = 'Config for ' + vm.provider.name;
+            vm.user_code = 'Config for ' + vm.provider.name;
             vm.type = credentialTypes.USERNAME_WITH_PASSWORD_AND_PRIVATE_KEY;
             vm.username = '';
             vm.password = '';
@@ -42,19 +42,24 @@
 
         vm.agree = function ($event) {
 
-            var data = {
-                name: vm.name,
-                user_code: vm.user_code,
-                type: vm.type,
-                provider: vm.provider.id,
-                username: vm.username,
-                password: vm.password,
-                key: vm.key,
-            };
+            var formData = new FormData();
+
+            formData.append('name', vm.name);
+            formData.append('user_code', vm.user_code);
+            formData.append('type', vm.type);
+            formData.append('provider', vm.provider.id);
+            formData.append('username', vm.username);
+            formData.append('password', vm.password);
+            if (vm.public_key) {
+                formData.append('path_to_public_key', vm.public_key);
+            }
+            if (vm.private_key) {
+                formData.append('path_to_private_key', vm.private_key);
+            }
 
             if (vm.id) {
 
-                dataProvidersService.editCredential(vm.id, data).then(function () {
+                dataProvidersService.editCredential(vm.id, formData).then(function () {
 
                     var message = 'Credential ' + vm.name + ' was saved';
                     vm.info(message, $event);
@@ -65,7 +70,7 @@
 
             } else {
 
-                dataProvidersService.createCredential(data).then(function (res) {
+                dataProvidersService.createCredential(formData).then(function (res) {
 
                     var message = 'Credential ' + vm.name + ' was created';
                     vm.info(message, $event);
@@ -149,7 +154,6 @@
             }
 
         };
-
 
 
         vm.init = function () {
