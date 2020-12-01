@@ -2,6 +2,8 @@
     'use strict';
 
     var metaService = require('../services/metaService');
+    var expressionService = require('../services/expression.service');
+
     var entityEditorHelper = require('./entity-editor.helper');
 
     var isUserInputUsedInTTypeExpr = function (userInput, transactionsTypeActions) {
@@ -153,20 +155,22 @@
 
     };
 
+    // Victor 2020.12.01 #64
     var fillMissingFieldsByDefaultValues = function (entity, userInputsNotPlacedInTheForm) {
-        userInputsNotPlacedInTheForm.forEach(input => {
-            console.log('entity[input.name] before filling', entity[input.name], input.value)
-            if (input.value === null) {
-                return;
-            }
-            entity[input.name] = input.value;
-            console.log('entity[input.name] after filling', entity[input.name])
-        })
+        return userInputsNotPlacedInTheForm
+            .filter(input => input.value !== null)
+            .map(input => {
+                if (input.value_type === 20) { // Expression
+                    return expressionService.getResultOfExpression({'expression': input.value})
+                        .then(data => entity[input.name] = data.result)
+                }
 
-    }
+                entity[input.name] = input.value;
+                return;
+            })
+    };
 
     var updateEntityBeforeSave = function (viewModel) {
-        console.log('updateEntityBeforeSave')
         const vm = viewModel
 
         if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
@@ -222,9 +226,6 @@
 
             });
         }
-
-        fillMissingFieldsByDefaultValues(vm.entity, vm.userInputsNotPlacedInTheForm);
-
     };
 
     module.exports = {
@@ -232,7 +233,9 @@
         updateTransactionUserInputs: updateTransactionUserInputs,
 		removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
         getTransactionUserInputsNotPlacedInTheForm: getTransactionUserInputsNotPlacedInTheForm,
-        updateEntityBeforeSave: updateEntityBeforeSave
+
+        updateEntityBeforeSave: updateEntityBeforeSave,
+        fillMissingFieldsByDefaultValues: fillMissingFieldsByDefaultValues
     }
 
 }());

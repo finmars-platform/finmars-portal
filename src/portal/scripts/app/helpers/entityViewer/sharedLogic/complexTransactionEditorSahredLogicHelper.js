@@ -68,7 +68,7 @@
 
 				if (userInput) {
 
-					let calcInput = viewModel.inputsWithCalculations.find(function (input) {
+					let calcInput = viewModel.inputsWithCalculations && viewModel.inputsWithCalculations.find(function (input) {
 						return input.name === userInput.name &&
 						       input.settings &&
 						       input.settings.recalc_on_change_linked_inputs;
