@@ -18,9 +18,9 @@
                     Some Instrument Prices are absent as of the Reporting Date ({{vm.missingHistoryPrices.length}})
                 </div>
 
-                <md-button class="md-raised disabled-btn">View</md-button>
+                <md-button class="md-raised" data-ng-click="vm.viewMissingPriceHistory($event)">View</md-button>
 
-                <md-button class="md-raised" data-ui-sref="app.data.price-history">Go to Prices</md-button>
+                <md-button class="md-raised" data-ui-sref="app.data.price-history" target="_blank"> Go to Prices</md-button>
 
                 <md-button class="md-raised" data-ng-click="vm.downloadPriceHistoryCSV($event)">CSV</md-button>
 
@@ -32,9 +32,9 @@
                     Some FX rates are absent as of the Reporting Date ({{vm.missingFxRates.length}})
                 </div>
 
-                <md-button class="md-raised disabled-btn">View</md-button>
+                <md-button class="md-raised" data-ng-click="vm.viewMissingFxRates($event)">View</md-button>
 
-                <md-button class="md-raised" data-ui-sref="app.data.currency-history">Go to FX Rates</md-button>
+                <md-button class="md-raised" data-ui-sref="app.data.currency-history" target="_blank">Go to FX Rates</md-button>
 
                 <md-button class="md-raised" data-ng-click="vm.downloadFxRatesCSV($event)">CSV</md-button>
 
@@ -46,9 +46,9 @@
                     Some Historical FX rates are absent (needed for correct P&L accounting) ({{vm.missingHistoricalFxRates.length}})
                 </div>
 
-                <md-button class="md-raised disabled-btn">View</md-button>
+                <md-button class="md-raised" data-ng-click="vm.viewMissingHistoricalFxRates($event)">View</md-button>
 
-                <md-button class="md-raised" data-ui-sref="app.data.currency-history">Go to FX Rates</md-button>
+                <md-button class="md-raised" data-ui-sref="app.data.currency-history" target="_blank">Go to FX Rates</md-button>
 
                 <md-button class="md-raised" data-ng-click="vm.downloadHistoricalFxRatesCSV($event)">CSV</md-button>
 

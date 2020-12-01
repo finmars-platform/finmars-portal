@@ -32,13 +32,11 @@
             case 'transaction':
                 return 'transactions/transaction';
             case 'transaction-type':
-                // return 'transactions/transaction-type';
-                return 'transactions/transaction-type-light';
+                return 'transactions/transaction-type';
             case 'transaction-type-group':
                 return 'transactions/transaction-type-group';
             case 'complex-transaction':
-                // return 'transactions/complex-transaction';
-                return 'transactions/complex-transaction-light';
+                return 'transactions/complex-transaction';
             case 'currency':
                 return 'currencies/currency';
             case 'currency-history':
@@ -63,7 +61,6 @@
                 return 'strategies/3/subgroup';
             case 'strategy-3-group':
                 return 'strategies/3/group';
-
             case 'price-history-error':
                 return 'pricing/price-history-error';
             case 'currency-history-error':
