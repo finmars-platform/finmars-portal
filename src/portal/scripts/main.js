@@ -39,6 +39,24 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     console.log('Project environment: ' + '__PROJECT_ENV__');
     console.log('Project build date: ' + '__BUILD_DATE__');
 
+    var controllersCount = 0;
+    var directivesCount = 0;
+
+    app._invokeQueue.forEach(function (item) {
+
+        if (item[0] === '$controllerProvider') {
+            controllersCount = controllersCount + 1;
+        }
+
+        if (item[0] === '$compileProvider' && item[1] === 'directive') {
+            directivesCount = directivesCount + 1;
+        }
+
+    });
+
+    console.log("angular.js info: " + controllersCount + ' controllers registered');
+    console.log("angular.js info: " + directivesCount + ' directives registered');
+
     var developerConsoleService = require('./app/services/developerConsoleService');
 
     window.developerConsoleService = developerConsoleService;
@@ -196,6 +214,7 @@ app.controller('FileReportsController', ['$scope', '$mdDialog', require('./app/c
 app.controller('LoginDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/loginDialogController')]);
 app.controller('HealthcheckController', ['$scope', require('./app/controllers/pages/healthcheckController')]);
 
+app.controller('TwoFactorLoginDialogController', ['$scope', '$mdDialog', 'username', require('./app/controllers/dialogs/twoFactorLoginDialogController')]);
 
 // System Dialogs
 

@@ -42,8 +42,8 @@
                 "code": "user_code"
             },
             {
-                "key": "tags",
-                "name": "Tags",
+                "key": "object_permissions",
+                "name": "Object permissions",
                 "value_type": "mc_field"
             }
         ]
