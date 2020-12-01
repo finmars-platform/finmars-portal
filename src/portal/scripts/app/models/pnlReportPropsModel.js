@@ -161,6 +161,16 @@
                 "value_type": 20
             },
             {
+                "key": "ytm_at_cost",
+                "name": "YTM at cost",
+                "value_type": 20
+            },
+            {
+                "key": "return_annually",
+                "name": "Return annually",
+                "value_type": 20
+            },
+            {
                 "key": "modified_duration",
                 "name": "Modified duration",
                 "value_type": 20
@@ -179,11 +189,6 @@
             {
                 "key": "gross_cost_price_loc",
                 "name": "Gross cost price (Pricing Currency)",
-                "value_type": 20
-            },
-            {
-                "key": "ytm_at_cost",
-                "name": "YTM at cost",
                 "value_type": 20
             },
             // {
