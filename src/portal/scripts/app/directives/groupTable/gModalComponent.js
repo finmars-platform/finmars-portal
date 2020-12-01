@@ -422,19 +422,61 @@
 
         };
 
-        var orderSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
-            //console.log('#66 orderSelectedGroups', insideTable, selectedAttrs)
+        var isAttributeInsideAnotherGroup = function (attr, groupType) {
+            switch (groupType) {
+                case 'groups':
+                    if (attr.columns || attr.filters) {
+                        return true;
+                    }
+                case 'columns':
+                    if (attr.groups || attr.filters) {
+                        return true;
+                    }
+                case 'filters':
+                    if (attr.columns || attr.groups) {
+                        return true;
+                    }
+            }
+
+            return false
+        }
+
+        var orderSelectedGroups = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
+
+            if (groupType === 'columns') {
+
+                console.log('#66 orderSelectedGroups insideTable selectedAttrs', insideTable, JSON.parse(JSON.stringify(selectedAttrs)));
+            }
 
             // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
 
-            const selectedAttrsHash = selectedAttrs.reduce((acc, item) => ({...acc, [item.key]: item}), {});
+            const selectedAttrsObject = selectedAttrs.reduce((acc, item) => {
+
+                if (!item[groupType] && isAttributeInsideAnotherGroup(item, groupType)) { // remove attribute that inside another group
+
+                    return acc;
+
+                } else {
+
+                    return {...acc, [item.key]: item}
+                }
+
+            }, {});
+
 
             // console.log('#66 selectedAttrsHash', selectedAttrsHash)
 
             const orderedSelAttrs = insideTable.reduce((acc, item) => {
-                if (selectedAttrsHash.hasOwnProperty(item.key)) {
-                    const selectedItem = selectedAttrsHash[item.key];
-                    delete selectedAttrsHash[item.key];
+
+                // depending on attribute state: order or delete it
+
+                if (selectedAttrsObject.hasOwnProperty(item.key)) {
+                    const selectedItem = selectedAttrsObject[item.key];
+                    delete selectedAttrsObject[item.key]; // if attribute unselected
+
+                    selectedAttrsObject[groupType]
+
+
 
                     return [...acc, selectedItem];
                 }
@@ -442,7 +484,9 @@
                 return acc;
             },[])
 
-            const res = [...orderedSelAttrs, ...Object.values(selectedAttrsHash)];
+
+
+            const res = [...orderedSelAttrs, ...Object.values(selectedAttrsObject)];
             // const res = [...orderedSelAttrs];
             //console.log('#66 orderSelectedGroups', insideTable, selectedAttrs, res);
 
@@ -536,13 +580,13 @@
 
             // Order selected as they are inside the table
             // if (groups.length > 0) {
-                vm.selectedGroups = orderSelectedGroups(groups, selectedGroups);
+                vm.selectedGroups = orderSelectedGroups(groups, selectedGroups, 'groups');
             // }
             // if (columns.length > 0) {
-                vm.selectedColumns = orderSelectedGroups(columns, selectedColumns);
+                vm.selectedColumns = orderSelectedGroups(columns, selectedColumns, 'columns');
             // }
             // if (filters.length > 0) {
-                vm.selectedFilters = orderSelectedGroups(filters, selectedFilters);
+                vm.selectedFilters = orderSelectedGroups(filters, selectedFilters, 'filters');
             // }
 
 
