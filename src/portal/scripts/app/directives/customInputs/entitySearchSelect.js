@@ -166,7 +166,7 @@
                         pageSize: 20,
                     };
 
-                    if (scope.inputText) {
+                	if (scope.inputText) {
 
                         var inputText = scope.inputText;
 
@@ -174,7 +174,7 @@
                             'short_name': inputText
                         }
 
-                    }
+                	}
 
                     entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
@@ -290,54 +290,6 @@
 
                 };
 
-                /*$(elem).on('click', function (event) {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    if (!scope.isDisabled) {
-
-                        $mdDialog.show({
-                            controller: 'EntitySearchDialogController as vm',
-                            templateUrl: 'views/dialogs/entity-search-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: event,
-                            preserveScope: false,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            clickOutsideToClose: false,
-                            locals: {
-                                data: {
-                                    entityType: scope.entityType,
-                                    selectedItem: scope.item
-                                }
-                            }
-                        }).then(function (res) {
-
-                            if (res.status === 'agree') {
-
-                                scope.item = res.data.item.id;
-                                scope.inputText = res.data.item.name;
-
-                                console.log('res', res);
-
-                                setTimeout(function () {
-
-                                    scope.onChangeCallback();
-
-                                    scope.$apply();
-
-                                }, 0)
-
-
-                            }
-                        });
-
-                    }
-
-                });*/
-
                 var applyCustomStyles = function () {
 
                     Object.keys(scope.customStyles).forEach(function (className) {
@@ -368,9 +320,12 @@
                     });
 
                     inputElem.addEventListener('focus', function () {
+
+						scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         getOptionsList();
+
                     });
 
                     inputElem.addEventListener('blur', function (event) {
@@ -441,11 +396,13 @@
 
                     });
 
-                }
+                    scope.$watch('entityType', function () {
+                        changeIconAndPlaceholder(scope.entityType);
+                    })
 
-                var init = function () {
+                };
 
-                    initEventListeners();
+                var changeIconAndPlaceholder = function (entityType) {
 
                     // scope.iconData = entityIndicatorIcons[scope.entityType];
 
@@ -453,12 +410,20 @@
 
                     for (var i = 0; i < entitiesData.length; i++) {
 
-                        if (entitiesData[i].entity === scope.entityType) {
+                        if (entitiesData[i].entity === entityType) {
                             scope.placeholderText = entitiesData[i].name;
                             break;
                         }
 
                     }
+
+                };
+
+                var init = function () {
+
+                    initEventListeners();
+
+                    changeIconAndPlaceholder(scope.entityType);
 
                     if (scope.customStyles) {
                         applyCustomStyles();

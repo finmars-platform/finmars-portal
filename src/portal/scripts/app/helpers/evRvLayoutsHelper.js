@@ -2,8 +2,12 @@
 
     'use strict';
 
-    var getLinkingToFilters = function (layout) {
-        var linkingToFilters = [];
+	let uiService = require('../services/uiService');
+	var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
+    let getLinkingToFilters = function (layout) {
+
+        let linkingToFilters = [];
 
         layout.data.filters.forEach(function (filter) {
 
@@ -13,7 +17,7 @@
 
                     if (Object.keys(filter.options.use_from_above).length) {
 
-                        var filterObj = {
+                        let filterObj = {
                             key: filter.options.use_from_above.key,
                             name: filter.name,
                             filter_type: filter.options.filter_type
@@ -30,7 +34,7 @@
 
                 } else {
 
-                    var filterObj = {
+                    let filterObj = {
                         key: filter.options.use_from_above,
                         name: filter.name,
                         filter_type: filter.options.filter_type
@@ -51,13 +55,13 @@
         return linkingToFilters;
     };
 
-    var getDataForLayoutSelectorWithFilters = function (layouts) {
+    let getDataForLayoutSelectorWithFilters = function (layouts) {
 
-        var result = [];
+        let result = [];
 
         layouts.forEach(function (layout) {
 
-            var layoutObj = {
+            let layoutObj = {
                 id: layout.id,
                 name: layout.name,
                 //content_type: layout.content_type,
@@ -74,9 +78,34 @@
 
     };
 
+
+    let saveLayoutList = function (entityViewerDataService, isReport) {
+
+    	var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(isReport);
+
+		if (currentLayoutConfig.hasOwnProperty('id')) {
+
+			uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (updatedLayoutData) {
+
+				let listLayout = entityViewerDataService.getListLayout();
+				listLayout.modified = updatedLayoutData.modified
+
+				entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
+				entityViewerDataService.setListLayout(listLayout);
+
+				toastNotificationService.success("Success. Page was saved.");
+
+			});
+
+		}
+
+	};
+
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
-        getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters
+        getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
+
+		saveLayoutList: saveLayoutList
     }
 
 }());

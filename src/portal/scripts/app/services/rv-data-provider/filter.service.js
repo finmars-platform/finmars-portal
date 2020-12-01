@@ -128,15 +128,18 @@
                                         valueFromTable = new Date(valueFromTable).toDateString();
                                         filterArgument = new Date(filterArgument[0]).toDateString();
                                         break;
+
                                     case 'from_to':
                                         valueFromTable = new Date(valueFromTable);
                                         filterArgument.min_value = new Date(filterArgument.min_value);
                                         filterArgument.max_value = new Date(filterArgument.max_value);
                                         break;
+
                                     case 'date_tree':
                                         valueFromTable = new Date(valueFromTable);
                                         // filterArgument is array of strings
                                         break;
+
                                     default:
                                         valueFromTable = new Date(valueFromTable);
                                         filterArgument = new Date(filterArgument[0]);
@@ -145,10 +148,11 @@
 
                             }
 
-                            if(valueType === 100) {
+                             /* TODO delete as deprecated
+                             if (valueType === 100) {
                                 valueFromTable = valueFromTable;
                                 filterArgument = filterArgument[0];
-                            }
+                             } */
 
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
@@ -259,9 +263,11 @@
                 break;
 
             case 'less_equal':
-                if (valueToFilter <= filterBy) {
+
+            	if (valueToFilter <= filterBy) {
                     return true;
                 }
+
                 break;
 
             /*case 'top_n':
@@ -277,19 +283,22 @@
                 break;*/
 
             case 'from_to':
-                var minValue = filterBy.min_value;
+
+            	var minValue = filterBy.min_value;
                 var maxValue = filterBy.max_value;
 
                 if (valueToFilter >= minValue && valueToFilter <= maxValue) {
                     return true;
                 }
+
                 break;
 
             case 'multiselector':
 
-                if (filterBy.indexOf(valueToFilter) !== -1) {
+                if (filterBy.includes(valueToFilter)) {
                     return true;
                 }
+
                 break;
 
             case 'date_tree':
@@ -304,9 +313,14 @@
                 }
                 break;
 
+			default:
+
+				return false;
+
+				break;
+
         }
 
-        return false;
 
     };
 
@@ -324,14 +338,14 @@
         } else {
 
             if (item_value.toString().toLowerCase() !== value.toLowerCase()) {
-                match = false
+                match = false;
             }
 
         }
 
         // console.log('match', match);
 
-        return match
+        return match;
 
     };
 
@@ -364,7 +378,7 @@
 
                 }
 
-                return match
+                return match;
 
             });
 

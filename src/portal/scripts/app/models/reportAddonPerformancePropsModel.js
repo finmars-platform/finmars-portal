@@ -24,7 +24,7 @@
             },
             {
                 "key": "net_position_return_loc",
-                "name": "Net position return (LOC)",
+                "name": "Net position return (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -34,7 +34,7 @@
             },
             {
                 "key": "position_return_loc",
-                "name": "Position return (LOC)",
+                "name": "Position return (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -54,7 +54,7 @@
             },
             {
                 "key": "principal_fx_loc",
-                "name": "Principal FX (LOC)",
+                "name": "Principal FX (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -64,7 +64,7 @@
             },
             {
                 "key": "principal_fx_opened_loc",
-                "name": "Principal FX opened (LOC)",
+                "name": "Principal FX opened (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -74,7 +74,7 @@
             },
             {
                 "key": "principal_fixed_loc",
-                "name": "Principal fixed (LOC)",
+                "name": "Principal fixed (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -84,7 +84,7 @@
             },
             {
                 "key": "principal_fixed_opened_loc",
-                "name": "Principal fixed opened (LOC)",
+                "name": "Principal fixed opened (Pricing Currency)",
                 "value_type": 20
             },
 
@@ -95,7 +95,7 @@
             },
             {
                 "key": "carry_fx_loc",
-                "name": "Carry FX (LOC)",
+                "name": "Carry FX (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -105,7 +105,7 @@
             },
             {
                 "key": "carry_fx_opened_loc",
-                "name": "Carry FX opened (LOC)",
+                "name": "Carry FX opened (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -115,7 +115,7 @@
             },
             {
                 "key": "carry_fixed_loc",
-                "name": "Carry fixed (LOC)",
+                "name": "Carry fixed (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -125,7 +125,7 @@
             },
             {
                 "key": "carry_fixed_opened_loc",
-                "name": "Carry fixed opened (LOC)",
+                "name": "Carry fixed opened (Pricing Currency)",
                 "value_type": 20
             },
 
@@ -136,7 +136,7 @@
             },
             {
                 "key": "overheads_fx_loc",
-                "name": "Overheads FX (LOC)",
+                "name": "Overheads FX (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -146,7 +146,7 @@
             },
             {
                 "key": "overheads_fx_opened_loc",
-                "name": "Overheads FX opened (LOC)",
+                "name": "Overheads FX opened (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -156,7 +156,7 @@
             },
             {
                 "key": "overheads_fixed_loc",
-                "name": "Overheads fixed (LOC)",
+                "name": "Overheads fixed (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -166,7 +166,7 @@
             },
             {
                 "key": "overheads_fixed_opened_loc",
-                "name": "Overheads fixed opened (LOC)",
+                "name": "Overheads fixed opened (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -191,22 +191,22 @@
             },
             {
                 "key": "principal_loc",
-                "name": "Pricnipal (LOC)",
+                "name": "Pricnipal (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "carry_loc",
-                "name": "Carry (LOC)",
+                "name": "Carry (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "overheads_loc",
-                "name": "Overheads (LOC)",
+                "name": "Overheads (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "total_loc",
-                "name": "Total (LOC)",
+                "name": "Total (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -231,22 +231,22 @@
             },
             {
                 "key": "principal_closed_loc",
-                "name": "Principal closed (LOC)",
+                "name": "Principal closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "carry_closed_loc",
-                "name": "Carry closed (LOC)",
+                "name": "Carry closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "overheads_closed_loc",
-                "name": "Overheads closed (LOC)",
+                "name": "Overheads closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "total_closed_loc",
-                "name": "Total closed (LOC)",
+                "name": "Total closed (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -271,22 +271,22 @@
             },
             {
                 "key": "principal_opened_loc",
-                "name": "Principal opened (LOC)",
+                "name": "Principal opened (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "carry_opened_loc",
-                "name": "Carry opened (LOC)",
+                "name": "Carry opened (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "overheads_opened_loc",
-                "name": "Overheads opened (LOC)",
+                "name": "Overheads opened (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "total_opened_loc",
-                "name": "Total opened (LOC)",
+                "name": "Total opened (Pricing Currency)",
                 "value_type": 20
             },
 
@@ -297,7 +297,7 @@
             },
             {
                 "key": "total_fx_loc",
-                "name": "Total FX (LOC)",
+                "name": "Total FX (Pricing Currency)",
                 "value_type": 20
             },
 
@@ -323,22 +323,22 @@
             },
             {
                 "key": "principal_fx_closed_loc",
-                "name": "Principal FX closed (LOC)",
+                "name": "Principal FX closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "carry_fx_closed_loc",
-                "name": "Carry FX closed (LOC)",
+                "name": "Carry FX closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "overheads_fx_closed_loc",
-                "name": "Overheads FX closed (LOC)",
+                "name": "Overheads FX closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "total_fx_closed_loc",
-                "name": "Total FX closed (LOC)",
+                "name": "Total FX closed (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -348,7 +348,7 @@
             },
             {
                 "key": "total_fx_opened_loc",
-                "name": "Total FX opened (LOC)",
+                "name": "Total FX opened (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -358,7 +358,7 @@
             },
             {
                 "key": "total_fixed_loc",
-                "name": "Total fixed (LOC)",
+                "name": "Total fixed (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -383,22 +383,22 @@
             },
             {
                 "key": "principal_fixed_closed_loc",
-                "name": "Principal fixed closed (LOC)",
+                "name": "Principal fixed closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "carry_fixed_closed_loc",
-                "name": "Carry fixed closed (LOC)",
+                "name": "Carry fixed closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "overheads_fixed_closed_loc",
-                "name": "Overheads fixed closed (LOC)",
+                "name": "Overheads fixed closed (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "total_fixed_closed_loc",
-                "name": "Total fixed closed (LOC)",
+                "name": "Total fixed closed (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -408,7 +408,7 @@
             },
             {
                 "key": "total_fixed_opened_loc",
-                "name": "Total fixed opened (LOC)",
+                "name": "Total fixed opened (Pricing Currency)",
                 "value_type": 20
             }
 

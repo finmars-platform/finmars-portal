@@ -109,6 +109,11 @@
 
                 };
 
+                scope.multiselectorEditClick = function () {
+                    var multiselectorElem = elem[0].querySelector("two-fields-multiselect.grid-table-cell-multiselector");
+                    multiselectorElem.click();
+                };
+
                 var init = function () {
 
                     if (scope.row.order !== 'header' && !scope.cellWithPopup()) { // if no child directive initialized

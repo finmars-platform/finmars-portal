@@ -3,61 +3,90 @@
 
         <div layout="row">
 
-            <md-input-container class="md-block" style="width: 200px;">
-                <label>Accrual Currency</label>
-                <md-select md-on-close="vm.searchTermCurrecy = ''"
-                           data-ng-model="vm.entity.accrued_currency"
-                           md-on-open="vm.getCurrencyFields()"
-                           md-container-class="common-select-container">
-                    <md-select-header>
-                        <input data-ng-model="vm.searchTermCurrecy"
-                               type="search"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern select-input-filter"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-select-header>
-                    <div class="select-options-holder">
-                        <md-option
-                                data-ng-repeat="field in vm.currencyFields | orderBy:'-'+field.name | filter:{name: vm.searchTermCurrecy} as results track by field.id "
-                                ng-value="field.id">
-                            {{field.name}}
-                        </md-option>
-                    </div>
-                </md-select>
-            </md-input-container>
+<!--            <md-input-container class="md-block" style="width: 200px;">-->
+<!--                <label>Accrual Currency</label>-->
+<!--                <md-select md-on-close="vm.searchTermCurrecy = ''"-->
+<!--                           data-ng-model="vm.entity.accrued_currency"-->
+<!--                           md-on-open="vm.getCurrencyFields()"-->
+<!--                           md-container-class="common-select-container">-->
+<!--                    <md-select-header>-->
+<!--                        <input data-ng-model="vm.searchTermCurrecy"-->
+<!--                               type="search"-->
+<!--                               placeholder="Search for a ..."-->
+<!--                               class="md-text md-select-search-pattern select-input-filter"-->
+<!--                               ng-keydown="$event.stopPropagation()">-->
+<!--                    </md-select-header>-->
+<!--                    <div class="select-options-holder">-->
+<!--                        <md-option-->
+<!--                                data-ng-repeat="field in vm.currencyFields | orderBy:'-'+field.name | filter:{name: vm.searchTermCurrecy} as results track by field.id "-->
+<!--                                ng-value="field.id">-->
+<!--                            {{field.name}}-->
+<!--                        </md-option>-->
+<!--                    </div>-->
+<!--                </md-select>-->
+<!--            </md-input-container>-->
 
-            <md-input-container class="md-block" style="width: 230px;">
-                <label>Accrual Size Clarification</label>
-                <md-select md-on-close="vm.searchTermPaymentSizeDetail = ''"
-                           data-ng-model="vm.entity.payment_size_detail"
-                           md-on-open="vm.getPaymentSizeDetailFields()"
-                           md-container-class="common-select-container">
-                    <md-select-header>
-                        <input data-ng-model="vm.searchTermPaymentSizeDetail"
-                               type="search"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern select-input-filter"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-select-header>
-                    <div class="select-options-holder">
-                        <md-option
-                                data-ng-repeat="field in vm.dailyPricingModelFields | orderBy:'-'+field.name | filter:{name: vm.searchTermPaymentSizeDetail} as results track by field.id "
-                                ng-value="field.id">
-                            {{field.name}}
-                        </md-option>
-                    </div>
-                </md-select>
-            </md-input-container>
+            <dropdown-select class="p-r-8" label="Accrual Currency"
+                             model="vm.entity.accrued_currency"
+                             placeholder-text="Accrual Currency"
+                             menu-options="vm.currencyFields"
+                             small-options="{tooltipText: 'Accrual Currency'}"
+                             style="width: 200px;">
+            </dropdown-select>
 
-            <md-input-container style="width: 200px;">
-                <label for="">Accrual Multiplier</label>
-                <input type="text" data-ng-model="vm.entity.accrued_multiplier">
-            </md-input-container>
+<!--            <md-input-container class="md-block" style="width: 230px;">-->
+<!--                <label>Accrual Size Clarification</label>-->
+<!--                <md-select md-on-close="vm.searchTermPaymentSizeDetail = ''"-->
+<!--                           data-ng-model="vm.entity.payment_size_detail"-->
+<!--                           md-on-open="vm.getPaymentSizeDetailFields()"-->
+<!--                           md-container-class="common-select-container">-->
+<!--                    <md-select-header>-->
+<!--                        <input data-ng-model="vm.searchTermPaymentSizeDetail"-->
+<!--                               type="search"-->
+<!--                               placeholder="Search for a ..."-->
+<!--                               class="md-text md-select-search-pattern select-input-filter"-->
+<!--                               ng-keydown="$event.stopPropagation()">-->
+<!--                    </md-select-header>-->
+<!--                    <div class="select-options-holder">-->
+<!--                        <md-option-->
+<!--                                data-ng-repeat="field in vm.dailyPricingModelFields | orderBy:'-'+field.name | filter:{name: vm.searchTermPaymentSizeDetail} as results track by field.id "-->
+<!--                                ng-value="field.id">-->
+<!--                            {{field.name}}-->
+<!--                        </md-option>-->
+<!--                    </div>-->
+<!--                </md-select>-->
+<!--            </md-input-container>-->
 
-            <md-input-container style="width: 200px;">
-                <label for="">Default Accrued</label>
-                <input type="text" data-ng-model="vm.entity.default_accrued">
-            </md-input-container>
+            <dropdown-select class="p-r-8" label="Accrual Size Clarification"
+                             model="vm.entity.payment_size_detail"
+                             placeholder-text="Accrual Size Clarification"
+                             menu-options="vm.dailyPricingModelFields"
+                             small-options="{tooltipText: 'Accrual Size Clarification'}"
+                             style="width: 230px;">
+            </dropdown-select>
+
+<!--            <md-input-container style="width: 200px;">-->
+<!--                <label for="">Accrual Multiplier</label>-->
+<!--                <input type="text" data-ng-model="vm.entity.accrued_multiplier">-->
+<!--            </md-input-container>-->
+
+            <number-input class="p-r-8"
+                          label="Accrual Multiplier"
+                          model="vm.entity.accrued_multiplier"
+                          small-options="{tooltipText: 'Accrual Multiplier'}"
+                          style="width: 200px;">
+            </number-input>
+
+<!--            <md-input-container style="width: 200px;">-->
+<!--                <label for="">Default Accrued</label>-->
+<!--                <input type="text" data-ng-model="vm.entity.default_accrued">-->
+<!--            </md-input-container>-->
+
+            <number-input label="Default Accrued"
+                          model="vm.entity.default_accrued"
+                          small-options="{tooltipText: 'Default Accrued'}"
+                          style="width: 200px;">
+            </number-input>
 
             <md-button data-ng-click="vm.generateEventsSchedule($event)" data-ng-if="vm.entity.id"
                        class="md-raised md-primary">Build Events

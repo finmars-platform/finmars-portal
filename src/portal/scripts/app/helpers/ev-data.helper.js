@@ -5,6 +5,10 @@
     var evRvCommonHelper = require('./ev-rv-common.helper');
     var metaService = require('../services/metaService');
 
+    // IMPORTANT: if you are changing popupMenu variables, also change them in 'entity-viewer.less'
+    var popupMenuWidth = 320;
+    var popupMenuOptionHeight = 24;
+
     var getNextPage = function (options, event, entityViewerDataService) {
 
         var _options = Object.assign({}, options);
@@ -783,6 +787,79 @@
 
     };
 
+    var calculateMenuPosition = function (popup, menuPosition) {
+
+        var bodyWidth = document.body.clientWidth;
+        var bodyHeight = document.body.clientHeight;
+
+        var menuOptionsContainer = popup.querySelector('.ev-dropdown-container');
+        var submenuItem = menuOptionsContainer.querySelector('.ev-dropdown-submenu');
+
+        if (bodyWidth <= menuPosition.positionX + popupMenuWidth) {
+
+            popup.classList.add('ev-dropdown-opens-left');
+            popup.style.right = 0;
+
+        } else if (submenuItem && bodyWidth <= menuPosition.positionX + (popupMenuWidth * 2)) { // multiplying by 2 because of possibility of at least one submenu
+            popup.classList.add('ev-dropdown-opens-left');
+
+        } else {
+            popup.style.left = menuPosition.positionX + 'px';
+        }
+
+        var firstLevelOptionsNumber = menuOptionsContainer.childElementCount;
+        var menuHeight = firstLevelOptionsNumber * popupMenuOptionHeight;
+
+        if (bodyHeight < menuPosition.positionY + menuHeight) {
+
+            popup.classList.add('ev-dropdown-opens-top');
+            popup.style.bottom = 0;
+
+        } else {
+            popup.style.top = menuPosition.positionY + 'px';
+        }
+
+        //popup.style.cssText = menuPosition;
+
+    }
+
+    var preparePopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
+
+        var popup = document.createElement('div');
+
+        if (isReport) {
+
+            var objects = evDataService.getObjects();
+
+            objects.forEach(function (item) {
+                item.___is_activated = false;
+                item.___is_last_selected = false;
+
+                evDataService.setObject(item);
+
+            });
+
+        }
+
+        var obj = getObject(objectId, parentGroupHashId, evDataService);
+
+        obj.___is_activated = true;
+
+        if (isReport) {
+            obj.___is_last_selected = true;
+        }
+
+        evDataService.setObject(obj);
+
+        popup.id = 'dropdown-' + objectId;
+        popup.classList.add('ev-dropdown');
+
+        popup.style.position = 'absolute';
+
+        return popup;
+
+    }
+
     module.exports = {
 
         getGroupNameFromParent: getGroupNameFromParent,
@@ -813,6 +890,8 @@
         updateColumnsIds: updateColumnsIds,
 
         calculatePageFromOffset: calculatePageFromOffset,
+        preparePopupMenu: preparePopupMenu,
+        calculateMenuPosition: calculateMenuPosition,
 
         setDefaultGroups: setDefaultGroups,
         setDefaultObjects: setDefaultObjects,

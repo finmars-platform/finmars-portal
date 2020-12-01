@@ -16,7 +16,7 @@
             },
             template: '<div class="gt-cell-text-container">' +
                 '<div class="gt-cell-text"><span data-ng-bind="column.settings.cellText"></span></div>' +
-                '<div class="gt-cell-edit-btn">' +
+                '<div class="gt-cell-edit-btn" ng-if="!column.settings.isDisabled">' +
                     '<span class="material-icons">edit</span>' +
                 '</div>' +
             '</div>',
@@ -98,8 +98,18 @@
 
                     setPopupPosition(posX, posY);
 
+                    document.addEventListener('keyup', function (event) {
+                        if (event.key === "Escape") {
+                            closePopupArea();
+                        }
+                    }, {once: true});
+
                     if (scope.column.settings.closeOnMouseOut !== false) {
                         popupBackdropElem.addEventListener('mouseenter', closePopupArea, {once: true});
+                    }
+
+                    if (scope.column.settings.closeOnClick !== false) {
+                        popupBackdropElem.addEventListener('click', closePopupArea, {once: true});
                     }
 
                 }
@@ -217,6 +227,11 @@
                     /*if (scope.column.settings && scope.column.settings.value) {
                         scope.cellValue = scope.column.settings.value;
                     }*/
+
+                    // Victor 12.10.2020
+                    if (scope.column.settings.isDisabled) { // not add handlers if column is disabled
+                        return;
+                    }
 
                     switch (scope.column.cellType) {
                         case 'custom_popup':

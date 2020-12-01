@@ -37,6 +37,53 @@
                                 </div>
                             </div>
 
+                            <div layout="row">
+
+                                <md-input-container>
+                                    <label>Error handling</label>
+                                    <md-select data-ng-model="vm.scheme.error_handler">
+                                        <md-option value="continue">Continue</md-option>
+                                        <md-option value="break">Break on first error</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container>
+                                    <label>Separator</label>
+                                    <md-select data-ng-model="vm.scheme.delimiter">
+                                        <md-option value=",">Comma (,)</md-option>
+                                        <md-option value=";">Semicolon (;)</md-option>
+                                        <md-option value="\t">Tab</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container>
+                                    <label>Mode</label>
+                                    <md-select data-ng-model="vm.scheme.mode">
+                                        <md-option value="skip">Skip if exists</md-option>
+                                        <md-option value="overwrite">Overwrite</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container style="width: 255px;">
+                                    <label>Import Rules - if object is not found</label>
+                                    <md-select
+                                            data-ng-model="vm.scheme.missing_data_handler">
+                                        <md-option value="throw_error">Treat as Error</md-option>
+                                        <md-option value="set_defaults">Replace with Default Value</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container style="width: 485px;">
+                                    <label>Import Rules - If User Attribute-Classifier doesn't have such category</label>
+                                    <md-select
+                                            data-ng-model="vm.scheme.classifier_handler">
+                                        <md-option value="skip">Skip (assign Null)</md-option>
+                                        <md-option value="append">Append Category (assign the appended category)</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                            </div>
+
                             <md-input-container class="SC-entity-select-container" aria-label="select with filter">
                                 <!--<label>Data type</label>
                                 <md-select data-ng-model="vm.scheme.content_type"

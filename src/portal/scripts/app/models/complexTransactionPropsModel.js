@@ -23,6 +23,11 @@
                 "value_type": 10 // actually field
             },
             {
+                "key": "transaction_unique_code",
+                "name": "Transaction Unique Code",
+                "value_type": 10
+            },
+            {
                 "key": "text",
                 "name": "Description",
                 "value_type": 10
