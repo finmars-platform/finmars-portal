@@ -641,9 +641,15 @@
 
         };
 
-        var rebookComplexTransaction = function (inputsToRecalculate, recalculationData) {
+        var rebookComplexTransaction = async function (inputsToRecalculate, recalculationData) {
 
             vm.processing = true;
+
+            // Victor 2020.12.01 #64
+            vm.userInputsNotPlacedInTheForm = transactionHelper.getTransactionUserInputsNotPlacedInTheForm(vm.userInputs, vm.transactionType);
+            const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputsNotPlacedInTheForm);
+            await Promise.allSettled(missingFieldsPromises);
+            // <Victor 2020.12.01 #64>
 
             var values = {};
 

@@ -352,8 +352,7 @@
             vm.userInputs = [];
 
             transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
-            vm.userInputsNotPlacedInTheForm = transactionHelper.getTransactionUserInputsNotPlacedInTheForm(vm.userInputs, vm.transactionType);
-            console.log('testing vm.userInputsNotPlacedInTheForm!!!', vm.userInputsNotPlacedInTheForm)
+
             /*vm.tabs.forEach(function (tab) {
                 tab.layout.fields.forEach(function (field) {
                     if (field.attribute_class === 'userInput') {
@@ -769,7 +768,7 @@
             return true;
         };
 
-        vm.book = function ($event) {
+        vm.book = async function ($event) {
 
             transactionHelper.updateEntityBeforeSave(vm);
 
@@ -826,6 +825,15 @@
 
             } else {
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+
+                // Victor 2020.12.01 #64
+                vm.processing = true;
+                vm.userInputsNotPlacedInTheForm = transactionHelper.getTransactionUserInputsNotPlacedInTheForm(vm.userInputs, vm.transactionType);
+                const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputsNotPlacedInTheForm);
+                await Promise.allSettled(missingFieldsPromises);
+                vm.processing = false;
+                // <Victor 2020.12.01 #64>
+
                 var resultEntity = vm.entity;
 
                 resultEntity.values = {};
@@ -1004,7 +1012,7 @@
 
         };
 
-        vm.bookAsPending = function ($event) {
+        vm.bookAsPending = async function ($event) {
 
             transactionHelper.updateEntityBeforeSave(vm);
 
@@ -1015,6 +1023,12 @@
             if (vm.entity.$_isValid) {
 
                 if (hasProhibitNegNums.length === 0) {
+
+                    // Victor 2020.12.01 #64
+                    vm.userInputsNotPlacedInTheForm = transactionHelper.getTransactionUserInputsNotPlacedInTheForm(vm.userInputs, vm.transactionType);
+                    const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputsNotPlacedInTheForm);
+                    await Promise.allSettled(missingFieldsPromises);
+                    // <Victor 2020.12.01 #64>
 
                     var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
