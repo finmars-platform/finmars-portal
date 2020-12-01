@@ -55,7 +55,6 @@
                         }
 
                         // console.log('width', width);
-
                         $(scope.workareaWrapElement).width(width);
                         var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
                         elem.find('.g-scroll-wrapper').width(wrapperWidth);
@@ -69,36 +68,30 @@
 
                     scope.components = scope.evDataService.getComponents();
 
-                    setTimeout(function () {
+                    /*setTimeout(function () {
                         resizeWorkarea();
-                    }, 0);
+                    }, 0);*/
 
-                    window.addEventListener('resize', function () {
+                    /*window.addEventListener('resize', function () {
                         resizeWorkarea();
 
-                    });
+                    });*/
 
-                    scope.evEventService.addEventListener('UPDATE_EV_UI', function () {
+                    /* scope.evEventService.addEventListener('UPDATE_EV_UI', function () {
 
                         scope.components = scope.evDataService.getComponents();
 
                         resizeWorkarea();
 
-                    });
+                    }); */
 
-                    scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+                    /*scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
 
                         scope.components = scope.evDataService.getComponents();
 
                         resizeWorkarea();
 
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.VERTICAL_ADDITIONS_CHANGE, function () {
-
-                        console.log("gLayoutResizeComponent Vertical Additions Change")
-
-                    });
+                    });*/
 
                 };
 

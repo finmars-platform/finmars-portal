@@ -245,6 +245,8 @@
 
         Object.keys(groups).forEach(function (key) {
 
+            console.log('key', key);
+
             groups[key].forEach(function (item) {
 
                 if (!groupsTotalMarketValue.hasOwnProperty(key)) {

@@ -212,7 +212,9 @@
                 key: 'accrued_currency'
             }).then(function (res) {
 
-                vm.currencyFields = res.data;
+                // Victor 19.10.2020
+                // vm.currencyFields = res.data;
+                vm.currencyFields = metaHelper.textWithDashSort(res.data);
 
                 $scope.$apply();
 
@@ -227,7 +229,9 @@
                 key: 'payment_size_detail'
             }).then(function (res) {
 
-                vm.dailyPricingModelFields = res.data;
+                // Victor 19.10.2020
+                // vm.dailyPricingModelFields = res.data;
+                vm.dailyPricingModelFields = metaHelper.textWithDashSort(res.data);
 
                 $scope.$apply();
 
@@ -528,7 +532,10 @@
         vm.init = function () {
 
             vm.setDefaultCurrencyFields();
-            vm.setDefaultPaymentSizeDetailFields();
+
+            // Victor 19.10.2020
+            // vm.setDefaultPaymentSizeDetailFields();
+            vm.getPaymentSizeDetailFields();
 
             vm.schedulesGridTableDataService = new GridTableDataService();
             vm.schedulesGridTableEventService = new GridTableEventService();

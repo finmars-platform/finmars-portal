@@ -7,15 +7,18 @@
  */
 (function () {
 
-    var objectComparisonHelper = require('../helpers/objectsComparisonHelper');
+    let objectComparisonHelper = require('../helpers/objectsComparisonHelper');
+    let uiService = require('../services/uiService');
+
+    var middlewareService = require('../services/middlewareService');
 
     'use strict';
 
-    var transformItem = function (item, attrs) {
+    let transformItem = function (item, attrs) {
 
         if (item.attributes) {
 
-            var key;
+            let key;
 
             console.log('transformItem.item', item);
             console.log('transformItem.attrs', attrs);
@@ -63,7 +66,7 @@
      * @memberOf module:EntityViewerHelperService
      * @return {boolean} Returns true if layout has been changed, otherwise false
      */
-    var checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
+    let checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
 
         if (isReport) {
 
@@ -111,7 +114,7 @@
 
         }
 
-        var layoutChanged = objectComparisonHelper.comparePropertiesOfObjects(activeLayoutConfig, layoutCurrentConfig);
+        let layoutChanged = objectComparisonHelper.areObjectsTheSame(activeLayoutConfig, layoutCurrentConfig);
 
         return layoutChanged;
     };
@@ -123,9 +126,9 @@
      * @memberOf module:EntityViewerHelperService
      * @return {object} Return attribute in form of group, column or filter
      */
-    var getTableAttrInFormOf = function (form, attrInstance) {
+    let getTableAttrInFormOf = function (form, attrInstance) {
         console.log("add filter getTableAttrInFormOf attrInstance", attrInstance);
-        var attrTypeToAdd = {};
+        let attrTypeToAdd = {};
 
         attrTypeToAdd.key = attrInstance.key;
 
@@ -176,9 +179,9 @@
      * @memberOf module:EntityViewerHelperService
      * @return {string|float|date} Return value of dynamic attribute
      */
-    var getDynamicAttrValue = function (dAttrData) {
+    let getDynamicAttrValue = function (dAttrData) {
 
-        var attrVal;
+        let attrVal;
 
         if (dAttrData.attribute_type_object.value_type === 30) {
 
@@ -215,12 +218,12 @@
      * @memberOf module:EntityViewerHelperService
      * @return {string|float|date} Return value of dynamic attribute
      */
-    var getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
+    let getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
 
-        var cellValue;
+        let cellValue;
 
-        for (var da = 0; da < dAttrsList.length; da++) {
-            var dynamicAttributeData = dAttrsList[da];
+        for (let da = 0; da < dAttrsList.length; da++) {
+            let dynamicAttributeData = dAttrsList[da];
 
             if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
 
@@ -235,13 +238,83 @@
 
     };
 
+    let getLayoutByUserCode = function (viewModel, userCode, $mdDialog) {
+
+        uiService.getListLayout(viewModel.entityType, {
+            pageSize: 1000,
+            filters: {
+                user_code: userCode
+            }
+
+        }).then(function (activeLayoutData) {
+
+            let activeLayout = null;
+
+            if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
+                activeLayout = activeLayoutData.results[0];
+            }
+
+            if (activeLayout) {
+                viewModel.setLayout(activeLayout);
+
+            } else {
+
+                $mdDialog.show({
+                    controller: 'InfoDialogController as vm',
+                    templateUrl: 'views/info-dialog-view.html',
+                    parent: angular.element(document.body),
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        info: {
+                            title: 'Warning',
+                            description: "Layout " + name + " is not found. Switching back to Default Layout."
+                        }
+                    }
+                }).then(function (value) {
+
+                    viewModel.getDefaultLayout()
+
+                })
+
+            }
+
+        });
+
+    };
+
+    let getDefaultLayout = function (viewModel, viewContext) {
+
+        uiService.getDefaultListLayout(viewModel.entityType).then(function (defaultLayoutData) {
+
+            var defaultLayout = null;
+            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+
+                defaultLayout = defaultLayoutData.results[0];
+                if (viewContext === 'split_panel') {
+                    middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
+                }
+
+            }
+
+            viewModel.setLayout(defaultLayout);
+
+        });
+
+    };
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
-        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode
+        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
+        getLayoutByUserCode: getLayoutByUserCode,
+        getDefaultLayout: getDefaultLayout
     }
 
 }());

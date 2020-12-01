@@ -13,14 +13,15 @@
 
     var getBalanceReport = function (options) {
 
-        var isSql = window.location.search.indexOf('sql=true') !== -1;
+        //TODO refactor soon
+        var isSql = window.location.search.indexOf('report=legacy') === -1;
 
         return reportRepository.getBalanceReport(options, isSql);
     };
 
     var getPnlReport = function (options) {
 
-        var isSql = window.location.search.indexOf('sql=true') !== -1;
+        var isSql = window.location.search.indexOf('report=legacy') === -1;
 
         return reportRepository.getPnlReport(options, isSql);
     };
@@ -31,7 +32,7 @@
 
     var getTransactionReport = function (options) {
 
-        var isSql = window.location.search.indexOf('sql=true') !== -1;
+        var isSql = window.location.search.indexOf('report=legacy') === -1;
 
         return reportRepository.getTransactionReport(options, isSql);
     };

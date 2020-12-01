@@ -19,43 +19,42 @@
 
   <div data-ng-if="fieldType['display_name'] === 'String'">
 
-    <text-input
-      label="{{getName()}}"
-      placeholder-text="text"
-      model="entity[fieldKey]"
-      custom-buttons="item.buttons"
-      custom-styles="customStyles"
-      event-signal="ciEventObj.event"
-      small-options="{tooltipText: tooltipText, notNull: options.notNull}"
-      on-change-callback="itemChange()"
-      on-blur-callback="inputBlur()"
+    <text-input label="{{getName()}}"
+                placeholder-text="text"
+                model="entity[fieldKey]"
+                custom-buttons="item.buttons"
+                custom-styles="customStyles"
+                event-signal="ciEventObj.event"
+                small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                on-change-callback="itemChange()"
+                on-blur-callback="inputBlur()"
     ></text-input>
   </div>
 
   <div data-ng-if="fieldType['display_name'] === 'Field'">
     <div>
-      <ev-field-resolver
-        data-item="item"
-        data-entity="entity"
-        data-options="options"
-        ev-editor-data-service="evEditorDataService"
-        ev-editor-event-service="evEditorEventService"
-        data-item-change="itemChange()"
-        data-entity-type="entityType"
-      ></ev-field-resolver>
+      <ev-field-resolver data-item="item"
+                         data-entity="entity"
+                         data-options="options"
+                         ev-editor-data-service="evEditorDataService"
+                         ev-editor-event-service="evEditorEventService"
+                         data-entity-type="entityType"
+                         data-item-change="itemChange()">
+      </ev-field-resolver>
     </div>
 
   </div>
 
   <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
     <div>
-      <ev-field-resolver
-        data-item="item"
-        data-entity="entity"
-        ev-editor-data-service="evEditorDataService"
-        ev-editor-event-service="evEditorEventService"
-        data-options="options"
-      ></ev-field-resolver>
+      <ev-field-resolver data-item="item"
+                         data-entity="entity"
+                         data-options="options"
+                         ev-editor-data-service="evEditorDataService"
+                         ev-editor-event-service="evEditorEventService"
+                         data-entity-type="entityType"
+                         data-item-change="itemChange()">
+      </ev-field-resolver>
     </div>
   </div>
 
@@ -122,27 +121,28 @@
     </div>
   </div>
 
-  <div data-ng-if="fieldType['display_name'] === 'Decoration'"
-       class="ec-decoration-container"
-  >
-    <span
-      class="ec-decoration line"
-      data-ng-if="!item.options.labelText"
-      style="{{inputBackgroundColor()}}"
-    ></span>
-    <span class="ec-decoration labeled" data-ng-if="item.options.labelText">
-      <span class="w-rp" data-ng-bind="item.options.labelText"></span>
-    </span>
-  </div>
+    <div data-ng-if="fieldType['display_name'] === 'Decoration' && item.key === 'layoutLine'" class="ec-decoration-container">
+        <span class="ec-decoration line" style="{{inputBackgroundColor()}}"></span>
+    </div>
+
+    <div data-ng-if="fieldType['display_name'] === 'Decoration'  && item.key === 'layoutLineWithLabel'" class="ec-decoration-container">
+        <span class="ec-decoration labeled" data-ng-if="item.options.labelText">
+            <span class="w-rp" data-ng-bind="item.options.labelText"></span>
+        </span>
+    </div>
+
+    <div data-ng-if="fieldType['display_name'] === 'Decoration' && item.key === 'layoutPlainText'" class="ec-decoration-container">
+        <span class="ec-decoration plain-text" data-ng-bind="item.options.plainText"></span>
+    </div>
 
   <div data-ng-if="fieldType['display_name'] === 'Selector'"
        class="ec-decoration-container"
   >
-    <ev-selector-resolver
-      data-item="item"
-      data-entity="entity"
-      data-options="options"
-      data-entity-type="entityType"
-    ></ev-selector-resolver>
+    <ev-selector-resolver item="item"
+                          entity="entity"
+                          options="options"
+                          entity-type="entityType"
+                          item-change="itemChange()">
+    </ev-selector-resolver>
   </div>
 </div>
