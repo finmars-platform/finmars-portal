@@ -30,6 +30,8 @@
 
     var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
 
+    var exportExcelService = require('../../services/exportExcelService');
+
 
     module.exports = function ($mdDialog, $state) {
         return {
@@ -1753,6 +1755,27 @@
 
                     var blobPart = convertReportHelper.convertFlatListToCSV(flatList, columns, scope.isReport, groups.length);
                     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
+                };
+
+                scope.exportAsExcel = function(){
+
+                    var data = {
+                        entityType: scope.entityType,
+                        contentSettings: {
+                            columns: scope.evDataService.getColumns(),
+                            groups: scope.evDataService.getGroups()
+                        },
+                        content: scope.evDataService.getFlatList()
+                    };
+
+                    exportExcelService.generatePdf(data).then(function (blob) {
+
+                        downloadFileHelper.downloadFile(blob, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
+
+                        $mdDialog.hide();
+
+                    })
+
                 };
 
                 /*scope.copyReport = function ($event) {
