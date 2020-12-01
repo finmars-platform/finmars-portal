@@ -21,7 +21,8 @@
             case 10:
             case 30:
             case 'field':
-                vm.filterTypes = [{
+
+            	vm.filterTypes = [{
                     key: 'contains',
                     name: 'CONTAINS'
                 },
@@ -29,11 +30,13 @@
                     key: 'equal',
                     name: 'EQUAL'
                 }];
+
                 break;
 
             case 20:
             case 40:
-                vm.filterTypes = [{
+
+            	vm.filterTypes = [{
                     key: 'equal',
                     name: 'EQUAL',
                 },

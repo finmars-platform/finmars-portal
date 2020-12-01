@@ -489,6 +489,15 @@
 
                     </div>
 
+                    <div class="m-t-16">
+                        <two-fields-multiselect items="vm.customFieldsNames"
+                                                model="vm.selectedCustomFields"
+                                                title="Custom Fields multiselector"
+                                                selected-items="vm.selectedCustomFields"
+                                                nothing-selected-text="Nothing Selected"
+                                                on-change-callback="vm.selectedCustomFieldsChanged()"
+                                                name-property="name"></two-fields-multiselect>
+                    </div>
                 </div>
 
                 <div data-ng-if="!vm.checkReadyStatus()" class="p-t-24 p-b-24">
