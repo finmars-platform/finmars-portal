@@ -192,10 +192,6 @@
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
 
-        vm.getEntityPropertyByDefault = function () {
-            return vm.entity[vm.showByDefault];
-        };
-
         vm.onPopupSaveCallback = function () {
             keysOfFixedFieldsAttrs.forEach((key) => {
                 if (!key) {
@@ -884,8 +880,10 @@
 
                 // Victor 2020.11.20 #59 Fixed area popup
 
-                vm.showByDefault = vm.fixedArea.showByDefault;
-                vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+                if (vm.fixedArea.showByDefault) {
+                    vm.showByDefault = vm.fixedArea.showByDefault;
+                    vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+                }
 
                 const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
 
