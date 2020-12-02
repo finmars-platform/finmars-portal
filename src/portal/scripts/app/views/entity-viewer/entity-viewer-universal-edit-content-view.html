@@ -26,7 +26,8 @@
                 <text-input
                         label="{{vm.entityTypeSlug()}}"
                         model="vm.getEntityPropertyByDefault()"
-                        placeholder-text=""
+                        placeholder-text="{{vm.getPlaceholderByDefault()}}"
+                        small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
                 ></text-input>
 
             </div>

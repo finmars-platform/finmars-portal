@@ -185,6 +185,10 @@
             return vm.entity[vm.showByDefault];
         };
 
+        vm.getPlaceholderByDefault = function () {
+            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).name;
+        };
+
         vm.onPopupSaveCallback = function () {
             keysOfFixedFieldsAttrs.forEach((key) => {
                 if (!key) {
