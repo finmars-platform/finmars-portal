@@ -1552,7 +1552,8 @@
                             options: {
                                 complexSaveAsLayoutDialog: {
                                     entityType: scope.entityType
-                                }
+                                },
+								layoutName: listLayout.name
                             }
                         },
                         clickOutsideToClose: false

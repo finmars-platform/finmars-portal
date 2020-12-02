@@ -15,12 +15,12 @@
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents')
 
     var gridHelperService = require('../../services/gridHelperService');
-    var entityViewerHelperService = require('../../services/entityViewerHelperService');
+    // var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
 
-    var attributeTypeService = require('../../services/attributeTypeService');
+    // var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var tooltipsService = require('../../services/tooltipsService');
@@ -29,6 +29,7 @@
     var uiService = require('../../services/uiService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
+    var EntityViewerEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/entityViewerEditorSharedLogicHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
@@ -44,6 +45,8 @@
 
         var vm = this;
 
+        var evEditorSharedLogicHelper = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog);
+
         vm.processing = false;
 
         vm.contextData = {};
@@ -56,8 +59,7 @@
         vm.entityId = entityId;
 
         vm.entity = {$_isValid: true};
-        var dataConstructorLayout = {};
-        var dcLayoutHasBeenFixed = false;
+        vm.dataConstructorLayout = {};
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
@@ -102,6 +104,7 @@
         ];
         //vm.currenciesSorted = [];
 
+		vm.dcLayoutHasBeenFixed = false;
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
         var tabsWithErrors = {};
@@ -169,170 +172,16 @@
 
         };
 
-        /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
+        /* var fixFieldsLayoutWithMissingSockets = function () {
 
-            var i, l, e;
-
-            tab.layout.fields.forEach(function (field, fieldIndex) {
-
-                var fieldResult = {};
-
-                if (field && field.type === 'field') {
-
-                    if (field.attribute_class === 'attr') {
-
-                        var dAttrFound = false;
-
-                        for (i = 0; i < vm.attributeTypes.length; i = i + 1) {
-
-                            if (field.key) {
-
-                                if (field.key === vm.attributeTypes[i].user_code) {
-
-                                    vm.attributeTypes[i].options = field.options;
-                                    fieldResult = vm.attributeTypes[i];
-                                    dAttrFound = true;
-                                    break;
-
-                                }
-
-                            } else {
-
-                                if (field.attribute.user_code) {
-
-                                    if (field.attribute.user_code === vm.attributeTypes[i].user_code) {
-
-                                        vm.attributeTypes[i].options = field.options;
-                                        fieldResult = vm.attributeTypes[i];
-                                        dAttrFound = true;
-                                        break;
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                        if (!dAttrFound) {
-                            var fieldPath = {
-                                tabIndex: tabIndex,
-                                fieldIndex: fieldIndex
-                            };
-
-                            fieldsToEmptyList.push(fieldPath);
-                        }
-
-                    } else {
-
-                        for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                            if (field.name === vm.entityAttrs[e].name) {
-                                vm.entityAttrs[e].options = field.options;
-                                fieldResult = vm.entityAttrs[e];
-                            }
-                        }
-
-                        for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                            if (field.name === vm.layoutAttrs[l].name) {
-                                vm.layoutAttrs[l].options = field.options;
-                                fieldResult = vm.layoutAttrs[l];
-                            }
-                        }
-
-                    }
-
-                    if (field.backgroundColor) {
-                        fieldResult.backgroundColor = field.backgroundColor;
-                    }
-
-                }
-
-                tabResult.push(fieldResult)
-
-
-            });
-
-        };
-
-        vm.generateAttributesFromLayoutFields = function () {
-
-            vm.attributesLayout = [];
-            var fieldsToEmptyList = [];
-            dcLayoutHasBeenFixed = false;
-
-            var tabResult;
-
-            vm.tabs.forEach(function (tab, tabIndex) {
-
-                tabResult = [];
-
-                getMatchForLayoutFields(tab, tabIndex, fieldsToEmptyList, tabResult);
-                vm.attributesLayout.push(tabResult);
-
-            });
+            var socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(vm.tabs, vm.dataConstructorLayout);
 
             if (vm.fixedArea && vm.fixedArea.isActive) {
-
-                vm.fixedAreaAttributesLayout = [];
-                getMatchForLayoutFields(vm.fixedArea, 'fixedArea', fieldsToEmptyList, vm.fixedAreaAttributesLayout);
-
-            }
-
-            // Empty sockets that have no attribute that matches them
-            fieldsToEmptyList.forEach(function (fieldPath) {
-
-                if (fieldPath.tabIndex === 'fixedArea') {
-                    var dcLayoutFields = vm.fixedArea.layout.fields;
-                    var layoutFieldsToSave = dataConstructorLayout.data.fixedArea.layout.fields;
-                } else {
-                    var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
-
-                    if (Array.isArray(dataConstructorLayout.data)) {
-                        var layoutFieldsToSave = dataConstructorLayout.data[fieldPath.tabIndex].layout.fields;
-                    } else {
-                        var layoutFieldsToSave = dataConstructorLayout.data.tabs[fieldPath.tabIndex].layout.fields;
-                    }
-
-                }
-
-                var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
-                var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
-
-                dcLayoutFields[fieldPath.fieldIndex] = { // removing from view
-                    colspan: 1,
-                    column: fieldToEmptyColumn,
-                    editMode: false,
-                    row: fieldToEmptyRow,
-                    type: 'empty'
-                };
-
-                layoutFieldsToSave[fieldPath.fieldIndex] = { // removing from layout copy for saving
-                    colspan: 1,
-                    column: fieldToEmptyColumn,
-                    editMode: false,
-                    row: fieldToEmptyRow,
-                    type: 'empty'
-                };
-
-            });
-
-            if (fieldsToEmptyList.length) {
-                dcLayoutHasBeenFixed = true;
-            }
-            // < Empty sockets that have no attribute that matches them >
-        };*/
-
-        var fixFieldsLayoutWithMissingSockets = function () {
-
-            var socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(vm.tabs, dataConstructorLayout);
-
-            if (vm.fixedArea && vm.fixedArea.isActive) {
-                var socketsHasBeenAddedToFixedArea = entityEditorHelper.fixCustomTabs(vm.fixedArea, dataConstructorLayout);
+                var socketsHasBeenAddedToFixedArea = entityEditorHelper.fixCustomTabs(vm.fixedArea, vm.dataConstructorLayout);
             }
 
             if (socketsHasBeenAddedToTabs || socketsHasBeenAddedToFixedArea) {
-                dcLayoutHasBeenFixed = true;
+				vm.dcLayoutHasBeenFixed = true;
             }
 
         };
@@ -345,28 +194,28 @@
                 layoutAttrs: vm.layoutAttrs
             };
 
-            var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, dataConstructorLayout, true);
+            var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, vm.dataConstructorLayout, true);
 
             vm.attributesLayout = attributesLayoutData.attributesLayout;
 
             if (vm.fixedArea && vm.fixedArea.isActive) {
-                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.fixedArea, attributes, dataConstructorLayout, true);
+                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.fixedArea, attributes, vm.dataConstructorLayout, true);
 
                 vm.fixedAreaAttributesLayout = fixedAreaAttributesLayoutData.attributesLayout;
             }
 
             if (attributesLayoutData.dcLayoutHasBeenFixed || (fixedAreaAttributesLayoutData && fixedAreaAttributesLayoutData.dcLayoutHasBeenFixed)) {
-                dcLayoutHasBeenFixed = true;
+				vm.dcLayoutHasBeenFixed = true;
             }
 
         };
 
         var mapAttributesAndFixFieldsLayout = function () {
-            dcLayoutHasBeenFixed = false;
+			vm.dcLayoutHasBeenFixed = false;
 
             fixFieldsLayoutWithMissingSockets();
             mapAttributesToLayoutFields();
-        };
+        }; */
 
         vm.loadPermissions = function () {
 
@@ -557,13 +406,13 @@
 
         };
 
-        vm.getFormLayout = function () {
+        /* vm.getFormLayout = function () {
 
             uiService.getEditLayout(vm.entityType).then(function (data) {
 
                 if (data.results.length && data.results.length > 0 && data.results[0].data) {
 
-                    dataConstructorLayout = JSON.parse(JSON.stringify(data.results[0]));
+					vm.dataConstructorLayout = JSON.parse(JSON.stringify(data.results[0]));
 
                     if (Array.isArray(data.results[0].data)) {
                         vm.tabs = data.results[0].data;
@@ -589,7 +438,7 @@
 
                     entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
 
-                    //vm.generateAttributesFromLayoutFields();
+					vm.getEntityPricingSchemes();
                     mapAttributesAndFixFieldsLayout();
 
                     vm.readyStatus.layout = true;
@@ -601,8 +450,6 @@
                         vm.readyStatus.userFields = true;
                     }
 
-                    vm.getEntityPricingSchemes();
-
                     $scope.$apply();
 
                 });
@@ -610,7 +457,7 @@
 
             });
 
-        };
+        }; */
 
         vm.getItem = function () {
             return new Promise(function (res, rej) {
@@ -634,7 +481,8 @@
 
                     }
 
-                    vm.getFormLayout();
+                    // vm.getFormLayout();
+					evEditorSharedLogicHelper.getFormLayout('edition');
 
                     // Resolving promise to inform child about end of editor building
                     res();
@@ -646,11 +494,11 @@
 
         };
 
-        vm.getAttributeTypes = function () {
+        /* vm.getAttributeTypes = function () {
             return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attributeTypes = data.results;
             });
-        };
+        }; */
 
         vm.checkReadyStatus = function () {
 
@@ -1035,8 +883,8 @@
 
                 var result = entityEditorHelper.clearEntityBeforeSave(deepCopyOfEntity, vm.entityType);
 
-                if (dcLayoutHasBeenFixed) {
-                    uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+                if (vm.dcLayoutHasBeenFixed) {
+                    uiService.updateEditLayout(vm.dataConstructorLayout.id, vm.dataConstructorLayout);
                 }
 
                 vm.processing = true;
@@ -1097,7 +945,7 @@
 
         };
 
-        vm.getInstrumentUserFields = function () {
+        /* vm.getInstrumentUserFields = function () {
 
             uiService.getInstrumentFieldList().then(function (data) {
 
@@ -1133,7 +981,7 @@
 
             })
 
-        };
+        }; */
 
         vm.recalculatePermissions = function ($event) {
 
