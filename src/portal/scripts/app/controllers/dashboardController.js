@@ -8,7 +8,7 @@
     var uiService = require('../services/uiService');
 
     var DashboardDataService = require('../services/dashboard/dashboardDataService');
-    var DashboardEventService = require('../services/dashboard/dashboardEventService');
+    var DashboardEventService = require('../services/eventService');
 
     var dashboardEvents = require('../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');

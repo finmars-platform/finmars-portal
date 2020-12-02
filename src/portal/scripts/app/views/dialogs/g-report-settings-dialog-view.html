@@ -1,4 +1,7 @@
-<md-dialog aria-label="" ng-cloak class="g-report-settings-dialog-view draggable-dialog" drag-dialog style="width: 75%">
+<md-dialog class="g-report-settings-dialog-view draggable-dialog"
+           style="width: 75%"
+           drag-dialog
+           aria-label="g report settings dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -7,7 +10,8 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+
+    <md-dialog-content style="background: #E5E5E5;">
 
         <md-card style="margin-top: 10px;">
 
@@ -317,7 +321,9 @@
                                                 title="Portfolios multiselector"
                                                 selected-items="vm.reportOptions.portfolios"
                                                 nothing-selected-text="Off"
-                                                name-property="short_name"></two-fields-multiselect>
+                                                selected-items-indication="chips"
+                                                name-property="short_name"
+                                                small-options="{tooltipText: 'Portfolios multiselector'}"></two-fields-multiselect>
 
                         <!--<md-input-container>
 
@@ -342,10 +348,12 @@
 
                         <two-fields-multiselect get-data-method="vm.getAccounts(vm.optionsForMultiselect)"
                                                 model="vm.reportOptions.accounts"
-                                                data-title="Accounts multiselector"
-                                                data-selected-items="vm.reportOptions.accounts"
+                                                title="Accounts multiselector"
+                                                selected-items="vm.reportOptions.accounts"
                                                 nothing-selected-text="Off"
-                                                data-name-property="short_name"></two-fields-multiselect>
+                                                selected-items-indication="chips"
+                                                name-property="short_name"
+                                                small-options="{tooltipText: 'Accounts multiselector'}"></two-fields-multiselect>
 
                     </div>
 
@@ -377,7 +385,9 @@
                                                 data-title="Strategies 1 multiselector"
                                                 data-selected-items="vm.reportOptions.strategies1"
                                                 nothing-selected-text="Off"
-                                                data-name-property="short_name"></two-fields-multiselect>
+                                                selected-items-indication="chips"
+                                                data-name-property="short_name"
+                                                small-options="{tooltipText: 'Strategies 1 multiselector'}"></two-fields-multiselect>
 
                         <!--<md-input-container>
 
@@ -405,7 +415,9 @@
                                                 data-title="Strategies 2 multiselector"
                                                 data-selected-items="vm.reportOptions.strategies2"
                                                 nothing-selected-text="Off"
-                                                data-name-property="short_name"></two-fields-multiselect>
+                                                selected-items-indication="chips"
+                                                data-name-property="short_name"
+                                                small-options="{tooltipText: 'Strategies 2 multiselector'}"></two-fields-multiselect>
 
                         <!--<md-input-container>
 
@@ -433,7 +445,9 @@
                                                 data-title="Strategies 3 multiselector"
                                                 data-selected-items="vm.reportOptions.strategies3"
                                                 nothing-selected-text="Off"
-                                                data-name-property="short_name"></two-fields-multiselect>
+                                                selected-items-indication="chips"
+                                                name-property="short_name"
+                                                small-options="{tooltipText: 'Accounts multiselector'}"></two-fields-multiselect>
 
                     </div>
 
@@ -497,6 +511,7 @@
         </md-card>
 
     </md-dialog-content>
+
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
             Close
