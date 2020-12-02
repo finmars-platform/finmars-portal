@@ -16,7 +16,7 @@
 
         var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
         var EntityViewerDataService = require('../../services/entityViewerDataService');
-        var EntityViewerEventService = require('../../services/entityViewerEventService');
+        var EntityViewerEventService = require('../../services/eventService');
         var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
         var AttributeDataService = require('../../services/attributeDataService');
 

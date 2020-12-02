@@ -22,7 +22,7 @@
         var groups = evDataService.getGroups();
         var level = groups.length;
 
-        console.log('calculateItemSubtotal.item', item)
+        // console.log('calculateItemSubtotal.item', item)
 
         if (item.___level === level) {
 

@@ -2,49 +2,45 @@
 
     'use strict';
 
+    var attributeTypeService = require('../../services/attributeTypeService');
+
     module.exports = function ($mdDialog) {
 
         return {
             restrict: 'E',
+            require: '?ngModel',
             scope: {
                 label: '@',
                 placeholderText: '@',
                 model: '=',
-                menuOptions: '=',
+                //menuOptions: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
-                sorted: '=',
-                onChangeCallback: '&?'
+                onChangeCallback: '&?',
+                // Victor 2020.10.23 Next fields setting up classifiers properties
+                classifierAttr: '=',
+                classifierValue: '=',
+                entityType: '='
             },
-            templateUrl: 'views/directives/customInputs/dropdown-select-view.html',
+            templateUrl: 'views/directives/customInputs/classifier-select-view.html',
             link: function (scope, elem, attr) {
 
                 scope.error = '';
                 scope.inputValue = '';
-                //scope.placeholderText = 'Relation';
-                scope.dropdownMenuShown = false;
+                scope.dropdownMenuHidden = false;
                 scope.dropdownMenuFilter = '';
+                scope.menuOptions = [];
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                 }
 
-                // TIPS
-                // scope.smallOptions probable properties
-                    // tooltipText: custom tolltip text
-                    // indicatorBtnIcon: sets icon for indicator button
-                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
                 if (scope.smallOptions) {
 
                     scope.tooltipText = scope.smallOptions.tooltipText
-
-                    /* if (scope.smallOptions.indicatorBtnIcon) {
-                        var indicatorBtnIcon = scope.smallOptions.indicatorBtnIcon;
-                    } */
-
                     scope.dialogParent = scope.smallOptions.dialogParent
                 }
 
@@ -53,16 +49,8 @@
                 var inputContainer = elem[0].querySelector('.dropdownSelectInputContainer');
                 var inputElem = elem[0].querySelector('.dropdownSelectInputElem');
 
-                /*var entityIndicatorIcons = {
-                    'type1': {
-                        type: 'class',
-                        icon: 'fas fa-align-justify'
-                    }
-                }*/
-
                 scope.getInputContainerClasses = function () {
-
-                	var classes = '';
+                    var classes = '';
 
                     if (scope.isDisabled) {
                         classes += "custom-input-is-disabled";
@@ -83,7 +71,6 @@
                     }
 
                     return classes;
-
                 };
 
                 scope.callFnForCustomBtn = function (actionData) {
@@ -131,7 +118,7 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
-                    scope.dropdownMenuShown = false;
+                    scope.dropdownMenuHidden = false;
 
                     window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
@@ -194,28 +181,29 @@
                     }
 
                     $mdDialog.show({
-                        controller: "ExpandableItemsSelectorDialogController as vm",
-                        templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
+                        controller: 'ClassifierSelectDialogController as vm',
+                        templateUrl: 'views/classifier-select-dialog-view.html',
+                        parent: angular.element(document.body),
                         targetEvent: $event,
-                        parent: dialogParent,
+                        preserveScope: true,
+                        autoWrap: true,
                         multiple: true,
+                        skipHide: true,
                         locals: {
                             data: {
-                                dialogTitle: 'Choose layout to open Split Panel with',
-                                items: scope.menuOptions
+                                classifier: scope.classifierAttr,
+                                classifierId: scope.classifierValue,
+                                entityType: scope.entityType
                             }
                         }
-
                     }).then(function (res) {
-
                         if (res.status === 'agree') {
-                            scope.selectOption(res.selected);
+                            scope.model = +res.data.item;
+                            console.log('scope.model', scope.model)
+                            getTree();
                         }
-
-                    })
-
+                    });
                 };
-
 
                 var initScopeWatchers = function () {
 
@@ -228,7 +216,7 @@
                                 if (scope.menuOptions[i].id === scope.model) {
 
                                     scope.inputText = scope.menuOptions[i].name
-                                    // scope.valueIsValid = true
+                                    scope.valueIsValid = true
                                     break;
 
                                 }
@@ -237,7 +225,7 @@
 
                         } else {
                             scope.inputText = ""
-                            // scope.valueIsValid = false
+                            scope.valueIsValid = false
                         }
 
                     });
@@ -313,9 +301,9 @@
 
                     inputElem.addEventListener('focus', function () {
 
-						scope.inputText = "";
-						inputContainer.classList.add('custom-input-focused');
-                        scope.dropdownMenuShown = true;
+                        inputContainer.classList.add('custom-input-focused');
+
+                        scope.dropdownMenuHidden = true;
 
                         window.addEventListener('click', closeDDMenuOnClick);
                         document.addEventListener('keydown', onTabKeyPress);
@@ -337,19 +325,40 @@
 
                 };
 
-                var init = function () {
+                const recursiveFlat = (classifiers) => classifiers.reduce(
+                    (acc, classifier) => classifier.children.length > 0
+                        ? [...acc, classifier, ...recursiveFlat(classifier.children)]
+                        : [...acc, classifier],
+                    []
+                );
 
-                    for (var i = 0; i < scope.menuOptions.length; i++) {
-                        if (scope.menuOptions[i].id === scope.model) {
+                var getTree = function () {
+                    var classifierId = scope.classifierAttr.id
+                    attributeTypeService.getByKey(scope.entityType, classifierId).then(function (data) {
+                        debugger
 
-                            scope.itemName = scope.menuOptions[i].name;
-                            scope.inputText = scope.menuOptions[i].name;
+                        scope.menuOptions = recursiveFlat(data.classifiers);
 
-                            break;
+                        for (var i = 0; i < scope.menuOptions.length; i++) {
+                            if (scope.menuOptions[i].id === scope.model) {
+
+                                scope.itemName = scope.menuOptions[i].name;
+                                scope.inputText = scope.menuOptions[i].name;
+
+                                break;
+
+                            }
 
                         }
+                        scope.$apply();
 
-                    }
+
+
+                    });
+                }
+
+                var init = function () {
+                    getTree();
 
                     initScopeWatchers();
 
