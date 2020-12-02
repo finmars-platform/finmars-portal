@@ -1,5 +1,5 @@
-<div class="custom-input-container dropdown-input-container dropdownSelectInputContainer customInputBackgroundColor"
-         data-ng-class="getInputContainerClasses()">
+<div class="custom-input-container classifier-input-container dropdownSelectInputContainer customInputBackgroundColor">
+
     <div class="custom-input-top-row">
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
@@ -11,20 +11,20 @@
                 <div class="flex-row">
 
                     <button data-ng-if="!noIndicatorBtn"
-                                    class="custom-input-indicator-btn position-relative"
-                                    data-ng-click="openSelectorDialog($event)"
-                                    ng-disabled="isDisabled">
+                            class="custom-input-indicator-btn position-relative"
+                            data-ng-click="openSelectorDialog($event)"
+                            ng-disabled="isDisabled">
                         <span class="material-icons">menu</span>
                     </button>
 
                     <input
-                        type="text"
-                        placeholder="{{placeholderText}}"
-                        data-ng-model="inputText"
-                        data-ng-model-options="{debounce: 1000}"
-                        data-ng-change="onInputTextChange()"
-                        data-ng-disabled="isDisabled"
-                        class="custom-input dropdown-select-input dropdownSelectInputElem"
+                            type="text"
+                            placeholder="{{placeholderText}}"
+                            data-ng-model="inputText"
+                            data-ng-model-options="{debounce: 1000}"
+                            data-ng-change="onInputTextChange()"
+                            data-ng-disabled="isDisabled"
+                            class="custom-input dropdown-select-input dropdownSelectInputElem"
                     />
 
                 </div>
@@ -34,16 +34,16 @@
                     <div class="custom-input-custom-btns-holder">
                         <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
                             <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
-                                            data-ng-click="callFnForCustomBtn(button.action)">
+                                    data-ng-click="callFnForCustomBtn(button.action)">
                                 {{button.caption}}
                                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
-                                                        size="24"
-                                                        icon="{{button.iconObj.icon}}"
-                                                        class="ci-custom-btn-icon"></ng-md-icon>
+                                            size="24"
+                                            icon="{{button.iconObj.icon}}"
+                                            class="ci-custom-btn-icon"></ng-md-icon>
 
                                 <md-tooltip data-ng-if="button.tooltip"
-                                                        class="tooltip_1"
-                                                        md-direction="top">{{button.tooltip}}
+                                            class="tooltip_1"
+                                            md-direction="top">{{button.tooltip}}
                                 </md-tooltip>
                             </button>
                         </div>
@@ -65,23 +65,18 @@
         </div>
     </div>
 
-    <div data-ng-if="dropdownMenuShown"
-         class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
+    <div
+            data-ng-if="dropdownMenuHidden"
+            class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
         <div class="custom-input-sel-menu-block">
-            <div data-ng-if="!sorted"
-                 data-ng-repeat="option in menuOptions | filter: inputText | orderBy:'-'+option.name"
-                 data-ng-mousedown="selectOption(option)"
-                 data-ng-bind="option.name"
-                 class="custom-input-sel-option"
-            ></div>
-            <div data-ng-if="sorted"
-                 data-ng-repeat="option in menuOptions | filter: inputText"
-                 data-ng-mousedown="selectOption(option)"
-                 data-ng-bind="option.name"
-                 class="custom-input-sel-option"
+            <div
+                    data-ng-repeat="option in menuOptions | filter: inputText"
+                    data-ng-mousedown="selectOption(option)"
+                    data-ng-bind="option.name"
+                    class="custom-input-sel-option"
+                    style="padding-left: {{(option.level + 1) * 10}}px"
             ></div>
 
-            <!--  data-ng-repeat="option in menuOptions | filter: inputText | orderBy:'-'+option.name"-->
         </div>
     </div>
 

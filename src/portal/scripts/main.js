@@ -675,6 +675,8 @@ app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/number
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
+app.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
+app.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
 // Inputs
 
@@ -683,6 +685,7 @@ app.directive('numberInput', ['$mdDialog', require('./app/directives/customInput
 app.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
 app.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
 app.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
+app.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
 
 // Inputs End
 
@@ -692,6 +695,7 @@ app.directive('gridTableTopPanel', [require('./app/directives/gridTable/gridTabl
 app.directive('gridTableCell', ['$compile', require('./app/directives/gridTable/gridTableCellDirective')]);
 app.directive('gridTableHeaderCell', [require('./app/directives/gridTable/cells/gridTableHeaderCellDirective')]);
 app.directive('gridTablePopupCell', ['$compile', '$mdDialog', require('./app/directives/gridTable/cells/gridTablePopupCellDirective')]);
+app.directive('gridTableMultiselectorCell', ['$mdDialog', require('./app/directives/gridTable/cells/gridTableMultiselectorCellDirective')]);
 // Grid Table End
 
 app.directive('postNgRepeat', ['$mdDialog', require('./app/directives/postNgRepeatDirective')]);
