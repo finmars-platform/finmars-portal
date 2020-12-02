@@ -151,6 +151,14 @@
 
         };
 
+        vm.getEntityPropertyByDefault = function () {
+            return vm.entity[vm.showByDefault];
+        };
+
+        vm.getPlaceholderByDefault = function () {
+            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).name;
+        };
+
         var bigDrawerResizeButton;
 
         var onBigDrawerResizeButtonClick = function () {
