@@ -151,6 +151,10 @@
 
         };
 
+        vm.getEntityPropertyByDefault = function () {
+            return vm.entity[vm.showByDefault];
+        };
+
         var bigDrawerResizeButton;
 
         var onBigDrawerResizeButtonClick = function () {
