@@ -20,15 +20,15 @@
 
 			viewportWidth = window.innerWidth;
 
-			drawerWidth = (viewportWidth - sidenavWidth) * 0.9;
+			if (!drawerWidth) {
 
-			if (drawerOptions.drawerWidth) {
-				drawerWidth = drawerOptions.drawerWidth;
+				drawerWidth = (viewportWidth - sidenavWidth) * 0.9 + 'px';
+
 			}
 
 			drawerHeight = window.innerHeight;
 
-			drawerContainer.style.width = drawerWidth + 'px';
+			drawerContainer.style.width = drawerWidth;
 			drawerContainer.style.height = drawerHeight + 'px';
 
 		};
@@ -114,11 +114,11 @@
                 $(drawerContainer).html(tpl);
                 $(drawerContainer).children().data('$ngControllerController', ctrl);
 
-				calcDrawerContainerSize();
-
 				if (options.drawerWidth) {
 					setDrawerWidth(options.drawerWidth);
 				}
+
+				calcDrawerContainerSize();
 
 				if (options.addResizeButton) {
 

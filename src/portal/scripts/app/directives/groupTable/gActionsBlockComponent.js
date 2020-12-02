@@ -477,10 +477,13 @@
 								}
 
 							}).then(postAddEntityFn); */
+							const drawerWidth = evHelperService.getBigDrawerWidthPercent(1);
+
 							$bigDrawer.show({
 								controller: 'EntityViewerAddDialogController as vm',
 								templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
                                 addResizeButton: true,
+								drawerWidth: drawerWidth,
 								locals: {
 									entityType: scope.entityType,
 									entity: {},
