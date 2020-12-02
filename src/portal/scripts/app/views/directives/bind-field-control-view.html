@@ -114,7 +114,8 @@
         <span class="ec-decoration line" style="{{inputBackgroundColor()}}"></span>
     </div>
 
-    <div data-ng-if="fieldType['display_name'] === 'Decoration'  && item.key === 'layoutLineWithLabel'" class="ec-decoration-container">
+    <div data-ng-if="fieldType['display_name'] === 'Decoration'  && item.key === 'layoutLineWithLabel'"
+         class="ec-decoration-container">
         <span class="ec-decoration labeled" data-ng-if="item.options.labelText">
             <span class="w-rp" data-ng-bind="item.options.labelText"></span>
         </span>
@@ -125,8 +126,7 @@
     </div>
 
   <div data-ng-if="fieldType['display_name'] === 'Selector'"
-       class="ec-decoration-container"
-  >
+       class="ec-decoration-container">
     <ev-selector-resolver item="item"
                           entity="entity"
                           options="options"

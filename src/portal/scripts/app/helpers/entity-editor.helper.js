@@ -118,7 +118,8 @@
     };
 
     var appendAttribute = function (attr, value) {
-        var attribute = {
+
+    	var attribute = {
             attribute_name: attr.name,
             attribute_type: attr.id,
             classifier: null,
@@ -144,6 +145,7 @@
         }
 
         return attribute;
+
     };
 
     var updateValue = function (entityAttr, attr, value) {
@@ -1161,31 +1163,37 @@
                         fieldsToEmptyList.push(fieldPath);
                     }
 
-                } else {
+                }
 
-                    for (e = 0; e < entityAttrs.length; e = e + 1) {
-                        if (field.name === entityAttrs[e].name) {
-                            entityAttrs[e].options = field.options;
-                            fieldResult = entityAttrs[e];
+                else if (field.attribute_class === 'decorationAttr') {
 
-                            attrFound = true;
-                            break;
-                        }
-                    }
+					for (l = 0; l < layoutAttrs.length; l = l + 1) {
+						if (field.name === layoutAttrs[l].name) {
+							var layoutAttr = {...{}, ...layoutAttrs[l]}; // removing mutation because the same object may be used for another decoration
 
-                    if (!attrFound) {
-                        for (l = 0; l < layoutAttrs.length; l = l + 1) {
-                            if (field.name === layoutAttrs[l].name) {
-                                layoutAttrs[l].options = field.options;
-                                fieldResult = layoutAttrs[l];
+							layoutAttr.options = field.options;
+							fieldResult = layoutAttr;
 
-                                attrFound = true;
-                                break;
-                            }
-                        }
-                    }
+							attrFound = true;
+							break;
+						}
+					}
 
                 }
+
+                else {
+
+					for (e = 0; e < entityAttrs.length; e = e + 1) {
+						if (field.name === entityAttrs[e].name) {
+							entityAttrs[e].options = field.options;
+							fieldResult = entityAttrs[e];
+
+							attrFound = true;
+							break;
+						}
+					}
+
+				}
 
                 if (forComplexTransaction) {
 
