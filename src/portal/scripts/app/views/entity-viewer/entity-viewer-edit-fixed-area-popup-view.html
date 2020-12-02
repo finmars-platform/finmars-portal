@@ -3,14 +3,16 @@
         <text-input
                 label="Name"
                 placeholder-text="Name"
-                model="vm.fields.name.value"></text-input>
+                model="vm.fields.name.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
     <div data-ng-if="vm.fields.public_name">
         <text-input
                 label="Public name"
                 placeholder-text="Public name"
-                model="vm.fields.public_name.value"></text-input>
+                model="vm.fields.public_name.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
 
@@ -18,14 +20,16 @@
         <text-input
                 label="Short name"
                 placeholder-text="Short name"
-                model="vm.fields.short_name.value"></text-input>
+                model="vm.fields.short_name.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
     <div data-ng-if="vm.fields.user_code">
         <text-input
                 label="User code"
                 placeholder-text="User code"
-                model="vm.fields.user_code.value"></text-input>
+                model="vm.fields.user_code.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
     <div data-ng-if="vm.fields.showByDefault">
@@ -33,7 +37,7 @@
                          model="vm.fields.showByDefault.value"
                          placeholder-text="Show by default"
                          menu-options="vm.fields.showByDefault.options"
-                         small-options="{tooltipText: 'Show by default', indicatorBtnIcon: 'type1'}"
+                         small-options="{tooltipText: 'Show by default', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
                          class="ev-editor-field"></dropdown-select>
     </div>
 
@@ -41,7 +45,8 @@
         <text-input
                 label="Transaction details expr"
                 placeholder-text="Transaction details expr"
-                model="vm.fields.transaction_details_expr.value"></text-input>
+                model="vm.fields.transaction_details_expr.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
     <div data-ng-if="vm.fields.status && vm.tabColumns < 6">
@@ -49,7 +54,7 @@
                          model="vm.fields.status.value"
                          placeholder-text="System List"
                          menu-options="vm.fields.status.options"
-                         small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                         small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
                          class="ev-editor-field"></dropdown-select>
     </div>
 
@@ -58,7 +63,7 @@
                          model="vm.fields.type.value"
                          placeholder-text="{{vm.fields.type.name}}"
                          menu-options="vm.fields.type.options"
-                         small-options="{tooltipText: '{{vm.fields.type.name}}', indicatorBtnIcon: 'type1'}"
+                         small-options="{tooltipText: '{{vm.fields.type.name}}', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
                          class="ev-editor-field"></dropdown-select>
     </div>
 
