@@ -964,7 +964,7 @@
 
                 } else {
                     // vm.getDefaultLayout();
-                    evHelperService.getDefaultLayout(vm);
+                    evHelperService.getDefaultLayout(vm, 'entity_viewer');
                 }
 
 
