@@ -740,12 +740,51 @@
 
   // Victor 2020.1202 #69 New report viewer interface
   @g-top-part-height: 50px;
+  @icon-size: 20px;
   @new-interface-color: #7d7d7d;
+  @primary-button-color: #f05a22;
+
   .new-interface {
     color: @new-interface-color;
     font-size: 14px;
     background-color: white;
   }
+
+  .md-button {
+    ng-md-icon{
+      width: @icon-size;
+      height: @icon-size;
+    }
+
+    &.rounded {
+      border-radius: 50%;
+
+      ng-md-icon svg {
+        fill: white;
+      }
+    }
+
+    &.chain-button {
+      ng-md-icon svg {
+        fill: @primary-button-color;
+      }
+    }
+
+    &.signed-button {
+      min-width: auto;
+      margin: 0;
+
+      span {
+        line-height: normal;
+        text-transform: none;
+      }
+
+      ng-md-icon svg {
+        fill: @new-interface-color;
+      }
+    }
+  }
+
 
   .g-top-part {
     .new-interface;
