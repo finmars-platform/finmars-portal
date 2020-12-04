@@ -1,0 +1,77 @@
+<div class="g-top-part width-100 flex-row fc-space-between flex-i-center">
+    <div class="p-l-24">
+        <md-button class="g-top-button" ng-click="openLayoutList($event)">
+            <div class="flex-row flex-i-center">
+                <ng-md-icon icon="view_quilt" class="flex-row"></ng-md-icon>
+                <span class="m-l-8">{{layoutName}}</span>
+            </div>
+
+        </md-button>
+    </div>
+
+    <div>
+        <md-button  class="md-raised" ng-click="saveLayoutList($event)">
+            Save
+        </md-button>
+        <md-button  class="md-raised" ng-click="saveAsLayoutList($event)">
+            Save as
+        </md-button>
+    </div>
+
+    <div class="p-r-24 flex-row flex-i-center">
+
+        <md-select data-ng-model="reportOptions.cost_method" ng-change="updateReportOptions()">
+            <md-option ng-value="1">AVCO
+            </md-option>
+            <md-option ng-value="2">FIFO
+            </md-option>
+            <!--<md-option ng-value="3">LIFO-->
+            <!--</md-option>-->
+        </md-select>
+
+        <md-input-container>
+            <label></label>
+            <md-select ng-model="reportOptions.report_currency"
+                       md-container-class="common-select-container"
+                       md-on-close="searchTerm = ''"
+                       ng-change="updateReportOptions()"
+                       data-ng-disabled="viewContext === 'dashboard'">
+                <md-select-header>
+                    <input data-ng-model="searchTerm"
+                           type="search"
+                           placeholder="Search for a ..."
+                           class="md-text md-select-search-pattern select-input-filter"
+                           ng-keydown="$event.stopPropagation()">
+                </md-select-header>
+
+                <div class="select-options-holder">
+
+                    <md-option ng-repeat="item in currencies | filter:{name: searchTerm}"
+                               ng-value="item.id">
+                        {{item.name}}
+                    </md-option>
+
+                </div>
+
+            </md-select>
+        </md-input-container>
+
+        <complex-zh-date-picker data-date="reportOptions.report_date"
+                                data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                data-display-options="datepickerToDisplayOptions"
+                                data-callback-method="updateReportOptions()"
+                                ev-data-service="evDataService"
+                                ev-event-service="evEventService"
+                                data-attribute-data-service="attributeDataService">
+        </complex-zh-date-picker>
+
+        <md-button class="md-icon-button" ng-click="onSettingsClick()">
+            <div class="flex-row flex-c-center flex-i-center">
+                <ng-md-icon icon="settings" size="20">
+                    <md-tooltip md-direction="top">Settings</md-tooltip>
+                </ng-md-icon>
+            </div>
+
+        </md-button>
+    </div>
+</div>
