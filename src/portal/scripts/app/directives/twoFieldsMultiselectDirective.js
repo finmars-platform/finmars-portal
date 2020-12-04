@@ -79,6 +79,10 @@
 
 				let getSelectedOptionsIds = function () {
 
+					if (!scope.model) {
+						return;
+					}
+
 					selOptionsIdsList = scope.model.map(function (selOption) {
 
 						let optionId = selOption;

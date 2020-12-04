@@ -44,6 +44,10 @@
 
         vm.layoutName = options.layoutName;
 
+      } else {
+
+          vm.layoutName = '';
+
       }
 
       if (options.layoutUserCode) {

@@ -643,6 +643,8 @@ app.controller('gModalReportTransactionController', ['$scope', '$mdDialog', 'ent
 app.controller('gModalReportPerformanceController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', require('./app/directives/groupTable/gModalReportPerformanceComponent')]);
 app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', require('./app/directives/groupTable/gModalReportCashFlowProjectionComponent')]);
 
+// New report viewer interface
+app.directive('gTopPart', ['$mdDialog', '$state', require('./app/directives/groupTable/gTopPartDirective')]);
 
 // GROUP TABLE END
 

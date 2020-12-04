@@ -30,12 +30,29 @@
     <div class="g-content-wrap"
          data-ng-class="{'g-content-wrap-right': verticalAdditions.isOpen, 'g-root-content-wrap': isRootEntityViewer}">
 
+<!--        <div ng-if="isReport">
+            <g-top-part ev-data-service="evDataService"
+                        ev-event-service="evEventService"
+            ></g-top-part>
+        </div>-->
+
+
+
         <div class="g-workarea-wrap">
             <div class="g-workarea main-area"
                  data-ng-if="domElemsAreReady"
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
+
+                <div ng-if="isReport">
+                    <g-top-part ev-data-service="evDataService"
+                                ev-event-service="evEventService"
+                                attribute-data-service="attributeDataService"
+                                sp-exchange-service="spExchangeService">
+                    </g-top-part>
+                </div>
+
                 <div class="g-grouping-section"
                      data-ng-if="components.groupingArea && viewType !== 'matrix'">
                     <group-grouping ev-data-service="evDataService"
