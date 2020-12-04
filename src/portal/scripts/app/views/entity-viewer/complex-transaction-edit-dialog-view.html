@@ -50,7 +50,7 @@
                     <div layout="row"
                          ng-repeat="row in vm.range(vm.fixedArea.layout.rows)"
                          class="entity-editor-row">
-                        <div data-ng-repeat="field in vm.fixedArea.layout.fields track by $index"
+                        <div data-ng-repeat="field in vm.fixedArea.layout.fields | orderBy: 'column' track by $index"
                              data-ng-if="vm.checkFieldRender(vm.fixedArea, row, field)"
                              class="ev-data-field"
                              data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
@@ -81,7 +81,7 @@
                                 <div layout="row"
                                      ng-repeat="row in vm.range(tab.layout.rows)"
                                      class="entity-editor-row">
-                                    <div data-ng-repeat="field in tab.layout.fields track by $index"
+                                    <div data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
                                          class="ev-data-field {{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
                                          flex="{{vm.bindFlex(tab, field)}}"
                                          data-ng-if="vm.checkFieldRender(tab, row, field)">
@@ -152,6 +152,7 @@
                 </div>
 
             </div>
+
             <div data-ng-if="!vm.checkReadyStatus()">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                     <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->

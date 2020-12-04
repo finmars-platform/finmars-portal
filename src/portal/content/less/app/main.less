@@ -2615,26 +2615,125 @@ md-dialog.two-rows-dialog-actions {
   z-index: 50;
 }
 
+@keyframes bigDrawerOpening {
+  from {
+    overflow: hidden;
+    width: 0;
+  }
+
+  to {
+    overflow: visible;
+    width: 100%;
+  }
+}
+
+@keyframes bigDrawerClosing {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0;
+  }
+}
+
+@keyframes bigDrawerPinShow {
+  0% {
+    opacity: 0;
+  }
+
+  99% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+
+}
+
+@keyframes bigDrawerPinHide {
+  0% {
+    opacity: 1;
+  }
+
+  1% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+
+}
+
 .big-drawer-div {
   position: absolute;
   top: 0;
   right: 0;
   height: 100%;
   z-index: 50;
-  border-left: 2px solid #a2a2a2;
 
   .big-drawer-wrap {
     width: 0;
     height: 100%;
-    overflow: hidden;
-    transition: width 0.5s linear;
     float: right;
+    animation-duration: .5s;
+    border-left: 2px solid #a2a2a2;
+    transition: width 0.5s linear;
+
+    &.big-drawer-opens {
+      animation-name: bigDrawerOpening;
+
+      .big-drawer-resize-button {
+        animation-duration: 0.5s;
+        animation-name: bigDrawerPinShow;
+      }
+    }
+
+    &.big-drawer-closes {
+      overflow: hidden;
+      animation-name: bigDrawerClosing;
+
+      .big-drawer-resize-button {
+        animation-duration: 0.5s;
+        animation-name: bigDrawerPinHide;
+      }
+    }
+
   }
 
   .big-drawer-container {
     height: 100%;
     background-color: rgb(250, 250, 250);
     overflow: auto;
+    // transition: width 0.5s linear; // TODO make width animation later
+  }
+
+  .big-drawer-resize-button {
+    position: absolute;
+    top: calc(50% - 24px);
+    width: 25px;
+    height: 48px;
+    left: -25px;
+    background-color: white;
+    color: black;
+    z-index: 50;
+    border-top: 2px solid #a2a2a2;
+    boorder-left: #2a2a2a;
+    border-bottom: 2px solid #a2a2a2;
+    border-left: 2px solid #a2a2a2;
+    border-radius: 4px 0px 0px 4px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+      svg {
+        position: absolute;
+        top: 12px;
+      }
+
   }
 
 }
@@ -2666,6 +2765,7 @@ md-dialog.two-rows-dialog-actions {
   .big-drawer-footer {
     flex: 0 0 52px;
     background-color: white;
+    border-top: 1px solid rgba(0,0,0,0.12);
   }
 }
 
@@ -2792,3 +2892,49 @@ button.md-raised.md-warn.md-button {
 
 }
 // < chips >
+
+.md-button.primary-button {
+  padding: 0 15px;
+
+  font-weight: 700;
+  color: #fff;
+  background-color: #f05a22;
+
+  border-radius: 3px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+
+  &:not([disabled]):hover {
+    opacity: 0.5;
+    background-color: #f05a22;
+  }
+}
+
+.md-button.outline-button {
+  min-width: auto;
+  max-height: 36px;
+  background-color: #ffffff;
+  color: #f05a22;
+  font-weight: 700;
+
+  border: 1px solid #7d7d7d;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: #FDECE5
+  }
+
+  ng-md-icon svg {
+    fill: #7d7d7d;
+  }
+}
+
+.md-button.link-button {
+  background-color: #ffffff;
+  color: #f05a22;
+  font-weight: 700;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: #FDECE5
+  }
+}

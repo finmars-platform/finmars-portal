@@ -651,6 +651,11 @@
 
             } else {
 
+                console.log('vm.fieldsTree[tab.tabOrder]', vm.fieldsTree[tab.tabOrder], row)
+
+                // TODO this line get throw
+                // Error: [$interpolate:interr] Can't interpolate: {{vm.bindFlex(tab, row, column)}}
+                // vm.fieldsTree[tab.tabOrder] have not property [row]
                 for (i = 0; i < vm.fieldsTree[tab.tabOrder][row].length; i++) {
                     var colFromRow = vm.fieldsTree[tab.tabOrder][row][i];
                     totalColspans = totalColspans + parseInt(colFromRow.colspan, 10);

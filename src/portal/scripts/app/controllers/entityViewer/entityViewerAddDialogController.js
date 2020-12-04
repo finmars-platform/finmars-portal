@@ -28,6 +28,7 @@
 
     var uiService = require('../../services/uiService');
 
+	var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
@@ -35,7 +36,16 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $state, entityType, entity, data) {
+    var SHOW_BY_DEFAULT_OPTIONS = [
+        {id: 'name', name: 'Name'},
+        {id: 'public_name', name: 'Public Name'},
+        {id: 'short_name', name: 'Short Name'},
+        {id: 'user_code', name: 'User Code'},
+    ];
+
+    module.exports = function entityViewerAddDialogController(
+    	$scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
+	) {
 
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
 
@@ -85,6 +95,134 @@
         vm.attributeTypesByValueTypes = {}; // need for pricing;
 
         vm.currencies = []; // need for instrument pricing tab;
+
+        // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
+        vm.typeFieldName = 'type';
+        vm.typeFieldLabel = 'Type';
+
+        if (vm.entityType === 'instrument') {
+            vm.typeFieldName = 'instrument_type';
+            vm.typeFieldLabel = 'Instrument type';
+        }
+
+        if (vm.entityType === 'instrument-type') {
+            vm.typeFieldName = 'instrument_class';
+            vm.typeFieldLabel = 'Instrument class';
+        }
+        vm.showByDefaultOptions = SHOW_BY_DEFAULT_OPTIONS;
+
+        if (vm.entityType === 'currency') {
+            vm.showByDefaultOptions = vm.showByDefaultOptions.filter((item) => item.id !== 'public_name')
+        }
+
+        vm.showByDefault = vm.showByDefaultOptions[0].id;
+
+        vm.fixedAreaPopup = {
+            fields: {},
+            entityType: vm.entityType,
+            tabColumns: null,
+        };
+
+        vm.typeSelectorOptions = [];
+
+        vm.pricingConditions = [
+            {id: 1, name: "Don't Run Valuation"},
+            {id: 2, name: "Run Valuation: if non-zero position"},
+            {id: 3, name: "Run Valuation: always"},
+        ];
+
+        vm.activeTab = null;
+
+        var getShowByDefaultOptions = function (columns, entityType) {
+            let result = vm.showByDefaultOptions;
+            if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
+                result = result.filter(option => option.id !== 'short_name')
+            }
+
+            if (columns >5) {
+                if (vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type') {
+                    result = result.filter(option => option.id !== 'short_name');
+                } else {
+                    result = result.filter(option => option.id !== 'user_code')
+                }
+            }
+
+            return result;
+
+        };
+
+        vm.getEntityPropertyByDefault = function () {
+            return vm.entity[vm.showByDefault];
+        };
+
+        vm.getPlaceholderByDefault = function () {
+            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).name;
+        };
+
+        var bigDrawerResizeButton;
+
+        var onBigDrawerResizeButtonClick = function () {
+
+        	if (vm.fixedAreaPopup.tabColumns === 6) {
+                return;
+            }
+
+            vm.fixedAreaPopup.tabColumns = 6;
+            vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+            $scope.$apply();
+
+            const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+
+            $bigDrawer.setWidth(bigDrawerWidthPercent);
+            bigDrawerResizeButton.classList.add('display-none');
+            bigDrawerResizeButton.classList.remove('display-block');
+
+        };
+
+        setTimeout(() => {
+            bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
+
+            if (bigDrawerResizeButton) {
+				bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick);
+            }
+
+        }, 0);
+
+        vm.isEntityTabActive = function () {
+            return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
+        };
+
+        vm.onPopupSaveCallback = function () {
+            keysOfFixedFieldsAttrs.forEach((key) => {
+                if (!key) {
+                    return;
+                }
+
+                const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
+                vm.entity[key] = vm.fixedAreaPopup.fields[fieldKey].value;
+            })
+
+            if (vm.entityStatus !== vm.fixedAreaPopup.fields.status.value) {
+                vm.entityStatus = vm.fixedAreaPopup.fields.status.value;
+                vm.entityStatusChanged();
+            }
+
+            if (vm.showByDefault !== vm.fixedAreaPopup.fields.showByDefault.value) {
+                vm.showByDefault = vm.fixedAreaPopup.fields.showByDefault.value;
+                // save layout settings
+                dataConstructorLayout.data.fixedArea.showByDefault = vm.showByDefault;
+                uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+            }
+
+
+
+        };
+
+        vm.setTypeSelectorOptions = function (options) {
+            vm.typeSelectorOptions = options;
+            $scope.$apply();
+        }
+        // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
 
         var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
@@ -377,6 +515,8 @@
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;
 
+                vm.systemCurrencies = [data.system_currency_object];
+
                 $scope.$apply();
 
             })
@@ -657,7 +797,8 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            // $mdDialog.hide({status: 'disagree'});
+			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         vm.editLayout = function (ev) {
@@ -736,6 +877,33 @@
                         tab.tabOrder = index;
                     });
                 }
+
+                // Victor 2020.11.20 #59 Fixed area popup
+
+                if (vm.fixedArea.showByDefault) {
+                    vm.showByDefault = vm.fixedArea.showByDefault;
+                    vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+                }
+
+                const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+
+                if (vm.fixedAreaPopup.tabColumns !== columns) {
+
+                    vm.fixedAreaPopup.tabColumns = columns;
+                    vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+
+                    const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+                    $bigDrawer.setWidth(bigDrawerWidthPercent);
+
+                    if (vm.fixedAreaPopup.tabColumns !== 6) {
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
+                    } else {
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+                    }
+                }
+                // <Victor 2020.11.20 #59 Fixed area popup>
 
                 vm.getAttributeTypes().then(function (value) {
 
@@ -934,7 +1102,7 @@
 
         };*/
 
-        vm.save = function ($event) {
+        vm.save = function ($event, isAutoExitAfterSave) {
 
             vm.updateEntityBeforeSave();
 
@@ -1006,7 +1174,7 @@
 
                 vm.processing = true;
 
-                entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
+                entityResolverService.create(vm.entityType, resultEntity).then(function (responseData) {
 
                     vm.processing = false;
 
@@ -1014,7 +1182,11 @@
 
                     toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully created');
 
-                    $mdDialog.hide({res: 'agree', data: data});
+                    if(isAutoExitAfterSave) {
+                        // $mdDialog.hide({res: 'agree', data: data});
+                        let responseObj = {res: 'agree', data: responseData};
+                        metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                    }
 
                 }).catch(function (data) {
 
@@ -1462,6 +1634,11 @@
             } else {
                 vm.loadPermissions();
             }
+
+            // Victor 2020.11.20 #59 fixed area popup
+            vm.fixedAreaPopup.fields = entityViewerHelperService.getFieldsForFixedAreaPopup(vm, keysOfFixedFieldsAttrs);
+            console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
+            // <Victor 2020.11.20 #59 fixed area popup>
 
         };
 

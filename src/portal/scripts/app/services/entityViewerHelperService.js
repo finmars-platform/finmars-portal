@@ -10,6 +10,8 @@
     let objectComparisonHelper = require('../helpers/objectsComparisonHelper');
     let uiService = require('../services/uiService');
 
+    var entityResolverService = require('../services/entityResolverService');
+
     var middlewareService = require('../services/middlewareService');
 
     'use strict';
@@ -306,15 +308,114 @@
 
     };
 
+
+    /**
+     * Get max columns from tabs of Edit Layout
+     * @param {Array} editLayoutTabs
+     * @memberOf module:EntityViewerHelperService
+     * @returns {number}
+     */
+    var getEditLayoutMaxColumns = function (editLayoutTabs) {
+        const widths = editLayoutTabs
+            .map(tab => tab.layout && tab.layout.columns)
+            .filter(num => Boolean(Number(num)));
+
+        const maxWidth = Math.max(...widths)
+
+        return  maxWidth > 0 ? maxWidth : 6;
+
+    }
+
+    /**
+     * Get big drawer width percentage by fixed area columns
+     * @param {number} columns
+     * @returns {string}
+     */
+    var getBigDrawerWidthPercent = function (columns) {
+
+    	let viewportWidth = window.innerWidth;
+
+    	let widthPercent = 75;
+
+    	switch (columns) {
+            case 5:
+            case 4:
+				widthPercent = 49;
+				break;
+            case 3:
+                widthPercent = 39;
+                break;
+            case 2:
+            case 1:
+				widthPercent = 27;
+				break;
+
+        }
+
+		let drawerWidth = (viewportWidth * widthPercent / 100) + 'px';
+
+    	return drawerWidth;
+
+    }
+
+	/**
+	 * Format data for popupDirective in fixed area
+	 * @param {object} viewModel - of add / edit controller
+	 * @param {array} keysOfFixedFieldsAttrs - array of strings that are keys of entity attributes
+	 * @returns {object} object where each property corresponding to field inside popup
+	 */
+    var getFieldsForFixedAreaPopup = function (viewModel, keysOfFixedFieldsAttrs) {
+
+        const fields = keysOfFixedFieldsAttrs.reduce((acc,key) => {
+
+        	const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
+
+            if (!attr) {
+                return acc;
+            }
+
+            const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
+            const field = {
+                [fieldKey]: {name: attr.name, value: viewModel.entity[key]}
+            };
+
+            if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
+                field[fieldKey].value_entity = attr.value_entity;
+            }
+
+            return {...acc, ...field};
+
+        }, {});
+
+        fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
+        fields.showByDefault = {key: 'Show by default', value: viewModel.showByDefault, options: viewModel.showByDefaultOptions}
+
+        // get options for 'type' or 'instrument type' fields
+        fields.hasOwnProperty('type') && entityResolverService.getListLight(fields.type.value_entity).then((data) => {
+
+        	const options = Array.isArray(data) ? data : data.results;
+            fields.type.options = options;
+            viewModel.setTypeSelectorOptions(options);
+
+        });
+
+        return fields;
+
+    };
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
-        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
         getLayoutByUserCode: getLayoutByUserCode,
-        getDefaultLayout: getDefaultLayout
+        getDefaultLayout: getDefaultLayout,
+        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
+
+        getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
+        getEditLayoutMaxColumns: getEditLayoutMaxColumns,
+        getBigDrawerWidthPercent: getBigDrawerWidthPercent
     }
 
 }());
