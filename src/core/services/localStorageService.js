@@ -2,22 +2,21 @@
 
     'use strict';
 
-    let currentMasterUser = {};
+    let UMuM = ''; // <user.id>_<masterUser.id>_<member.id>
 
-    let setCurrentMasterUser = function (masterUser) {
-        currentMasterUser = masterUser
+    let setUMuM = function (userId, masterUserId, memberId) {
+		UMuM = userId + '_' + masterUserId + '_' + memberId;
     };
 
     let getCache = () => {
 
-        let cache = localStorage.getItem("cache");
+        let cache = localStorage.getItem(UMuM);
 
         if (cache) {
             cache = JSON.parse(cache);
 
         } else {
             cache = {}
-
         }
 
         return cache;
@@ -109,11 +108,11 @@
 
     let cacheLayout = function (layout) {
 
-        let objPath = [currentMasterUser.id, 'layouts', 'layoutsList', layout.id];
+        let objPath = ['layouts', 'layoutsList', layout.id];
 
-        if (currentMasterUser.id) {
+        if (UMuM) {
             let cache = cacheData(objPath, layout);
-            localStorage.setItem("cache", JSON.stringify(cache));
+            localStorage.setItem(UMuM, JSON.stringify(cache));
 
         } else {
             throw("No current master user set");
@@ -123,9 +122,9 @@
 
     let getCachedLayout = (layoutId) => {
 
-        let objPath = [currentMasterUser.id, 'layouts', 'layoutsList', layoutId];
+        let objPath = ['layouts', 'layoutsList', layoutId];
 
-        if (currentMasterUser.id) {
+        if (UMuM) {
             return getCacheProp(objPath);
         }
 
@@ -133,8 +132,8 @@
 
     let cacheDefaultLayout = function (layout) {
 
-        let defLayoutDataPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', layout.content_type];
-        let layoutPath = [currentMasterUser.id, 'layouts', 'layoutsList', layout.id];
+        let defLayoutDataPath = ['layouts', 'defaultLayouts', layout.content_type];
+        let layoutPath = ['layouts', 'layoutsList', layout.id];
         let defaultLayoutData = {
             content_type: layout.content_type,
             id: layout.id,
@@ -142,12 +141,12 @@
             user_code: layout.user_code
         }
 
-        if (currentMasterUser.id) {
+        if (UMuM) {
 
             let cache = cacheData(defLayoutDataPath, defaultLayoutData);
             cache = cacheData(layoutPath, layout, cache);
 
-            localStorage.setItem("cache", JSON.stringify(cache));
+            localStorage.setItem(UMuM, JSON.stringify(cache));
 
         } else {
             throw("No current master user set");
@@ -157,9 +156,9 @@
 
     let getDefaultLayout = (contentType) => {
 
-        let objPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', contentType];
+        let objPath = ['layouts', 'defaultLayouts', contentType];
 
-        if (currentMasterUser.id) {
+        if (UMuM) {
 
             let defaultLayoutData = getCacheProp(objPath);
 
@@ -177,24 +176,24 @@
 
     let deleteLayoutFromCache = function (layoutId) {
 
-        let layoutPath = [currentMasterUser.id, 'layouts', 'layoutsList', layoutId];
+        let layoutPath = ['layouts', 'layoutsList', layoutId];
         let cache = getCache();
         let layoutToDelete = getCacheProp(layoutPath, cache);
 
         // clear content_type default layout
         if (layoutToDelete.is_default) {
-            let defLayoutPath = [currentMasterUser.id, 'layouts', 'defaultLayouts', layoutToDelete.content_type];
+            let defLayoutPath = ['layouts', 'defaultLayouts', layoutToDelete.content_type];
             cache = removeFromCache(defLayoutPath, cache);
         }
 
         cache = removeFromCache(layoutPath, cache);
-        localStorage.setItem("cache", JSON.stringify(cache));
+        localStorage.setItem(UMuM, JSON.stringify(cache));
 
     };
 
     module.exports = {
 
-        setCurrentMasterUser: setCurrentMasterUser,
+		setUMuM: setUMuM,
 
         cacheDefaultLayout: cacheDefaultLayout,
         getDefaultLayout: getDefaultLayout,
