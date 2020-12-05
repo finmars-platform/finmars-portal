@@ -6,9 +6,11 @@ describe('homepage', function() {
     var commonHelper = new CommonHelper();
     var env = commonHelper.getEnvironmentVariables();
 
-    beforeEach(function() {
+    beforeEach(async function() {
 
         browser.driver.get(env.host + '/#/');
+
+        await commonHelper.printLogs();
 
         commonHelper.login(env.username, env.password);
 
@@ -30,14 +32,9 @@ describe('homepage', function() {
 
     });
 
-    afterEach(function (){
+    afterEach(async function (){
 
-        browser.manage().logs().get('browser').then(function(browserLog) {
-            if (browserLog.length) {
-                console.log('Browser console error!');
-                console.error('log: ' + JSON.stringify(browserLog));
-            }
-        });
+       await commonHelper.printLogs();
 
     })
 
