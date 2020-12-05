@@ -15,10 +15,16 @@ module.exports = function () {
 
     }
 
-    function login(username, password) {
+    async function login(username, password) {
+
+        var authHeader = element(by.css('.auth-header'))
         var usernameInput = element(by.css('.auth-username'));
         var passwordInput = element(by.css('.auth-password'));
         var loginButton = element(by.css('.auth-login'));
+
+        var text = await authHeader.getText()
+        expect(text).toEqual('Authentication')
+        console.log("Header found. Text " + text)
 
         usernameInput.sendKeys(username);
         passwordInput.sendKeys(password);
