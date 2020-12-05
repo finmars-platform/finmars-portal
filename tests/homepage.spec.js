@@ -12,14 +12,16 @@ describe('homepage', function() {
 
         await commonHelper.printLogs();
 
-        commonHelper.login(env.username, env.password);
+        await commonHelper.login(env.username, env.password);
+
+        commonHelper.printCookies();
 
     });
 
     it('check master user name', async function() {
 
-        await browser.sleep(5000);
-        console.log("sleep 5000")
+        await browser.sleep(10000);
+        console.log("sleep 10000")
 
         var masterUserName = element(by.css('.header-masteruser-name'));
 
