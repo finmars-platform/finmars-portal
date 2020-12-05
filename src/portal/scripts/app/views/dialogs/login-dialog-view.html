@@ -2,7 +2,7 @@
            aria-label="login dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Authentication</h2>
+            <h2 class="auth-header">Authentication</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -17,7 +17,7 @@
 
                     <md-input-container class="width-100">
                         <label for="">Username</label>
-                        <input type="text" data-ng-model="vm.username" data-ng-change="vm.error = false">
+                        <input type="text" class="auth-username" data-ng-model="vm.username" data-ng-change="vm.error = false">
                     </md-input-container>
 
                 </div>
@@ -25,7 +25,7 @@
                 <div class="p-r-24">
                     <md-input-container class="width-100">
                         <label for="">Password</label>
-                        <input type="password" data-ng-model="vm.password" data-ng-change="vm.error = false">
+                        <input type="password" class="auth-password" data-ng-model="vm.password" data-ng-change="vm.error = false">
                     </md-input-container>
                 </div>
 
@@ -52,7 +52,7 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row" layout-align="center center">
-        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised md-primary auth-login" ng-click="vm.agree()" style="margin-right:20px;">
             Sign In
         </md-button>
     </md-dialog-actions>
