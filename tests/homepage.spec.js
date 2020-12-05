@@ -1,0 +1,32 @@
+
+var CommonHelper = require('./common.helper')
+
+describe('homepage', function() {
+
+    var commonHelper = new CommonHelper();
+    var env = commonHelper.getEnvironmentVariables();
+
+    beforeEach(function() {
+
+        browser.driver.get(env.host + '/#/');
+
+        commonHelper.login(env.username, env.password);
+
+    });
+
+    it('check master user name', function() {
+
+        browser.driver.sleep(5000);
+
+        var masterUserName = element(by.css('.header-masteruser-name'));
+
+        masterUserName.getText().then(function(text) {
+
+            console.log('Master user name', text);
+
+            expect(text.length).not.toEqual(0)
+        })
+
+    });
+
+});
