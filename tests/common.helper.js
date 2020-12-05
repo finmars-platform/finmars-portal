@@ -23,6 +23,8 @@ module.exports = function () {
         usernameInput.sendKeys(username);
         passwordInput.sendKeys(password);
         loginButton.click();
+
+        console.log("Logged in Successfully");
     }
 
     return {
