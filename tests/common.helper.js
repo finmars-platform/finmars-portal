@@ -17,6 +17,8 @@ module.exports = function () {
 
     async function login(username, password) {
 
+        await browser.sleep(2000);
+
         var authHeader = element(by.css('.auth-header'))
         var usernameInput = element(by.css('.auth-username'));
         var passwordInput = element(by.css('.auth-password'));
