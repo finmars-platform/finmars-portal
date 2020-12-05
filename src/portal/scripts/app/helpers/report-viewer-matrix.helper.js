@@ -12,7 +12,7 @@
             var itemKey = item[key] || '-';
             var itemTotal = null;
 
-            if (item[valueKey] !== null) {
+            if ((item[valueKey] || item[valueKey] === 0) && typeof item[valueKey] === 'number') {
                 itemTotal = item[valueKey];
             }
 
@@ -182,7 +182,7 @@
                         var flItem = column.data.flatListItems[i];
 
                         if (
-                        	(flItem[valueKey] && !isNaN(flItem[valueKey])) ||
+                        	(flItem[valueKey] && typeof flItem[valueKey] === 'number') ||
 							flItem[valueKey] === 0
 						) {
 

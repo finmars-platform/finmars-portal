@@ -219,18 +219,27 @@
 
                 scope.formatValue = function (val) {
 
-                    if (scope.matrixSettings.number_format && val) {
+                	var result = val;
 
-                        return renderHelper.formatValue({
-                            value: val
-                        }, {
-                            key: 'value',
-                            report_settings: scope.matrixSettings.number_format
-                        });
+                    if (scope.matrixSettings.number_format && (val || val === 0)) {
 
-                    } else {
-                        return val
+						result = renderHelper.formatValue(
+                        	{
+								value: val
+							},
+							{
+								key: 'value',
+								report_settings: scope.matrixSettings.number_format
+							}
+						);
+
                     }
+
+                    if (!result && result !== 0) {
+                    	return '';
+					}
+
+                    return result;
 
                 };
 
