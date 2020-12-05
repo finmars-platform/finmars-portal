@@ -30,4 +30,15 @@ describe('homepage', function() {
 
     });
 
+    afterEach(function (){
+
+        browser.manage().logs().get('browser').then(function(browserLog) {
+            if (browserLog.length) {
+                console.log('Browser console error!');
+                console.error('log: ' + JSON.stringify(browserLog));
+            }
+        });
+
+    })
+
 });
