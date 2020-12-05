@@ -14,9 +14,10 @@ describe('homepage', function() {
 
     });
 
-    it('check master user name', function() {
+    it('check master user name', async function() {
 
-        browser.driver.sleep(5000);
+        await browser.sleep(5000);
+        console.log("sleep 5000")
 
         var masterUserName = element(by.css('.header-masteruser-name'));
 
