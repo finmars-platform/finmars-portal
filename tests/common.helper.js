@@ -15,6 +15,14 @@ module.exports = function () {
 
     }
 
+    async function printCookies(){
+
+        browser.manage().getCookies().then(function(cookies) {
+            console.log('Cookies: ', cookies);
+        });
+
+    }
+
     async function login(username, password) {
 
         await browser.sleep(2000);
@@ -47,6 +55,7 @@ module.exports = function () {
     }
 
     return {
+        printCookies: printCookies,
         login: login,
         printLogs: printLogs,
         getEnvironmentVariables: getEnvironmentVariables
