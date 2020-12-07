@@ -1688,7 +1688,7 @@
 
             };
 
-            vm.downloadAttributes = function () {
+            /* vm.downloadAttributes = function () {
 
                 return new Promise(function (resolve, reject) {
 
@@ -1734,7 +1734,7 @@
 
                 })
 
-            };
+            }; */
 
             var setDataFromDashboard = function () {
 
@@ -1865,7 +1865,7 @@
 
                 vm.entityViewerDataService.setViewContext('dashboard');
 
-                var downloadAttrsPromise = vm.downloadAttributes();
+                var downloadAttrsPromise = rvSharedLogicHelper.downloadAttributes();
                 vm.setEventListeners();
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
@@ -1955,7 +1955,7 @@
                     var columns = vm.entityViewerDataService.getColumns();
                     vm.dashboardComponentDataService.setViewerTableColumns(columns);
 
-
+                    $scope.$apply();
 
                     //vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
