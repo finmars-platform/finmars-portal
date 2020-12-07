@@ -41,9 +41,21 @@
             DnDScrollElem = htmlElement;
         }
 
+        function enableDnDWheelScroll () {
+			document.addEventListener('wheel', DnDWheelScroll, {passive: false});
+		}
+
+		function disableDnDWheelScroll () {
+			document.removeEventListener('wheel', DnDWheelScroll);
+		}
+
+
         return {
             setDnDScrollElem: setDnDScrollElem,
-            DnDWheelScroll: DnDWheelScroll
+            DnDWheelScroll: DnDWheelScroll,
+
+			enableDnDWheelScroll: enableDnDWheelScroll,
+			disableDnDWheelScroll: disableDnDWheelScroll
         }
 
     }

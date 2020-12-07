@@ -325,7 +325,7 @@
                         });
 
                         drake.on('drag', function () {
-                            document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+							scrollHelper.enableDnDWheelScroll();
                         });
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
@@ -630,8 +630,9 @@
 
                         drake.on('dragend', function (elem) {
 
-                            document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
-                            if (sourceContainer) {
+							scrollHelper.disableDnDWheelScroll();
+
+							if (sourceContainer) {
                                 sourceContainer.classList.remove('dragged-out-card-space');
                             }
 
@@ -664,11 +665,13 @@
 
                 var init = function () {
                     setTimeout(function () {
-                        var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
+
+                    	var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
                         scrollHelper.setDnDScrollElem(DnDScrollElem);
 
                         viewConstructorDnD.init();
                         selectedDnD.init();
+
                     });
                 };
 
