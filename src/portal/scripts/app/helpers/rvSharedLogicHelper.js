@@ -10,6 +10,50 @@
 
     module.exports = function (viewModel, $scope, $mdDialog) {
 
+		let downloadAttributes = function () {
+
+			return new Promise(function (resolve, reject) {
+
+				var promises = [];
+
+				promises.push(viewModel.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
+				promises.push(viewModel.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
+				promises.push(viewModel.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
+
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('account'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
+
+
+				if (viewModel.entityType === 'balance-report' ||
+					viewModel.entityType === 'pl-report' ||
+					viewModel.entityType === 'transaction-report') {
+
+					promises.push(viewModel.attributeDataService.downloadInstrumentUserFields());
+
+				}
+
+				if (viewModel.entityType === 'transaction-report') {
+					promises.push(viewModel.attributeDataService.downloadTransactionUserFields());
+				}
+
+				Promise.all(promises).then(function (data) {
+
+					viewModel.readyStatus.attributes = true;
+					resolve(data);
+
+				}).catch(function (error) {
+					resolve({errorObj: error, errorCause: 'dynamicAttributes'});
+				});
+
+			});
+
+		};
+
         var onSetLayoutEnd = function () {
 
             viewModel.readyStatus.layout = true;
@@ -114,6 +158,7 @@
         };
 
         return {
+			downloadAttributes: downloadAttributes,
             calculateReportDatesExprs: calculateReportDatesExprs,
             onSetLayoutEnd: onSetLayoutEnd
         }

@@ -743,43 +743,49 @@
 
             };
 
-            vm.downloadAttributes = function () {
+            /* vm.downloadAttributes = function () {
 
-                var promises = [];
+            	return new Promise(function (resolve, reject) {
 
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
+            		var promises = [];
 
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
+					promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
+					promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
+					promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
 
-                if (vm.entityType === 'balance-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                }
+					promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
+					promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
+					promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
+					promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
+					promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
+					promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
+					promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
 
-                if (vm.entityType === 'pl-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                }
+					if (vm.entityType === 'balance-report') {
+						promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+					}
 
-                if (vm.entityType === 'transaction-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                    promises.push(vm.attributeDataService.downloadTransactionUserFields());
-                }
+					if (vm.entityType === 'pl-report') {
+						promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+					}
 
-                Promise.all(promises).then(function (data) {
+					if (vm.entityType === 'transaction-report') {
+						promises.push(vm.attributeDataService.downloadInstrumentUserFields());
+						promises.push(vm.attributeDataService.downloadTransactionUserFields());
+					}
 
-                    vm.readyStatus.attributes = true;
-                    // $scope.$apply();
+					Promise.all(promises).then(function (data) {
 
-                })
+						vm.readyStatus.attributes = true;
+						resolve(data);
 
-            };
+					}).catch(function (error) {
+						reject(error);
+					});
+
+				});
+
+            }; */
 
             vm.isLayoutFromUrl = function () {
                 return window.location.href.indexOf('?layout=') !== -1
@@ -922,79 +928,82 @@
 
             vm.setLayout = function (layout) {
 
-                vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
-                vm.setFiltersValuesFromQueryParameters();
+            	return new Promise(async function (resolve, reject) {
 
-                // var reportOptions = vm.entityViewerDataService.getReportOptions();
-                var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+            		vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+					vm.setFiltersValuesFromQueryParameters();
 
-                var finishSetLayout = function () {
+					// var reportOptions = vm.entityViewerDataService.getReportOptions();
+					var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
-                    // REPORT REQUEST STARTS HERE
-                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+					/* var finishSetLayout = function () {
 
-                    var additions = vm.entityViewerDataService.getAdditions();
-                    var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+						// REPORT REQUEST STARTS HERE
+						rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
-                    if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
-                        vm.entityViewerDataService.setSplitPanelStatus(true);
-                    }
+						var additions = vm.entityViewerDataService.getAdditions();
+						var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
 
-                    vm.readyStatus.layout = true;
+						if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+							vm.entityViewerDataService.setSplitPanelStatus(true);
+						}
 
-                    $scope.$apply();
+						vm.readyStatus.layout = true;
 
-                }
+						$scope.$apply();
 
-                // Check if there is need to solve report datepicker expression
-                if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
+					} */
 
-                    /* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
-                    var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
+					var additions = vm.entityViewerDataService.getAdditions();
+					var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
 
-                    var dateExprsProms = [];
+					if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+						vm.entityViewerDataService.setSplitPanelStatus(true);
+					}
 
-                    if (firstDateExpr) {
-                        calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
-                    }
+					// Check if there is need to solve report datepicker expression
+					if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                    if (secondDateExpr) {
-                        calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
-                    }
+						/* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
+						var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
 
-                    Promise.all(dateExprsProms).then(function () {
-                        onSetLayoutEnd();
+						var dateExprsProms = [];
 
-                    }).catch(function () {
-                        onSetLayoutEnd();
-                    }); */
+						if (firstDateExpr) {
+							calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
+						}
 
+						if (secondDateExpr) {
+							calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
+						}
 
-                    rvSharedLogicHelper.calculateReportDatesExprs().then(function () {
-                        rvSharedLogicHelper.onSetLayoutEnd();
+						Promise.all(dateExprsProms).then(function () {
+							onSetLayoutEnd();
 
-                    }).catch(function () {
-                        rvSharedLogicHelper.onSetLayoutEnd();
-                    });
+						}).catch(function () {
+							onSetLayoutEnd();
+						}); */
+						await rvSharedLogicHelper.calculateReportDatesExprs();
+						rvSharedLogicHelper.onSetLayoutEnd();
 
-                } else {
-                    rvSharedLogicHelper.onSetLayoutEnd();
-                }
+						resolve();
 
-                var additions = vm.entityViewerDataService.getAdditions();
-                var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+					} else {
+						rvSharedLogicHelper.onSetLayoutEnd();
+					}
 
-                if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
-                    vm.entityViewerDataService.setSplitPanelStatus(true);
-                }
+					resolve();
+
+				});
 
             };
 
+            // called inside entityViewerHelperService
             vm.getView = function () {
 
                 middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
-                vm.readyStatus.layout = false;
+                vm.readyStatus.layout = false; // switched to true by rvSharedLogicHelper.onSetLayoutEnd()
 
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
@@ -1006,7 +1015,8 @@
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
 
-                vm.downloadAttributes();
+                var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
+                var setLayoutProm;
                 vm.setEventListeners();
 
                 var layoutUserCode;
@@ -1033,18 +1043,22 @@
                     });
 
                     // vm.getLayoutByUserCode(layoutUserCode);
-                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+					setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
                     // vm.getLayoutByUserCode(layoutUserCode);
-                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+					setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else {
                     // vm.getDefaultLayout();
-                    evHelperService.getDefaultLayout(vm);
+					setLayoutProm = evHelperService.getDefaultLayout(vm);
                 }
+
+                Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
+					$scope.$apply();
+				});
 
             };
 
