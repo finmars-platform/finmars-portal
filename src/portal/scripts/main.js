@@ -645,7 +645,7 @@ app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog
 
 // New report viewer interface
 app.directive('gTopPart', ['$mdDialog', '$state', require('./app/directives/groupTable/gTopPartDirective')]);
-app.directive('gFilters', [require('./app/directives/groupTable/gFiltersDirective')]);
+app.directive('gFilters', ['$mdDialog', require('./app/directives/groupTable/gFiltersDirective')]);
 
 // GROUP TABLE END
 

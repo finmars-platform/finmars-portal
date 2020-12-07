@@ -3,7 +3,7 @@
  * */
 (function () {
 
-    'use strict'
+    'use strict';
 
     var metaService = require('../../services/metaService');
     var evEvents = require('../../services/entityViewerEvents');
