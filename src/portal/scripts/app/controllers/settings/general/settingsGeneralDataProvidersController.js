@@ -12,10 +12,12 @@
         var vm = this;
 
         vm.dataProviders = [];
+        vm.personalDataProviders = [];
+
         vm.testCertificateConfig = {};
         vm.testCertificateProcessing = false;
 
-        vm.readyStatus = {dataProviders: false, configs: false};
+        vm.readyStatus = {dataProviders: false, configs: false, personalDataProviders: false, credentials: false};
 
         vm.getProviders = function () {
 
@@ -60,6 +62,54 @@
                 $scope.$apply();
             });
 
+        };
+
+
+        vm.getPersonalProvidersList = function () {
+
+            dataProvidersService.getPersonalProvidersList().then(function (data) {
+
+                vm.personalDataProviders = data;
+                vm.readyStatus.personalDataProviders = true;
+
+                vm.getCredentials();
+            });
+
+        };
+
+        vm.getCredentials = function () {
+
+            dataProvidersService.getCredentials().then(function (data) {
+
+                vm.credentials = data.results;
+                vm.readyStatus.credentials = true;
+
+                vm.personalDataProviders.forEach(function (provider) {
+
+                    var lastModifiedCredential = vm.credentials.filter(function (credential) {
+
+                        return credential.provider === provider.id;
+
+                    }).sort(function (first, second) {
+
+                        var firstDate = new Date(first.modified);
+                        var secondDate = new Date(second.modified);
+
+                        if (firstDate === secondDate) {
+                            return 0;
+                        }
+
+                        return firstDate > secondDate ? -1 : 1;
+
+                    })[0];
+
+                    provider.credential = lastModifiedCredential;
+
+                })
+
+                $scope.$apply();
+
+            });
 
         };
 
@@ -163,10 +213,34 @@
 
         };
 
+        vm.editPersonalProvider = function ($event, provider) {
+            $mdDialog.show({
+                controller: 'SettingsPersonalDataProviderController as vm',
+                templateUrl: 'views/settings/personal-data-provider-config-settings-view.html',
+                parent: angular.element(document.body),
+                locals: {
+                    provider: provider
+                },
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true
+            }).then(function (status) {
+                if (status === 'agree') {
+
+                    vm.getPersonalProvidersList();
+
+                }
+            });
+
+        };
+
         vm.init = function () {
 
             vm.getProviders();
             vm.getBloombergCredentialList();
+            vm.getPersonalProvidersList();
 
         };
 

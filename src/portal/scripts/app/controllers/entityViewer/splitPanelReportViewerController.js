@@ -8,24 +8,31 @@
 
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
-        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
 
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
 
+        var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
         var EntityViewerDataService = require('../../services/entityViewerDataService');
-        var EntityViewerEventService = require('../../services/entityViewerEventService');
+        var EntityViewerEventService = require('../../services/eventService');
         var AttributeDataService = require('../../services/attributeDataService');
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
-
-        var expressionService = require('../../services/expression.service');
         var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+        module.exports = function (
+            $scope,
+            $mdDialog,
+            $transitions,
+            parentEntityViewerDataService,
+            parentEntityViewerEventService,
+            splitPanelExchangeService
+        ) {
 
             var vm = this;
+
+            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             console.log('parentEntityViewerDataService', parentEntityViewerDataService);
             console.log('parentEntityViewerEventService', parentEntityViewerEventService);
@@ -794,7 +801,7 @@
 
             splitPanelExchangeService.setSplitPanelLayoutChangesCheckFn(getLayoutChanges);
 
-            vm.downloadAttributes = function(){
+            /* vm.downloadAttributes = function(){
 
                 var promises = [];
 
@@ -830,13 +837,13 @@
 
                 })
 
-            };
+            }; */
 
             vm.getView = function () {
 
                 // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
-                vm.readyStatus.layout = false;
+                vm.readyStatus.layout = false; // switched to true by rvSharedLogicHelper.onSetLayoutEnd()
 
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
@@ -851,9 +858,9 @@
                 vm.entityViewerDataService.setViewContext('split_panel');
 
 
-                vm.downloadAttributes();
+				var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
 
-                var columns = parentEntityViewerDataService.getColumns();
+				var columns = parentEntityViewerDataService.getColumns();
 
                 var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
                 var additions = parentEntityViewerDataService.getAdditions();
@@ -868,7 +875,9 @@
 
                 if (splitPanelLayoutToOpen) {
                     defaultLayoutId = splitPanelLayoutToOpen;
+
                 } else {
+
                     defaultLayoutId = additions.layoutId; // needed in order for old system layouts work
 
                     if (additions.layoutData && additions.layoutData.layoutId) {
@@ -881,81 +890,34 @@
 
                 vm.setEventListeners();
 
-                var setLayout = function (layout) {
+				var setLayoutProm;
 
-                    vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
-                    vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+                vm.setLayout = function (layout) {
 
-                    var reportOptions = vm.entityViewerDataService.getReportOptions();
-                    var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+					return new Promise(async function (resolve, reject) {
 
-                    // Check if there is need to solve report datepicker expression
-                    if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
+						vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
+						vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
-                        var reportFirstDatepickerExpression = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // field for the first datepicker in reports with two datepickers, e.g. p&l report
-                        var reportLastDatepickerExpression = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+						// var reportOptions = vm.entityViewerDataService.getReportOptions();
+						var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
-                        if (reportFirstDatepickerExpression || reportLastDatepickerExpression) {
+						// Check if there is need to solve report datepicker expression
+						if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                            var datepickerExpressionsToSolve = [];
+							await rvSharedLogicHelper.calculateReportDatesExprs();
+							rvSharedLogicHelper.onSetLayoutEnd();
 
-                            if (reportFirstDatepickerExpression) {
+							resolve();
 
-                                var solveFirstExpression = function () {
-                                    return expressionService.getResultOfExpression({"expression": reportFirstDatepickerExpression}).then(function (data) {
-                                        reportOptions.pl_first_date = data.result;
-                                    });
-                                };
+							// < Check if there is need to solve report datepicker expression >
+						} else {
+							rvSharedLogicHelper.onSetLayoutEnd();
+						}
 
-                                datepickerExpressionsToSolve.push(solveFirstExpression());
-                            }
+						resolve();
 
-                            if (reportLastDatepickerExpression) {
-
-                                var solveLastExpression = function () {
-                                    return expressionService.getResultOfExpression({"expression": reportLastDatepickerExpression}).then(function (data) {
-                                        reportOptions.report_date = data.result;
-                                    });
-                                };
-
-                                datepickerExpressionsToSolve.push(solveLastExpression());
-                            }
-
-                            Promise.all(datepickerExpressionsToSolve).then(function () {
-
-                                vm.readyStatus.layout = true;
-
-                                rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                                $scope.$apply();
-
-                                //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
-                            });
-
-
-                        } else {
-
-                            vm.readyStatus.layout = true;
-
-                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                            $scope.$apply();
-
-                            //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-
-                        }
-                    // < Check if there is need to solve report datepicker expression >
-                    } else {
-
-                        vm.readyStatus.layout = true;
-
-                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                        $scope.$apply();
-
-                        //vm.entityViewerDataService.setActiveLayoutConfiguration({isReport: true});
-                    }
+					});
 
                 };
 
@@ -967,53 +929,27 @@
                             middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
                         }
 
-                        setLayout(spLayoutData);
+                        vm.setLayout(spLayoutData);
 
                     }).catch(function (reason) {
-
-                        uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-
-                            var defaultLayout = null;
-                            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-
-                                defaultLayout = defaultLayoutData.results[0];
-                                middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
-
-                            }
-
-                            setLayout(defaultLayout);
-
-                        });
-
+						setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
                     })
 
                 } else {
-
-                    uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
-
-                        var defaultLayout = null;
-                        if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
-
-                            defaultLayout = defaultLayoutData.results[0];
-                            middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
-
-                        }
-
-                        setLayout(defaultLayout);
-
-                    });
+					setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
                 }
+
+				Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
+					$scope.$apply();
+				});
 
             };
 
             vm.init = function () {
-
                 vm.getView();
-
             };
 
             vm.init();
-
 
         }
 

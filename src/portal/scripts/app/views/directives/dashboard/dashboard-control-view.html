@@ -43,7 +43,7 @@
 
             <div data-ng-if="!componentData.settings.multiple">
                 <md-input-container class="md-block no-error-spacer">
-                    <label data-ng-bind="item.data.name"></label>
+                    <label data-ng-bind="item.data.store.label"></label>
 
                     <md-select data-ng-model="item.data.store.value"
                                data-ng-change="valueChanged()"
@@ -90,10 +90,11 @@
 
                 <entity-search-select
                         data-item="item.data.store.value"
-                        data-label="item.data.name"
+                        data-label="item.data.store.label"
                         data-input-text="item.data.store.name"
+                        data-item-name="item.data.store.name"
                         data-entity-type="entityType"
-                        data-callback="valueChanged()"></entity-search-select>
+                        data-on-change-callback="valueChanged()"></entity-search-select>
             </div>
 
             <div data-ng-if="componentData.settings.multiple">

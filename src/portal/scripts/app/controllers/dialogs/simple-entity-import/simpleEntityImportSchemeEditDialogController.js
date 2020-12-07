@@ -138,8 +138,6 @@
 
                 });
 
-                console.log("classifier vm.scheme.entity_fields", vm.scheme.entity_fields);
-
                 vm.inputsFunctions = vm.getFunctions();
 
                 findPickedDynamicAttrs();

@@ -75,15 +75,17 @@
 
                                 <div layout="row">
 
-                                    <!--<md-input-container style="width: 200px;">-->
-                                    <!--<label for="">Reference Name</label>-->
-                                    <!--<input type="text" data-ng-model="filterLink.key">-->
-                                    <!--</md-input-container>-->
+                                    <!-- <md-input-container style="width: 200px;">
+                                    <label for="">Reference Name</label>
+                                    <input type="text" data-ng-model="filterLink.key">
+                                    </md-input-container> -->
 
                                     <div class="m-t-16 m-b-16">
 
                                         <md-input-container class="dashboard-constructor-field1">
+
                                             <label for="">Attribute</label>
+
                                             <md-select data-ng-model="filterLink.key"
                                                        md-on-close="filterLinkSearchTerm = ''"
                                                        ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
@@ -100,6 +102,7 @@
                                                     {{attribute.name}}
                                                 </md-option>
                                             </md-select>
+
                                         </md-input-container>
 
                                     </div>
@@ -340,12 +343,19 @@
         <div data-ng-if="!vm.launchedFromDashboard"
              layout="row"
              layout-align="space-between center">
+
+            <md-button ng-click="vm.exportToDashboards()" style="margin-right:20px;">
+                Export to dashboards
+            </md-button>
+
             <md-button data-ng-click="vm.cancel()" style="margin-right:20px;">
                 Cancel
             </md-button>
+
             <md-button data-ng-click="vm.agree()" style="margin-right:20px;">
                 OK
             </md-button>
+
         </div>
 
         <div data-ng-if="vm.launchedFromDashboard"

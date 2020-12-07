@@ -2,12 +2,12 @@
 
     var renderHelper = require('../../helpers/render.helper');
 
-    var checkIcon = renderHelper.getCheckIcon();
+    /* var checkIcon = renderHelper.getCheckIcon();
     var lockIcon = renderHelper.getLockIcon();
     var lock2Icon = renderHelper.getLock2Icon();
     var starIcon = renderHelper.getStarIcon();
     var cancelIcon = renderHelper.getCancelIcon();
-    var partiallyVisibleIcon = renderHelper.getPartiallyVisibleIcon();
+    var partiallyVisibleIcon = renderHelper.getPartiallyVisibleIcon(); */
 
     var getIcon = function (obj, currentMember, classList) {
 
@@ -19,7 +19,7 @@
 
         if (obj.object_permissions) {
 
-            result = lockIcon; // lock
+            result = 'lockIcon'; // lock
 
             obj.object_permissions.forEach(function (perm) {
 
@@ -43,7 +43,7 @@
             });
 
             if (hasManage) {
-                result = starIcon;
+                result = 'starIcon';
 
             } else if (hasChange) {
                 result = '';
@@ -59,27 +59,40 @@
 
         }
 
-        if (currentMember && currentMember.is_admin) {
-            result = starIcon
-        }
-
-        if (obj.is_locked) {
-            result = lock2Icon;
-        }
-
-        if (obj.is_canceled) {
-            result = cancelIcon;
-        }
-
-        if (partVisible) {
-            result = partiallyVisibleIcon;
-        }
-
         if (obj.___is_activated) {
-            result = checkIcon
+            result = 'checkIcon'
         }
 
-        return result
+        else if (partVisible) {
+            result = 'partiallyVisibleIcon';
+        }
+
+        else if (obj.is_canceled) {
+            result = 'cancelIcon';
+        }
+
+        else if (obj.is_locked) {
+            result = 'lock2Icon';
+        }
+
+        /* TODO uncomment after enabling angular material icons
+        else if (obj.is_deleted) {
+            result = 'deletedIcon'
+        }
+
+        else if (!obj.is_enabled) {
+            result = 'disabledIcon'
+        }
+
+        else if (!obj.is_active) {
+            result = 'inactiveIcon'
+        } */
+
+        else if (currentMember && currentMember.is_admin) {
+            result = 'starIcon'
+        }
+
+        return renderHelper.getIconByKey(result);
 
     };
 
@@ -105,7 +118,13 @@
 
                     if (obj[column.key + '_object'].name) {
 
-                        return obj[column.key + '_object'].short_name;
+                        if (obj[column.key + '_object'].short_name) {
+
+                            return obj[column.key + '_object'].short_name;
+
+                        } else {
+                            return obj[column.key + '_object'].name;
+                        }
 
                     } else if (column.key === 'price_download_scheme') {
 
@@ -268,17 +287,27 @@
         return result;
     };
 
+    var getRowGeneralClasses = function (obj, classList) {
+
+        if (obj.___is_last_selected) {
+            classList.push('last-selected');
+
+        } else if (obj.___is_activated) {
+            classList.push('selected');
+
+        } else if (obj.is_deleted) {
+            classList.push('deleted');
+        }
+
+    }
+
     var render = function (obj, columns, currentMember, viewContext, verticalAdditions) {
 
         var classList = ['g-row'];
 
         var rowSelection;
 
-        if (obj.___is_last_selected) {
-            classList.push('last-selected');
-        } else if (obj.___is_activated) {
-            classList.push('selected');
-        }
+        getRowGeneralClasses(obj, classList);
 
         rowSelection = '<div class="g-row-selection">' + getIcon(obj, currentMember, classList) + '</div>';
 
