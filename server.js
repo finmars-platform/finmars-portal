@@ -8,8 +8,37 @@ var url = require('url');
 var proxy = require('proxy-middleware');
 var app = express();
 
+var port = process.env.PORT || 8080;
+
+// app.use(function (req, res, next) {
+//
+//     var host = process.env.HOSTNAME || 'none';
+//
+//     console.info('host', host);
+//
+//     res.header("Access-Control-Expose-Headers", "x-hostname");
+//     res.header('x-hostname', host);
+//
+//     next()
+// });
+
+
+app.use('/build/:uid/*', function(req, res, next) {
+
+    console.info(req.originalUrl);
+
+    var uid = req.params.uid;
+
+    path = req.params[0] ? req.params[0] : 'index.html';
+
+    res.sendFile(path, {root: './dist'});
+
+});
+
+
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/portal', express.static('dist'));
+
 
 app.use('/healthcheck', function (req, res) {
 
@@ -27,6 +56,11 @@ app.use('/healthcheck', function (req, res) {
 });
 
 
+
+
+
+app.use(express.static(path.join(__dirname, 'dist')));
+
 // WARNING ONLY FOR DEV PURPOSE
 // var pdfProxyOptions = url.parse('http://0.0.0.0:80');
 //
@@ -40,6 +74,6 @@ app.use('/healthcheck', function (req, res) {
 
 // app.use('/', proxy(proxyOptions));
 
-app.listen(8080, function () {
-    console.info('Server started at 8080 port');
+app.listen(port, function () {
+    console.info('Server started at '+port+' port');
 });

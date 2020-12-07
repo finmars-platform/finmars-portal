@@ -14,9 +14,10 @@
                 numberFormat: '<',
                 customButtons: '=',
                 customStyles: '<',
-                //setedFromOutside: '=',
+                // setedFromOutside: '=',
                 eventSignal: '=',
                 smallOptions: '<',
+                isDisabled: '=',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/customInputs/number-input-view.html',
@@ -33,13 +34,14 @@
                     // onlyPositive: whether field should accept only positive number
                     // tooltipText: custom tolltip text
                     // notNull: turn on error mode if field is not filled
+                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
                 if (scope.smallOptions) {
-                    scope.onlyPositive = scope.smallOptions.onlyPositive;
+                    scope.onlyPositive = scope.smallOptions.onlyPositive
 
-                    if (scope.smallOptions.tooltipText) {
-                        scope.tooltipText = scope.smallOptions.tooltipText;
-                    }
+                    scope.tooltipText = scope.smallOptions.tooltipText
+
+                    scope.dialogParent = scope.smallOptions.dialogParent
                 }
 
                 var inputContainer = elem[0].querySelector('.numberInputContainer');
@@ -48,7 +50,10 @@
                 scope.getInputContainerClasses = function () {
                     var classes = '';
 
-                    if (scope.error) {
+                    if (scope.isDisabled) {
+                        classes += "custom-input-is-disabled";
+
+                    } else if (scope.error) {
                         classes = 'custom-input-error';
 
                     } else if (stylePreset) {
@@ -56,6 +61,11 @@
 
                     } else if (scope.valueIsValid) {
                         classes = 'custom-input-is-valid';
+
+                    }
+
+                    if (scope.noIndicatorBtn) {
+                        classes += " no-indicator-btn";
                     }
 
                     return classes;
@@ -160,10 +170,23 @@
 
                     var calculatorTitle = "Calculator for: " + scope.label;
 
+                    var dialogParent = angular.element(document.body);
+
+                    if (scope.dialogParent) {
+
+                        var dialogParentElem = document.querySelector(scope.dialogParent);
+
+                        if (dialogParentElem) {
+                            dialogParent = dialogParentElem
+                        }
+
+                    }
+
                     $mdDialog.show({
                         controller: 'CalculatorDialogController as vm',
                         templateUrl: 'views/dialogs/calculator-dialog-view.html',
                         targetEvent: $event,
+                        parent: dialogParent,
                         multiple: true,
                         locals: {
                             data: {
@@ -201,11 +224,15 @@
 
                     Object.keys(scope.customStyles).forEach(function (className) {
 
-                        var elemClass = '.' + className;
-                        var elemToApplyStyles = elem[0].querySelector(elemClass);
+                        var elemClass = "." + className;
+                        var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-                        if (elemToApplyStyles) {
-                            elemToApplyStyles.style.cssText = scope.customStyles[className];
+                        if (elemToApplyStyles.length) {
+
+                            elemToApplyStyles.forEach(function (htmlNode) {
+                                htmlNode.style.cssText = scope.customStyles[className];
+                            })
+
                         }
 
                     });

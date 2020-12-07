@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingProcedureService = require('../../services/pricing/pricingProcedureService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -32,7 +32,7 @@
 
             $mdDialog.show({
                 controller: 'PricingProcedureEditDialogController as vm',
-                templateUrl: 'views/dialogs/pricing/pricing-procedure-edit-dialog-view.html',
+                templateUrl: 'views/dialogs/procedures/pricing-procedure-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -92,7 +92,7 @@
 
             $mdDialog.show({
                 controller: 'PricingProcedureAddDialogController as vm',
-                templateUrl: 'views/dialogs/pricing/pricing-procedure-add-dialog-view.html',
+                templateUrl: 'views/dialogs/procedures/pricing-procedure-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,

@@ -60,7 +60,8 @@
                     },
                     linked_components: {
                         report_settings: {},
-                        filter_links: []
+                        filter_links: [],
+						active_object: null
                     }
                 },
                 user_settings: {}
@@ -261,6 +262,9 @@
             }
 
         }; */
+		vm.clearSelect = function (item, propToDelete) {
+			delete item[propToDelete];
+		}
 
         vm.smallRvColumnsChanged = function () {
 
@@ -386,6 +390,11 @@
         vm.getStrategies = function (strategyNumber) {
             return strategyService.getList(strategyNumber, {page: 1, pageSize: 1000});
         };*/
+
+        // Victor 2020.10.26 Issue #47
+        vm.exportToDashboards = function () {
+            dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
+        };
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

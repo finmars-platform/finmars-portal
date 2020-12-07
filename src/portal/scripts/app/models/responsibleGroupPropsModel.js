@@ -31,11 +31,6 @@
                 "key": "public_name",
                 "name": "Public name",
                 "value_type": 10
-            },
-            {
-                "key": "tags",
-                "name": "Tags",
-                "value_type": "mc_field"
             }
         ]
     };

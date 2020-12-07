@@ -269,8 +269,6 @@
                     return 'Currencies';
                 case 'instruments.instrumenttype':
                     return "Instrument Types";
-                case 'integrations.pricingautomatedschedule':
-                    return 'Automated uploads schedule ';
                 case 'ui.editlayout':
                     return "Input Form";
                 case 'ui.listlayout':
@@ -341,6 +339,8 @@
                     return 'Instrument Pricing Scheme';
                 case 'pricing.pricingprocedure':
                     return 'Pricing Procedure';
+                case 'procedures.requestdatafileprocedure':
+                    return 'Data Procedure';
                 case 'schedules.pricingschedule':
                     return 'Pricing Schedule';
                 default:

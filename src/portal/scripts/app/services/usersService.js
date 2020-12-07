@@ -5,126 +5,128 @@
 
     'use strict';
 
-    var usersRepository = require('../repositories/usersRepository');
+    let usersRepository = require('../repositories/usersRepository');
 
-    var login = function (login, password) {
+    let login = function (login, password) {
         return usersRepository.login(login, password);
     };
 
-    var logout = function () {
+    let logout = function () {
         return usersRepository.logout();
     };
 
-    var ping = function () {
+    let ping = function () {
         return usersRepository.ping();
     };
 
-    var protectedPing = function () {
+    let protectedPing = function () {
         return usersRepository.protectedPing();
     };
 
-    var getList = function () {
+    let getList = function () {
         return usersRepository.getList();
     };
 
-    var getByKey = function (id) {
+    let getByKey = function (id) {
         return usersRepository.getByKey(id)
     };
 
-    var getMe = function () {
+    let getMe = function () {
         return usersRepository.getMe();
     };
 
-    var getMyCurrentMember = function () {
+    let getMyCurrentMember = function () {
         return usersRepository.getMyCurrentMember();
     };
 
-    var changePassword = function (id, user) {
+    let changePassword = function (id, user) {
         return usersRepository.changePassword(id, user);
     };
 
-    var update = function (id, user) {
+    let update = function (id, user) {
         return usersRepository.update(id, user);
     };
 
-    var patch = function (id, user) {
+    let patch = function (id, user) {
         return usersRepository.patch(id, user);
     };
 
-    var deleteByKey = function (id) {
+    let deleteByKey = function (id) {
         return usersRepository.deleteByKey(id);
     };
 
-    var getCurrentMasterUser = function () {
+    let getCurrentMasterUser = function () {
         return usersRepository.getCurrentMasterUser();
     };
     
-    var createMasterUser = function (user) {
+    let createMasterUser = function (user) {
         return usersRepository.createMasterUser(user);
     };
 
-    var getMasterList = function () {
+    let getMasterList = function () {
         return usersRepository.getMasterList();
     };
 
-    var getMasterByKey = function (id) {
+    let getMasterByKey = function (id) {
         return usersRepository.getMasterByKey(id)
     };
 
-    var updateMaster = function (id, user) {
+    let updateMaster = function (id, user) {
         return usersRepository.updateMaster(id, user);
     };
 
-    var patchMaster = function (id, user) {
+    let patchMaster = function (id, user) {
         return usersRepository.patchMaster(id, user);
     };
 
-    var deleteMasterByKey = function (id) {
+    let deleteMasterByKey = function (id) {
         return usersRepository.deleteMasterByKey(id);
     };
 
-    var setMasterUser = function (id) {
+    let setMasterUser = function (id) {
         return usersRepository.setMasterUser(id);
     };
 
 
-    var getMemberList = function () {
+    let getMemberList = function () {
         return usersRepository.getMemberList();
     };
 
-    var getMasterListLight = function () {
+    let getMasterListLight = function () {
         return usersRepository.getMasterListLight();
     };
 
-    var getMemberByKey = function (id) {
+    let getMemberByKey = function (id) {
         return usersRepository.getMemberByKey(id)
     };
 
-    var updateMember = function (id, user) {
+    let updateMember = function (id, user) {
         return usersRepository.updateMember(id, user);
     };
 
-    var patchMember = function (id, user) {
+    let patchMember = function (id, user) {
         return usersRepository.patchMember(id, user);
     };
 
-    var deleteMemberByKey = function (id) {
+    let deleteMemberByKey = function (id) {
         return usersRepository.deleteMemberByKey(id);
     };
 
-    var getGroupList = function () {
+    let getGroupList = function () {
         return usersRepository.getGroupList();
     };
 
-    var getOwnMemberSettings = function () {
+    let getOwnMemberSettings = function () {
         return usersRepository.getOwnMemberSettings();
     };
 
-    var updateOwnMemberSettings = function (id, member) {
+    let updateOwnMemberSettings = function (id, member) {
         return usersRepository.updateOwnMemberSettings(id, member);
     };
 
+	let setGlobal = function () {
 
+	};
 
     module.exports = {
         login: login,
