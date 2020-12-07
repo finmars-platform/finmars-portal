@@ -801,7 +801,7 @@
 
             splitPanelExchangeService.setSplitPanelLayoutChangesCheckFn(getLayoutChanges);
 
-            vm.downloadAttributes = function(){
+            /* vm.downloadAttributes = function(){
 
                 var promises = [];
 
@@ -837,13 +837,13 @@
 
                 })
 
-            };
+            }; */
 
             vm.getView = function () {
 
                 // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
-                vm.readyStatus.layout = false;
+                vm.readyStatus.layout = false; // switched to true by rvSharedLogicHelper.onSetLayoutEnd()
 
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
@@ -858,9 +858,9 @@
                 vm.entityViewerDataService.setViewContext('split_panel');
 
 
-                vm.downloadAttributes();
+				var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
 
-                var columns = parentEntityViewerDataService.getColumns();
+				var columns = parentEntityViewerDataService.getColumns();
 
                 var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
                 var additions = parentEntityViewerDataService.getAdditions();
@@ -890,28 +890,34 @@
 
                 vm.setEventListeners();
 
+				var setLayoutProm;
+
                 vm.setLayout = function (layout) {
 
-                    vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
-                    vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+					return new Promise(async function (resolve, reject) {
 
-                    // var reportOptions = vm.entityViewerDataService.getReportOptions();
-                    var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+						vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
+						vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
-                    // Check if there is need to solve report datepicker expression
-                    if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
+						// var reportOptions = vm.entityViewerDataService.getReportOptions();
+						var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
-                        rvSharedLogicHelper.calculateReportDatesExprs().then(function () {
-                            rvSharedLogicHelper.onSetLayoutEnd();
+						// Check if there is need to solve report datepicker expression
+						if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                        }).catch(function () {
-                            rvSharedLogicHelper.onSetLayoutEnd();
+							await rvSharedLogicHelper.calculateReportDatesExprs();
+							rvSharedLogicHelper.onSetLayoutEnd();
 
-                        });
-                    // < Check if there is need to solve report datepicker expression >
-                    } else {
-                        rvSharedLogicHelper.onSetLayoutEnd();
-                    }
+							resolve();
+
+							// < Check if there is need to solve report datepicker expression >
+						} else {
+							rvSharedLogicHelper.onSetLayoutEnd();
+						}
+
+						resolve();
+
+					});
 
                 };
 
@@ -926,12 +932,16 @@
                         vm.setLayout(spLayoutData);
 
                     }).catch(function (reason) {
-                        evHelperService.getDefaultLayout(vm, 'split_panel');
+						setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
                     })
 
                 } else {
-                    evHelperService.getDefaultLayout(vm, 'split_panel');
+					setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
                 }
+
+				Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
+					$scope.$apply();
+				});
 
             };
 

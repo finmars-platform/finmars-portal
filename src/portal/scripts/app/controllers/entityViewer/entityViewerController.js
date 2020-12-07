@@ -954,13 +954,13 @@
                     });
 
                     // vm.getLayoutByUserCode(layoutUserCode);
-                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
                     // vm.getLayoutByUserCode(layoutUserCode);
-                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
                 } else {
                     // vm.getDefaultLayout();
