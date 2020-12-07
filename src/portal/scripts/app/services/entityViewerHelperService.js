@@ -238,71 +238,88 @@
 
     };
 
-    let getLayoutByUserCode = function (viewModel, userCode, $mdDialog) {
+    let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
 
-        uiService.getListLayout(viewModel.entityType, {
-            pageSize: 1000,
-            filters: {
-                user_code: userCode
-            }
+    	return new Promise(function (resolve) {
 
-        }).then(function (activeLayoutData) {
+    		uiService.getListLayout(viewModel.entityType, {
+				pageSize: 1000,
+				filters: {
+					user_code: userCode
+				}
 
-            let activeLayout = null;
+			}).then(async function (activeLayoutData) {
 
-            if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
-                activeLayout = activeLayoutData.results[0];
-            }
+				let activeLayout = null;
 
-            if (activeLayout) {
-                viewModel.setLayout(activeLayout);
+				if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
+					activeLayout = activeLayoutData.results[0];
+				}
 
-            } else {
+				if (activeLayout) {
 
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        info: {
-                            title: 'Warning',
-                            description: "Layout " + name + " is not found. Switching back to Default Layout."
-                        }
-                    }
-                }).then(function (value) {
+					await viewModel.setLayout(activeLayout);
 
-                    viewModel.getDefaultLayout()
+					resolve();
 
-                })
+				} else {
 
-            }
+					$mdDialog.show({
+						controller: 'InfoDialogController as vm',
+						templateUrl: 'views/info-dialog-view.html',
+						parent: angular.element(document.body),
+						clickOutsideToClose: false,
+						preserveScope: true,
+						autoWrap: true,
+						skipHide: true,
+						multiple: true,
+						locals: {
+							info: {
+								title: 'Warning',
+								description: "Layout " + name + " is not found. Switching back to Default Layout."
+							}
+						}
+					}).then(async function (value) {
 
-        });
+						await getDefaultLayout(viewModel, viewContext);
+
+						resolve();
+
+					})
+
+				}
+
+			});
+
+		});
 
     };
 
     let getDefaultLayout = function (viewModel, viewContext) {
 
-        uiService.getDefaultListLayout(viewModel.entityType).then(function (defaultLayoutData) {
+    	return new Promise(function (resolve, reject) {
 
-            var defaultLayout = null;
-            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+    		uiService.getDefaultListLayout(viewModel.entityType).then(async function (defaultLayoutData) {
 
-                defaultLayout = defaultLayoutData.results[0];
-                if (viewContext === 'split_panel') {
-                    middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
-                }
+				let defaultLayout = null;
+				if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
 
-            }
+					defaultLayout = defaultLayoutData.results[0];
+					if (viewContext === 'split_panel') {
+						middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
+					}
 
-            viewModel.setLayout(defaultLayout);
+				}
 
-        });
+				await viewModel.setLayout(defaultLayout);
+
+				resolve();
+
+			}).catch(function (error) {
+				reject(error);
+			});
+
+		});
 
     };
 
