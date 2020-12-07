@@ -10,6 +10,7 @@
     var uiService = require('../../services/uiService');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evEvents = require('../../services/entityViewerEvents');
+    var ScrollHelper = require('../../helpers/scrollHelper');
 
     var metaService = require('../../services/metaService');
 
@@ -42,6 +43,8 @@
         var currentColumnsWidth = columns.length;
         var filters = vm.entityViewerDataService.getFilters();
         var groups = vm.entityViewerDataService.getGroups();
+
+		var scrollHelper;
 
         vm.attrsList = [];
 
@@ -380,171 +383,103 @@
         var selectedColumns = [];
         var selectedFilters = [];
 
+		var isAttrInsideOfAnotherGroup = function (attrKey, groupType) {
+
+			let group1, group2;
+
+			switch (groupType) {
+				case 'groups':
+					group1 = columns;
+					group2 = filters;
+					break;
+
+				case 'columns':
+					group1 = groups;
+					group2 = filters;
+					break;
+
+				case 'filters':
+					group1 = groups;
+					group2 = columns;
+					break;
+			}
+
+			let attrIndex = group1.findIndex(attr => {return attr.key === attrKey});
+
+			if (attrIndex < 0) {
+				attrIndex = group2.findIndex(attr => {return attr.key === attrKey});
+			}
+
+			return attrIndex > -1;
+
+		}
+
+		var updateSelectedAttr = function (attr, selectedAttrs) {
+
+			const existingAttrIndex = selectedAttrs.findIndex(selAttr => attr.key === selAttr.key);
+
+			if (existingAttrIndex < 0) {
+				selectedAttrs.push(attr);
+			} else {
+				selectedAttrs[existingAttrIndex] = attr
+			}
+
+		};
+
         var separateSelectedAttrs = function (attributes, attrsVmKey) {
-            console.log('#66 separateSelectedAttrs attributes', attributes)
-            console.log('#66 separateSelectedAttrs attrsVmKey', attrsVmKey)
-            console.log('#66 separateSelectedAttrs selectedGroups', selectedGroups)
-            console.log('#66 separateSelectedAttrs vm.selectedGroups', vm.selectedGroups)
 
             for (var i = 0; i < attributes.length; i++) {
-                var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute['attrsVmKey'] = attrsVmKey;
+
+            	var attribute = JSON.parse(angular.toJson(attributes[i]));
+                attribute['attrsVmKey'] = attrsVmKey; // used inside HTML for vm.onSelectedAttrsChange()
 
                 // attrsVmKey used in vm.updateAttrs and selectedDnD
                 if (attribute.columns) {
-                    const existingColumnIndex = selectedColumns.findIndex(col => col.key === attribute.key);
-                    if (existingColumnIndex < 0) {
-                        selectedColumns.push(attribute);
-                    } else {
-                        selectedColumns[existingColumnIndex] = attribute;
-                    }
-                    // console.log('#66 separateSelectedAttrs selectedColumns', selectedColumns, attribute)
+					updateSelectedAttr(attribute, selectedColumns);
+
                 } else if (attribute.groups) {
-                    const existingGroupIndex = selectedGroups.findIndex(group => group.key === attribute.key);
-                    if (existingGroupIndex < 0) {
-                        selectedGroups.push(attribute);
-                    } else {
-                        selectedGroups[existingGroupIndex] = attribute;
-                    }
-                    console.log('#66 separateSelectedAttrs selectedGroups', selectedGroups, attribute)
+					updateSelectedAttr(attribute, selectedGroups);
+
                 }
 
                 if (attribute.filters) {
-                    const existingFilterIndex = selectedFilters.findIndex(filter => filter.key === attribute.key);
-                    if (existingFilterIndex < 0) {
-                        selectedFilters.push(attribute);
-                    } else {
-                        selectedFilters[existingFilterIndex] = attribute;
-                    }
-                    // console.log('#66 separateSelectedAttrs selectedFilters', selectedFilters, attribute)
+					updateSelectedAttr(attribute, selectedFilters);
                 }
+
             }
 
         };
 
-        var isAttributeInsideAnotherGroup = function (attr, groupType) {
-            switch (groupType) {
-                case 'groups':
-                    if (attr.columns || attr.filters) {
-                        return true;
-                    }
-                case 'columns':
-                    if (attr.groups || attr.filters) {
-                        return true;
-                    }
-                case 'filters':
-                    if (attr.columns || attr.groups) {
-                        return true;
-                    }
-            }
-
-            return false
-        }
-
-        var orderSelectedGroups = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
-
-            if (groupType === 'columns') {
-
-                console.log('#66 orderSelectedGroups insideTable selectedAttrs', insideTable, JSON.parse(JSON.stringify(selectedAttrs)));
-            }
+        var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
 
             // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
+			let selectedAttrsObj = {};
+            let inactiveAttrs = [];
 
-            const selectedAttrsObject = selectedAttrs.reduce((acc, item) => {
+            selectedAttrs.forEach((attr) => {
 
-                if (!item[groupType] && isAttributeInsideAnotherGroup(item, groupType)) { // remove attribute that inside another group
+                if (attr[groupType]) {
+					selectedAttrsObj[attr.key] = attr
 
-                    return acc;
+                } else if (!isAttrInsideOfAnotherGroup(attr.key, groupType)) {
 
-                } else {
+					inactiveAttrs.push(attr);
 
-                    return {...acc, [item.key]: item}
-                }
+				}
 
-            }, {});
+            });
 
+			let orderedAttrs = insideTable.map(function (attr) {
 
-            // console.log('#66 selectedAttrsHash', selectedAttrsHash)
+				return selectedAttrsObj[attr.key];
 
-            const orderedSelAttrs = insideTable.reduce((acc, item) => {
+			});
 
-                // depending on attribute state: order or delete it
+			orderedAttrs = orderedAttrs.concat(inactiveAttrs);
 
-                if (selectedAttrsObject.hasOwnProperty(item.key)) {
-                    const selectedItem = selectedAttrsObject[item.key];
-                    delete selectedAttrsObject[item.key]; // if attribute unselected
+            return orderedAttrs;
 
-                    selectedAttrsObject[groupType]
-
-
-
-                    return [...acc, selectedItem];
-                }
-
-                return acc;
-            },[])
-
-
-
-            const res = [...orderedSelAttrs, ...Object.values(selectedAttrsObject)];
-            // const res = [...orderedSelAttrs];
-            //console.log('#66 orderSelectedGroups', insideTable, selectedAttrs, res);
-
-            return res;
-
-/*            var orderedSelAttrs = [];
-
-            var a;
-            for (a = 0; a < insideTable.length; a++) {
-                var attr = insideTable[a];
-
-                for (var i = 0; i < selectedAttrs.length; i++) {
-                    var sAttr = selectedAttrs[i];
-
-                    if (sAttr.key === attr.key) {
-                        orderedSelAttrs.push(sAttr);
-                        break;
-                    }
-                }
-
-            }
-            console.log('#66 orderSelectedGroups', insideTable, selectedAttrs, orderedSelAttrs);
-            return orderedSelAttrs;*/
         };
-
-        var removeDuplicateFields = function (groups, columns) {
-            return columns.filter(column => !groups.find(group => group.key === column.key));
-        };
-
-        const getSelectedAttrsByAreas = function (viewModel) {
-            const attrTypes = ['entityAttrs', 'attrs', 'userTextFields', 'userDateFields'];
-
-            const selectedAttributes = attrTypes.reduce((acc, attrsVmKey) => {
-                const attributes = viewModel[attrsVmKey];
-                const attributesCopies = attributes.map(attribute => JSON.parse(angular.toJson(attribute)))
-                const selectedAttrs = attributesCopies.filter(attribute => attribute.groups || attribute.columns || attribute.filters)
-
-                return [...acc, ...selectedAttrs];
-            }, []);
-
-            const selectedAttrsByAreas =  selectedAttributes.reduce((acc,attribute) => {
-                if (attribute.filters) {
-                    acc.selectedFilters.push(attribute)
-                }
-
-                if (attribute.columns) {
-                    acc.selectedColumns.push(attribute)
-                } else if (attribute.groups) {
-                    acc.selectedGroups.push(attribute);
-                }
-
-                return acc;
-            }, {selectedGroups: [], selectedColumns:[], selectedFilters: []})
-
-            //console.log('#66 getSelectedAttrsByAreas', selectedAttrsByAreas)
-
-
-        }
 
         vm.selectedGroups = [];
         vm.selectedColumns = [];
@@ -552,20 +487,9 @@
 
         var getSelectedAttrs = function () {
 
-            getSelectedAttrsByAreas(vm);
-            // console.log('#66 getSelectedAttrs groups', selectedGroups, vm.selectedGroups)
-            // console.log('#66 getSelectedAttrs columns', selectedColumns, vm.selectedColumns)
-            // console.log('#66 getSelectedAttrs filters', filters, selectedFilters, vm.selectedFilters)
-
-/*            selectedGroups = [];
-            selectedColumns = [];
-            selectedFilters = [];*/
-
             selectedGroups = vm.selectedGroups;
             selectedColumns = vm.selectedColumns;
             selectedFilters = vm.selectedFilters;
-
-
 
             separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
             separateSelectedAttrs(vm.attrs, 'attrs');
@@ -574,25 +498,10 @@
             separateSelectedAttrs(vm.userNumberFields, 'userNumberFields');
             separateSelectedAttrs(vm.userDateFields, 'userDateFields');
 
-            // selectedColumns = removeDuplicateFields(groups, selectedColumns);
-            //console.log('#66 filtered selectedColumns', selectedColumns)
-
-
             // Order selected as they are inside the table
-            // if (groups.length > 0) {
-                vm.selectedGroups = orderSelectedGroups(groups, selectedGroups, 'groups');
-            // }
-            // if (columns.length > 0) {
-                vm.selectedColumns = orderSelectedGroups(columns, selectedColumns, 'columns');
-            // }
-            // if (filters.length > 0) {
-                vm.selectedFilters = orderSelectedGroups(filters, selectedFilters, 'filters');
-            // }
-
-
-            console.log('#66 getSelectedAttrs groups', groups, selectedGroups, vm.selectedGroups)
-            console.log('#66 getSelectedAttrs columns', columns, selectedColumns, vm.selectedColumns)
-            console.log('#66 getSelectedAttrs filters', filters, selectedFilters, vm.selectedFilters)
+			vm.selectedGroups = organizeSelectedAttrs(groups, selectedGroups, 'groups');
+			vm.selectedColumns = organizeSelectedAttrs(columns, selectedColumns, 'columns');
+			vm.selectedFilters = organizeSelectedAttrs(filters, selectedFilters, 'filters');
 
         };
 
@@ -625,9 +534,7 @@
             eventListeners: function () {
 
                 var exist = false;
-                var columnExist = false;
-                var groupExist = false;
-                var filterExist = false;
+                var existedAttrGroup = '';
 
                 this.dragula.on('over', function (elem, container, source) {
                     $(container).addClass('active');
@@ -643,14 +550,14 @@
                     var identifier = $(elem).attr('data-key-identifier');
                     var i;
 
-
                     exist = false;
+
                     if (target === contentWrapElement.querySelector('#columnsbag') ||
                         target === contentWrapElement.querySelector('.g-columns-holder')) {
                         for (i = 0; i < columns.length; i = i + 1) {
                             if (columns[i].key === identifier) {
                                 exist = true;
-                                columnExist = true;
+								existedAttrGroup = 'column';
                             }
                             /*if (columns[i].name === name) {
                                 exist = true;
@@ -666,7 +573,7 @@
                             }*/
                             if (groups[i].key === identifier) {
                                 exist = true;
-                                groupExist = true;
+								existedAttrGroup = 'group';
                             }
                         }
                     }
@@ -680,7 +587,7 @@
 
                             if (filters[i].key === identifier) {
                                 exist = true;
-                                filterExist = true;
+								existedAttrGroup = 'filter';
                             }
                         }
                     }
@@ -765,13 +672,9 @@
 
                         var errorMessage = 'Item should be unique';
 
-                        if (columnExist) {
-                            errorMessage = 'There is already such column in Column Area';
-                        } else if (groupExist) {
-                            errorMessage = 'There is already such group in Grouping Area';
-                        } else if (filterExist) {
-                            errorMessage = 'There is already such filter in Filter Area';
-                        }
+                        if (existedAttrGroup) {
+							errorMessage = 'There is already such ' + existedAttrGroup + ' in Filter Area';
+						}
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
@@ -838,7 +741,7 @@
         };
 
         // scroll while dragging
-        var DnDScrollElem;
+        /* var DnDScrollElem;
         var DnDScrollTimeOutId;
         var scrollSize = null;
 
@@ -866,7 +769,7 @@
                 scrollSize = null;
             }, 30);
 
-        };
+        }; */
         // < scroll while dragging >
 
         var selectedDnD = {
@@ -900,7 +803,7 @@
                 });
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', DnDWheel);
+                    scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('drop', function (elem, target, source, nextSibling) {
@@ -938,36 +841,71 @@
                                         vm[attrsVmKey][i].columns = false;
                                         vm[attrsVmKey][i].filters = true;
                                         GCFItems = filters;
+
                                         updateGCFMethod = function () {
-                                            vm.entityViewerDataService.setFilters(GCFItems);
+                                        	vm.entityViewerDataService.setFilters(GCFItems);
                                         };
+
                                         break;
                                 }
 
                                 var attrData = JSON.parse(JSON.stringify(vm[attrsVmKey][i]));
+								var insertAttr = true;
+
+                                if (nextSibling) {
+									var nextSiblingKey = nextSibling.dataset.attributeKey;
+								}
 
                                 attributeChanged = true;
 
-                                for (var a = 0; a < GCFItems.length; a++) { // remove same element from selected group
-                                    if (GCFItems[a].key === attributeKey) {
-                                        GCFItems.splice(a, 1);
+								for (var a = 0; a < GCFItems.length; a++) {
+
+								 	if (GCFItems[a].key === attributeKey) {
+
+										GCFItems[a].groups = attrData.groups
+										GCFItems[a].columns = attrData.columns
+										GCFItems[a].groups = attrData.groups
+
+										if (nextSiblingKey === attributeKey) { // attr already in right place
+
+											insertAttr = false;
+
+										} else { // remove attribute before inserting it into another index
+
+											attrData = JSON.parse(JSON.stringify(GCFItems[a]));
+											GCFItems.splice(a, 1);
+
+										}
+
                                         break;
                                     }
+
                                 }
 
-                                if (nextSibling) {
-                                    var nextSiblingKey = nextSibling.dataset.attributeKey;
+                                if (insertAttr) {
 
-                                    for (var a = 0; a < GCFItems.length; a++) {
-                                        var GCFElem = GCFItems[a];
+                                	if (nextSibling) {
 
-                                        if (GCFElem.key === nextSiblingKey) {
-                                            GCFItems.splice(a, 0, attrData);
-                                            updateGCFMethod();
-                                            break;
-                                        }
-                                    }
+                                		for (var a = 0; a < GCFItems.length; a++) {
+
+                                			var GCFElem = GCFItems[a];
+
+											if (GCFElem.key === nextSiblingKey) {
+
+												GCFItems.splice(a, 0, attrData);
+												break;
+
+											}
+
+										}
+
+									} else {
+										GCFItems.push(attrData);
+									}
+
                                 }
+
+								updateGCFMethod();
 
                                 break;
                             }
@@ -1076,7 +1014,7 @@
                     }
                     // < dragging from filters >
 
-                    if (attributeChanged) { // does not trigger on order change
+                    if (attributeChanged) { // do not trigger on order change
 
                         vm.updateAttrs(vm[attrsVmKey]);
                         drake.remove(); // adds delay if called when only attributes order changed in group
@@ -1086,14 +1024,17 @@
                 });
 
                 drake.on('dragend', function () {
-                    if (sourceContainer) {
+
+                	if (sourceContainer) {
                         sourceContainer.classList.remove('dragged-out-card-space');
                     }
 
                     if (containerWithShadow) {
                         containerWithShadow.classList.remove('remove-card-space');
                     }
-                    document.removeEventListener('wheel', DnDWheel);
+
+                    scrollHelper.disableDnDWheelScroll();
+
                 });
 
             },
@@ -1534,11 +1475,17 @@
         };
 
         vm.initDnd = function () {
-            setTimeout(function () {
-                DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
-                viewConstructorDnD.init();
+
+        	setTimeout(function () {
+
+        		var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
+        		scrollHelper.setDnDScrollElem(DnDScrollElem);
+
+        		viewConstructorDnD.init();
                 selectedDnD.init();
+
             }, 500);
+
         };
 
         vm.cancel = function () {
@@ -1554,6 +1501,8 @@
         };
 
         var init = function () {
+
+			scrollHelper = new ScrollHelper();
 
             vm.getAttributes();
 
