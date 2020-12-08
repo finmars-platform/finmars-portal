@@ -437,6 +437,9 @@
                 case 'report_viewer_matrix':
                     verboseName = 'Report Viewer Matrix';
                     break;
+                case 'report_viewer_table_chart':
+                    verboseName = 'Report Viewer Table Chart';
+                    break;
                 case 'entity_viewer':
                     verboseName = 'Entity Viewer';
                     break;
@@ -1169,6 +1172,10 @@
             report_viewer_pie_chart: {
                 editorController: 'DashboardConstructorReportViewerChartsComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html'
+            },
+            report_viewer_table_chart: {
+                editorController: 'DashboardConstructorReportViewerTableChartComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-table-chart-component-dialog-view.html'
             },
             report_viewer_matrix: {
                 editorController: 'DashboardConstructorReportViewerMatrixComponentDialogController as vm',
