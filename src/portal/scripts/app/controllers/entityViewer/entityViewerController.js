@@ -237,7 +237,7 @@
                         var selectedRows = flatList.filter(function (row) {
                             return row.___is_activated;
                         });
-
+						console.log("testing manageInstrumentProps selectedRows", selectedRows);
                         selectedRows.forEach(function (row) {
 
                             var obj = vm.entityViewerDataService.getObject(row.___id, row.___parentId);
@@ -246,18 +246,21 @@
 
                                 case 'deactivate':
 
-                                    obj.is_active = false;
+                                	if (obj.is_active) {
+										obj.is_active = false;
 
-                                    instrumentService.patch(obj.id,
-                                        {
-                                            is_active: obj.is_active
-                                        }
-                                    );
+										instrumentService.patch(obj.id,
+											{
+												is_active: obj.is_active
+											}
+										);
+									}
 
                                     break;
 
                                 case 'activate':
-                                    if (obj.is_active) {
+
+                                	if (!obj.is_active) {
 
                                         obj.is_active = true;
 
