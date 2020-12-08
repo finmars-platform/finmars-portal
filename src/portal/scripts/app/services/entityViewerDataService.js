@@ -1079,7 +1079,7 @@
 
                     entityViewerOptions = {
                         complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
-                        entity_filters: ['disabled', 'deleted', 'inactive']
+                        entity_filters: ['enabled', 'disabled', 'active', 'inactive']
                     }
 
                 } else if (!entityViewerOptions.complex_transaction_filters) {
@@ -1089,7 +1089,7 @@
 
                 } else if (!entityViewerOptions.entity_filters){
 
-                    entityViewerOptions.entity_filters = ['disabled', 'deleted', 'inactive'];
+                    entityViewerOptions.entity_filters = ['enabled', 'disabled', 'active', 'inactive'];
                 }
 
                 setEntityViewerOptions(entityViewerOptions);
