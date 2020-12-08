@@ -119,7 +119,7 @@
                                     class="entity-editor-row">
                                     <div class="ev-data-field
 								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
-                                        data-ng-repeat="field in tab.layout.fields track by $index"
+                                        data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
                                         flex="{{vm.bindFlex(tab, field)}}"
                                         data-ng-if="vm.checkFieldRender(tab, row, field)">
                                         <bind-field-control entity-type="vm.entityType" entity="vm.entity"
