@@ -180,14 +180,14 @@
                     layoutUserCode: null
                 }
             })
-            .state('app.data.pricing-policy', {
+            /* .state('app.data.pricing-policy', {
                 url: '/pricing-policy',
                 templateUrl: 'views/data/data-pricing-policy-view.html',
                 controller: 'DataPricingPolicyController as vm',
                 params: {
                     layoutUserCode: null
                 }
-            })
+            }) */
             .state('app.data.complex-transaction', {
                 url: '/complex-transactions',
                 templateUrl: 'views/data/data-complex-transaction-view.html',

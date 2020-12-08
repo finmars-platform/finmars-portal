@@ -44,7 +44,7 @@
                 'app.data.responsible',
                 'app.data.instrument',
                 'app.data.instrument-type',
-                'app.data.pricing-policy',
+                // 'app.data.pricing-policy',
                 'app.data.complex-transaction',
                 'app.data.transaction',
                 'app.data.transaction-type',

@@ -370,9 +370,9 @@
                         case 'app.data.instrument-type':
                             return "INSTRUMENT TYPES";
                             break;
-                        case 'app.data.pricing-policy':
+                        /* case 'app.data.pricing-policy':
                             return "PRICING POLICY";
-                            break;
+                            break; */
                         case 'app.data.transaction-type':
                             return "TRANSACTION TYPE";
                             break;
