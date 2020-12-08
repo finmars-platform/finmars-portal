@@ -467,10 +467,18 @@
 
                         const editLayout = await uiService.getEditLayout(entitytype);
                         console.log('editLayout', editLayout, entitytype)
-                        const tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
+						let bigDrawerWidthPercent;
+                        let fixedAreaColumns;
 
-                        const fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
-                        const bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
+                        if (editLayout.results.length) {
+
+                        	const tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
+							fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+
+							bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
+
+						}
+
 
                         console.log('vm', vm)
                         $bigDrawer.show({

@@ -20,9 +20,10 @@
 
 			viewportWidth = window.innerWidth;
 
-			if (!drawerWidth) {
+			if (!drawerWidth && drawerWidth !== 0) {
 
 				drawerWidth = (viewportWidth - sidenavWidth) * 0.9 + 'px';
+				drawerWrap.style.width = drawerWidth
 
 			}
 
@@ -72,7 +73,7 @@
                 let ctrl;
                 drawerOptions = options;
 
-                tpl = $templateCache.get(options.templateUrl);
+                tpl = $templateCache.get(drawerOptions.templateUrl);
 
                 templateScope = $rootScope.$new();
 
@@ -81,9 +82,9 @@
                     // $bigDrawer: Object.assign({}, _this, {_id: lastId})
                 };
 
-                let locals = Object.assign(defaultLocals, options.locals);
+                let locals = Object.assign(defaultLocals, drawerOptions.locals);
 
-                ctrl = $controller(options.controller, locals);
+                ctrl = $controller(drawerOptions.controller, locals);
 
 
                 /* let viewportWidth = window.innerWidth;
@@ -114,13 +115,13 @@
                 $(drawerContainer).html(tpl);
                 $(drawerContainer).children().data('$ngControllerController', ctrl);
 
-				if (options.drawerWidth) {
-					setDrawerWidth(options.drawerWidth);
+				if (drawerOptions.drawerWidth || drawerOptions.drawerWidth === 0) {
+					setDrawerWidth(drawerOptions.drawerWidth);
 				}
 
 				calcDrawerContainerSize();
 
-				if (options.addResizeButton) {
+				if (drawerOptions.addResizeButton) {
 
 					resizeButton = document.createElement('div');
 					resizeButton.classList.add('big-drawer-resize-button', 'onResizeButtonClick');
@@ -172,6 +173,11 @@
                 $(_this.rootElement).removeClass('overflow-hidden');
 
             }, drawerWidthAnimationDuration);
+
+            // reset variables on drawer close
+			resizeButton = null;
+			drawerWidth = null; viewportWidth = null; drawerWidth = null; drawerHeight = null;
+			drawerOptions = {};
 
 			window.removeEventListener("resize", bigDrawerOnWindowResize);
 
