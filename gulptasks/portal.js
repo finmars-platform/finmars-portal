@@ -111,7 +111,7 @@
     });
 
     gulp.task('portal-profile-HTML-to-JS', function () {
-        profileTasks.forumHtmlToJs();
+        return profileTasks.forumHtmlToJs();
     });
 
     function left_pad(num) {
