@@ -96,7 +96,8 @@
         <div layout="row"
              class="entity-editor-row">
 
-            <div data-ng-if="vm.entityType !== 'currency' || vm.fixedAreaPopup.tabColumns < 6"
+            <div class="cursor-pointer"
+                 data-ng-if="vm.entityType !== 'currency' || vm.fixedAreaPopup.tabColumns < 6"
                  data-ng-class="{
                         'width-33': vm.fixedAreaPopup.tabColumns === 6,
                         'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
@@ -108,13 +109,15 @@
                  popup-y="top"
                  offset-y="-24"
                  popup-data="vm.fixedAreaPopup"
+                 prevent-default="'true'"
                  on-save-callback="vm.onPopupSaveCallback()">
-                <text-input
-                        label="{{vm.entityTypeSlug()}}"
-                        model="vm.getEntityPropertyByDefault()"
-                        placeholder-text="{{vm.getPlaceholderByDefault()}}"
-                        small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
-                ></text-input>
+
+                <text-input label="{{vm.entityTypeSlug()}}"
+                            model="vm.getEntityPropertyByDefault()"
+                            placeholder-text="{{vm.getPlaceholderByDefault()}}"
+                            small-options="{dialogParent: '.dialog-containers-wrap', readonly: true}"
+                            style="pointer-events: none;">
+                </text-input>
 
             </div>
 

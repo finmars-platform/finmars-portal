@@ -655,7 +655,8 @@ app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDire
 app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
-app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
+// app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
+app.directive('popup', ['$compile', require('./app/directives/popupDirective')]);
 
 // Inputs
 
@@ -664,7 +665,6 @@ app.directive('numberInput', ['$mdDialog', require('./app/directives/customInput
 app.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
 app.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
 app.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
-app.directive('popup', ['$compile', require('./app/directives/customInputs/popupDirective')]);
 
 // Inputs End
 
