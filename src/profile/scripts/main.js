@@ -28,6 +28,6 @@
     app.controller('DeleteMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/deleteMasterUserDialogController')]);
     app.controller('RenameMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameMasterUserDialogController')]);
 
-    require('./templates.min.js');
+    // require('./templates.min.js');
 
 }());
