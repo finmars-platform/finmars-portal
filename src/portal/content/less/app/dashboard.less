@@ -27,6 +27,29 @@
   .dashboard-tabs-holder {
     flex: 0 1 100%;
     overflow: auto;
+
+    md-tabs-canvas {
+      background: rgba(242, 242, 242, 1);
+      border-bottom: 1px solid #e0e0e0;
+      border-top: 1px solid #e0e0e0;
+    }
+    .md-tab {
+      cursor: pointer;
+      &:hover {
+        background: rgba(240,90,34,0.11);
+      }
+    }
+    .md-tab.md-active {
+      color: rgb(240, 90, 34);
+      font-family: Roboto, "Helvetica Neue", sans-serif;
+      font-weight: 500;
+      font-style: normal;
+
+    }
+    md-ink-bar {
+      color: rgb(240, 90, 34);
+      background: rgb(240, 90, 34);
+    }
   }
 
   .dashboard-top-row {
@@ -135,20 +158,29 @@
 
   .dashboard-component-header {
     position: relative;
-    height: 30px;
+    height: 60px;
     width: 100%;
-    padding-top: 5px;
+    padding-top: 20px;
+    box-sizing: border-box;
+    border-top: 1px solid #e0e0e0;
+
 
     .dashboard-component-name {
-      text-align: center;
+      text-align: left;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
+      font-weight: 500;
+      font-style: normal;
+      font-size: 16px;
+      letter-spacing: 0.4px;
+      padding-left: 16px;
+      font-family: Roboto, "Helvetica Neue", sans-serif;
     }
 
     .dashboard-component-header-left {
       position: absolute;
-      top: 0;
+      top: 20px;
       right: 0;
 
       button.md-button {
@@ -157,6 +189,18 @@
         height: 23px;
         margin: 0 0 0 5px;
         padding: 0;
+
+        margin-right: 16px;
+
+        ng-md-icon {
+          fill: #747474;
+        }
+
+        &.md-warn {
+          ng-md-icon {
+            fill: #fff;
+          }
+        }
       }
     }
   }
@@ -209,6 +253,7 @@
     height: 36px;
     box-sizing: border-box;
     padding-top: 4px;
+
     &:hover {
       background: #ccc;
     }
@@ -234,7 +279,9 @@
     overflow: hidden;
   }
 
-};
+}
+
+;
 
 .report-viewer-charts-scrollable-container {
   height: 100%;
@@ -249,8 +296,8 @@
 
 .control-clear-btn {
   position: absolute;
-  right: 4px;
-  top: 1px;
+  right: 8px;
+  top: 8px;
   margin: 0;
   width: 24px;
   min-width: 24px;
@@ -262,10 +309,12 @@
   line-height: 24px;
   border-radius: 12px;
   z-index: 1;
+
   &:hover {
     //opacity: .8;
   }
 }
+
 button.md-button.control-clear-btn {
   &:hover {
     background: #f1f1f1;
@@ -285,7 +334,9 @@ button.md-button.control-clear-btn {
   opacity: 0.9;
   pointer-events: none;
   z-index: 1101;
-};
+}
+
+;
 
 .bar-chart-axis {
   font-size: 10px;
@@ -295,7 +346,8 @@ button.md-button.control-clear-btn {
   md-input-container {
     width: 200px;
     margin: 0 10px;
-  };
+  }
+;
 }
 
 .dashboard-chart-name-h {
@@ -337,7 +389,9 @@ button.md-button.control-clear-btn {
   column-count: 2;
   padding-left: 0;
   margin-top: 0;
-};
+}
+
+;
 
 .pie-chart-bottom-legends {
   .pie-chart-legends-holder {
@@ -350,7 +404,9 @@ button.md-button.control-clear-btn {
   padding-left: 18px;
   margin-bottom: 8px;
   list-style-type: none;
-};
+}
+
+;
 
 .pie-chart-legend-color {
   position: absolute;
@@ -359,7 +415,9 @@ button.md-button.control-clear-btn {
   top: 4px;
   left: 0;
   border-radius: 2px;
-};
+}
+
+;
 
 .dashboard-linked-filters-container {
   display: flex;
@@ -381,5 +439,43 @@ button.md-button.control-clear-btn {
       list-style-type: none;
       margin-bottom: 8px;
     }
+  }
+}
+
+
+button.md-button.dashboard-button-set-button {
+  min-width: 60px;
+  min-height: 36px;
+  margin: 6px 4px;
+  padding: 2px 16px 2px 16px;
+  background: inherit;
+  background-color: rgba(65, 133, 244, 0);
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(176, 176, 176, 1);
+  border-radius: 4px;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  font-family: 'Roboto-Bold', 'Roboto Bold', 'Roboto', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: #F05A22;
+
+  &:hover {
+    background-color: rgba(240, 90, 34, 0.12);
+  }
+}
+dashboard-report-viewer-grand-total {
+  .g-group-table-holder {
+    overflow: inherit;
+  }
+
+  .custom-input-container.custom-input-is-disabled {
+    opacity: 1;
+  }
+  .custom-input {
+    font-weight: bold;
   }
 }

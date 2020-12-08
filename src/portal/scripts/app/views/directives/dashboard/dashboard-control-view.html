@@ -1,39 +1,45 @@
 <div>
 
-    <div class="dashboard-component-name text-center">
-        <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
-        <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
-    </div>
+<!--    <div class="dashboard-component-name text-center">-->
+<!--        <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>-->
+<!--        <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>-->
+<!--    </div>-->
 
     <div data-ng-if="componentData.settings.value_type == 10">
 
-        <md-input-container class="md-block no-error-spacer textarea-bind-field">
-            <label data-ng-bind="item.data.name"></label>
-            <input type="text"
-                   data-ng-change="valueChanged()"
-                   data-ng-model="item.data.store.value">
-        </md-input-container>
+        <text-input  label="{{customName}}"
+                     model="item.data.store.value"
+                     small-options="{notNull: options.notNull}"
+                     on-change-callback="valueChanged()"
+        ></text-input>
 
     </div>
 
     <div data-ng-if="componentData.settings.value_type == 20">
 
-        <md-input-container class="md-block">
-            <label data-ng-bind="item.data.name"></label>
-            <input
-                    data-ng-change="valueChanged()"
-                    data-ng-model="item.data.store.value"
-                    data-float-numbers>
-        </md-input-container>
+        <number-input  label="{{customName}}"
+                     model="item.data.store.value"
+                     small-options="{notNull: options.notNull}"
+                     on-change-callback="valueChanged()"
+        ></number-input>
 
     </div>
 
     <div data-ng-if="componentData.settings.value_type == 40">
 
-        <md-input-container class="field-date-pick-holder no-error-spacer md-block">
-            <label data-ng-bind="item.data.name"></label>
-            <zh-date-picker data-date-value="item.data.store.value" callback-method="valueChanged()"></zh-date-picker>
-        </md-input-container>
+        <date-input
+                label="{{customName}}"
+                model="item.data.store.value"
+                custom-buttons="buttons"
+                custom-styles="customStyles"
+                small-options="{notNull: options.notNull}"
+                on-change-callback="valueChanged()"
+        ></date-input>
+
+<!--        <md-input-container class="field-date-pick-holder no-error-spacer md-block">-->
+<!--            <label data-ng-bind="item.data.name"></label>-->
+<!--            <zh-date-picker data-date-value="item.data.store.value" callback-method="valueChanged()"></zh-date-picker>-->
+<!--        </md-input-container>-->
 
     </div>
 
@@ -90,7 +96,7 @@
 
                 <entity-search-select
                         data-item="item.data.store.value"
-                        data-label="item.data.store.label"
+                        data-label="customName"
                         data-input-text="item.data.store.name"
                         data-item-name="item.data.store.name"
                         data-entity-type="entityType"

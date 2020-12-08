@@ -107,6 +107,7 @@ app.controller('DashboardConstructorReportViewerComponentDialogController', ['$s
 app.controller('DashboardConstructorReportViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerSplitPanelComponentDialogController')]);
 app.controller('DashboardConstructorReportViewerGrandTotalComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerGrandTotalComponentDialogController')]);
 app.controller('DashboardConstructorReportViewerMatrixComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerMatrixComponentDialogController')]);
+app.controller('DashboardConstructorReportViewerTableChartComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerTableChartComponentDialogController')]);
 app.controller('DashboardConstructorReportViewerChartsComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerChartsComponentDialogController')]);
 
 app.controller('DashboardConstructorEntityViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerComponentDialogController')]);
@@ -132,11 +133,13 @@ app.directive('dashboardReportViewer', ['$mdDialog', require('./app/directives/d
 app.directive('dashboardReportViewerSplitPanel', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerSplitPanelDirective')]);
 app.directive('dashboardReportViewerGrandTotal', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerGrandTotalDirective')]);
 app.directive('dashboardReportViewerMatrix', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerMatrixDirective')]);
+app.directive('dashboardReportViewerTableChart', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerTableChartDirective')]);
 app.directive('dashboardReportViewerCharts', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerChartsDirective')]);
 
 app.controller('DashboardReportViewerController', ['$scope', '$mdDialog', '$transitions', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
 
 app.directive('reportViewerMatrix', ['$mdDialog', require('./app/directives/reportViewerMatrixDirective')]);
+app.directive('reportViewerTableChart', ['$mdDialog', require('./app/directives/reportViewerTableChartDirective')]);
 app.directive('reportViewerBarsChart', ['d3Service', require('./app/directives/reportViewer/reportViewerBarsChart')]);
 app.directive('reportViewerPieChart', ['d3Service', require('./app/directives/reportViewer/reportViewerPieChart')]);
 
