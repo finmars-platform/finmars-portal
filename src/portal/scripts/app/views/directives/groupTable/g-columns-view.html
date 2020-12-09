@@ -839,9 +839,9 @@
                 &mdash;
             </md-button>
 
-            <md-button class="g-group-button">
-                <div class="flex-row flex-i-center">{{column.name}}</div>
-                <div data-ng-if="isSortable(column) && checkReportSortButton(column, $index)">
+            <md-button class="g-group-button flex-row" data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
+                <div>{{column.name}}</div>
+                <div class="sort">
                     <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
                     <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
                 </div>
