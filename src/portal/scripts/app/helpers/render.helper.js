@@ -14,7 +14,7 @@
         'partiallyVisibleIcon': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48"><path d="M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"></path><path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg>',
         'deletedIcon': '<span class="entity-viewer-table-icon material-icons">delete</span>',
         'disabledIcon': '<span class="entity-viewer-table-icon material-icons">visibility_off</span>',
-        'disabledIcon': '<span class="entity-viewer-table-icon material-icons">pause</span>'
+        'inactiveIcon': '<span class="entity-viewer-table-icon material-icons">pause</span>'
     };
 
     /* var checkIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>';

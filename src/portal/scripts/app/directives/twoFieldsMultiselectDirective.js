@@ -255,7 +255,9 @@
 								if (res.status === "agree") {
 
 									scope.model = res.selectedItems
-									getSelectedOptionsIds();
+									if (scope.model) {
+										getSelectedOptionsIds();
+									}
 
 									if (scope.selectedItemsIndication === 'chips') {
 
@@ -499,7 +501,10 @@
 
 					scope.$watch('model', function () {
 
-						getSelectedOptionsIds();
+						if (scope.model) {
+							getSelectedOptionsIds();
+						}
+
 						setInputText();
 
 					});
