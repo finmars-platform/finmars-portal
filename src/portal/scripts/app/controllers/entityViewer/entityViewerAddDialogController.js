@@ -898,22 +898,6 @@
 
 			}
 
-			if (data.results.length && data.results.length > 0 && data.results[0].data) {
-
-				dataConstructorLayout = data.results[0];
-
-				if (Array.isArray(data.results[0].data)) {
-					vm.tabs = data.results[0].data;
-				} else {
-					vm.tabs = data.results[0].data.tabs;
-					vm.fixedArea = data.results[0].data.fixedArea;
-				}
-
-			} else {
-				vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
-				vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
-			}
-
 			if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
 				vm.tabs.forEach(function (tab, index) {
 					tab.tabOrder = index;
