@@ -316,13 +316,27 @@
      * @returns {number}
      */
     var getEditLayoutMaxColumns = function (editLayoutTabs) {
-        const widths = editLayoutTabs
+
+    	let maxCols = 0;
+
+		editLayoutTabs.forEach(function (tab) {
+
+			if (tab.layout && tab.layout.columns &&
+				tab.layout.columns > maxCols) {
+
+				maxCols = tab.layout.columns;
+
+			}
+
+		})
+
+		/* const widths = editLayoutTabs
             .map(tab => tab.layout && tab.layout.columns)
             .filter(num => Boolean(Number(num)));
 
-        const maxWidth = Math.max(...widths)
+        const maxWidth = Math.max(...widths) */
 
-        return  maxWidth > 0 ? maxWidth : 6;
+        return maxCols ? maxCols : 6;
 
     }
 

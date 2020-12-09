@@ -24,7 +24,7 @@
             templateUrl: 'views/directives/popup-view.html',
             transclude: true,
             link: function (scope, elem, attrs) {
-				console.log('testing preventDefault', scope.preventDefault);
+
                 scope.vm = scope.popupData;
                 console.log('scope.popupTemplate', scope.popupTemplate)
 
