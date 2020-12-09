@@ -124,10 +124,15 @@
             vm.showByDefaultOptions = vm.showByDefaultOptions.filter((item) => item.id !== 'public_name')
         }
 
+		// id of popup field which value will be shown when popup closed
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
         vm.fixedAreaPopup = {
-            fields: {},
+            fields: {
+				showByDefault: {
+					value: vm.showByDefault
+				}
+			},
             entityType: vm.entityType,
             tabColumns: null,
         };
@@ -141,6 +146,8 @@
         ];
 
         vm.activeTab = null;
+
+        var formLayoutFromAbove = data.editLayout;
 
         var getShowByDefaultOptions = function (columns, entityType) {
             if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
@@ -655,85 +662,100 @@
 
         };
 
-        vm.getFormLayout = function () {
+        vm.getFormLayout = async function () {
 
-            uiService.getEditLayout(vm.entityType).then(function (editLayout) {
+        	var editLayout;
+        	var gotEditLayout = true;
 
-                if (editLayout.results.length && editLayout.results.length > 0 && editLayout.results[0].data) {
+			if (formLayoutFromAbove) {
+        		editLayout = formLayoutFromAbove;
 
-                    dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
+			} else {
 
-                    if (Array.isArray(editLayout.results[0].data)) {
-                        vm.tabs = editLayout.results[0].data;
-                    } else {
-                        vm.tabs = editLayout.results[0].data.tabs;
-                        vm.fixedArea = editLayout.results[0].data.fixedArea;
-                    }
+				try {
+					editLayout = await uiService.getEditLayout(vm.entityType);
 
-                } else {
+				} catch (error) {
+					gotEditLayout = false;
+				}
 
-                    vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
-                    vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
+			}
 
-                }
+			if (gotEditLayout && editLayout.results.length && editLayout.results.length && editLayout.results[0].data) {
 
-                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
-                    vm.tabs.forEach(function (tab, index) {
-                        tab.tabOrder = index;
-                    });
-                }
+				dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
 
-                // Victor 2020.11.20 #59 Fixed area popup
-                if (vm.fixedArea.showByDefault) {
-                    vm.showByDefault = vm.fixedArea.showByDefault;
-                    vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
-                }
+				if (Array.isArray(editLayout.results[0].data)) {
+					vm.tabs = editLayout.results[0].data;
 
-                const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+				} else {
 
-                if (vm.fixedAreaPopup.tabColumns !== columns) {
+					vm.tabs = editLayout.results[0].data.tabs;
+					vm.fixedArea = editLayout.results[0].data.fixedArea;
 
-                    vm.fixedAreaPopup.tabColumns = columns;
-                    vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+				}
 
-                    const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-                    $bigDrawer.setWidth(bigDrawerWidthPercent);
+			} else {
 
-                    if (vm.fixedAreaPopup.tabColumns !== 6) {
-                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
-                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
-                    } else {
-                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
-                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
-                    }
+				vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
+				vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
 
-                }
-                // <Victor 2020.11.20 #59 Fixed area popup>
+			}
 
-                vm.getAttributeTypes().then(function () {
+			if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
+				vm.tabs.forEach(function (tab, index) {
+					tab.tabOrder = index;
+				});
+			}
 
-                    entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
+			// Victor 2020.11.20 #59 Fixed area popup
+			if (vm.fixedArea && vm.fixedArea.showByDefault) {
+				vm.showByDefault = vm.fixedArea.showByDefault;
+				vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+			}
 
-                    //vm.generateAttributesFromLayoutFields();
-                    mapAttributesAndFixFieldsLayout();
+			const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
 
-                    vm.readyStatus.layout = true;
-                    vm.readyStatus.attributeTypes = true;
+			if (vm.fixedAreaPopup.tabColumns !== columns) {
 
-                    if (vm.entityType === 'instrument') {
-                        vm.getInstrumentUserFields();
-                    } else {
-                        vm.readyStatus.userFields = true;
-                    }
+				vm.fixedAreaPopup.tabColumns = columns;
+				vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
 
-                    vm.getEntityPricingSchemes();
+				const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+				$bigDrawer.setWidth(bigDrawerWidthPercent);
 
-                    $scope.$apply();
+				if (vm.fixedAreaPopup.tabColumns !== 6) {
+					bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+					bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
+				} else {
+					bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+					bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+				}
 
-                });
+			}
+			// <Victor 2020.11.20 #59 Fixed area popup>
 
+			vm.getAttributeTypes().then(function () {
 
-            });
+				entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
+
+				//vm.generateAttributesFromLayoutFields();
+				mapAttributesAndFixFieldsLayout();
+
+				vm.readyStatus.layout = true;
+				vm.readyStatus.attributeTypes = true;
+
+				if (vm.entityType === 'instrument') {
+					vm.getInstrumentUserFields();
+				} else {
+					vm.readyStatus.userFields = true;
+				}
+
+				vm.getEntityPricingSchemes();
+
+				$scope.$apply();
+
+			});
 
         };
 
@@ -1228,6 +1250,8 @@
                     vm.readyStatus.attributeTypes = false;
                     vm.readyStatus.entity = false;
                     vm.readyStatus.layout = false;
+
+                    formLayoutFromAbove = null; // forcing getFormLayout() to download layout from server
 
                     vm.getItem();
 
@@ -2114,6 +2138,90 @@
 
         };*/
 
-    }
+		/* TO DELETE
+		vm.getFormLayout = function () {
+
+			uiService.getEditLayout(vm.entityType).then(function (editLayout) {
+
+				if (editLayout.results.length && editLayout.results.length > 0 && editLayout.results[0].data) {
+
+					dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
+
+					if (Array.isArray(editLayout.results[0].data)) {
+						vm.tabs = editLayout.results[0].data;
+					} else {
+						vm.tabs = editLayout.results[0].data.tabs;
+						vm.fixedArea = editLayout.results[0].data.fixedArea;
+					}
+
+				} else {
+
+					vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
+					vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
+
+				}
+
+				if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
+					vm.tabs.forEach(function (tab, index) {
+						tab.tabOrder = index;
+					});
+				}
+
+				// Victor 2020.11.20 #59 Fixed area popup
+				if (vm.fixedArea.showByDefault) {
+					vm.showByDefault = vm.fixedArea.showByDefault;
+					vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+				}
+
+				const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+
+				if (vm.fixedAreaPopup.tabColumns !== columns) {
+
+					vm.fixedAreaPopup.tabColumns = columns;
+					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+
+					const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+					$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+					if (vm.fixedAreaPopup.tabColumns !== 6) {
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
+					} else {
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+					}
+
+				}
+				// <Victor 2020.11.20 #59 Fixed area popup>
+
+				vm.getAttributeTypes().then(function () {
+
+					entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
+
+					//vm.generateAttributesFromLayoutFields();
+					mapAttributesAndFixFieldsLayout();
+
+					vm.readyStatus.layout = true;
+					vm.readyStatus.attributeTypes = true;
+
+					if (vm.entityType === 'instrument') {
+						vm.getInstrumentUserFields();
+					} else {
+						vm.readyStatus.userFields = true;
+					}
+
+					vm.getEntityPricingSchemes();
+
+					$scope.$apply();
+
+				});
+
+
+			});
+
+		};*/
+
+
+	}
 
 }());
