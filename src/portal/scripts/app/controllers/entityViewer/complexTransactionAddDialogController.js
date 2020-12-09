@@ -67,8 +67,9 @@
 
 		vm.tabsWithErrors = {};
 		vm.errorFieldsList = [];
+		vm.inputsWithCalculations = null;
+
         var notCopiedTransaction = true;
-        var inputsWithCalculations;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
         //var tooltipsList = [];
 
@@ -392,10 +393,10 @@
 
             });*/
 
-            inputsWithCalculations = transactionData.transaction_type_object.inputs;
+			vm.inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
-            if (inputsWithCalculations) {
-                inputsWithCalculations.forEach(function (inputWithCalc) {
+            if (vm.inputsWithCalculations) {
+				vm.inputsWithCalculations.forEach(function (inputWithCalc) {
 
                     vm.userInputs.forEach(function (userInput) {
                         if (userInput.name === inputWithCalc.name) {
@@ -1465,7 +1466,7 @@
 
             if (fieldKey) {
 
-                if (inputsWithCalculations) {
+                if (vm.inputsWithCalculations) {
 
                     var i, a;
                     for (i = 0; i < vm.userInputs.length; i++) {
@@ -1474,8 +1475,8 @@
 
                             var uInputName = vm.userInputs[i].name;
 
-                            for (a = 0; a < inputsWithCalculations.length; a++) {
-                                var inputWithCalc = inputsWithCalculations[a];
+                            for (a = 0; a < vm.inputsWithCalculations.length; a++) {
+                                var inputWithCalc = vm.inputsWithCalculations[a];
 
                                 if (inputWithCalc.name === uInputName &&
                                     inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {

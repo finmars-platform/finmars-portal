@@ -8,6 +8,8 @@ var url = require('url');
 var proxy = require('proxy-middleware');
 var app = express();
 
+var port = process.env.PORT || 8080;
+
 // app.use(function (req, res, next) {
 //
 //     var host = process.env.HOSTNAME || 'none';
@@ -72,6 +74,6 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // app.use('/', proxy(proxyOptions));
 
-app.listen(8080, function () {
-    console.info('Server started at 8080 port');
+app.listen(port, function () {
+    console.info('Server started at '+port+' port');
 });

@@ -2751,6 +2751,7 @@ md-dialog.two-rows-dialog-actions {
       padding-left: 16px;
       margin: 16px 0 0;
     }
+
   }
 
   .big-drawer-main {
@@ -2831,3 +2832,107 @@ md-checkbox.md-indeterminate .md-icon:after {
     background-color: #FDECE5
   }
 }
+
+button.md-raised.md-warn.md-button {
+  fill: #fff;
+}
+
+.classifier-select-dialog-view {
+  width: 500px;
+}
+
+// chips
+.chips-list-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.chip-div {
+  position: relative;
+  height: 28px;
+  background-color: rgb(235, 235, 235);
+  border-radius: 16px;
+  padding: 6px 12px;
+  margin: 0 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: rgba(216, 216, 216, 1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  .chip-deletion-btn {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 18px;
+    width: 18px;
+    min-height: 0;
+    height: 100%;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0 6px 0 0;
+    box-sizing: content-box;
+
+    &:hover {
+      background-color: transparent;
+      opacity: .5;
+    }
+
+    .material-icons {
+      color: @gray;
+      font-size: 16px;
+    }
+
+  }
+
+  .chip-list-text {
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+}
+
+.chip-div.expand-chip {
+  max-width: 70px;
+}
+
+.chips-list-container.chips-deletion-enabled {
+
+  .chip-div {
+    padding-right: 28px;
+  }
+
+  .chip-div.expand-chip { // make bigger for deletion button
+    max-width: 98px;
+  }
+
+}
+
+.chip-hidden {
+  position: absolute;
+  visibility: hidden;
+}
+
+.chips-list-container.chips-list-disabled {
+
+  .chip-div {
+    &:hover {
+      background-color: rgb(235, 235, 235);
+    }
+
+    .chip-deletion-btn:hover {
+      opacity: 1;
+    }
+  }
+
+}
+// < chips >

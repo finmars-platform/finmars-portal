@@ -17,7 +17,7 @@
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
-        var EntityViewerEventService = require('../../services/entityViewerEventService');
+        var EntityViewerEventService = require('../../services/eventService');
         var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
         var AttributeDataService = require('../../services/attributeDataService');
 
@@ -711,7 +711,7 @@
                         var selectedRows = flatList.filter(function (row) {
                             return row.___is_activated;
                         });
-
+						console.log("testing manageInstrumentProps selectedRows", selectedRows);
                         selectedRows.forEach(function (row) {
 
                             var obj = vm.entityViewerDataService.getObject(row.___id, row.___parentId);
@@ -720,18 +720,21 @@
 
                                 case 'deactivate':
 
-                                    obj.is_active = false;
+                                	if (obj.is_active) {
+										obj.is_active = false;
 
-                                    instrumentService.patch(obj.id,
-                                        {
-                                            is_active: obj.is_active
-                                        }
-                                    );
+										instrumentService.patch(obj.id,
+											{
+												is_active: obj.is_active
+											}
+										);
+									}
 
                                     break;
 
                                 case 'activate':
-                                    if (obj.is_active) {
+
+                                	if (!obj.is_active) {
 
                                         obj.is_active = true;
 
@@ -1595,17 +1598,17 @@
                     });
 
                     // vm.getLayoutByUserCode(layoutUserCode);
-                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
                     // vm.getLayoutByUserCode(layoutUserCode);
-                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
                 } else {
                     // vm.getDefaultLayout();
-                    evHelperService.getDefaultLayout(vm);
+                    evHelperService.getDefaultLayout(vm, 'entity_viewer');
                 }
 
 

@@ -1,0 +1,48 @@
+<div class="chips-list-container overflow-hidden chipsListContainer"
+     ng-class="getChipsListClasses()">
+
+    <div ng-repeat="chip in chipsList | orderBy: orderOptions track by chip.id"
+         class="chip-wrap chip-hidden chipWrapElem"
+         ng-init="$last && hideOverflowingChips(true)">
+
+        <div class="chip-div chipDivElem"
+             ng-click="onChipClickMethod(chip, $event)">
+
+            <div ng-bind-html="chip.text"
+                  class="chip-list-text"></div>
+
+            <md-button ng-if="chipsDeletion"
+                       ng-click="deleteChips(chip)"
+                       class="chip-deletion-btn">
+                <span class="material-icons">cancel</span>
+            </md-button>
+
+            <md-tooltip ng-if="chip.text"
+                        md-direction="top"
+                        class="tooltip_1"
+                        ng-bind="chip.text"></md-tooltip>
+
+        </div>
+
+    </div>
+
+    <div class="chip-wrap" ng-if="hiddenChips.length">
+        <div class="chip-div expand-chip">
+
+            <div class="chip-list-text">+{{hiddenChips.length}}</div>
+
+             <md-button ng-if="chipsDeletion"
+                        ng-click="deleteChips(hiddenChips)"
+                        class="chip-deletion-btn">
+                <span class="material-icons">cancel</span>
+            </md-button>
+
+            <md-tooltip ng-if="hiddenChipsTexts"
+                        md-direction="top"
+                        class="tooltip_1"
+                        ng-bind="hiddenChipsTexts"></md-tooltip>
+
+        </div>
+    </div>
+
+</div>

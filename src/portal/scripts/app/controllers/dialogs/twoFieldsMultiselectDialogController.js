@@ -5,32 +5,30 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
-        logService.controller('TwoFieldsOptionsDialogController', 'initialized');
-
-        var getDataMethod = data.getDataMethod;
+        // var getDataMethod = data.getDataMethod;
         var selectedItems = data.model;
 
         if (!selectedItems) {
             selectedItems = [];
         }
 
-        vm.title = data.title;
+        /* vm.title = data.title;
 
         if (!vm.title) {
             vm.title = '';
-        }
+        } */
 
-        vm.nameProperty = data.nameProperty;
-        vm.strictOrder = data.strictOrder;
-        vm.optionsCheckboxes = data.optionsCheckboxes;
-        vm.readyStatus = false;
-        vm.selectedItems = [];
+        vm.nameProperty = data.nameProperty
+        vm.strictOrder = data.strictOrder
+        vm.optionsCheckboxes = data.optionsCheckboxes
+        vm.readyStatus = false
+        vm.selectedItems = []
+
+		vm.orderOptions = data.orderOptions || null
 
         var separateUnselectedItems = function (items, selectedItems) {
 
@@ -77,10 +75,12 @@
 			if (vm.optionsCheckboxes) {
 
 				vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+
 					return {
 						id: selItem.id,
 						isChecked: selItem.isChecked || false
 					};
+
 				});
 
 			} else {

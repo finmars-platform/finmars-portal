@@ -12,7 +12,7 @@
             var itemKey = item[key] || '-';
             var itemTotal = null;
 
-            if (item[valueKey] !== null) {
+            if ((item[valueKey] || item[valueKey] === 0) && typeof item[valueKey] === 'number') {
                 itemTotal = item[valueKey];
             }
 
@@ -79,7 +79,8 @@
 
         });
 
-        return result
+        return result;
+
     }
 
     function getMatrix(itemList, rows, columns, rowsKey, columnsKey, valueKey, subtotal_formula_id) {
@@ -180,7 +181,10 @@
 
                         var flItem = column.data.flatListItems[i];
 
-                        if (flItem[valueKey] || flItem[valueKey] === 0) {
+                        if (
+                        	(flItem[valueKey] && typeof flItem[valueKey] === 'number') ||
+							flItem[valueKey] === 0
+						) {
 
                             cellHasNumericVal = true;
                             break;
