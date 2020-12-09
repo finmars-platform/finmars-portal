@@ -11,7 +11,8 @@
         <div layout="row"
              class="entity-editor-row">
 
-            <div data-ng-class="{
+            <div class="cursor-pointer"
+                 ng-class="{
                         'width-33': vm.fixedAreaPopup.tabColumns === 6,
                         'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
                         'width-66': vm.fixedAreaPopup.tabColumns === 3,
@@ -23,12 +24,13 @@
                  offset-y="-24"
                  popup-data="vm.fixedAreaPopup"
                  on-save-callback="vm.onPopupSaveCallback()">
-                <text-input
-                        label="{{vm.entityTypeSlug()}}"
-                        model="vm.getEntityPropertyByDefault()"
-                        placeholder-text="{{vm.getPlaceholderByDefault()}}"
-                        small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
-                ></text-input>
+
+                <text-input label="{{vm.entityTypeSlug()}}"
+                            model="vm.getEntityPropertyByDefault()"
+                            placeholder-text="{{vm.getPlaceholderByDefault()}}"
+                            small-options="{dialogParent: '.dialog-containers-wrap', readonly: true}"
+                            style="pointer-events: none;">
+                </text-input>
 
             </div>
 

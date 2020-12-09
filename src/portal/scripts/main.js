@@ -677,7 +677,8 @@ app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDire
 app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
-app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
+// app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
+app.directive('popup', ['$compile', require('./app/directives/popupDirective')]);
 app.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
 app.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 

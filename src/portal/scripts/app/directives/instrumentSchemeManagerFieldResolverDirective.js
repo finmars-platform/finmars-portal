@@ -43,8 +43,6 @@
 
                             scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
 
-                            console.log('test?');
-
                             scope.readyStatus.tags = true;
 
                             scope.$apply(function () {

@@ -1063,23 +1063,28 @@
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
                 // linked_inputs_names
-                // TODO input.settings is null
-                rowObj.columns[8].settings.value = input.settings && input.settings.linked_inputs_names && input.settings.linked_inputs_names.map(function (linkedInputName) {
+				rowObj.columns[8].settings.value = []
 
-                	var linkedInput = {
-                		id: linkedInputName,
-						isChecked: false
-					};
+                if (input.settings && input.settings.linked_inputs_names) {
 
-                	if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
+					rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
 
-						linkedInput.isChecked = true;
+						var linkedInput = {
+							id: linkedInputName,
+							isChecked: false
+						};
 
-					}
+						if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
 
-					return linkedInput;
+							linkedInput.isChecked = true;
 
-				});
+						}
+
+						return linkedInput;
+
+					});
+
+				}
 
                 rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
                 // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;

@@ -43,7 +43,7 @@
                 console.log('data', data);
                 vm.transactionTypes = data.results;
                 vm.readyStatus.transactionTypes = true;
-                //console.log('test?', vm.readyStatus.transactionTypes);
+
                 $scope.$apply();
             });
 

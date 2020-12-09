@@ -16,15 +16,16 @@
                 offsetX: '@', // add offset to left position
                 offsetY: '@', // add offset to top position
 
+				preventDefault: '@',
+
                 onSaveCallback: '&?'
 
             },
-            templateUrl: 'views/directives/customInputs/popup-view.html',
+            templateUrl: 'views/directives/popup-view.html',
             transclude: true,
             link: function (scope, elem, attrs) {
 
                 scope.vm = scope.popupData;
-                console.log('scope.vm', scope.vm);
                 console.log('scope.popupTemplate', scope.popupTemplate)
 
                 scope.isPopupOpen = false;
@@ -174,6 +175,10 @@
 
                 scope.onTargetElementClick = function ($event) {
                     console.log('onTargetElementClick')
+
+					if (scope.preventDefault) {
+						$event.preventDefault();
+					}
 
                     if (scope.isPopupOpen) {
                         return removePopUp();

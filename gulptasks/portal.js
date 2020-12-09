@@ -107,11 +107,11 @@
     });
 
     gulp.task('portal-forum-HTML-to-JS', function () {
-        forumTasks.forumHtmlToJs();
+        return forumTasks.forumHtmlToJs();
     });
 
     gulp.task('portal-profile-HTML-to-JS', function () {
-        profileTasks.forumHtmlToJs();
+        return profileTasks.profileHtmlToJs();
     });
 
     function left_pad(num) {

@@ -739,6 +739,8 @@
                     return 'Pricing Procedure';
                 case 'schedules.pricingschedule':
                     return 'Pricing Schedule';
+                case 'procedures.requestdatafileprocedure':
+                    return 'Data Procedure';
                 default:
                     return "Unknown"
             }

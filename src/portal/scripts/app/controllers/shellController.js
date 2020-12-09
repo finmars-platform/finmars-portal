@@ -32,6 +32,7 @@
 
         vm.currentGlobalState = 'portal';
         vm.currentMasterUser = '';
+		var member = '';
 
         vm.broadcastManager = null;
 
@@ -58,31 +59,34 @@
 
         vm.getMasterUsersList = function () {
 
-            vm.readyStatus.masters = false;
+            vm.readyStatus.masters = false
 
             // return usersService.getMasterList().then(function (data) {
+			return new Promise(function (resolve, reject) {
 
-            return usersService.getMasterListLight().then(function (data) {
+				usersService.getMasterListLight().then(function (data) {
 
-                if (data.hasOwnProperty('results')) {
-                    vm.masters = data.results
+					if (data.hasOwnProperty('results')) {
+						vm.masters = data.results
 
-                    if (vm.masters.length) {
-                        vm.updateCurrentMasterUser();
-                    }
+						if (vm.masters.length) {
+							vm.updateCurrentMasterUser();
+						}
 
-                    vm.readyStatus.masters = true
-                    $scope.$apply();
+					} else {
+						vm.masters = []
+					}
 
-                } else {
+					vm.readyStatus.masters = true
+					$scope.$apply();
 
-                    vm.masters = []
-                    vm.readyStatus.masters = true
-                    $scope.$apply();
+					resolve();
 
-                }
+				}).catch(function (error) {
+					reject(error);
+				});
 
-            });
+			});
 
         };
 
@@ -93,7 +97,6 @@
                 if (item.is_current) {
 
                     vm.currentMasterUser = item
-                    localStorageService.setCurrentMasterUser(item);
 
                 }
 
@@ -732,20 +735,49 @@
 
         vm.getUser = function() {
 
-            usersService.getMe().then(function (data) {
+        	return new Promise(function (resolve, reject) {
 
-                vm.user = data;
+        		usersService.getMe().then(function (data) {
 
-                $scope.$apply();
-            });
+					vm.user = data;
+
+					resolve();
+
+				}).catch(function (error) {
+					reject(error);
+				});
+
+			});
+
 
         };
 
+        var getMember = function () {
+
+        	return new Promise(function (resolve, reject) {
+
+        		usersService.getMyCurrentMember().then(function (data) {
+
+        			member = data;
+        			resolve(member);
+
+				}).catch(function (error) {
+					reject(error);
+				});
+
+			});
+
+		}
+
+		var transactionsList = [
+			'app.settings.general.init-configuration', 'app.settings.init-configuration',
+			'app.settings.ecosystem-default-settings', 'app.settings.data-providers', 'app.settings.users-groups',
+			'app.processes'
+		];
+
         function enableAccessHandler($transitions) {
 
-            usersService.getMyCurrentMember().then(function (data) {
-
-                var member = data;
+            // usersService.getMyCurrentMember().then(function (data) {
 
                 $transitions.onStart({}, function (transition) {
 
@@ -755,34 +787,14 @@
 
                     console.log('transition.to().name', transition.to().name);
 
-                    if (transition.to().name === 'app.settings.general.init-configuration') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.settings.init-configuration') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.settings.ecosystem-default-settings') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.settings.data-providers') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.settings.users-groups') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.processes') {
-                        return false;
-                    }
+                    if (transactionsList.includes(transition.to().name)) {
+						return false;
+					}
 
                     return true;
                 })
 
-            })
+            // })
 
         }
 
@@ -800,8 +812,6 @@
             window.addEventListener('error', function (e) {
                 toastr.error(e.error);
             });
-
-            enableAccessHandler($transitions); // TODO Run after successful auth
 
             $transitions.onSuccess({}, function (trans) {
 
@@ -832,33 +842,40 @@
 
             vm.initTransitionListener();
 
-            vm.getUser();
+            var getUserProm = vm.getUser();
 
-            vm.getMasterUsersList().then(function () {
+            var getMasterUsersProm = vm.getMasterUsersList();
 
-                if (vm.masters.length) {
+            var getMemberProm = getMember();
 
-                    vm.getNotifications();
+            Promise.allSettled([getUserProm, getMasterUsersProm, getMemberProm]).then(function () {
 
-                    vm.isIdentified = true;
-                    console.log("User status: Identified");
+				localStorageService.setUMuM(vm.user.id, vm.currentMasterUser.id, member.id);
+				enableAccessHandler($transitions); // TODO Run after successful auth
 
-                    $scope.$apply();
+            	if (vm.masters.length) {
 
-                } else {
+					vm.getNotifications();
 
-                    if (vm.currentGlobalState !== 'profile') {
-                        $state.go('app.profile', {}, {reload: 'app'})
-                    }
+					vm.isIdentified = true;
+					console.log("User status: Identified");
 
-                }
+					$scope.$apply();
 
-                if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
-                    showLayoutName = true;
-                    vm.getActiveLayoutName();
-                }
+				} else {
 
-            });
+					if (vm.currentGlobalState !== 'profile') {
+						$state.go('app.profile', {}, {reload: 'app'})
+					}
+
+				}
+
+				if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
+					showLayoutName = true;
+					vm.getActiveLayoutName();
+				}
+
+			})
 
             if (window.BroadcastChannel) {
                 vm.initCrossTabBroadcast();

@@ -118,7 +118,11 @@
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
         vm.fixedAreaPopup = {
-            fields: {},
+            fields: {
+				showByDefault: {
+					value: vm.showByDefault
+				}
+			},
             entityType: vm.entityType,
             tabColumns: null,
         };
@@ -132,6 +136,8 @@
         ];
 
         vm.activeTab = null;
+
+		var formLayoutFromAbove = data.editLayout;
 
         var getShowByDefaultOptions = function (columns, entityType) {
             let result = vm.showByDefaultOptions;
@@ -852,78 +858,98 @@
         };
 
 
-        vm.getFormLayout = function () {
+        vm.getFormLayout = async function () {
 
-            uiService.getEditLayout(vm.entityType).then(function (data) {
+			var editLayout;
+			var gotEditLayout = true;
 
-                if (data.results.length && data.results.length > 0 && data.results[0].data) {
+			if (formLayoutFromAbove) {
+				editLayout = formLayoutFromAbove;
 
-                    dataConstructorLayout = data.results[0];
+			} else {
 
-                    if (Array.isArray(data.results[0].data)) {
-                        vm.tabs = data.results[0].data;
-                    } else {
-                        vm.tabs = data.results[0].data.tabs;
-                        vm.fixedArea = data.results[0].data.fixedArea;
-                    }
+				try {
+					editLayout = await uiService.getEditLayout(vm.entityType);
 
-                } else {
-                    vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
-                    vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
-                }
+				} catch (error) {
+					gotEditLayout = false;
+				}
 
-                if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
-                    vm.tabs.forEach(function (tab, index) {
-                        tab.tabOrder = index;
-                    });
-                }
+			}
 
-                // Victor 2020.11.20 #59 Fixed area popup
+			if (gotEditLayout && editLayout.results.length && editLayout.results.length && editLayout.results[0].data) {
 
-                if (vm.fixedArea.showByDefault) {
-                    vm.showByDefault = vm.fixedArea.showByDefault;
-                    vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
-                }
+				dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
 
-                const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+				if (Array.isArray(editLayout.results[0].data)) {
+					vm.tabs = editLayout.results[0].data;
 
-                if (vm.fixedAreaPopup.tabColumns !== columns) {
+				} else {
 
-                    vm.fixedAreaPopup.tabColumns = columns;
-                    vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+					vm.tabs = editLayout.results[0].data.tabs;
+					vm.fixedArea = editLayout.results[0].data.fixedArea;
 
-                    const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-                    $bigDrawer.setWidth(bigDrawerWidthPercent);
+				}
 
-                    if (vm.fixedAreaPopup.tabColumns !== 6) {
-                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
-                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
-                    } else {
-                        bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
-                        bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
-                    }
-                }
-                // <Victor 2020.11.20 #59 Fixed area popup>
+			} else {
 
-                vm.getAttributeTypes().then(function (value) {
+				vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
+				vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
 
-                    entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
-                    //vm.generateAttributesFromLayoutFields();
-                    vm.getEntityPricingSchemes();
+			}
 
-                    mapAttributesAndFixFieldsLayout();
+			if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
+				vm.tabs.forEach(function (tab, index) {
+					tab.tabOrder = index;
+				});
+			}
 
-                    vm.readyStatus.content = true;
-                    vm.readyStatus.entity = true;
-                    // vm.readyStatus.permissions = true;
+			// Victor 2020.11.20 #59 Fixed area popup
 
-                    console.log("vm.entity", vm.entity);
+			if (vm.fixedArea && vm.fixedArea.showByDefault) {
+				vm.showByDefault = vm.fixedArea.showByDefault;
+				vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+			}
 
-                    $scope.$apply();
+			const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
 
-                });
+			if (vm.fixedAreaPopup.tabColumns !== columns) {
 
-            });
+				vm.fixedAreaPopup.tabColumns = columns;
+				vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+
+				const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+				$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+				if (vm.fixedAreaPopup.tabColumns !== 6) {
+					bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+					bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
+				} else {
+					bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+					bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+				}
+
+			}
+			// <Victor 2020.11.20 #59 Fixed area popup>
+
+			vm.getAttributeTypes().then(function (value) {
+
+				entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
+				//vm.generateAttributesFromLayoutFields();
+				vm.getEntityPricingSchemes();
+
+				mapAttributesAndFixFieldsLayout();
+
+				vm.readyStatus.content = true;
+				vm.readyStatus.entity = true;
+				// vm.readyStatus.permissions = true;
+
+				console.log("vm.entity", vm.entity);
+
+				$scope.$apply();
+
+			});
+
         };
 
         vm.getAttributeTypes = function () {

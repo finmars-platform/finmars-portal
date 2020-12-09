@@ -759,7 +759,20 @@
 
                     console.log('selection', selection);
 
-                    if (!selection.length) {
+                    if (clickData.isShiftPressed) {
+
+                        switch (clickData.___type) {
+
+                            case 'object':
+                                handleObjectClick(clickData, evDataService, evEventService);
+                                break;
+
+                            case 'subtotal':
+                                handleSubtotalClick(clickData, evDataService, evEventService);
+                                break;
+                        }
+
+                    } else if (!selection.length) {
 
                         switch (clickData.___type) {
 
@@ -1290,7 +1303,6 @@
             if (!event.target.classList.contains('ev-dropdown-option')) {
                 clearDropdowns();
             }
-
 
 
         }
