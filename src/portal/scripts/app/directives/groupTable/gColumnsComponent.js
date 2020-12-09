@@ -24,6 +24,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.columns = scope.evDataService.getColumns();
+                console.log('#69 scope.columns', scope.columns)
 
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.components = scope.evDataService.getComponents();
@@ -36,10 +37,16 @@
                 scope.isReport = metaService.isReport(scope.entityType);
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
+                scope.isAllStarsSelected = false;
+                scope.isFavoriteAreaShown = true;
 
                 var entityAttrs = [];
                 var dynamicAttrs = [];
                 var keysOfColsToHide = [];
+
+                scope.favoriteAreaToggle = function () {
+                    scope.isFavoriteAreaShown = !scope.isFavoriteAreaShown;
+                }
 
                 var getAttributes = function () {
 

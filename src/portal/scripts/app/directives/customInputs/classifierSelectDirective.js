@@ -335,7 +335,6 @@
                 var getTree = function () {
                     var classifierId = scope.classifierAttr.id
                     attributeTypeService.getByKey(scope.entityType, classifierId).then(function (data) {
-                        debugger
 
                         scope.menuOptions = recursiveFlat(data.classifiers);
 
