@@ -54,13 +54,21 @@
 
   .dashboard-top-row {
     position: relative;
+    height: 31px;
+    -webkit-box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.0470588235294118);
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.0470588235294118);
+    z-index: 1;
   }
 
   .dashboard-title {
-    padding: 10px;
-    font-size: 20px;
-    height: 48px;
-    box-sizing: border-box;
+    font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    letter-spacing: normal;
+    color: #333333;
+    line-height: 31px;
+    padding-left: 8px;
   }
 
   .dashboard-loader {
@@ -93,7 +101,7 @@
     bottom: 0;
     left: 0;
     z-index: 1;
-    background: rgba(100, 100, 100, 0.3);
+    //background: rgba(100, 100, 100, 0.3);
   }
 
   .dashboard-rows-holder {
@@ -236,7 +244,7 @@
   .dashboard-tabs-control-panel {
     position: absolute;
     right: 6px;
-    top: 4px;
+    top: 0;
     z-index: 1;
   }
 
@@ -246,14 +254,15 @@
   }
 
   .dashboard-control-button {
-    min-width: 40px;
-    width: 40px;
-    background: #ddd;
+    min-width: 2px;
+    width: 24px;
+    //background: #ddd;
     margin: 2px;
-    height: 36px;
+    height: 24px;
+    min-height: 24px;
     box-sizing: border-box;
-    padding-top: 4px;
 
+    padding: 0;
     &:hover {
       background: #ccc;
     }
@@ -303,7 +312,7 @@
   min-width: 24px;
   height: 24px;
   min-height: 24px;
-  background: #ddd;
+  //background: #ddd;
   text-align: center;
   padding: 0;
   line-height: 24px;
@@ -477,5 +486,51 @@ dashboard-report-viewer-grand-total {
   }
   .custom-input {
     font-weight: bold;
+  }
+}
+
+.dashboard-buttonset-dropdown {
+
+  margin: 0 4px 0;
+  padding: 2px 16px;
+  background: inherit;
+  background-color: rgba(65,133,244,0);
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #b0b0b0;
+  border-radius: 4px;
+  box-shadow: none;
+
+  min-width: 60px;
+  min-height: 42px;
+  height: 42px;
+  line-height: 2;
+
+  display: block;
+
+  .md-select-value {
+    border-bottom: 0;
+  }
+
+  &:not([disabled]):focus .md-select-value, &:not([disabled]):focus .md-select-value {
+    border-bottom: 0;
+    color: #F05A22;
+    background-color: rgba(240,90,34,.12);
+  }
+
+  &:not([disabled]):focus .md-select-value, &:not([disabled]):focus .md-select-value.md-select-placeholder {
+    border-bottom: 0;
+    color: #F05A22;
+    background-color: rgba(240,90,34,.12);
+  }
+
+  .md-select-value.md-select-placeholder {
+    color: #F05A22;
+  }
+
+  &:hover {
+    border-color: #F05A22;
+    background-color: rgba(240,90,34,.12);
   }
 }
