@@ -63,6 +63,13 @@
                                                       item="vm.item.settings.title_column"
                                                       class="dashboard-constructor-field1 md-block"></table-attribute-selector>
 
+                            <div>
+                                <md-input-container style="width: 200px;">
+                                    <label for="">Title Column Name</label>
+                                    <input type="text" data-ng-model="vm.item.settings.title_column_name">
+                                </md-input-container>
+                            </div>
+
                         </div>
 
                         <div layout="row">
@@ -85,19 +92,11 @@
 
                         </div>
 
-                        <div layout="row">
-
-                            <div class="m-t-16 m-b-16">
-
-                                <table-attribute-selector title="Percent column"
-                                                          dialog-title="Percent "
-                                                          available-attrs="vm.numericAttributes"
-                                                          item="vm.item.settings.percent_column"
-                                                          class="dashboard-constructor-field1"
-                                                          style="margin: 0 10px;"></table-attribute-selector>
-
-                            </div>
-
+                        <div>
+                            <md-input-container style="width: 200px;">
+                                <label for="">Value Column Name</label>
+                                <input type="text" data-ng-model="vm.item.settings.value_column_name">
+                            </md-input-container>
                         </div>
 
                     </div>

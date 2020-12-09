@@ -1776,6 +1776,16 @@
                     };
                 }
 
+                if (vm.componentData.type === 'report_viewer_table_chart') {
+                    vm.tableChartSettings = {
+                        title_column: vm.componentData.settings.title_column,
+                        value_column: vm.componentData.settings.value_column,
+
+                        title_column_name: vm.componentData.settings.title_column_name,
+                        value_column_name: vm.componentData.settings.value_column_name
+                    };
+                }
+
                 if (vm.componentData.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
                         bar_name_key: vm.componentData.settings.bar_name_key,

@@ -33,7 +33,8 @@
                 settings: {
                     title_column: '',
                     value_column: '',
-                    percent_column: '',
+                    title_column_name: '',
+                    value_column_name: '',
                     subtotal_formula_id: 1,
                     styles: {
                         cell: {
