@@ -51,10 +51,9 @@
                 "allow_null": true
             },
             {
-                "key": "tags",
-                "name": "Tags",
-                "value_type": "mc_field",
-                "allow_null": true
+                "key": "object_permissions",
+                "name": "Object permissions",
+                "value_type": "mc_field"
             }
         ]
     };

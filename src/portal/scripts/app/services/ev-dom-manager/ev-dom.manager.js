@@ -547,7 +547,8 @@
 
             }
 
-            if (!selection.length) {
+
+            if (clickData.isShiftPressed) {
 
                 if (event.detail === 1) {
 
@@ -568,7 +569,26 @@
                     }
                 }
 
+            } else if (!selection.length) {
 
+                if (event.detail === 1) {
+
+                    if (clickData.___type === 'group') {
+
+                        handleGroupClick(clickData, evDataService, evEventService);
+
+                    }
+
+                    if (clickData.___type === 'control') {
+                        handleControlClick(clickData, evDataService, evEventService);
+                    }
+
+                    if (clickData.___type === 'object') {
+
+                        handleObjectClick(clickData, evDataService, evEventService);
+
+                    }
+                }
 
             }
         });

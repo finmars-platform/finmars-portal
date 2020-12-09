@@ -34,7 +34,7 @@
 
         console.log('API_HOST: ' + API_HOST);
 
-        if (API_HOST.indexOf('https://') === -1) {
+        if (API_HOST.indexOf('https://') === -1 && API_HOST.indexOf('http://') === -1) {
 
             API_HOST  = "https://" + API_HOST;
 

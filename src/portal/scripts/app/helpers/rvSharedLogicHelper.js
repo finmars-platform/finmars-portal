@@ -10,57 +10,102 @@
 
     module.exports = function (viewModel, $scope, $mdDialog) {
 
+		let downloadAttributes = function () {
+
+			return new Promise(function (resolve, reject) {
+
+				var promises = [];
+
+				promises.push(viewModel.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
+				promises.push(viewModel.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
+				promises.push(viewModel.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
+
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('account'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
+				promises.push(viewModel.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
+
+
+				if (viewModel.entityType === 'balance-report' ||
+					viewModel.entityType === 'pl-report' ||
+					viewModel.entityType === 'transaction-report') {
+
+					promises.push(viewModel.attributeDataService.downloadInstrumentUserFields());
+
+				}
+
+				if (viewModel.entityType === 'transaction-report') {
+					promises.push(viewModel.attributeDataService.downloadTransactionUserFields());
+				}
+
+				Promise.all(promises).then(function (data) {
+
+					viewModel.readyStatus.attributes = true;
+					resolve(data);
+
+				}).catch(function (error) {
+					resolve({errorObj: error, errorCause: 'dynamicAttributes'});
+				});
+
+			});
+
+		};
+
         var onSetLayoutEnd = function () {
 
             viewModel.readyStatus.layout = true;
             rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
 
             var reportOptions = viewModel.entityViewerDataService.getReportOptions();
+            var entityType = viewModel.entityViewerDataService.getEntityType();
 
-            pricesCheckerService.check(reportOptions).then(function (data) {
+            if (entityType !== 'transaction-report') {
+                pricesCheckerService.check(reportOptions).then(function (data) {
 
-                data.items = data.items.map(function (item) {
+                    data.items = data.items.map(function (item) {
 
-                    if (item.type === 'missing_principal_pricing_history' || item.type === 'missing_accrued_pricing_history') {
+                        if (item.type === 'missing_principal_pricing_history' || item.type === 'missing_accrued_pricing_history') {
 
-                        data.item_instruments.forEach(function (instrument) {
+                            data.item_instruments.forEach(function (instrument) {
 
-                            if(item.id === instrument.id) {
-                                item.instrument_object = instrument;
-                            }
+                                if (item.id === instrument.id) {
+                                    item.instrument_object = instrument;
+                                }
 
-                        })
+                            })
 
-                    }
+                        }
 
 
+                        if (item.type === 'fixed_calc' || item.type === 'stl_cur_fx' || item.type === 'missing_instrument_currency_fx_rate') {
 
-                    if (item.type === 'fixed_calc' || item.type === 'stl_cur_fx' || item.type === 'missing_instrument_currency_fx_rate') {
-                        
-                        data.item_currencies.forEach(function (currency) {
+                            data.item_currencies.forEach(function (currency) {
 
-                            if (item.transaction_currency_id === currency.id) {
-                                item.currency_object = currency;
-                            }
+                                if (item.transaction_currency_id === currency.id) {
+                                    item.currency_object = currency;
+                                }
 
-                            if (item.id === currency.id) { // backend magic
-                                item.currency_object = currency;
-                            }
-                            
-                        })
-                        
-                    }
+                                if (item.id === currency.id) {
+                                    item.currency_object = currency;
+                                }
 
-                    return item
+                            })
+
+                        }
+
+                        return item
+
+                    });
+
+                    viewModel.entityViewerDataService.setMissingPrices(data);
+
+                    viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END)
 
                 });
-
-                viewModel.entityViewerDataService.setMissingPrices(data);
-
-                viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END)
-
-            });
-
+            }
 
             $scope.$apply();
 
@@ -113,6 +158,7 @@
         };
 
         return {
+			downloadAttributes: downloadAttributes,
             calculateReportDatesExprs: calculateReportDatesExprs,
             onSetLayoutEnd: onSetLayoutEnd
         }
