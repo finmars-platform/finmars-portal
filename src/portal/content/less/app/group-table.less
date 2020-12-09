@@ -741,11 +741,13 @@
   // Victor 2020.1202 #69 New report viewer interface
   @g-top-part-height: 50px;
   @icon-size: 20px;
-  @new-interface-color: #7d7d7d;
+  @g-top-part-color: #7d7d7d;
+  @g-table-header-background-color: rgba(242, 242, 242, 1);
   @primary-button-color: #f05a22;
+  @g-table-border-color: rgb(219, 219, 219);
 
   .new-interface {
-    color: @new-interface-color;
+    color: @g-top-part-color;
     font-size: 14px;
     background-color: white;
   }
@@ -780,11 +782,10 @@
       }
 
       ng-md-icon svg {
-        fill: @new-interface-color;
+        fill: @g-top-part-color;
       }
     }
   }
-
 
   .g-top-part {
     .new-interface;
@@ -811,16 +812,10 @@
 
       margin: 0;
 
-/*      ng-md-icon {
-        position: absolute;
-        left: 5px;
-        top: 8px;
-      }*/
-
     }
 
     ng-md-icon svg {
-      fill: @new-interface-color;
+      fill: @g-top-part-color;
     }
 
 
@@ -835,10 +830,6 @@
       }
     }
 
-/*    md-input-container {
-      margin: 0;
-    }*/
-
   }
 
   .g-filters {
@@ -852,7 +843,169 @@
 
   }
 
+  .g-column-bottom-row.g-table-header {
+    @g-table-header-height: 50px;
+
+    min-height: @g-table-header-height;
+    background-color: @g-table-header-background-color;
+
+    .g-cell {
+      display: flex;
+      align-items: center;
+
+      padding-top: 0;
+
+      height: @g-table-header-height;
+
+      border-right: 1px solid @g-table-border-color;
+      border-bottom: none;
+    }
+
+    .g-cell-select-all {
+      position: relative;
+      width: @g-table-header-height;
+    }
+
+    md-checkbox {
+      margin: 0;
+
+      .md-icon {
+        width: 17px;
+        height: 17px;
+        border-color: @g-table-border-color;
+        border-radius: 4px;
+      }
+
+      &.md-checked {
+        .md-icon {
+          border: none;
+          &:after {
+            bottom: 2px;
+          }
+        }
+      }
+    }
+
+    @star-icon-size: 25px;
+
+    .g-cell-favorite {
+      position: relative;
+
+      display: flex;
+      justify-content: space-around;
+
+      width: 100px;
+
+      &.closed {
+        width: 0;
+        padding: 0;
+      }
+    }
+
+    .g-cell-button {
+      margin: 0;
+      padding: 0;
+
+      min-width: auto;
+      min-height: auto;
+
+      &.md-button {
+        ng-md-icon {
+          width: @star-icon-size;
+          height: @star-icon-size;
+
+          svg {
+            fill: @g-table-border-color;
+          }
+        }
+
+        &:hover {
+          background: none;
+
+          ng-md-icon {
+            svg {
+              fill: @g-top-part-color;
+            }
+          }
+        }
+      }
+
+      &.selected.md-button {
+        ng-md-icon {
+          svg {
+            fill: #FAC878
+          }
+        }
+
+      }
+
+    }
+
+    .favorite-toggle {
+      position: absolute;
+      right: -10px;
+      top: calc(50% - 10px);
+
+      margin: 0;
+      padding: 0;
+
+      width: 18px;
+      height: 18px;
+      min-width: auto;
+      min-height: auto;
+
+      background-color: white;
+
+      border: 1px solid @g-table-border-color;
+      border-radius: 50%;
+
+        ng-md-icon {
+          width: auto;
+          height: auto;
+        }
+
+    }
+
+    .g-group-cell {
+
+      .g-cell-button {
+        width: 17px;
+        height: 17px;
+        min-width: 17px;
+        font-size: 9px;
+        line-height: normal;
+        border: 2px solid @g-top-part-color;
+        border-radius: 3px;
+      }
+
+      .g-group-button {
+        margin: 0 0 0 5px;
+
+        padding: 0;
+
+        min-width: auto;
+        min-height: auto;
+
+        text-transform: none;
+        color: @g-top-part-color;
+        font-weight: 700;
+        font-size: 12px;
+
+        .gt-sorting-icon {
+          position: absolute;
+          left: -1px;
+          top: 16px;
+          //color: #747474;
+          font-size: 16px;
+        }
+      }
+    }
+
+
+  }
+
 }
+// <Victor 2020.1202 #69 New report viewer interface>
 
 .g-wrapper.g-v-split-panel-active {
   display: flex;

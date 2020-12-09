@@ -779,3 +779,75 @@
         </div>
     </div>
 </div>
+<!--Victor #69 New report viewer interface-->
+<div  class="g-scrollable-area">
+    <div class="g-column-bottom-row g-table-header flex-row">
+        <div class="g-cell g-cell-select-all">
+            <md-checkbox data-ng-click="selectAllRows()" data-ng-checked="isAllSelected"></md-checkbox>
+
+            <md-button class="favorite-toggle" data-ng-if="!isFavoriteAreaShown" data-ng-click="favoriteAreaToggle()">
+                <div class="flex-row flex-i-center">
+                    <ng-md-icon icon="keyboard_arrow_right" size="16" class="flex-row"></ng-md-icon>
+                </div>
+            </md-button>
+        </div>
+
+        <div data-ng-if="isFavoriteAreaShown" class="g-cell g-cell-favorite">
+            <md-button class="g-cell-button"
+                       data-ng-class="{'selected': isAllStarsSelected}"
+                       data-ng-Click="isAllStarsSelected = !isAllStarsSelected">
+                <div class="flex-row flex-i-center">
+                    <ng-md-icon data-ng-if="!isAllStarsSelected" icon="star_border" size="25" class="flex-row"></ng-md-icon>
+                    <ng-md-icon data-ng-if="isAllStarsSelected" icon="star" size="25" class="flex-row"></ng-md-icon>
+                </div>
+            </md-button>
+
+            <md-menu>
+                <md-button class="g-cell-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <ng-md-icon icon="crop_16_9" class="flex-row"></ng-md-icon>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="2">
+                    <md-menu-item>
+                        <md-button class="g-cell-button">
+                            <ng-md-icon icon="crop_16_9" class="flex-row"></ng-md-icon>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button class="g-cell-button">
+                            <ng-md-icon icon="crop_16_9" class="flex-row"></ng-md-icon>
+                        </md-button>
+                    </md-menu-item>
+
+                </md-menu-content>
+            </md-menu>
+
+
+            <md-button class="favorite-toggle" data-ng-if="isFavoriteAreaShown" data-ng-click="favoriteAreaToggle()">
+                <div class="flex-row flex-i-center">
+                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>
+                </div>
+            </md-button>
+        </div>
+
+        <div class="g-cell g-group-cell"
+             data-ng-repeat="column in columns track by column.key">
+            <md-button class="g-cell-button">
+                &mdash;
+            </md-button>
+
+            <md-button class="g-group-button">
+                <div class="flex-row flex-i-center">{{column.name}}</div>
+                <div data-ng-if="isSortable(column) && checkReportSortButton(column, $index)">
+                    <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
+                    <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+                </div>
+
+            </md-button>
+        </div>
+
+    </div>
+</div>
