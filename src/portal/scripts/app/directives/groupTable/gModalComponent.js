@@ -858,7 +858,7 @@
 
                                 attributeChanged = true;
 
-								for (var a = 0; a < GCFItems.length; a++) {
+								for (var a = 0; a < GCFItems.length; a++) { // search for the same attr
 
 								 	if (GCFItems[a].key === attributeKey) {
 
