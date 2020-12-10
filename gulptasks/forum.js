@@ -39,11 +39,12 @@
             }))
             .pipe(concat('templates.min.js'))
             .pipe(uglify())
-            .pipe(gulp.dest('src/' + appName + '/scripts/'));
+            .pipe(gulp.dest('src/' + appName + '/scripts/'))
+			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
     }
 
     gulp.task(appName + '-HTML-to-JS', function () {
-        forumHtmlToJs();
+        return forumHtmlToJs();
     });
 
     module.exports = {
