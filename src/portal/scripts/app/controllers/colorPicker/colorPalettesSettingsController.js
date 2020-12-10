@@ -98,19 +98,6 @@
             var selPaletteText = vm.openedPalette.name;
             var selPaletteUserCode = vm.openedPalette.user_code;
 
-            var localsData = {
-                firstInput: {
-                    value: selPaletteText
-                },
-                secondInput: {
-                    value: selPaletteUserCode,
-                    smallOptions: {
-                        noIndicatorBtn: true,
-                        disabled: true
-                    }
-                }
-            }
-
             $mdDialog.show({
                 controller: 'TwoInputsDialogController as vm',
                 templateUrl: 'views/dialogs/two-inputs-dialog-view.html',
@@ -118,7 +105,21 @@
                 targetEvent: $event,
                 multiple: true,
                 locals: {
-                    data: localsData
+                    data: {
+						title: "Choose palette name and user code.",
+						firstInput: {
+							value: selPaletteText,
+							label: "Name"
+						},
+						secondInput: {
+							value: selPaletteUserCode,
+							label: "User code",
+							smallOptions: {
+								noIndicatorBtn: true,
+								disabled: true
+							}
+						}
+					}
                 }
 
             }).then(function (res) {
@@ -129,8 +130,8 @@
 
                         vm.openedPalette.name = res.data.text;
                         vm.openedPalette.user_code = res.data.text2;
-                        var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
-                        colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate);
+                        /* var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
+                        colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate); */
 
                     }
 
@@ -162,27 +163,38 @@
                 multiple: true,
                 locals: {
                     data: {
+                    	title: "Enter name and user code for new palette.",
                         firstInput: {
-                            value: paletteCopyName
+                            value: paletteCopyName,
+							label: "Name"
                         },
                         secondInput: {
                             value: paletteCopyUserCode,
+							label: "User code"
                         },
                         palettesList: vm.palettesList
                     }
                 }
 
-            }).then(function (res) {
+            }).then(async function (res) {
 
                 if (res.status === 'agree') {
 
-                    paletteCopy.name = res.data.text;
-                    paletteCopy.user_code = res.data.text2;
+					var actionBeforeCopying = await vm.beforeShowingPaletteChange();
 
-                    /*colorPalettesService.create(paletteCopy).then(function () {
-                        vm.readyStatus = false;
-                        getPalettesList(paletteCopy.user_code);
-                    });*/
+                	if (actionBeforeCopying !== "disagree") {
+
+                		paletteCopy.name = res.data.text
+						paletteCopy.user_code = res.data.text2
+
+						colorPalettesService.create(paletteCopy).then(function () {
+
+							vm.readyStatus = false;
+							getPalettesList(paletteCopy.user_code);
+
+						});
+
+					}
 
                 }
 
@@ -211,26 +223,37 @@
             var tooltipText = color.tooltip;
 
             $mdDialog.show({
-                controller: 'RenameColorDialogController as vm',
-                templateUrl: 'views/dialogs/rename-color-dialog-view.html',
+                controller: 'TwoInputsDialogController as vm',
+                templateUrl: 'views/dialogs/two-inputs-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
                     data: {
-                        name: colorName,
-                        tooltip: tooltipText
-                    }
+						title: "Choose color name and tooltip.",
+						firstInput: {
+							value: colorName,
+							label: "Name"
+						},
+						secondInput: {
+							value: tooltipText,
+							label: "Tooltip",
+							smallOptions: {
+								noIndicatorBtn: true,
+								disabled: true
+							}
+						}
+					}
                 }
 
             }).then(function (res) {
 
                 if (res.status === 'agree') {
 
-                	if (colorName !== res.data.name || tooltipText !== res.data.tooltipText) {
+                	if (colorName !== res.data.text || tooltipText !== res.data.text2) {
 
-						color.name = res.data.name;
-						color.tooltip = res.data.tooltipText;
+						color.name = res.data.text;
+						color.tooltip = res.data.text2;
                         // vm.onColorChange();
 
                     }
@@ -285,63 +308,73 @@
 			vm.openedPaletteId = paletteId
 			var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
 
-			if (objectComparisonHelper.areObjectsTheSame(paletteToUpdate, openedPaletteOriginal)) {
+			return new Promise(function (resolve) {
 
-				openPalette('id', vm.openedPaletteId);
+				if (objectComparisonHelper.areObjectsTheSame(paletteToUpdate, openedPaletteOriginal)) {
 
-			} else {
+					openPalette('id', vm.openedPaletteId);
+					resolve('no_changes');
 
-				let warningDescription = "All unsaved changes for " +
-					openedPaletteOriginal.name +
-					" will be lost after switch. Do you still want to proceed?";
+				} else {
 
-				$mdDialog.show({
-					controller: 'WarningDialogController as vm',
-					templateUrl: 'views/dialogs/warning-dialog-view.html',
-					parent: angular.element(document.body),
-					targetEvent: $event,
-					clickOutsideToClose: false,
-					locals: {
-						warning: {
-							title: 'Warning',
-							description: warningDescription,
-							actionsButtons: [
-								{
-									name: "Save Layout",
-									response: {status: 'save'}
-								},
-								{
-									name: "Don't Save",
-									response: {status: 'do_not_save'}
-								},
-								{
-									name: "Cancel",
-									response: {status: 'disagree'}
-								}
-							]
+					let warningDescription = "All unsaved changes for " +
+						openedPaletteOriginal.name +
+						" will be lost after switch. Do you still want to proceed?";
+
+					$mdDialog.show({
+						controller: 'WarningDialogController as vm',
+						templateUrl: 'views/dialogs/warning-dialog-view.html',
+						parent: angular.element(document.body),
+						targetEvent: $event,
+						clickOutsideToClose: false,
+						locals: {
+							warning: {
+								title: 'Warning',
+								description: warningDescription,
+								actionsButtons: [
+									{
+										name: "Save Layout",
+										response: {status: 'save'}
+									},
+									{
+										name: "Don't Save",
+										response: {status: 'do_not_save'}
+									},
+									{
+										name: "Cancel",
+										response: {status: 'disagree'}
+									}
+								]
+							}
 						}
-					}
 
-				}).then(function (res) {
+					}).then(function (res) {
 
-					switch (res.status) {
+						switch (res.status) {
 
-						case 'save':
-							vm.savePaletteSettings();
+							case 'save':
+								vm.savePaletteSettings();
 
-						case 'do_not_save':
-							openPalette('id', vm.openedPaletteId);
-							break;
+							case 'do_not_save':
+								openPalette('id', vm.openedPaletteId);
 
-						case 'disagree':
-							vm.openedPaletteId = openedPaletteOriginal.id
-							break;
+								break;
 
-					}
+							case 'disagree':
+								vm.openedPaletteId = openedPaletteOriginal.id
+								break;
 
-				});
+						}
 
-			}
+						resolve(res.status);
+
+					}).catch(function () {
+						resolve('disagree');
+					});
+
+				}
+
+			});
 
 		};
 
