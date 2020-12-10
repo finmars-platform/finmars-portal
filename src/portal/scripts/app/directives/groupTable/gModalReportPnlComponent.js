@@ -17,11 +17,16 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
+    var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         logService.controller('gModalController', 'initialized');
 
         var vm = this;
+
+        var gModalSharedLogicHelper = new GModalSharedLogicHelper(vm);
+
         vm.readyStatus = {content: false};
 
         vm.entityViewerDataService = entityViewerDataService;
@@ -532,7 +537,9 @@
                 'strategy3attrs'
             ];
 
-            evDataHelper.getSelectedAttrs(vm, attributes, groups, columns, filters);
+            const attrGroups = {groups, columns, filters}; // Victor 2020.12.10 I need variables: groups, columns, filters in gModalSharedLogicHelper
+
+            gModalSharedLogicHelper.getSelectedAttrs(attributes, attrGroups);
 
         };
         // < format data for SELECTED tab >
