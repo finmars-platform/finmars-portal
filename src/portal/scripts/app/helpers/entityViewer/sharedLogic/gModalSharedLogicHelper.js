@@ -54,7 +54,11 @@
             const areasGroups = {groups, columns, filters};
             const anotherGroups = Object.keys(areasGroups).filter(group => group !== groupType);
 
-            return anotherGroups.some(key => areasGroups[key].find(attr => attr.key === attrKey));
+            return anotherGroups.some(key => {
+
+                    return areasGroups[key].find(attr => attr.key === attrKey);
+
+            });
 
 /*            let group1, group2;
 
