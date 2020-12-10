@@ -302,6 +302,34 @@
             });
         };
 
+        vm.openAccordionEditor = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorAccordionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-accordion-editor-dialog-view.html',
+                multiple: true,
+                locals: {
+                    data: {
+                        layout: vm.layout
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.layout = res.data.layout;
+
+                    vm.dashboardConstructorDataService.setData(vm.layout);
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+                }
+
+            });
+
+        }
+
         var tabNameInput = null;
 
         var removeKeydownListener = function () {
