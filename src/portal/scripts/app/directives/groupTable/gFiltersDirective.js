@@ -22,13 +22,13 @@
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
-            templateUrl: 'views/directives/groupTable/g-filters-directive-view.html',
             scope: {
                 evDataService: '=',
                 evEventService: '=',
                 attributeDataService: '=',
                 contentWrapElement: '='
             },
+			templateUrl: 'views/directives/groupTable/g-filters-directive-view.html',
             link: function (scope) {
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
