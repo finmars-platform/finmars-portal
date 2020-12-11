@@ -8,51 +8,66 @@
                 popupTemplate: '@', // all data must be already rendered in template
                 popupTemplateUrl: '@', // can bind data from popupData when compile in createPopup
                 popupData: '=',
-                closeOnClick: '=',
+				positionRelativeTo: '@', // ('mouse', 'elem'). Default - 'mouse'.
 
-                popupX: '@', // set left position for popup (optional) ('left', 'right', pixels). Default - 'left' of target element
+				closeOnClickOutside: '=',
+				preventDefault: '@',
+				rightClickOpen: '@', // open popup on right click
+
+				popupX: '@', // set left position for popup (optional) ('left', 'right', pixels). Default - 'left' of target element
                 popupY: '@',  // set top position for popup (optional) ('top', 'bottom', pixels). Default - 'bottom' of target element
 
                 offsetX: '@', // add offset to left position
                 offsetY: '@', // add offset to top position
 
-				preventDefault: '@',
-
                 onSaveCallback: '&?'
 
             },
-            templateUrl: 'views/directives/popup-view.html',
-            transclude: true,
             link: function (scope, elem, attrs) {
 
                 scope.vm = scope.popupData;
-                console.log('scope.popupTemplate', scope.popupTemplate)
+				console.log('scope.popupTemplate', scope.popupTemplateUrl);
 
                 scope.isPopupOpen = false;
                 console.log('scope', scope)
 
-                var bodyElem = document.querySelector("body");
-                var templateElem = elem[0].querySelector('template');
-                var targetElement = elem[0].querySelector('.fields-popup-target');
-                var popupBackdropElem;
-                var popUpElem;
-                console.log('templateElem', templateElem);
+                // var templateElem = elem[0].querySelector('template');
+                // var targetElement = elem[0].querySelector('.fields-popup-target');
+                let popupBackdropElem = document.createElement("div");
+				popupBackdropElem.classList.add('popup-area-backdrop');
+
+                let popUpElem = document.createElement("div");
+				popUpElem.classList.add("popup-container");
+                // console.log('templateElem', templateElem);
 
 
-                var setPopupPosition = function () {
-                    const coords = targetElement.getBoundingClientRect();
-                    popUpElem.style.width = coords.width + 'px';
+                let setPopupPosition = function (event) {
+                    // const coords = targetElement.getBoundingClientRect();
+					let positionX;
+					let positionY;
 
-                    let positionX = coords.left; // default X
-                    let positionY = coords.bottom; // default Y
+					if (scope.positionRelativeTo === 'elem') {
 
-                    if (scope.popupX) {
-                        positionX = ['left', 'right'].includes(scope.popupX) ? coords[scope.popupX] : Number(scope.popupX);
-                    }
+						const coords = elem[0].getBoundingClientRect();
+						popUpElem.style.width = coords.width + 'px';
 
-                    if (scope.popupY) {
-                        positionY = ['top', 'bottom'].includes(scope.popupY) ? coords[scope.popupY] : Number(scope.popupY);
-                    }
+						positionX = coords.left;
+						positionY = coords.bottom;
+
+						if (scope.popupX) {
+							positionX = ['left', 'right'].includes(scope.popupX) ? coords[scope.popupX] : Number(scope.popupX);
+						}
+
+						if (scope.popupY) {
+							positionY = ['top', 'bottom'].includes(scope.popupY) ? coords[scope.popupY] : Number(scope.popupY);
+						}
+
+					} else {
+
+						positionX = event.clientX;
+						positionY = event.clientY;
+
+					}
 
                     if (scope.offsetX) {
                         positionX = positionX + Number(scope.offsetX);
@@ -62,6 +77,7 @@
                         positionY = positionY + Number(scope.offsetY);
                     }
 
+					// Prevents popup from creeping out of window
                     const popupHeight = popUpElem.clientHeight;
                     const popupWidth = popUpElem.clientWidth;
 
@@ -93,16 +109,21 @@
                         popUpElem.style.top = positionY + 'px';
                         popUpElem.style.bottom = null;
                     }
+					// < Prevents popup from creeping out of window >
 
                 };
 
-                var keyUpHandler = function (event) {
-                    scope.isPopupOpen &&  event.key === "Escape" && removePopUp();
+                let keyUpHandler = function (event) {
+
+                	if (scope.isPopupOpen && event.key === "Escape") {
+						removePopUp();
+					}
+
                 };
 
 
-                var resizeTimeout;
-                var resizeThrottler = function () {
+                let resizeTimeout;
+                let resizeThrottler = function () {
 
                     if ( !resizeTimeout ) {
                         resizeTimeout = setTimeout(function() {
@@ -113,43 +134,48 @@
 
                 };
 
-                var resizeHandler = function (event) {
+                let resizeHandler = function (event) {
                     setPopupPosition();
                 }
 
-                var addListeners = function () {
+                let addListeners = function () {
                     document.addEventListener('keyup', keyUpHandler, {once: true});
                     window.addEventListener('resize', resizeThrottler);
                 };
 
-                var removeListeners = function () {
+                let removeListeners = function () {
                     document.removeEventListener('keyup', keyUpHandler);
                     window.removeEventListener('resize', resizeThrottler);
                 };
 
-                var createPopup = function () {
-                    var popupTemplate = templateElem.content.cloneNode(true);
+				let createPopup = function () {
+
+                	// var popupTemplate = templateElem.content.cloneNode(true);
 
                     if (scope.popupTemplateUrl) {
 
-                    	var contentElem = popupTemplate.querySelector('.popup-content-template-url');
-                        contentElem.setAttribute('data-ng-include', scope.popupTemplateUrl);
+                    	/* var contentElem = popupTemplate.querySelector('.popup-content-template-url');
+                        contentElem.setAttribute('data-ng-include', scope.popupTemplateUrl); */
+						// popUpElem.setAttribute('ng-include', scope.popupTemplateUrl);
+						popUpElem.innerHTML = '<div ng-include="' + scope.popupTemplateUrl + '"></div>';
 
                     } else if (scope.popupTemplate) {
 
-                    	var contentElem = popupTemplate.querySelector('.popup-content-template');
-                        contentElem.innerHTML = scope.popupTemplate;
-
+                    	/* var contentElem = popupTemplate.querySelector('.popup-content-template');
+                        contentElem.innerHTML = scope.popupTemplate; */
+						popUpElem.innerHtml = scope.popupTemplate;
                     }
 
-                    $compile($(popupTemplate))(scope);
+                    // $compile($(popupTemplate))(scope);
+					$compile(popUpElem)(scope);
+                    // popupBackdropElem = popupTemplate.querySelector('.popup-area-backdrop');
+                    // popUpElem = popupTemplate.querySelector('.popup-container');
 
-                    popupBackdropElem = popupTemplate.querySelector('.popup-area-backdrop');
-                    popUpElem = popupTemplate.querySelector('.popup-container');
+					document.body.appendChild(popupBackdropElem);
+					document.body.appendChild(popUpElem);
 
-                    $(bodyElem).append($(popupTemplate));
-
-                    setTimeout(setPopupPosition, 0) // append is async. setPopupPosition must be called after append
+					scope.$apply(); // needed to show ng-include content after $compile
+                    // setTimeout(setPopupPosition, 0) // append is async. setPopupPosition must be called after append
 
                     addListeners();
 
@@ -157,10 +183,10 @@
 
                 }
 
-                var removePopUp = function () {
+				let removePopUp = function () {
 
-                    bodyElem.removeChild(popupBackdropElem);
-                    bodyElem.removeChild(popUpElem);
+					document.body.removeChild(popupBackdropElem);
+					document.body.removeChild(popUpElem);
 
                     removeListeners();
 
@@ -168,26 +194,32 @@
 
                 }
 
-                scope.onBackdropClick = function () {
-                    scope.closeOnClick !== false && removePopUp();
-                }
+                /* scope.onBackdropClick = function () {
+
+					if (scope.closeOnClickOutside !== false) {
+						removePopUp();
+					}
+
+                } */
 
 
-                scope.onTargetElementClick = function ($event) {
-                    console.log('onTargetElementClick')
+                scope.onTargetElementClick = function (event) {
+                    console.log('testing onTargetElementClick', scope.rightClickOpen)
 
-					if (scope.preventDefault) {
-						$event.preventDefault();
+					if (scope.preventDefault || scope.rightClickOpen) {
+						event.preventDefault();
 					}
 
                     if (scope.isPopupOpen) {
-                        return removePopUp();
-                    }
+                        removePopUp();
 
-                    var posX = $event.pageX;
-                    var posY = $event.pageY;
+                    } else {
 
-                    createPopup(posX, posY);
+						createPopup();
+
+						setPopupPosition(event);
+
+					}
 
                 }
 
@@ -197,19 +229,25 @@
                         scope.onSaveCallback();
                     }
 
-                    return removePopUp();
+                    removePopUp();
 
                 };
 
 
                 scope.cancel = function () {
-
-                    return removePopUp();
-
+                    removePopUp();
                 };
 
 
                 scope.init = function () {
+
+					let openEvent = scope.rightClickOpen ? "contextmenu": "click";
+
+					elem[0].addEventListener(openEvent, scope.onTargetElementClick);
+
+					if (scope.closeOnClickOutside) {
+						popupBackdropElem.addEventListener("click", removePopUp);
+					}
 
                 }
 
