@@ -22,7 +22,7 @@
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
-            templateUrl: 'views/directives/groupTable/g-filters-directive-view.html',
+            templateUrl: 'views/directives/groupTable/g-filters-view.html',
             scope: {
                 evDataService: '=',
                 evEventService: '=',
