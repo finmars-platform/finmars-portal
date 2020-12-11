@@ -45,7 +45,9 @@
                 var keysOfColsToHide = [];
 
                 scope.favoriteAreaToggle = function () {
+
                     scope.isFavoriteAreaShown = !scope.isFavoriteAreaShown;
+
                 }
 
                 var getAttributes = function () {

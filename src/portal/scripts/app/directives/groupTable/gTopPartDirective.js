@@ -20,7 +20,7 @@
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'AE',
-            templateUrl: 'views/directives/groupTable/g-top-part-directive-view.html',
+            templateUrl: 'views/directives/groupTable/g-top-part-view.html',
             scope: {
                 evDataService: '=',
                 evEventService: '=',
