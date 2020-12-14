@@ -529,7 +529,7 @@
 
                 var result = [];
 
-                attributeTypeService.getList(entityType).then(function (data) {
+                attributeTypeService.getList(entityType, {pageSize: 1000}).then(function (data) {
 
                     result = data.results;
 
