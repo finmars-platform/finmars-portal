@@ -51,6 +51,44 @@
                 var dynamicAttrs = [];
                 var keysOfColsToHide = [];
 
+                // Victor 2020.12.14 #69 New report viewer design
+                scope.getPopupData = function (column, $index) {
+
+                    return {
+                        $index: $index,
+                        column: column,
+                        viewContext: scope.viewContext,
+                        renameColumn: scope.renameColumn,
+                        isReport: scope.isReport,
+                        columnHasCorrespondingGroup: scope.columnHasCorrespondingGroup,
+                        addColumnEntityToGrouping: scope.addColumnEntityToGrouping,
+                        checkForFilteringBySameAttr: scope.checkForFilteringBySameAttr,
+                        addFiltersWithColAttr: scope.addFiltersWithColAttr,
+                        activateColumnNumberRenderingPreset: scope.activateColumnNumberRenderingPreset,
+                        selectSubtotalType: scope.selectSubtotalType,
+                        checkSubtotalFormula: scope.checkSubtotalFormula,
+                        resizeColumn: scope.resizeColumn,
+                        removeColumn: scope.removeColumn,
+
+                        changeColumnTextAlign: scope.changeColumnTextAlign,
+                        checkColTextAlign: scope.checkColTextAlign,
+                        removeGroup: scope.removeGroup,
+                    };
+
+                };
+
+                scope.getPopupMenuTemplate = function (column) {
+
+
+                    if (scope.isReport && column.value_type == 20) {
+
+                        return "'views/popups/g-report-viewer-numeric-column-settings-popup-menu.html'"; // Victor 2020.12.14 #69 string in string must returned for template binding
+
+                    }
+
+                    return "'views/popups/g-report-viewer-column-settings-popup-menu.html'";
+                }
+
                 scope.onColumnsChange = function () {
 
 
@@ -61,6 +99,8 @@
                     scope.isFavoriteAreaShown = !scope.isFavoriteAreaShown;
 
                 }
+
+                // <Victor 2020.12.14 #69 New report viewer design>
 
                 var getAttributes = function () {
 
