@@ -70,6 +70,10 @@ md-toolbar:not(.md-menu-toolbar) {
   }
 }
 
+md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
+  color: #747474;
+}
+
 md-toolbar {
 
   color: #747474;
@@ -81,7 +85,7 @@ md-toolbar {
   }
 
   .toolbar-wrapper {
-    height: 52px;
+    height: 53px; // 1px for border;
     color: #747474;
     fill: #747474;
     border-bottom: 1px solid rgba(224, 224, 224, 1);
@@ -109,13 +113,16 @@ md-toolbar:not(.md-hue-1),
   .md-toolbar-tools {
     min-height: 52px;
     height: 52px;
+    background-color: rgba(242, 242, 242, 1);
   }
 }
+
+
 
 .md-toolbar-tools {
   position: relative;
   //background-color: #4c334d;
-  background-color: rgba(242, 242, 242, 1);
+  background-color: #fff;
 }
 
 md-sidenav {
@@ -564,7 +571,7 @@ md-backdrop.md-select-backdrop {
 }
 
 .unreaded-notifications-number {
-  background: rgba(255, 64, 129, 0.87);
+  background: #F05A22;
   border-radius: 23px;
   position: relative;
   top: -18px;

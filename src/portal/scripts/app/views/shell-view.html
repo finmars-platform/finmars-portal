@@ -141,8 +141,15 @@
                                                        aria-label="Notifications">
                                                 <ng-md-icon icon="flag"></ng-md-icon>
                                                 <span data-ng-show="vm.unreadedNotificationsAmount"
-                                                      data-ng-bind="vm.unreadedNotificationsAmount"
-                                                      class="unreaded-notifications-number"></span>
+                                                      data-ng-if="vm.unreadedNotificationsAmount <= 99 "
+                                                class="unreaded-notifications-number">
+                                                    {{vm.unreadedNotificationsAmount}}
+                                                </span>
+                                                <span data-ng-show="vm.unreadedNotificationsAmount"
+                                                      data-ng-if="vm.unreadedNotificationsAmount > 99 "
+                                                      class="unreaded-notifications-number">
+                                                    99+
+                                                </span>
                                             </md-button>
 
                                             <md-button style="margin-left: 0"
