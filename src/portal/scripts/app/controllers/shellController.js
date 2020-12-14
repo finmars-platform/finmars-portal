@@ -233,7 +233,7 @@
             return metaService.getCurrentLocation($state).toUpperCase();
         };*/
         vm.currentLocation = function () {
-            return metaService.getHeaderTitleForCurrentLocation($state);
+            return metaService.getHeaderTitleForCurrentLocation($state).toLocaleLowerCase();
         };
 
         // Get name of active layout in the toolbar

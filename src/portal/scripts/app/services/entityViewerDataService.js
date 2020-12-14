@@ -7,7 +7,7 @@
 
     var getDefaultInterfaceLayout = function () {
 
-        var sidebarWidth = 200;
+        var sidebarWidth = 160;
         var sidebarHeight = document.body.clientHeight;
 
         var headerToolbarHeight = 64;

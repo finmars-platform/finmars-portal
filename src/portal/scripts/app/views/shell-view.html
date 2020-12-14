@@ -13,6 +13,7 @@
                         <div layout="columns" class="toolbar-wrapper">
                             <div class="md-toolbar-tools" flex="60" layout="start center">
                                 <h2 data-ng-if="vm.currentLocation().length > 0"
+                                    class="current-location-title"
                                     data-ng-bind="vm.currentLocation()"></h2>
                             </div>
 
@@ -53,7 +54,7 @@
                                         <md-menu>
                                             <md-button class="md-button header-account-btn" aria-label="Account button"
                                                        ng-click="$mdOpenMenu($event)">
-                                                <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
+                                                <ng-md-icon icon="account_box" size="24"></ng-md-icon>
                                                 <span class="header-profile-name"
                                                       data-ng-bind="vm.user.username"></span>
                                             </md-button>
@@ -91,7 +92,7 @@
 
                                 <div layout="row" class="toolbar-wrapper">
                                     <div class="md-toolbar-tools" flex="60" layout="start center">
-                                        <h2 data-ng-if="vm.currentLocation().length > 0"
+                                        <h2 class="current-location-title" data-ng-if="vm.currentLocation().length > 0"
                                             data-ng-bind="vm.currentLocation()"></h2>
                                         <h3 data-ng-if="vm.isStateOfEntity()" class="toolbar-layout-info">
                                             (Layout: <span
@@ -184,7 +185,7 @@
                                                     <md-button class="md-button header-account-btn"
                                                                ng-click="$mdOpenMenu($event)"
                                                                aria-label="Account button">
-                                                        <ng-md-icon icon="account_circle" size="48"></ng-md-icon>
+                                                        <ng-md-icon icon="account_box" size="24"></ng-md-icon>
                                                         <span class="header-profile-name"
                                                               data-ng-bind="vm.user.username"></span>
                                                     </md-button>
