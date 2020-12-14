@@ -848,17 +848,22 @@
             <md-button class="g-group-button flex-row"
                        data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')"
                        popup
-                       popup-template-url="'views/popups/g-report-viewer-column-settings-popup-menu.html'"
+                       popup-template-url="{{getPopupMenuTemplate(column)}}"
                        position-relative-to="mouse"
                        right-click-open="'true'"
-                       close-on-click-outside="'true'"
-
+                       close-on-click-outside="true"
                        prevent-default="'true'"
-                       on-save-callback="">
+                       on-save-callback=""
+                       popup-data="{data: getPopupData(column, $index)}"
+                       offset-x="-10"
+                       offset-y="-10"
+                       backdrop-classes="low-z-index-backdrop class2 class3">
                 <div>{{column.name}}</div>
 <!--                popup-y="top"-->
 <!--                offset-y="-24"-->
 <!--                popup-data="vm.fixedAreaPopup"-->
+<!--                popup-template-url="{{getPopupMenuTemplate(column)}}"-->
+<!--                popup-template-url="'views/popups/g-report-viewer-column-settings-popup-menu.html'"-->
 
                 <div class="sort">
                     <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
@@ -873,7 +878,19 @@
         <div class="g-cell g-group-cell"
              data-ng-repeat="column in notGroupingColumns track by column.key">
 
-            <md-button class="g-group-button flex-row" data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
+            <md-button class="g-group-button flex-row"
+                       data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')"
+                       popup
+                       popup-template-url="{{getPopupMenuTemplate(column)}}"
+                       position-relative-to="mouse"
+                       right-click-open="'true'"
+                       close-on-click-outside="true"
+                       prevent-default="'true'"
+                       on-save-callback=""
+                       popup-data="{data: getPopupData(column, $index)}"
+                       offset-x="-10"
+                       offset-y="-10"
+                       backdrop-classes="low-z-index-backdrop">
                 <div>{{column.name}}</div>
                 <div class="sort">
                     <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>

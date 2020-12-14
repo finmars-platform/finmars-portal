@@ -13,6 +13,7 @@
 				closeOnClickOutside: '=',
 				preventDefault: '@',
 				rightClickOpen: '@', // open popup on right click
+                backdropClasses: '@', // add css classes to backdrop
 
 				popupX: '@', // set left position for popup (optional) ('left', 'right', pixels). Default - 'left' of target element
                 popupY: '@',  // set top position for popup (optional) ('top', 'bottom', pixels). Default - 'bottom' of target element
@@ -29,12 +30,19 @@
 				console.log('scope.popupTemplate', scope.popupTemplateUrl);
 
                 scope.isPopupOpen = false;
-                console.log('scope', scope)
 
                 // var templateElem = elem[0].querySelector('template');
                 // var targetElement = elem[0].querySelector('.fields-popup-target');
                 let popupBackdropElem = document.createElement("div");
 				popupBackdropElem.classList.add('popup-area-backdrop');
+
+				if (typeof scope.backdropClasses === 'string' && scope.backdropClasses.trim().length > 0) {
+
+				    const classes = scope.backdropClasses.split(' ');
+
+				    popupBackdropElem.classList.add(...classes);
+
+                }
 
                 let popUpElem = document.createElement("div");
 				popUpElem.classList.add("popup-container");
