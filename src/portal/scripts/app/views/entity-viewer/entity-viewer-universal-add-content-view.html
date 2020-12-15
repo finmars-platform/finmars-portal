@@ -393,22 +393,23 @@
 
                 <md-tab-body>
                     <md-content class="md-padding p-t-26">
-                        <md-content class="md-padding">
-                            <div data-ng-if="vm.readyStatus.permissions">
+                        <md-content class="md-padding permissions-table">
+                            <div ng-if="vm.readyStatus.permissions"
+                                 class="permissions-table"
+                                 style="min-width: 410px;">
 
                                 <h3>Group permissions</h3>
 
                                 <div>
-                                    <div layout="column">
-                                        <div layout="row" layout-align="space-between center"
-                                             class="permissions-table-header">
-                                            <div>
-                                                <div class="permissions-columns">Group name
-                                                </div>
+                                    <div class="flex-column">
+                                        <div class="flex-row fc-space-between fi-end permissions-table-header">
+                                            <div class="flex-0-1-100">
+                                                <div class="permissions-columns">Group name</div>
                                             </div>
-                                            <div layout="row" class="permissions-checkbox-holder" flex="30"
-                                                 layout-align="space-between center">
-                                                <div class="permissions-columns" flex="33">
+
+                                            <div class="flex-row fc-space-between fi-center permissions-checkbox-holder"
+                                                 style="flex: 0 0 295px;">
+                                                <div class="flex-33 flex-center permissions-columns">
                                                     Delegate
                                                     <ng-md-icon class="tooltip-inline-block" icon="info"
                                                                 size="20" style="fill: #777777">
@@ -418,7 +419,8 @@
                                                         </md-tooltip>
                                                     </ng-md-icon>
                                                 </div>
-                                                <div class="permissions-columns" flex="33">
+
+                                                <div class="flex-33 flex-center permissions-columns">
                                                     Write
                                                     <ng-md-icon class="tooltip-inline-block" icon="info"
                                                                 size="20" style="fill: #777777">
@@ -428,7 +430,8 @@
                                                         </md-tooltip>
                                                     </ng-md-icon>
                                                 </div>
-                                                <div class="permissions-columns" flex="33"
+
+                                                <div class="flex-33 flex-center permissions-columns"
                                                      data-ng-if="vm.entityType !== 'currency'">
                                                     Read
                                                     <ng-md-icon class="tooltip-inline-block" icon="info"
@@ -444,26 +447,27 @@
                                         </div>
                                         <md-divider></md-divider>
                                     </div>
-                                    <div data-ng-repeat="group in vm.groups" layout="column">
-                                        <div layout="row" layout-align="space-between center"
-                                             class="permissions-table-row">
-                                            <div>
+
+                                    <div data-ng-repeat="group in vm.groups" class="flex-column">
+                                        <div class="flex-row fc-space-between permissions-table-row">
+                                            <div class="flex-0-1-100">
                                                 <p> {{ group.name }} </p>
                                             </div>
-                                            <div layout="row" class="permissions-checkbox-holder" flex="30"
-                                                 layout-align="space-between center">
-                                                <div flex="33" layout="center center">
+
+                                            <div class="flex-row fc-space-between fi-center permissions-checkbox-holder"
+                                                 style="flex: 0 0 295px;">
+                                                <div class="flex-33 flex-center permissions-columns">
                                                     <md-checkbox class="md-secondary"
                                                                  data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
                                                                  ng-model="group.objectPermissions.manage"></md-checkbox>
                                                 </div>
-                                                <div flex="33" layout="center center">
+                                                <div class="flex-33 flex-center permissions-columns">
                                                     <md-checkbox class="md-secondary"
                                                                  data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
                                                                  ng-model="group.objectPermissions.change"></md-checkbox>
                                                 </div>
-                                                <div flex="33" layout="center center"
-                                                     data-ng-if="vm.entityType !== 'currency'">
+                                                <div data-ng-if="vm.entityType !== 'currency'"
+                                                     class="flex-33 flex-center permissions-columns">
                                                     <md-checkbox class="md-secondary"
                                                                  data-ng-class="{'disabled-btn': (vm.isInheritRights || !group.objectPermissions.manage) && !vm.currentMember.is_admin}"
                                                                  ng-model="group.objectPermissions.view"></md-checkbox>
