@@ -32,8 +32,18 @@
                 <div data-ng-if="vm.grandTotalProcessing" class="text-center">
                     <i>Calculating</i>
                 </div>
+
                 <div data-ng-if="!vm.grandTotalProcessing">
-                    <div class="grand-total-value" ng-class="{'negative-red': vm.grandTotalNegative}">{{vm.grandTotalValue}}</div>
+
+                    <number-input
+                            label="{{vm.componentData.custom_component_name}}"
+                            model="vm.grandTotalValue"
+                            number-format="vm.componentData.settings.number_format"
+                            small-optinos="{noIndicatorBtn: true}"
+                            is-disabled="true"
+                    ></number-input>
+
+<!--                    <div class="grand-total-value" ng-class="{'negative-red': vm.grandTotalNegative}">{{vm.grandTotalValue}}</div>-->
                 </div>
 
             </div>
@@ -59,9 +69,16 @@
                                       ev-event-service="vm.entityViewerEventService"></report-viewer-matrix>
             </div>
 
+            <div data-ng-if="vm.componentData.type === 'report_viewer_table_chart'" class="height-100">
+                <report-viewer-table-chart class="height-100 display-block"
+                                      table-chart-settings="vm.tableChartSettings"
+                                      ev-data-service="vm.entityViewerDataService"
+                                      ev-event-service="vm.entityViewerEventService"></report-viewer-table-chart>
+            </div>
+
         </div>
 
-        <div data-ng-if="!readyStatus.disabled && (!vm.readyStatus.attributes || !vm.readyStatus.layout)">
+        <div data-ng-if="vm.componentData.type != 'report_viewer_grand_total' && !readyStatus.disabled && (!vm.readyStatus.attributes || !vm.readyStatus.layout)">
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
                 <!--<md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>-->
                 <progress-circular diameter="100"></progress-circular>

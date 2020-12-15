@@ -343,6 +343,7 @@
 
                 console.log('Grand Total Status: rootGroup', rootGroup);
                 console.log('Grand Total Status: flatList', flatList);
+                console.log('Grand Total Status: componentData', vm.componentData);
 
                 var root = flatList[0];
 
@@ -1772,6 +1773,16 @@
                         styles: vm.componentData.settings.styles,
                         auto_scaling: vm.componentData.settings.auto_scaling,
                         hide_empty_lines: vm.componentData.settings.hide_empty_lines
+                    };
+                }
+
+                if (vm.componentData.type === 'report_viewer_table_chart') {
+                    vm.tableChartSettings = {
+                        title_column: vm.componentData.settings.title_column,
+                        value_column: vm.componentData.settings.value_column,
+
+                        title_column_name: vm.componentData.settings.title_column_name,
+                        value_column_name: vm.componentData.settings.value_column_name
                     };
                 }
 
