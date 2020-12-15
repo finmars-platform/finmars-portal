@@ -1,4 +1,4 @@
-<div>
+<div class="dashboard-control">
 
 <!--    <div class="dashboard-component-name text-center">-->
 <!--        <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>-->
@@ -45,52 +45,53 @@
 
     <div data-ng-if="componentData.settings.value_type == 100" class="position-relative">
 
-        <div data-ng-if="componentData.settings.content_type == 'currencies.currency' || componentData.settings.content_type == 'instruments.pricingpolicy'">
+<!--        <div data-ng-if="componentData.settings.content_type == 'currencies.currency' || componentData.settings.content_type == 'instruments.pricingpolicy'">-->
 
-            <div data-ng-if="!componentData.settings.multiple">
-                <md-input-container class="md-block no-error-spacer">
-                    <label data-ng-bind="item.data.store.label"></label>
+<!--            <div data-ng-if="!componentData.settings.multiple">-->
+<!--                <md-input-container class="md-block no-error-spacer">-->
+<!--                    <label data-ng-bind="item.data.store.label"></label>-->
 
-                    <md-select data-ng-model="item.data.store.value"
-                               data-ng-change="valueChanged()"
-                               md-on-open="getData()"
-                               md-container-class="common-select-container"
-                               md-on-close="searchTerm = ''"
-                               style="margin-bottom: 10px">
+<!--                    <md-select data-ng-model="item.data.store.value"-->
+<!--                               data-ng-change="valueChanged()"-->
+<!--                               md-on-open="getData()"-->
+<!--                               md-container-class="common-select-container"-->
+<!--                               md-on-close="searchTerm = ''"-->
+<!--                               style="margin-bottom: 10px">-->
 
-                        <md-select-header>
-                            <input data-ng-model="searchTerm"
-                                   type="search"
-                                   placeholder="Search for a ..."
-                                   class="md-text md-select-search-pattern select-input-filter"
-                                   ng-keydown="$event.stopPropagation()">
-                        </md-select-header>
+<!--                        <md-select-header>-->
+<!--                            <input data-ng-model="searchTerm"-->
+<!--                                   type="search"-->
+<!--                                   placeholder="Search for a ..."-->
+<!--                                   class="md-text md-select-search-pattern select-input-filter"-->
+<!--                                   ng-keydown="$event.stopPropagation()">-->
+<!--                        </md-select-header>-->
 
-                        <div class="select-options-holder">
-                            <md-option
-                                    data-ng-repeat="field in fields | orderBy:'-name' | filter:{name: searchTerm} as results track by field.id "
-                                    ng-value="field.id">
-                                {{field.name}}
-                            </md-option>
-                        </div>
+<!--                        <div class="select-options-holder">-->
+<!--                            <md-option-->
+<!--                                    data-ng-repeat="field in fields | orderBy:'-name' | filter:{name: searchTerm} as results track by field.id "-->
+<!--                                    ng-value="field.id">-->
+<!--                                {{field.name}}-->
+<!--                            </md-option>-->
+<!--                        </div>-->
 
-                    </md-select>
-                </md-input-container>
-            </div>
+<!--                    </md-select>-->
+<!--                </md-input-container>-->
+<!--            </div>-->
 
-            <div data-ng-if="componentData.settings.multiple">
-                <two-fields-multiselect data-title="{{item.data.name}}"
-                                        data-items="fields"
-                                        data-model="item.data.store.value"
-                                        data-name-property="short_name"
-                                        data-get-data-method="getDataForMultiselect()"
-                                        data-on-change-callback="valueChanged()"
-                                        class="two-fields-multiselect no-error-spacer dashboard-control-multiselect"></two-fields-multiselect>
-            </div>
+<!--            <div data-ng-if="componentData.settings.multiple">-->
+<!--                <two-fields-multiselect data-title="{{item.data.name}}"-->
+<!--                                        data-items="fields"-->
+<!--                                        data-model="item.data.store.value"-->
+<!--                                        data-name-property="short_name"-->
+<!--                                        data-get-data-method="getDataForMultiselect()"-->
+<!--                                        data-on-change-callback="valueChanged()"-->
+<!--                                        class="two-fields-multiselect no-error-spacer dashboard-control-multiselect"></two-fields-multiselect>-->
+<!--            </div>-->
 
-        </div>
+<!--        </div>-->
 
-        <div data-ng-if="componentData.settings.content_type != 'currencies.currency' && componentData.settings.content_type != 'instruments.pricingpolicy'">
+<!--        <div data-ng-if="componentData.settings.content_type != 'currencies.currency' && componentData.settings.content_type != 'instruments.pricingpolicy'">-->
+        <div>
 
             <div data-ng-if="!componentData.settings.multiple">
 

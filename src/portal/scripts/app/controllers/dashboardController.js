@@ -41,7 +41,6 @@
 
             var result = [];
 
-
             console.log('generateProjection.vm.layout', layout);
 
             var data = JSON.parse(JSON.stringify(layout.data));
@@ -171,6 +170,7 @@
                 vm.readyStatus.data = true;
 
                 vm.projection = vm.generateProjection(vm.layout);
+                vm.dashboardDataService.setProjection(vm.projection);
 
                 vm.initDashboardComponents();
 
@@ -191,6 +191,7 @@
                 }
 
                 vm.projection = vm.generateProjection(vm.layout);
+                vm.dashboardDataService.setProjection(vm.projection);
 
                 vm.dashboardDataService.setData(vm.layout);
                 vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
@@ -233,6 +234,8 @@
                     vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
                     vm.projection = vm.generateProjection(vm.layout);
+
+                    vm.dashboardDataService.setProjection(vm.projection);
 
                     vm.readyStatus.data = true;
 
