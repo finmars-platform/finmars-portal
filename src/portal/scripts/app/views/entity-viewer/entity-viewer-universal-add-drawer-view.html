@@ -68,24 +68,6 @@
                 </md-menu-content>
             </md-menu>
 
-
-            <!--        <div>
-                        <md-button class="md-raised" ng-click="vm.cancel()">
-                            Cancel
-                        </md-button>
-                        <md-button class="md-raised" data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
-                                   ng-click="vm.save()" style="margin-right:20px;">
-                            Add and Exit
-                        </md-button>
-                    </div>-->
-
-
-            <md-button class="outline-button"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
-                       ng-click="vm.save($event, false)">
-                Save
-            </md-button>
-
             <md-button class="m-r-24 primary-button"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
                        ng-click="vm.save($event, true)">

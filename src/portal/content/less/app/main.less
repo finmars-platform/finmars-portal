@@ -857,13 +857,22 @@ md-card.small-width {
   margin-right: 10px;
 }
 
-.permissions-checkbox-holder md-checkbox {
-  margin: 0 auto;
+.permissions-checkbox-holder {
+
+  md-checkbox {
+    margin: 0 auto;
+  }
+
+  & > div {
+    margin-right: 10px;
+    text-align: center;
+  }
 }
 
-.permissions-checkbox-holder > div {
-  margin-right: 10px;
-  text-align: center;
+.permissions-table {
+  .permissions-checkbox-holder > div {
+    margin-right: 0;
+  }
 }
 
 button.header-account-btn.md-button {

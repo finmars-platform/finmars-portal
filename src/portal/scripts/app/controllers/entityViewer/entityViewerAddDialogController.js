@@ -1139,7 +1139,7 @@
                 vm.entityAttrs,
                 vm.attributeTypes,
                 []);
-
+			console.log("testing errors", errors);
             if (errors.length) {
 
                 tabsWithErrors = {};
@@ -1152,16 +1152,18 @@
                         var tabName = errorObj.locationData.name.toLowerCase();
 
                         var selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
-
                         var tabNameElem = document.querySelector(selectorString);
 
-                        tabNameElem.classList.add('error-tab');
+						if (tabNameElem) {
+							tabNameElem.classList.add('error-tab');
+						}
 
                         if (!tabsWithErrors.hasOwnProperty(tabName)) {
                             tabsWithErrors[tabName] = [errorObj.key];
 
-                        } else if (tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
-                            tabsWithErrors[tabName].push(errorObj.key);
+                        } else if (tabsWithErrors[tabName].includes(errorObj.key)) {
+
+                        	tabsWithErrors[tabName].push(errorObj.key);
 
                         }
 
@@ -1173,7 +1175,7 @@
                 });
 
                 vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
-                //vm.evEditorEvent = {key: 'mark_not_valid_fields'};
+                // vm.evEditorEvent = {key: 'mark_not_valid_fields'};
 
                 $mdDialog.show({
                     controller: 'EvAddEditValidationDialogController as vm',
