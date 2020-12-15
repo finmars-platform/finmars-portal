@@ -103,25 +103,10 @@
                 "value_type": "boolean"
             },
             {
-                "key": "tags",
-                "name": "Tags",
-                "value_type": "mc_field",
-                "value_entity": "tag",
-                "code": "user_code",
-                "allow_null": true
+                "key": "object_permissions",
+                "name": "Object permissions",
+                "value_type": "mc_field"
             }
-            // {
-            //     "key": "object_permissions_user",
-            //     "name": "Users permissions",
-            //     "value_type": "mc_field",
-            //     "allow_null": true
-            // },
-            // {
-            //     "key": "object_permissions_group",
-            //     "name": "Groups permissions",
-            //     "value_type": "mc_field",
-            //     "allow_null": true
-            // }
         ]
     };
 

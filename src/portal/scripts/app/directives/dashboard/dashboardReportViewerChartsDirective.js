@@ -9,7 +9,7 @@
     var uiService = require('../../services/uiService');
 
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
-    var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
+    var DashboardComponentEventService = require('../../services/eventService');
 
 	var dashboardHelper = require('../../helpers/dashboard.helper');
 

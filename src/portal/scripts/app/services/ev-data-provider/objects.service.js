@@ -11,82 +11,6 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    // DEPRECATED
-    var getList = function (entityType, options) {
-
-        var entityUrl = entityUrlService.resolve(entityType);
-
-        var queryParams = '';
-
-        if (options) {
-            queryParams = '?' + queryParamsHelper.toQueryParamsString(options)
-        }
-
-        return window.fetch(baseUrl + entityUrl + '/' + queryParams,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return data.json();
-        })
-
-        /*return window.fetch(configureRepositoryUrlService.configureUrl(baseUrl + entityUrl, options),
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(function (response) {
-
-                if (!response.ok) {
-                    throw response;
-                }
-
-                return response.json();
-            })
-*/
-    };
-
-    var filter_settings = [
-        {
-            "key": "attributes.Asse_Sub_Type",
-            "filter_type": "does_not_contains",
-            "exclude_empty_cells": false,
-            "value_type": 10,
-            "value": [
-                'Bank notes'
-            ]
-        },
-        // {
-        //     "key":"attributes.ISIN",
-        //     "filter_type":"contains",
-        //     "exclude_empty_cells":false,
-        //     "value_type":10,
-        //     "value":[
-        //         'US 12344444'
-        //     ]
-        // },
-        // {
-        //     "key":"attributes.number_attr",
-        //     "filter_type":"equal",
-        //     "exclude_empty_cells":false,
-        //     "value_type":20,
-        //     "value":[
-        //         15242
-        //     ]
-        // }
-
-    ];
-
     var getFilteredList = function (entityType, options) {
 
         console.log('getFilteredList.options', options);
@@ -95,7 +19,7 @@
 
         var entityUrl = entityUrlService.resolve(entityType);
 
-        return xhrService.fetch(baseUrl + entityUrl + '/filtered/',
+        return xhrService.fetch(baseUrl + entityUrl + '-ev/filtered/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -111,7 +35,6 @@
     };
 
     module.exports = {
-        getList: getList, // DEPRECATED
         getFilteredList: getFilteredList
     }
 

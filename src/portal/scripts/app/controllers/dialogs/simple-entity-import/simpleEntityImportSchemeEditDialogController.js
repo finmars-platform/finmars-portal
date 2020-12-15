@@ -158,7 +158,9 @@
             var entity = metaContentTypesService.findEntityByContentType(vm.scheme.content_type);
             vm.entityType = entity;
 
-            attributeTypeService.getList(entity).then(function (data) {
+            attributeTypeService.getList(entity, {
+                pageSize: 1000
+            }).then(function (data) {
 
                 vm.dynamicAttributes = data.results;
 
