@@ -821,7 +821,7 @@
 
         //popup.style.cssText = menuPosition;
 
-    }
+    };
 
     var preparePopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
 
@@ -858,7 +858,30 @@
 
         return popup;
 
-    }
+    };
+
+    var separateNotGroupingColumns = function (columns, groups) {
+
+        const notGroupingColumns = [];
+
+        columns.forEach(column => {
+
+            const isGroupingColumn = groups.find(group => {
+
+                return group.key === column.key;
+
+            });
+
+            if (!isGroupingColumn) {
+
+                notGroupingColumns.push(column);
+
+            }
+
+        });
+
+        return notGroupingColumns;
+    };
 
     module.exports = {
 
@@ -902,7 +925,9 @@
         isSelected: isSelected,
 
         getGroupsTypesToLevel: getGroupsTypesToLevel,
-        getGroupsValuesByItem: getGroupsValuesByItem
+        getGroupsValuesByItem: getGroupsValuesByItem,
+
+        separateNotGroupingColumns: separateNotGroupingColumns
     }
 
 
