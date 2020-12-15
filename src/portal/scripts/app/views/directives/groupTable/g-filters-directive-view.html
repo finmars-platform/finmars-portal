@@ -1,24 +1,35 @@
 <div class="g-filters width-100 flex-row fc-space-between flex-i-start"
      data-ng-class="{'open-filters': isFiltersOpened}">
+
     <div class="flex-row flex-i-center">
 
-            <md-button class="md-icon-button primary-button rounded" data-ng-click="calculateReport()">
-                <div class="flex-row flex-c-center flex-i-center">
-                    <ng-md-icon icon="refresh" size="20">
-                        <md-tooltip md-direction="top">Calculate</md-tooltip>
-                    </ng-md-icon>
-                </div>
+        <md-button class="md-icon-button primary-button rounded" data-ng-click="calculateReport()">
+            <div class="flex-row flex-c-center flex-i-center">
+                <ng-md-icon icon="refresh" size="20">
+                    <md-tooltip md-direction="top">Calculate</md-tooltip>
+                </ng-md-icon>
+            </div>
+        </md-button>
 
-            </md-button>
+        <md-button class="md-icon-button chain-button" data-ng-click="isFiltersOpened = !isFiltersOpened">
+            <div class="flex-row flex-c-center flex-i-center">
+                <ng-md-icon icon="link" size="20"></ng-md-icon>
+            </div>
+        </md-button>
 
-
-            <md-button class="md-icon-button chain-button" data-ng-click="isFiltersOpened = !isFiltersOpened">
-                <div class="flex-row flex-c-center flex-i-center">
-                    <ng-md-icon icon="link" size="20">
-                    </ng-md-icon>
-                </div>
-
-            </md-button>
+        <div ng-if="readyStatus.filters">
+            <div popup
+                 popup-template-url="'views/popups/g-filter-settings.html'"
+                 popup-data="popupData"
+                 popup-event-service="popupEventService"
+                 popup-x="popupPosX"
+                 popup-y="popupPosY">
+                <chips-list chips-list="filtersChips"
+                            chips-deletion="true"
+                            chips-container-width="800"
+                            on-chip-click="onFilterChipClick"></chips-list>
+            </div>
+        </div>
 
         <div>
             <md-button class="link-button">
@@ -167,7 +178,6 @@
                         <span>Custom Columns</span>
                     </md-button>
                 </md-menu-item>
-
             </md-menu-content>
         </md-menu>
 

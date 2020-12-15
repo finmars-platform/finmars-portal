@@ -1,0 +1,20 @@
+<div class="flex-row fc-space-between">
+    <md-select ng-model="activeFilterType"
+               ng-change="changeFilterType()"
+               class="rv-filter-types-select">
+        <div class="select-options-holder">
+
+            <md-option ng-repeat="type in filterTypes"
+                       ng-value="type.value"
+                       ng-bind="type.name"></md-option>
+
+        </div>
+    </md-select>
+
+    <md-input-container class="rv-filter-value-container no-error-spacer md-block"
+                        md-no-float>
+        <input type="text"
+               ng-model="filter.options.filter_values[0]"
+               placeholder="Value" />
+    </md-input-container>
+</div>
