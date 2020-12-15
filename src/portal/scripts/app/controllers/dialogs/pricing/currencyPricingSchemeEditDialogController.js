@@ -74,7 +74,7 @@
 
             var entityType = 'currency';
 
-            attributeTypeService.getList(entityType).then(function (data) {
+            attributeTypeService.getList(entityType, {pageSize: 1000}).then(function (data) {
 
                 vm.attributeTypes = data.results;
 

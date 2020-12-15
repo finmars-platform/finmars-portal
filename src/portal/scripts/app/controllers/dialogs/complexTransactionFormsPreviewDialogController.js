@@ -496,7 +496,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType).then(function (data) {
+            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
             });
