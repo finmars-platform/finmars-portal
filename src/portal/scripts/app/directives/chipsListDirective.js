@@ -2,21 +2,24 @@
 
 	'use strict';
 
-	let directivesEvents = require("../services/directivesEvents");
+	let directivesEvents = require("../services/events/directivesEvents");
 
 	module.exports = function ($filter) {
 		return {
 			restrict: "E",
 			scope: {
 				chipsList: "=",
+
 				eventService: "=",
+
 				chipsDeletion: "@", // whether allow chips deletion
 				orderChips: "@",
 				isDisabled: "=",
                 // dropdownMenuOptions: "=",
-				chipsContainerWidth: "=",
-                onChipDeletion: "=", // pass function with argument that is array of deleted inputs
-				onChipClick: "=" // pass function with argument that contains object with next properties: chipsList
+				chipsContainerWidth: "=", // in pixels
+
+				onChipDeletion: "=", // pass function with argument that is array of deleted inputs
+				onChipClick: "=" // [ function({}) ]
 			},
 			templateUrl: "views/directives/chips-list-view.html",
 			link: function (scope, elem, attr) {
@@ -56,16 +59,13 @@
 
                     $event.stopPropagation();
 
-					let chipsList = chipData;
-
-					if (!Array.isArray(chipData)) {
-
-						chipsList = [chipData];
-
-					}
+					let chipsData = {
+						hiddenChips: Array.isArray(chipData),
+						data: chipData
+					};
 
 					if (scope.onChipClick) {
-						scope.onChipClick(chipsList);
+						scope.onChipClick({chipsData: chipsData, event: $event});
 					}
 
 				};
