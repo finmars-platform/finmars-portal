@@ -779,6 +779,7 @@
         </div>
     </div>
 </div>
+
 <!--Victor #69 New report viewer interface-->
 <div  class="g-scrollable-area">
     <div class="g-column-bottom-row g-table-header flex-row">
@@ -834,10 +835,43 @@
         </div>
 
         <div class="g-cell g-group-cell"
-             data-ng-repeat="column in columns track by column.key">
-            <md-button class="g-cell-button">
-                &mdash;
+             data-ng-repeat="column in groups track by column.key">
+
+            <md-button class="g-cell-button" data-ng-if="column.report_settings.is_level_folded" data-ng-click="unfoldLevel(column, $index)">
+                +
             </md-button>
+
+            <md-button class="g-cell-button" data-ng-if="!column.report_settings.is_level_folded" data-ng-click="foldLevel(column, $index)">
+                -
+            </md-button>
+
+            <md-button class="g-group-button flex-row"
+                       data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')"
+                       popup
+                       popup-template-url="'views/popups/g-report-viewer-column-settings-popup-menu.html'"
+                       position-relative-to="mouse"
+                       right-click-open="'true'"
+                       close-on-click-outside="'true'"
+
+                       prevent-default="'true'"
+                       on-save-callback="">
+                <div>{{column.name}}</div>
+<!--                popup-y="top"-->
+<!--                offset-y="-24"-->
+<!--                popup-data="vm.fixedAreaPopup"-->
+
+                <div class="sort">
+                    <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
+                    <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+                </div>
+
+            </md-button>
+
+
+        </div>
+
+        <div class="g-cell g-group-cell"
+             data-ng-repeat="column in notGroupingColumns track by column.key">
 
             <md-button class="g-group-button flex-row" data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
                 <div>{{column.name}}</div>
@@ -851,3 +885,4 @@
 
     </div>
 </div>
+<!-- <Victor #69 New report viewer interface> -->

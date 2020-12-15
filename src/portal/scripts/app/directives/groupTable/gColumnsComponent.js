@@ -23,12 +23,19 @@
             templateUrl: 'views/directives/groupTable/g-columns-view.html',
             link: function (scope, elem, attrs) {
 
+
+
                 scope.columns = scope.evDataService.getColumns();
-                console.log('#69 scope.columns', scope.columns)
+                console.log('#69 total columns', scope.columns)
+                scope.groups = scope.evDataService.getGroups();
+                console.log('#69 scope.groups', scope.groups)
+                // Victor 2020.12.11 scope.notGroupingColumns should update on any scope.columns or scope.groups change (if not dispatched evEvents.COLUMNS_CHANGE)
+                scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                console.log('#69 scope.notGroupingColumns', scope.notGroupingColumns)
 
                 scope.entityType = scope.evDataService.getEntityType();
+
                 scope.components = scope.evDataService.getComponents();
-                scope.groups = scope.evDataService.getGroups();
                 scope.downloadedItemsCount = null;
                 scope.contentType = scope.evDataService.getContentType();
                 scope.columnAreaCollapsed = false;
@@ -44,8 +51,15 @@
                 var dynamicAttrs = [];
                 var keysOfColsToHide = [];
 
+                scope.onColumnsChange = function () {
+
+
+                }
+
                 scope.favoriteAreaToggle = function () {
+
                     scope.isFavoriteAreaShown = !scope.isFavoriteAreaShown;
+
                 }
 
                 var getAttributes = function () {
@@ -269,6 +283,8 @@
                     scope.evDataService.setActiveColumnSort(column);
 
                     scope.evDataService.setColumns(columns);
+
+                    scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 
                     scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -963,8 +979,7 @@
 
                         });
 
-                        scope.evDataService.setColumns(scope.columns)
-
+                        scope.evDataService.setColumns(scope.columns);
 
                     } else {
 
@@ -1004,8 +1019,7 @@
 
                         });
 
-                        scope.evDataService.setColumns(scope.columns)
-
+                        scope.evDataService.setColumns(scope.columns);
 
                     }
 
@@ -1074,6 +1088,7 @@
 
                     scope.columns = scope.evDataService.getColumns();
                     flagMissingColumns();
+                    scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);
@@ -1084,6 +1099,7 @@
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
                         scope.groups = scope.evDataService.getGroups();
+                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                     });
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
@@ -1094,6 +1110,7 @@
                         scope.columns = scope.evDataService.getColumns();
                         getColsAvailableForAdditions();
                         flagMissingColumns();
+                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                         //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
 
                     });
@@ -1101,6 +1118,7 @@
                     scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {
 
                         scope.groups = scope.evDataService.getGroups();
+                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 
                     });
 
