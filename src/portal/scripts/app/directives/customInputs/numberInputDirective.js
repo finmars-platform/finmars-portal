@@ -42,6 +42,8 @@
                     scope.tooltipText = scope.smallOptions.tooltipText
 
                     scope.dialogParent = scope.smallOptions.dialogParent
+
+                    scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
                 }
 
                 var inputContainer = elem[0].querySelector('.numberInputContainer');
