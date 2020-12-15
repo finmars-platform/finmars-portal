@@ -23,7 +23,7 @@
 
     var appName = 'profile';
 
-    function forumHtmlToJs () {
+    function profileHtmlToJs () {
         // console.log('Executing task index-HTML-templateCache...');
 
         var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
@@ -39,15 +39,16 @@
             }))
             .pipe(concat('templates.min.js'))
             .pipe(uglify())
-            .pipe(gulp.dest('src/' + appName + '/scripts/'));
+            .pipe(gulp.dest('src/' + appName + '/scripts/'))
+			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
     }
 
     gulp.task(appName + '-HTML-to-JS', function () {
-        return forumHtmlToJs();
+        return profileHtmlToJs();
     });
 
     module.exports = {
-        forumHtmlToJs: forumHtmlToJs
+		profileHtmlToJs: profileHtmlToJs
     }
 
 }());

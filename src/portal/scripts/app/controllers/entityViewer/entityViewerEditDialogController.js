@@ -716,7 +716,7 @@
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
 
-                if (vm.entityStatus === 'instrument') {
+                if (vm.entityType === 'instrument') {
 
                     switch (vm.entityStatus) {
                         case 'active':
@@ -774,7 +774,6 @@
                     }
 
                 }
-
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 

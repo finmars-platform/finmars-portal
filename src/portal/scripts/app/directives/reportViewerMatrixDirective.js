@@ -219,18 +219,27 @@
 
                 scope.formatValue = function (val) {
 
-                    if (scope.matrixSettings.number_format) {
+                	var result = val;
 
-                        return renderHelper.formatValue({
-                            value: val
-                        }, {
-                            key: 'value',
-                            report_settings: scope.matrixSettings.number_format
-                        });
+                    if (scope.matrixSettings.number_format && (val || val === 0)) {
 
-                    } else {
-                        return val
+						result = renderHelper.formatValue(
+                        	{
+								value: val
+							},
+							{
+								key: 'value',
+								report_settings: scope.matrixSettings.number_format
+							}
+						);
+
                     }
+
+                    if (!result && result !== 0) {
+                    	return '';
+					}
+
+                    return result;
 
                 };
 
@@ -291,7 +300,7 @@
 
                     var activeObject = {};
 
-                    activeObject[scope.matrixSettings.abscissa] = scope.columns[index];
+                    activeObject[scope.matrixSettings.abscissa] = scope.columns[index].key;
 
                     console.log('activeObject', activeObject);
 
@@ -308,7 +317,7 @@
 
                     var activeObject = {};
 
-                    activeObject[scope.matrixSettings.ordinate] = scope.rows[index];
+                    activeObject[scope.matrixSettings.ordinate] = scope.rows[index].key;
 
                     console.log('activeObject', activeObject);
 
@@ -325,8 +334,8 @@
 
                     var activeObject = {};
 
-                    activeObject[scope.matrixSettings.ordinate] = scope.rows[rowIndex];
-                    activeObject[scope.matrixSettings.abscissa] = scope.columns[columnIndex];
+                    activeObject[scope.matrixSettings.ordinate] = scope.rows[rowIndex].key;
+                    activeObject[scope.matrixSettings.abscissa] = scope.columns[columnIndex].key;
 
                     console.log('activeObject', activeObject);
 
@@ -344,8 +353,6 @@
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
-
-                    //scope.rows.push({key: 'Строка с null', total: 0});
 
                 };
 

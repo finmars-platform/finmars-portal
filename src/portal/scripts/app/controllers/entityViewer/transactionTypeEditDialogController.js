@@ -340,24 +340,24 @@
 
                     	vm.entity.inputs.forEach(function (input) {
 
-							if (input.settings) {
+                    		if (!input.settings) {
+								input.settings = {}
+							}
 
-								if (input.settings.linked_inputs_names) {
+							if (input.settings.linked_inputs_names) {
 
-									input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+								input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
 
-								} else {
-									input.settings.linked_inputs_names = []
-								}
+							} else {
+								input.settings.linked_inputs_names = []
+							}
 
-								if (input.settings.recalc_on_change_linked_inputs) {
+							if (input.settings.recalc_on_change_linked_inputs) {
 
-									input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
+								input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
 
-								} else {
-									input.settings.recalc_on_change_linked_inputs = []
-								}
-
+							} else {
+								input.settings.recalc_on_change_linked_inputs = []
 							}
 
                             vm.resolveDefaultValue(input)
