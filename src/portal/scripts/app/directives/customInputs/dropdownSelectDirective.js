@@ -24,7 +24,7 @@
                 scope.error = '';
                 scope.inputValue = '';
                 //scope.placeholderText = 'Relation';
-                scope.dropdownMenuHidden = false;
+                scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
@@ -131,7 +131,7 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
-                    scope.dropdownMenuHidden = false;
+                    scope.dropdownMenuShown = false;
 
                     window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
@@ -315,7 +315,7 @@
 
 						scope.inputText = "";
 						inputContainer.classList.add('custom-input-focused');
-                        scope.dropdownMenuHidden = true;
+                        scope.dropdownMenuShown = true;
 
                         window.addEventListener('click', closeDDMenuOnClick);
                         document.addEventListener('keydown', onTabKeyPress);

@@ -39,6 +39,20 @@
 
                 </div>
 
+                <div class="m-t-16" layout="row">
+
+                    <md-input-container>
+                        <label for="">Date from</label>
+                        <zh-date-picker data-date-value="vm.item.date_from"></zh-date-picker>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label for="">Date to</label>
+                        <zh-date-picker data-date-value="vm.item.date_to"></zh-date-picker>
+                    </md-input-container>
+
+                </div>
+
                 <div class="m-t-16">
 
                     <div><label for="">Provider</label></div>
@@ -87,6 +101,63 @@
 
                 </div>
 
+                <!--lombard-->
+                <div data-ng-if="vm.item.provider == 3">
+
+                    <md-input-container>
+                        <label>Archive password</label>
+                        <input type="password" data-ng-model="vm.item.data.archivepassword">
+                    </md-input-container>
+
+                </div>
+
+                <!--revolut-->
+                <div data-ng-if="vm.item.provider == 4">
+
+                    <div>
+
+                        <md-input-container>
+                            <label>Code</label>
+                            <input type="text" data-ng-model="vm.item.data.code">
+                        </md-input-container>
+
+                    </div>
+
+                    <div>
+
+                        <md-input-container>
+                            <label>Issuer</label>
+                            <input type="text" data-ng-model="vm.item.data.issuer">
+                        </md-input-container>
+
+                    </div>
+
+                    <div>
+
+                        <md-input-container>
+                            <label>Client ID</label>
+                            <input type="text" data-ng-model="vm.item.data.client_id">
+                        </md-input-container>
+
+                    </div>
+
+                    <div>
+
+                        <md-input-container class="md-block">
+                            <label>JWT</label>
+
+                            <br/>
+                            <textarea name="" id="" cols="30" rows="10"
+                                      data-ng-model="vm.item.data.jwt"></textarea>
+
+                        </md-input-container>
+
+                    </div>
+
+
+                </div>
+
+                <!--email provider-->
                 <div data-ng-if="vm.item.provider == 5">
 
                     <md-input-container>
@@ -104,22 +175,17 @@
                         <input type="text" data-ng-model="vm.item.data.filename">
                     </md-input-container>
 
-                </div>
 
-                <div data-ng-if="vm.item.provider == 3">
-
-                    <md-input-container>
-                        <label>Archive password</label>
-                        <input type="password" data-ng-model="vm.item.data.archivepassword">
-                    </md-input-container>
+                    <div class="m-t-8">
+                        <md-checkbox ng-model="vm.item.data.hasNoDelete">
+                            No delete
+                        </md-checkbox>
+                    </div>
 
                 </div>
 
-                <div>
-                    <md-checkbox ng-model="vm.item.data.hasNoDelete">
-                        No delete
-                    </md-checkbox>
-                </div>
+
+
 
 
             </div>
