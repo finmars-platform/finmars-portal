@@ -46,6 +46,7 @@
       height: auto;
 
     }
+
     .dashboard-layout-holder {
       height: 200px;
     }
@@ -177,7 +178,7 @@
     display: block;
     position: absolute;
     right: 0;
-    top:0;
+    top: 0;
 
   }
 
@@ -185,7 +186,7 @@
     display: block;
     position: absolute;
     //right: -100px;
-    top:0;
+    top: 0;
 
     height: 50px;
     width: 100px;
@@ -227,6 +228,7 @@
       padding-top: 60px;
       margin-bottom: 20px;
     }
+
     .dashboard-constructor-layout-type-buttons-holder {
       text-align: center;
     }
@@ -371,4 +373,58 @@
   border: 1px solid #ddd;
   margin: 8px;
   padding: 16px;
+}
+
+.accordion-constructor-row-accordion {
+
+  // TODO refactor class names
+  .ec-tab-btn {
+    opacity: 1;
+    &:hover {
+      opacity: .6;
+    }
+  }
+
+}
+.accordion-constructor-row {
+
+  height: 60px;
+
+  // TODO refactor class names
+  .ec-tab-btn {
+    opacity: 1;
+    &:hover {
+      opacity: .6;
+    }
+  }
+
+  .dashboard-constructor-empty-cell {
+    border: 1px dotted #000;
+    padding: 6px 8px;
+    text-align: center;
+    fill: #898989;
+
+    height: 30px;
+    width: 100px;
+    box-sizing: border-box;
+
+    position: relative;
+
+    ng-md-icon {
+      top: 50%;
+      position: absolute;
+      margin-top: -12px;
+      left: 50%;
+      margin-left: -12px;
+    }
+  }
+
+}
+
+.accordion-constructor-row-accordion {
+  min-height: 60px;
+  padding-top: 10px;
+}
+.accordion-constructor-row-proxy {
+  height: 60px;
 }

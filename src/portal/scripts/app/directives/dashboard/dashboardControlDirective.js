@@ -28,6 +28,10 @@
                 scope.fields = [];
                 scope.entityType = null;
 
+                scope.attribute = {
+                    key: 'value'
+                }
+
                 scope.getEntityTypeByContentType = function (contentType) {
 
                     /*if (contentType === 'instruments.instrument') {
@@ -250,9 +254,11 @@
                 scope.settingUpDefaultValue = function (componentData) {
 
                     getItemDataStore(componentData).then(function (store) {
+
                         if (!store.value) {
                             return;
                         }
+
                         scope.item.data.store = store;
                         scope.$apply();
                         scope.valueChanged();
@@ -260,10 +266,61 @@
 
                 };
 
+                scope.setDateToday = function () {
+                    scope.item.data.store.value = moment(new Date()).format(
+                        "YYYY-MM-DD"
+                    );
+                };
+
+                scope.setDatePlus = function () {
+                    scope.item.data.store.value = moment(
+                        new Date(scope.item.data.store.value)
+                    )
+                        .add(1, "days")
+                        .format("YYYY-MM-DD");
+                };
+
+                scope.setDateMinus = function () {
+                    scope.item.data.store.value = moment(
+                        new Date(scope.item.data.store.value)
+                    )
+                        .subtract(1, "days")
+                        .format("YYYY-MM-DD");
+                };
+
+
                 scope.init = function () {
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
                     scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
+
+                    console.log('scope.componentData, ', scope.componentData);
+                    scope.buttons = []
+
+                    if (scope.componentData.settings.value_type === 40) {
+
+                        scope.buttons.push({
+                            iconObj: {type: "angular-material", icon: "add"},
+                            tooltip: "Increase by one day",
+                            classes: "date-input-specific-btns",
+                            action: {callback: scope.setDatePlus},
+                        });
+
+                        scope.buttons.push({
+                            iconObj: {type: "angular-material", icon: "radio_button_unchecked"},
+                            tooltip: "Set today's date",
+                            classes: "date-input-specific-btns",
+                            action: {callback: scope.setDateToday},
+                        });
+
+                        scope.buttons.push({
+                            iconObj: {type: "angular-material", icon: "remove"},
+                            tooltip: "Decrease by one day",
+                            classes: "date-input-specific-btns",
+                            action: {callback: scope.setDateMinus},
+                        });
+
+                    }
 
                     if (scope.entityType) {
 
@@ -277,6 +334,8 @@
                             });
 
                     } else {
+
+                        scope.item.data.store = {};
 
                         scope.settingUpDefaultValue(scope.componentData);
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
