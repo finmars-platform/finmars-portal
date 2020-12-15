@@ -53,7 +53,7 @@
 
             <div class="dashboard-top-row">
                 <div class="dashboard-title">
-                    Dashboard: <b>{{vm.layout.name}}</b>
+                    <b>{{vm.layout.name}}</b>
                 </div>
 
                 <div class="dashboard-tabs-control-panel">
@@ -140,7 +140,7 @@
                     <div class="dashboard-rows-holder"  data-row="{{row.row_number}}" data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
 
                         <div data-ng-repeat="item in row.columns"
-                             class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}}"
+                             class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}"
                              data-tab="fixed_area"
                              data-row="{{row.row_number}}"
                              data-column="{{item.column_number}}"
@@ -344,7 +344,7 @@
                                         <div class="dashboard-rows-holder {{accordion.folded ? 'folded' : '' }}" data-row="{{row.row_number}}"  data-ng-repeat="row in accordion.items">
 
                                             <div data-ng-repeat="item in row.columns"
-                                                 class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}}"
+                                                 class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}"
                                                  data-tab="{{tab.tab_number}}"
                                                  data-row="{{row.row_number}}"
                                                  data-column="{{item.column_number}}"

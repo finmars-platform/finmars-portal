@@ -105,8 +105,9 @@
   }
 
   .dashboard-rows-holder {
-    height: 50px;
+    height: 64px;
   }
+
 
   /*.dashboard-layout {
     overflow: auto;
@@ -135,13 +136,18 @@
     }
   }
 
+
+
   .dashboard-cell {
 
-    padding: 10px;
+    //padding: 10px;
 
     box-sizing: border-box;
 
     overflow: auto;
+
+    padding-bottom: 8px;
+    padding-right: 8px;
 
     &.bordered::after {
 
@@ -162,6 +168,10 @@
 
     }
 
+  }
+
+  .dashboard-cell-no-overflow {
+    overflow: initial;
   }
 
   .dashboard-component-header {
@@ -248,6 +258,21 @@
     z-index: 1;
   }
 
+  .dashboard-grand-total-component {
+    padding-top: 10px;
+  }
+  .dashboard-grand-total-component-loading {
+    padding-top: 16px;
+    text-align: center;
+  }
+
+  .dashboard-control {
+    .custom-input-container {
+      padding-top: 10px;
+      margin-bottom:0;
+    }
+  }
+
   .dashboard-control-menu {
     display: inline-block;
     width: 40px;
@@ -306,7 +331,7 @@
 .control-clear-btn {
   position: absolute;
   right: 8px;
-  top: 8px;
+  top: 18px;
   margin: 0;
   width: 24px;
   min-width: 24px;
@@ -400,8 +425,6 @@ button.md-button.control-clear-btn {
   margin-top: 0;
 }
 
-;
-
 .pie-chart-bottom-legends {
   .pie-chart-legends-holder {
     margin-top: 35px;
@@ -415,8 +438,6 @@ button.md-button.control-clear-btn {
   list-style-type: none;
 }
 
-;
-
 .pie-chart-legend-color {
   position: absolute;
   height: 11px;
@@ -426,7 +447,6 @@ button.md-button.control-clear-btn {
   border-radius: 2px;
 }
 
-;
 
 .dashboard-linked-filters-container {
   display: flex;
@@ -451,11 +471,14 @@ button.md-button.control-clear-btn {
   }
 }
 
+.dashboard-button-set-component {
+  padding-top: 10px;
+}
 
 button.md-button.dashboard-button-set-button {
   min-width: 60px;
   min-height: 36px;
-  margin: 6px 4px;
+  //margin: 6px 4px;
   padding: 2px 16px 2px 16px;
   background: inherit;
   background-color: rgba(65, 133, 244, 0);
@@ -471,6 +494,10 @@ button.md-button.dashboard-button-set-button {
   font-weight: 700;
   font-style: normal;
   color: #F05A22;
+
+  margin: 0;
+  margin-right: 4px;
+  margin-bottom: 4px;
 
   &:hover {
     background-color: rgba(240, 90, 34, 0.12);
@@ -491,7 +518,7 @@ dashboard-report-viewer-grand-total {
 
 .dashboard-buttonset-dropdown {
 
-  margin: 0 4px 0;
+  margin: 0;
   padding: 2px 16px;
   background: inherit;
   background-color: rgba(65,133,244,0);
@@ -538,11 +565,14 @@ dashboard-report-viewer-grand-total {
 .dashboard-accordion-header {
   height: 48px;
 }
+.dashboard-accordion-content {
+  padding-bottom: 16px;
+}
 
 .dashboard-layout {
   //background: #f2f2f2;
   background: #fff;
-  padding: 10px;
+  //padding: 10px;
 }
 .dashboard-accordion {
   background: #fff;
