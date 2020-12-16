@@ -60,7 +60,8 @@
                     },
                     linked_components: {
                         report_settings: {},
-                        filter_links: []
+                        filter_links: [],
+						active_object: null
                     }
                 },
                 user_settings: {}
@@ -261,6 +262,9 @@
             }
 
         }; */
+		vm.clearSelect = function (item, propToDelete) {
+			delete item[propToDelete];
+		}
 
         vm.smallRvColumnsChanged = function () {
 

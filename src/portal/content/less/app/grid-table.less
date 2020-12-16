@@ -22,7 +22,7 @@
   .grid-table-top-row-btns {
     font-weight: 700;
     padding: 0 10px;
-    color: @grey;
+    color: @gray;
 
     &:hover {
       background-color: rgba(240, 90, 34, 0.15);
@@ -81,7 +81,7 @@
   height: 48px;
   padding-right: 16px;
   padding-left: 36px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid @borderPale;
   box-sizing: border-box;
   outline: none;
 
@@ -112,7 +112,7 @@
     height: 24px;
     top: 14px;
     left: 14px;
-    color: @grey;
+    color: @gray;
     padding: 0;
     margin: 0;
   }
@@ -186,17 +186,18 @@
       }
     }
 
-    .gt-cell-edit-btn {
-      flex: 0 0 24px;
-      min-width: 24px;
-      width: 24px;
-      min-height: 24px;
-      height: 24px;
-      padding: 0;
-      margin: 0;
-      color: #747474;
-      opacity: 0;
-    }
+  }
+
+  .gt-cell-edit-btn {
+    flex: 0 0 24px;
+    min-width: 24px;
+    width: 24px;
+    min-height: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    color: @gray;
+    opacity: 0;
   }
 
   .gt-cell-selector-container {
@@ -253,7 +254,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        color: @grey;
+        color: @gray;
 
         span.material-icons {
           font-size: 18px;
@@ -309,6 +310,17 @@
       }
     }
 
+  }
+
+  .gt-multiselector-cell {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+  }
+
+  .gt-multiselector-cell.gt-cell-disabled {
+    pointer-events: none;
+    cursor: default;
   }
 
 }

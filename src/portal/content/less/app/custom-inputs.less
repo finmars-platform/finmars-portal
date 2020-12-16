@@ -1,5 +1,3 @@
-@import "./variables.less";
-
 @customInputsRightSpace: 8px;
 
 .entity-editor-fixed-fields-container {
@@ -11,8 +9,8 @@
 }
 
 .ci-icon-color {
-  fill: @grey;
-  color: @grey;
+  fill: @gray;
+  color: @gray;
 }
 
 .custom-input-textarea-span-pan {
@@ -209,14 +207,14 @@
     }
 
     .ci-custom-btn-icon {
-      fill: @grey;
-      color: @grey;
+      fill: @gray;
+      color: @gray;
     }
   }
 }
 
 .custom-input-indicator-btn {
-  flex: 0 0 30px;
+  width: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -265,6 +263,21 @@
   overflow: auto;
   z-index: 52;
   box-sizing: border-box;
+
+  .custom-input-dropdown-menu-filter {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid @borderGray;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+    }
+
+  }
 
   .custom-input-sel-option {
     padding: 4px 10px;
@@ -351,16 +364,15 @@
 }
 
 .custom-input-container.custom-input-preset1 {
-  .custom-input-label {
-  }
 
   .custom-input-borders .custom-input-content .flex-row input {
-    color: #f05a22;
+    color: @orange;
     font-weight: bold;
   }
 
-  .custom-input {
+  .custom-input, .custom-input-full-text {
     color: @orange;
+    font-weight: bold;
   }
 }
 
@@ -380,8 +392,9 @@
 }
 
 .custom-input-container.custom-input-is-valid {
-  .custom-input {
+  .custom-input, .custom-input-full-text {
     color: #015f01;
+    font-weight: bold;
   }
 
   .custom-input-indicator-btn {
@@ -401,6 +414,19 @@
   //resize: none;
   text-overflow: ellipsis;
   font-style: italic;
+}
+
+.multiselector-input-container {
+
+  .multiselector-input-chips-wrap {
+    height: 100%;
+    flex: 0 1 100%;
+    display: flex;
+    align-items: center;
+    cursor: text;
+    padding-right: @customInputsRightSpace;
+  }
+
 }
 
 // should always be at the bottom
@@ -562,7 +588,7 @@
 
   md-select {
     height: 40px;
-    border: 1px solid @grey;
+    border: 1px solid @gray;
     border-radius: 5px;
     margin: 2.5px;
 
@@ -576,7 +602,7 @@
       border-bottom: 2px solid transparent !important;
       span {
         &:first-of-type {
-          color: @grey !important;
+          color: @gray !important;
           background-color: white;
           max-width: 70%;
         }

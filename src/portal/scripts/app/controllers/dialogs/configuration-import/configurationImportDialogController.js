@@ -339,6 +339,8 @@
                     return 'Instrument Pricing Scheme';
                 case 'pricing.pricingprocedure':
                     return 'Pricing Procedure';
+                case 'procedures.requestdatafileprocedure':
+                    return 'Data Procedure';
                 case 'schedules.pricingschedule':
                     return 'Pricing Schedule';
                 default:

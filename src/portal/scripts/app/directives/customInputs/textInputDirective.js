@@ -20,7 +20,7 @@
 				renderHyperlinks: "=",
 				onChangeCallback: "&?",
 				onBlurCallback: "&?"
-	  		},
+			},
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {
 
@@ -37,21 +37,18 @@
 
 				// TIPS
 				// scope.smallOptions probable properties
-				  // tooltipText: custom tolltip text
-				  // notNull: turn on error mode if field is not filled
-				  // noIndicatorBtn: whether to show button at the right part of input
-				  // readonly: making input readonly
-				  // dialogParent: 'string' - querySelector content for element to insert mdDialog into
+					// tooltipText: custom tolltip text
+					// notNull: turn on error mode if field is not filled
+					// noIndicatorBtn: whether to show button at the right part of input
+					// readonly: making input readonly
+					// dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
 				if (scope.smallOptions) {
 
 					scope.tooltipText = scope.smallOptions.tooltipText
 					scope.isReadonly = scope.smallOptions.readonly
 					scope.dialogParent = scope.smallOptions.dialogParent
-
-					if (scope.smallOptions.noIndicatorBtn) {
-						scope.noIndicatorBtn = true
-					}
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
 
 				}
 
@@ -68,10 +65,9 @@
 					} else if (stylePreset) {
 						classes = 'custom-input-preset' + stylePreset;
 
-					} else if (scope.valueIsValid) {
-						classes = 'custom-input-is-valid';
-
-					}
+			} else if (scope.valueIsValid) {
+				classes = 'custom-input-is-valid';
+			}
 
 					if (scope.noIndicatorBtn) {
 						classes += " no-indicator-btn";
@@ -99,15 +95,19 @@
 						scope.valueIsValid = true;
 
 					} else {
+
 						if (scope.smallOptions && scope.smallOptions.notNull) {
-						  scope.error = "Field should not be null";
+							scope.error = "Field should not be null";
 						}
+
 					}
 
 					if (scope.onChangeCallback) {
+
 						setTimeout(function () {
-						  scope.onChangeCallback();
+							scope.onChangeCallback();
 						}, 0);
+
 					}
 				};
 
@@ -120,9 +120,9 @@
 
 						if (elemToApplyStyles.length) {
 
-						  elemToApplyStyles.forEach(function (htmlNode) {
-							htmlNode.style.cssText = scope.customStyles[className];
-						  })
+							elemToApplyStyles.forEach(function (htmlNode) {
+								htmlNode.style.cssText = scope.customStyles[className];
+							})
 
 						}
 
@@ -146,17 +146,17 @@
 
 				scope.openTextInDialog = function ($event) {
 
-  					var dialogParent = angular.element(document.body);
+					var dialogParent = angular.element(document.body);
 
-					  if (scope.dialogParent) {
+					if (scope.dialogParent) {
 
-						let dialogParentElem = document.querySelector(scope.dialogParent);
+						var dialogParentElem = document.querySelector(scope.dialogParent);
 
 						if (dialogParentElem) {
-						  dialogParent = dialogParentElem
+							dialogParent = dialogParentElem
 						}
 
-					  }
+					}
 
 					$mdDialog.show({
 						controller: "TextEditorDialogController as vm",
@@ -167,9 +167,9 @@
 						locals: {
 							data: {
 								title: "Text",
-								text: scope.model
-							},
-						},
+								text: scope.model,
+							}
+						}
 
 					}).then(function (res) {
 

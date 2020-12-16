@@ -5,31 +5,30 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
-        logService.controller('TwoFieldsOptionsDialogController', 'initialized');
-
-        var getDataMethod = data.getDataMethod;
+        // var getDataMethod = data.getDataMethod;
         var selectedItems = data.model;
 
         if (!selectedItems) {
             selectedItems = [];
         }
 
-        vm.title = data.title;
+        /* vm.title = data.title;
 
         if (!vm.title) {
             vm.title = '';
-        }
+        } */
 
-        vm.nameProperty = data.nameProperty;
-        vm.readyStatus = false;
+        vm.nameProperty = data.nameProperty
+        vm.strictOrder = data.strictOrder
+        vm.optionsCheckboxes = data.optionsCheckboxes
+        vm.readyStatus = false
+        vm.selectedItems = []
 
-        vm.selectedItems = [];
+		vm.orderOptions = data.orderOptions || null
 
         var separateUnselectedItems = function (items, selectedItems) {
 
@@ -37,10 +36,21 @@
 
                 items.forEach(function (item, itemIndex) {
 
-                    if (item.id === selItem) {
+                	let selItemId = selItem;
+
+                	if (typeof selItem === 'object') {
+						selItemId = selItem.id;
+					}
+
+                    if (item.id === selItemId) {
+
+                    	if (typeof selItem === 'object') {
+							item = Object.assign(item, selItem);
+						}
 
                         vm.selectedItems.push(item);
                         items.splice(itemIndex, 1);
+
                     }
 
                 });
@@ -62,11 +72,24 @@
 
         vm.agree = function () {
 
-            vm.selectedItemsId = [];
+			if (vm.optionsCheckboxes) {
 
-            vm.selectedItems.map(function (selItem) {
-               vm.selectedItemsId.push(selItem.id);
-            });
+				vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+
+					return {
+						id: selItem.id,
+						isChecked: selItem.isChecked || false
+					};
+
+				});
+
+			} else {
+
+				vm.selectedItemsId = vm.selectedItems.map(function (selItem) {
+					return selItem.id;
+				});
+
+			}
 
             $mdDialog.hide({status: "agree", selectedItems: vm.selectedItemsId});
 
