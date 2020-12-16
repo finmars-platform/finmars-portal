@@ -45,7 +45,7 @@
         var viewportElem = elements.viewportElem;
         var contentWrapElem = elements.contentWrapElem;
 
-        var columnBottomRow;
+        var columnBottomRows;
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
@@ -61,11 +61,15 @@
 
         var scrollXHandler = function () {
 
-            if (!columnBottomRow) {
-                columnBottomRow = contentWrapElem.querySelector('.g-column-bottom-row');
+            if (!columnBottomRows) {
+                columnBottomRows = contentWrapElem.querySelectorAll('.g-column-bottom-row'); // Victor 2020.12.16 While old and new design work together
             }
 
-            columnBottomRow.style.left = -viewportElem.scrollLeft + 'px';
+            columnBottomRows.forEach(row => {
+
+                row.style.left = -viewportElem.scrollLeft + 'px';
+
+            })
 
         };
 
@@ -862,7 +866,8 @@
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
         }
 
-        viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+        const reducer = 200; // TODO Victor 2020.12.15 reducer need for viewport fit in the screen. This is temporary solution;
+        viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - reducer);
 
         // console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);

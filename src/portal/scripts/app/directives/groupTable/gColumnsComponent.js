@@ -27,8 +27,11 @@
 
                 scope.columns = scope.evDataService.getColumns();
                 console.log('#69 total columns', scope.columns)
+
                 scope.groups = scope.evDataService.getGroups();
+                evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
                 console.log('#69 scope.groups', scope.groups)
+
                 // Victor 2020.12.11 scope.notGroupingColumns should update on any scope.columns or scope.groups change (if not dispatched evEvents.COLUMNS_CHANGE)
                 scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                 console.log('#69 scope.notGroupingColumns', scope.notGroupingColumns)
@@ -58,21 +61,23 @@
                         $index: $index,
                         column: column,
                         viewContext: scope.viewContext,
-                        renameColumn: scope.renameColumn,
+                        renameColumn: scope.renameColumn, // + 1
                         isReport: scope.isReport,
                         columnHasCorrespondingGroup: scope.columnHasCorrespondingGroup,
-                        addColumnEntityToGrouping: scope.addColumnEntityToGrouping,
+                        addColumnEntityToGrouping: scope.addColumnEntityToGrouping, // + 5
                         checkForFilteringBySameAttr: scope.checkForFilteringBySameAttr,
-                        addFiltersWithColAttr: scope.addFiltersWithColAttr,
+                        addFiltersWithColAttr: scope.addFiltersWithColAttr, // + 6
                         activateColumnNumberRenderingPreset: scope.activateColumnNumberRenderingPreset,
-                        selectSubtotalType: scope.selectSubtotalType,
+                        openColumnNumbersRenderingSettings: scope.openColumnNumbersRenderingSettings,
+                        selectSubtotalType: scope.selectSubtotalType, // + 8
                         checkSubtotalFormula: scope.checkSubtotalFormula,
-                        resizeColumn: scope.resizeColumn,
-                        removeColumn: scope.removeColumn,
+                        resizeColumn: scope.resizeColumn, // + 4
+                        removeColumn: scope.removeColumn, // + 3
 
-                        changeColumnTextAlign: scope.changeColumnTextAlign,
+                        changeColumnTextAlign: scope.changeColumnTextAlign, // + 7
                         checkColTextAlign: scope.checkColTextAlign,
-                        removeGroup: scope.removeGroup,
+                        removeGroup: scope.removeGroup, // + 2
+                        reportHideSubtotal: scope.reportHideSubtotal, //
                     };
 
                 };
@@ -362,6 +367,8 @@
 
                 scope.selectSubtotalType = function (column, type) {
 
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+
                     if (!column.hasOwnProperty('report_settings')) {
                         column.report_settings = {};
                     }
@@ -391,7 +398,15 @@
 
                 scope.renameColumn = function (column, $mdMenu, $event) {
 
-                    $mdMenu.close();
+                    if ($mdMenu) {
+
+                        $mdMenu.close();
+
+                    } else {
+
+                        scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+
+                    }
 
                     console.log('renameColumn', column);
 
@@ -409,7 +424,15 @@
 
                 scope.resizeColumn = function (column, $mdMenu, $event) {
 
-                    $mdMenu.close();
+                    if ($mdMenu) {
+
+                        $mdMenu.close();
+
+                    } else {
+
+                        scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+
+                    }
 
                     $mdDialog.show({
                         controller: 'ResizeFieldDialogController as vm',
@@ -446,6 +469,9 @@
                 };
 
                 scope.changeColumnTextAlign = function (column, type) {
+
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+
                     if (!column.hasOwnProperty('style')) {
                         column.style = {};
                     }
@@ -614,6 +640,8 @@
 
                 scope.openColumnNumbersRenderingSettings = function (column, $event) {
 
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+
                     $mdDialog.show({
                         controller: 'gColumnNumbersRenderingSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-column-numbers-rendering-settings-dialog-view.html',
@@ -640,6 +668,8 @@
                 };
 
                 scope.activateColumnNumberRenderingPreset = function (column, rendPreset) {
+
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
 
                     if (!column.report_settings) {
                         column.report_settings = {};
@@ -693,6 +723,8 @@
 
                 scope.addColumnEntityToGrouping = function (column) {
 
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+
                     var groups = scope.evDataService.getGroups();
                     var groupToAdd = evHelperService.getTableAttrInFormOf('group', column);
 
@@ -717,6 +749,9 @@
                 };
 
                 scope.addFiltersWithColAttr = function (column) {
+
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+
                     var filters = scope.evDataService.getFilters();
                     var filterToAdd = evHelperService.getTableAttrInFormOf('filter', column);
 
@@ -728,6 +763,9 @@
                 };
 
                 scope.removeGroup = function (columnTableId) {
+
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+
                     var groups = scope.evDataService.getGroups();
 
                     /** remove group */
@@ -762,6 +800,8 @@
                 };
 
                 scope.removeColumn = function (column) {
+
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
 
                     var colToDeleteAttr = '';
                     /*scope.columns = scope.columns.filter(function (item) {
@@ -822,6 +862,8 @@
                 };
 
                 scope.reportHideSubtotal = function (column) {
+
+                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
 
                     if (!column.hasOwnProperty('report_settings')) {
                         column.report_settings = {};
@@ -1138,8 +1180,11 @@
                     }
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
                         scope.groups = scope.evDataService.getGroups();
+                        evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+
                     });
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
@@ -1158,6 +1203,7 @@
                     scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {
 
                         scope.groups = scope.evDataService.getGroups();
+                        evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 
                     });
