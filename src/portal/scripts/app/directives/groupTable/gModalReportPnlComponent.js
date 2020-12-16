@@ -58,7 +58,7 @@
             'instrument_pricing_currency_fx_rate', 'instrument_accrued_currency_fx_rate', 'net_cost_price_loc', 'market_value', 'market_value_loc', 'market_value_percent',
             'exposure', 'exposure_percent', 'exposure_loc', 'instrument_principal_price', 'instrument_accrued_price', 'detail',
 
-            'ytm'
+            'ytm', 'ytm_at_cost', 'return_annually'
 
 
         ];

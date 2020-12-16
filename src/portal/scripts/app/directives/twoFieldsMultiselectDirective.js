@@ -2,448 +2,529 @@
  * Created by mevstratov on 25.03.2019.
  */
 (function () {
-  "use strict";
 
-  module.exports = function ($mdDialog) {
-    return {
-      restrict: "E",
-      scope: {
-        getDataMethod: "&?", // needed for downloading items on opening multiselector
-        items: "=",
-        model: "=",
-        title: "@",
-        dialogTitle: "@",
-        nothingSelectedText: "@",
-        selectedItemsIndication: "@",
-        nameProperty: "@",
-        onChangeCallback: "&?",
-      },
-      require: "?ngModel",
-      templateUrl: "views/directives/two-fields-multiselect-view.html",
-      link: function (scope, elem, attr, ngModel) {
+	"use strict";
 
-        // Andrew's code here
-        /*
-        scope.inputText = "";
-        scope.itemsSelected = [];
-        scope.itemAxact = "";
-        scope.clientWidth = 0;
+	let ChipsListEventService = require('../services/eventService');
+	let directivesEvents = require("../services/directivesEvents");
 
-        scope.deleteAllSelectedItems = function (event) {
-          scope.inputText = "Off";
-          scope.model = [];
-        };
+	module.exports = function ($mdDialog) {
+		return {
+			restrict: "E",
+			scope: {
+				items: "=",
+				model: "=",
+				customButtons: '=',
+				customStyles: "=",
+				title: "@",
+				dialogTitle: "@",
+				nothingSelectedText: "@",
+				selectedItemsIndication: "@",
+				nameProperty: "@",
+				smallOptions: "=",
+				getDataMethod: "&?", // needed for downloading items on opening multiselector
+				strictOrder: "=",
+				optionsCheckboxes: "=",
+				onChangeCallback: "&?",
+			},
+			require: "?ngModel",
+			templateUrl: "views/directives/two-fields-multiselect-view.html",
+			link: function (scope, elem, attr, ngModel) {
 
-        scope.deleteById = async function ({ id }, $index) {
+				scope.inputText = '';
+				scope.error = '';
+				scope.orderOptions = {
+					options: true,
+					selectedOptions: true
+				};
 
-          var items = await getItems();
-          scope.model = await scope.itemsSelected
-            .filter((el) => el.id !== id)
-            .map((s) => s.id);
-          scope.itemsSelected = await scope.itemsSelected.filter(
-            (el) => el.id !== id
-          );
-          //   idx = Math.min(...scope.model);
-          scope.itemAxact = items
-            .filter((el) => el.id == id)
-            .map((n) => n.name)
-            .join("");
-          scope.$apply();
-        };
+				if (!scope.nameProperty) {
+					scope.nameProperty = 'name';
+				}
 
-        if (!scope.nameProperty) {
-          scope.nameProperty = "name";
-        }
-        var items = [];
-        scope.$watch("model", function () {
-          setInputText();
-        });
+				scope.orderSelectedOpts = '';
 
-        var defaultInputText = async function () {
-          var selElemNumber = 0;
-          var chipsName = "";
-          if (scope.model && scope.model.length > 0) {
-            selElemNumber = scope.model.length;
-          }
-          if (selElemNumber === 0) {
-            scope.inputText = "";
-            if (
-              scope.nothingSelectedText ||
-              typeof scope.nothingSelectedText === "string"
-            ) {
-              scope.inputText = scope.nothingSelectedText;
-            } else {
-              scope.inputText = "0 items selected";
-            }
-          } else {
+				// let dialogTitle = scope.dialogTitle || scope.title;
+				let items;
+				let selOptionsIdsList = [];
+				let chipElem;
 
-            const items = await getItems();
+				// TIPS
+				// scope.smallOptions probable properties
+					// tooltipText: custom tolltip text
+					// noIndicatorBtn: whether to show button at the right part of input
+					// optionsOrdering: default alphabetical ordering for options; true by default
+					// selectedOptionsOrdering: default alphabetical ordering for selected options
 
-            var idx = Math.min(...scope.model);
-            scope.itemAxact = items
-              .filter((el) => el.id == idx)
-              .map((n) => n.name)
-              .join("");
-            scope.itemsSelected = [];
-            scope.model.forEach((Elem) => {
-              items.forEach((el) => {
-                if (Elem == el.id) {
-                  scope.itemsSelected.push(el);
-                }
-              });
-            });
+				if (scope.smallOptions) {
 
-            scope.inputText = selElemNumber - scope.clientWidth;
+					scope.tooltipText = scope.smallOptions.tooltipText
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
 
-            scope.$apply();
+					if (scope.smallOptions.optionsOrdering === false) {
+						scope.orderOptions.options = false
+					}
 
-          }
-        };
+					if (scope.smallOptions.selectedOptionsOrdering === false) {
+						scope.orderOptions.selectedOptions = false
+					}
 
-        var arrayLikeInputText = function () {
+				}
 
-          var propName = scope.nameProperty || "name";
+				scope.chipsOrderSettings = 'true';
 
-          if (scope.model && scope.model.length) {
+				if (scope.strictOrder || !scope.orderOptions.selectedOptions) {
+					scope.chipsOrderSettings = ''
+				}
 
-            if (scope.items && scope.items.length) {
+				let getSelectedOptionsIds = function () {
 
-              scope.inputText = "[";
-              scope.tooltipText = "Values selected:";
-              scope.model.forEach(function (sItemId, index) {
+					selOptionsIdsList = scope.model.map(function (selOption) {
 
-                for (var i = 0; i < scope.items.length; i++) {
-                  if (scope.items[i].id === sItemId) {
-                    if (index > 0) {
-                      scope.inputText = scope.inputText + ",";
-                      scope.tooltipText = scope.tooltipText + ",";
-                    }
-                    scope.inputText =
-                      scope.inputText + " " + scope.items[i][propName];
-                    scope.tooltipText =
-                      scope.tooltipText + " " + scope.items[i][propName];
-                    break;
-                  }
-                }
-              });
+						let optionId = selOption;
 
-              scope.inputText = scope.inputText + " ]";
+						if (typeof selOption === 'object') {
+							optionId = selOption.id;
+						}
 
-            } else {
-              // in case of error
-              scope.inputText = scope.model.length + " items selected";
-            }
+						return optionId;
 
-          } else if (scope.nothingSelectedText) {
-            scope.inputText = scope.nothingSelectedText;
+					});
 
-          } else {
-            scope.inputText = "[ ]";
-          }
-        };
+				};
 
-        var setInputText = function () {
-          if (scope.selectedItemsIndication) {
-            switch (scope.selectedItemsIndication) {
-              case "array":
-                arrayLikeInputText();
-                break;
-            }
-          } else {
-            defaultInputText();
-          }
-        };
+				let defaultInputText = function () {
 
-        var getItems = function () {
-          return new Promise(function (resolve, reject) {
-            if (items && items.length) {
-              resolve(items);
-            } else {
-              if (scope.items && scope.items.length) {
-                items = JSON.parse(JSON.stringify(scope.items));
-                resolve(items);
-              } else if (scope.getDataMethod) {
-                scope
-                  .getDataMethod()
-                  .then(function (resData) {
-                    items = JSON.parse(JSON.stringify(resData.results));
-                    resolve(items);
-                  })
-                  .catch(function (error) {
-                    items = [];
-                    resolve(items);
-                  });
-              }
-            }
-          });
-        };
+					var selElemNumber = 0;
 
-        scope.selectItemModal = function (event) {
+					if (scope.model && scope.model.length > 0) {
+						selElemNumber = scope.model.length;
+					}
 
-          if (scope.clientWidth < event.currentTarget.clientWidth) {
-            const maxItemSize = 130;
-            scope.clientWidth = parseInt(
-              event.currentTarget.clientWidth / maxItemSize
-            );
-          }
+					if (selElemNumber === 0) {
 
-          getItems().then(function (data) {
-            items = data;
-            $mdDialog
-              .show({
-                controller: "TwoFieldsMultiselectDialogController as vm",
-                templateUrl:
-                  "views/dialogs/two-fields-multiselect-dialog-view.html",
-                targetEvent: event,
-                multiple: true,
-                locals: {
-                  data: {
-                    items: items,
-                    model: scope.model,
-                    title: scope.title,
-                    nameProperty: scope.nameProperty,
-                  },
-                },
+						scope.inputText = "";
 
-              }).then(function (res) {
+						if (scope.nothingSelectedText || typeof scope.nothingSelectedText === "string") {
+							scope.inputText = scope.nothingSelectedText;
 
-                if (res.status === "agree") {
+						} else {
+							scope.inputText = "0 items selected";
+						}
 
-                  scope.model = res.selectedItems;
+					} else {
+						scope.inputText = selElemNumber + " " + "items selected";
+					}
 
-                  if (scope.onChangeCallback) {
+				};
 
-                    scope.model = res.selectedItems;
+				var arrayLikeInputText = function () {
 
-                    setTimeout(function () {
-                      scope.onChangeCallback();
-                    }, 500);
+					var propName = scope.nameProperty || 'name';
 
-                  } else if (ngModel) {
-                    ngModel.$setViewValue(res.selectedItems);
-                  }
+					if (scope.model && scope.model.length) {
 
-                }
+						if (scope.items && scope.items.length) {
 
-              });
-          });
-        };
+							scope.inputText = '[';
+							scope.tooltipText = 'Values selected:';
+							/*var selItemsIds = scope.model;
 
-        $(elem).mouseover(function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          scope.toltipShow = true;
-          scope.$apply();
-        });
+							if (typeof selItemsIds[0] === 'object') { // multiselector returns array of objects
 
-        $(elem).mouseleave(function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          scope.toltipShow = false;
-          scope.$apply();
-        }); */
-        // < Andrew's code here >
+								selItemsIds = selItemsIds.map(function (sItem) {
+									return sItem.id;
+								});
+							}
 
-        scope.inputText = '';
+							selItemsIds.forEach(function (sItemId, index) { */
+							selOptionsIdsList.forEach(function (sItemId, index) {
 
-        if (!scope.nameProperty) {
-          scope.nameProperty = 'name';
-        }
+								for (var i = 0; i < scope.items.length; i++) {
 
-        var dialogTitle = scope.dialogTitle || scope.title;
-        var items = [];
+									if (scope.items[i].id === sItemId) {
 
-        scope.$watch('model', function () {
-          setInputText();
-        });
+										if (index > 0) { // add comma between selected items
 
-        scope.$watch('items', function () {
-            if (!scope.items) {
-                return;
-            }
+											scope.inputText = scope.inputText + ',';
+											scope.tooltipText = scope.tooltipText + ',';
 
-            items = JSON.parse(JSON.stringify(scope.items));
-        });
+										}
 
-        var defaultInputText = function () {
+										scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
+										scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
 
-          var selElemNumber = 0;
-          if (scope.model && scope.model.length > 0) {
-            selElemNumber = scope.model.length;
-          }
+										break;
+									}
+								}
+							});
 
-          if (selElemNumber === 0) {
+							scope.inputText = scope.inputText + ' ]';
 
-            scope.inputText = "";
+						} else { // in case of error
+							scope.inputText = scope.model.length + ' items selected';
+						}
 
-            if (scope.nothingSelectedText || typeof scope.nothingSelectedText === "string") {
-              scope.inputText = scope.nothingSelectedText;
+					} else if (scope.nothingSelectedText) {
+						scope.inputText = scope.nothingSelectedText;
 
-            } else {
-              scope.inputText = "0 items selected";
-            }
+					} else {
+						scope.inputText = "[ ]";
+					}
+				};
 
-          } else {
-            scope.inputText = selElemNumber + " " + "items selected";
-          }
+				var setInputText = function () {
 
-        };
+					if (scope.selectedItemsIndication === "array") {
+						arrayLikeInputText();
 
-        var arrayLikeInputText = function () {
+					} else {
+						defaultInputText();
+					}
 
-          var propName = scope.nameProperty || 'name';
+				};
 
-          if (scope.model && scope.model.length) {
+				// setInputText();
 
-            if (scope.items && scope.items.length) {
+				let getItems = function () {
 
-              scope.inputText = '[';
-              scope.tooltipText = 'Values selected:';
+					return new Promise(function (resolve, reject) {
 
-              scope.model.forEach(function (sItemId, index) {
+						/*if (items && items.length) {
+							resolve(items);
 
-                for (var i = 0; i < scope.items.length; i++) {
+						} else {*/
 
-                  if (scope.items[i].id === sItemId) {
+						if (items && Array.isArray(items)) {
+							resolve(items);
 
-                    if (index > 0) { // add comma between selected items
-                      scope.inputText = scope.inputText + ',';
-                      scope.tooltipText = scope.tooltipText + ',';
+						} else if (scope.getDataMethod) {
+
+							scope.getDataMethod().then(function (resData) {
+
+								items = resData.results;
+								resolve(items);
+
+							}).catch(function (error) {
+
+								items = [];
+								resolve(items);
+
+							});
+
+						}
+
+						// }
+
+					});
+
+				}
+
+				scope.openMultiselectorDialog = function (event) {
+
+					event.preventDefault();
+					event.stopPropagation();
+
+					getItems().then(function (data) {
+
+						items = data;
+
+						$mdDialog.show({
+							controller: "TwoFieldsMultiselectDialogController as vm",
+							templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
+							targetEvent: event,
+							multiple: true,
+							locals: {
+								data: {
+									items: items,
+									model: scope.model,
+									// title: dialogTitle,
+									nameProperty: scope.nameProperty,
+									orderOptions: scope.orderOptions,
+									strictOrder: scope.strictOrder,
+									optionsCheckboxes: scope.optionsCheckboxes
+								}
+							}
+
+						}).then(function (res) {
+
+								if (res.status === "agree") {
+
+									scope.model = res.selectedItems
+									if (scope.model) {
+										getSelectedOptionsIds();
+									}
+
+									if (scope.selectedItemsIndication === 'chips') {
+
+										formatDataForChips();
+										getAvailableOptions();
+
+										scope.chipsListEventService.dispatchEvent(
+											directivesEvents.CHIPS_LIST_CHANGED,
+											{chipsList: scope.chipsList, updateScope: true}
+										);
+
+									}
+
+									if (scope.onChangeCallback) {
+
+										setTimeout(function () {
+
+											scope.onChangeCallback();
+
+										}, 500);
+
+									} else if (ngModel) { // old method but still used in some places
+										ngModel.$setViewValue(res.selectedItems);
+									}
+
+								}
+
+							});
+
+					});
+
+				};
+
+				let getAvailableOptions = function () {
+
+				    if (items) {
+
+						scope.dropdownMenuOptions = []
+
+				    	for (let i = 0; i < items.length && i < 20; i++) {
+
+				    		if (!selOptionsIdsList.includes(items[i].id)) {
+
+				    			let availableOpt = Object.assign({}, items[i]);
+				    			scope.dropdownMenuOptions.push(availableOpt);
+
+							}
+
+						}
+
                     }
 
-                    scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
-                    scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
+                };
 
-                    break;
+				let formatDataForChips = function () {
 
-                  }
+					if (scope.model && items) {
 
-                }
+						scope.chipsList = selOptionsIdsList.map(function (selOptId) {
 
-              });
+							for (let i = 0; i < items.length; i++) {
 
-              scope.inputText = scope.inputText + ' ]';
+								if (items[i].id === selOptId) {
 
-            } else { // in case of error
-              scope.inputText = scope.model.length + ' items selected';
-            }
+									return {
+										id: selOptId,
+										text: items[i][scope.nameProperty]
+									};
 
-            //scope.inputText = '[' + scope.model.join(', ') + ']';
+								}
 
-          } else if (scope.nothingSelectedText) {
+							}
 
-            scope.inputText = scope.nothingSelectedText;
+						});
 
-          } else {
+					}
 
-            scope.inputText = "[ ]";
+				};
 
-          }
+				scope.callFnForCustomBtn = function (actionData, event) {
 
-        };
+					event.stopPropagation();
 
-        var setInputText = function () {
+					if (actionData.parameters) {
+						actionData.callback(actionData.parameters);
+					} else {
+						actionData.callback();
+					}
 
-          if (scope.selectedItemsIndication) {
+				};
 
-            switch (scope.selectedItemsIndication) {
-              case "array":
-                arrayLikeInputText();
-                break;
-            }
+				let applyCustomStyles = function () {
 
-          } else {
-            defaultInputText();
-          }
+					Object.keys(scope.customStyles).forEach(function (className) {
 
-        };
+						let elemClass = "." + className;
+						let elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-        //setInputText();
+						if (elemToApplyStyles.length) {
 
-        var getItems = function () {
+							elemToApplyStyles.forEach(function (htmlNode) {
+								htmlNode.style.cssText = scope.customStyles[className]
+							})
 
-          return new Promise(function (resolve, reject) {
+						}
 
-            /*if (items && items.length) {
-              resolve(items);
+					});
 
-            } else {*/
+				};
 
-              if (scope.items && Array.isArray(scope.items)) {
+				let init = function () {
 
-                items = JSON.parse(JSON.stringify(scope.items));
-                resolve(items);
+					scope.chipsListEventService = new ChipsListEventService();
 
-              } else if (scope.getDataMethod) {
+					if (scope.selectedItemsIndication === 'chips') {
 
-                scope.getDataMethod().then(function (resData) {
-                  scope.items = resData.results;
-                  items = JSON.parse(JSON.stringify(resData.results));
-                  resolve(items);
+						scope.dropdownMenuShown = false
+						scope.menuFilterTerms = {}
+						scope.menuFilterTerms[scope.nameProperty] = ""
 
-                }).catch(function (error) {
+						scope.dropdownMenuOptions = []
+						scope.orderMenuOptions = scope.nameProperty
 
-                  items = [];
-                  resolve(items);
+						if (scope.orderOptions.options === false) {
+							scope.orderMenuOptions = null
+						}
 
-                });
+						chipElem = elem[0].querySelector("chips-list");
 
-              }
+						scope.onDropdownMenuFilterBlur = function (terms) {
+							scope.dropdownMenuShown = false
+							scope.menuFilterTerms[scope.nameProperty] = ""
+						}
 
-            // }
+						scope.getChipsContainerWidth = function () {
 
-          })
+							let customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
+							scope.chipsContainerWidth = customInputContent.clientWidth - 8; // padding size is '8px'
 
-        }
+						};
 
-        $(elem).click(function (event) {
-          event.preventDefault();
-          event.stopPropagation();
+						scope.addDropdownMenuListeners = function () {
 
-          getItems().then(function (data) {
+							let customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
+							let dropdownMenuFilter = elem[0].querySelector('.dropdownMenuFilter');
 
-            items = data;
+							customInputContent.addEventListener("click", function (event) {
 
-            $mdDialog.show({
-              controller: "TwoFieldsMultiselectDialogController as vm",
-              templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-              targetEvent: event,
-              multiple: true,
-              locals: {
-                data: {
-                  items: items,
-                  model: scope.model,
-                  title: dialogTitle,
-                  nameProperty: scope.nameProperty
-                }
-              }
-            }).then(function (res) {
+								let targetElem = event.target;
 
-              if (res.status === "agree") {
+								if (customInputContent === targetElem) {
 
-                scope.model = res.selectedItems;
+									scope.dropdownMenuShown = true
+									scope.$apply();
 
-                if (scope.onChangeCallback) {
-                  scope.model = res.selectedItems;
+									dropdownMenuFilter.focus();
 
-                  setTimeout(function () {
-                    scope.onChangeCallback();
-                  }, 500);
+								}
 
-                } else if (ngModel) {
-                  ngModel.$setViewValue(res.selectedItems);
-                }
+							});
 
-              }
+						};
 
-            });
+						scope.onChipDeletion = function (chipsData) {
 
-          });
+							chipsData.forEach(function (chipData) {
 
-        });
+								for (let i = 0; i < selOptionsIdsList.length; i++) {
 
-      },
-    };
-  };
+									let optionId = selOptionsIdsList[i];
 
-}());
+									if (optionId === chipData.id) {
+
+										scope.model.splice(i, 1);
+										selOptionsIdsList.splice(i, 1);
+
+										break;
+
+									}
+
+								}
+
+							});
+
+							getAvailableOptions();
+
+						};
+
+						scope.selectOption = function (option) {
+
+							let selOption = option.id;
+
+							if (scope.optionsCheckboxes) {
+
+								selOption = {
+									id: option.id,
+									isChecked: false
+								}
+
+							}
+
+							scope.model.push(selOption);
+							selOptionsIdsList.push(option.id);
+							formatDataForChips();
+
+							getAvailableOptions();
+
+							scope.chipsListEventService.dispatchEvent(
+								directivesEvents.CHIPS_LIST_CHANGED,
+								{chipsList: scope.chipsList, updateScope: true}
+							);
+
+						};
+
+						if (scope.model || scope.model.length) {
+
+							getItems().then(function () {
+
+                                getAvailableOptions();
+								formatDataForChips();
+
+								/* scope.chipsListEventService.dispatchEvent(
+								    directivesEvents.DROPDOWN_MENU_OPTIONS_CHANGED,
+                                    {optionsList: scope.dropdownMenuOptions}); */
+
+								scope.$apply();
+
+							});
+
+						}
+
+					} else {
+
+						$(elem).click(scope.openMultiselectorDialog);
+
+					}
+
+					if (scope.customStyles) {
+						applyCustomStyles();
+					}
+
+					scope.$watch('model', function () {
+
+						if (scope.model) {
+							getSelectedOptionsIds();
+						}
+
+						setInputText();
+
+					});
+
+					scope.$watch('items', function () {
+
+						if (scope.items) {
+
+							items = JSON.parse(JSON.stringify(scope.items));
+							getAvailableOptions();
+
+							if (scope.selectedItemsIndication === 'chips') {
+								formatDataForChips();
+							}
+
+						}
+
+					});
+
+				};
+
+				init();
+
+			}
+		};
+	};
+})();

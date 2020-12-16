@@ -15,6 +15,7 @@
         vm.currentStep = 1;
         vm.codeIsValid = false;
         vm.provisioning_uri = null;
+        vm.token_id = null;
         vm.securityCode = null;
         vm.isShowAuthenticatorApps = false;
 
@@ -42,6 +43,8 @@
 
             twoFactorService.generateCode().then(function (data) {
 
+                vm.token_id = data.token_id;
+
                 vm.provisioning_uri = data.provisioning_uri;
 
                 vm.generateQrCode();
@@ -56,11 +59,24 @@
 
             if (vm.securityCode && vm.securityCode.length === 6) {
 
-                twoFactorService.validateCode({code: vm.securityCode, username: vm.user.username}).then(function (data) {
+                twoFactorService.validateCode({
+                    code: vm.securityCode,
+                    username: vm.user.username
+                }).then(function (data) {
 
                     vm.codeIsValid = data.match;
 
-                    $scope.$apply();
+                    twoFactorService.pachByKey(data.id, {is_active: true}).then(function (value) {
+
+                        $scope.$apply();
+
+                    })
+
+                    if (vm.token_id) {
+
+                        twoFactorService.activateTwoFactor(vm.token_id);
+
+                    }
 
                 })
             }

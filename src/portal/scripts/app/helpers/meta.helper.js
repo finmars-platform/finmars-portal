@@ -61,8 +61,10 @@
 
     }
 
+    // sorts array alphabetically but puts text that starts with '-' at the beginning
     let textWithDashSort = (arr, field)  => {
-        const keys = ['name', 'user_code', 'public_name']; // preferred fields for sort
+
+    	const keys = ['name', 'user_code', 'public_name']; // preferred fields for sort
         const key = field || keys.find(key => arr.every(item => item.hasOwnProperty(key)));
 
         if (!key) {
@@ -110,16 +112,20 @@
             // }
 
             if (aStartsWithDash && bStartsWithDash) {
-                const aWithoutDash = a.name.slice(1);
+
+            	const aWithoutDash = a.name.slice(1);
                 const bWithoutDash = b.name.slice(1);
 
                 if (aWithoutDash > bWithoutDash) {
                     return 1
                 }
+
                 if (aWithoutDash < bWithoutDash) {
                     return -1
                 }
+
                 return 0;
+
             }
 
             // if (a.name > b.name) {
