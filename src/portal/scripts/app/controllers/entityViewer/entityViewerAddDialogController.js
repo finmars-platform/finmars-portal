@@ -1139,7 +1139,7 @@
                 vm.entityAttrs,
                 vm.attributeTypes,
                 []);
-			console.log("testing errors", errors);
+
             if (errors.length) {
 
                 tabsWithErrors = {};
