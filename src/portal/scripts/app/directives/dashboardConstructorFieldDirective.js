@@ -54,6 +54,9 @@
                         case 'report_viewer_matrix':
                             verboseType = 'Report Viewer Matrix';
                             break;
+                        case 'report_viewer_table_chart':
+                            verboseType = 'Report Viewer Table Chart';
+                            break;
                         case 'entity_viewer':
                             verboseType = 'Entity Viewer';
                             break;
