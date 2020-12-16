@@ -883,6 +883,25 @@
         return notGroupingColumns;
     };
 
+    var importGroupsStylesFromColumns = function (groups, columns) {
+
+        let columnStyles = {};
+
+        columns.forEach(column => {
+
+            columnStyles[column.key] = column.style;
+
+        });
+
+        groups.forEach(group => {
+
+            group.style = columnStyles[group.key];
+
+        });
+
+
+    };
+
     module.exports = {
 
         getGroupNameFromParent: getGroupNameFromParent,
@@ -927,7 +946,8 @@
         getGroupsTypesToLevel: getGroupsTypesToLevel,
         getGroupsValuesByItem: getGroupsValuesByItem,
 
-        separateNotGroupingColumns: separateNotGroupingColumns
+        separateNotGroupingColumns: separateNotGroupingColumns,
+        importGroupsStylesFromColumns: importGroupsStylesFromColumns
     }
 
 

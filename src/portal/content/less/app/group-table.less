@@ -852,6 +852,8 @@
     background-color: @g-table-header-background-color;
 
     .g-cell {
+      position: relative;
+
       display: flex;
       align-items: center;
 
@@ -968,7 +970,7 @@
 
     }
 
-    .g-group-cell {
+    .g-table-header-cell {
 
       .g-cell-button {
         width: 17px;
@@ -1006,6 +1008,16 @@
         }
 
      }
+
+      .resize-slider {
+        width: 3px;
+        height: 100%;
+        background: @g-table-header-background-color;
+        position: absolute;
+        right: 0;
+        top: 0;
+        cursor: col-resize;
+      }
     }
 
 

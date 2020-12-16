@@ -1,5 +1,8 @@
 (function () {
+
     'use strict';
+
+    var evEvents = require('../services/entityViewerEvents');
 
     module.exports = function ($compile) {
         return {
@@ -21,13 +24,16 @@
                 offsetX: '@', // add offset to left position
                 offsetY: '@', // add offset to top position
 
-                onSaveCallback: '&?'
+                onSaveCallback: '&?',
+
+                eventService: '=',
 
             },
             link: function (scope, elem, attrs) {
 
                 scope.vm = scope.popupData;
 				console.log('scope.popupTemplate', scope.popupTemplateUrl);
+                console.log('#69 scope.vm', scope.vm)
 
                 scope.isPopupOpen = false;
 
@@ -146,14 +152,31 @@
                     setPopupPosition();
                 }
 
+                let closePopupListenerIndex = null;
                 let addListeners = function () {
+
                     document.addEventListener('keyup', keyUpHandler, {once: true});
                     window.addEventListener('resize', resizeThrottler);
+
+                    if (scope.eventService) {
+
+                        closePopupListenerIndex = scope.eventService.addEventListener(evEvents.CLOSE_POPUP, removePopUp);
+
+                    }
+
                 };
 
                 let removeListeners = function () {
+
                     document.removeEventListener('keyup', keyUpHandler);
                     window.removeEventListener('resize', resizeThrottler);
+
+                    if (scope.eventService && closePopupListenerIndex >= 0) {
+
+                        scope.eventService.removeEventListener(evEvents.CLOSE_POPUP, closePopupListenerIndex);
+
+                    }
+
                 };
 
 				let createPopup = function () {
@@ -253,6 +276,7 @@
 
 					elem[0].addEventListener(openEvent, scope.onTargetElementClick);
 
+					// TODO Victor 2020.12.15 maybe set this event listener when the popup is open? And remove after popup close?
 					if (scope.closeOnClickOutside) {
 						popupBackdropElem.addEventListener("click", removePopUp);
 					}

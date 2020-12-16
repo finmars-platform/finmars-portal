@@ -9,6 +9,7 @@
     <md-menu-content width="4">-->
 <div class="popup-menu">
         <div>
+<!--            <md-button ng-click="vm.data.renameColumn(vm.data.column, $mdMenu, $event)"-->
             <md-button ng-click="vm.data.renameColumn(vm.data.column, $mdMenu, $event)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"
@@ -104,7 +105,7 @@
         </div>
 
         <div data-ng-if="vm.data.isReport && vm.data.columnHasCorrespondingGroup(vm.data.column.key)">
-            <md-button data-ng-click="vm.data.removeGroup(vm.data.column.___column_id)"
+            <md-button data-ng-click="vm.data.removeGroup(vm.data.column.___column_id || vm.data.column.___group_type_id)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"></ng-md-icon>
                 <span>Remove</span>

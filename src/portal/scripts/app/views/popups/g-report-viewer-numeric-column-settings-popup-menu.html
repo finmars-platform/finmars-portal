@@ -300,42 +300,42 @@
 
                 <md-menu-content width="3">
                         <md-menu-item>
-                            <md-button ng-click="changeColumnTextAlign(column, 'left')"
+                            <md-button ng-click="vm.data.changeColumnTextAlign(vm.data.column, 'left')"
                                        class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
-                                            data-ng-show="!checkColTextAlign(column, 'left')"
+                                            data-ng-show="!vm.data.checkColTextAlign(vm.data.column, 'left')"
                                             class="z-menu-icon"
                                             style="visibility: hidden;"></ng-md-icon>
                                 <ng-md-icon icon="done"
-                                            data-ng-show="checkColTextAlign(column, 'left')"
+                                            data-ng-show="vm.data.checkColTextAlign(vm.data.column, 'left')"
                                             class="z-menu-icon"></ng-md-icon>
                                 <span>Left</span>
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button ng-click="changeColumnTextAlign(column, 'center')"
+                            <md-button ng-click="vm.data.changeColumnTextAlign(vm.data.column, 'center')"
                                        class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
-                                            data-ng-show="!checkColTextAlign(column, 'center')"
+                                            data-ng-show="!vm.data.checkColTextAlign(vm.data.column, 'center')"
                                             class="z-menu-icon"
                                             style="visibility: hidden;"></ng-md-icon>
                                 <ng-md-icon icon="done"
-                                            data-ng-show="checkColTextAlign(column, 'center')"
+                                            data-ng-show="vm.data.checkColTextAlign(vm.data.column, 'center')"
                                             class="z-menu-icon"></ng-md-icon>
                                 <span>Center</span>
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button ng-click="changeColumnTextAlign(column, 'right')"
+                            <md-button ng-click="vm.data.changeColumnTextAlign(vm.data.column, 'right')"
                                        class="g-settings-option-btn">
                                 <ng-md-icon icon="done"
-                                            data-ng-show="!checkColTextAlign(column, 'right')"
+                                            data-ng-show="!vm.data.checkColTextAlign(vm.data.column, 'right')"
                                             class="z-menu-icon"
                                             style="visibility: hidden;"></ng-md-icon>
                                 <ng-md-icon icon="done"
-                                            data-ng-show="checkColTextAlign(column, 'right')"
+                                            data-ng-show="vm.data.checkColTextAlign(vm.data.column, 'right')"
                                             class="z-menu-icon"></ng-md-icon>
                                 <span>Right</span>
                             </md-button>
