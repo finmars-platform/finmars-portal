@@ -11,7 +11,12 @@
 
         console.log('websocket send', data);
 
-        window.ws.send(JSON.stringify(data));
+        if (window.ws) {
+
+            window.ws.send(JSON.stringify(data));
+
+        }
+
     };
 
     let addEventListener = function (event, callback) {
