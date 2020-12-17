@@ -254,6 +254,8 @@
                 var dialogController = 'EntityViewerEditDialogController as vm';
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
 
+				locals.openedIn = 'modal'
+
                 if (locals.entityType && locals.entityType === 'complex-transaction') {
                     dialogController = 'ComplexTransactionEditDialogController as vm';
                     dialogTemplateUrl = 'views/entity-viewer/complex-transaction-edit-dialog-view.html';

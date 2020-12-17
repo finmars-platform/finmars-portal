@@ -138,6 +138,7 @@
         vm.activeTab = null;
 
 		var formLayoutFromAbove = data.editLayout;
+		var bigDrawerResizeButton;
 
         var getShowByDefaultOptions = function (columns, entityType) {
             let result = vm.showByDefaultOptions;
@@ -164,35 +165,6 @@
         vm.getPlaceholderByDefault = function () {
             return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).name;
         };
-
-        var bigDrawerResizeButton;
-
-        var onBigDrawerResizeButtonClick = function () {
-
-        	if (vm.fixedAreaPopup.tabColumns === 6) {
-                return;
-            }
-
-            vm.fixedAreaPopup.tabColumns = 6;
-            vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
-            $scope.$apply();
-
-            const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-
-            $bigDrawer.setWidth(bigDrawerWidthPercent);
-            bigDrawerResizeButton.classList.add('display-none');
-            bigDrawerResizeButton.classList.remove('display-block');
-
-        };
-
-        setTimeout(() => {
-            bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
-
-            if (bigDrawerResizeButton) {
-				bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick);
-            }
-
-        }, 0);
 
         vm.isEntityTabActive = function () {
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
@@ -904,33 +876,38 @@
 				});
 			}
 
-			// Victor 2020.11.20 #59 Fixed area popup
+			if (data.openedIn === 'big-drawer') {
 
-			if (vm.fixedArea && vm.fixedArea.showByDefault) {
-				vm.showByDefault = vm.fixedArea.showByDefault;
-				vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
-			}
-
-			const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
-
-			if (vm.fixedAreaPopup.tabColumns !== columns) {
-
-				vm.fixedAreaPopup.tabColumns = columns;
-				vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
-
-				const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-				$bigDrawer.setWidth(bigDrawerWidthPercent);
-
-				if (vm.fixedAreaPopup.tabColumns !== 6) {
-					bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
-					bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
-				} else {
-					bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
-					bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+				// Victor 2020.11.20 #59 Fixed area popup
+				if (vm.fixedArea && vm.fixedArea.showByDefault) {
+					vm.showByDefault = vm.fixedArea.showByDefault;
+					vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
 				}
 
+				const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+
+				if (vm.fixedAreaPopup.tabColumns !== columns) {
+
+					vm.fixedAreaPopup.tabColumns = columns;
+					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+
+					const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+					$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+					if (vm.fixedAreaPopup.tabColumns !== 6) {
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
+					} else {
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+					}
+
+				}
+				// <Victor 2020.11.20 #59 Fixed area popup>
+
+			} else {
+				vm.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
 			}
-			// <Victor 2020.11.20 #59 Fixed area popup>
 
 			vm.getAttributeTypes().then(function (value) {
 
@@ -1210,10 +1187,11 @@
 
                     toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully created');
 
-                    if(isAutoExitAfterSave) {
-                        // $mdDialog.hide({res: 'agree', data: data});
+                    if (isAutoExitAfterSave) {
+
                         let responseObj = {res: 'agree', data: responseData};
                         metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+
                     }
 
                 }).catch(function (data) {
@@ -1628,9 +1606,36 @@
 
         };
 
+		var onBigDrawerResizeButtonClick = function () {
+
+			vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, vm.entityType);
+
+			$scope.$apply();
+			const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(6);
+
+			$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+			bigDrawerResizeButton.classList.add('display-none');
+			bigDrawerResizeButton.classList.remove('display-block');
+
+		};
+
         vm.init = function () {
-            setTimeout(function () {
-                vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
+
+        	setTimeout(function () {
+
+				if (data.openedIn === 'big-drawer') {
+
+					bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
+
+					if (bigDrawerResizeButton) {
+						bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick);
+					}
+
+				} else {
+					vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
+				}
+
             }, 100);
 
             vm.evEditorDataService = new EntityViewerEditorDataService();

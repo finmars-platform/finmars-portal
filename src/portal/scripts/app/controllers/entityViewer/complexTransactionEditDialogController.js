@@ -1245,7 +1245,9 @@
                     }
                 })
 
-            } else {
+            }
+
+            else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
 

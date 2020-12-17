@@ -1,6 +1,6 @@
 <div data-ng-if="vm.checkReadyStatus()">
 
-    <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
+    <!-- <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-fields-container"
          data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">
         <div layout="row"
@@ -84,7 +84,7 @@
                                  on-change-callback="vm.entityStatusChanged()"
                                  class="ev-editor-field">
                 </dropdown-select>
-                <!--<md-input-container class="md-block">
+                &lt;!&ndash;<md-input-container class="md-block">
                     <label>Status</label>
                     <md-select data-ng-model="vm.entityStatus"
                                data-ng-change="vm.entityStatusChanged()">
@@ -96,7 +96,7 @@
                         <md-option value="disabled">Disabled</md-option>
                         <md-option value="deleted">Deleted</md-option>
                     </md-select>
-                </md-input-container>-->
+                </md-input-container>&ndash;&gt;
 
             </div>
         </div>
@@ -104,9 +104,11 @@
         <div class="entity-editor-divider-holder">
             <div></div>
         </div>
-    </div>
+    </div> -->
 
-    <!--<div data-ng-if="vm.fixedArea.isActive"
+    <!-- DYNAMIC FIXED AREA
+
+    <div data-ng-if="vm.fixedArea.isActive"
          class="entity-editor-fixed-area-container"
          data-ng-class="{'opacity-05': !vm.entity.is_enabled && vm.hasEnabledStatus, 'no-pointer-events': !vm.entity.is_enabled && vm.hasEnabledStatus}">
         <div layout="row"
@@ -125,7 +127,64 @@
                                     entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
             </div>
         </div>
-    </div>-->
+    </div> -->
+
+    <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
+         class="entity-editor-fixed-area"
+         data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+
+        <div layout="row"
+             class="entity-editor-row">
+
+            <div class="cursor-pointer width-100"
+                 popup
+                 popup-template-url="'views/entity-viewer/entity-viewer-edit-fixed-area-popup-view.html'"
+                 popup-y="top"
+                 offset-y="-24"
+                 popup-data="vm.fixedAreaPopup"
+                 on-save-callback="vm.onPopupSaveCallback()">
+
+                <text-input label="{{vm.entityTypeSlug()}}"
+                            model="vm.getEntityPropertyByDefault()"
+                            placeholder-text="{{vm.getPlaceholderByDefault()}}"
+                            small-options="{dialogParent: '.dialog-containers-wrap', readonly: true}"
+                            style="pointer-events: none;">
+                </text-input>
+
+            </div>
+
+            <div class="width-100">
+
+                <dropdown-select data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
+                                 label="{{vm.typeFieldLabel}}"
+                                 model="vm.entity[vm.typeFieldName]"
+                                 placeholder-text="{{vm.typeFieldLabel}}"
+                                 menu-options="vm.typeSelectorOptions"
+                                 small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
+                                 class="ev-editor-field"></dropdown-select>
+
+                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
+                     class="ev-editor-field">
+                    <text-input
+                            label="Short name"
+                            placeholder-text="Short name"
+                            model="vm.entity.short_name"></text-input>
+                </div>
+            </div>
+
+            <div class="width-33">
+                <dropdown-select label="Status"
+                                 model="vm.entityStatus"
+                                 placeholder-text="System List"
+                                 menu-options="vm.statusSelectorOptions"
+                                 small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                                 on-change-callback="vm.entityStatusChanged()"
+                                 class="ev-editor-field"></dropdown-select>
+            </div>
+
+        </div>
+
+    </div>
 
     <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
