@@ -79,7 +79,7 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
             window.ws.send(JSON.stringify({action: "initial_auth"}));
         }
 
-    } catch(error) {
+    } catch (error) {
 
         console.error("Can't connect to Websocket server. Error ", error);
 
@@ -87,12 +87,14 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     }
 
-    ws.onerror = function (error) {
+    if (window.ws) {
+        ws.onerror = function (error) {
 
-        console.error("Can't connect to Websocket server. Error ", error);
+            console.error("Can't connect to Websocket server. Error ", error);
 
-        window.ws = null;
-    };
+            window.ws = null;
+        };
+    }
 
 }
 ]);
