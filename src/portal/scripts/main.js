@@ -66,16 +66,33 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
 
     developerConsoleService.init();
 
-    window.ws = new WebSocket("__WS_HOST__");
+    try {
 
-    websocketService.addEventListener('simple_message', function (data){
-        toastNotificationService.info(data.message)
-    })
+        window.ws = new WebSocket("__WS_HOST__");
 
-    window.ws.onopen = function () {
-        console.log("Websocket. Initial Auth");
-        window.ws.send(JSON.stringify({action: "initial_auth"}));
+        websocketService.addEventListener('simple_message', function (data) {
+            toastNotificationService.info(data.message)
+        })
+
+        window.ws.onopen = function () {
+            console.log("Websocket. Initial Auth");
+            window.ws.send(JSON.stringify({action: "initial_auth"}));
+        }
+
+    } catch(error) {
+
+        console.error("Can't connect to Websocket server. Error ", error);
+
+        window.ws = null;
+
     }
+
+    ws.onerror = function (error) {
+
+        console.error("Can't connect to Websocket server. Error ", error);
+
+        window.ws = null;
+    };
 
 }
 ]);
