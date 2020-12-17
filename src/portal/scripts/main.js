@@ -58,12 +58,27 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     console.log("angular.js info: " + directivesCount + ' directives registered');
 
     var developerConsoleService = require('./app/services/developerConsoleService');
+    var websocketService = require('./app/services/websocketService');
+    var toastNotificationService = require('../../core/services/toastNotificationService');
+
 
     window.developerConsoleService = developerConsoleService;
 
     developerConsoleService.init();
 
-}]);
+    window.ws = new WebSocket("__WS_HOST__");
+
+    websocketService.addEventListener('simple_message', function (data){
+        toastNotificationService.info(data.message)
+    })
+
+    window.ws.onopen = function () {
+        console.log("Websocket. Initial Auth");
+        window.ws.send(JSON.stringify({action: "initial_auth"}));
+    }
+
+}
+]);
 
 app.factory('pickmeup', ['$window', function ($window) {
     if ($window.pickmeup) {
@@ -315,8 +330,6 @@ app.controller('PriceHistoryErrorEditDialogController', ['$scope', '$mdDialog', 
 app.controller('CurrencyHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/currencyHistoryErrorEditDialogController')]);
 
 
-
-
 // Transaction type form
 
 app.controller(
@@ -544,7 +557,6 @@ app.controller('PricingPolicyAddDialogController', ['$scope', '$mdDialog', 'data
 app.controller('PricingPolicyEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyEditDialogController')]);
 
 
-
 app.controller('PricingMultipleParametersDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingMultipleParametersDialogController')]);
 
 
@@ -715,7 +727,7 @@ app.directive('ngRightClick', ['$parse', function ($parse) {
         element.bind('contextmenu', function (event) {
             scope.$apply(function () {
                 event.preventDefault();
-                fn(scope, { $event: event });
+                fn(scope, {$event: event});
             });
         });
     };
