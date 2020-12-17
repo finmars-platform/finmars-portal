@@ -234,7 +234,6 @@
                         locals: {
                             data: {
                                 validationResult: data,
-                                scheme: transactionScheme,
                                 config: config
                             }
                         },

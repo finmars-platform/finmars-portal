@@ -33,11 +33,12 @@
         vm.activeContentType = null;
 
         vm.config = {
-            delimiter: ',',
-            error_handler: 'break',
-            mode: 'skip',
-            missing_data_handler: 'throw_error',
-            classifier_handler: 'skip'
+            // DEPRECATED, this settings were moved to Scheme
+            // delimiter: ',',
+            // error_handler: 'break',
+            // mode: 'skip',
+            // missing_data_handler: 'throw_error',
+            // classifier_handler: 'skip'
         };
 
         vm.processing = false;
@@ -174,11 +175,11 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                formData.append('error_handler', vm.config.error_handler);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('mode', vm.config.mode);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
-                formData.append('classifier_handler', vm.config.classifier_handler);
+                // formData.append('error_handler', vm.config.error_handler);
+                // formData.append('delimiter', vm.config.delimiter);
+                // formData.append('mode', vm.config.mode);
+                // formData.append('missing_data_handler', vm.config.missing_data_handler);
+                // formData.append('classifier_handler', vm.config.classifier_handler);
 
             }
 
@@ -328,11 +329,11 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                formData.append('error_handler', vm.config.error_handler);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('mode', vm.config.mode);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
-                formData.append('classifier_handler', vm.config.classifier_handler);
+                // formData.append('error_handler', vm.config.error_handler);
+                // formData.append('delimiter', vm.config.delimiter);
+                // formData.append('mode', vm.config.mode);
+                // formData.append('missing_data_handler', vm.config.missing_data_handler);
+                // formData.append('classifier_handler', vm.config.classifier_handler);
 
             }
 
@@ -527,7 +528,6 @@
                         locals: {
                             data: {
                                 validationResult: data,
-                                scheme: schemeObject,
                                 config: vm.config
                             }
                         }

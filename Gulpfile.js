@@ -15,6 +15,7 @@
     var replace = require('gulp-replace');
 
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
+    var WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
 
     gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All'));
 
@@ -43,6 +44,7 @@
 
         return gulp.src(['dist/portal/scripts/main.min.js'])
             .pipe(replace(/__API_HOST__/g, API_HOST))
+            .pipe(replace(/__WS_HOST__/g, WS_HOST))
             .pipe(gulp.dest('dist/portal/scripts/'))
 
     });
