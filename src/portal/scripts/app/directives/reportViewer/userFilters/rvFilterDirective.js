@@ -15,7 +15,7 @@
 				onCancel: '&',
 				onSave: '&'
 			},
-			templateUrl: 'views/directives/reportViewer/userFilters/rv-filter-view.html',
+			templateUrl: 'views/components/g-layouts-manager-view.html',
 			controllerAs: 'vm',
 			controller: ['$scope', function RvFilterController ($scope) {
 

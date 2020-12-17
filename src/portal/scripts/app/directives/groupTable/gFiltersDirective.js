@@ -24,7 +24,7 @@
 
     module.exports = function ($mdDialog) {
         return {
-            restrict: 'AE',
+            restrict: 'E',
             scope: {
                 evDataService: '=',
                 evEventService: '=',

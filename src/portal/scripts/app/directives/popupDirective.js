@@ -35,6 +35,8 @@
 
             },
             link: function (scope, elem, attrs) {
+                console.log('#69 popup', scope)
+
 
                 scope.isPopupOpen = false;
 

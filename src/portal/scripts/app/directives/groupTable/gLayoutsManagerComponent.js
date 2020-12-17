@@ -1,27 +1,26 @@
 (function () {
 
-    const evEvents = require("../../../services/entityViewerEvents");
+    const evEvents = require("../../services/entityViewerEvents");
 
     'use strict';
 
-    module.exports = function () {
-        return {
-            scope: {
+    module.exports = {
+/*            scope: {
                 filterKey: '=',
                 evDataService: '=',
                 evEventService: '=',
 
                 onCancel: '&',
                 onSave: '&'
-            },
+            },*/
             controllerAs: 'vm',
-            templateUrl: 'views/directives/reportViewer/userFilters/!!rv-filter-view.html',
+            templateUrl: 'views/components/g-layouts-manager-view.html',
             controller: function() {
+                console.log('#69 gLayoutsManagerComponent.js')
 
                 const vm = this;
 
 
-            }
-        };
+        }
     }
 }());
