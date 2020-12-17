@@ -5,16 +5,12 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     module.exports = function ($scope, $mdDialog, data) {
-
-        logService.controller('SimpleEntityImportErrorsDialogController', 'initialized');
 
         var vm = this;
 
         vm.validationResult = data.validationResult;
-        vm.scheme = data.scheme;
+        vm.scheme = data.validationResult.scheme_object;
         vm.config = data.config;
 
         vm.errors = [];
@@ -218,6 +214,8 @@
         };
 
         vm.init = function () {
+
+            console.log('vm.scheme ', vm.scheme );
 
             vm.errors = vm.validationResult.stats.filter(function (item) {
                 return item.level === 'error';

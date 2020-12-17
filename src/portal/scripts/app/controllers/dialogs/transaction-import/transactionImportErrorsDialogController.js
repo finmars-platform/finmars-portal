@@ -5,11 +5,7 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     module.exports = function ($scope, $mdDialog, data) {
-
-        logService.controller('TransactionImportErrorsDialogController', 'initialized');
 
         var vm = this;
 
@@ -25,7 +21,7 @@
 
         vm.error_rows = []
 
-        vm.scheme = data.scheme;
+        vm.scheme = data.validationResult.scheme_object;
         vm.config = data.config;
 
         vm.getUniqueColumns = function (validationResult) {
