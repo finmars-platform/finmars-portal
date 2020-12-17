@@ -6,6 +6,7 @@
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
+    var popupEvents = require('../../services/events/popupEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
 
     var metaService = require('../../services/metaService');
@@ -367,7 +368,7 @@
 
                 scope.selectSubtotalType = function (column, type) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     if (!column.hasOwnProperty('report_settings')) {
                         column.report_settings = {};
@@ -404,7 +405,7 @@
 
                     } else {
 
-                        scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                        scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     }
 
@@ -430,7 +431,7 @@
 
                     } else {
 
-                        scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                        scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     }
 
@@ -470,7 +471,7 @@
 
                 scope.changeColumnTextAlign = function (column, type) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     if (!column.hasOwnProperty('style')) {
                         column.style = {};
@@ -640,7 +641,7 @@
 
                 scope.openColumnNumbersRenderingSettings = function (column, $event) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
                         controller: 'gColumnNumbersRenderingSettingsDialogController as vm',
@@ -669,7 +670,7 @@
 
                 scope.activateColumnNumberRenderingPreset = function (column, rendPreset) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     if (!column.report_settings) {
                         column.report_settings = {};
@@ -723,7 +724,7 @@
 
                 scope.addColumnEntityToGrouping = function (column) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     var groups = scope.evDataService.getGroups();
                     var groupToAdd = evHelperService.getTableAttrInFormOf('group', column);
@@ -750,7 +751,7 @@
 
                 scope.addFiltersWithColAttr = function (column) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     var filters = scope.evDataService.getFilters();
                     var filterToAdd = evHelperService.getTableAttrInFormOf('filter', column);
@@ -764,7 +765,7 @@
 
                 scope.removeGroup = function (columnTableId) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     var groups = scope.evDataService.getGroups();
 
@@ -801,7 +802,7 @@
 
                 scope.removeColumn = function (column) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     var colToDeleteAttr = '';
                     /*scope.columns = scope.columns.filter(function (item) {
@@ -863,7 +864,7 @@
 
                 scope.reportHideSubtotal = function (column) {
 
-                    scope.evEventService.dispatchEvent(evEvents.CLOSE_POPUP);
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     if (!column.hasOwnProperty('report_settings')) {
                         column.report_settings = {};

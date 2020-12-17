@@ -151,7 +151,20 @@
 
                         scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_START);
 
-                        var gColumnElem = $(this).parents('md-card.g-cell.g-column');
+                        const isNewDesign = this.parentElement.classList.contains('g-table-header-cell');
+
+                        var gColumnElem;
+
+                        if (isNewDesign) {
+
+                            gColumnElem = $(this).parents('.g-cell.g-table-header-cell'); // Victor 2020.12.16 New report viewer design
+
+                        } else {
+
+                            gColumnElem = $(this).parents('md-card.g-cell.g-column');
+
+                        }
+
                         var column = findColumnById(gColumnElem[0].dataset.columnId);
                         var columnIndex = findColumnIndexById(gColumnElem[0].dataset.columnId);
 

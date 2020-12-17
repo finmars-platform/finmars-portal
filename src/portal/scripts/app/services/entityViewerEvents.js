@@ -81,6 +81,5 @@ module.exports = {
     // < Event for dashboard >
 
     'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END',
-    'CLOSE_POPUP': 'CLOSE_POPUP'
 
 };
