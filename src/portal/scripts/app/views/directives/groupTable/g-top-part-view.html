@@ -1,10 +1,33 @@
 <div class="g-top-part width-100 flex-row fc-space-between flex-i-center">
     <div class="p-l-24">
-        <md-button class="g-top-button" ng-click="openLayoutList($event)">
+        <md-button class="g-top-button"
+                   ng-click="openLayoutList($event)"
+                   popup
+                   popup-template-url="'views/popups/g-layouts-manager-popup-view.html'"
+                   position-relative-to="mouse"
+                   open-on="right_click"
+                   close-on-click-outside="true">
+<!--            src/portal/scripts/app/views/directives/groupTable/g-top-part-view.html-->
             <div class="flex-row flex-i-center">
                 <ng-md-icon icon="view_quilt" class="flex-row"></ng-md-icon>
                 <span class="m-l-8">{{layoutName}}</span>
             </div>
+
+
+<!--            <md-button class="g-group-button flex-row"-->
+<!--                       data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')"-->
+<!--                       popup-->
+<!--                       popup-template-url="{{getPopupMenuTemplate(column)}}"-->
+<!--                       position-relative-to="mouse"-->
+<!--                       open-on="right_click"-->
+<!--                       close-on-click-outside="true"-->
+<!--                       prevent-default="'true'"-->
+<!--                       on-save-callback=""-->
+<!--                       popup-data="{data: getPopupData(column, $index)}"-->
+<!--                       offset-x="-10"-->
+<!--                       offset-y="-10"-->
+<!--                       backdrop-classes="low-z-index-backdrop"-->
+<!--                       popup-event-service="evEventService">-->
 
         </md-button>
     </div>

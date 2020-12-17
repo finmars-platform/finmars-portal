@@ -19,7 +19,7 @@
 
     module.exports = function ($mdDialog, $state) {
         return {
-            restrict: 'AE',
+            restrict: 'E',
             templateUrl: 'views/directives/groupTable/g-top-part-view.html',
             scope: {
                 evDataService: '=',
@@ -28,6 +28,7 @@
                 spExchangeService: '=', // TODO may be not need
             },
             link: function (scope, ) {
+                console.log('#69 gTopPartDirective', scope)
 
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType) || false;

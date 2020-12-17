@@ -2965,9 +2965,46 @@ button.md-raised.md-warn.md-button {
 
   }
 
+  md-menu-divider {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 1px;
+    min-height: 1px;
+    max-height: 1px;
+    width: 100%;
+    background-color: rgba(0,0,0,0.12);
+  }
+
+
+}
+// <popup menu>
+@g-top-part-color: #747474;
+
+// layouts manager
+.layouts-manager {
+
+
+  .popup-menu {
+    width: 370px;
+    max-height: 100%;
+    font-size: 14px;
+
+    .popup-menu-item{
+      margin: 5px auto;
+      color: @g-top-part-color;
+
+      ng-md-icon {
+        margin-left: 8px;
+        margin-right: 24px;
+        svg {
+          fill: @g-top-part-color;
+        }
+      }
+    }
+  }
 
 
 
 }
+// <layouts manager>
 
-// <popup menu>
