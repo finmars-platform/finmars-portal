@@ -190,7 +190,8 @@
 							//clickOutsideToClose: false,
 							locals: {
 								entityType: entitytype,
-								entityId: activeObject.id
+								entityId: activeObject.id,
+								openedIn: 'dialog'
 							}
 						}).then(function (res) {
 

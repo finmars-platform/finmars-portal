@@ -148,6 +148,7 @@
         vm.activeTab = null;
 
         var formLayoutFromAbove = data.editLayout;
+		var bigDrawerResizeButton;
 
         var getShowByDefaultOptions = function (columns, entityType) {
             if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
@@ -157,8 +158,6 @@
             return vm.showByDefaultOptions;
 
         };
-
-        var bigDrawerResizeButton;
 
         vm.isEntityTabActive = function () {
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
@@ -708,32 +707,39 @@
 				});
 			}
 
-			// Victor 2020.11.20 #59 Fixed area popup
-			if (vm.fixedArea && vm.fixedArea.showByDefault) {
-				vm.showByDefault = vm.fixedArea.showByDefault;
-				vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
-			}
+			if (data.openedIn === 'big-drawer') {
 
-			const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
-
-			if (vm.fixedAreaPopup.tabColumns !== columns) {
-
-				vm.fixedAreaPopup.tabColumns = columns;
-				vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
-
-				const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-				$bigDrawer.setWidth(bigDrawerWidthPercent);
-
-				if (vm.fixedAreaPopup.tabColumns !== 6) {
-					bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
-					bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
-				} else {
-					bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
-					bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+				// Victor 2020.11.20 #59 Fixed area popup
+				if (vm.fixedArea && vm.fixedArea.showByDefault) {
+					vm.showByDefault = vm.fixedArea.showByDefault;
+					vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
 				}
 
+				const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+
+				if (vm.fixedAreaPopup.tabColumns !== columns) {
+
+					vm.fixedAreaPopup.tabColumns = columns;
+					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+
+					const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
+					$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+					if (vm.fixedAreaPopup.tabColumns !== 6) {
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
+					} else {
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+					}
+
+				}
+				// <Victor 2020.11.20 #59 Fixed area popup>
+
+			} else {
+				vm.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
 			}
-			// <Victor 2020.11.20 #59 Fixed area popup>
+
 
 			vm.getAttributeTypes().then(function () {
 
@@ -1213,10 +1219,13 @@
                         toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully saved');
 
                         if (isAutoExitAfterSave) {
-                            // $mdDialog.hide({res: 'agree', responseData: responseData});
+
                             let responseObj = {res: 'agree', data: responseData};
                             metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
-                        }
+
+                        } else {
+							vm.entity.modified = responseData.modified
+						}
 
 
                     }
@@ -2021,34 +2030,39 @@
 
         };
 
+		var onBigDrawerResizeButtonClick = function () {
+
+			vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, vm.entityType);
+
+			$scope.$apply();
+			const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(6);
+
+			$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+			bigDrawerResizeButton.classList.add('display-none');
+			bigDrawerResizeButton.classList.remove('display-block');
+
+		};
+
         vm.init = function () {
 
-        	setTimeout(function () {
+			setTimeout(function () {
 
-            	vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
+				if (data.openedIn === 'big-drawer') {
 
-				bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
+					bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
 
-				if (bigDrawerResizeButton) {
+					if (bigDrawerResizeButton) {
+						bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick);
+					}
 
-					bigDrawerResizeButton.addEventListener('click', function () {
-
-						// vm.fixedAreaPopup.tabColumns = 6;
-						vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, vm.entityType);
-
-						$scope.$apply();
-						const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(6);
-
-						$bigDrawer.setWidth(bigDrawerWidthPercent);
-
-						bigDrawerResizeButton.classList.add('display-none');
-						bigDrawerResizeButton.classList.remove('display-block');
-
-					});
-
+				} else {
+					vm.dialogElemToResize = document.querySelector('.evEditorDialogElemToResize');
 				}
 
-            }, 100);
+
+			}, 100);
+
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
