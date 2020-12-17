@@ -17,7 +17,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
-    var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
+    var EntityViewerEditorEventService = require('../../services/eventService');
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var tooltipsService = require('../../services/tooltipsService');
@@ -642,7 +642,7 @@
 
         var rebookComplexTransaction = function (inputsToRecalculate, recalculationData) {
 
-            vm.processing = true;
+            // vm.processing = true;
 
             var values = {};
 
@@ -663,7 +663,16 @@
 
                 vm.transactionTypeId = cTransactionData.transaction_type;
                 vm.editLayoutEntityInstanceId = cTransactionData.transaction_type;
-                vm.entity = cTransactionData.complex_transaction;
+
+                if (inputsToRecalculate && inputsToRecalculate.length) {
+
+                	inputsToRecalculate.forEach(input => {
+						vm.entity[input.name] = cTransactionData.complex_transaction[input.name]
+					})
+
+				} else {
+					vm.entity = cTransactionData.complex_transaction
+				}
 
                 var recalculationInfo = {
                     recalculatedInputs: inputsToRecalculate,
@@ -672,36 +681,40 @@
 
                 postRebookComplexTransactionActions(cTransactionData, recalculationInfo);
 
-
                 vm.readyStatus.entity = true;
 
-                vm.processing = false;
+                // vm.processing = false;
 
                 $scope.$apply();
 
-                if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
-                }
+				if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
+					vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+				}
+
+				/* if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
+					vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
+				} */
 
             }).catch(function (reason) {
 
                 console.log("Something went wrong with recalculation", reason);
 
-                vm.processing = false;
+                // vm.processing = false;
+				vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
                 vm.readyStatus.layout = true;
 
                 $scope.$apply();
 
-            })
+            });
 
         }
 
         vm.recalculate = function (paramsObj) {
 
-            var inputs = paramsObj.inputs;
-            var recalculationData = paramsObj.recalculationData;
+			var inputs = paramsObj.inputs;
+        	var recalculationData = paramsObj.recalculationData;
 
-            transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+			sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
             if (inputs && inputs.length) {
                 rebookComplexTransaction(inputs, recalculationData);

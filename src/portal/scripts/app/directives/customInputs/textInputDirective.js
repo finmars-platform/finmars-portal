@@ -161,9 +161,11 @@
 							scope.model = res.text;
 
 							if (scope.onChangeCallback) {
+
 								setTimeout(function () {
-								scope.onChangeCallback();
+									scope.onChangeCallback();
 								}, 0);
+
 							}
 
 						}

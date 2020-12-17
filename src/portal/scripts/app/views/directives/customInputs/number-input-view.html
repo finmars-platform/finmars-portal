@@ -22,9 +22,9 @@
 
           <input
             type="text"
-            data-ng-model="numberToShow"
-            data-ng-change="onValueChange()"
-            data-ng-model-options="{debounce: 200}"
+            ng-model="numberToShow"
+            ng-change="onValueChange()"
+            ng-model-options="{debounce: 500}"
             placeholder="{{placeholderText}}"
             ng-disabled="isDisabled"
             class="custom-input number-input numberInputElem"
