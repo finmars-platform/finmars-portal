@@ -41,8 +41,8 @@
           </button>
 
           <input data-ng-model="model"
-                 data-ng-model-options="{debounce: 500}"
-                 placeholder="{{placeholderText}}" class="custom-input text-input textInputElem"
+                 placeholder="{{placeholderText}}"
+                 class="custom-input text-input textInputElem"
                  ng-readonly="isReadonly"
                  ng-disabled="isDisabled" />
 
@@ -94,8 +94,9 @@
     </div>
 
     <div class="custom-input-full-text-container customInputFullText">
-      <textarea data-ng-model="model"
-                data-ng-change="onInputChange()"
+      <textarea ng-model="model"
+                ng-model-options="{debounce: 500}"
+                ng-change="onInputChange()"
                 class="custom-input-full-text customInputBackgroundColor"></textarea>
 
       <!--<button data-ng-if="!noIndicatorBtn"

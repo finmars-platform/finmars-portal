@@ -2,9 +2,23 @@
 
 	'use strict';
 
-	let entityEditorHelper = require('../../../helpers/entity-editor.helper');
+	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
+	const entityEditorHelper = require('../../../helpers/entity-editor.helper');
 
 	module.exports = function (viewModel, $scope, $mdDialog) {
+
+		let preRecalculationActions = function (inputs, updateScope) {
+
+			removeUserInputsInvalidForRecalculation(inputs, viewModel.transactionType.inputs);
+
+			viewModel.evEditorDataService.setUserInputsToRecalculate(inputs);
+			viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_START);
+
+			if (updateScope) {
+				$scope.$apply();
+			}
+
+		};
 
 		let onFieldChange = function (fieldKey) {
 
@@ -62,26 +76,29 @@
 
 				} */
 
-				let userInput = viewModel.userInputs.find(function (input) {
-					return input.key === fieldKey;
-				});
+				let userInput = viewModel.userInputs.find(input => input.key === fieldKey);
 
 				if (userInput) {
 
-					let calcInput = viewModel.inputsWithCalculations.find(function (input) {
+					let calcInput = viewModel.inputsWithCalculations.find(input => {
+
 						return input.name === userInput.name &&
 						       input.settings &&
 						       input.settings.recalc_on_change_linked_inputs;
+
 					});
 
 					if (calcInput) {
 
 						let linkedInputsNames = calcInput.settings.recalc_on_change_linked_inputs.split(',');
 
+						viewModel.evEditorDataService.setUserInputsToRecalculate(linkedInputsNames);
+
 						viewModel.recalculate({
-								inputs: linkedInputsNames,
-								recalculationData: "linked_inputs"
-							});
+							inputs: linkedInputsNames,
+							recalculationData: "linked_inputs",
+							updateScope: true
+						});
 
 					}
 
@@ -110,7 +127,41 @@
 
 		}
 
+		let removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
+
+			inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+
+				let inputInvalid = true;
+
+				for (let i = 0; i < actualUserInputs.length; i++) {
+
+					if (inputName === actualUserInputs[i].name) { // whether input actually exist
+
+						if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+
+							inputInvalid = false;
+
+						}
+
+
+						break;
+
+					}
+
+				}
+
+				if (inputInvalid) {
+					inputsList.splice(index, 1);
+				}
+
+			});
+
+			// return inputsList;
+
+		}
+
 		return {
+			preRecalculationActions: preRecalculationActions,
 			onFieldChange: onFieldChange
 		}
 

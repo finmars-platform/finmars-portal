@@ -451,7 +451,7 @@
 
         var bookComplexTransaction = function (inputsToRecalculate, recalculationData) {
 
-            vm.processing = true;
+            // vm.processing = true;
 
             var values = {};
 
@@ -471,7 +471,15 @@
                 vm.transactionTypeId = data.transaction_type;
                 vm.editLayoutEntityInstanceId = data.transaction_type;
 
-                vm.entity = data.complex_transaction;
+				if (inputsToRecalculate && inputsToRecalculate.length) {
+
+					inputsToRecalculate.forEach(input => {
+						vm.entity[input.name] = data.complex_transaction[input.name]
+					})
+
+				} else {
+					vm.entity = data.complex_transaction
+				}
 
                 vm.transactionType = data.transaction_type_object;
 
@@ -509,19 +517,20 @@
                 postBookComplexTransactionActions(data, recalculationInfo);
 
 
-                vm.processing = false;
+                // vm.processing = false;
 
                 $scope.$apply();
 
                 if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
+                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
                 }
 
             }).catch(function (reason) {
 
                 console.log("Something went wrong with recalculation");
 
-                vm.processing = false;
+                // vm.processing = false;
+				vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
                 vm.readyStatus.layout = true;
 
                 $scope.$apply();
@@ -532,10 +541,10 @@
 
         vm.recalculate = function (paramsObj) {
 
-            var inputs = paramsObj.inputs;
-            var recalculationData = paramsObj.recalculationData;
+			var inputs = paramsObj.inputs;
+			var recalculationData = paramsObj.recalculationData;
 
-            transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+			sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
             if (inputs && inputs.length) {
                 bookComplexTransaction(inputs, recalculationData);

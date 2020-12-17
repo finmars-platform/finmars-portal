@@ -458,7 +458,7 @@
                         scope.ciEventObj.event = {key: 'mark_not_valid_fields'};
                     });
 
-                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATED, function () {
+                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
                         if (scope.item && scope.item.frontOptions &&
                             (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
