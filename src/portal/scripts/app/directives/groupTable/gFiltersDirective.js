@@ -5,35 +5,46 @@
 
     'use strict';
 
-    var metaService = require('../../services/metaService');
-    var evEvents = require('../../services/entityViewerEvents');
-    var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
+    const metaService = require('../../services/metaService');
+	const evEvents = require('../../services/entityViewerEvents');
+	const popupEvents = require('../../services/events/popupEvents');
+	const evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
-    var middlewareService = require('../../services/middlewareService');
+	const middlewareService = require('../../services/middlewareService');
 
-    var uiService = require('../../services/uiService');
-    var downloadFileHelper = require('../../helpers/downloadFileHelper');
+	const uiService = require('../../services/uiService');
+	const downloadFileHelper = require('../../helpers/downloadFileHelper');
 
-    var convertReportHelper = require('../../helpers/converters/convertReportHelper');
-    var reportCopyHelper = require('../../helpers/reportCopyHelper');
+	const convertReportHelper = require('../../helpers/converters/convertReportHelper');
+	const reportCopyHelper = require('../../helpers/reportCopyHelper');
 
-    var exportExcelService = require('../../services/exportExcelService');
+	const exportExcelService = require('../../services/exportExcelService');
+
+	const EventService = require('../../services/eventService');
 
     module.exports = function ($mdDialog) {
         return {
             restrict: 'AE',
-            templateUrl: 'views/directives/groupTable/g-filters-view.html',
             scope: {
                 evDataService: '=',
                 evEventService: '=',
                 attributeDataService: '=',
                 contentWrapElement: '='
             },
-            link: function (scope) {
-                scope.entityType = scope.evDataService.getEntityType();
+			templateUrl: 'views/directives/groupTable/g-filters-view.html',
+            link: function (scope, elem, attrs) {
+
+            	scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isFiltersOpened = true;
+				scope.filters = scope.evDataService.getFilters();
+				scope.popupPosX = {value: null}
+				scope.popupPosY = {value: null}
+
+				scope.readyStatus = {
+					filters: false
+				}
 
                 scope.calculateReport = function () {
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
@@ -59,7 +70,7 @@
 
                 }
 
-                var getListLayoutByEntity = function (entityType) {
+                let getListLayoutByEntity = function (entityType) {
                     var options = {
                         pageSize: 1000,
                         page: 1,
@@ -104,7 +115,7 @@
 
                     if (scope.currentAdditions.type === type) {
 
-                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                        let interfaceLayout = scope.evDataService.getInterfaceLayout();
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
@@ -324,8 +335,8 @@
 
                     if (scope.isReport) {
 
-                        var controllerName = '';
-                        var templateUrl = '';
+                        let controllerName = '';
+                        let templateUrl = '';
 
                         switch (scope.entityType) {
                             case 'balance-report':
@@ -400,8 +411,44 @@
                     })
 
                 };
-            }
 
+                let formatFiltersForChips = function () {
+
+					scope.filtersChips = scope.filters.map(filter => {
+						return {id: filter.key, text: filter.name};
+					});
+
+				};
+
+                scope.onFilterChipClick = function (argumentObj) {
+
+					scope.popupData.filterKey = argumentObj.chipsData.data.id
+
+					scope.popupPosX.value = argumentObj.event.clientX
+					scope.popupPosY.value = argumentObj.event.clientY
+
+					scope.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
+
+				};
+
+				let init = function () {
+
+					scope.popupEventService = new EventService();
+
+					scope.popupData = {
+						evDataService: scope.evDataService,
+						evEventService: scope.evEventService
+					}
+
+					formatFiltersForChips();
+
+					scope.readyStatus.filters = true;
+
+				};
+
+				init();
+
+            }
 
         }
     }

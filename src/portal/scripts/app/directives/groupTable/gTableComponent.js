@@ -12,13 +12,13 @@
     module.exports = function () {
         return {
             restrict: 'AE',
-            templateUrl: 'views/directives/groupTable/g-table-component-view.html',
             scope: {
                 attributeDataService: '=',
                 evDataService: '=',
                 evEventService: '=',
                 spExchangeService: '='
             },
+			templateUrl: 'views/directives/groupTable/g-table-component-view.html',
             link: function (scope, elem, attrs) {
 
                 console.log("gTableComponent.Link", scope, elem, attrs);

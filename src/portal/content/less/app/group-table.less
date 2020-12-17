@@ -1603,11 +1603,11 @@ body.md-dialog-is-showing {
 
 .g-table-dial {
   position: absolute;
-  //left: 5%;
+  // left: 5%;
   left: 20px;
   bottom: 20px;
 }
-
+// old group table filters
 .g-filter-sidebar.additions-sidebar {
   &::before {
     display: block;
@@ -1740,7 +1740,7 @@ body.md-dialog-is-showing {
   &.f-disabled {
     background-color: rgba(255, 222, 137, 0.4);
   }
-};
+}
 
 .link-to-above-filter {
   background-color: #c6dfb5;
@@ -1837,20 +1837,22 @@ md-checkbox.g-filter-options-checkbox {
   position: relative;
 }
 
-.select-menu-visible {
-  label, label:not(.md-no-float):not(.md-container-ignore), input {
-    padding-left: 15px;
-  }
-}
-
 .rv-filter-link-to-above-btn {
   padding: 0;
+
   .md-button.use-from-above-btn {
     width: 100%;
     text-align: left;
     //padding-left: 50px;
     margin: 0;
     text-transform: none;
+  }
+}
+// < old group table filters >
+
+.select-menu-visible {
+  label, label:not(.md-no-float):not(.md-container-ignore), input {
+    padding-left: 15px;
   }
 }
 

@@ -9,7 +9,7 @@
              ng-click="onChipClickMethod(chip, $event)">
 
             <div ng-bind-html="chip.text"
-                  class="chip-list-text"></div>
+                 class="chip-list-text"></div>
 
             <md-button ng-if="chipsDeletion"
                        ng-click="deleteChips(chip)"
@@ -31,9 +31,9 @@
 
             <div class="chip-list-text">+{{hiddenChips.length}}</div>
 
-             <md-button ng-if="chipsDeletion"
-                        ng-click="deleteChips(hiddenChips)"
-                        class="chip-deletion-btn">
+            <md-button ng-if="chipsDeletion"
+                       ng-click="deleteChips(hiddenChips)"
+                       class="chip-deletion-btn">
                 <span class="material-icons">cancel</span>
             </md-button>
 

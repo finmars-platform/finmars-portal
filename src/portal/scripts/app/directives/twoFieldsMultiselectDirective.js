@@ -6,7 +6,7 @@
 	"use strict";
 
 	let ChipsListEventService = require('../services/eventService');
-	let directivesEvents = require("../services/directivesEvents");
+	let directivesEvents = require("../services/events/directivesEvents");
 
 	module.exports = function ($mdDialog) {
 		return {

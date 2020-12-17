@@ -9,8 +9,8 @@
     <md-menu-content width="4">-->
 <div class="popup-menu">
         <div>
-<!--            <md-button ng-click="vm.data.renameColumn(vm.data.column, $mdMenu, $event)"-->
-            <md-button ng-click="vm.data.renameColumn(vm.data.column, $mdMenu, $event)"
+<!--            <md-button ng-click="popupData.data.renameColumn(popupData.data.column, $mdMenu, $event)"-->
+            <md-button ng-click="popupData.data.renameColumn(popupData.data.column, $mdMenu, $event)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"
                             style="visibility: hidden;"></ng-md-icon>
@@ -18,8 +18,8 @@
             </md-button>
         </div>
 
-        <div data-ng-if="!vm.data.columnHasCorrespondingGroup(vm.data.column.key)">
-            <md-button data-ng-click="vm.data.addColumnEntityToGrouping(vm.data.column)"
+        <div data-ng-if="!popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
+            <md-button data-ng-click="popupData.data.addColumnEntityToGrouping(popupData.data.column)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"
                             style="visibility: hidden;"></ng-md-icon>
@@ -27,8 +27,8 @@
             </md-button>
         </div>
 
-        <div data-ng-if="vm.data.checkForFilteringBySameAttr(vm.data.column.key)">
-            <md-button data-ng-click="vm.data.addFiltersWithColAttr(vm.data.column)"
+        <div data-ng-if="popupData.data.checkForFilteringBySameAttr(popupData.data.column.key)">
+            <md-button data-ng-click="popupData.data.addFiltersWithColAttr(popupData.data.column)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"
                             style="visibility: hidden;"></ng-md-icon>
@@ -37,7 +37,7 @@
         </div>
 
         <div>
-            <md-button ng-click="vm.data.resizeColumn(vm.data.column, $mdMenu, $event)"
+            <md-button ng-click="popupData.data.resizeColumn(popupData.data.column, $mdMenu, $event)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"
                             style="visibility: hidden;"></ng-md-icon>
@@ -45,7 +45,7 @@
             </md-button>
         </div>
 
-        <div data-ng-if="!vm.data.isReport || !vm.data.columnHasCorrespondingGroup(vm.data.column.key);">
+        <div data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.column.key);">
             <md-menu md-offset="260px 0">
                 <md-button aria-label="Open phone interactions menu"
                            class="popup-menu-item"
@@ -60,42 +60,42 @@
 
                 <md-menu-content width="3">
                     <md-menu-item>
-                        <md-button ng-click="vm.data.changeColumnTextAlign(vm.data.column, 'left')"
+                        <md-button ng-click="popupData.data.changeColumnTextAlign(popupData.data.column, 'left')"
                                    class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!vm.data.checkColTextAlign(vm.data.column, 'left')"
+                                        data-ng-show="!popupData.data.checkColTextAlign(popupData.data.column, 'left')"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="vm.data.checkColTextAlign(vm.data.column, 'left')"
+                                        data-ng-show="popupData.data.checkColTextAlign(popupData.data.column, 'left')"
                                         class="z-menu-icon"></ng-md-icon>
                             <span>Left</span>
                         </md-button>
                     </md-menu-item>
 
                     <md-menu-item>
-                        <md-button ng-click="vm.data.changeColumnTextAlign(vm.data.column, 'center')"
+                        <md-button ng-click="popupData.data.changeColumnTextAlign(popupData.data.column, 'center')"
                                    class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!vm.data.checkColTextAlign(vm.data.column, 'center')"
+                                        data-ng-show="!popupData.data.checkColTextAlign(popupData.data.column, 'center')"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="vm.data.checkColTextAlign(vm.data.column, 'center')"
+                                        data-ng-show="popupData.data.checkColTextAlign(popupData.data.column, 'center')"
                                         class="z-menu-icon"></ng-md-icon>
                             <span>Center</span>
                         </md-button>
                     </md-menu-item>
 
                     <md-menu-item>
-                        <md-button ng-click="vm.data.changeColumnTextAlign(vm.data.column, 'right')"
+                        <md-button ng-click="popupData.data.changeColumnTextAlign(popupData.data.column, 'right')"
                                    class="g-settings-option-btn">
                             <ng-md-icon icon="done"
-                                        data-ng-show="!vm.data.checkColTextAlign(vm.data.column, 'right')"
+                                        data-ng-show="!popupData.data.checkColTextAlign(popupData.data.column, 'right')"
                                         class="z-menu-icon"
                                         style="visibility: hidden;"></ng-md-icon>
                             <ng-md-icon icon="done"
-                                        data-ng-show="vm.data.checkColTextAlign(vm.data.column, 'right')"
+                                        data-ng-show="popupData.data.checkColTextAlign(popupData.data.column, 'right')"
                                         class="z-menu-icon"></ng-md-icon>
                             <span>Right</span>
                         </md-button>
@@ -104,16 +104,16 @@
             </md-menu>
         </div>
 
-        <div data-ng-if="vm.data.isReport && vm.data.columnHasCorrespondingGroup(vm.data.column.key)">
-            <md-button data-ng-click="vm.data.removeGroup(vm.data.column.___column_id || vm.data.column.___group_type_id)"
+        <div data-ng-if="popupData.data.isReport && popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
+            <md-button data-ng-click="popupData.data.removeGroup(popupData.data.column.___column_id || popupData.data.column.___group_type_id)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"></ng-md-icon>
                 <span>Remove</span>
             </md-button>
         </div>
 
-        <div data-ng-if="!vm.data.isReport || !vm.data.columnHasCorrespondingGroup(vm.data.column.key)">
-            <md-button ng-click="vm.data.removeColumn(vm.data.column)"
+        <div data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
+            <md-button ng-click="popupData.data.removeColumn(popupData.data.column)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"></ng-md-icon>
                 <span>Remove</span>

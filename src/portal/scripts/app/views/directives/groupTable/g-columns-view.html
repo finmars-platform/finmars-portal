@@ -854,7 +854,7 @@
                        popup
                        popup-template-url="{{getPopupMenuTemplate(column)}}"
                        position-relative-to="mouse"
-                       right-click-open="'true'"
+                       open-on="right_click"
                        close-on-click-outside="true"
                        prevent-default="'true'"
                        on-save-callback=""
@@ -862,7 +862,7 @@
                        offset-x="-10"
                        offset-y="-10"
                        backdrop-classes="low-z-index-backdrop"
-                       event-service="evEventService">
+                       popup-event-service="evEventService">
 
                 <div ng-if="!column.layout_name">
                     <span ng-bind="column.name"></span>
