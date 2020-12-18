@@ -1929,6 +1929,23 @@
                                     } else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+
+                                        var listLayout = vm.entityViewerDataService.getListLayout();
+                                        var layoutColumns = listLayout.data.columns;
+
+                                        layoutColumns.forEach(function(layoutColumn) {
+
+                                            var column = columns.find(function(itemColumn){
+                                                return itemColumn.key === layoutColumn.key
+                                            })
+
+                                            if(column && !column.layout_name) {
+                                                column.layout_name = layoutColumn.layout_name
+                                            }
+
+                                        })
+
+
                                         vm.entityViewerDataService.setColumns(columns);
 
                                     }
