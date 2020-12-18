@@ -18,6 +18,7 @@
 				preventDefault: '@',
 
 				positionRelativeTo: '@', // ('mouse', 'element').
+                popupClasses: '@', // add css classes to popup-container, example: popup-classes="class1 class2"
                 backdropClasses: '@', // add css classes to backdrop
 
 				// position relative to element or mouse
@@ -57,6 +58,14 @@
                 let popUpElem = document.createElement("div");
 				popUpElem.classList.add("popup-container");
                 // console.log('templateElem', templateElem);
+
+                if (typeof scope.popupClasses === 'string' && scope.popupClasses.trim().length > 0) {
+
+                    const classes = scope.popupClasses.split(' ');
+
+                    popUpElem.classList.add(...classes);
+
+                }
 
 
                 let setPopupPosition = function (event) {
