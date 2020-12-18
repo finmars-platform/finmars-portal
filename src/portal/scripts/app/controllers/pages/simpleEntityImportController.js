@@ -25,30 +25,17 @@
 
         vm.readyStatus = {
             schemes: false,
-            processing: false,
-            dailyModel: false,
-            priceDownloadScheme: false,
-            instrumentType: false,
-            currency: false
+            processing: false
         };
+
         vm.dataIsImported = false;
         vm.activeContentType = null;
 
-        vm.config = {
-            // DEPRECATED, this settings were moved to Scheme
-            // delimiter: ',',
-            // error_handler: 'break',
-            // mode: 'skip',
-            // missing_data_handler: 'throw_error',
-            // classifier_handler: 'skip'
-        };
+        vm.config = {};
+        vm.validateConfig = {};
 
         vm.processing = false;
         vm.loaderData = {};
-
-        vm.validateConfig = {
-            mode: 1
-        };
 
         vm.hasSchemeEditPermission = false;
 
@@ -66,15 +53,16 @@
             var options = {filters: {'content_type': vm.activeContentType}};
 
             csvImportSchemeService.getListLight(options).then(function (data) {
+
                 vm.entitySchemes = data.results;
                 vm.readyStatus.schemes = true;
                 $scope.$apply();
+
             });
 
         };
 
         vm.checkExtension = function (file, extension, $event) {
-            console.log('file', file);
 
             if (file) {
 
@@ -99,6 +87,7 @@
                     }).then(function () {
 
                         vm.config.file = null;
+
                     });
 
                 }
@@ -112,9 +101,7 @@
         };
 
         vm.getFileUrl = function (id) {
-
             return baseUrl + 'file-reports/file-report/' + id + '/view/';
-
         };
 
         vm.createScheme = function ($event) {
@@ -177,15 +164,8 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                // formData.append('error_handler', vm.config.error_handler);
-                // formData.append('delimiter', vm.config.delimiter);
-                // formData.append('mode', vm.config.mode);
-                // formData.append('missing_data_handler', vm.config.missing_data_handler);
-                // formData.append('classifier_handler', vm.config.classifier_handler);
 
             }
-
-            console.log('vm.validateConfig', vm.validateConfig);
 
             importEntityService.validateImport(formData).then(function (data) {
 
@@ -345,7 +325,6 @@
 
                 }
 
-
             });
 
 
@@ -365,15 +344,8 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                // formData.append('error_handler', vm.config.error_handler);
-                // formData.append('delimiter', vm.config.delimiter);
-                // formData.append('mode', vm.config.mode);
-                // formData.append('missing_data_handler', vm.config.missing_data_handler);
-                // formData.append('classifier_handler', vm.config.classifier_handler);
 
             }
-
-            console.log('vm.config', vm.config);
 
             importEntityService.startImport(formData).then(function (data) {
 
@@ -388,12 +360,9 @@
 
                 $scope.$apply();
 
-
                 if (websocketService.isOnline()) {
 
                     websocketService.addEventListener('simple_import_status', function (data) {
-
-                        console.log('simple_import_status.data', data);
 
                         if (vm.config.task_id === data.task_id) {
 
@@ -462,6 +431,8 @@
 
             }).then(function (data) {
 
+                vm.config = {};
+
                 vm.processing = false;
 
                 console.log('import.data', data);
@@ -471,42 +442,37 @@
 
                 $scope.$apply();
 
-
                 var errors = data.stats.filter(function (item) {
                     return item.level === 'error'
                 });
 
                 console.log('errors', errors);
 
-
                 var description;
 
-                if (vm.config.error_handler === 'continue') {
+                if (data.scheme_object.error_handler === 'continue') {
 
                     description = '<div>' +
-                        '<div>Rows total: ' + (data.total_rows - 1) + '</div>' +
+                        '<div>Rows total: ' + (data.total_rows) + '</div>' +
                         '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
                         '<div>Rows fail import: ' + errors.length + '</div>' +
                         '</div><br/>';
 
                 }
 
-                if (vm.config.error_handler === 'break') {
+                if (data.scheme_object.error_handler === 'break') {
 
                     description = '<div>' +
-                        '<div>Rows total: ' + (data.total_rows - 1) + '</div>' +
+                        '<div>Rows total: ' + (data.total_rows) + '</div>' +
                         '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
                         '<div>Rows fail import: ' + errors.length + '</div>' +
                         '</div><br/>';
 
                 }
-
-                console.log('description', description);
 
                 description = description + '<div> You have successfully imported csv file </div>';
 
                 description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
-
 
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',
@@ -549,6 +515,8 @@
 
             }).then(function (data) {
 
+                vm.validateConfig = {};
+
                 vm.processing = false;
 
                 console.log('validateImport.data', data);
@@ -559,7 +527,6 @@
                 vm.dataIsImported = true;
 
                 $scope.$apply();
-
 
                 data.stats.forEach(function (item) {
 
@@ -606,6 +573,7 @@
                     }).then(function (res) {
 
                         if (res && res.status === 'agree') {
+
                             vm.startImport($event);
                         }
 
