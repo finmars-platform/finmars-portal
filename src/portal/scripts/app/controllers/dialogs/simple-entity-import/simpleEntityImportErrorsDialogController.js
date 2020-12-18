@@ -128,9 +128,9 @@
 
         vm.agree = function ($event) {
 
-            if (vm.config.process_mode !== 'validate') {
+            if (vm.scheme.process_mode !== 'validate') {
 
-                if (vm.config.error_handler === 'break') {
+                if (vm.scheme.error_handler === 'break') {
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
@@ -168,7 +168,7 @@
 
                 }
 
-                if (vm.config.error_handler === 'continue') {
+                if (vm.scheme.error_handler === 'continue') {
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
