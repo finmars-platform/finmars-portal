@@ -4,10 +4,12 @@
                    ng-click="openLayoutList($event)"
                    popup
                    popup-template-url="'views/popups/g-layouts-manager-popup-view.html'"
+                   popup-data="popupData"
                    position-relative-to="mouse"
                    open-on="right_click"
                    popup-classes="rounded-border"
-                   close-on-click-outside="true">
+                   close-on-click-outside="true"
+                   popup-event-service="evEventService">
 <!--            src/portal/scripts/app/views/directives/groupTable/g-top-part-view.html-->
             <div class="flex-row flex-i-center">
                 <ng-md-icon icon="view_quilt" class="flex-row"></ng-md-icon>

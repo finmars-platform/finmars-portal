@@ -17,7 +17,7 @@
 
     var currencyService = require('../../services/currencyService');
 
-    module.exports = function ($mdDialog, $state) {
+    module.exports = function ($mdDialog, $state,) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/groupTable/g-top-part-view.html',
@@ -40,6 +40,12 @@
                 scope.layout = scope.evDataService.getListLayout()
                 if (scope.layout && scope.layout.name) {
                     scope.layoutName = scope.layout.name;
+                }
+
+                scope.popupData = {
+                    entityType: scope.entityType,
+                    evDataService: scope.evDataService,
+                    evEventService: scope.evEventService
                 }
 
                 var applyLayout = function (layout) {
@@ -442,9 +448,7 @@
 
                 };
 
-
-
-                var init = function () {
+                var init = async function () {
                     initEventListeners();
                 };
 
