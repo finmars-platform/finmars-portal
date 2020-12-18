@@ -187,9 +187,10 @@
         };
 
         vm.agree = function ($event) {
+
             if (vm.config.process_mode !== 'validate') {
 
-                if (vm.config.error_handling === 'break') {
+                if (vm.validationResult.scheme_object.error_handler === 'break') {
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
@@ -227,7 +228,7 @@
 
                 }
 
-                if (vm.config.error_handling === 'continue') {
+                if (vm.validationResult.scheme_object.error_handler === 'continue') {
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
@@ -289,7 +290,7 @@
             });
 
 
-            if (vm.config.error_handling === 'break') {
+            if (vm.validationResult.scheme_object.error_handler === 'break') {
                 vm.rowsSuccessCount = vm.validationResult.error_row_index - 1;
             } else {
 

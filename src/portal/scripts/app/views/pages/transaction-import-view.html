@@ -68,7 +68,7 @@
             <md-button
                     class="md-raised colored-btn"
                     data-ng-class="{'disabled-btn': !vm.loadIsAvailable()}"
-                    data-ng-click="vm.startImport($event)">
+                    data-ng-click="vm.startImportWithValidation($event)">
                 IMPORT
             </md-button>
             <div data-ng-if="vm.processing" class="m-l-16">
@@ -76,35 +76,6 @@
             </div>
         </div>
     </div>
-
-<!--    <div layout="row">-->
-<!--        <md-input-container class="m-l-0">-->
-<!--            <label for="">Error handling</label>-->
-<!--            <md-select data-ng-model="vm.config.error_handling">-->
-<!--                <md-option value="continue">Continue</md-option>-->
-<!--                <md-option value="break">Break on first error</md-option>-->
-<!--            </md-select>-->
-<!--        </md-input-container>-->
-
-<!--        <md-input-container>-->
-<!--            <label>Separator</label>-->
-<!--            <md-select data-ng-model="vm.config.delimiter">-->
-<!--                <md-option value=",">Comma (,)</md-option>-->
-<!--                <md-option value=";">Semicolon (;)</md-option>-->
-<!--                <md-option value="\t">Tab</md-option>-->
-<!--            </md-select>-->
-<!--        </md-input-container>-->
-
-<!--        <md-input-container style="width: 245px;">-->
-<!--            <label>Import Rules - if object is not found</label>-->
-<!--            <md-select-->
-<!--                    data-ng-model="vm.config.missing_data_handler">-->
-<!--                <md-option value="throw_error">Treat as Error</md-option>-->
-<!--                <md-option value="set_defaults">Replace with Default Value</md-option>-->
-<!--            </md-select>-->
-<!--        </md-input-container>-->
-
-<!--    </div>-->
 
     <div class="loader-dialog" data-ng-if="vm.processing">
 
