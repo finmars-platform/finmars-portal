@@ -19,7 +19,7 @@
 
     };
 
-    let addEventListener = function (event, callback) {
+     function addEventListener(event, callback) {
 
         if (!callbacks[event]) {
             callbacks[event] = [];
@@ -36,9 +36,13 @@
                 var parsedMessage = JSON.parse(message.data)
 
                 if (parsedMessage.hasOwnProperty('type')) {
-                    callbacks[parsedMessage.type].forEach(function (callback) {
-                        callback(parsedMessage.payload);
-                    })
+
+                    if (callbacks[parsedMessage.type]) {
+                        callbacks[parsedMessage.type].forEach(function (callback) {
+                            callback(parsedMessage.payload);
+                        })
+                    }
+
                 } else {
                     console.log("Websocket onmessage error. Type is not set", message);
                 }
@@ -51,12 +55,25 @@
 
         }
 
-    };
+    }
+
+    function removeEventListener(event){
+
+        if (callbacks[event]) {
+            delete callbacks[event];
+        }
+
+    }
+
+    function isOnline(){
+        return !!window.ws
+    }
 
     module.exports = {
         send: send,
         addEventListener: addEventListener,
-
+        removeEventListener: removeEventListener,
+        isOnline: isOnline
 
     }
 
