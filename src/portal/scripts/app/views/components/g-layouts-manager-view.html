@@ -8,10 +8,10 @@
 
     <md-menu-divider></md-menu-divider>
 
-    <div>
-        <md-button class="popup-menu-item">
-            <ng-md-icon icon="home"></ng-md-icon>
-            <span>Balance rolling</span>
+    <div class="layouts-container">
+        <md-button data-ng-repeat="layout in layouts" class="popup-menu-item" data-ng-click="openLayout(layout)">
+            <ng-md-icon icon="home" ng-style="{ visibility: layout.is_default ? 'visible' : 'hidden' }"></ng-md-icon>
+            <span>{{layout.name}}</span>
         </md-button>
     </div>
 
@@ -56,7 +56,9 @@
     </div>
 
     <div>
-        <md-button class="popup-menu-item">
+        <md-button class="popup-menu-item"
+                   data-ng-click="setAsDefault()"
+                   data-ng-disabled="layout.is_default">
             <ng-md-icon icon="home"></ng-md-icon>
             <span>Make default</span>
         </md-button>
@@ -65,7 +67,7 @@
     <md-menu-divider></md-menu-divider>
 
     <div>
-        <md-button class="popup-menu-item">
+        <md-button class="popup-menu-item" data-ng-click="deleteLayout($event)">
             <ng-md-icon icon="delete"></ng-md-icon>
             <span>Delete</span>
         </md-button>
