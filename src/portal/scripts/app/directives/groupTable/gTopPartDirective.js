@@ -38,6 +38,7 @@
                 scope.layoutName = '';
 
                 scope.layout = scope.evDataService.getListLayout()
+                console.log('#69 scope.layout', scope.layout)
                 if (scope.layout && scope.layout.name) {
                     scope.layoutName = scope.layout.name;
                 }
