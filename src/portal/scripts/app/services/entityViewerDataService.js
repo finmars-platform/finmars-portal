@@ -776,6 +776,10 @@
             return data.activeObjectFromAbove;
         }
 
+        function setRowHeight(height) {
+            return data.virtualScroll.rowHeight = height;
+        }
+
         function getRowHeight() {
             return data.virtualScroll.rowHeight;
         }
@@ -1404,6 +1408,7 @@
             getActiveObjectActionData: getActiveObjectActionData,
 
             getRowHeight: getRowHeight,
+            setRowHeight: setRowHeight,
             getRequestThreshold: getRequestThreshold,
             getVirtualScrollStep: getVirtualScrollStep,
             setVirtualScrollStep: setVirtualScrollStep,
