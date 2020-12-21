@@ -1870,6 +1870,7 @@
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
+                vm.entityViewerDataService.setRowHeight(36);
 
                 /* if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
