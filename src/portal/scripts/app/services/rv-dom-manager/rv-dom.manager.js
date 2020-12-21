@@ -49,15 +49,22 @@
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
-            // offset = Math.floor(viewportElem.scrollTop / rowHeight);
-            // evDataService.setVirtualScrollOffset(offset);
-            evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
-            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+            var flatList = evDataService.getFlatList();
 
-            calculateScroll(elements, evDataService)
+            if (flatList.length > 500) {
+
+                // offset = Math.floor(viewportElem.scrollTop / rowHeight);
+                // evDataService.setVirtualScrollOffset(offset);
+                evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
+                evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+
+                calculateScroll(elements, evDataService)
+
+            }
 
 
         }, 10);
+
 
         var scrollXHandler = function () {
 
@@ -68,6 +75,9 @@
             columnBottomRow.style.left = -viewportElem.scrollLeft + 'px';
 
         };
+
+        viewportElem.removeEventListener('scroll', scrollYHandler);
+        viewportElem.removeEventListener('scroll', scrollXHandler);
 
         viewportElem.addEventListener('scroll', scrollYHandler);
 

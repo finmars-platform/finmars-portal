@@ -323,8 +323,12 @@
 
                     if (isReport) {
 
-                        rvDomManager.calculateScroll(elements, scope.evDataService);
-                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        if (flatList.length > 500) {
+                            rvDomManager.calculateScroll(elements, scope.evDataService);
+                            rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        } else {
+                            rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        }
 
                         clearOverflowingCells();
                         cellContentOverflow();
@@ -401,7 +405,7 @@
                     viewportElem.scrollTop = 0;
                 });
 
-                function onWindowResize () {
+                function onWindowResize() {
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
@@ -431,66 +435,66 @@
                     window.addEventListener('resize', onWindowResize);
 
                     if (!isReport) {
-						scope.scrollManager = new EvScrollManager();
-					}
+                        scope.scrollManager = new EvScrollManager();
+                    }
 
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
-                    	calculateElemsWrapsSizes();
+                        calculateElemsWrapsSizes();
 
-						if (isReport) {
+                        if (isReport) {
 
-							rvDomManager.calculateScroll(elements, scope.evDataService);
+                            rvDomManager.calculateScroll(elements, scope.evDataService);
 
-							rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-							rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-
-
-							rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
-
-							scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_START, function () {
-								clearOverflowingCells();
-							});
-
-							scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
-								cellContentOverflow();
-							});
+                            rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                            rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
 
-							// If we already have data (e.g. viewType changed)
-							var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+                            rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
 
-							if (flatList.length > 1) {
+                            scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_START, function () {
+                                clearOverflowingCells();
+                            });
 
-								progressBar.style.display = 'none';
-
-								if (isReport) {
-									contentElem.style.opacity = '1';
-								}
-
-								updateTableContent();
-
-							}
-
-							//  If we already have data (e.g. viewType changed) end
+                            scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
+                                cellContentOverflow();
+                            });
 
 
-							/*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
-								cellContentOverflow();
-							});*/
+                            // If we already have data (e.g. viewType changed)
+                            var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
 
-						} else {
+                            if (flatList.length > 1) {
 
-							evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                                progressBar.style.display = 'none';
 
-							evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-							evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                                if (isReport) {
+                                    contentElem.style.opacity = '1';
+                                }
 
-							evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
+                                updateTableContent();
 
-						}
+                            }
 
-					}, 500);
+                            //  If we already have data (e.g. viewType changed) end
+
+
+                            /*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
+                                cellContentOverflow();
+                            });*/
+
+                        } else {
+
+                            evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+
+                            evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                            evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+
+                            evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
+
+                        }
+
+                    }, 500);
 
                     toggleBookmarksBtn.addEventListener('click', function () {
 
