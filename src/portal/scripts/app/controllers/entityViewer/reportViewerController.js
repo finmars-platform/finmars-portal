@@ -1015,6 +1015,8 @@
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
 
+                vm.entityViewerDataService.setRowHeight(36);
+
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
                 vm.setEventListeners();
