@@ -349,22 +349,28 @@
 
     var calculateProjection = function (flatList, evDataService) {
 
-        console.time('Creating projection');
+        if (flatList.length > 500) {
 
-        var rowHeight = evDataService.getRowHeight();
-        var offsetPx = evDataService.getVirtualScrollOffsetPx();
-        var from = Math.ceil(offsetPx / rowHeight);
-        var step = evDataService.getVirtualScrollStep();
+            console.time('Creating projection');
 
-        var to = from + step;
+            var rowHeight = evDataService.getRowHeight();
+            var offsetPx = evDataService.getVirtualScrollOffsetPx();
+            var from = Math.ceil(offsetPx / rowHeight);
+            var step = evDataService.getVirtualScrollStep();
 
-        console.timeEnd('Creating projection');
+            var to = from + step;
 
-        console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
-        console.log('View Context ' + evDataService.getViewContext() + ' from', from);
-        console.log('View Context '  + evDataService.getViewContext() + ' to', to);
+            console.timeEnd('Creating projection');
 
-        return flatList.slice(from, to);
+            console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
+            console.log('View Context ' + evDataService.getViewContext() + ' from', from);
+            console.log('View Context ' + evDataService.getViewContext() + ' to', to);
+
+            return flatList.slice(from, to);
+
+        } else {
+            return flatList;
+        }
 
     };
 
