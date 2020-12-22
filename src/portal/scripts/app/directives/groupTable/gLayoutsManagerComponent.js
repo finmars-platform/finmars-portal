@@ -771,6 +771,67 @@
 
                 };
 
+                scope.renameLayout = function ($event, /*layout, index*/) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    //$event.stopPropagation();
+                    // var layoutData = layoutsList[index];
+                    const layoutData = scope.layout;
+
+                    $mdDialog.show({
+                        controller: 'UiLayoutSaveAsDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        multiple: true,
+                        clickOutsideToClose: false,
+                        locals: {
+                            options: {
+                                layoutName: layoutData.name,
+                                layoutUserCode: layoutData.user_code
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            layoutData.name = res.data.name;
+                            //layout.name = res.data.name;
+                            layoutData.user_code = res.data.user_code;
+                            //layout.user_code = res.data.user_code;
+
+                            uiService.updateListLayout(layoutData.id, layoutData).then(function (data) {
+
+                                const listLayout = scope.evDataService.getListLayout();
+
+                                if (listLayout.id && listLayout.id === data.id) {
+
+                                    listLayout.name = data.name;
+                                    listLayout.modified = data.name;
+                                    scope.evDataService.setListLayout(listLayout);
+
+                                    if (isRootEntityViewer) {
+                                        middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
+                                    } else {
+                                        middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
+                                    }
+
+                                    scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+
+                                    scope.$apply()
+
+                                }
+
+                            });
+
+                        }
+
+                    })
+
+                };
+
                 const getLayouts = async () => {
 
                     const {results} = await uiService.getListLayout(scope.entityType, {pageSize: 1000});
