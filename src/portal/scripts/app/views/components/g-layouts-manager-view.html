@@ -48,12 +48,47 @@
 
     <md-menu-divider></md-menu-divider>
 
-    <div>
-        <md-button class="popup-menu-item">
+    <md-menu md-offset="375px 0">
+
+        <md-button class="popup-menu-item" data-ng-click="$mdMenu.open()">
             <ng-md-icon icon="exit_to_app"></ng-md-icon>
             <span>Export</span>
         </md-button>
-    </div>
+
+        <md-menu-content width="4">
+            <md-menu-item>
+                <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
+                    <span>Export to PDF</span>
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button data-ng-click="exportAsCSV()" class="g-settings-option-btn">
+                    <span>Export to CSV</span>
+                </md-button>
+            </md-menu-item>
+
+            <md-menu-item>
+                <md-button data-ng-click="exportAsExcel()" class="g-settings-option-btn">
+                    <span>Export to Excel</span>
+                </md-button>
+            </md-menu-item>
+
+
+            <md-menu-item>
+                <md-button data-ng-click="copyReport()" class="g-settings-option-btn">
+                    <span>Copy all to buffer</span>
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button data-ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
+                    <span>Copy selected to buffer</span>
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+
+
 
     <div>
         <md-button class="popup-menu-item">

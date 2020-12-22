@@ -14,6 +14,13 @@
 
     const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
+    const downloadFileHelper = require('../../helpers/downloadFileHelper');
+
+    const convertReportHelper = require('../../helpers/converters/convertReportHelper');
+    const reportCopyHelper = require('../../helpers/reportCopyHelper');
+
+    const exportExcelService = require('../../services/exportExcelService');
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'E',
@@ -694,6 +701,73 @@
                         }
 
                     });
+
+                };
+
+                scope.exportAsPdf = function ($event) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    $mdDialog.show({
+                        controller: 'ExportPdfDialogController as vm',
+                        templateUrl: 'views/dialogs/export-pdf-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            evDataService: scope.evDataService,
+                            evEventService: scope.evEventService,
+                            data: {entityType: scope.entityType}
+                        }
+                    })
+
+                };
+
+                scope.exportAsCSV = function () {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    const flatList = scope.evDataService.getFlatList();
+                    const columns = scope.evDataService.getColumns();
+                    const groups = scope.evDataService.getGroups();
+
+                    const blobPart = convertReportHelper.convertFlatListToCSV(flatList, columns, scope.isReport, groups.length);
+                    downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
+                };
+
+                scope.exportAsExcel = function() {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    const data = {
+                        entityType: scope.entityType,
+                        contentSettings: {
+                            columns: scope.evDataService.getColumns(),
+                            groups: scope.evDataService.getGroups()
+                        },
+                        content: scope.evDataService.getFlatList()
+                    };
+
+                    exportExcelService.generatePdf(data).then(function (blob) {
+
+                        downloadFileHelper.downloadFile(blob, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
+
+                        $mdDialog.hide();
+
+                    })
+
+                };
+
+                scope.copyReport = function () {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    reportCopyHelper.copy(scope.evDataService, scope.isReport);
+
+                };
+
+                scope.copySelectedToBuffer = function () {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    reportCopyHelper.copy(scope.evDataService, scope.isReport, 'selected');
 
                 };
 
