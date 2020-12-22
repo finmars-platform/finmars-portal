@@ -1,10 +1,11 @@
 (function () {
 
 
-    var render = function (obj, evDataService, prevObj) {
+    var render = function (evDataService, obj, prevObj) {
 
         var requestParameters = evDataService.getRequestParameters(obj.___parentId);
         var pagination = requestParameters.pagination;
+        var rowHeight = evDataService.getRowHeight();
 
         var total_pages = Math.ceil(pagination.count / pagination.page_size);
         var page = pagination.page;
@@ -21,7 +22,9 @@
 
         var rowSelection = '<div class="g-row-selection"></div>';
 
-        var result = '<div class="' + classes + '" data-type="control" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
+
+        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px"  data-type="control" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
 
         result = result + rowSelection;
 
