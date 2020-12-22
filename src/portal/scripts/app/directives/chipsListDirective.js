@@ -70,9 +70,8 @@
 						hiddenChips: Array.isArray(chipData),
 						data: chipData
 					};
-					console.log("testing cope.onChipClick");
+
 					if (scope.onChipClick) {
-						console.log("testing cope.onChipClick called");
 						scope.onChipClick({chipsData: chipsData, event: $event});
 					}
 
