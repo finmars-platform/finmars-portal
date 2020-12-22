@@ -862,13 +862,13 @@
 
       height: @g-table-header-height;
 
-      border-right: 1px solid @g-table-border-color;
       border-bottom: none;
     }
 
     .g-cell-select-all {
       position: relative;
       width: @g-table-header-height;
+      border-right: 1px solid @g-table-border-color;
     }
 
     md-checkbox {
@@ -1010,6 +1010,11 @@
 
      }
 
+    }
+
+    .g-table-header-cell-wrapper {
+      position: relative;
+
       .resize-slider {
         width: 3px;
         height: 100%;
@@ -1018,10 +1023,10 @@
         right: 0;
         top: 0;
         cursor: col-resize;
+        border-right: 1px solid @g-table-border-color;
       }
+
     }
-
-
   }
 
 }

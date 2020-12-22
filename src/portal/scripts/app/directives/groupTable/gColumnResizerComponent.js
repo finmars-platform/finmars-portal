@@ -151,13 +151,13 @@
 
                         scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_START);
 
-                        const isNewDesign = this.parentElement.classList.contains('g-table-header-cell');
+                        const isNewDesign = this.parentElement.classList.contains('g-table-header-cell-wrapper');
 
                         var gColumnElem;
 
                         if (isNewDesign) {
 
-                            gColumnElem = $(this).parents('.g-cell.g-table-header-cell'); // Victor 2020.12.16 New report viewer design
+                            gColumnElem = $(this).parents('.g-table-header-cell-wrapper'); // Victor 2020.12.16 New report viewer design
 
                         } else {
 
