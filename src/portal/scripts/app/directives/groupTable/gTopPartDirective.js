@@ -28,7 +28,6 @@
                 spExchangeService: '=', // TODO may be not need
             },
             link: function (scope, ) {
-                console.log('#69 gTopPartDirective', scope)
 
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType) || false;
@@ -38,7 +37,6 @@
                 scope.layoutName = '';
 
                 scope.layout = scope.evDataService.getListLayout()
-                console.log('#69 scope.layout', scope.layout)
                 if (scope.layout && scope.layout.name) {
                     scope.layoutName = scope.layout.name;
                 }
@@ -48,49 +46,6 @@
                     evDataService: scope.evDataService,
                     evEventService: scope.evEventService
                 }
-
-                scope.openLayoutList = function ($event) {
-
-                    $mdDialog.show({
-                        controller: 'UiLayoutListDialogController as vm',
-                        templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        preserveScope: false,
-                        locals: {
-                            options: {
-                                entityViewerDataService: scope.evDataService,
-                                entityViewerEventService: scope.evEventService,
-                                entityType: scope.entityType
-                            }
-                        }
-                    }).then(function (res) {
-
-                        if (res.status === 'agree') {
-
-                            if (scope.isRootEntityViewer) {
-
-                                if (res.data.layoutUserCode) {
-
-                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
-                                    $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
-
-                                } else {
-                                    var errorText = 'Layout "' + res.data.layoutName + '" has no user code.';
-                                    toastNotificationService.error(errorText);
-                                }
-
-                            } else {
-                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
-
-                                scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
-                                scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-                            }
-
-                        }
-
-                    })
-                };
 
                 var openReportSettings = function ($event) {
 
@@ -212,7 +167,6 @@
                             currencyService.getListLight(currencyOptions).then(function (data) {
 
                                 scope.currencies = scope.currencies.concat(data.results);
-                                console.log('#69 scope.currencies', scope.currencies)
 
                                 if (data.next) {
 
@@ -236,9 +190,6 @@
                     getCurrencies();
 
                     prepareReportLayoutOptions();
-                    console.log('#69 reportOptions', scope.reportOptions);
-                    console.log('#69 reportLayoutOptions', scope.reportLayoutOptions);
-                    console.log('#69 datepickerToDisplayOptions', scope.datepickerToDisplayOptions);
 
                 }
 
@@ -253,7 +204,6 @@
                     delete newReportLayoutOptions.reportFirstDatepicker;
                     delete newReportLayoutOptions.reportLastDatepicker;
                     // < Delete in future >
-                    console.log('#69 updateReportOptions', newReportOptions, newReportLayoutOptions);
 
                     scope.evDataService.setReportOptions(newReportOptions);
                     scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
@@ -266,8 +216,9 @@
                 };
 
                 var initEventListeners =function () {
+
                     scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
-                        var listLayout = scope.evDataService.getListLayout();
+                        const listLayout = scope.evDataService.getListLayout();
                         scope.layoutName = listLayout.name;
 
                     });

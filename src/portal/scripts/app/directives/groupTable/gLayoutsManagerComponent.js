@@ -31,7 +31,6 @@
                 evEventService: '=',
             },
             link: function (scope) {
-                console.log('#69 scope', scope)
                 scope.layout = scope.evDataService.getListLayout()
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
@@ -45,7 +44,9 @@
 
                 scope.layouts = [];
 
-                scope.deleteItem = function (ev) {
+                scope.deleteLayout = function (ev) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
@@ -80,19 +81,6 @@
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-/*                    if (layout.user_code) {
-
-                        middlewareService.setNewEntityViewerLayoutName(layout.user_code); // Give signal to update active layout name in the toolbar
-                        $state.transitionTo($state.current, {layoutUserCode: layout.user_code});
-
-                    } else {
-
-                        const errorText = 'Layout "' + layout.name + '" has no user code.';
-                        toastNotificationService.error(errorText);
-
-                    }*/
-
-
                     if (scope.isRootEntityViewer) {
 
                         if (layout.user_code) {
@@ -101,24 +89,24 @@
                             $state.transitionTo($state.current, {layoutUserCode: layout.user_code});
 
                         } else {
+
                             const errorText = 'Layout "' + layout.name + '" has no user code.';
                             toastNotificationService.error(errorText);
+
                         }
 
                     } else {
+
                         middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active layout name in the toolbar
 
                         scope.evDataService.setSplitPanelLayoutToOpen(layout.id);
                         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
                     }
 
                 };
 
                 scope.setAsDefault = (targetLayout) => {
-
-                    // $event.stopPropagation();
-
-                    // var targetLayout = layoutsList[index];
 
                     if (isRootEntityViewer) {
 
@@ -771,7 +759,7 @@
 
                 };
 
-                scope.renameLayout = function ($event, /*layout, index*/) {
+                scope.renameLayout = function ($event) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
@@ -832,11 +820,45 @@
 
                 };
 
+                scope.shareLayout = function ($event) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    let type = 'entity_viewer';
+
+                    if (scope.evDataService.getEntityType().indexOf('report') !== -1) {
+                        type = 'report_viewer';
+                    }
+
+                    $mdDialog.show({
+                        controller: 'UiShareLayoutDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-share-layout-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        multiple: true,
+                        clickOutsideToClose: false,
+                        locals: {
+                            options: {
+                                layout: scope.layout,
+                                type: type
+                            }
+                        }
+
+                    }).then(async function (res) {
+
+                        if (res.status === 'agree') {
+                            // vm.getList();
+                            scope.layouts = await getLayouts();
+
+                        }
+
+                    })
+
+                };
+
                 const getLayouts = async () => {
 
                     const {results} = await uiService.getListLayout(scope.entityType, {pageSize: 1000});
-
-                    console.log('#69 getLayouts', results);
 
                     return results;
 
@@ -845,7 +867,6 @@
                 const init = async () => {
 
                     scope.layouts = await getLayouts();
-                    console.log('#69 init scope.layouts', scope.layouts)
 
                     scope.$apply();
 

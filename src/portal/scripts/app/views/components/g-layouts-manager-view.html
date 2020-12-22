@@ -10,11 +10,6 @@
 
     <div class="layouts-container">
 
-<!--        <md-button data-ng-repeat="layout in layouts" class="popup-menu-item" data-ng-click="openLayout(layout)">
-            <ng-md-icon icon="home" ></ng-md-icon>
-            <span>{{layout.name}}</span>
-        </md-button>-->
-
         <div data-ng-repeat="layout in layouts" class="popup-menu-item">
 
             <ng-md-icon class="make-default-layout" data-ng-class="{'default-layout': layout.is_default}"
@@ -25,26 +20,21 @@
             </md-button>
 
         </div>
-    </div>
 
-<!--    ng-style="{ visibility: layout.is_default ? 'visible' : 'hidden' }"-->
+    </div>
 
     <md-menu-divider></md-menu-divider>
 
-    <div>
-        <md-button class="popup-menu-item" data-ng-click="saveLayoutList()">
-            <ng-md-icon icon="save"></ng-md-icon>
-            <span>Save</span>
-        </md-button>
-    </div>
+    <md-button class="popup-menu-item" data-ng-click="saveLayoutList()">
+        <ng-md-icon icon="save"></ng-md-icon>
+        <span>Save</span>
+    </md-button>
 
-    <div>
-        <md-button class="popup-menu-item" data-ng-click="saveAsLayoutList()">
-            <ng-md-icon icon="visibility_off"
-                        style="visibility: hidden;"></ng-md-icon>
-            <span>Save as</span>
-        </md-button>
-    </div>
+    <md-button class="popup-menu-item" data-ng-click="saveAsLayoutList()">
+        <ng-md-icon icon="visibility_off"
+                    style="visibility: hidden;"></ng-md-icon>
+        <span>Save as</span>
+    </md-button>
 
     <md-menu-divider></md-menu-divider>
 
@@ -88,38 +78,28 @@
         </md-menu-content>
     </md-menu>
 
+    <md-button class="popup-menu-item" data-ng-click="renameLayout($event)">
+        <ng-md-icon icon="create"></ng-md-icon>
+        <span>Rename</span>
+    </md-button>
 
+    <md-button class="popup-menu-item" data-ng-click="shareLayout($event)">
+        <ng-md-icon icon="share"></ng-md-icon>
+        <span>Share</span>
+    </md-button>
 
-    <div>
-        <md-button class="popup-menu-item" data-ng-click="renameLayout($event)">
-            <ng-md-icon icon="create"></ng-md-icon>
-            <span>Rename</span>
-        </md-button>
-    </div>
-
-    <div>
-        <md-button class="popup-menu-item">
-            <ng-md-icon icon="share"></ng-md-icon>
-            <span>Share</span>
-        </md-button>
-    </div>
-
-    <div>
-        <md-button class="popup-menu-item"
-                   data-ng-click="setAsDefault(layout)"
-                   data-ng-disabled="layout.is_default">
-            <ng-md-icon icon="home"></ng-md-icon>
-            <span>Make default</span>
-        </md-button>
-    </div>
+    <md-button class="popup-menu-item"
+               data-ng-click="setAsDefault(layout)"
+               data-ng-disabled="layout.is_default">
+        <ng-md-icon icon="home"></ng-md-icon>
+        <span>Make default</span>
+    </md-button>
 
     <md-menu-divider></md-menu-divider>
 
-    <div>
-        <md-button class="popup-menu-item" data-ng-click="deleteLayout($event)">
-            <ng-md-icon icon="delete"></ng-md-icon>
-            <span>Delete</span>
-        </md-button>
-    </div>
+    <md-button class="popup-menu-item" data-ng-click="deleteLayout($event)">
+        <ng-md-icon icon="delete"></ng-md-icon>
+        <span>Delete</span>
+    </md-button>
 
 </div>
