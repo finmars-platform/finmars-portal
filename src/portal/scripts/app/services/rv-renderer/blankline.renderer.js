@@ -55,6 +55,7 @@
 
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
+        var rowHeight = evDataService.getRowHeight();
 
         var classList = ['g-row'];
 
@@ -72,8 +73,9 @@
         }
 
         var classes = classList.join(' ');
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
-        var result = '<div class="' + classes + '" data-type="blankline" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="blankline" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         result = result + rowSelection;

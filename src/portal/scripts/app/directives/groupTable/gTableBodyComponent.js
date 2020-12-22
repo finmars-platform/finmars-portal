@@ -75,14 +75,33 @@
                         return item.___type !== 'group';
                     });
 
+                    var index = 0;
                     flatList = flatList.map(function (item, i) {
                         item.___flat_list_index = i;
+
+                        if (item.___type === 'object' ||
+                            item.___type === 'blankline') {
+                            item.___flat_list_offset_top_index = index;
+                            index = index + 1;
+                        }
+
+                        if (item.___type === 'subtotal') {
+
+                            if (item.___subtotal_type !== 'proxyline') {
+                                item.___flat_list_offset_top_index = index;
+                                index = index + 1;
+                            }
+                        }
+
                         return item
                     });
                     console.log("flat list", flatList);
+
+
+
                     scope.evDataService.setFlatList(flatList);
 
-                    projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
+                    projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
 
                     scope.evDataService.setProjection(projection);
 
@@ -90,7 +109,9 @@
 
                     rvDomManager.calculateScroll(elements, scope.evDataService);
 
-                    rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    window.requestAnimationFrame(function (){
+                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService)
+                    });
 
                 }
 
@@ -174,10 +195,25 @@
                         flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
                     }
 
+                    var index = 0;
+                    flatList = flatList.map(function (item, i) {
+                        item.___flat_list_index = i;
+
+                        if (item.___type === 'object' ||
+                            item.___type === 'control' ||
+                            item.___type === 'placeholder_group' ||
+                            item.___type === 'placeholder_object' ||
+                            item.___type === 'group') {
+                            item.___flat_list_offset_top_index = index;
+                            index = index + 1;
+                        }
+
+                        return item
+                    });
 
                     scope.evDataService.setFlatList(flatList);
 
-                    evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
+                    // evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                     projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
 
@@ -187,7 +223,10 @@
 
                     evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
-                    evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    window.requestAnimationFrame(function (){
+                        evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                    });
+
 
                     scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER)
 
@@ -319,21 +358,20 @@
 
                     var flatList = scope.evDataService.getFlatList();
 
-                    projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
-
                     if (isReport) {
 
-                        if (flatList.length > 500) {
-                            rvDomManager.calculateScroll(elements, scope.evDataService);
-                            rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
-                        } else {
-                            rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
-                        }
+                        projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
+
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 
                         clearOverflowingCells();
                         cellContentOverflow();
 
                     } else {
+
+                        projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
+
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
                         evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
                     }

@@ -403,6 +403,14 @@
             data.projection = projection
         }
 
+        function setProjectionLastFrom(from) {
+            data.projection_last_from = from
+        }
+
+        function getProjectionLastFrom() {
+            return data.projection_last_from;
+        }
+
         function getProjection() {
             return data.projection;
         }
@@ -1353,6 +1361,9 @@
 
             setProjection: setProjection,
             getProjection: getProjection,
+
+            setProjectionLastFrom: setProjectionLastFrom,
+            getProjectionLastFrom: getProjectionLastFrom,
 
             setFlatList: setFlatList,
             getFlatList: getFlatList,
