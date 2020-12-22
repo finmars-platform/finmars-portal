@@ -609,7 +609,7 @@
 				};
 
                 scope.onFilterChipClick = function (chipsData, event) {
-					console.log("testing onFilterChipClick called");
+
 					scope.popupData.filterKey = chipsData.data.id
 
 					scope.popupPosX.value = event.clientX
