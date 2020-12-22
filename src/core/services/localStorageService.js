@@ -181,7 +181,7 @@
         let layoutToDelete = getCacheProp(layoutPath, cache);
 
         // clear content_type default layout
-        if (layoutToDelete.is_default) {
+        if (layoutToDelete && layoutToDelete.is_default) {
             let defLayoutPath = ['layouts', 'defaultLayouts', layoutToDelete.content_type];
             cache = removeFromCache(defLayoutPath, cache);
         }

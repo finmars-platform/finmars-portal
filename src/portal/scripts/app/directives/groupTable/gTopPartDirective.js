@@ -17,7 +17,7 @@
 
     var currencyService = require('../../services/currencyService');
 
-    module.exports = function ($mdDialog, $state) {
+    module.exports = function ($mdDialog, $state,) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/groupTable/g-top-part-view.html',
@@ -28,7 +28,6 @@
                 spExchangeService: '=', // TODO may be not need
             },
             link: function (scope, ) {
-                console.log('#69 gTopPartDirective', scope)
 
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType) || false;
@@ -42,223 +41,11 @@
                     scope.layoutName = scope.layout.name;
                 }
 
-                var applyLayout = function (layout) {
-
-                    if (scope.isRootEntityViewer) {
-
-                        middlewareService.setNewEntityViewerLayoutName(layout.name);
-
-                    } else {
-                        scope.evDataService.setSplitPanelDefaultLayout(layout.id);
-                        scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-                        middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active split panel layout name in the toolbar
-                    }
-
-                    scope.evDataService.setListLayout(layout);
-                    scope.evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
-
-                    scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
-
-                    toastNotificationService.success("New layout with name '" + layout.name + "' created");
-
-                    scope.isNewLayout = false;
-                    scope.$apply();
-
-                };
-
-                var overwriteLayout = function (changeableLayout, listLayout) {
-
-                    var id = changeableLayout.id;
-
-                    listLayout.id = id;
-                    changeableLayout.data = listLayout.data;
-                    changeableLayout.name = listLayout.name;
-
-                    return uiService.updateListLayout(id, changeableLayout);
-
-                };
-
-                scope.getLayoutByUserCode = function (userCode) {
-
-                    var contentType = metaContentTypesService.findContentTypeByEntity(scope.entityType, 'ui');
-
-                    /* return uiService.getListLayoutDefault({
-                        pageSize: 1000,
-                        filters: {
-                            content_type: contentType,
-                            user_code: userCode
-                        }
-                    }); */
-                    return uiService.getListLayout(
-                        null,
-                        {
-                            pageSize: 1000,
-                            filters: {
-                                content_type: contentType,
-                                user_code: userCode
-                            }
-                        }
-                    );
-
-                };
-
-                scope.openLayoutList = function ($event) {
-
-                    $mdDialog.show({
-                        controller: 'UiLayoutListDialogController as vm',
-                        templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        preserveScope: false,
-                        locals: {
-                            options: {
-                                entityViewerDataService: scope.evDataService,
-                                entityViewerEventService: scope.evEventService,
-                                entityType: scope.entityType
-                            }
-                        }
-                    }).then(function (res) {
-
-                        if (res.status === 'agree') {
-
-                            if (scope.isRootEntityViewer) {
-
-                                if (res.data.layoutUserCode) {
-
-                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
-                                    $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
-
-                                } else {
-                                    var errorText = 'Layout "' + res.data.layoutName + '" has no user code.';
-                                    toastNotificationService.error(errorText);
-                                }
-
-                            } else {
-                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
-
-                                scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
-                                scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
-                            }
-
-                        }
-
-                    })
-                };
-
-                scope.saveLayoutList = function () {
-                    evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
-                };
-
-                scope.saveAsLayoutList = function ($event) {
-
-                    var listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
-                    $mdDialog.show({
-                        controller: 'UiLayoutSaveAsDialogController as vm',
-                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        locals: {
-                            options: {
-                                complexSaveAsLayoutDialog: {
-                                    entityType: scope.entityType
-                                }
-                            }
-                        },
-                        clickOutsideToClose: false
-
-                    }).then(function (res) {
-
-                        if (res.status === 'agree') {
-
-                            var saveAsLayout = function () {
-
-                                listLayout.name = res.data.name;
-                                listLayout.user_code = res.data.user_code;
-
-                                uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
-
-                                    listLayout.id = data.id;
-                                    applyLayout(listLayout);
-
-                                }).catch(function (error) {
-                                    toastNotificationService.error("Error occurred");
-                                });
-
-                            };
-
-                            if (listLayout.id) { // if layout based on another existing layout
-
-                                if (scope.isRootEntityViewer) {
-
-                                    /* uiService.getDefaultListLayout(scope.entityType).then(function (openedLayoutData) {
-
-                                        var currentlyOpenLayout = openedLayoutData.results[0];
-                                        currentlyOpenLayout.is_default = false;
-
-                                        uiService.updateListLayout(currentlyOpenLayout.id, currentlyOpenLayout).then(function () {
-
-                                            listLayout.is_default = true;
-                                            delete listLayout.id;
-
-                                            saveAsLayout();
-
-                                        }).catch(function (error) {
-                                            toastNotificationService.error("Error occurred");
-                                        });
-
-                                    }).catch(function (error) {
-                                        toastNotificationService.error("Error occurred");
-                                    }); */
-
-                                    listLayout.is_default = true;
-
-                                } else { // for split panel
-
-                                    listLayout.is_default = false;
-                                    /*delete listLayout.id;
-                                    saveAsLayout();*/
-
-                                }
-
-                                delete listLayout.id;
-                                saveAsLayout();
-
-                            } else { // if layout was not based on another layout
-
-                                if (scope.isRootEntityViewer) {
-                                    listLayout.is_default = true;
-                                }
-
-                                saveAsLayout();
-                            }
-                        }
-
-                        if (res.status === 'overwrite') {
-
-                            var userCode = res.data.user_code;
-
-                            listLayout.name = res.data.name;
-                            listLayout.user_code = userCode;
-
-                            scope.getLayoutByUserCode(userCode).then(function (changeableLayoutData) {
-
-                                var changeableLayout = changeableLayoutData.results[0];
-                                overwriteLayout(changeableLayout, listLayout).then(function (updatedLayoutData) {
-
-                                    listLayout.is_default = true;
-                                    listLayout.modified = updatedLayoutData.modified;
-                                    applyLayout(listLayout);
-
-                                });
-
-                            });
-
-                        }
-
-                    });
-
-                };
+                scope.popupData = {
+                    entityType: scope.entityType,
+                    evDataService: scope.evDataService,
+                    evEventService: scope.evEventService
+                }
 
                 var openReportSettings = function ($event) {
 
@@ -380,7 +167,6 @@
                             currencyService.getListLight(currencyOptions).then(function (data) {
 
                                 scope.currencies = scope.currencies.concat(data.results);
-                                console.log('#69 scope.currencies', scope.currencies)
 
                                 if (data.next) {
 
@@ -404,9 +190,6 @@
                     getCurrencies();
 
                     prepareReportLayoutOptions();
-                    console.log('#69 reportOptions', scope.reportOptions);
-                    console.log('#69 reportLayoutOptions', scope.reportLayoutOptions);
-                    console.log('#69 datepickerToDisplayOptions', scope.datepickerToDisplayOptions);
 
                 }
 
@@ -421,7 +204,6 @@
                     delete newReportLayoutOptions.reportFirstDatepicker;
                     delete newReportLayoutOptions.reportLastDatepicker;
                     // < Delete in future >
-                    console.log('#69 updateReportOptions', newReportOptions, newReportLayoutOptions);
 
                     scope.evDataService.setReportOptions(newReportOptions);
                     scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
@@ -434,17 +216,16 @@
                 };
 
                 var initEventListeners =function () {
+
                     scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
-                        var listLayout = scope.evDataService.getListLayout();
+                        const listLayout = scope.evDataService.getListLayout();
                         scope.layoutName = listLayout.name;
 
                     });
 
                 };
 
-
-
-                var init = function () {
+                var init = async function () {
                     initEventListeners();
                 };
 

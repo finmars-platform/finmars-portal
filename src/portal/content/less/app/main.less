@@ -2996,20 +2996,60 @@ button.md-raised.md-warn.md-button {
     max-height: 100%;
     font-size: 14px;
 
-    .popup-menu-item{
+    .popup-menu-item {
+      display: flex;
       margin: 5px auto;
       color: @g-top-part-color;
+
+      .md-button {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        font-size: 15px;
+        text-transform: none;
+        text-align: left;
+      }
 
       ng-md-icon {
         margin-left: 8px;
         margin-right: 24px;
+
+        cursor: pointer;
+
+        &.make-default-layout {
+          opacity: 0;
+        }
+
+        &.default-layout {
+          opacity: 1;
+
+        }
+
         svg {
           fill: @g-top-part-color;
         }
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &:focus {
+          outline: none;
+        }
+
       }
+
     }
+
   }
 
+  .layouts-container {
+    max-height: 300px;
+    padding-right: 20px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+  }
 
 
 }
