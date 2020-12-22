@@ -2882,12 +2882,18 @@ button.md-raised.md-warn.md-button {
 
   }
 
-  .chip-list-text {
+  .chip-list-content {
     font-size: 14px;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
+}
+
+.add-chip-wrap {
+  .chip-div {
+    font-weight: bold;
+  }
 }
 
 .chip-div.expand-chip {
@@ -2896,8 +2902,10 @@ button.md-raised.md-warn.md-button {
 
 .chips-list-container.chips-deletion-enabled {
 
-  .chip-div {
-    padding-right: 28px;
+  .chip-wrap:not(.add-chip-wrap) {
+    .chip-div {
+      padding-right: 28px;
+    }
   }
 
   .chip-div.expand-chip { // make bigger for deletion button
