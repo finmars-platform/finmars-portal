@@ -13,13 +13,17 @@
 				eventService: "=",
 
 				chipsDeletion: "@", // whether allow chips deletion
+				chipsAddition: "@",
 				orderChips: "@",
 				isDisabled: "=",
                 // dropdownMenuOptions: "=",
 				chipsContainerWidth: "=", // in pixels
 
-				onChipDeletion: "=", // pass function with argument that is array of deleted inputs
-				onChipClick: "=" // [ function({}) ]
+				hideOverflowingChips: "@", // [ 'false' ] - will prevent chips concealment. [ 'true' ] - by default
+
+				onChipsDeletion: "&?", // pass function with argument that is array of deleted inputs
+				onChipClick: "&?", // [ function({}) ]
+				onAddChipClick: "&?"
 			},
 			templateUrl: "views/directives/chips-list-view.html",
 			link: function (scope, elem, attr) {
@@ -34,6 +38,9 @@
 					scope.orderOptions = "text"
 				}
 
+				let lastChipRendered = false;
+				let addChipElem, addChipWidth = 0;
+
 				/* scope.orderMenuOptions = null
 
                 if (scope.orderMenuOptions) {
@@ -41,7 +48,7 @@
                 } */
 
 				let chipsContainer, chipsContainerWidth = 0;
-                let dropdownMenuFilter;
+                // let dropdownMenuFilter;
 
 				scope.getChipsListClasses = function () {
 
@@ -101,62 +108,100 @@
 				};
 
 				// hideOverflowingChips function called from chips-list-view.html by ng-init
-				scope.hideOverflowingChips = function (updateScope) {
+				scope.getChipClasses = chipData => {
+					return chipData.classes ? chipData.classes : "";
+				};
 
-					setTimeout(function () { // wait for ng-repeat to finish rendering
 
-						scope.hiddenChips = [];
+				scope.concealOverflowingChips = function (updateScope) {
 
-						let chipsElemsList = elem[0].querySelectorAll('.chipWrapElem');
-						let expandChipWidth = 74;
-						let chipsWidth = 0; // size of .expand-chip (width + margins)
+					if (scope.hideOverflowingChips !== 'false') {
 
-						let hideChips = function (index) {
+						setTimeout(function () { // wait for ng-repeat to finish rendering
 
-							scope.hiddenChips = scope.chipsList.slice(index);
-							getHiddenChipsTexts();
+							scope.hiddenChips = [];
 
-						}
+							const expandChipWidth = 74;
+							let chipsElemsList = elem[0].querySelectorAll('.chipWrapElem');
+							let chipsWidth = 0; // size of .expand-chip (width + margins)
 
-						chipsElemsList.forEach(function (cElem) {
-							cElem.classList.add('chip-hidden');
-						});
+							const hideChips = function (index) {
 
-						for (let i = 0; i < chipsElemsList.length; i++) {
+								scope.hiddenChips = scope.chipsList.slice(index);
+								getHiddenChipsTexts();
 
-							let cElem = chipsElemsList[i];
-							chipsWidth += cElem.clientWidth;
+							};
 
-							if (i + 1 === chipsElemsList.length) { // for the last chip
+							chipsElemsList.forEach(function (cElem) {
+								cElem.classList.add('chip-hidden');
+							});
 
-								if (chipsWidth > chipsContainerWidth) {
+							for (let i = 0; i < chipsElemsList.length; i++) {
+
+								let cElem = chipsElemsList[i];
+								chipsWidth += cElem.clientWidth;
+
+								if (i + 1 === chipsElemsList.length) { // for the last chip
+
+									if (chipsWidth > chipsContainerWidth) {
+
+										hideChips(i);
+										break;
+
+									}
+
+
+								} else if (chipsWidth + expandChipWidth > chipsContainerWidth) {
 
 									hideChips(i);
 									break;
 
 								}
 
-
-							} else if (chipsWidth + expandChipWidth > chipsContainerWidth) {
-
-								hideChips(i);
-								break;
+								cElem.classList.remove('chip-hidden');
 
 							}
 
-							cElem.classList.remove('chip-hidden');
+							if (updateScope) {
+								scope.$apply();
+							}
 
-						}
+						}, 100);
 
-						if (updateScope) {
-							scope.$apply();
-						}
-
-					}, 100);
+					}
 
 				};
 
-				scope.deleteChips = function (chipsData) {
+				scope.onLastChipInit = function () {
+
+					if (typeof scope.chipsAddition === 'string') {
+
+						lastChipRendered = true;
+
+						if (addChipElem) { // if addChipElem rendered
+							scope.concealOverflowingChips(true);
+						}
+
+					} else {
+						scope.concealOverflowingChips(true);
+					}
+
+				};
+
+				scope.onAddChipInit = function () {
+
+					addChipElem = elem[0].querySelector(".add-chip-wrap");
+					addChipWidth = addChipElem.clientWidth;
+
+					if (lastChipRendered) {
+						scope.concealOverflowingChips(true);
+					}
+
+				};
+
+				scope.deleteChips = function (chipsData, $event) {
+
+					$event.stopPropagation();
 
 					let chipsForDeletion = JSON.parse(JSON.stringify(chipsData));
 
@@ -183,12 +228,10 @@
 
 					})
 
-					scope.hideOverflowingChips();
+					scope.concealOverflowingChips();
 
-					if (scope.onChipDeletion) {
-
-						scope.onChipDeletion(chipsForDeletion);
-
+					if (scope.onChipsDeletion) {
+						scope.onChipsDeletion({chipsData: chipsForDeletion});
 					}
 
 
@@ -202,7 +245,7 @@
                     };
 
                     scope.chipsList.push(newChip);
-                    scope.hideOverflowingChips();
+                    scope.concealOverflowingChips();
 
                 }; */
 
@@ -210,12 +253,12 @@
 
 					if (scope.chipsContainerWidth) {
 
-						chipsContainerWidth = scope.chipsContainerWidth;
+						chipsContainerWidth = scope.chipsContainerWidth - addChipWidth;
 
 					} else {
 
 						chipsContainer = elem[0].querySelector('.chipsListContainer');
-						chipsContainerWidth = chipsContainer.clientWidth;
+						chipsContainerWidth = chipsContainer.clientWidth - addChipWidth;
 
 					}
 
@@ -226,17 +269,17 @@
 							/*
 							argumentsObj properties
 							chipsList: new array of chips
-							updateScope: whether call scope.$apply at the end of hideOverflowingChips()
+							updateScope: whether call scope.$apply at the end of concealOverflowingChips()
 							*/
 							scope.chipsList = argumentsObj.chipsList;
-							scope.hideOverflowingChips(argumentsObj.updateScope);
+							scope.concealOverflowingChips(argumentsObj.updateScope);
 
 						});
 
 						scope.eventService.addEventListener(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED, function () {
 
-							chipsContainerWidth = chipsContainer.clientWidth;
-							scope.hideOverflowingChips();
+							chipsContainerWidth = chipsContainer.clientWidth - addChipWidth;
+							scope.concealOverflowingChips();
 
 						});
 
