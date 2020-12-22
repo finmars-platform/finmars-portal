@@ -1881,6 +1881,7 @@
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 /* if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);

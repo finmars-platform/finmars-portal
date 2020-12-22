@@ -31,16 +31,16 @@
             switch (item.___type) {
                 case 'placeholder_group':
                 case 'placeholder_object':
-                    renderedRow = placeholderRender.render(item, columns);
+                    renderedRow = placeholderRender.render(evDataService, item, columns);
                     break;
                 case 'group':
-                    renderedRow = groupRender.render(item, groups);
+                    renderedRow = groupRender.render(evDataService, item, groups);
                     break;
                 case 'object':
-                    renderedRow = objectRender.render(item, columns, currentMember, viewContext, verticalAdditions);
+                    renderedRow = objectRender.render(evDataService, item, columns, currentMember, viewContext, verticalAdditions);
                     break;
                 case 'control':
-                    renderedRow = controlRender.render(item, evDataService, previousRow);
+                    renderedRow = controlRender.render(evDataService, item, previousRow);
                     break;
             }
 

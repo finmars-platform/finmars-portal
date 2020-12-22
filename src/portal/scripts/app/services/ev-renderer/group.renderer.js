@@ -4,9 +4,11 @@
 
     var checkIcon = renderHelper.getIconByKey('checkIcon');
 
-    var render = function (group, groupTypes) {
+    var render = function (evDataService, group, groupTypes) {
 
         var groupType = groupTypes[group.___level - 1];
+
+        var rowHeight = evDataService.getRowHeight();
 
         var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">+</div></div>';
 
@@ -35,7 +37,10 @@
             additionalText = additionalText + ' (' + group.___group_identifier + ')'
         }
 
-        return '<div class="' + classes + '" data-type="group" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
+        var offsetTop = group.___flat_list_offset_top_index * rowHeight;
+
+
+        return '<div class="' + classes + '"  style="top: '+ offsetTop+'px" data-type="group" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
             rowSelection + foldButton + group.___group_name + additionalText +'</div>'
 
     };
