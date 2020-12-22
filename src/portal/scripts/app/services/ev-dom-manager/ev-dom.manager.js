@@ -1102,7 +1102,7 @@
                 }
             }
 
-        }, 10);
+        }, 100);
 
         var scrollXHandler = function () {
 
