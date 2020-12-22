@@ -42,6 +42,8 @@
 				scope.filters = scope.evDataService.getFilters();
 				scope.popupPosX = { value: null }
 				scope.popupPosY = { value: null }
+				scope.fpBackClasses = "z-index-48"
+				scope.fpClasses = "z-index-49"
 
 				scope.readyStatus = {
 					filters: false
@@ -607,7 +609,7 @@
 				};
 
                 scope.onFilterChipClick = function (chipsData, event) {
-
+					console.log("testing onFilterChipClick called");
 					scope.popupData.filterKey = chipsData.data.id
 
 					scope.popupPosX.value = event.clientX
