@@ -97,12 +97,15 @@
 
             var entityViewerOptions = entityViewerDataService.getEntityViewerOptions();
 
+            console.log('entityViewerOptions', entityViewerOptions);
+
             var multselData = getMultiselectorData();
             vm.multiselectorOptions = multselData.optionsList;
             //vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
 			vm.entityFilters = entityViewerOptions.entity_filters;
 
-			if (vm.entityType === "complex-transaction") {
+			// DEPRECATED
+			if (vm.entityType === "complex-transaction" && entityViewerOptions.complex_transaction_filters) {
 				vm.entityFilters = entityViewerOptions.complex_transaction_filters;
 			}
 
