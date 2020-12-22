@@ -85,7 +85,7 @@
                 }
             }
 
-            // calculateScroll(elements, evDataService)
+            calculateScroll(elements, evDataService)
 
         }, 100);
 
