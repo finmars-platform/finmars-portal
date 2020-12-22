@@ -402,15 +402,15 @@
         if (obj.___is_last_selected) {
 
             classList.push('last-selected');
-            rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
+            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
 
         } else if (obj.___is_activated) {
 
             classList.push('selected');
-            rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
+            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
 
         } else {
-            rowSelection = '<div class="g-row-selection"></div>';
+            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
         }
 
         if (markedReportRows.hasOwnProperty(obj.id)) {

@@ -18,12 +18,15 @@
 				preventDefault: '@',
 
 				positionRelativeTo: '@', // ('mouse', 'element').
-                popupClasses: '@', // add css classes to popup-container, example: popup-classes="class1 class2"
-                backdropClasses: '@', // add css classes to backdrop
+
+                popupClasses: '=', // add css classes to popup-container, example: popup-classes="class1 class2"
+                backdropClasses: '=', // add css classes to backdrop
 
 				// position relative to element or mouse
 				relativePopupX: '@', // [ 'left', 'right' ] Default - 'left'
 				relativePopupY: '@', // [ 'top', 'bottom' ] Default - 'bottom'
+
+                popupWidth: '@', // [ 'element', 'content' ] Default - 'content'
 
 				// obj with property value
 				popupX: '=',
@@ -47,7 +50,7 @@
                 let popupBackdropElem = document.createElement("div");
 				popupBackdropElem.classList.add('popup-area-backdrop');
 
-				if (typeof scope.backdropClasses === 'string' && scope.backdropClasses.trim().length > 0) {
+				if (scope.backdropClasses) {
 
 				    const classes = scope.backdropClasses.split(' ');
 
@@ -59,7 +62,7 @@
 				popUpElem.classList.add("popup-container");
                 // console.log('templateElem', templateElem);
 
-                if (typeof scope.popupClasses === 'string' && scope.popupClasses.trim().length > 0) {
+                if (scope.popupClasses) {
 
                     const classes = scope.popupClasses.split(' ');
 
@@ -84,7 +87,11 @@
 							coords = elem[0].getBoundingClientRect();
 						}
 
-						popUpElem.style.width = coords.width + 'px';
+						if (scope.popupWidth === 'element') {
+
+                            popUpElem.style.width = coords.width + 'px';
+
+                        }
 
 						if (!positionX) {
 							positionX = scope.relativePopupX ? coords[scope.relativePopupX] : coords['left'];

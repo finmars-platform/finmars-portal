@@ -159,7 +159,7 @@
                             foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '"><div>+</div></div>';
                         }
 
-                        result.html_result = foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span>';
+                        result.html_result = foldButton + '<span class="">' + currentGroup.___group_name + '</span>';
                         result.raw_text_result = currentGroup.___group_name;
 
                     }
@@ -194,7 +194,7 @@
                     foldButtonStr = ''
                 }
 
-                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="text-bold">' + obj.___group_name + '</span></span>';
+                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="">' + obj.___group_name + '</span></span>';
                 result.raw_text_result = obj.___group_name;
 
             }
@@ -359,11 +359,11 @@
             subtotal_type = obj.___subtotal_type
         }
 
-        if(subtotal_type === 'line') {
+        if (subtotal_type === 'line') {
             is_activated = parent.___is_line_subtotal_activated
         }
 
-        if(subtotal_type === 'area') {
+        if (subtotal_type === 'area') {
             is_activated = parent.___is_area_subtotal_activated
         }
 
@@ -371,9 +371,9 @@
 
         if (is_activated) {
             classList.push('selected');
-            rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
+            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
         } else {
-            rowSelection = '<div class="g-row-selection"></div>';
+            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
         }
 
         if (is_activated) {
