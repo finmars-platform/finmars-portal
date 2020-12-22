@@ -1102,7 +1102,9 @@
                 }
             }
 
-        }, 10);
+            calculateScroll(elements, evDataService, evScrollManager)
+
+        }, 100);
 
         var scrollXHandler = function () {
 
