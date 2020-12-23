@@ -279,13 +279,14 @@
                         scope.onSaveCallback();
                     }
 
-                    removePopUp();
+					scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                 };
 
 
                 scope.cancel = function () {
-                    removePopUp();
+                    // removePopUp();
+					scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
                 };
 
                 scope.init = function () {
@@ -322,7 +323,6 @@
                 }
 
                 scope.init();
-
 
             }
         }

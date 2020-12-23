@@ -21,7 +21,7 @@
 
         <div class="custom-input-container">
 
-            <div class="custom-input-top-row">
+            <div ng-if="title" class="custom-input-top-row">
                 <span class="custom-input-textarea-span-pan">{{title}}</span>
             </div>
 
@@ -50,7 +50,7 @@
                                             chips-list="chipsList"
                                             event-service="chipsListEventService"
                                             chips-deletion="true"
-                                            on-chip-deletion="onChipDeletion"
+                                            on-chips-deletion="onChipsDeletion(chipsData)"
                                             order-chips="{{chipsOrderSettings}}"
                                             dropdown-menu-options="dropdownMenuOptions"
                                             chips-container-width="chipsContainerWidth"></chips-list>

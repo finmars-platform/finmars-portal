@@ -8,6 +8,7 @@
     const metaService = require('../../services/metaService');
 	const evEvents = require('../../services/entityViewerEvents');
 	const popupEvents = require('../../services/events/popupEvents');
+	const directivesEvents = require('../../services/events/directivesEvents');
 	const evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
 	const middlewareService = require('../../services/middlewareService');
@@ -39,20 +40,119 @@
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isFiltersOpened = true;
 				scope.filters = scope.evDataService.getFilters();
-				scope.popupPosX = {value: null}
-				scope.popupPosY = {value: null}
+				scope.popupPosX = { value: null }
+				scope.popupPosY = { value: null }
+				scope.fpBackClasses = "z-index-48"
+				scope.fpClasses = "z-index-49"
 
 				scope.readyStatus = {
 					filters: false
 				}
 
+				let entityAttrs = [];
+				let dynamicAttrs = [];
+				let attrsWithoutFilters = ['notes'];
+
                 scope.calculateReport = function () {
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 };
 
+				let getAttributes = () => {
+
+					let allAttrsList;
+
+					if (scope.viewContext === 'reconciliation_viewer') {
+
+						allAttrsList = scope.attributeDataService.getReconciliationAttributes();
+
+					} else {
+
+						switch (scope.entityType) {
+							case 'balance-report':
+								allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
+								break;
+
+							case 'pl-report':
+								allAttrsList = scope.attributeDataService.getPlReportAttributes();
+								break;
+
+							case 'transaction-report':
+								allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
+								break;
+
+							default:
+								entityAttrs = [];
+								dynamicAttrs = [];
+								allAttrsList = [];
+
+								entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(scope.entityType);
+
+								entityAttrs.forEach(function (item) {
+									if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+										item.name = 'Group';
+									}
+									item.entity = scope.entityType;
+								});
+
+								let instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
+								let transactionUserFields = scope.attributeDataService.getTransactionUserFields();
+
+								instrumentUserFields.forEach(function (field) {
+
+									entityAttrs.forEach(function (entityAttr) {
+
+										if (entityAttr.key === field.key) {
+											entityAttr.name = field.name;
+										}
+
+									})
+
+								});
+
+								transactionUserFields.forEach(function (field) {
+
+									entityAttrs.forEach(function (entityAttr) {
+
+										if (entityAttr.key === field.key) {
+											entityAttr.name = field.name;
+										}
+
+									})
+
+								});
+
+								dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
+
+
+								dynamicAttrs = dynamicAttrs.map(function (attribute) {
+
+									let result = {};
+
+									result.attribute_type = Object.assign({}, attribute);
+									result.value_type = attribute.value_type;
+									result.content_type = scope.contentType;
+									result.key = 'attributes.' + attribute.user_code;
+									result.name = attribute.name;
+
+									return result
+
+								});
+
+								allAttrsList = allAttrsList.concat(entityAttrs);
+								allAttrsList = allAttrsList.concat(dynamicAttrs);
+
+								break;
+						}
+
+					}
+
+					return allAttrsList;
+
+				};
+
                 function clearAdditions() {
 
-                    var additions = scope.evDataService.getAdditions();
+					let additions = scope.evDataService.getAdditions();
 
                     additions.isOpen = false;
                     additions.type = '';
@@ -412,22 +512,125 @@
 
                 };
 
-                let formatFiltersForChips = function () {
+				scope.removeFilter = function (filtersToRemove) {
 
-					scope.filtersChips = scope.filters.map(filter => {
-						return {id: filter.key, text: filter.name};
+					scope.filters = scope.filters.filter(filter => {
+
+						return filtersToRemove.find(item => item.id !== filter.key);
+
+					});
+
+					scope.evDataService.setFilters(scope.filters);
+					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+				};
+
+				scope.addFilter = function (event) {
+
+					const allAttrsList = getAttributes();
+
+					let availableAttrs;
+
+					availableAttrs = allAttrsList.filter(attr => {
+
+						for (let i = 0; i < scope.filters.length; i++) {
+							if (scope.filters[i].key === attr.key) {
+								return false;
+							}
+						}
+
+						if (attrsWithoutFilters.indexOf(attr.key) !== -1) {
+							return false;
+						}
+
+						return true;
+
+					});
+
+					$mdDialog.show({
+						controller: "TableAttributeSelectorDialogController as vm",
+						templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+						targetEvent: event,
+						multiple: true,
+						locals: {
+							data: {
+								availableAttrs: availableAttrs,
+								title: 'Choose filter to add'
+							}
+						}
+
+					}).then(function (res) {
+
+						if (res && res.status === "agree") {
+
+							res.data.groups = true;
+
+							scope.filters.push(res.data);
+							scope.evDataService.setFilters(scope.filters);
+							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+						}
+
 					});
 
 				};
 
-                scope.onFilterChipClick = function (argumentObj) {
+                let formatFiltersForChips = function () {
 
-					scope.popupData.filterKey = argumentObj.chipsData.data.id
+					scope.filtersChips = scope.filters.map(filter => {
 
-					scope.popupPosX.value = argumentObj.event.clientX
-					scope.popupPosY.value = argumentObj.event.clientY
+						let filterData = {
+							id: filter.key
+						};
+
+						const filterOpts = filter.options || {};
+						const filterVal = filterOpts.filter_values || "";
+
+						let chipText = '<span class="g-filter-chips-text">' +
+								'<span class="g-filter-chip-name">' + filter.name + ':</span>' +
+								'<span class="g-filter-chip-value text-bold"> ' + filterVal + '</span>' +
+							'</span>'
+
+						if (filterOpts.use_from_above &&
+							Object.keys(filterOpts.use_from_above).length) {
+
+							filterData.classes = "use-from-above-filter-chip"
+
+							chipText = '<span class="material-icons">link</span>' + chipText;
+
+						}
+
+						filterData.text = chipText
+
+						return filterData;
+					});
+
+				};
+
+                scope.onFilterChipClick = function (chipsData, event) {
+
+					scope.popupData.filterKey = chipsData.data.id
+
+					scope.popupPosX.value = event.clientX
+					scope.popupPosY.value = event.clientY
 
 					scope.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
+
+				};
+
+                scope.filterSettingsChange = function () {
+
+					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+					scope.evDataService.resetData();
+					scope.evDataService.resetRequestParameters();
+
+					var rootGroup = scope.evDataService.getRootGroupData();
+
+					scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
 				};
 
@@ -437,12 +640,28 @@
 
 					scope.popupData = {
 						evDataService: scope.evDataService,
-						evEventService: scope.evEventService
+						evEventService: scope.evEventService,
+						attributeDataService: scope.attributeDataService
 					}
 
 					formatFiltersForChips();
 
 					scope.readyStatus.filters = true;
+
+					scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+
+						scope.filters = scope.evDataService.getFilters();
+
+						formatFiltersForChips();
+
+						let filterChips = JSON.parse(JSON.stringify(scope.filtersChips));
+
+						scope.popupEventService.dispatchEvent(
+							directivesEvents.CHIPS_LIST_CHANGED,
+							{chipsList: filterChips}
+						);
+
+					});
 
 				};
 

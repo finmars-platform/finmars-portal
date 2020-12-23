@@ -602,7 +602,7 @@ app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportView
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
 app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]);
 app.directive('rvFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvFilterDirective')]);
-app.directive('rvTextFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterPopupDirective')]);
+app.directive('rvTextFilterPopup', [require('./app/directives/reportViewer/userFilters/rvTextFilterPopupDirective')]);
 
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 app.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evTextFilterDirective')]);

@@ -79,21 +79,21 @@
 
 				let getSelectedOptionsIds = function () {
 
-					if (!scope.model) {
-						return;
+					if (scope.model) {
+
+						selOptionsIdsList = scope.model.map(function (selOption) {
+
+							let optionId = selOption;
+
+							if (typeof selOption === 'object') {
+								optionId = selOption.id;
+							}
+
+							return optionId;
+
+						});
+
 					}
-
-					selOptionsIdsList = scope.model.map(function (selOption) {
-
-						let optionId = selOption;
-
-						if (typeof selOption === 'object') {
-							optionId = selOption.id;
-						}
-
-						return optionId;
-
-					});
 
 				};
 
@@ -318,17 +318,21 @@
 
 						scope.chipsList = selOptionsIdsList.map(function (selOptId) {
 
-							for (let i = 0; i < items.length; i++) {
+							let selOpt = items.find(item => {
 
-								if (items[i].id === selOptId) {
+								let itemId = item;
 
-									return {
-										id: selOptId,
-										text: items[i][scope.nameProperty]
-									};
-
+								if (typeof item === 'object') {
+									itemId = item.id;
 								}
 
+								return itemId === selOptId;
+
+							});
+
+							return {
+								id: selOptId,
+								text: selOpt[scope.nameProperty]
 							}
 
 						});
@@ -387,7 +391,7 @@
 
 						chipElem = elem[0].querySelector("chips-list");
 
-						scope.onDropdownMenuFilterBlur = function (terms) {
+						scope.onDropdownMenuFilterBlur = function () {
 							scope.dropdownMenuShown = false
 							scope.menuFilterTerms[scope.nameProperty] = ""
 						}
@@ -421,7 +425,7 @@
 
 						};
 
-						scope.onChipDeletion = function (chipsData) {
+						scope.onChipsDeletion = function (chipsData) {
 
 							chipsData.forEach(function (chipData) {
 
