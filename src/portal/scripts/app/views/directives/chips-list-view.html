@@ -2,17 +2,18 @@
      ng-class="getChipsListClasses()">
 
     <div ng-repeat="chip in chipsList | orderBy: orderOptions track by chip.id"
-         class="chip-wrap chip-hidden chipWrapElem"
-         ng-init="$last && hideOverflowingChips(true)">
+         class="chip-wrap chipWrapElem"
+         ng-class="getChipClasses(chip)"
+         ng-init="$last && onLastChipInit()">
 
         <div class="chip-div chipDivElem"
              ng-click="onChipClickMethod(chip, $event)">
 
             <div ng-bind-html="chip.text"
-                 class="chip-list-text"></div>
+                 class="chip-list-content"></div>
 
             <md-button ng-if="chipsDeletion"
-                       ng-click="deleteChips(chip)"
+                       ng-click="deleteChips(chip, $event)"
                        class="chip-deletion-btn">
                 <span class="material-icons">cancel</span>
             </md-button>
@@ -27,12 +28,12 @@
     </div>
 
     <div class="chip-wrap" ng-if="hiddenChips.length">
-        <div class="chip-div expand-chip">
+        <div class="chip-div expand-chip" ng-click="onChipClickMethod(hiddenChips, $event)">
 
-            <div class="chip-list-text">+{{hiddenChips.length}}</div>
+            <div class="chip-list-content">+{{hiddenChips.length}}</div>
 
             <md-button ng-if="chipsDeletion"
-                       ng-click="deleteChips(hiddenChips)"
+                       ng-click="deleteChips(hiddenChips, $event)"
                        class="chip-deletion-btn">
                 <span class="material-icons">cancel</span>
             </md-button>
@@ -42,6 +43,12 @@
                         class="tooltip_1"
                         ng-bind="hiddenChipsTexts"></md-tooltip>
 
+        </div>
+    </div>
+
+    <div class="add-chip-wrap" ng-if="chipsAddition">
+        <div class="chip-div" ng-click="onAddChipClick({event: $event})" ng-init="onAddChipInit()">
+            <div class="chip-list-content" ng-bind="chipsAddition"></div>
         </div>
     </div>
 

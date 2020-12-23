@@ -23,19 +23,27 @@
                  popup-data="popupData"
                  popup-event-service="popupEventService"
                  popup-x="popupPosX"
-                 popup-y="popupPosY">
+                 popup-y="popupPosY"
+                 backdrop-classes="fpBackClasses"
+                 popup-classes="fpClasses"
+                 on-save-callback="filterSettingsChange()">
                 <chips-list chips-list="filtersChips"
                             chips-deletion="true"
+                            chips-addition="ADD FILTER"
                             chips-container-width="800"
-                            on-chip-click="onFilterChipClick"></chips-list>
+                            on-chip-click="onFilterChipClick(chipsData, event)"
+                            hide-overflowing-chips="false"
+                            on-chips-deletion="removeFilter(chipsData)"
+                            on-add-chip-click="addFilter(event)"
+                            class="g-filter-chips"></chips-list>
             </div>
         </div>
 
-        <div>
+        <!-- <div>
             <md-button class="link-button">
                 <span>Add filter</span>
             </md-button>
-        </div>
+        </div> -->
 
     </div>
 
