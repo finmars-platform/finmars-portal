@@ -108,6 +108,10 @@
 
                 scope.setAsDefault = (targetLayout) => {
 
+                    if (targetLayout.is_default) {
+                        return;
+                    }
+
                     if (isRootEntityViewer) {
 
                         if (!targetLayout.is_default) {
@@ -144,6 +148,8 @@
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
 
                                 scope.evEventService.dispatchEvent(evEvents.DEFAULT_LAYOUT_CHANGE);
+
+                                scope.$apply();
 
                             });
 
