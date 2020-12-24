@@ -1,7 +1,7 @@
 <div class="g-top-part width-100 flex-row fc-space-between flex-i-center">
     <div class="p-l-24">
 
-        <md-button class="g-top-button"
+        <md-button class="g-top-button flex-row"
                    popup
                    popup-template-url="'views/popups/g-layouts-manager-popup-view.html'"
                    popup-data="popupData"
@@ -13,10 +13,14 @@
                    backdrop-classes="'low-z-index-backdrop'"
                    popup-event-service="evEventService">
 
-            <div class="flex-row flex-i-center">
+<!--            <div class="flex-row flex-i-center">
                 <ng-md-icon icon="view_quilt" class="flex-row"></ng-md-icon>
                 <span class="m-l-8">{{layoutName}}</span>
-            </div>
+            </div>-->
+
+            <span class="material-icons">view_quilt</span>
+            <span class="m-l-8">{{layoutName}}</span>
+            <span class="material-icons">arrow_drop_down</span>
 
         </md-button>
     </div>
