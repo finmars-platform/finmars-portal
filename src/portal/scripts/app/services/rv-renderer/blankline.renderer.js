@@ -67,6 +67,8 @@
             rowSelection = '<div class="g-row-selection"></div>';
         }
 
+		var rowSettings = renderHelper.rowSettingsElem;
+
         if (obj.___is_activated) {
             classList.push('activated');
         }
@@ -76,7 +78,7 @@
         var result = '<div class="' + classes + '" data-type="blankline" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
-        result = result + rowSelection;
+        result = result + rowSelection + rowSettings;
 
         columns.forEach(function (column, index) {
 

@@ -139,7 +139,8 @@
                 };
 
                 scope.getWrapperClasses = function () {
-                    var classes = '';
+
+                	var classes = '';
 
                     if (scope.isRootEntityViewer) {
                         classes = 'g-root-wrapper';
@@ -150,6 +151,10 @@
                     if (scope.evDataService.isVerticalSplitPanelActive()) {
                         classes += ' g-v-split-panel-active';
                     }
+
+                    if (scope.isReport) {
+						classes += ' g-is-report';
+					}
 
                     return classes;
 

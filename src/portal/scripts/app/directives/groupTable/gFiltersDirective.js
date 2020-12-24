@@ -45,6 +45,8 @@
 				scope.fpBackClasses = "z-index-48"
 				scope.fpClasses = "z-index-49"
 
+				scope.showLinkedFilters = true;
+
 				scope.readyStatus = {
 					filters: false
 				}
@@ -512,6 +514,13 @@
 
                 };
 
+                scope.toggleLinkedFilters = function () {
+
+                	scope.showLinkedFilters = !scope.showLinkedFilters
+					formatFiltersForChips();
+
+				};
+
 				scope.removeFilter = function (filtersToRemove) {
 
 					scope.filters = scope.filters.filter(filter => {
@@ -578,32 +587,43 @@
 
                 let formatFiltersForChips = function () {
 
-					scope.filtersChips = scope.filters.map(filter => {
+					scope.filtersChips = [];
 
-						let filterData = {
-							id: filter.key
-						};
+					scope.filters.forEach(filter => {
 
 						const filterOpts = filter.options || {};
 						const filterVal = filterOpts.filter_values || "";
 
-						let chipText = '<span class="g-filter-chips-text">' +
+						// hide linked filters if needed
+						if (
+							scope.showLinkedFilters ||
+							(!filterOpts.use_from_above || !Object.keys(filterOpts.use_from_above).length)
+						) {
+
+							let filterData = {
+								id: filter.key
+							};
+
+							let chipText = '<span class="g-filter-chips-text">' +
 								'<span class="g-filter-chip-name">' + filter.name + ':</span>' +
 								'<span class="g-filter-chip-value text-bold"> ' + filterVal + '</span>' +
-							'</span>'
+								'</span>'
 
-						if (filterOpts.use_from_above &&
-							Object.keys(filterOpts.use_from_above).length) {
+							if (filterOpts.use_from_above &&
+								Object.keys(filterOpts.use_from_above).length) {
 
-							filterData.classes = "use-from-above-filter-chip"
+								filterData.classes = "use-from-above-filter-chip"
 
-							chipText = '<span class="material-icons">link</span>' + chipText;
+								chipText = '<span class="material-icons">link</span>' + chipText;
+
+							}
+
+							filterData.text = chipText
+
+							scope.filtersChips.push(filterData);
 
 						}
 
-						filterData.text = chipText
-
-						return filterData;
 					});
 
 				};

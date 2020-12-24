@@ -457,6 +457,11 @@
 
   .g-wrapper {
 
+    .g-row-settings:not(.closed) {
+      padding-right: 6px;
+      width: 59px;
+    }
+
     .ev-content {
 
       .g-row {
@@ -478,10 +483,10 @@
       }
 
       .g-row-selection {
-        height: 35px;
+        height: @gRowHeight;
         width: 49px;
-        border-bottom: 1px solid #DBDBDB;
-        border-right: 1px solid #DBDBDB;
+        border-bottom: @gCellBorder;
+        border-right: @gCellBorder;
       }
 
       .g-row-selection-button {

@@ -1,3 +1,5 @@
+@star-icon-size: 25px;
+
 .g-wrapper {
   overflow: hidden;
   height: 100%;
@@ -616,6 +618,14 @@
     }
   }
 
+  .g-row-settings-table {
+    float: left;
+    height: @gRowHeight;
+    border-bottom: 1px solid #DBDBDB;
+    border-right: 1px solid #DBDBDB;
+    box-sizing: border-box;
+  }
+
   .g-table-wrap {
     //width: calc(~"100% - 40px");
     width: 100%;
@@ -736,6 +746,59 @@
     background-color: #DCDCDC;
     //overflow: hidden;
     overflow: auto;
+  }
+
+  .g-row-settings { // inside table
+    width: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 12px;
+    border-right: @gCellBorder;
+    transition: width 100ms linear;
+
+    &.closed {
+      width: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  }
+
+  .g-row-color-picker-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    .label-icon {
+      color: #dbdbdb;
+    }
+
+    .arrow-icon {
+      width: 16px;
+      position: relative;
+      right: 5px;
+      opacity: 0;
+      color: @gray;
+    }
+
+    &:hover {
+
+      .label-icon {
+        color: @gray;
+      }
+
+      .arrow-icon {
+        opacity: 1;
+      }
+
+    }
+
+    &:not([disabled]):focus {
+      background-color: initial;
+    }
   }
 
   // Victor 2020.1202 #69 New report viewer interface
@@ -891,20 +954,9 @@
       }
     }
 
-    @star-icon-size: 25px;
-
-    .g-cell-favorite {
+    .g-cell-rows-settings {
       position: relative;
-
-      display: flex;
-      justify-content: space-around;
-
-      width: 100px;
-
-      &.closed {
-        width: 0;
-        padding: 0;
-      }
+      padding: 0;
     }
 
     .g-cell-button {
@@ -963,6 +1015,7 @@
 
       border: 1px solid @g-table-border-color;
       border-radius: 50%;
+      z-index: 1;
 
         ng-md-icon {
           width: auto;
@@ -1028,9 +1081,27 @@
 
     }
   }
+  // <Victor 2020.1202 #69 New report viewer interface>
 
 }
-// <Victor 2020.1202 #69 New report viewer interface>
+
+.g-row-color-picker-content {
+  min-width: 58px;
+
+  .md-button {
+    min-width: auto;
+    width: 100%;
+    min-height: auto;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+  }
+
+}
 
 .g-wrapper.g-v-split-panel-active {
   display: flex;

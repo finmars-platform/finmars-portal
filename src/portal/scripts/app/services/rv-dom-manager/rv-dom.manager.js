@@ -806,7 +806,7 @@
 
     };
 
-    var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
+    /* var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
 
         var splitPanelIsActive = evDataService.isSplitPanelActive();
 
@@ -821,7 +821,7 @@
             contentWrapElement.style.height = "";
         }
 
-    };
+    }; */
 
     var calculateScroll = function (elements, evDataService) {
 
@@ -1711,6 +1711,10 @@
         })
 
     };
+
+    var createPaintRowMenu = function () {
+
+	};
 
 
     module.exports = {
