@@ -105,9 +105,9 @@
 			vm.entityFilters = entityViewerOptions.entity_filters;
 
 			// DEPRECATED
-			if (vm.entityType === "complex-transaction" && entityViewerOptions.complex_transaction_filters) {
-				vm.entityFilters = entityViewerOptions.complex_transaction_filters;
-			}
+			// if (vm.entityType === "complex-transaction" && entityViewerOptions.complex_transaction_filters) {
+			// 	vm.entityFilters = entityViewerOptions.complex_transaction_filters;
+			// }
 
             if (!vm.entityFilters) {
                 vm.entityFilters = multselData.selectedByDefault;
