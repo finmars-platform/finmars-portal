@@ -52,6 +52,13 @@
         return icons[key] || '';
     }
 
+	var rowSettingsElem = '<div class="g-row-settings g-row-settings-table">' +
+			'<div class="g-row-color-picker-btn">' +
+				'<span class="material-icons label-icon">label_outline</span>' +
+				'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
+			'</div>' +
+		'</div>';
+
 
     var formatRounding = function (value, column) {
 
@@ -379,6 +386,8 @@
         getCancelIcon: getCancelIcon,
         getPartiallyVisibleIcon: getPartiallyVisibleIcon, */
         getIconByKey: getIconByKey,
+
+		rowSettingsElem: rowSettingsElem,
 
         formatRounding: formatRounding,
         formatNegative: formatNegative,

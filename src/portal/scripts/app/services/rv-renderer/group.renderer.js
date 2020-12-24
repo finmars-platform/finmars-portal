@@ -1,8 +1,8 @@
-    (function () {
+(function () {
 
     var renderHelper = require('../../helpers/render.helper');
 
-        var checkIcon = renderHelper.getIconByKey('checkIcon');
+    var checkIcon = renderHelper.getIconByKey('checkIcon');
 
     var render = function (group) {
 
@@ -25,6 +25,8 @@
             rowSelection = '<div class="g-row-selection"></div>';
         }
 
+		var rowSettings = renderHelper.rowSettingsElem;
+
         if (group.___is_activated) {
             classList.push('activated');
         }
@@ -33,7 +35,7 @@
 
 
         return '<div class="' + classes + '" data-type="group" data-group-hash-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' +
-            rowSelection + foldButton + group.___group_name + '</div>'
+            rowSelection + rowSettings + foldButton + group.___group_name + '</div>'
 
     };
 

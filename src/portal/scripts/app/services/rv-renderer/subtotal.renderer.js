@@ -376,6 +376,8 @@
             rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
         }
 
+		var rowSettings = renderHelper.rowSettingsElem;
+
         if (is_activated) {
             classList.push('activated');
         }
@@ -392,7 +394,7 @@
         }
         var cell;
 
-        result = result + rowSelection;
+        result = result + rowSelection + rowSettings;
 
         obj.___cells_values = [];
 

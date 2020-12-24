@@ -787,51 +787,62 @@
     <div class="g-column-bottom-row g-table-header flex-row">
         <div class="g-cell g-cell-select-all">
             <md-checkbox data-ng-click="selectAllRows()" data-ng-checked="isAllSelected"></md-checkbox>
-
-            <md-button class="favorite-toggle" data-ng-if="!isReport && !isFavoriteAreaShown" data-ng-click="favoriteAreaToggle()">
-                <div class="flex-row flex-i-center">
-                    <ng-md-icon icon="keyboard_arrow_right" size="16" class="flex-row"></ng-md-icon>
-                </div>
-            </md-button>
         </div>
 
-        <div data-ng-if="!isReport && isFavoriteAreaShown" class="g-cell g-cell-favorite">
-            <md-button class="g-cell-button"
-                       data-ng-class="{'selected': isAllStarsSelected}"
-                       data-ng-Click="isAllStarsSelected = !isAllStarsSelected">
-                <div class="flex-row flex-i-center">
-                    <ng-md-icon data-ng-if="!isAllStarsSelected" icon="star_border" size="25" class="flex-row"></ng-md-icon>
-                    <ng-md-icon data-ng-if="isAllStarsSelected" icon="star" size="25" class="flex-row"></ng-md-icon>
-                </div>
-            </md-button>
+        <div data-ng-if="isReport" class="g-cell-rows-settings">
 
-            <md-menu>
-                <md-button class="g-cell-button" data-ng-click="$mdOpenMenu($event)">
-                    <div class="flex-column flex-i-center">
-                        <ng-md-icon icon="crop_16_9" class="flex-row"></ng-md-icon>
+            <div class="g-cell g-row-settings" ng-class="{'closed': hideRowFilters}">
+                <md-button ng-if="!isReport"
+                           class="g-cell-button"
+                           data-ng-class="{'selected': isAllStarsSelected}"
+                           data-ng-Click="isAllStarsSelected = !isAllStarsSelected">
+                    <div class="flex-row flex-i-center">
+                        <ng-md-icon data-ng-if="!isAllStarsSelected" icon="star_border" size="25" class="flex-row"></ng-md-icon>
+                        <ng-md-icon data-ng-if="isAllStarsSelected" icon="star" size="25" class="flex-row"></ng-md-icon>
                     </div>
                 </md-button>
 
-                <md-menu-content width="2">
-                    <md-menu-item>
-                        <md-button class="g-cell-button">
-                            <ng-md-icon icon="crop_16_9" class="flex-row"></ng-md-icon>
-                        </md-button>
-                    </md-menu-item>
+                <md-menu>
+                    <md-button class="g-cell-button g-row-color-picker-btn" data-ng-click="$mdOpenMenu($event)">
+                        <span class="material-icons label-icon">label_outline</span>
+                        <span class="material-icons arrow-icon">arrow_drop_down</span>
+                    </md-button>
 
-                    <md-menu-item>
-                        <md-button class="g-cell-button">
-                            <ng-md-icon icon="crop_16_9" class="flex-row"></ng-md-icon>
-                        </md-button>
-                    </md-menu-item>
+                    <md-menu-content class="g-row-color-picker-content" width="2"
+                                     ng-mouseleave="$mdMenu.close()">
+                        <md-menu-item>
+                            <md-button class="g-cell-button">
+                                <span class="material-icons">label_outline</span>
+                            </md-button>
+                        </md-menu-item>
 
-                </md-menu-content>
-            </md-menu>
+                        <md-menu-item>
+                            <md-button class="g-cell-button">
+                                <span class="material-icons" style="color: #f05a22;">label</span>
+                            </md-button>
+                        </md-menu-item>
 
+                        <md-menu-item>
+                            <md-button class="g-cell-button">
+                                <span class="material-icons" style="color: #fac878;">label</span>
+                            </md-button>
+                        </md-menu-item>
 
-            <md-button class="favorite-toggle" data-ng-if="isFavoriteAreaShown" data-ng-click="favoriteAreaToggle()">
-                <div class="flex-row flex-i-center">
-                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>
+                        <md-menu-item>
+                            <md-button class="g-cell-button">
+                                <span class="material-icons" style="color: #a5d9c9;">label</span>
+                            </md-button>
+                        </md-menu-item>
+
+                    </md-menu-content>
+                </md-menu>
+            </div>
+
+            <md-button class="favorite-toggle" data-ng-click="rowFiltersToggle()">
+                <div class="flex-row flex-i-center height-100">
+<!--                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>-->
+                    <span ng-hide="hideRowFilters" class="material-icons f-s-16">keyboard_arrow_left</span>
+                    <span ng-hide="!hideRowFilters" class="material-icons f-s-16">keyboard_arrow_right</span>
                 </div>
             </md-button>
         </div>

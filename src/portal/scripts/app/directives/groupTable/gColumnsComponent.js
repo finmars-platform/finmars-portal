@@ -49,7 +49,7 @@
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
                 scope.isAllStarsSelected = false;
-                scope.isFavoriteAreaShown = true;
+                scope.hideRowFilters = false;
 
                 var entityAttrs = [];
                 var dynamicAttrs = [];
@@ -95,15 +95,8 @@
                     return "'views/popups/g-report-viewer-column-settings-popup-menu.html'";
                 }
 
-                scope.onColumnsChange = function () {
-
-
-                }
-
-                scope.favoriteAreaToggle = function () {
-
-                    scope.isFavoriteAreaShown = !scope.isFavoriteAreaShown;
-
+                scope.rowFiltersToggle = function () {
+                    scope.hideRowFilters = !scope.hideRowFilters
                 }
 
                 // <Victor 2020.12.14 #69 New report viewer design>
