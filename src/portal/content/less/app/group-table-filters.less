@@ -363,6 +363,10 @@ md-checkbox.g-filter-options-checkbox {
     border-bottom: @gFilterFieldBottomBorder;
     box-sizing: border-box;
 
+    &.no-input-arrows {
+
+    }
+
     &:focus {
       outline: none;
       padding-bottom: 0;
@@ -413,6 +417,10 @@ md-checkbox.g-filter-options-checkbox {
 
     .g-filter-value-wrap {
       width: 170px;
+
+      input:nth-child(2) {
+        margin-top: 10px;
+      }
     }
 
     .g-filter-types-select {
