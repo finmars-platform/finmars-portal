@@ -1086,15 +1086,16 @@
                 if (!entityViewerOptions) {
 
                     entityViewerOptions = {
-                        complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
+                        // complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
                         entity_filters: ['enabled', 'disabled', 'active', 'inactive']
                     }
 
-                } else if (!entityViewerOptions.complex_transaction_filters) {
-
-                    entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
-
-
+                // } else if (!entityViewerOptions.complex_transaction_filters) {
+                //
+                //     entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
+                //
+                //
+                // } else if (!entityViewerOptions.entity_filters){
                 } else if (!entityViewerOptions.entity_filters){
 
                     entityViewerOptions.entity_filters = ['enabled', 'disabled', 'active', 'inactive'];
