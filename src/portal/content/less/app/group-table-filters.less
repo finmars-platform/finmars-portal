@@ -429,20 +429,18 @@ md-checkbox.g-filter-options-checkbox {
         }
       }
 
-      .pick-me-up {
-        input {
-          .filter-input;
-          background-color: @tnvBackColor;
-        }
+      input {
+        .filter-input;
+        background-color: @tnvBackColor;
       }
 
       .date-tree {
         md-input-container {
+          margin: 0;
+          padding: 0;
+
           input {
-            height: calc(@gFilterFieldsHeight - 2px);
             margin-top: 0;
-            border-bottom: @gFilterFieldBottomBorder;
-            background-color: @tnvBackColor;
           }
         }
 

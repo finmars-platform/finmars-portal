@@ -39,7 +39,8 @@
         <div class="date-tree" ng-if="filter.options.filter_type === 'date_tree'"
              class="height-100">
 
-            <date-tree-input dates-list="columnRowsContent"
+            <date-tree-input title=""
+                             dates-list="columnRowsContent"
                              dates-tree="filter.options.dates_tree"
                              nothing-selected-text="Off"
                              callback-method="dateTreeChanged(filter.options.dates_tree)"></date-tree-input>
