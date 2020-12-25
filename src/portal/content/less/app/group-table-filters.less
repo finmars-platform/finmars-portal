@@ -354,7 +354,7 @@ md-checkbox.g-filter-options-checkbox {
     }
   }
 
-  input.g-filter-input {
+  .filter-input {
     width: 100%;
     height: @gFilterFieldsHeight;
     padding-left: @gFilterFieldLeftIndent;
@@ -363,15 +363,16 @@ md-checkbox.g-filter-options-checkbox {
     border-bottom: @gFilterFieldBottomBorder;
     box-sizing: border-box;
 
-    &.no-input-arrows {
-
-    }
-
     &:focus {
       outline: none;
       padding-bottom: 0;
       border-bottom: 2px solid @orange;
     }
+  }
+
+
+  input.g-filter-input {
+    .filter-input
   }
 
   .g-filter-tnv-back {
@@ -421,6 +422,32 @@ md-checkbox.g-filter-options-checkbox {
       input:nth-child(2) {
         margin-top: 10px;
       }
+
+      .to_date {
+        input {
+          margin-top: 10px;
+        }
+      }
+
+      .pick-me-up {
+        input {
+          .filter-input;
+          background-color: @tnvBackColor;
+        }
+      }
+
+      .date-tree {
+        md-input-container {
+          input {
+            height: calc(@gFilterFieldsHeight - 2px);
+            margin-top: 0;
+            border-bottom: @gFilterFieldBottomBorder;
+            background-color: @tnvBackColor;
+          }
+        }
+
+      }
+
     }
 
     .g-filter-types-select {
