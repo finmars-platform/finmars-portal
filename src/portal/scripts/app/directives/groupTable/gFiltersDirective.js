@@ -38,7 +38,7 @@
             	scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.currentAdditions = scope.evDataService.getAdditions();
-                scope.isFiltersOpened = true;
+                scope.isFiltersOpened = true
 				scope.filters = scope.evDataService.getFilters();
 				scope.popupPosX = { value: null }
 				scope.popupPosY = { value: null }
@@ -50,6 +50,8 @@
 				scope.readyStatus = {
 					filters: false
 				}
+
+				let gFilterElem;
 
 				let entityAttrs = [];
 				let dynamicAttrs = [];
@@ -613,6 +615,7 @@
 								Object.keys(filterOpts.use_from_above).length) {
 
 								filterData.classes = "use-from-above-filter-chip"
+								filterData.tooltipContent = chipText
 
 								chipText = '<span class="material-icons">link</span>' + chipText;
 
@@ -654,9 +657,33 @@
 
 				};
 
+                let updateFilterAreaHeight = () => {
+
+                	let interfaceLayout = scope.evDataService.getInterfaceLayout();
+					const gFiltersHeight = gFilterElem.clientHeight;
+					const originalHeight = interfaceLayout.filterArea.height;
+
+					interfaceLayout.filterArea.height = gFiltersHeight
+
+					scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+					return originalHeight !== gFiltersHeight;
+
+				};
+
+                scope.onChipsFirstRender = function () {
+
+					updateFilterAreaHeight();
+                	scope.evEventService.dispatchEvent(evEvents.FILTERS_RENDERED);
+
+				};
+
 				let init = function () {
 
+					gFilterElem = elem[0].querySelector('.g-filters');
+
 					scope.popupEventService = new EventService();
+					scope.chipsListEventService = new EventService();
 
 					scope.popupData = {
 						evDataService: scope.evDataService,
@@ -674,12 +701,16 @@
 
 						formatFiltersForChips();
 
-						let filterChips = JSON.parse(JSON.stringify(scope.filtersChips));
+						setTimeout(function () { // wait until DOM elems reflow after ng-repeat
 
-						scope.popupEventService.dispatchEvent(
-							directivesEvents.CHIPS_LIST_CHANGED,
-							{chipsList: filterChips}
-						);
+							const filterAreaHeightChanged = updateFilterAreaHeight();
+
+							if (filterAreaHeightChanged) {
+								scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+							}
+
+						}, 0);
+
 
 					});
 

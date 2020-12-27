@@ -1,188 +1,192 @@
-<div class="g-filters width-100 flex-row fc-space-between flex-i-start"
+<div class="g-filters width-100"
      data-ng-class="{'open-filters': isFiltersOpened}">
 
-    <div class="flex-row flex-i-start">
+    <div class="g-filters-holder width-100 flex-row fc-space-between flex-i-start">
+        <div class="flex-row flex-i-start">
 
-        <md-button class="md-icon-button primary-button rounded" data-ng-click="calculateReport()">
-            <div class="flex-row flex-c-center flex-i-center">
-                <ng-md-icon icon="refresh" size="20">
-                    <md-tooltip md-direction="top">Calculate</md-tooltip>
-                </ng-md-icon>
-            </div>
-        </md-button>
+            <md-button class="md-icon-button primary-button rounded" data-ng-click="calculateReport()">
+                <div class="flex-row flex-c-center flex-i-center">
+                    <ng-md-icon icon="refresh" size="20">
+                        <md-tooltip md-direction="top">Calculate</md-tooltip>
+                    </ng-md-icon>
+                </div>
+            </md-button>
 
-        <md-button class="md-icon-button chain-button" data-ng-click="toggleLinkedFilters()">
-            <div class="flex-row flex-c-center flex-i-center">
-                <ng-md-icon icon="link" size="20"></ng-md-icon>
-            </div>
-        </md-button>
+            <md-button class="md-icon-button chain-button" data-ng-click="toggleLinkedFilters()">
+                <div class="flex-row flex-c-center flex-i-center">
+                    <ng-md-icon icon="link" size="20"></ng-md-icon>
+                </div>
+            </md-button>
 
-        <div ng-if="readyStatus.filters">
-            <div popup
-                 popup-template-url="'views/popups/g-filter-settings.html'"
-                 popup-data="popupData"
-                 popup-event-service="popupEventService"
-                 popup-x="popupPosX"
-                 popup-y="popupPosY"
-                 backdrop-classes="fpBackClasses"
-                 popup-classes="fpClasses"
-                 on-save-callback="filterSettingsChange()"
-                 class="g-filter-chips-wrap">
-                <chips-list chips-list="filtersChips"
-                            chips-deletion="true"
-                            chips-addition="ADD FILTER"
-                            chips-container-width="800"
-                            on-chip-click="onFilterChipClick(chipsData, event)"
-                            hide-overflowing-chips="false"
-                            on-chips-deletion="removeFilter(chipsData)"
-                            on-add-chip-click="addFilter(event)"
-                            class="g-filter-chips"></chips-list>
+            <div ng-if="readyStatus.filters">
+                <div popup
+                     popup-template-url="'views/popups/g-filter-settings.html'"
+                     popup-data="popupData"
+                     popup-event-service="popupEventService"
+                     popup-x="popupPosX"
+                     popup-y="popupPosY"
+                     backdrop-classes="fpBackClasses"
+                     popup-classes="fpClasses"
+                     on-save-callback="filterSettingsChange()"
+                     class="g-filter-chips-wrap">
+                    <chips-list chips-list="filtersChips"
+                                chips-deletion="true"
+                                chips-addition="ADD FILTER"
+                                chips-container-width="800"
+                                on-chip-click="onFilterChipClick(chipsData, event)"
+                                hide-overflowing-chips="false"
+                                on-chips-deletion="removeFilter(chipsData)"
+                                on-add-chip-click="addFilter(event)"
+                                on-first-render-ending="onChipsFirstRender()"
+                                class="g-filter-chips"></chips-list>
+                </div>
             </div>
+
         </div>
 
+        <div class="icon-buttons">
+            <md-menu class="full-width">
+                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">view_stream</span>
+                        <span>Split</span>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button data-ng-click="toggleSplitPanel($event, 'balance-report')"
+                                   class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.type !== 'balance-report'"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.type == 'balance-report'"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open Balance Report view panel</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button data-ng-click="toggleSplitPanel($event, 'pl-report')"
+                                   class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.type !== 'pl-report'"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.type === 'pl-report'"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open P&L Report view panel</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button data-ng-click="toggleSplitPanel($event, 'transaction-report')"
+                                   class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.type !== 'transaction-report'"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="currentAdditions.type === 'transaction-report'"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open Transaction Report view panel</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+            <md-menu class="full-width">
+                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">view_module</span>
+                        <span>Matrix</span>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button data-ng-click="toggleMatrix($event)" class="g-settings-option-btn">
+                            <ng-md-icon icon="done"
+                                        data-ng-show="view != 'matrix'"
+                                        class="z-menu-icon"
+                                        style="visibility: hidden;"></ng-md-icon>
+                            <ng-md-icon icon="done"
+                                        data-ng-show="view == 'matrix'"
+                                        class="z-menu-icon"></ng-md-icon>
+                            <span>Open Matrix</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+            <md-menu>
+                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">upgrade</span>
+                        <span>Export</span>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
+                            <span>Export to PDF</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button data-ng-click="exportAsCSV()" class="g-settings-option-btn">
+                            <span>Export to CSV</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button data-ng-click="exportAsExcel()" class="g-settings-option-btn">
+                            <span>Export to Excel</span>
+                        </md-button>
+                    </md-menu-item>
+
+
+                    <md-menu-item>
+                        <md-button data-ng-click="copyReport()" class="g-settings-option-btn">
+                            <span>Copy all to buffer</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button data-ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
+                            <span>Copy selected to buffer</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+            <md-menu>
+                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                    <div class="flex-column flex-i-center">
+                        <span class="material-icons">more_vert</span>
+                        <span>More</span>
+                    </div>
+                </md-button>
+
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button  data-ng-click="openViewConstructor($event)" class="g-settings-option-btn">
+                            <span>View Constructor</span>
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button data-ng-click="openCustomFieldsManager()" class="g-settings-option-btn">
+                            <span>Custom Columns</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+        </div>
     </div>
 
-    <div  class="icon-buttons">
-        <md-menu class="full-width">
-            <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">view_stream</span>
-                    <span>Split</span>
-                </div>
-            </md-button>
-
-            <md-menu-content width="4">
-                <md-menu-item>
-                    <md-button data-ng-click="toggleSplitPanel($event, 'balance-report')"
-                               class="g-settings-option-btn">
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.type !== 'balance-report'"
-                                    class="z-menu-icon"
-                                    style="visibility: hidden;"></ng-md-icon>
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.type == 'balance-report'"
-                                    class="z-menu-icon"></ng-md-icon>
-                        <span>Open Balance Report view panel</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item>
-                    <md-button data-ng-click="toggleSplitPanel($event, 'pl-report')"
-                               class="g-settings-option-btn">
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.type !== 'pl-report'"
-                                    class="z-menu-icon"
-                                    style="visibility: hidden;"></ng-md-icon>
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.type === 'pl-report'"
-                                    class="z-menu-icon"></ng-md-icon>
-                        <span>Open P&L Report view panel</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item>
-                    <md-button data-ng-click="toggleSplitPanel($event, 'transaction-report')"
-                               class="g-settings-option-btn">
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.type !== 'transaction-report'"
-                                    class="z-menu-icon"
-                                    style="visibility: hidden;"></ng-md-icon>
-                        <ng-md-icon icon="done"
-                                    data-ng-show="currentAdditions.type === 'transaction-report'"
-                                    class="z-menu-icon"></ng-md-icon>
-                        <span>Open Transaction Report view panel</span>
-                    </md-button>
-                </md-menu-item>
-            </md-menu-content>
-        </md-menu>
-
-        <md-menu class="full-width">
-            <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">view_module</span>
-                    <span>Matrix</span>
-                </div>
-            </md-button>
-
-            <md-menu-content width="4">
-                <md-menu-item>
-                    <md-button data-ng-click="toggleMatrix($event)" class="g-settings-option-btn">
-                        <ng-md-icon icon="done"
-                                    data-ng-show="view != 'matrix'"
-                                    class="z-menu-icon"
-                                    style="visibility: hidden;"></ng-md-icon>
-                        <ng-md-icon icon="done"
-                                    data-ng-show="view == 'matrix'"
-                                    class="z-menu-icon"></ng-md-icon>
-                        <span>Open Matrix</span>
-                    </md-button>
-                </md-menu-item>
-            </md-menu-content>
-        </md-menu>
-
-        <md-menu>
-            <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">upgrade</span>
-                    <span>Export</span>
-                </div>
-            </md-button>
-
-            <md-menu-content width="4">
-                <md-menu-item>
-                    <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
-                        <span>Export to PDF</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item>
-                    <md-button data-ng-click="exportAsCSV()" class="g-settings-option-btn">
-                        <span>Export to CSV</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item>
-                    <md-button data-ng-click="exportAsExcel()" class="g-settings-option-btn">
-                        <span>Export to Excel</span>
-                    </md-button>
-                </md-menu-item>
-
-
-                <md-menu-item>
-                    <md-button data-ng-click="copyReport()" class="g-settings-option-btn">
-                        <span>Copy all to buffer</span>
-                    </md-button>
-                </md-menu-item>
-                <md-menu-item>
-                    <md-button data-ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
-                        <span>Copy selected to buffer</span>
-                    </md-button>
-                </md-menu-item>
-            </md-menu-content>
-        </md-menu>
-
-        <md-menu>
-            <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">more_vert</span>
-                    <span>More</span>
-                </div>
-            </md-button>
-
-            <md-menu-content width="4">
-                <md-menu-item>
-                    <md-button  data-ng-click="openViewConstructor($event)" class="g-settings-option-btn">
-                        <span>View Constructor</span>
-                    </md-button>
-                </md-menu-item>
-
-                <md-menu-item>
-                    <md-button data-ng-click="openCustomFieldsManager()" class="g-settings-option-btn">
-                        <span>Custom Columns</span>
-                    </md-button>
-                </md-menu-item>
-            </md-menu-content>
-        </md-menu>
-
-    </div>
 </div>

@@ -18,10 +18,10 @@
                 <span class="material-icons">cancel</span>
             </md-button>
 
-            <md-tooltip ng-if="chip.text"
+            <md-tooltip ng-if="getTooltipContent(chip)"
                         md-direction="top"
                         class="tooltip_1"
-                        ng-bind="chip.text"></md-tooltip>
+                        ng-bind-html="getTooltipContent(chip)"></md-tooltip>
 
         </div>
 
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <div class="add-chip-wrap" ng-if="chipsAddition">
+    <div class="add-chip-wrap chipWrapElem" ng-if="chipsAddition">
         <div class="chip-div" ng-click="onAddChipClick({event: $event})" ng-init="onAddChipInit()">
             <div class="chip-list-content" ng-bind="chipsAddition"></div>
         </div>

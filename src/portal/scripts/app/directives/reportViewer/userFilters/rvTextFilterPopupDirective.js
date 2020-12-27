@@ -26,7 +26,7 @@
 					{name: 'Does not contains', value: 'does_not_contains'},
 					{name: 'Select', value: 'selector'},
 					{name: 'Multiple Select', value: 'multiselector'},
-					{name: 'Empty cells', value: 'empty'},
+					{name: 'Empty cells', value: 'empty'}
 					// {name: 'Linked', value: 'use_from_above'}
 				];
 

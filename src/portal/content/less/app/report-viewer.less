@@ -20,6 +20,10 @@
     height: 23px;
   }
 
+  .g-filters-holder {
+    float: none;
+  }
+
   .g-wrapper .g-group-holder {
     line-height: initial;
     padding-top: 4px;
@@ -238,6 +242,7 @@
   }
 
   .ev-progressbar-holder {
+    display: none;
     height: 4px;
     background: #4C334D;
   }
@@ -484,9 +489,10 @@
 
       .g-row-selection {
         height: @gRowHeight;
-        width: 49px;
+        width: 50px;
         border-bottom: @gCellBorder;
         border-right: @gCellBorder;
+        box-sizing: border-box;
       }
 
       .g-row-selection-button {

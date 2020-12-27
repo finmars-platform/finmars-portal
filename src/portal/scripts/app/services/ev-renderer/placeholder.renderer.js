@@ -17,13 +17,14 @@
 
         var width = [30, 40, 60, 80, 100];
 
-        columns.forEach(function (column) {
+        columns.forEach(function (column, columnIndex) {
 
+        	var columnNumber = columnIndex + 1;
             var index = getRandomNumber(0, 4);
 
             var widthClass = 'width-' + width[index];
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell"><div class="g-cell-content-wrap"><span class="placeholder-text ' + widthClass + '"></span></div></div></div>';
+            cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell"><div class="g-cell-content-wrap"><span class="placeholder-text ' + widthClass + '"></span></div></div></div>';
 
             result = result + cell
 

@@ -23,7 +23,8 @@
 
 				onChipsDeletion: "&?", // pass function with argument that is array of deleted inputs
 				onChipClick: "&?", // [ function({}) ]
-				onAddChipClick: "&?"
+				onAddChipClick: "&?",
+				onFirstRenderEnding: "&?"
 			},
 			templateUrl: "views/directives/chips-list-view.html",
 			link: function (scope, elem, attr) {
@@ -38,9 +39,8 @@
 					scope.orderOptions = "text"
 				}
 
+				let addChipBtn, addChipWidth = 0;
 				let lastChipRendered = false;
-				let addChipElem, addChipWidth = 0;
-
 				/* scope.orderMenuOptions = null
 
                 if (scope.orderMenuOptions) {
@@ -112,6 +112,14 @@
 					return chipData.classes ? chipData.classes : "";
 				};
 
+				scope.getTooltipContent = chipData => {
+					if (chipData.hasOwnProperty('tooltipContent')) {
+						return chipData.tooltipContent;
+					}
+
+					return chipData.text;
+				};
+
 
 				scope.concealOverflowingChips = function (updateScope) {
 
@@ -166,35 +174,8 @@
 								scope.$apply();
 							}
 
-						}, 100);
+						}, 0);
 
-					}
-
-				};
-
-				scope.onLastChipInit = function () {
-
-					if (typeof scope.chipsAddition === 'string') {
-
-						lastChipRendered = true;
-
-						if (addChipElem) { // if addChipElem rendered
-							scope.concealOverflowingChips(true);
-						}
-
-					} else {
-						scope.concealOverflowingChips(true);
-					}
-
-				};
-
-				scope.onAddChipInit = function () {
-
-					addChipElem = elem[0].querySelector(".add-chip-wrap");
-					addChipWidth = addChipElem.clientWidth;
-
-					if (lastChipRendered) {
-						scope.concealOverflowingChips(true);
 					}
 
 				};
@@ -249,6 +230,59 @@
 
                 }; */
 
+				let onFirstRenderEnding = function () {
+
+					if (scope.onFirstRenderEnding) {
+
+						setTimeout(function () { // wait until DOM elems reflow after ng-repeat
+							scope.onFirstRenderEnding();
+						}, 0);
+
+					}
+
+					scope.onLastChipInit = function () { // discard all on first time init callbacks
+						scope.concealOverflowingChips(true);
+					};
+
+				};
+
+
+				scope.onLastChipInit = function () {
+
+					if (typeof scope.chipsAddition === 'string') {
+
+						lastChipRendered = true;
+
+						if (addChipBtn) { // whether addChipBtn already loaded
+							scope.concealOverflowingChips(true);
+							onFirstRenderEnding();
+						}
+
+
+					} else {
+
+						scope.concealOverflowingChips(true);
+						onFirstRenderEnding();
+
+					}
+
+				};
+
+				scope.onAddChipInit = function () {
+
+					addChipBtn = elem[0].querySelector(".add-chip-wrap");
+					addChipWidth = addChipBtn.clientWidth;
+
+					if (lastChipRendered) {
+
+						scope.concealOverflowingChips(true);
+						onFirstRenderEnding();
+
+					}
+
+				};
+
+
 				let init = function () {
 
 					if (scope.chipsContainerWidth) {
@@ -260,6 +294,10 @@
 						chipsContainer = elem[0].querySelector('.chipsListContainer');
 						chipsContainerWidth = chipsContainer.clientWidth - addChipWidth;
 
+					}
+
+					if (!scope.chipsList || !scope.chipsList.length) {
+						onFirstRenderEnding();
 					}
 
 					if (scope.eventService) {
