@@ -56,7 +56,6 @@
                                ev-event-service="evEventService"
                                attribute-data-service="attributeDataService"
                                content-wrap-element="contentWrapElem">
-
                     </g-filters>
                 </div>
 
@@ -68,7 +67,7 @@
                                     content-wrap-element="contentWrapElem"></group-grouping>
                 </div>
 
-                <div class="g-table-section">
+                <div class="g-table-section" ng-if="readyToRenderTable">
                     <div>
                         <div class="g-table-wrap">
 
@@ -81,7 +80,7 @@
                                     ></group-columns>
                                 </div>
 
-                                <md-button data-ng-if="!isInsideDashboard && viewType !== 'matrix'"
+                                <md-button data-ng-if="!isReport && !isInsideDashboard && viewType !== 'matrix'"
                                            class="toggle-group-column-area-btn"
                                            ng-click="toggleGroupAndColumnArea()">
                                     <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"
@@ -116,6 +115,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 

@@ -33,6 +33,9 @@
                 width: headerToolbarWidth,
                 height: headerToolbarHeight
             },
+			topPart: {
+				height: 50
+			},
             mainContent: {
                 height: 0
             },
@@ -1122,7 +1125,8 @@
             });
 
             listLayout.data.components = {
-                columnArea: true,
+				filterArea: true,
+            	columnArea: true,
                 viewer: true,
                 sidebar: true,
                 groupingArea: true,

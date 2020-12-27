@@ -82,10 +82,12 @@
 
         columns.forEach(function (column, index) {
 
+			var columnNumber = index + 1;
+
             var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, index + 1, groups);
             var borderRightTransparent = getBorderRightTransparent(obj, index + 1);
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + borderBottomTransparent + ' ' + borderRightTransparent + '">&nbsp;</div></div>';
+            cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + borderBottomTransparent + ' ' + borderRightTransparent + '">&nbsp;</div></div>';
 
             result = result + cell
 

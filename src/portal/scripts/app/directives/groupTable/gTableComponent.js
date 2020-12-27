@@ -32,6 +32,7 @@
 
                 scope.viewType = scope.evDataService.getViewType();
                 scope.viewSettings = scope.evDataService.getViewSettings(scope.viewType);
+                scope.readyToRenderTable = false;
 
 
                 console.log('scope.components', scope.components);
@@ -196,6 +197,10 @@
                         scope.activeObject = scope.evDataService.getActiveObject();
                     });
 
+					scope.evEventService.addEventListener(evEvents.FILTERS_RENDERED, function () {
+						scope.readyToRenderTable = true
+					});
+
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.additions = scope.evDataService.getAdditions();
@@ -237,6 +242,8 @@
                 scope.init = function () {
 
                     initEventListeners();
+
+					scope.readyToRenderTable = !scope.isReport // TO DELETE after updating ev interface
 
                     if (document.querySelector('body').classList.contains('filter-side-nav-collapsed')) {
 

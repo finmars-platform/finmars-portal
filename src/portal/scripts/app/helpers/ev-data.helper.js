@@ -172,11 +172,11 @@
 
         }
 
-        if (groupType.hasOwnProperty('id')) {
+        /* if (groupType.hasOwnProperty('id')) {
 
             pattern = [groupType.name, stringHelper.toHash(groupType.id)].join('');
 
-        }
+        } */
 
         return stringHelper.toHash(pattern)
 
@@ -192,11 +192,11 @@
 
         }
 
-        if (column.hasOwnProperty('id')) {
+        /* if (column.hasOwnProperty('id')) {
 
             pattern = [column.name, stringHelper.toHash(column.id)].join('');
 
-        }
+        } */
 
         return stringHelper.toHash(pattern)
 

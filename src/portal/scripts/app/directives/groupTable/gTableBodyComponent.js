@@ -434,6 +434,23 @@
 						scope.scrollManager = new EvScrollManager();
 					}
 
+					// TO DELETE remove after applying new interface for ev and rv
+                    if (isReport) {
+
+                    	var interfaceLayout = scope.evDataService.getInterfaceLayout();
+						var components = scope.evDataService.getComponents();
+
+						components.groupingArea = false
+						components.topPart = true
+						interfaceLayout.columnArea.height = 50
+						// interfaceLayout.filterArea.height = 50
+
+						scope.evDataService.setInterfaceLayout(interfaceLayout);
+						scope.evDataService.setComponents(components);
+
+					}
+					// < TO DELETE remove after applying new interface for ev and rv >
+
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
                     	calculateElemsWrapsSizes();

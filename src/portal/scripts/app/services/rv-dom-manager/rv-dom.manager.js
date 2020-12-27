@@ -856,19 +856,26 @@
 
         // console.log('viewportWidth', viewportWidth);
 
-        viewportTop = interfaceLayout.progressBar.height;
+        // viewportTop = interfaceLayout.progressBar.height;
+		viewportTop = 0;
+
+        if (components.topPart) {
+			viewportTop = viewportTop + interfaceLayout.topPart.height
+		}
+
+        if (components.filterArea) {
+			viewportTop = viewportTop + interfaceLayout.filterArea.height
+		}
 
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height
         }
 
-        if (components.groupingArea) {
+        /* if (components.groupingArea) {
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
-        }
+        } */
 
-        const reducer = 200; // TODO Victor 2020.12.15 reducer need for viewport fit in the screen. This is temporary solution;
-        viewportHeight = Math.floor(contentWrapElemHeight - viewportTop - reducer);
-
+        viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
         // console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);
 
@@ -879,9 +886,9 @@
         }
 
         var paddingTop = calculatePaddingTop(evDataService);
-        //var totalHeight = calculateTotalHeight(evDataService);
+        // var totalHeight = calculateTotalHeight(evDataService);
 
-        //rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
+        // rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
         rvScrollManager.setContentElemPaddingTop(paddingTop);
 
         // there is another method that calculates contentElemWidth resizeScrollableArea() form gColumnResizerComponent.js

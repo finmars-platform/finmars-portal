@@ -101,6 +101,8 @@
 									vm.filter.options.filter_type = res.data.filterType
 									vm.filter.options.use_from_above.attrs_entity_type = res.data.attrsEntityType
 
+									resolve('use_from_above');
+
 								}
 
 							}
