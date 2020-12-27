@@ -604,6 +604,7 @@ app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportView
 app.directive('rvFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvFilterDirective')]);
 app.directive('rvTextFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterPopupDirective')]);
 app.directive('rvNumberFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterPopupDirective')]);
+app.directive('rvDateFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterPopupDirective')]);
 
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 app.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evTextFilterDirective')]);
