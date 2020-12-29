@@ -1585,6 +1585,8 @@
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
+            vm.evEditorDataService.setRecalculationFunction(vm.recalculate);
+
             var tooltipsOptions = {
                 pageSize: 1000,
                 filters: {

@@ -34,7 +34,11 @@
             {
                 "name": "Selector",
                 "id": 110
-            }
+            },
+            {
+                "name": "Button",
+                "id": 120
+            },
         ];
 
         var getValueTypes = function() {
@@ -1083,6 +1087,12 @@
 						return linkedInput;
 
 					});
+
+					if (input.value_type === 120) { // Button
+
+                        rowObj.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+
+                    }
 
 				}
 

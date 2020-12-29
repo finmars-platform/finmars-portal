@@ -1310,6 +1310,8 @@
             vm.evEditorEventService = new EntityViewerEditorEventService();
             vm.evEditorDataService = new EntityViewerEditorDataService();
 
+            vm.evEditorDataService.setRecalculationFunction(vm.recalculate);
+
             console.log('entity', entity);
             console.log('data', data);
 

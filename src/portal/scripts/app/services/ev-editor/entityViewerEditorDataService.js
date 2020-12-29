@@ -37,6 +37,14 @@
             }
         }
 
+        function setRecalculationFunction (fn) {
+            data.recalculate = fn;
+        }
+
+        function getRecalculationFunction () {
+            return data.recalculate;
+        }
+
         return {
             setChangedUserInputData: setChangedUserInputData,
             getChangedUserInputData: getChangedUserInputData,
@@ -44,7 +52,10 @@
             setTooltipsData: setTooltipsData,
             getTooltipsData: getTooltipsData,
             setColorPalettesList: setColorPalettesList,
-            getColorPalettesList: getColorPalettesList
+            getColorPalettesList: getColorPalettesList,
+
+            setRecalculationFunction: setRecalculationFunction,
+            getRecalculationFunction: getRecalculationFunction
         }
     }
 
