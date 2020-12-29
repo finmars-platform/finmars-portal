@@ -363,6 +363,7 @@
         console.timeEnd('Creating projection');
 
         from = from - (step / 2) // two rows, before viewport
+
         if (from < 0) {
             from = 0;
         }
