@@ -893,6 +893,11 @@
                         keys.forEach(function (key) {
                             if (key === userInput.name) {
                                 resultEntity.values[userInput.name] = vm.entity[userInput.name];
+
+                                if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
+                                    resultEntity.values[userInput.name] = true;
+                                }
+
                             }
                         });
                     }

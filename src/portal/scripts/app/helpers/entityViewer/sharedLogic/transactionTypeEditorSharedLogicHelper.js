@@ -809,6 +809,12 @@
                     inputCalcExpression.settings.value = res.data.value_expr;
                     linkedInputs.settings.value = res.data.linked_inputs_names;
 
+                    if (valueType.settings.value === 120) { // Button
+
+                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+
+                    }
+
                     changeCellsBasedOnValueType(newRow);
                     viewModel.inputsGridTableData.body.unshift(newRow);
 
