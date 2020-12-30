@@ -52,12 +52,22 @@
         return icons[key] || '';
     }
 
-	var rowSettingsElem = '<div class="g-row-settings g-row-settings-table">' +
-			'<div class="g-row-color-picker-btn">' +
-				'<span class="material-icons label-icon">label_outline</span>' +
-				'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
-			'</div>' +
-		'</div>';
+    var getRowSettings = function (buttonClasses) {
+
+    	var classes = "g-row-color-picker-btn gRowColorPicker";
+
+    	if (buttonClasses) {
+			classes = classes + " " + buttonClasses;
+		}
+
+    	return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
+				'<button class="' + classes + '">' +
+					'<span class="material-icons label-icon">label_outline</span>' +
+					'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
+				'</button>' +
+			'</div>';
+
+	};
 
 
     var formatRounding = function (value, column) {
@@ -387,7 +397,7 @@
         getPartiallyVisibleIcon: getPartiallyVisibleIcon, */
         getIconByKey: getIconByKey,
 
-		rowSettingsElem: rowSettingsElem,
+		getRowSettings: getRowSettings,
 
         formatRounding: formatRounding,
         formatNegative: formatNegative,

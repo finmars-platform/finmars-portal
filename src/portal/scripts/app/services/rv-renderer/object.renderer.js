@@ -413,7 +413,7 @@
             rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
         }
 
-        var rowSettings = renderHelper.rowSettingsElem;
+        var rowSettings = renderHelper.getRowSettings();
 
         if (markedReportRows.hasOwnProperty(obj.id)) {
             classList.push('g-row-marked-' + markedReportRows[obj.id].color)

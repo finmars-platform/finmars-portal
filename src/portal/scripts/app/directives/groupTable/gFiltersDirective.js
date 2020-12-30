@@ -45,7 +45,7 @@
 				scope.fpBackClasses = "z-index-48"
 				scope.fpClasses = "z-index-49"
 
-				scope.showLinkedFilters = true;
+				scope.showUseFromAboveFilters = true;
 
 				scope.readyStatus = {
 					filters: false
@@ -516,9 +516,9 @@
 
                 };
 
-                scope.toggleLinkedFilters = function () {
+                scope.toggleUseFromAboveFilters = function () {
 
-                	scope.showLinkedFilters = !scope.showLinkedFilters
+                	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters
 					formatFiltersForChips();
 
 				};
@@ -596,9 +596,9 @@
 						const filterOpts = filter.options || {};
 						const filterVal = filterOpts.filter_values || "";
 
-						// hide linked filters if needed
+						// hide use from above filters if needed
 						if (
-							scope.showLinkedFilters ||
+							scope.showUseFromAboveFilters ||
 							(!filterOpts.use_from_above || !Object.keys(filterOpts.use_from_above).length)
 						) {
 
@@ -690,6 +690,9 @@
 						evEventService: scope.evEventService,
 						attributeDataService: scope.attributeDataService
 					}
+
+					scope.evDataService.setFilters(scope.filters);
+					scope.evDataService.setFilters(scope.filters);
 
 					formatFiltersForChips();
 

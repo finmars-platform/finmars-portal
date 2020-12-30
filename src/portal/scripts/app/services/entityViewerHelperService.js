@@ -240,6 +240,14 @@
 
     };
 
+	/**
+	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+	 * @param {string} userCode
+	 * @param {obj} $mdDialog
+	 * @param {string} viewContext
+	 * @memberOf module:EntityViewerHelperService
+	 * @return {promise}
+	 */
     let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
 
     	return new Promise(function (resolve) {
@@ -297,6 +305,12 @@
 
     };
 
+	/**
+	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+	 * @param {string} viewContext
+	 * @memberOf module:EntityViewerHelperService
+	 * @return {promise}
+	 */
     let getDefaultLayout = function (viewModel, viewContext) {
 
     	return new Promise(function (resolve, reject) {
