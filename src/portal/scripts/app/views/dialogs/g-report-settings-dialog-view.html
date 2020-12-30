@@ -82,6 +82,14 @@
                                 </div>
                             </md-input-container>
 
+                            <dropdown-select label="Table font size"
+                                             model="vm.tableFontSize"
+                                             placeholder-text="Table font size"
+                                             menu-options="vm.tableFontSizeOptions"
+                                             small-options="{tooltipText: 'Table font size'}"
+                                             style="width: 200px;">
+                            </dropdown-select>
+
                         </div>
 
                         <div layout="row">
@@ -261,6 +269,14 @@
                                 ></zh-date-picker>
 
                             </md-input-container>
+
+                            <dropdown-select label="Table font size"
+                                             model="vm.tableFontSize"
+                                             placeholder-text="Table font size"
+                                             menu-options="vm.tableFontSizeOptions"
+                                             small-options="{tooltipText: 'Table font size'}"
+                                             style="width: 200px;">
+                            </dropdown-select>
 
                         </div>
 
@@ -448,6 +464,37 @@
                                                 selected-items-indication="chips"
                                                 name-property="short_name"
                                                 small-options="{tooltipText: 'Accounts multiselector'}"></two-fields-multiselect>
+
+                    </div>
+
+                    <div data-ng-if="vm.entityType == 'balance-report'">
+
+                        <h2>Exposure details</h2>
+
+                        <div layout="row">
+
+                            <md-input-container>
+                                <md-checkbox data-ng-model="vm.reportOptions.show_balance_exposure_details">
+                                    Show exposure details
+                                </md-checkbox>
+                            </md-input-container>
+
+                        </div>
+
+                        <h2>Market Value/Exposure % calculation grouping</h2>
+
+                        <div layout="row">
+                            <md-radio-group ng-model="vm.reportOptions.calculationGroup" layout="row">
+
+                                <md-radio-button value="portfolio" class="md-primary">Portfolio</md-radio-button>
+                                <md-radio-button value="account" class="md-primary">Account</md-radio-button>
+                                <md-radio-button value="strategy1" class="md-primary">Strategy 1</md-radio-button>
+                                <md-radio-button value="strategy2" class="md-primary">Strategy 2</md-radio-button>
+                                <md-radio-button value="strategy3" class="md-primary">Strategy 3</md-radio-button>
+
+                            </md-radio-group>
+
+                        </div>
 
                     </div>
 

@@ -453,18 +453,11 @@
 
 .report-viewer-holder {
 
-  // tmp styles start
-  //.g-wrapper .g-grouping-section {
-  //  display: none;
-  //}
-  //
-  //.g-wrapper .g-columns-component.g-thead {
-  //  display: none;
-  //}
-
-  // tmp styles end
-
   .g-wrapper {
+
+    .g-row {
+      position: absolute;
+    }
 
     .g-row-settings:not(.closed) {
       padding-right: 6px;
@@ -472,6 +465,7 @@
     }
 
     .ev-content {
+      position: relative;
 
       .g-row {
         height: 36px;

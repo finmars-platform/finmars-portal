@@ -54,7 +54,7 @@
         });
 
         // Adding dynamic attributes to the list
-        return attributeTypeService.getList(processedEntity).then(function (dynamicAttributes) {
+        return attributeTypeService.getList(processedEntity, {pageSize: 1000}).then(function (dynamicAttributes) {
             if (dynamicAttributes.results && dynamicAttributes.results.length > 0) {
                 var dynamicAttrs = dynamicAttributes.results;
 

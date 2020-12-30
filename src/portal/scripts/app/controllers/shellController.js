@@ -15,6 +15,7 @@
     var metaService = require('../services/metaService');
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
+    var websocketService = require('../services/websocketService');
 
     var crossTabEvents = {
         'MASTER_USER_CHANGED': 'MASTER_USER_CHANGED',
@@ -97,6 +98,7 @@
                 if (item.is_current) {
 
                     vm.currentMasterUser = item
+                    websocketService.send({action: "update_user_state", data: {master_user: vm.currentMasterUser}});
 
                 }
 
@@ -233,7 +235,7 @@
             return metaService.getCurrentLocation($state).toUpperCase();
         };*/
         vm.currentLocation = function () {
-            return metaService.getHeaderTitleForCurrentLocation($state);
+            return metaService.getHeaderTitleForCurrentLocation($state).toLocaleLowerCase();
         };
 
         // Get name of active layout in the toolbar
@@ -759,9 +761,15 @@
         		usersService.getMyCurrentMember().then(function (data) {
 
         			member = data;
+
+                    websocketService.send({action: "update_user_state", data: {member: member}});
+
         			resolve(member);
 
 				}).catch(function (error) {
+				    
+				    console.error(error);
+				    
 					reject(error);
 				});
 

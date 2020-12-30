@@ -92,6 +92,11 @@
 
                             <group-table-body data-ng-if="viewType == 'report_viewer'"
                                               class="group-table-body"
+                                              data-ng-class="{
+                                                'g-font-size-small': reportOptions.table_font_size === 'small',
+                                                'g-font-size-medium': reportOptions.table_font_size === 'medium',
+                                                'g-font-size-large': reportOptions.table_font_size === 'large',
+                                              }"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"
                                               workarea-wrap-element="workareaWrapElem"

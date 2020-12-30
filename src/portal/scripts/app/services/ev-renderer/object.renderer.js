@@ -301,11 +301,12 @@
 
     }
 
-    var render = function (obj, columns, currentMember, viewContext, verticalAdditions) {
+    var render = function (evDataService, obj, columns, currentMember, viewContext, verticalAdditions) {
 
         var classList = ['g-row'];
 
         var rowSelection;
+        var rowHeight = evDataService.getRowHeight();
 
         getRowGeneralClasses(obj, classList);
 
@@ -315,7 +316,9 @@
 
         var classes = classList.join(' ');
 
-        var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
+
+        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         result = result + rowSelection;

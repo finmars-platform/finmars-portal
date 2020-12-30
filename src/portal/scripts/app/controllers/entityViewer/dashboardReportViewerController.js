@@ -343,6 +343,7 @@
 
                 console.log('Grand Total Status: rootGroup', rootGroup);
                 console.log('Grand Total Status: flatList', flatList);
+                console.log('Grand Total Status: componentData', vm.componentData);
 
                 var root = flatList[0];
 
@@ -1775,6 +1776,16 @@
                     };
                 }
 
+                if (vm.componentData.type === 'report_viewer_table_chart') {
+                    vm.tableChartSettings = {
+                        title_column: vm.componentData.settings.title_column,
+                        value_column: vm.componentData.settings.value_column,
+
+                        title_column_name: vm.componentData.settings.title_column_name,
+                        value_column_name: vm.componentData.settings.value_column_name
+                    };
+                }
+
                 if (vm.componentData.type === 'report_viewer_bars_chart') {
                     vm.rvChartsSettings = {
                         bar_name_key: vm.componentData.settings.bar_name_key,
@@ -1871,6 +1882,7 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setRowHeight(36);
+				vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 /* if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
@@ -1919,6 +1931,23 @@
                                     } else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+
+                                        var listLayout = vm.entityViewerDataService.getListLayout();
+                                        var layoutColumns = listLayout.data.columns;
+
+                                        layoutColumns.forEach(function(layoutColumn) {
+
+                                            var column = columns.find(function(itemColumn){
+                                                return itemColumn.key === layoutColumn.key
+                                            })
+
+                                            if(column && !column.layout_name) {
+                                                column.layout_name = layoutColumn.layout_name
+                                            }
+
+                                        })
+
+
                                         vm.entityViewerDataService.setColumns(columns);
 
                                     }

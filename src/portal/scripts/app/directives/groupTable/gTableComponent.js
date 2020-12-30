@@ -34,6 +34,8 @@
                 scope.viewSettings = scope.evDataService.getViewSettings(scope.viewType);
                 scope.readyToRenderTable = false;
 
+                scope.reportOptions = scope.evDataService.getReportOptions();
+
 
                 console.log('scope.components', scope.components);
 
@@ -234,6 +236,13 @@
                         } else {
                             scope.groupingAndColumnAreaCollapsed = false;
                         }
+
+                    });
+
+                    // Victor 2020.11.30 #67
+                    scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+
+                        scope.reportOptions = scope.evDataService.getReportOptions();
 
                     });
 

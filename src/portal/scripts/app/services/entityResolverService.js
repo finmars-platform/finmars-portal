@@ -744,7 +744,9 @@
         update: update,
         deleteByKey: deleteByKey,
         updateBulk: updateBulk,
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+
     }
 
 }());

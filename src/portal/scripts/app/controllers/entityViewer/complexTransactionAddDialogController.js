@@ -541,7 +541,45 @@
             transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
-                bookComplexTransaction(inputs, recalculationData);
+                // rebookComplexTransaction(inputs, recalculationData);
+
+                var values = {};
+
+                vm.userInputs.forEach(function (item) {
+                    values[item.name] = vm.entity[item.name]
+                });
+
+                var book = {
+                    transaction_type: vm.entity.transaction_type,
+                    recalculate_inputs: inputs,
+                    process_mode: 'recalculate',
+                    values: values
+                };
+
+                transactionTypeService.recalculateComplexTransaction(book.transaction_type, book).then(function (data) {
+
+                    console.log('data', data);
+
+                    var recalculationInfo = {
+                        recalculatedInputs: inputs,
+                        recalculationData: recalculationData
+                    }
+
+                    var keys = Object.keys(data.values);
+
+                    keys.forEach(function (item) {
+                        vm.entity[item] = data.values[item];
+                    });
+
+                    $scope.$apply();
+
+                    if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
+                        vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
+                    }
+
+
+                })
+
             }
 
         };

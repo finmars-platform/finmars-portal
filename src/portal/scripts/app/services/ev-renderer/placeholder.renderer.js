@@ -4,18 +4,23 @@
         return Math.floor(Math.random()*(max-min+1)+min);
     }
 
-    var render = function (obj, columns) {
+    var render = function (evDataService, obj, columns) {
+
+        var rowHeight = evDataService.getRowHeight();
 
         var rowSelection;
 
         rowSelection = '<div class="g-row-selection"></div>';
 
-        var result = '<div class="placeholder-row">';
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
+
+        var result = '<div class="placeholder-row" style="top: '+ offsetTop+'px" >';
         var cell;
 
         result = result + rowSelection;
 
         var width = [30, 40, 60, 80, 100];
+
 
         columns.forEach(function (column, columnIndex) {
 

@@ -53,6 +53,10 @@
         return transactionTypeRepository.bookComplexTransaction(id, transaction);
     };
 
+    var recalculateComplexTransaction = function (id, transaction){
+        return transactionTypeRepository.recalculateComplexTransaction(id, transaction);
+    }
+
     var initBookPendingComplexTransaction = function (id) {
         return transactionTypeRepository.initBookPendingComplexTransaction(id);
     };
@@ -78,6 +82,7 @@
 
         initBookComplexTransaction: initBookComplexTransaction,
         bookComplexTransaction: bookComplexTransaction,
+        recalculateComplexTransaction: recalculateComplexTransaction,
 
         initBookPendingComplexTransaction: initBookPendingComplexTransaction,
         bookPendingComplexTransaction: bookPendingComplexTransaction,

@@ -266,10 +266,6 @@
 
                 var groupData = entityViewerDataService.getData(event.___id);
 
-                console.log('getObjects.data', data);
-                console.log('getObjects.groupData', groupData);
-                console.log('getObjects.event', event);
-
                 var obj;
 
                 if (!event.___id) {
