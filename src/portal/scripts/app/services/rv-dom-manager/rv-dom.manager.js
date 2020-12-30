@@ -32,7 +32,7 @@
 
         var rowHeight = evDataService.getRowHeight();
 
-        var extraHeight = 20 * rowHeight;
+        var extraHeight = 10 * rowHeight;
 
         return Math.floor(rowHeight * count) + extraHeight;
 
@@ -49,15 +49,46 @@
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
-            // offset = Math.floor(viewportElem.scrollTop / rowHeight);
-            // evDataService.setVirtualScrollOffset(offset);
+            var rowHeight = evDataService.getRowHeight();
+            var from = Math.ceil(viewportElem.scrollTop / rowHeight);
+            var lastFrom = evDataService.getProjectionLastFrom();
+
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
-            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+
+            var step = evDataService.getVirtualScrollStep();
+            var halfstep = step / 2;
+
+            // Example
+            // step = 200 rendered rows
+            // Users see 100 rows before Viewport, N rows in viewport and step - 100 - N after viewport
+            // Render happened, we render rows from 0 to 99, because we start from 0
+            // halfstep - (halfstep / 4) = 75, that means, we will render next step as
+            // from 0 - to 175 (+- 100)
+            // And so on
+
+            // If we scroll upwards
+            // lets start lastFrom = 500
+            // it means we render from 300 and to 599
+            // step threshold is still 75
+            // lets scroll to from = 400
+            // 500 - 400 = 100 its bigger then 75
+            // lastFrom = 400 now,
+            // It means we render from 300 to 499
+
+            if (from < lastFrom) {
+                if(Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            } else {
+                if(Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            }
 
             calculateScroll(elements, evDataService)
 
+        }, 100);
 
-        }, 10);
 
         var scrollXHandler = function () {
 
@@ -68,6 +99,9 @@
             columnBottomRow.style.left = -viewportElem.scrollLeft + 'px';
 
         };
+
+        viewportElem.removeEventListener('scroll', scrollYHandler);
+        viewportElem.removeEventListener('scroll', scrollXHandler);
 
         viewportElem.addEventListener('scroll', scrollYHandler);
 
@@ -759,7 +793,20 @@
 
                     console.log('selection', selection);
 
-                    if (!selection.length) {
+                    if (clickData.isShiftPressed) {
+
+                        switch (clickData.___type) {
+
+                            case 'object':
+                                handleObjectClick(clickData, evDataService, evEventService);
+                                break;
+
+                            case 'subtotal':
+                                handleSubtotalClick(clickData, evDataService, evEventService);
+                                break;
+                        }
+
+                    } else if (!selection.length) {
 
                         switch (clickData.___type) {
 
@@ -785,7 +832,9 @@
 
     var calculatePaddingTop = function (evDataService) {
 
-        return evDataService.getVirtualScrollOffsetPx();
+        var scrollOffsetPx = evDataService.getVirtualScrollOffsetPx();
+
+        return scrollOffsetPx;
 
     };
 
@@ -860,11 +909,12 @@
             rvScrollManager.setViewportWidth(viewportWidth);
         }
 
-        var paddingTop = calculatePaddingTop(evDataService);
-        //var totalHeight = calculateTotalHeight(evDataService);
+        // var paddingTop = calculatePaddingTop(evDataService);
+        var totalHeight = calculateTotalHeight(evDataService);
 
         //rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
-        rvScrollManager.setContentElemPaddingTop(paddingTop);
+        rvScrollManager.setContentElemHeight(totalHeight);
+        // rvScrollManager.setContentElemPaddingTop(paddingTop);
 
         // there is another method that calculates contentElemWidth resizeScrollableArea() form gColumnResizerComponent.js
         var areaWidth = 0;
@@ -1037,6 +1087,10 @@
             return true;
         }
 
+        if (option.action === 'mark_row') {
+            return true;
+        }
+
         return false;
     };
 
@@ -1134,6 +1188,10 @@
 
             }
 
+            if (item.action === 'mark_row') {
+                ttype_specific_attr = ' data-ev-dropdown-action-data-color="' + item.action_data + '"'
+            }
+
             if (item.action === 'open_layout') {
 
                 result = result +
@@ -1204,20 +1262,6 @@
             result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
         });
 
-        result = result + '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="mark_row"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Red';
-
-        result = result + '</div>';
-
-        result = result + '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="mark_row_green"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '"> Mark Green';
-
-        result = result + '</div>';
-
         result = result + '</div>';
 
         return result;
@@ -1238,23 +1282,13 @@
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
             }
 
-            console.log('sendContextMenuActionToActiveObj.dropdownAction', dropdownAction);
+            if (dropdownAction === 'mark_row') {
 
-            if (dropdownAction === 'mark_row_red' || dropdownAction === 'mark_row_green') {
+                var color = event.target.dataset.evDropdownActionDataColor;
 
-                if (objectId && dropdownAction && parentGroupHashId) {
+                if (objectId && color && parentGroupHashId) {
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                    var color;
-
-                    if (dropdownAction === 'mark_row_red') {
-                        color = 'red'
-                    }
-
-                    if (dropdownAction === 'mark_row_green') {
-                        color = 'green'
-                    }
 
                     var markedReportRows = localStorage.getItem("marked_report_rows");
 
@@ -1264,13 +1298,17 @@
                         markedReportRows = {};
                     }
 
-                    markedReportRows[obj.id] = {
-                        color: color
-                    };
+                    if (color === 'undo_mark_row') {
+                        delete markedReportRows[obj.id]
+                    } else {
+                        markedReportRows[obj.id] = {
+                            color: color
+                        };
+                    }
 
                     localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
 
-                    console.log('markedReportRows', markedReportRows);
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
 
@@ -1302,7 +1340,6 @@
             if (!event.target.classList.contains('ev-dropdown-option')) {
                 clearDropdowns();
             }
-
 
 
         }

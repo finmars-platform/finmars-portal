@@ -189,6 +189,12 @@
                 "name": "Time invested",
                 "value_type": 20
             },
+
+            {
+                "key": "return_annually",
+                "name": "Return annually",
+                "value_type": 20
+            },
             //{
             //    "key": "net_cost_price",
             //    "name": "Net cost price",
@@ -202,6 +208,14 @@
             {
                 "key": "currency",
                 "name": "Currency",
+                "value_type": "field",
+                "value_entity": "currency",
+                "value_content_type": "currencies.currency",
+                "code": "user_code"
+            },
+            {
+                "key": "exposure_currency",
+                "name": " Exposure Currency",
                 "value_type": "field",
                 "value_entity": "currency",
                 "value_content_type": "currencies.currency",

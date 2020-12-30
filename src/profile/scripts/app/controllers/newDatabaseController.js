@@ -95,7 +95,7 @@
 
                             $state.go('app.home', {}, {reload: 'app'});
 
-                        }, 1000) // because its cool
+                        }, 100)
 
                     } else {
 

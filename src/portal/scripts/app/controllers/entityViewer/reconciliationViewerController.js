@@ -10,7 +10,7 @@
         var evHelperService = require('../../services/entityViewerHelperService');
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
-        var EntityViewerEventService = require('../../services/entityViewerEventService');
+        var EntityViewerEventService = require('../../services/eventService');
         var AttributeDataService = require('../../services/attributeDataService');
 
         var reconDataProviderService = require('../../services/recon-data-provider/recon-data-provider.service');
@@ -460,6 +460,7 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
                 vm.entityViewerDataService.setViewContext('reconciliation_viewer');
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 var components = {
                     columnArea: true,

@@ -1,20 +1,35 @@
-<div>
+<div class="dashboard-button-set-component">
 
-    <div data-ng-repeat="row in grid.rows" data-ng-show="row.index < rows">
+    <div data-ng-if="showAsDropdown">
 
-        <div layout="row">
+        <md-select ng-model="lastSelectedOption" class="dashboard-buttonset-dropdown"  md-selected-text="getSelectedText()">
+            <md-option data-ng-repeat="item in itemsList" ng-click="handleAction($event, item)">
+                {{item.name}}
+            </md-option>
+        </md-select>
 
-            <div data-ng-repeat="item in row.items track by $index" data-ng-show="$index < columns" >
+    </div>
 
-                <div data-ng-if="item.action">
+    <div data-ng-if="!showAsDropdown">
 
-                    <md-button data-ng-click="handleAction($event, item)" class="md-raised md-primary">{{item.name}}
-                    </md-button>
+        <div data-ng-repeat="row in grid.rows" data-ng-show="row.index < rows">
 
-                </div>
+            <div layout="row">
 
-                <div data-ng-if="!item.action">
-                    &nbsp;
+                <div data-ng-repeat="item in row.items track by $index" data-ng-show="$index < columns">
+
+                    <div data-ng-if="item.action">
+
+                        <md-button data-ng-click="handleAction($event, item)" class="dashboard-button-set-button">
+                            {{item.name}}
+                        </md-button>
+
+                    </div>
+
+                    <div data-ng-if="!item.action">
+                        &nbsp;
+                    </div>
+
                 </div>
 
             </div>

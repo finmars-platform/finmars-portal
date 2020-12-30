@@ -1,12 +1,12 @@
 <div class="height-100" data-ng-if="readyStatus.data === 'ready'">
 
-    <div class="dashboard-component-header" flex="noshrink">
-        <div class="dashboard-component-name">
-            <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
-            <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
-        </div>
+<!--    <div class="dashboard-component-header" flex="noshrink">-->
+<!--        <div class="dashboard-component-name">-->
+<!--            <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>-->
+<!--            <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>-->
+<!--        </div>-->
 
-        <div class="dashboard-component-header-left">
+<!--        <div class="dashboard-component-header-left">-->
 
             <!--<md-button data-ng-if="fillInModeData"-->
                        <!--data-ng-click="disableFillInMode()">-->
@@ -14,15 +14,15 @@
                 <!--<md-tooltip data-md-direction="top">Collapse Component</md-tooltip>-->
             <!--</md-button>-->
 
-            <md-button  data-ng-if="missingPricesData.items.length" class="md-raised md-warn" data-ng-click="openMissingPricesDialog($event)">
-                <ng-md-icon size="24" icon="warning"></ng-md-icon>
-                <md-tooltip data-md-direction="top"> Warning ({{missingPricesData.items.length}})</md-tooltip>
-            </md-button>
+<!--            <md-button  data-ng-if="missingPricesData.items.length" class="md-raised md-warn" data-ng-click="openMissingPricesDialog($event)">-->
+<!--                <ng-md-icon size="24" icon="warning"></ng-md-icon>-->
+<!--                <md-tooltip data-md-direction="top"> Warning ({{missingPricesData.items.length}})</md-tooltip>-->
+<!--            </md-button>-->
 
-            <md-button data-ng-click="clearUseFromAboveFilters()">
-                <ng-md-icon size="24" icon="leak_remove"></ng-md-icon>
-                <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>
-            </md-button>
+<!--            <md-button data-ng-click="clearUseFromAboveFilters()">-->
+<!--                <ng-md-icon size="24" icon="leak_remove"></ng-md-icon>-->
+<!--                <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>-->
+<!--            </md-button>-->
 
             <!--<md-button data-ng-if="!fillInModeData"-->
                        <!--data-ng-click="enableFillInMode()">-->
@@ -55,8 +55,8 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>-->
-        </div>
-    </div>
+<!--        </div>-->
+<!--    </div>-->
 
     <div data-ng-include="'views/entity-viewer/dashboard-report-viewer.html'" class="report-data-layer-wrapper"></div>
 
@@ -64,7 +64,7 @@
 
 <div data-ng-if="readyStatus.data === 'processing'" class="dashboard-component-loader-holder">
     <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
-        <progress-circular diameter="50"></progress-circular>
+        <progress-circular diameter="20"></progress-circular>
     </div>
 </div>
 

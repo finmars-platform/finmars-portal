@@ -15,7 +15,7 @@
 				isDisabled: "=",
 				onChangeCallback: "&?",
 				onBlurCallback: "&?"
-	  		},
+			},
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {
 
@@ -54,10 +54,7 @@
 					scope.tooltipText = scope.smallOptions.tooltipText
 					scope.isReadonly = scope.smallOptions.readonly
 					scope.dialogParent = scope.smallOptions.dialogParent
-
-					if (scope.smallOptions.noIndicatorBtn) {
-						scope.noIndicatorBtn = true
-					}
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
 
 				}
 
@@ -114,75 +111,77 @@
 
 				var applyCustomStyles = function () {
 
-				Object.keys(scope.customStyles).forEach(function (className) {
+					Object.keys(scope.customStyles).forEach(function (className) {
 
-					var elemClass = "." + className;
-					var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
+						var elemClass = "." + className;
+						var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-					if (elemToApplyStyles.length) {
+						if (elemToApplyStyles.length) {
 
-						elemToApplyStyles.forEach(function (htmlNode) {
-							htmlNode.style.cssText = scope.customStyles[className];
-						})
+							elemToApplyStyles.forEach(function (htmlNode) {
+								htmlNode.style.cssText = scope.customStyles[className];
+							})
 
-					}
+						}
 
-				});
+					});
 
-		};
+				};
 
 				scope.callFnForCustomBtn = function (actionData) {
 
-					  if (actionData.parameters) {
+					if (actionData.parameters) {
 						actionData.callback(actionData.parameters);
-					  } else {
+					} else {
 						actionData.callback();
-					  }
+					}
 
 				};
 
 				scope.openTextInDialog = function ($event) {
 
-		  var dialogParent = angular.element(document.body);
+					var dialogParent = angular.element(document.body);
 
-		  if (scope.dialogParent) {
+					if (scope.dialogParent) {
 
-			var dialogParentElem = document.querySelector(scope.dialogParent);
+						var dialogParentElem = document.querySelector(scope.dialogParent);
 
-			if (dialogParentElem) {
-			  dialogParent = dialogParentElem
-			}
+						if (dialogParentElem) {
+							dialogParent = dialogParentElem
+						}
 
-		  }
+					}
 
-		  $mdDialog.show({
-			  controller: "TextEditorDialogController as vm",
-			  templateUrl: "views/dialogs/text-editor-dialog-view.html",
-			  parent: dialogParent,
-			  targetEvent: $event,
-			  multiple: true,
-			  locals: {
-				data: {
-				  title: "Text",
-				  text: scope.model,
-				},
-			  },
+					$mdDialog.show({
+						controller: "TextEditorDialogController as vm",
+						templateUrl: "views/dialogs/text-editor-dialog-view.html",
+						parent: dialogParent,
+						targetEvent: $event,
+						multiple: true,
+						locals: {
+							data: {
+								title: "Text",
+								text: scope.model,
+							}
+						}
 
-		  }).then(function (res) {
+					}).then(function (res) {
 
-			if (res.status === "agree") {
+						if (res.status === "agree") {
 
-			  stylePreset = "";
-				scope.model = res.text;
+							stylePreset = "";
+							scope.model = res.text;
 
-				if (scope.onChangeCallback) {
-				  setTimeout(function () {
-					scope.onChangeCallback();
-				  }, 0);
-				}
-			  }
-			});
-		};
+							if (scope.onChangeCallback) {
+								setTimeout(function () {
+								scope.onChangeCallback();
+								}, 0);
+							}
+
+						}
+
+					});
+				};
 
 				var initScopeWatchers = function () {
 
@@ -282,6 +281,7 @@
 					if (scope.customStyles) {
 						applyCustomStyles();
 					}
+
 				};
 
 				init();

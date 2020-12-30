@@ -186,6 +186,10 @@
 
         };
 
+		vm.clearSelect = function (item, propToDelete) {
+			delete item[propToDelete];
+		}
+
         // Victor 2020.10.26 Issue #47
         vm.exportToDashboards = function () {
             dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
