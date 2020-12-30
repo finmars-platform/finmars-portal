@@ -32,7 +32,7 @@
 
         var rowHeight = evDataService.getRowHeight();
 
-        var extraHeight = 20 * rowHeight;
+        var extraHeight = 10 * rowHeight;
 
         return Math.floor(rowHeight * count) + extraHeight;
 
@@ -49,15 +49,46 @@
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
-            // offset = Math.floor(viewportElem.scrollTop / rowHeight);
-            // evDataService.setVirtualScrollOffset(offset);
+            var rowHeight = evDataService.getRowHeight();
+            var from = Math.ceil(viewportElem.scrollTop / rowHeight);
+            var lastFrom = evDataService.getProjectionLastFrom();
+
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
-            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+
+            var step = evDataService.getVirtualScrollStep();
+            var halfstep = step / 2;
+
+            // Example
+            // step = 200 rendered rows
+            // Users see 100 rows before Viewport, N rows in viewport and step - 100 - N after viewport
+            // Render happened, we render rows from 0 to 99, because we start from 0
+            // halfstep - (halfstep / 4) = 75, that means, we will render next step as
+            // from 0 - to 175 (+- 100)
+            // And so on
+
+            // If we scroll upwards
+            // lets start lastFrom = 500
+            // it means we render from 300 and to 599
+            // step threshold is still 75
+            // lets scroll to from = 400
+            // 500 - 400 = 100 its bigger then 75
+            // lastFrom = 400 now,
+            // It means we render from 300 to 499
+
+            if (from < lastFrom) {
+                if(Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            } else {
+                if(Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            }
 
             calculateScroll(elements, evDataService)
 
+        }, 100);
 
-        }, 10);
 
         var scrollXHandler = function () {
 
@@ -72,6 +103,9 @@
             })
 
         };
+
+        viewportElem.removeEventListener('scroll', scrollYHandler);
+        viewportElem.removeEventListener('scroll', scrollXHandler);
 
         viewportElem.addEventListener('scroll', scrollYHandler);
 
@@ -819,7 +853,9 @@
 
     var calculatePaddingTop = function (evDataService) {
 
-        return evDataService.getVirtualScrollOffsetPx();
+        var scrollOffsetPx = evDataService.getVirtualScrollOffsetPx();
+
+        return scrollOffsetPx;
 
     };
 
@@ -902,11 +938,12 @@
             rvScrollManager.setViewportWidth(viewportWidth);
         }
 
-        var paddingTop = calculatePaddingTop(evDataService);
-        // var totalHeight = calculateTotalHeight(evDataService);
+        // var paddingTop = calculatePaddingTop(evDataService);
+        var totalHeight = calculateTotalHeight(evDataService);
 
-        // rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
-        rvScrollManager.setContentElemPaddingTop(paddingTop);
+        //rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
+        rvScrollManager.setContentElemHeight(totalHeight);
+        // rvScrollManager.setContentElemPaddingTop(paddingTop);
 
         // there is another method that calculates contentElemWidth resizeScrollableArea() form gColumnResizerComponent.js
         var areaWidth = 0;

@@ -341,6 +341,7 @@
 
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
+        var rowHeight = evDataService.getRowHeight();
 
         var parent = evDataService.getData(obj.___parentId);
 
@@ -385,13 +386,15 @@
 
         var classes = classList.join(' ');
 
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
+
         var result;
 
         if (obj.___subtotal_subtype) {
-            result = '<div class="' + classes + '" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+            result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         } else {
 
-            result = '<div class="' + classes + '" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+            result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         }
         var cell;
 

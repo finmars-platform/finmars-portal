@@ -1014,6 +1014,7 @@
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 vm.entityViewerDataService.setRowHeight(36);
 

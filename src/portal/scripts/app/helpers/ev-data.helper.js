@@ -355,13 +355,20 @@
         var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
 
-        var to = from + step;
+        evDataService.setProjectionLastFrom(from);
+
+        var to = from + (step / 2);
 
         console.timeEnd('Creating projection');
 
-        console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
-        console.log('View Context ' + evDataService.getViewContext() + ' from', from);
-        console.log('View Context '  + evDataService.getViewContext() + ' to', to);
+        from = from - (step / 2) // two rows, before viewport
+
+        if (from < 0) {
+            from = 0;
+        }
+        // console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
+        // console.log('View Context ' + evDataService.getViewContext() + ' from', from);
+        // console.log('View Context ' + evDataService.getViewContext() + ' to', to);
 
         return flatList.slice(from, to);
 

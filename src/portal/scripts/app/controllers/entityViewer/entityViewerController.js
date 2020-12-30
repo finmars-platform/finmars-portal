@@ -1567,6 +1567,7 @@
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
                 vm.entityViewerDataService.setCurrentMember(vm.currentMember);
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 vm.downloadAttributes();
 
