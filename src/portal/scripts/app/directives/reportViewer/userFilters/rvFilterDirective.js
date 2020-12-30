@@ -24,9 +24,6 @@
 			controller: ['$scope', function RvFilterController ($scope) {
 
 				const vm = this;
-				let filters = JSON.parse(JSON.stringify($scope.evDataService.getFilters()));
-
-				vm.filter = filters.find(filter => filter.key === $scope.filterKey);
 
 				vm.evDataService = $scope.evDataService
 				vm.evEventService = $scope.evEventService
@@ -39,21 +36,68 @@
 				vm.isRootEntityViewer = vm.evDataService.isRootEntityViewer();
 				vm.useFromAbove = vm.evDataService.getUseFromAbove();
 
-				if (!vm.filter.options) {
-					vm.filter.options = {}
-				}
+				let filters;
+				let useFromAboveFilters;
+				let isUseFromAboveFilter = false;
+				let filterIndex;
 
-				if (!vm.filter.options.filter_values) {
-					vm.filter.options.filter_values = []
-				}
+				let findFilter = function () {
 
-				if (!vm.filter.options.hasOwnProperty('exclude_empty_cells')) {
-					vm.filter.options.exclude_empty_cells = false;
-				}
+					let allFilters = JSON.parse(JSON.stringify(vm.evDataService.getFilters()));
+					filters = [];
+					useFromAboveFilters = [];
 
-				if (!vm.filter.options.use_from_above) {
-					vm.filter.options.use_from_above = {}
-				}
+					isUseFromAboveFilter = false;
+
+					allFilters.forEach((filter) => {
+
+						if (isUseFromAbove(filter)) {
+
+							useFromAboveFilters.push(filter);
+
+							if (filter.key === $scope.filterKey) {
+
+								vm.filter = filter
+								isUseFromAboveFilter = true;
+								filterIndex = useFromAboveFilters.length - 1;
+
+							}
+
+
+						} else {
+
+							filters.push(filter);
+
+							if (filter.key === $scope.filterKey) {
+
+								vm.filter = filter
+								filterIndex = filters.length - 1;
+
+							}
+
+						}
+
+
+
+					});
+
+					if (!vm.filter.options) {
+						vm.filter.options = {}
+					}
+
+					if (!vm.filter.options.filter_values) {
+						vm.filter.options.filter_values = []
+					}
+
+					if (!vm.filter.options.hasOwnProperty('exclude_empty_cells')) {
+						vm.filter.options.exclude_empty_cells = false;
+					}
+
+					if (!vm.filter.options.use_from_above) {
+						vm.filter.options.use_from_above = {}
+					}
+
+				};
 
 				vm.getDataForSelects = function () {
 
@@ -71,7 +115,7 @@
 
 				};
 
-				vm.openLinkedSettings = function () {
+				vm.openUseFromAboveSettings = function () {
 
 					return new Promise(function (resolve) {
 
@@ -115,9 +159,31 @@
 
 				}
 
+				let isUseFromAbove = (filterData) => {
+					return filterData.options.use_from_above && Object.keys(filterData.options.use_from_above).length
+				};
+
 				vm.saveFilterSettings = function () {
 
-					vm.evDataService.setFilters(filters);
+					if (isUseFromAboveFilter !== isUseFromAbove(vm.filter)) { // is use from above toggled
+
+						if (isUseFromAboveFilter) { // became ordinary filter
+
+							filters.push(vm.filter);
+							useFromAboveFilters.splice(filterIndex, 1);
+
+						} else { // became use from above filter
+
+							filters.splice(filterIndex, 1);
+							useFromAboveFilters.push(vm.filter);
+
+						}
+
+					}
+
+					let allFilters = useFromAboveFilters.concat(filters);
+					vm.evDataService.setFilters(allFilters);
+
 					$scope.onSave();
 					$scope.$destroy();
 
@@ -128,17 +194,24 @@
 					$scope.$destroy();
 				};
 
-				vm.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+				let init = function () {
 
-					filters = JSON.parse(JSON.stringify(vm.evDataService.getFilters()));
-					vm.filter = filters.find(filter => filter.key === $scope.filterKey);
+					findFilter();
 
-				});
+					vm.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+
+						findFilter();
+
+					});
 
 
-				vm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
-					$scope.$destroy();
-				});
+					vm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
+						$scope.$destroy();
+					});
+
+				};
+
+				init();
 
 			}]
 		};

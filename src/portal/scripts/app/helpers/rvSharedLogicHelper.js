@@ -54,6 +54,31 @@
 
 		};
 
+		let putUseFromAboveFiltersFirst = function () { // needed for already existing rv layouts
+
+			let allFilters = viewModel.entityViewerDataService.getFilters();
+			let filters = [];
+
+			let useFromAboveFiters = allFilters.filter(filter => {
+
+				let filterOpts = filter.options || {};
+
+				if (filterOpts.use_from_above && Object.keys(filterOpts.use_from_above).length) {
+					return true;
+				}
+
+				filters.push(filter);
+
+				return false;
+
+			});
+
+			allFilters = useFromAboveFiters.concat(filters);
+
+			viewModel.entityViewerDataService.setFilters(allFilters);
+
+		};
+
         var onSetLayoutEnd = function () {
 
             viewModel.readyStatus.layout = true;
@@ -106,6 +131,8 @@
 
                 });
             }
+
+			putUseFromAboveFiltersFirst();
 
             $scope.$apply();
 

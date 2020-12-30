@@ -790,7 +790,7 @@
 
         <div data-ng-if="isReport" class="g-cell-rows-settings">
 
-            <div class="g-cell g-row-settings" ng-class="{'closed': hideRowFilters}">
+            <div class="g-cell g-row-settings gRowSettings">
                 <md-button ng-if="!isReport"
                            class="g-cell-button"
                            data-ng-class="{'selected': isAllStarsSelected}"
@@ -810,26 +810,26 @@
                     <md-menu-content class="g-row-color-picker-content" width="2"
                                      ng-mouseleave="$mdMenu.close()">
                         <md-menu-item>
-                            <md-button class="g-cell-button">
+                            <md-button class="g-cell-button g-row-color-picker-option">
                                 <span class="material-icons">label_outline</span>
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button class="g-cell-button">
-                                <span class="material-icons" style="color: #f05a22;">label</span>
+                            <md-button class="g-cell-button g-row-color-picker-option red">
+                                <span class="material-icons">label</span>
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button class="g-cell-button">
-                                <span class="material-icons" style="color: #fac878;">label</span>
+                            <md-button class="g-cell-button g-row-color-picker-option yellow">
+                                <span class="material-icons">label</span>
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button class="g-cell-button">
-                                <span class="material-icons" style="color: #a5d9c9;">label</span>
+                            <md-button class="g-cell-button g-row-color-picker-option green">
+                                <span class="material-icons">label</span>
                             </md-button>
                         </md-menu-item>
 

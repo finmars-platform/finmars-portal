@@ -96,7 +96,22 @@
                 }
 
                 scope.rowFiltersToggle = function () {
-                    scope.hideRowFilters = !scope.hideRowFilters
+
+                	scope.hideRowFilters = !scope.hideRowFilters
+
+					var rowSettingsElems = scope.contentWrapElement.querySelectorAll(".gRowSettings");
+
+					rowSettingsElems.forEach(rowSElem => {
+
+						if (scope.hideRowFilters) {
+							rowSElem.classList.add('closed');
+
+						} else {
+							rowSElem.classList.remove('closed');
+						}
+
+					});
+
                 }
 
                 // <Victor 2020.12.14 #69 New report viewer design>

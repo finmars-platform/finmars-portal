@@ -53,7 +53,7 @@
 
 				};
 
-				scope.openLinkedSettings = async function () {
+				scope.openUseFromAboveSettings = async function () {
 					scope.activeFilterType = await rvFilterVm.openLinkedSettings();
 					scope.$apply();
 				};

@@ -93,8 +93,9 @@
             clickData.___id = rowElem.dataset.objectId;
             clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
+            var targetElem = event.target;
 
-            if (event.target.classList.contains('ev-fold-button')) {
+            if (targetElem.classList.contains('ev-fold-button')) {
                 clickData.isFoldButtonPressed = true;
             }
 
@@ -104,6 +105,13 @@
 
             if (rowElem.dataset.subtotalSubtype) {
                 clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
+            }
+
+            if (targetElem.parentElement.classList.contains("gRowColorPicker")) {
+
+                clickData.isRowColorPickerPressed = true
+                clickData.actionElem = targetElem.parentElement
+
             }
 
         }
@@ -482,8 +490,6 @@
 
     var handleObjectClick = function (clickData, evDataService, evEventService) {
 
-        // console.log('handleObjectClick.clickData', clickData);
-
         var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
 
         if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
@@ -723,13 +729,15 @@
                 var cellElem;
 
                 // TODO make recursive get parent of g-cell
-                if (event.target.classList.contains('g-cell')) {
+                /* if (event.target.classList.contains('g-cell')) {
                     cellElem = event.target
                 } else if (event.target.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement;
                 } else if (event.target.parentElement.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement.parentElement;
-                }
+                } */
+
+                cellElem = event.target.closest('.g-cell');
 
                 if (cellElem) {
 
@@ -751,13 +759,22 @@
 
                 }
 
-            } else if (event.detail === 1) {
+            }
+
+            else if (event.detail === 1) {
 
                 if (clickData.isFoldButtonPressed) {
-
                     handleFoldButtonClick(clickData, evDataService, evEventService);
+                }
 
-                } else {
+                else if (clickData.isRowColorPickerPressed) {
+
+                	event.stopPropagation();
+                    createRowColorPickerMenu(clickData, evDataService, evEventService);
+
+                }
+
+                else {
 
                     var selection = window.getSelection().toString();
 
@@ -963,14 +980,35 @@
     //
     // };
 
+	var popupsToClear = [];
 
     var clearDropdowns = function () {
 
-        var dropdowns = document.querySelectorAll('.ev-dropdown');
+        var dropdowns = document.querySelectorAll('.evDropdown');
 
-        for (var i = 0; i < dropdowns.length; i = i + 1) {
+		dropdowns.forEach(dropdown => {
+
+			if (!popupsToClear.includes(dropdown.id)) {
+
+				dropdown.classList.add("fade-out");
+
+				popupsToClear.push(dropdown.id);
+				var dropdownIndex = popupsToClear.length - 1;
+
+				setTimeout(function () {
+
+					dropdown.parentElement.removeChild(dropdown);
+					popupsToClear.splice(dropdownIndex, 1);
+
+				}, 200); // duration of animation
+
+			}
+
+		});
+
+		/* for (var i = 0; i < dropdowns.length; i = i + 1) {
             dropdowns[i].remove();
-        }
+        } */
 
     };
 
@@ -1243,6 +1281,31 @@
 
     };
 
+    var markRowByColor = function (objectId, parentGroupHashId, evDataService, evEventService, color) {
+
+		var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+		var markedReportRows = localStorage.getItem("marked_report_rows");
+
+		if (markedReportRows) {
+			markedReportRows = JSON.parse(markedReportRows);
+		} else {
+			markedReportRows = {};
+		}
+
+		if (color === 'undo_mark_row') {
+			delete markedReportRows[obj.id]
+		} else {
+			markedReportRows[obj.id] = {
+				color: color
+			};
+		}
+
+		localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
+
+		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+	};
+
     var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
 
         function sendContextMenuActionToActiveObj(event) {
@@ -1263,8 +1326,9 @@
 
                 if (objectId && color && parentGroupHashId) {
 
-                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
+					markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+                    /* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+					console.log("testing objectId", objectId, obj.id);
                     var markedReportRows = localStorage.getItem("marked_report_rows");
 
                     if (markedReportRows) {
@@ -1283,7 +1347,7 @@
 
                     localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
 
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
 
                 }
 
@@ -1327,38 +1391,23 @@
 
         clearDropdowns();
 
-        /*var dropdownWidth = 320;
-        var dropdownOptionHeight = 24;
-        var popup = document.createElement('div');
-
-        clearObjectActiveState(evDataService);
-
-        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-        obj.___is_activated = true;
-        obj.___is_last_selected = true;
-
-        evDataService.setObject(obj);
-
-        popup.id = 'dropdown-' + objectId;
-        popup.classList.add('ev-dropdown');
-
-        popup.style.cssText = menuPosition;
-        popup.style.position = 'absolute';*/
-
         var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, true);
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-        popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
+		if (obj) {
 
-        /*popup.style.cssText = menuPosition;*/
-        evDataHelper.calculateMenuPosition(popup, menuPosition);
+			popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
-        document.body.appendChild(popup);
+			evDataHelper.calculateMenuPosition(popup, menuPosition);
 
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+			document.body.appendChild(popup);
 
-        addEventListenerForContextMenu(popup, evDataService, evEventService);
+			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+			addEventListenerForContextMenu(popup, evDataService, evEventService);
+
+		}
+
 
     };
 
@@ -1404,163 +1453,6 @@
 
         var contextMenu = {};
         var ttypes = null;
-
-
-        /*transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
-
-            uiService.getContextMenuLayoutList().then(function (contextMenuData) {
-
-                //var contextMenu = {};
-
-                if (contextMenuData.results.length) {
-
-                    var contextMenuLayout = contextMenuData.results[0];
-                    contextMenu = contextMenuLayout.data.menu
-
-                } else {
-                    contextMenu = {
-                        root: {
-                            items: [
-                                {
-                                    name: 'Edit Instrument',
-                                    action: 'edit_instrument'
-                                },
-                                {
-                                    name: 'Edit Account',
-                                    action: 'edit_account'
-                                },
-                                {
-                                    name: 'Edit Portfolio',
-                                    action: 'edit_portfolio'
-                                },
-                                {
-                                    name: 'Edit Price',
-                                    action: 'edit_price'
-                                },
-                                {
-                                    name: 'Edit FX Rate',
-                                    action: 'edit_fx_rate'
-                                },
-                                {
-                                    name: 'Edit Pricing FX Rate',
-                                    action: 'edit_pricing_currency'
-                                },
-                                {
-                                    name: 'Edit Accrued FX Rate',
-                                    action: 'edit_accrued_currency'
-                                },
-                                {
-                                    name: 'Edit Currency',
-                                    action: 'edit_currency'
-                                },
-                                {
-                                    name: 'Open Book Manager',
-                                    action: 'book_transaction'
-                                }
-                            ]
-                        }
-                    };
-                }
-
-                //var ttypes = data.results;
-                ttypes = data.results;
-
-                elem.addEventListener('contextmenu', function (ev) {
-
-                    var objectId;
-                    var parentGroupHashId;
-
-                    if (event.target.offsetParent.classList.contains('ev-viewport')) {
-
-                        objectId = event.target.dataset.objectId;
-                        parentGroupHashId = event.target.dataset.parentGroupHashId;
-
-                    } else {
-
-                        if (event.target.offsetParent.classList.contains('g-row')) {
-
-                            objectId = event.target.offsetParent.dataset.objectId;
-                            parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
-
-                        }
-
-                    }
-
-                    console.log('initContextMenuEventDelegation.event', event);
-
-                    console.log('initContextMenuEventDelegation.objectId', objectId);
-
-                    if (objectId) {
-
-                        ev.preventDefault();
-                        ev.stopPropagation();
-
-                        var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
-
-                        createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
-
-                        return false;
-
-                    }
-
-                }, false);
-
-                window.addEventListener('contextmenu', function () {
-                    clearDropdowns();
-                });
-
-                /!*window.addEventListener('click', function (event) {
-
-                    if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
-
-                        var objectId = event.target.dataset.objectId;
-                        var parentGroupHashId = event.target.dataset.parentGroupHashId;
-                        var dropdownAction = event.target.dataset.evDropdownAction;
-
-                        var dropdownActionData = {};
-
-                        console.log('event.target.dataset', event.target.dataset);
-
-                        if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
-                            dropdownActionData.id = event.target.dataset.evDropdownActionDataId
-                        }
-
-                        if (objectId && dropdownAction && parentGroupHashId) {
-
-                            var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                            if (!obj) {
-                                obj = {}
-                            }
-
-                            obj.event = event;
-
-                            console.log('dropdownActionData', dropdownActionData);
-
-                            evDataService.setActiveObject(obj);
-                            evDataService.setActiveObjectAction(dropdownAction);
-                            evDataService.setActiveObjectActionData(dropdownActionData);
-
-                            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                            clearDropdowns();
-
-                        } else {
-
-                            if (!event.target.classList.contains('ev-dropdown-option')) {
-                                clearDropdowns();
-                            }
-
-                        }
-
-                    }
-
-
-                });*!/
-
-            });
-
-        });*/
 
         getAllTTypes().then(function (data) {
 
@@ -1719,10 +1611,56 @@
 
     };
 
-    var createPaintRowMenu = function () {
+    var addEventListenersForRowColorPickerMenu = function (popupMenuElem, objectId, parentGroupHashId, evDataService, evEventService) {
+
+		var colorOpts = popupMenuElem.querySelectorAll('button');
+
+		colorOpts.forEach(option => {
+
+			option.addEventListener('click', function (event) {
+
+				var rowColor = event.currentTarget.dataset.color;
+				markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, rowColor);
+
+				clearDropdowns();
+
+			});
+
+		})
+
+		popupMenuElem.addEventListener('mouseleave', clearDropdowns)
 
 	};
 
+    var createRowColorPickerMenu = function (clickData, evDataService, evEventService) {
+
+        clearDropdowns();
+
+        var menuElem = clickData.actionElem;
+		var popup = evDataHelper.prepareSmallPopupMenu(clickData.___id);
+
+        evDataHelper.calculateRowSettingsMenuPosition(popup, menuElem);
+
+        popup.innerHTML = '<div class="g-row-color-picker-content">' +
+                '<button class="g-row-color-picker-option" data-color="undo_mark_row">' +
+					'<span class="material-icons">label_outline</span>' +
+				'</button>' +
+                '<button class="g-row-color-picker-option red" data-color="red">' +
+					'<span class="material-icons">label_outline</span>' +
+				'</button>' +
+                '<button class="g-row-color-picker-option yellow" data-color="yellow">' +
+					'<span class="material-icons">label_outline</span>' +
+				'</button>' +
+                '<button class="g-row-color-picker-option green" data-color="green">' +
+					'<span class="material-icons">label_outline</span>' +
+				'</button>' +
+            '</div>'
+
+        document.body.appendChild(popup);
+
+		addEventListenersForRowColorPickerMenu(popup, clickData.___id, clickData.___parentId, evDataService, evEventService);
+
+	};
 
     module.exports = {
         initEventDelegation: initEventDelegation,

@@ -109,6 +109,7 @@
                 subtotal_type: false
             },
             filters: [],
+			useFromAboveFilters: [],
             pagination: {
                 page_size: 60
             },

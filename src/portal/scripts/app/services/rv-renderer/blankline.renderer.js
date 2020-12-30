@@ -67,7 +67,8 @@
             rowSelection = '<div class="g-row-selection"></div>';
         }
 
-		var rowSettings = renderHelper.rowSettingsElem;
+		// TODO find out whether mark row should work for blanklines
+		var rowSettings = renderHelper.getRowSettings('disabled');
 
         if (obj.___is_activated) {
             classList.push('activated');

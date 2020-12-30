@@ -376,7 +376,8 @@
             rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
         }
 
-		var rowSettings = renderHelper.rowSettingsElem;
+		// TODO find out whether mark row should work for subtotals
+		var rowSettings = renderHelper.getRowSettings('disabled');
 
         if (is_activated) {
             classList.push('activated');
