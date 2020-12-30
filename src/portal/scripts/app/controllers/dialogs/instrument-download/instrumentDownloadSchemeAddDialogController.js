@@ -73,7 +73,7 @@
             return !!item
         });
         vm.attrs = [];
-        attributeTypeService.getList('instrument').then(function (data) {
+        attributeTypeService.getList('instrument', {pageSize: 1000}).then(function (data) {
             vm.attrs = data.results;
             $scope.$apply();
         });

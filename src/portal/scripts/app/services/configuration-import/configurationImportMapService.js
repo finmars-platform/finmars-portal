@@ -805,7 +805,7 @@
 
             var entityType = metaContentTypesService.findEntityByContentType(layout.content_type, 'ui');
 
-            attributeTypeService.getList(entityType).then(function (data) {
+            attributeTypeService.getList(entityType, {pageSize: 1000}).then(function (data) {
 
                 var layoutAttrs = data.results;
 
