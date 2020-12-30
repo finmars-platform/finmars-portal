@@ -8,7 +8,7 @@
     var uiService = require('../services/uiService');
 
     var DashboardDataService = require('../services/dashboard/dashboardDataService');
-    var DashboardEventService = require('../services/dashboard/dashboardEventService');
+    var DashboardEventService = require('../services/eventService');
 
     var dashboardEvents = require('../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
@@ -27,6 +27,127 @@
         vm.dashboardEventService = null;
 
         vm.processing = false;
+
+        vm.toggleAccordion = function ($event, accordion) {
+
+            accordion.folded = !accordion.folded;
+
+            setTimeout(function () {
+                vm.dashboardEventService.dispatchEvent(dashboardEvents.RESIZE);
+            }, 100); // need for resize query .folded rows
+        }
+
+        vm.generateProjection = function (layout) {
+
+            var result = [];
+
+            console.log('generateProjection.vm.layout', layout);
+
+            var data = JSON.parse(JSON.stringify(layout.data));
+
+            data.tabs.forEach(function (tab) {
+
+                tab.accordion_layout = [];
+
+                if (tab.accordions) {
+
+                    var rowsUsedInAccordions = [];
+
+                    tab.accordions.forEach(function (accordionItem) {
+
+                        if (accordionItem.from === accordionItem.to) {
+                            rowsUsedInAccordions.push(accordionItem.from);
+                        } else {
+                            for (var i = accordionItem.from; i <= accordionItem.to; i = i + 1) {
+                                rowsUsedInAccordions.push(i)
+                            }
+                        }
+
+                    })
+
+                    console.log('rowsUsedInAccordions', rowsUsedInAccordions);
+
+                    tab.layout.rows.forEach(function (item, index) {
+
+                        if (rowsUsedInAccordions.indexOf(index) === -1) {
+
+                            var accordion = {
+                                name: '',
+                                from: index,
+                                to: index,
+                                type: 'proxy_accordion',
+                                items: [item]
+                            };
+
+                            tab.accordion_layout.push(accordion);
+
+                        }
+
+                    })
+
+                    tab.accordions.forEach(function (accordionItem) {
+
+                        var accordion = {
+                            name: accordionItem.name,
+                            from: accordionItem.from,
+                            to: accordionItem.to,
+                            type: 'accordion',
+                            items: []
+                        };
+
+                        tab.layout.rows.forEach(function (row, index) {
+
+                            if (index >= accordionItem.from && index <= accordionItem.to) {
+                                accordion.items.push(row)
+                            }
+
+                        })
+
+                        tab.accordion_layout.push(accordion);
+
+                    })
+
+                } else {
+
+                    var accordion = {
+                        name: "",
+                        type: "proxy_accordion",
+                        items: [],
+                        from: 0,
+                        to: tab.layout.rows.length - 1
+                    }
+
+                    tab.layout.rows.forEach(function (row) {
+                        accordion.items.push(row);
+                    })
+
+                    tab.accordion_layout.push(accordion);
+
+                }
+
+
+                tab.accordion_layout = tab.accordion_layout.sort(function (a, b) {
+
+                    if (a.from < b.from) {
+                        return -1;
+                    }
+
+                    if (a.from > b.from) {
+                        return 1;
+                    }
+
+                    return 0;
+                })
+
+                result.push(tab);
+
+            })
+
+            console.log('generateProjection.result', result);
+
+            return result;
+
+        }
 
         vm.getLayout = function (layoutId) {
 
@@ -48,6 +169,9 @@
 
                 vm.readyStatus.data = true;
 
+                vm.projection = vm.generateProjection(vm.layout);
+                vm.dashboardDataService.setProjection(vm.projection);
+
                 vm.initDashboardComponents();
 
                 $scope.$apply();
@@ -65,6 +189,9 @@
                 if (data.results.length) {
                     vm.layout = data.results[0];
                 }
+
+                vm.projection = vm.generateProjection(vm.layout);
+                vm.dashboardDataService.setProjection(vm.projection);
 
                 vm.dashboardDataService.setData(vm.layout);
                 vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
@@ -105,6 +232,10 @@
 
                     vm.dashboardDataService.setData(vm.layout);
                     vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
+
+                    vm.projection = vm.generateProjection(vm.layout);
+
+                    vm.dashboardDataService.setProjection(vm.projection);
 
                     vm.readyStatus.data = true;
 
@@ -344,7 +475,7 @@
 
             var componentData = vm.dashboardDataService.getComponentById(compId);
 
-            if (!componentData || !componentData.settings || ! componentData.settings.linked_components || !componentData.settings.linked_components.report_settings) {
+            if (!componentData || !componentData.settings || !componentData.settings.linked_components || !componentData.settings.linked_components.report_settings) {
                 return true;
             }
 

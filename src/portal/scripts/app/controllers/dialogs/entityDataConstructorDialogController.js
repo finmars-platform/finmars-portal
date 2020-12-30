@@ -850,7 +850,7 @@
 
                 if (res.status === 'agree') {
 
-                    attributeTypeService.getList(vm.entityType).then(function (data) {
+                    attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
 
                         vm.readyStatus.constructor = false;
 
@@ -989,7 +989,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                attributeTypeService.getList(vm.entityType).then(function (data) {
+                attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
 
                     vm.attrs = data.results;
                     var entityAttrs = metaService.getEntityAttrs(vm.entityType);
@@ -1350,7 +1350,7 @@
                 });
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('out', function (elem, container, source) {
@@ -1403,7 +1403,8 @@
 
                 drake.on('dragend', function (el) {
 
-                    document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.disableDnDWheelScroll();
+
                     $scope.$apply();
                     drake.remove();
 

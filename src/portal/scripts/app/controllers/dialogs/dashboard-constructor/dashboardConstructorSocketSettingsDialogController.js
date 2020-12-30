@@ -51,6 +51,9 @@
                 case 'report_viewer_matrix':
                     verboseType = 'Report Viewer Matrix';
                     break;
+                case 'report_viewer_table_chart':
+                    verboseType = 'Report Viewer Table Chart';
+                    break;
                 case 'entity_viewer':
                     verboseType = 'Entity Viewer';
                     break;
@@ -412,6 +415,10 @@
                 case 'report_viewer_matrix':
                     contrName = 'DashboardConstructorReportViewerMatrixComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-matrix-component-dialog-view.html';
+                    break;
+                case 'report_viewer_table_chart':
+                    contrName = 'DashboardConstructorReportViewerTableChartComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-table-chart-component-dialog-view.html';
                     break;
                 case 'entity_viewer':
                     contrName = 'DashboardConstructorEntityViewerComponentDialogController as vm';

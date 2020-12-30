@@ -201,28 +201,28 @@
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" style="width: 200px;">
-                <label>Price Download Scheme</label>
-                <md-select md-on-close="vm.searchTermPriceDownloadScheme = ''"
-                           data-ng-model="vm.default.price_download_scheme"
-                           md-on-open="vm.getRelation('price-download-scheme', 'price_download_scheme', 'price_download_scheme_fields')"
-                           md-container-class="common-select-container">
-                    <md-select-header>
-                        <input data-ng-model="vm.searchTermPriceDownloadScheme"
-                               type="search"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern select-input-filter"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-select-header>
-                    <div class="select-options-holder">
-                        <md-option
-                                data-ng-repeat="field in vm.price_download_scheme_fields | orderBy:'-'+field.scheme_name | filter:{scheme_name: vm.searchTermPriceDownloadScheme} as results track by field.id "
-                                ng-value="field.id">
-                            {{field.scheme_name}}
-                        </md-option>
-                    </div>
-                </md-select>
-            </md-input-container>
+<!--            <md-input-container class="md-block" style="width: 200px;">-->
+<!--                <label>Price Download Scheme</label>-->
+<!--                <md-select md-on-close="vm.searchTermPriceDownloadScheme = ''"-->
+<!--                           data-ng-model="vm.default.price_download_scheme"-->
+<!--                           md-on-open="vm.getRelation('price-download-scheme', 'price_download_scheme', 'price_download_scheme_fields')"-->
+<!--                           md-container-class="common-select-container">-->
+<!--                    <md-select-header>-->
+<!--                        <input data-ng-model="vm.searchTermPriceDownloadScheme"-->
+<!--                               type="search"-->
+<!--                               placeholder="Search for a ..."-->
+<!--                               class="md-text md-select-search-pattern select-input-filter"-->
+<!--                               ng-keydown="$event.stopPropagation()">-->
+<!--                    </md-select-header>-->
+<!--                    <div class="select-options-holder">-->
+<!--                        <md-option-->
+<!--                                data-ng-repeat="field in vm.price_download_scheme_fields | orderBy:'-'+field.scheme_name | filter:{scheme_name: vm.searchTermPriceDownloadScheme} as results track by field.id "-->
+<!--                                ng-value="field.id">-->
+<!--                            {{field.scheme_name}}-->
+<!--                        </md-option>-->
+<!--                    </div>-->
+<!--                </md-select>-->
+<!--            </md-input-container>-->
 
         </div>
 
@@ -274,28 +274,28 @@
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" style="width: 200px;">
-                <label>Daily Pricing Model</label>
-                <md-select md-on-close="vm.searchTermDailyPricingModel = ''"
-                           data-ng-model="vm.default.daily_pricing_model"
-                           md-on-open="vm.getRelation('daily-pricing-model', 'daily_pricing_model', 'daily_pricing_model_fields')"
-                           md-container-class="common-select-container">
-                    <md-select-header>
-                        <input data-ng-model="vm.searchTermDailyPricingModel"
-                               type="search"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern select-input-filter"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-select-header>
-                    <div class="select-options-holder">
-                        <md-option
-                                data-ng-repeat="field in vm.daily_pricing_model_fields | orderBy:'-'+field.name | filter:{name: vm.searchTermDailyPricingModel} as results track by field.id "
-                                ng-value="field.id">
-                            {{field.name}}
-                        </md-option>
-                    </div>
-                </md-select>
-            </md-input-container>
+<!--            <md-input-container class="md-block" style="width: 200px;">-->
+<!--                <label>Daily Pricing Model</label>-->
+<!--                <md-select md-on-close="vm.searchTermDailyPricingModel = ''"-->
+<!--                           data-ng-model="vm.default.daily_pricing_model"-->
+<!--                           md-on-open="vm.getRelation('daily-pricing-model', 'daily_pricing_model', 'daily_pricing_model_fields')"-->
+<!--                           md-container-class="common-select-container">-->
+<!--                    <md-select-header>-->
+<!--                        <input data-ng-model="vm.searchTermDailyPricingModel"-->
+<!--                               type="search"-->
+<!--                               placeholder="Search for a ..."-->
+<!--                               class="md-text md-select-search-pattern select-input-filter"-->
+<!--                               ng-keydown="$event.stopPropagation()">-->
+<!--                    </md-select-header>-->
+<!--                    <div class="select-options-holder">-->
+<!--                        <md-option-->
+<!--                                data-ng-repeat="field in vm.daily_pricing_model_fields | orderBy:'-'+field.name | filter:{name: vm.searchTermDailyPricingModel} as results track by field.id "-->
+<!--                                ng-value="field.id">-->
+<!--                            {{field.name}}-->
+<!--                        </md-option>-->
+<!--                    </div>-->
+<!--                </md-select>-->
+<!--            </md-input-container>-->
 
             <md-input-container class="md-block" style="width: 200px;">
                 <label>Instrument Class</label>

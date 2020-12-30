@@ -1,5 +1,3 @@
-@import "./variables.less";
-
 @customInputsRightSpace: 8px;
 
 .entity-editor-fixed-fields-container {
@@ -214,7 +212,7 @@
 }
 
 .custom-input-indicator-btn {
-  flex: 0 0 30px;
+  width: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -263,6 +261,21 @@
   overflow: auto;
   z-index: 52;
   box-sizing: border-box;
+
+  .custom-input-dropdown-menu-filter {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid @borderGray;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+    }
+
+  }
 
   .custom-input-sel-option {
     padding: 4px 10px;
@@ -399,6 +412,19 @@
   //resize: none;
   text-overflow: ellipsis;
   font-style: italic;
+}
+
+.multiselector-input-container {
+
+  .multiselector-input-chips-wrap {
+    height: 100%;
+    flex: 0 1 100%;
+    display: flex;
+    align-items: center;
+    cursor: text;
+    padding-right: @customInputsRightSpace;
+  }
+
 }
 
 // should always be at the bottom

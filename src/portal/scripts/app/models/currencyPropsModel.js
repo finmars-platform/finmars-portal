@@ -33,30 +33,9 @@
                 "value_type": 10
             },
             {
-                "key": "daily_pricing_model",
-                "name": "Daily pricing model",
-                "value_type": "field",
-                "value_entity": "daily-pricing-model",
-                "code": "system_code",
-                "allow_null": false
-            },
-            {
-                "key": "price_download_scheme",
-                "name": "Price download scheme",
-                "value_type": "field",
-                "value_entity": "price_download_scheme",
-                "value_content_type": "integrations.pricedownloadscheme",
-                "code": "user_code"
-            },
-            {
                 "key": "default_fx_rate",
                 "name": "Default FX rate",
                 "value_type": 20
-            },
-            {
-                "key": "tags",
-                "name": "Tags",
-                "value_type": "mc_field"
             }
         ]
     };

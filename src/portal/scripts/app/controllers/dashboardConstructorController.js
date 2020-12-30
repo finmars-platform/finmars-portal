@@ -302,6 +302,34 @@
             });
         };
 
+        vm.openAccordionEditor = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorAccordionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-accordion-editor-dialog-view.html',
+                multiple: true,
+                locals: {
+                    data: {
+                        layout: vm.layout
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.layout = res.data.layout;
+
+                    vm.dashboardConstructorDataService.setData(vm.layout);
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+                }
+
+            });
+
+        }
+
         var tabNameInput = null;
 
         var removeKeydownListener = function () {
@@ -436,6 +464,9 @@
                     break;
                 case 'report_viewer_matrix':
                     verboseName = 'Report Viewer Matrix';
+                    break;
+                case 'report_viewer_table_chart':
+                    verboseName = 'Report Viewer Table Chart';
                     break;
                 case 'entity_viewer':
                     verboseName = 'Entity Viewer';
@@ -1169,6 +1200,10 @@
             report_viewer_pie_chart: {
                 editorController: 'DashboardConstructorReportViewerChartsComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html'
+            },
+            report_viewer_table_chart: {
+                editorController: 'DashboardConstructorReportViewerTableChartComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-table-chart-component-dialog-view.html'
             },
             report_viewer_matrix: {
                 editorController: 'DashboardConstructorReportViewerMatrixComponentDialogController as vm',
