@@ -7,7 +7,7 @@
 
     var getDefaultInterfaceLayout = function () {
 
-        var sidebarWidth = 200;
+        var sidebarWidth = 160;
         var sidebarHeight = document.body.clientHeight;
 
         var headerToolbarHeight = 64;
@@ -401,6 +401,14 @@
 
         function setProjection(projection) {
             data.projection = projection
+        }
+
+        function setProjectionLastFrom(from) {
+            data.projection_last_from = from
+        }
+
+        function getProjectionLastFrom() {
+            return data.projection_last_from;
         }
 
         function getProjection() {
@@ -1078,18 +1086,19 @@
                 if (!entityViewerOptions) {
 
                     entityViewerOptions = {
-                        complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
-                        entity_filters: ['disabled', 'deleted', 'inactive']
+                        // complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
+                        entity_filters: ['enabled', 'disabled', 'active', 'inactive']
                     }
 
-                } else if (!entityViewerOptions.complex_transaction_filters) {
-
-                    entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
-
-
+                // } else if (!entityViewerOptions.complex_transaction_filters) {
+                //
+                //     entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
+                //
+                //
+                // } else if (!entityViewerOptions.entity_filters){
                 } else if (!entityViewerOptions.entity_filters){
 
-                    entityViewerOptions.entity_filters = ['disabled', 'deleted', 'inactive'];
+                    entityViewerOptions.entity_filters = ['enabled', 'disabled', 'active', 'inactive'];
                 }
 
                 setEntityViewerOptions(entityViewerOptions);
@@ -1189,7 +1198,7 @@
         }
 
         function getEntityViewerOptions() {
-            return data.ev_options || {};
+            return data.ev_options;
         }
 
         function setCurrentMember(member) {
@@ -1353,6 +1362,9 @@
 
             setProjection: setProjection,
             getProjection: getProjection,
+
+            setProjectionLastFrom: setProjectionLastFrom,
+            getProjectionLastFrom: getProjectionLastFrom,
 
             setFlatList: setFlatList,
             getFlatList: getFlatList,

@@ -162,7 +162,7 @@
             },
             {
                 "key": "ytm_at_cost",
-                "name": "YTM a cost",
+                "name": "YTM at cost",
                 "value_type": 20
             },
             {
@@ -189,11 +189,6 @@
             {
                 "key": "gross_cost_price_loc",
                 "name": "Gross cost price (Pricing Currency)",
-                "value_type": 20
-            },
-            {
-                "key": "ytm_at_cost",
-                "name": "YTM at cost",
                 "value_type": 20
             },
             // {

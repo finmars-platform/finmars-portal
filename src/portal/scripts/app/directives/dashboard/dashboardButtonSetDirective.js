@@ -30,6 +30,7 @@
             },
             link: function (scope, elem, attr) {
 
+                scope.itemsList = [];
 
                 scope.initEventListeners = function () {
 
@@ -50,12 +51,31 @@
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
+                    scope.componentName = scope.componentData.custom_component_name
+
                     scope.rows = scope.componentData.settings.rows;
                     scope.columns = scope.componentData.settings.columns;
                     scope.grid = scope.componentData.settings.grid;
+                    scope.showAsDropdown = scope.componentData.settings.showAsDropdown
+
+                    if (scope.grid.rows && scope.grid.rows.length) {
+
+                        scope.grid.rows.forEach(function (row) {
+
+                            row.items.forEach(function (item) {
+
+                                if (item.action) {
+                                    scope.itemsList.push(item);
+                                }
+
+                            })
+
+                        })
+                    }
 
                     console.log('scope.grid', scope.grid);
                     console.log('scope.grid', scope.columns);
+                    console.log('scope.itemsList', scope.itemsList);
                     console.log('scope.grid', scope.rows);
 
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
@@ -65,10 +85,18 @@
 
                 };
 
+                scope.getSelectedText = function () {
+                    return scope.componentName;
+                }
+
                 scope.handleAction = function ($event, item) {
 
                     console.log('handleAction $event', $event);
                     console.log('handleAction item', item);
+
+                    setTimeout(function (){
+                        scope.componentName = scope.componentData.custom_component_name; // important after click thing
+                    }, 0)
 
                     if (item.action === 'book_transaction') {
 
