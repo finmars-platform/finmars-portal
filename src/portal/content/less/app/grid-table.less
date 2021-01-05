@@ -89,6 +89,10 @@
   &:not(.grid-table-header-row):focus {
     background-color: rgba(0, 0, 0, 0.04);
   }
+
+  &.no-checkbox {
+    padding-left: inherit;
+  }
 }
 
 .grid-table-row-checkbox {
@@ -161,6 +165,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
 
   .gt-cell-text-container {
     display: flex;
@@ -323,6 +328,20 @@
     cursor: default;
   }
 
+}
+
+.grid-table-cell.gt-cell-plain-text {
+
+
+  .gt-cell-content.gt-cell-readonly-text {
+    span {
+      display: block;
+      height: inherit;
+      overflow-x: inherit;
+      overflow-y: scroll;
+      white-space: inherit;
+    }
+  }
 }
 
 .grid-table-cell.gt-sorting-on { // header cell with sorting on
