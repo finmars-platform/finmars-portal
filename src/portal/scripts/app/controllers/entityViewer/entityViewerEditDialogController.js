@@ -71,6 +71,8 @@
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
+        console.log('#71 vm.entityTabs', vm.entityTabs)
+
         vm.formIsValid = true;
 
         vm.dataConstructorData = {};
@@ -1620,7 +1622,7 @@
 
         };
 
-        vm.getInstrumentPricingSchemes = function () {
+        vm.getInstrumentPricingSchemes = function () { // TODO Victor. Must removed after introducing new design with grid table.
 
             instrumentPricingSchemeService.getList().then(function (data) {
 
@@ -1736,7 +1738,8 @@
 
         };
 
-        vm.runPricingInstrument = function($event) {
+//  Victor 2020.12.30 transfer t0 pricingPoliciesTabController.js
+/*        vm.runPricingInstrument = function($event) {
 
             $mdDialog.show({
                 controller: 'RunPricingInstrumentDialogController as vm',
@@ -1781,7 +1784,7 @@
 
             });
 
-        };
+        };*/
 
         vm.runPricingCurrency = function($event) {
 

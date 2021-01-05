@@ -22,6 +22,15 @@
                     ng-bind="column.settings.value"></md-tooltip>
     </div>
 
+<!--    <div ng-if="column.cellType === 'plain_text'" class="gt-cell-content gt-cell-plain-text">
+        <span ng-bind="column.settings.value"></span>
+
+        <md-tooltip ng-if="column.settings.value"
+                    class="tooltip_1"
+                    md-direction="top"
+                    ng-bind="column.settings.value"></md-tooltip>
+    </div>-->
+
     <div data-ng-if="cellWithPopup()" class="gt-cell-content">
 
         <grid-table-popup-cell row="row"

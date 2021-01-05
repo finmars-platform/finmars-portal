@@ -92,10 +92,27 @@
 
                 };
 
+                var setCellCustomClasses = function () {
+
+                    const cellElem = elem[0].querySelector('.grid-table-cell');
+
+                    if (cellElem) {
+
+                        const classes = scope.column.classes.split(' ');
+                        cellElem.classList.add(...classes);
+
+                    }
+
+                }
+
                 scope.onChildrenLoadEnd = function () {
 
                     if (scope.column.styles) {
                         setCellCustomStyles();
+                    }
+
+                    if (scope.column.classes) {
+                        setCellCustomClasses();
                     }
 
                     if (cellMethods.onInit) {
