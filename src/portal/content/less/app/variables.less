@@ -9,4 +9,7 @@
 @btnHover: #fdece5;
 
 @gRowHeight: 36px;
-@gCellBorder: 1px solid #DBDBDB;
+@gCellBroderColor: #DBDBDB;
+@gCellBorder: 1px solid @gCellBroderColor;
+// after changing variable below, also modify methods that calculate popup position in rv-dom.manager.js
+@gPopupMenuOptionHeight: 48px;

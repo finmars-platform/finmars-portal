@@ -24,7 +24,7 @@
             templateUrl: 'views/directives/groupTable/g-columns-view.html',
             link: function (scope, elem, attrs) {
 
-
+				console.log("testing report options", scope.evDataService.getReportOptions());
 
                 scope.columns = scope.evDataService.getColumns();
                 console.log('#69 total columns', scope.columns)
@@ -482,13 +482,13 @@
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     if (!column.hasOwnProperty('style')) {
-                        column.style = {};
+                        column.style = {}
                     }
 
                     if (column.style.text_align === type) {
                         delete column.style.text_align;
                     } else {
-                        column.style.text_align = type;
+                        column.style.text_align = type
                     }
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);

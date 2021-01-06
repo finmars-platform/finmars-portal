@@ -314,7 +314,7 @@
 
   .g-group-holder {
     background: #DCDCDC;
-    border-bottom: 1px solid #363636;
+    border-bottom: 1px solid @gCellBroderColor;
 
     &.selected-row {
       .g-row-selection {
@@ -675,6 +675,17 @@
     border-bottom: 1px solid #DBDBDB;
     border-right: 1px solid #DBDBDB;
     box-sizing: border-box;
+  }
+
+  .g-subtotals-settings-menu {
+    position: relative;
+    top: 4px;
+    cursor: pointer;
+
+    .material-icons {
+      font-size: 18px;
+    }
+
   }
 
   .g-table-wrap {
@@ -1149,20 +1160,63 @@
 
 }
 
-.ev-small-dropdown {
+.ev-dropdown {
+  display: block;
+  background: #fff;
+  width: 320px;
+  border: 1px solid #DCDCDC;
+  z-index: 3;
+}
+
+.ev-dropdown-popup {
   border-radius: 4px;
   box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),
               0 4px 5px 0 rgba(0,0,0,.14),
               0 1px 10px 0 rgba(0,0,0,.12);
+
+  .ev-dropdown-content {
+    background-color: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 8px 0;
+  }
+}
+
+.ev-dropdown2 {
+  min-width: 195px;
+  z-index: 3;
+
+  .ev-dropdown-content {
+    font-size: 14px;
+
+    .ev-dropdown-menu-option {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: @gPopupMenuOptionHeight;
+      width: 100%;
+      padding-left: 48px;
+      box-sizing: border-box;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+
+    .g-grandtotal-opt-icon {
+      position: absolute;
+      left: 17px;
+      color: @gray;
+    }
+
+  }
 }
 
 .g-row-color-picker-content {
   min-width: 58px;
-  background-color: #ffffff;
-  padding: 8px 0;
-  border-radius: 4px;
-  overflow: hidden;
+  box-sizing: border-box;
 }
+
 md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
 .g-row-color-picker-option {
   display: flex;
@@ -1172,7 +1226,7 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
   min-width: auto;
   width: 58px;
   min-height: auto;
-  height: 48px;
+  height: @gPopupMenuOptionHeight;
   padding: 0;
   margin: 0;
   background-color: #fff;
@@ -1326,7 +1380,7 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
   position: relative;
   background-color: #ffffff;
   border-radius: 2px;
-  // border-left: 1px solid #363636;
+  // border-left: 1px solid @gCellBroderColor;
   //margin-left: 14px;
   cursor: grab;
 
@@ -1719,7 +1773,7 @@ body.md-dialog-is-showing {
       //outline: 1px solid rgb(205, 136, 99);
     }
 
-    border-bottom: 1px solid #363636;
+    border-bottom: 1px solid @gCellBroderColor;
 
     &:nth-last-of-type {
       border-bottom: 1px solid #fff;
