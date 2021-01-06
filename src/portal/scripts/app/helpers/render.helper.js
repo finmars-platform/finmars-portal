@@ -54,14 +54,14 @@
 
     var getRowSettings = function (buttonClasses) {
 
-    	var classes = "g-row-color-picker-btn gRowColorPicker";
+    	var classes = "g-row-color-picker-btn gTableActionBtn";
 
     	if (buttonClasses) {
 			classes = classes + " " + buttonClasses;
 		}
 
-    	return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
-				'<button class="' + classes + '">' +
+    	return '<div class="g-row-settings g-row-settings-table">' +
+				'<button class="' + classes + '" data-click-action-type="open_row_color_picker">' +
 					'<span class="material-icons label-icon">label_outline</span>' +
 					'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
 				'</button>' +

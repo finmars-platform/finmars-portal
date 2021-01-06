@@ -129,10 +129,6 @@
 
             var targetElem = event.target;
 
-            if (targetElem.classList.contains('ev-fold-button')) {
-                clickData.isFoldButtonPressed = true;
-            }
-
             if (rowElem.dataset.subtotalType) {
                 clickData.___subtotal_type = rowElem.dataset.subtotalType;
             }
@@ -141,12 +137,28 @@
                 clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
             }
 
-            if (targetElem.parentElement.classList.contains("gRowColorPicker")) {
+			if (targetElem.classList.contains('ev-fold-button')) {
+				clickData.isFoldButtonPressed = true;
+
+			} else {
+
+				var clickedActionBtn = targetElem.closest(".gTableActionBtn");
+
+				if (clickedActionBtn) {
+
+					clickData.actionElem = clickedActionBtn
+					clickData.actionType = clickedActionBtn.dataset.clickActionType
+
+				}
+
+			}
+
+            /* if (targetElem.parentElement.classList.contains("gRowColorPicker")) {
 
                 clickData.isRowColorPickerPressed = true
                 clickData.actionElem = targetElem.parentElement
 
-            }
+            } */
 
         }
 
@@ -801,10 +813,25 @@
                     handleFoldButtonClick(clickData, evDataService, evEventService);
                 }
 
-                else if (clickData.isRowColorPickerPressed) {
+                else if (clickData.actionType) {
 
-                	event.stopPropagation();
-                    createRowColorPickerMenu(clickData, evDataService, evEventService);
+					switch (clickData.actionType) {
+
+						case 'open_row_color_picker':
+
+							event.stopPropagation();
+							createRowColorPickerMenu(clickData, evDataService, evEventService);
+
+							break;
+
+						case 'open_subtotal_position_options':
+
+							event.stopPropagation();
+							createSubtotalSettingsMenu(clickData, evDataService, evEventService);
+
+							break;
+
+					}
 
                 }
 
@@ -827,7 +854,9 @@
                                 break;
                         }
 
-                    } else if (!selection.length) {
+                    }
+
+                    else if (!selection.length) {
 
                         switch (clickData.___type) {
 
@@ -1365,7 +1394,6 @@
 
 					markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
                     /* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-					console.log("testing objectId", objectId, obj.id);
                     var markedReportRows = localStorage.getItem("marked_report_rows");
 
                     if (markedReportRows) {
@@ -1648,54 +1676,137 @@
 
     };
 
-    var addEventListenersForRowColorPickerMenu = function (popupMenuElem, objectId, parentGroupHashId, evDataService, evEventService) {
+	var addEventListenersForPopupMenuOpions = function (popupMenuElem, optionClickCallback) {
 
-		var colorOpts = popupMenuElem.querySelectorAll('button');
+		var colorOpts = popupMenuElem.querySelectorAll('.gPopupMenuOption');
 
-		colorOpts.forEach(option => {
+		colorOpts.forEach(function (option) {
+			 option.addEventListener('click', optionClickCallback)
+		});
 
-			option.addEventListener('click', function (event) {
-
-				var rowColor = event.currentTarget.dataset.color;
-				markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, rowColor);
-
-				clearDropdowns();
-
-			});
-
-		})
-
-		popupMenuElem.addEventListener('mouseleave', clearDropdowns)
+		popupMenuElem.addEventListener('mouseleave', clearDropdowns);
 
 	};
 
     var createRowColorPickerMenu = function (clickData, evDataService, evEventService) {
 
+		var menuElem = clickData.actionElem;
+		var popup = evDataHelper.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup']);
+
         clearDropdowns();
 
-        var menuElem = clickData.actionElem;
-		var popup = evDataHelper.prepareSmallPopupMenu(clickData.___id);
+		evDataHelper.calculateStaticMenuPosition(popup, menuElem, 208);
 
-        evDataHelper.calculateRowSettingsMenuPosition(popup, menuElem);
-
-        popup.innerHTML = '<div class="g-row-color-picker-content">' +
-                '<button class="g-row-color-picker-option" data-color="undo_mark_row">' +
+		//<editor-fold desc="Color picker content div">
+		popup.innerHTML = '<div class="ev-dropdown-content g-row-color-picker-content">' +
+                '<button class="g-row-color-picker-option gPopupMenuOption" data-color="undo_mark_row">' +
 					'<span class="material-icons">label_outline</span>' +
 				'</button>' +
-                '<button class="g-row-color-picker-option red" data-color="red">' +
+                '<button class="g-row-color-picker-option red gPopupMenuOption" data-color="red">' +
 					'<span class="material-icons">label_outline</span>' +
 				'</button>' +
-                '<button class="g-row-color-picker-option yellow" data-color="yellow">' +
+                '<button class="g-row-color-picker-option yellow gPopupMenuOption" data-color="yellow">' +
 					'<span class="material-icons">label_outline</span>' +
 				'</button>' +
-                '<button class="g-row-color-picker-option green" data-color="green">' +
+                '<button class="g-row-color-picker-option green gPopupMenuOption" data-color="green">' +
 					'<span class="material-icons">label_outline</span>' +
 				'</button>' +
             '</div>'
+		//</editor-fold>
 
         document.body.appendChild(popup);
 
-		addEventListenersForRowColorPickerMenu(popup, clickData.___id, clickData.___parentId, evDataService, evEventService);
+		var onOptionClick = function (event) {
+
+			var rowColor = event.currentTarget.dataset.color;
+			markRowByColor(clickData.___id, clickData.___parentId, evDataService, evEventService, rowColor);
+
+			clearDropdowns();
+
+		};
+
+		addEventListenersForPopupMenuOpions(popup, onOptionClick);
+
+	};
+
+    var getSubtotalsType = function (evDataService) {
+
+    	var reportOptions = evDataService.getReportOptions();
+
+		// for old layouts
+    	if (!reportOptions.hasOwnProperty('subtotals_options')) {
+
+    		var groups = evDataService.getGroups();
+
+    		var groupWithSubtotal = groups.find(function (group) {
+				return group.report_settings.subtotal_type;
+			});
+
+    		return groupWithSubtotal || false;
+
+		}
+		// < for old layouts >
+
+    	return reportOptions.subtotals_options.type;
+	}
+
+	var createSubtotalSettingsMenu = function (clickData, evDataService, evEventService) {
+
+		var menuElem = clickData.actionElem;
+		var popup = evDataHelper.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup', 'ev-dropdown2']);
+		var report = evDataService.getRootGroupOptions();
+
+		var getOptionCheckbox = function (subtotalsType) {
+
+			if (subtotalsType === rootGroupOpts.subtotal_type) {
+				return '<span class="material-icons g-subtotal-opt-icon">done</span>'
+			}
+
+			return '';
+
+		};
+
+		clearDropdowns();
+
+		evDataHelper.calculateStaticMenuPosition(popup, menuElem, 195);
+
+		//<editor-fold desc="Subtotals options popup content">
+		popup.innerHTML = '<div class="ev-dropdown-content">' +
+			'<button class="ev-dropdown-menu-option gPopupMenuOption" data-subtotals-type="line">' +
+				getOptionCheckbox('line') + 'Top' +
+			'</button>' +
+			'<button class="ev-dropdown-menu-option gPopupMenuOption" data-subtotals-type="area">' +
+				getOptionCheckbox('area') + 'Bottom' +
+			'</button>' +
+			'<button class="ev-dropdown-menu-option gPopupMenuOption" data-subtotals-type="arealine">' +
+				getOptionCheckbox('arealine') + 'Top and Bottom' +
+			'</button>' +
+		'</div>'
+		//</editor-fold>
+
+		document.body.appendChild(popup);
+
+		var onOptionClick = function (event) {
+
+			var subtotalsType = event.currentTarget.dataset.subtotalsType;
+			var reportOptions = evDataService.getReportOptions();
+			var subtotalsOpts = reportOptions.subtotals_options || {};
+
+			if (subtotalsOpts.type === subtotalsType) {
+				subtotalsOpts.type = false
+
+			} else {
+				subtotalsOpts.subtotals_type = subtotalsType
+			}
+
+			/*evDataService.setRootGroupOptions(rootGroupOpts);
+
+			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+			evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);*/
+
+		};
+
+		addEventListenersForPopupMenuOpions(popup, onOptionClick);
 
 	};
 

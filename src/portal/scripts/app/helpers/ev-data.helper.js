@@ -829,22 +829,22 @@
 
     };
 
-    var calculateRowSettingsMenuPosition = function (popup, menuElem) {
+    var calculateStaticMenuPosition = function (popup, menuElem, popupHeight) {
 
         var menuElemRect = menuElem.getBoundingClientRect();
-
-        popup.style.top = menuElemRect.top + "px"
+		console.log("testing menuElemRect", menuElemRect, popupHeight);
+		var popupTop = menuElemRect.top;
         popup.style.left = menuElemRect.left + "px"
 
-        /* var menuHeight = firstLevelOptionsNumber * popupMenuOptionHeight;
-
-        if (bodyHeight < menuPosition.positionY + menuHeight) {
+		var bodyHeight = document.body.clientHeight;
+		console.log("testing bodyHeight", bodyHeight);
+        if (bodyHeight < popupTop + popupHeight) {
 
             popup.style.bottom = 0;
 
         } else {
-            popup.style.top = menuPosition.positionY + 'px';
-        } */
+			popup.style.top = popupTop + 'px'
+		}
 
     };
 
@@ -889,12 +889,16 @@
 
     };
 
-    var prepareSmallPopupMenu = function (objectId) {
+    var preparePopupMenuType2 = function (objectId, classesList) {
 
     	var popup = document.createElement('div');
 
 		popup.id = 'dropdown-' + objectId;
-		popup.classList.add("ev-small-dropdown", "fade-in", "evDropdown");
+
+		classesList = classesList || [];
+		classesList = classesList.concat(["fade-in", "evDropdown"]);
+
+		popup.classList.add(...classesList);
 
 		popup.style.position = 'absolute';
 
@@ -975,9 +979,9 @@
 
         calculatePageFromOffset: calculatePageFromOffset,
         preparePopupMenu: preparePopupMenu,
-		prepareSmallPopupMenu: prepareSmallPopupMenu,
+		preparePopupMenuType2: preparePopupMenuType2,
         calculateMenuPosition: calculateMenuPosition,
-        calculateRowSettingsMenuPosition: calculateRowSettingsMenuPosition,
+		calculateStaticMenuPosition: calculateStaticMenuPosition,
 
         setDefaultGroups: setDefaultGroups,
         setDefaultObjects: setDefaultObjects,

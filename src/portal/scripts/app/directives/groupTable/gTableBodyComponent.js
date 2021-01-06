@@ -110,7 +110,10 @@
                     rvDomManager.calculateScroll(elements, scope.evDataService);
 
                     window.requestAnimationFrame(function (){
-                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService)
+
+                    	rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+						cellContentOverflow();
+
                     });
 
                 }
@@ -232,96 +235,98 @@
 
                 }
 
+				function cellContentOverflow() {
+
+					var rows = contentElem.querySelectorAll('.g-row');
+					rows = Array.from(rows);
+
+					var subtotalRows = rows.filter(function (row) {
+						return row.dataset.type === 'subtotal';
+					});
+
+					var r, w;
+					for (r = 0; r < subtotalRows.length; r++) {
+
+						var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
+						var cells = subtotalRows[r].querySelectorAll('.g-cell');
+
+						for (w = 0; w < cellWraps.length; w++) {
+
+							var cellWrap = cellWraps[w], cellWrapWidth = cellWrap.clientWidth;
+							var cell = cells[w];
+							var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
+							var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
+
+							var rowIsGrandTotal = false;
+							var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
+
+							if (parentGroups[0].___level === 0 && w === 0) {
+								rowIsGrandTotal = true;
+							}
+
+							if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
+
+								var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
+								var cellSpaceForText = cellContentWrap.clientWidth;
+
+								if (!rowIsGrandTotal) {
+									cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
+								}
+
+								if (cellContentHolder.offsetWidth > cellSpaceForText) {
+
+									var cellStretchWidth = cellWrapWidth;
+									var nextCellIndex = w;
+									var overflowedCells = [];
+
+									// Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
+									while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
+
+										var nextCellIndex = nextCellIndex + 1;
+
+										var nextCellWrap = cellWraps[nextCellIndex], nextCellWrapWidth = nextCellWrap.clientWidth;
+										var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
+										var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
+
+										if (nexCellContentHolder || nextCellContentWrap.contentText) {
+											break;
+										}
+
+										overflowedCells.push(nextCellWrap);
+
+										cellSpaceForText = cellSpaceForText + nextCellWrapWidth;
+										cellStretchWidth = cellStretchWidth + nextCellWrapWidth;
+
+									}
+
+									if (cellStretchWidth > cellWrapWidth) { // check if there are available cells to be overflowed
+
+										overflowedCells.pop(); // leaving right border of last overflowed cell
+
+										overflowedCells.forEach(function (overflowedCell) {
+											overflowedCell.classList.add('g-overflowed-cell');
+										});
+
+										cellWrap.classList.add('g-overflowing-cell');
+										cell.style.width = cellStretchWidth + 'px';
+
+									}
+								}
+
+							}
+
+						}
+					}
+
+				}
+
                 function updateTableContent() {
                     if (isReport) {
                         renderReportViewer();
-                        cellContentOverflow();
+
                     } else {
                         renderEntityViewer();
                     }
-                }
-
-                function cellContentOverflow() {
-
-                    var rows = contentElem.querySelectorAll('.g-row');
-                    rows = Array.from(rows);
-
-                    var subtotalRows = rows.filter(function (row) {
-                        return row.dataset.type === 'subtotal';
-                    });
-
-                    var r;
-                    for (r = 0; r < subtotalRows.length; r++) {
-
-                        var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
-                        var cells = subtotalRows[r].querySelectorAll('.g-cell');
-
-                        var w;
-                        for (w = 0; w < cellWraps.length; w++) {
-
-                            var cellWrap = cellWraps[w];
-                            var cell = cells[w];
-                            var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
-                            var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
-
-                            var rowIsGrandTotal = false;
-                            var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
-
-                            if (parentGroups[0].___level === 0 && w === 0) {
-                                rowIsGrandTotal = true;
-                            }
-
-                            if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
-
-                                var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
-                                var cellSpaceForText = cellContentWrap.clientWidth;
-
-                                if (!rowIsGrandTotal) {
-                                    cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
-                                }
-
-                                if (cellContentHolder.offsetWidth > cellSpaceForText) {
-                                    var cellStretchWidth = cellWrap.clientWidth;
-                                    var nextCellIndex = w;
-                                    var overflowedCells = [];
-
-                                    // Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
-                                    while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
-
-                                        var nextCellIndex = nextCellIndex + 1;
-
-                                        var nextCellWrap = cellWraps[nextCellIndex];
-                                        var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
-                                        var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
-
-                                        if (nexCellContentHolder || nextCellContentWrap.contentText) {
-                                            break;
-                                        }
-
-                                        overflowedCells.push(nextCellWrap);
-                                        cellSpaceForText = cellSpaceForText + nextCellWrap.clientWidth;
-                                        cellStretchWidth = cellStretchWidth + nextCellWrap.clientWidth;
-
-                                    }
-
-                                    if (cellStretchWidth !== cellWrap.clientWidth) { // check if there is available cells to be overflowed
-
-                                        overflowedCells.pop(); // leaving right border of last overflowed cell
-                                        overflowedCells.map(function (overflowedCell) {
-                                            overflowedCell.classList.add('g-overflowed-cell');
-                                        });
-
-                                        cellWrap.classList.add('g-overflowing-cell');
-                                        cell.style.width = cellStretchWidth + 'px';
-
-                                    }
-                                }
-
-                            }
-
-                        }
-                    }
-
                 }
 
                 function clearOverflowingCells() {
