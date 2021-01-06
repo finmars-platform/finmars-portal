@@ -17,7 +17,7 @@
 
                     <div layout="row">
                         <div class="g-tr-btn-holder p-r-0" flex="50">
-                            <md-button data-ng-if="hasCreatePermission"
+                            <md-button data-ng-if="hasCreatePermission && !isBaseTransaction"
                                        class="md-primary md-raised long-text-btn"
                                        data-ng-click="addEntity($event)">Add {{getEntityNameByState()}}
                             </md-button>
