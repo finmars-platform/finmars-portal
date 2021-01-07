@@ -46,6 +46,14 @@
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
+                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+
+                if (rowTypeFilters) {
+
+                    items = filterService.filterByRowType(items, rowTypeFilters);
+
+                }
+
                 // console.log('groups filters length', items.length);
 
                 if (options.ordering) {

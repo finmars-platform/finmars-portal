@@ -39,6 +39,7 @@ module.exports = {
 
     'UPDATE_EV_UI': 'UPDATE_EV_UI',
     'TOGGLE_FILTER_AREA': 'TOGGLE_FILTER_AREA',
+    'TOGGLE_FILTER_BLOCK': 'TOGGLE_FILTER_BLOCK', // Victor 2021.01.06 #69 new report viewer interface toggle filter block visibility
     'UPDATE_FILTER_AREA_SIZE': 'UPDATE_FILTER_AREA_SIZE',
 
     'UPDATE_TABLE_VIEWPORT': 'UPDATE_TABLE_VIEWPORT', // recalculate height and width for ev-viewport

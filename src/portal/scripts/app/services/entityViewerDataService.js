@@ -317,6 +317,14 @@
             return data.filters;
         }
 
+        function setRowTypeFilters (filters) {
+            data.rowTypeFilters = filters;
+        }
+
+        function getRowTypeFilters () {
+            return data.rowTypeFilters;
+        }
+
         function getPagination() {
             return data.pagination
         }
@@ -1532,6 +1540,9 @@
 
             setMissingPrices: setMissingPrices,
             getMissingPrices: getMissingPrices,
+
+            setRowTypeFilters: setRowTypeFilters,
+            getRowTypeFilters: getRowTypeFilters,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,
