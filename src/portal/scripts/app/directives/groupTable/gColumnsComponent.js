@@ -51,13 +51,13 @@
                 scope.isAllStarsSelected = false;
                 scope.hideRowFilters = false;
 
-                scope.rowFilterColor = 'none';
-
                 var entityAttrs = [];
                 var dynamicAttrs = [];
                 var keysOfColsToHide = [];
 
                 // Victor 2020.12.14 #69 New report viewer design
+                scope.rowFilterColor = 'none';
+
                 scope.getPopupData = function (column, $index) {
 
                     return {
@@ -121,6 +121,16 @@
                     scope.evDataService.setRowTypeFilters(scope.rowFilterColor);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
                 };
+
+                let rowTypeFilters = localStorage.getItem("row_type_filters");
+
+                if (rowTypeFilters) {
+
+                    rowTypeFilters = JSON.parse(rowTypeFilters);
+                    scope.rowFilterColor = rowTypeFilters.markedRowFilters;
+                    scope.changeRowFilterColor(scope.rowFilterColor);
+
+                }
 
                 // <Victor 2020.12.14 #69 New report viewer design>
 
