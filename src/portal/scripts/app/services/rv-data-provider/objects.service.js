@@ -50,7 +50,7 @@
 
                 if (rowTypeFilters) {
 
-                    items = filterService.filterByRowType(items, rowTypeFilters);
+                    items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
 
                 }
 
