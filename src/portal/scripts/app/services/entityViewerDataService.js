@@ -109,6 +109,7 @@
                 subtotal_type: false
             },
             filters: [],
+            rowTypeFilters: null,
 			useFromAboveFilters: [],
             pagination: {
                 page_size: 60
@@ -317,8 +318,10 @@
             return data.filters;
         }
 
-        function setRowTypeFilters (filters) {
-            data.rowTypeFilters = filters;
+        function setRowTypeFilters (color) {
+            data.rowTypeFilters = {
+                markedRowFilters: color
+            };
         }
 
         function getRowTypeFilters () {
