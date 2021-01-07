@@ -51,6 +51,8 @@
                 scope.isAllStarsSelected = false;
                 scope.hideRowFilters = false;
 
+                scope.rowFilterColor = 'none';
+
                 var entityAttrs = [];
                 var dynamicAttrs = [];
                 var keysOfColsToHide = [];
@@ -93,7 +95,7 @@
                     }
 
                     return "'views/popups/g-report-viewer-column-settings-popup-menu.html'";
-                }
+                };
 
                 scope.rowFiltersToggle = function () {
 
@@ -112,7 +114,13 @@
 
 					});
 
-                }
+                };
+
+                scope.changeRowFilterColor = function (color) {
+                    scope.rowFilterColor = color;
+                    scope.evDataService.setRowTypeFilters(scope.rowFilterColor);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                };
 
                 // <Victor 2020.12.14 #69 New report viewer design>
 

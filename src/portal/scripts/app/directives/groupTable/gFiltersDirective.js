@@ -38,6 +38,8 @@
             	scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.currentAdditions = scope.evDataService.getAdditions();
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
                 scope.isFiltersOpened = true
 				scope.filters = scope.evDataService.getFilters();
 				scope.popupPosX = { value: null }
@@ -716,6 +718,12 @@
 
 
 					});
+
+					scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_BLOCK, function () {
+
+					    scope.isFiltersOpened = !scope.isFiltersOpened;
+
+                    })
 
 				};
 

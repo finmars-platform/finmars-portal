@@ -856,6 +856,18 @@
       background-color: initial;
     }
 
+    &.red {
+      color: #f05a22;
+    }
+
+    &.yellow {
+      color: #fac878;
+    }
+
+    &.green {
+      color: #a5d9c9;
+    }
+
     .label-icon {
       color: #dbdbdb;
     }
@@ -916,6 +928,11 @@
         fill: @g-top-part-color;
       }
     }
+    &.filter-toggle {
+      min-width: auto;
+      margin: 0;
+      color: @primary-button-color;
+    }
   }
 
   .g-top-part {
@@ -965,9 +982,11 @@
   }
 
   .g-filters {
+    max-height: 0;
+    transition: max-height 0.5s linear;
 
     &.open-filters {
-      min-height: 100px;
+      max-height: 300px;
     }
 
     .new-interface;

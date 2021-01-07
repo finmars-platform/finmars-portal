@@ -47,6 +47,10 @@
                     evEventService: scope.evEventService
                 }
 
+                scope.toggleFilterBlock = function () {
+                    scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
+                };
+
                 var openReportSettings = function ($event) {
 
                     var reportOptions = scope.evDataService.getReportOptions();
