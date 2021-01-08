@@ -109,6 +109,7 @@
                 subtotal_type: false
             },
             filters: [],
+            rowTypeFilters: null,
 			useFromAboveFilters: [],
             pagination: {
                 page_size: 60
@@ -315,6 +316,16 @@
 
         function getFilters() {
             return data.filters;
+        }
+
+        function setRowTypeFilters (color) {
+            data.rowTypeFilters = {
+                markedRowFilters: color
+            };
+        }
+
+        function getRowTypeFilters () {
+            return data.rowTypeFilters;
         }
 
         function getPagination() {
@@ -1532,6 +1543,9 @@
 
             setMissingPrices: setMissingPrices,
             getMissingPrices: getMissingPrices,
+
+            setRowTypeFilters: setRowTypeFilters,
+            getRowTypeFilters: getRowTypeFilters,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

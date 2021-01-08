@@ -171,6 +171,10 @@
         attrTypeToAdd.name = attrInstance.name;
         attrTypeToAdd.value_type = attrInstance.value_type;
 
+        if (attrInstance.layout_name) {
+            attrTypeToAdd.layout_name = attrInstance.layout_name;
+        }
+
         return attrTypeToAdd;
 
     };

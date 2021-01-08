@@ -388,6 +388,32 @@
 
     };
 
+    const filterByRowType = function (items, color) {
+
+        if (color === 'none') {
+            return items;
+        }
+
+        let markedReportRows = localStorage.getItem("marked_report_rows");
+
+        if (markedReportRows) {
+            markedReportRows = JSON.parse(markedReportRows);
+        } else {
+            markedReportRows = {};
+        }
+
+        const result = items.filter((item) => {
+
+            const id = item.id;
+
+            return markedReportRows[id] && markedReportRows[id].color === color;
+
+        });
+
+        return result;
+
+    };
+
     var getRegularFilters = function (options) {
 
         var result = {};
@@ -444,6 +470,7 @@
     module.exports = {
         filterTableRows: filterTableRows,
         filterByGroupsFilters: filterByGroupsFilters,
+        filterByRowType: filterByRowType,
         getRegularFilters: getRegularFilters,
         convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters
     }
