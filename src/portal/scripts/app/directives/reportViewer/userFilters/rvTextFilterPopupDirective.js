@@ -36,7 +36,6 @@
 
 						scope.activeFilterType = await rvFilterVm.openLinkedSettings();
 						scope.$apply();
-						console.log("testing scope.activeFilterType", scope.activeFilterType);
 
 					} else { */
 
@@ -54,7 +53,7 @@
 				};
 
 				scope.openUseFromAboveSettings = async function () {
-					scope.activeFilterType = await rvFilterVm.openLinkedSettings();
+					scope.activeFilterType = await rvFilterVm.openUseFromAboveSettings();
 					scope.$apply();
 				};
 

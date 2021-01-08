@@ -60,7 +60,7 @@
 			classes = classes + " " + buttonClasses;
 		}
 
-    	return '<div class="g-row-settings g-row-settings-table">' +
+    	return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
 				'<button class="' + classes + '" data-click-action-type="open_row_color_picker">' +
 					'<span class="material-icons label-icon">label_outline</span>' +
 					'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
@@ -386,6 +386,34 @@
 
     };
 
+    var isCellWithProxylineFoldButton = function (evDataService, obj, columnNumber) {
+
+    	var flatList = evDataService.getFlatList();
+
+    	for (var i = obj.___flat_list_index - 1; i >= 0; i = i - 1) {
+
+			if (flatList[i].___type === 'object' || flatList[i].___type === 'subtotal') {
+
+				if (flatList[i].___subtotal_type !== 'proxyline') {
+
+					return false;
+
+				}
+
+			}
+
+			if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
+
+				return true;
+				break;
+
+			}
+
+
+		}
+
+	};
+
     module.exports = {
         isFirstInWholeChain: isFirstInWholeChain,
 
@@ -406,7 +434,9 @@
 
         isColumnInGroupsList: isColumnInGroupsList,
         isColumnEqualLastGroup: isColumnEqualLastGroup,
-        isColumnAfterGroupsList: isColumnAfterGroupsList
+        isColumnAfterGroupsList: isColumnAfterGroupsList,
+
+		isCellWithProxylineFoldButton: isCellWithProxylineFoldButton
     }
 
 }());

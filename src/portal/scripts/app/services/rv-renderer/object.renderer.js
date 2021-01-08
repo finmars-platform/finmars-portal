@@ -132,9 +132,22 @@
             numeric_result: null,
             raw_text_result: ''
         };
-        var groups = evDataService.getGroups();
 
-        if (groups[columnNumber - 1].report_settings.subtotal_type === 'area') {
+        var groups = evDataService.getGroups();
+        var reportOptions = evDataService.getReportOptions();
+
+        var proxylineIsActive = function () {
+
+        	if (reportOptions.subtotals_options) {
+        		return reportOptions.subtotals_options.type === 'area';
+
+			} else { // for old layouts
+        		return groups[columnNumber - 1].report_settings.subtotal_type === 'area';
+			}
+
+		};
+
+        if (proxylineIsActive()) {
 
             var flatList = evDataService.getFlatList();
             var proxyLineSubtotal;
@@ -179,7 +192,7 @@
                         foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div></div>';
                     }
 
-                    result.html_result = foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span>';
+                    result.html_result = foldButton + '<span>' + currentGroup.___group_name + '</span>';
                     result.raw_text_result = currentGroup.___group_name;
 
                 }
@@ -317,22 +330,23 @@
     var getBorderBottomTransparent = function (evDataService, obj, columnNumber, groups) {
 
         var result = '';
-        var nextItem = null;
+        /* var nextItem = null;
         var flatList = evDataService.getFlatList();
 
         if (flatList.length > obj.___flat_list_index + 1) {
             nextItem = flatList[obj.___flat_list_index + 1]
-        }
+        } */
 
         if (columnNumber <= groups.length && columnNumber <= obj.___level) {
 
+            /* Part of group
             if (nextItem && nextItem.___type !== 'subtotal' && nextItem.___level === obj.___level) {
                 result = 'border-bottom-transparent';
-            }
+            } */
 
-            if (nextItem && nextItem.___type === 'subtotal' && columnNumber < obj.___level - 1) {
+            /* if (nextItem && nextItem.___type === 'subtotal' && columnNumber < obj.___level - 1) {
                 result = 'border-bottom-transparent';
-            }
+            } */
 
             if (obj.___type === 'subtotal' && columnNumber < obj.___level - 1) {
                 result = 'border-bottom-transparent';
@@ -343,6 +357,32 @@
         return result;
 
     };
+
+    var getBorderClasses = function (evDataService, obj, columnNumber, groups) {
+
+    	var results = [];
+
+    	var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
+
+    	if (borderBottomTransparent) {
+			results.push(borderBottomTransparent);
+		}
+
+		// grouping columns cells except last
+    	if (groups.length && columnNumber < groups.length) {
+
+    		// unless next cell is cell with group name
+    		if (!renderHelper.isCellWithProxylineFoldButton(evDataService, obj, columnNumber)) {
+
+    			results.push('border-right-transparent');
+
+			}
+
+		}
+
+    	return results;
+
+	};
 
     var getColorNegativeNumber = function (val, column) {
 
@@ -367,6 +407,36 @@
         return result;
 
     };
+
+    var getCellClasses = function (evDataService, obj, column, columnNumber, groups, valueObj) {
+
+    	var result = [];
+
+		var borderClasses = getBorderClasses(evDataService, obj, columnNumber, groups);
+
+		if (borderClasses.length) {
+			result = result.concat(borderClasses);
+		}
+
+		var textAlign = getCellTextAlign(evDataService, column, columnNumber, groups);
+
+		if (textAlign) {
+			result.push(textAlign);
+		}
+
+		if (valueObj.numeric_result !== null && valueObj.numeric_result !== undefined) {
+
+			var colorNegative = getColorNegativeNumber(valueObj.numeric_result, column);
+
+			if (colorNegative) {
+				result.push(colorNegative);
+			}
+
+		}
+
+    	return result;
+
+	};
 
     var isCellModified = function (obj, column, columnIndex) {
 
@@ -426,10 +496,10 @@
         var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
-        var textAlign;
-        var columnNumber;
+        /* var textAlign;
         var colorNegative = '';
-        var borderBottomTransparent = '';
+        var borderBottomTransparent = ''; */
+		var columnNumber;
         var value_obj;
         var gCellTitle = '';
         var resultValue;
@@ -443,20 +513,16 @@
 
             columnNumber = columnIndex + 1;
 
-            borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
-            textAlign = getCellTextAlign(evDataService, column, columnNumber, groups);
             value_obj = getValue(evDataService, obj, column, columnNumber, groups);
 
-            cellModified = isCellModified(obj, column, columnIndex) ? 'g-cell-modified' : '';
+            cellModified = isCellModified(obj, column, columnIndex) ? 'g-cell-modified' : ''; // why cell modified is not inside class list
 
-            colorNegative = '';
-            if (value_obj.numeric_result !== null && value_obj.numeric_result !== undefined) {
-                colorNegative = getColorNegativeNumber(value_obj.numeric_result, column);
-            }
+			var cellClassesList = getCellClasses(evDataService, obj, column, columnNumber, groups, value_obj);
+			var cellClasses = cellClassesList.join(' ');
 
             obj.___cells_values.push({
                 width: column.style.width,
-                classList: [textAlign, colorNegative, borderBottomTransparent],
+                classList: cellClassesList,
                 value: value_obj.html_result
             });
 
@@ -471,14 +537,14 @@
             }
 
             cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell ' + cellModified + ' ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
-                '<div class="g-cell-content-wrap">' +
-                resultValue +
-                '</div>' +
-                '</div>' +
+					'<div class="g-cell ' + cellModified + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
+						'<div class="g-cell-content-wrap">' +
+							resultValue +
+						'</div>' +
+					'</div>' +
                 '</div>';
 
-            result = result + cell
+            result = result + cell;
 
         });
 

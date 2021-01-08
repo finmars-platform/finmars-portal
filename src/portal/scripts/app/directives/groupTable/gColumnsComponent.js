@@ -24,8 +24,6 @@
             templateUrl: 'views/directives/groupTable/g-columns-view.html',
             link: function (scope, elem, attrs) {
 
-				console.log("testing report options", scope.evDataService.getReportOptions());
-
                 scope.columns = scope.evDataService.getColumns();
                 console.log('#69 total columns', scope.columns)
 
