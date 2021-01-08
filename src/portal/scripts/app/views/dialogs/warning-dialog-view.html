@@ -24,8 +24,11 @@
                 OK
             </md-button>
         </div>
+
         <div ng-if="vm.actionsButtons">
-            <md-button ng-repeat="button in vm.actionsButtons" ng-bind="button.name" ng-click="vm.agree(button.response)"></md-button>
+            <md-button ng-repeat="button in vm.actionsButtons"
+                       ng-bind="button.name"
+                       ng-click="vm.agree(button.response)"></md-button>
         </div>
     </md-dialog-actions>
 </md-dialog>

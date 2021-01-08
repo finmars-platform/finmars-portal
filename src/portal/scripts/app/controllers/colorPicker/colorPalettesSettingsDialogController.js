@@ -1,3 +1,4 @@
+// TO DELETE 2020-11-23 color-palettes-settings-dialog.html uses colorPalettesSettingsController.js
 (function () {
 
     var colorPalettesService = require('../../services/colorPalettesService');
