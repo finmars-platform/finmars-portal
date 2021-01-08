@@ -38,6 +38,8 @@
             	scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType);
                 scope.currentAdditions = scope.evDataService.getAdditions();
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
                 scope.isFiltersOpened = true
 				scope.filters = scope.evDataService.getFilters();
 				scope.popupPosX = { value: null }
@@ -606,8 +608,10 @@
 								id: filter.key
 							};
 
+							const filterName = filter.layout_name ? filter.layout_name : filter.name;
+
 							let chipText = '<span class="g-filter-chips-text">' +
-								'<span class="g-filter-chip-name">' + filter.name + ':</span>' +
+								'<span class="g-filter-chip-name">' + filterName + ':</span>' +
 								'<span class="g-filter-chip-value text-bold"> ' + filterVal + '</span>' +
 								'</span>'
 
@@ -716,6 +720,12 @@
 
 
 					});
+
+					scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_BLOCK, function () {
+
+					    scope.isFiltersOpened = !scope.isFiltersOpened;
+
+                    })
 
 				};
 

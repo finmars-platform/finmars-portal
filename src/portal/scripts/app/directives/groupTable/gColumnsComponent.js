@@ -31,9 +31,34 @@
                 evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
                 console.log('#69 scope.groups', scope.groups)
 
+                const setFiltersLayoutNames = () => {
+
+                    const filters = scope.evDataService.getFilters();
+
+                    const totalColumns = [...scope.groups, ...scope.notGroupingColumns];
+
+                    filters.forEach(filter => {
+
+                        const column = totalColumns.find(col => col.key === filter.key);
+
+                        if (column && column.layout_name) {
+
+                            filter.layout_name = column.layout_name;
+
+                        }
+
+                    });
+
+                    scope.evDataService.setFilters(filters);
+
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+                };
+
                 // Victor 2020.12.11 scope.notGroupingColumns should update on any scope.columns or scope.groups change (if not dispatched evEvents.COLUMNS_CHANGE)
                 scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                 console.log('#69 scope.notGroupingColumns', scope.notGroupingColumns)
+                setFiltersLayoutNames();
 
                 scope.entityType = scope.evDataService.getEntityType();
 
@@ -54,6 +79,8 @@
                 var keysOfColsToHide = [];
 
                 // Victor 2020.12.14 #69 New report viewer design
+                scope.rowFilterColor = 'none';
+
                 scope.getPopupData = function (column, $index) {
 
                     return {
@@ -91,7 +118,7 @@
                     }
 
                     return "'views/popups/g-report-viewer-column-settings-popup-menu.html'";
-                }
+                };
 
                 scope.rowFiltersToggle = function () {
 
@@ -109,6 +136,22 @@
 						}
 
 					});
+
+                };
+
+                scope.changeRowFilterColor = function (color) {
+                    scope.rowFilterColor = color;
+                    scope.evDataService.setRowTypeFilters(scope.rowFilterColor);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                };
+
+                let rowTypeFilters = localStorage.getItem("row_type_filters");
+
+                if (rowTypeFilters) {
+
+                    rowTypeFilters = JSON.parse(rowTypeFilters);
+                    scope.rowFilterColor = rowTypeFilters.markedRowFilters;
+                    scope.changeRowFilterColor(scope.rowFilterColor);
 
                 }
 
@@ -425,6 +468,25 @@
                         locals: {
                             data: column
                         }
+                    }).then(res => {
+
+                        if (res.status === 'agree') {
+
+                            const filters = scope.evDataService.getFilters();
+                            const filter = filters.find(filter => filter.key === res.data.key);
+
+                            if (filter) {
+
+                                filter.layout_name = res.data.layout_name;
+
+                                scope.evDataService.setFilters(filters);
+
+                                scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+                            }
+
+                        }
+
                     })
 
                 };
@@ -1178,6 +1240,7 @@
                     scope.columns = scope.evDataService.getColumns();
                     flagMissingColumns();
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                    setFiltersLayoutNames();
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);
@@ -1191,6 +1254,7 @@
                         scope.groups = scope.evDataService.getGroups();
                         evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        setFiltersLayoutNames();
 
                     });
 
@@ -1203,6 +1267,7 @@
                         getColsAvailableForAdditions();
                         flagMissingColumns();
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        setFiltersLayoutNames()
                         //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
 
                     });
@@ -1212,6 +1277,7 @@
                         scope.groups = scope.evDataService.getGroups();
                         evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        setFiltersLayoutNames()
 
                     });
 

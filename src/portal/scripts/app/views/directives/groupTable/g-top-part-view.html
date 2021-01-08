@@ -1,5 +1,5 @@
 <div class="g-top-part width-100 flex-row fc-space-between flex-i-center">
-    <div class="p-l-24">
+    <div class="p-l-24 flex-row">
 
         <md-button class="g-top-button flex-row"
                    popup
@@ -13,16 +13,18 @@
                    backdrop-classes="'low-z-index-backdrop'"
                    popup-event-service="evEventService">
 
-<!--            <div class="flex-row flex-i-center">
-                <ng-md-icon icon="view_quilt" class="flex-row"></ng-md-icon>
-                <span class="m-l-8">{{layoutName}}</span>
-            </div>-->
-
             <span class="material-icons">view_quilt</span>
             <span class="m-l-8">{{layoutName}}</span>
             <span class="material-icons">arrow_drop_down</span>
 
         </md-button>
+
+        <md-button class="filter-toggle" data-ng-if="!isRootEntityViewer" data-ng-click="toggleFilterBlock()">
+            <div class="flex-column flex-i-center">
+                <span class="material-icons">filter_list</span>
+            </div>
+        </md-button>
+
     </div>
 
     <div class="p-r-24 flex-row flex-i-center">

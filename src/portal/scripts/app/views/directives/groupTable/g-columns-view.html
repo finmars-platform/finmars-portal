@@ -802,33 +802,36 @@
                 </md-button>
 
                 <md-menu>
-                    <md-button class="g-cell-button g-row-color-picker-btn" data-ng-click="$mdOpenMenu($event)">
-                        <span class="material-icons label-icon">label_outline</span>
+                    <md-button class="g-cell-button g-row-color-picker-btn"
+                               data-ng-class="rowFilterColor"
+                               data-ng-click="$mdOpenMenu($event)">
+                        <span class="material-icons label-icon" data-ng-if="rowFilterColor === 'none'">label_outline</span>
+                        <span class="material-icons" data-ng-if="rowFilterColor !== 'none'">label</span>
                         <span class="material-icons arrow-icon">arrow_drop_down</span>
                     </md-button>
 
                     <md-menu-content class="g-row-color-picker-content" width="2"
                                      ng-mouseleave="$mdMenu.close()">
                         <md-menu-item>
-                            <md-button class="g-cell-button g-row-color-picker-option">
+                            <md-button class="g-cell-button g-row-color-picker-option" data-ng-click="changeRowFilterColor('none')">
                                 <span class="material-icons">label_outline</span>
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button class="g-cell-button g-row-color-picker-option red">
+                            <md-button class="g-cell-button g-row-color-picker-option red"  data-ng-click="changeRowFilterColor('red')">
                                 <span class="material-icons">label</span>
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button class="g-cell-button g-row-color-picker-option yellow">
+                            <md-button class="g-cell-button g-row-color-picker-option yellow"  data-ng-click="changeRowFilterColor('yellow')">
                                 <span class="material-icons">label</span>
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button class="g-cell-button g-row-color-picker-option green">
+                            <md-button class="g-cell-button g-row-color-picker-option green"  data-ng-click="changeRowFilterColor('green')">
                                 <span class="material-icons">label</span>
                             </md-button>
                         </md-menu-item>
