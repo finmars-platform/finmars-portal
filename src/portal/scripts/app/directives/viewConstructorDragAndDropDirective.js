@@ -239,7 +239,6 @@
                         this.dragula = dragula(items,
                             {
                                 accepts: function (el, target, source, nextSibling) {
-
                                     if (target.classList.contains('g-modal-draggable-card')) {
                                         return false;
                                     }
@@ -694,14 +693,27 @@
 
                     selectedDragulaInit: function () {
 
+                        const groupsContainer = document.querySelector('.vcSelectedGroups');
+                        const columnsContainer = document.querySelector('.vcSelectedColumns');
+                        const filtersContainer = document.querySelector('.vcSelectedFilters')
+
+
                         var items = [
-                            document.querySelector('.vcSelectedGroups'),
-                            document.querySelector('.vcSelectedColumns'),
-                            document.querySelector('.vcSelectedFilters')
+                            groupsContainer,
+                            columnsContainer,
+                            filtersContainer
                         ];
 
                         this.dragula = dragula(items, {
-                            revertOnSpill: true
+                            revertOnSpill: true,
+                            accepts: function (el, target, source, nextSibling) {
+
+                                if (source === filtersContainer && target === filtersContainer) {
+                                    return false;
+                                }
+
+                                return true;
+                            },
                         });
                     },
 
