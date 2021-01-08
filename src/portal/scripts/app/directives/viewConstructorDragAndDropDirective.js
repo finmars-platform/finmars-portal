@@ -90,12 +90,14 @@
 
                             if (target === scope.contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
                                 target === scope.contentWrapElement.querySelector('.g-filters-holder')) {
-                                for (i = 0; i < filters.length; i = i + 1) {
+
+                            	for (i = 0; i < filters.length; i = i + 1) {
                                     if (filters[i].key === identifier) {
                                         exist = true;
                                         filterExist = true;
                                     }
                                 }
+
                             }
 
                             if (!exist && target) {
@@ -173,7 +175,9 @@
 
                                 scope.$apply();
 
-                            } else if (exist && target) {
+                            }
+
+                            else if (exist && target) {
 
                                 var errorMessage = 'Item should be unique';
 
@@ -284,9 +288,13 @@
                                 }
 
                                 if (container === source) {
-                                    source.classList.remove('dragged-out-card-space');
+
+                                	source.classList.remove('dragged-out-card-space');
+
                                 } else {
-                                    $(elem).remove();  // removing only shadow of the dragged element
+
+                                	// TODO use class with display: none; to hide shadow as in reconciliation dnd
+                                	$(elem).remove();  // removing only shadow of the dragged element
 
                                     container.classList.add("vc-groups-container-shadowed");
 
@@ -299,8 +307,11 @@
                                     sourceContainer = source;
                                 }
 
-                            } else {
-                                sourceContainer = source;
+                            }
+
+                            else {
+
+                            	sourceContainer = source;
 
                                 elem.classList.add('vc-shadow-elem');
 
@@ -325,7 +336,7 @@
                         });
 
                         drake.on('drag', function () {
-                            document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+							scrollHelper.enableDnDWheelScroll();
                         });
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
@@ -370,6 +381,10 @@
 
                                         var attrData = JSON.parse(JSON.stringify(scope.$parent.vm[attrsVmKey][i]));
 
+										if (nextSibling) {
+											var nextSiblingKey = nextSibling.dataset.attributeKey;
+										}
+
                                         attributeChanged = true;
 
                                         if (draggedTo === 'groups') {
@@ -402,28 +417,60 @@
                                                 scope.evDataService.setGroups(groups);
                                             }
 
-                                        } else {
+                                        }
 
-                                            for (var a = 0; a < GCFItems.length; a++) { // remove same element from selected group
-                                                if (GCFItems[a].key === attributeKey) {
-                                                    GCFItems.splice(a, 1);
+                                        else {
+
+                                        	var insertAttr = true;
+
+                                            for (var a = 0; a < GCFItems.length; a++) { // search for the same attr
+
+                                            	if (GCFItems[a].key === attributeKey) {
+
+													GCFItems[a].groups = attrData.groups
+													GCFItems[a].columns = attrData.columns
+													GCFItems[a].groups = attrData.groups
+
+													if (nextSiblingKey === attributeKey) { // attr already in right place
+
+														insertAttr = false;
+
+													} else { // remove attribute before inserting it into another index
+
+														attrData = JSON.parse(JSON.stringify(GCFItems[a]));
+														GCFItems.splice(a, 1);
+
+													}
+
                                                     break;
                                                 }
+
                                             }
 
-                                            if (nextSibling) {
-                                                var nextSiblingKey = nextSibling.dataset.attributeKey;
+											if (insertAttr) {
 
-                                                for (var a = 0; a < GCFItems.length; a++) {
-                                                    var GCFElem = GCFItems[a];
+												if (nextSibling) {
 
-                                                    if (GCFElem.key === nextSiblingKey) {
-                                                        GCFItems.splice(a, 0, attrData);
-                                                        updateGCFMethod();
-                                                        break;
-                                                    }
-                                                }
-                                            }
+													for (var a = 0; a < GCFItems.length; a++) {
+
+														var GCFElem = GCFItems[a];
+
+														if (GCFElem.key === nextSiblingKey) {
+
+															GCFItems.splice(a, 0, attrData);
+															break;
+
+														}
+
+													}
+
+												} else {
+													GCFItems.push(attrData);
+												}
+
+											}
+
+											updateGCFMethod();
 
                                         }
 
@@ -630,8 +677,9 @@
 
                         drake.on('dragend', function (elem) {
 
-                            document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
-                            if (sourceContainer) {
+							scrollHelper.disableDnDWheelScroll();
+
+							if (sourceContainer) {
                                 sourceContainer.classList.remove('dragged-out-card-space');
                             }
 
@@ -664,11 +712,13 @@
 
                 var init = function () {
                     setTimeout(function () {
-                        var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
+
+                    	var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
                         scrollHelper.setDnDScrollElem(DnDScrollElem);
 
                         viewConstructorDnD.init();
                         selectedDnD.init();
+
                     });
                 };
 
