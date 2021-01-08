@@ -608,8 +608,10 @@
 								id: filter.key
 							};
 
+							const filterName = filter.layout_name ? filter.layout_name : filter.name;
+
 							let chipText = '<span class="g-filter-chips-text">' +
-								'<span class="g-filter-chip-name">' + filter.name + ':</span>' +
+								'<span class="g-filter-chip-name">' + filterName + ':</span>' +
 								'<span class="g-filter-chip-value text-bold"> ' + filterVal + '</span>' +
 								'</span>'
 
