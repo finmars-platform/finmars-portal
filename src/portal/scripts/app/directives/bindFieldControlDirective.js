@@ -550,7 +550,7 @@
 									iconObj: {type: "angular-material", icon: "add"},
 									tooltip: "Increase by one day",
 									classes: "date-input-specific-btns",
-									action: { callback: scope.setDatePlus },
+									action: { callback: scope.setDatePlus }
 								});
 							}
 
@@ -559,7 +559,7 @@
 									iconObj: {type: "angular-material", icon: "radio_button_unchecked"},
 									tooltip: "Set today's date",
 									classes: "date-input-specific-btns",
-									action: { callback: scope.setDateToday },
+									action: { callback: scope.setDateToday }
 								});
 							}
 
@@ -568,7 +568,7 @@
 									iconObj: {type: "angular-material", icon: "remove"},
 									tooltip: "Decrease by one day",
 									classes: "date-input-specific-btns",
-									action: { callback: scope.setDateMinus },
+									action: { callback: scope.setDateMinus }
 								});
 							}
 						}
@@ -630,11 +630,16 @@
 
 					scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
+						var userInputToRecalc = scope.evEditorDataService.getUserInputsToRecalculate();
+
+						if (userInputToRecalc && userInputToRecalc.includes(scope.fieldKey)) {
+							scope.readyStatus.content = true
+						}
+
 						if (scope.item &&
 							scope.item.frontOptions &&
 							(scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
-							scope.readyStatus.content = true;
 							setItemSpecificSettings();
 
 							/* if (scope.item.frontOptions.recalculated === 'input') {
