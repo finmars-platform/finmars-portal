@@ -496,24 +496,35 @@
 
         var postRebookComplexTransactionActions = function (cTransactionData, recalculationInfo) {
 
-            var keys = Object.keys(cTransactionData.values);
+			var keys = Object.keys(cTransactionData.values);
 
-            keys.forEach(function (item) {
-                vm.entity[item] = cTransactionData.values[item];
-            });
+            if (recalculationInfo &&
+				recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
+
+				recalculationInfo.recalculatedInputs.forEach(inputName => {
+					vm.entity[inputName] = cTransactionData.values[inputName]
+				});
+
+				vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+
+			} else {
+
+				keys.forEach(item => vm.entity[item] = cTransactionData.values[item]);
+
+			}
 
             cTransactionData.complex_transaction.attributes.forEach(function (item) {
                 if (item.attribute_type_object.value_type === 10) {
-                    vm.entity[item.attribute_type_object.name] = item.value_string;
+                    vm.entity[item.attribute_type_object.name] = item.value_string
                 }
                 if (item.attribute_type_object.value_type === 20) {
-                    vm.entity[item.attribute_type_object.name] = item.value_float;
+                    vm.entity[item.attribute_type_object.name] = item.value_float
                 }
                 if (item.attribute_type_object.value_type === 30) {
-                    vm.entity[item.attribute_type_object.name] = item.classifier;
+                    vm.entity[item.attribute_type_object.name] = item.classifier
                 }
                 if (item.attribute_type_object.value_type === 40) {
-                    vm.entity[item.attribute_type_object.name] = item.value_date;
+                    vm.entity[item.attribute_type_object.name] = item.value_date
                 }
             });
 
@@ -664,14 +675,19 @@
                 vm.transactionTypeId = cTransactionData.transaction_type;
                 vm.editLayoutEntityInstanceId = cTransactionData.transaction_type;
 
-                if (inputsToRecalculate && inputsToRecalculate.length) {
+                /* if (inputsToRecalculate && inputsToRecalculate.length) {
 
                 	inputsToRecalculate.forEach(input => {
 						vm.entity[input.name] = cTransactionData.complex_transaction[input.name]
-					})
+					});
 
 				} else {
 					vm.entity = cTransactionData.complex_transaction
+				} */
+				if (!inputsToRecalculate || !inputsToRecalculate.length) {
+
+					vm.entity = cTransactionData.complex_transaction
+
 				}
 
                 var recalculationInfo = {
@@ -686,10 +702,6 @@
                 // vm.processing = false;
 
                 $scope.$apply();
-
-				if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-					vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
-				}
 
 				/* if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
 					vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);

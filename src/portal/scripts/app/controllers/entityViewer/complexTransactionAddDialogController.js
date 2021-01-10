@@ -343,7 +343,8 @@
                 vm.tabs = transactionData.book_transaction_layout.data;
 
             } else {
-                vm.tabs = transactionData.book_transaction_layout.data.tabs;
+
+            	vm.tabs = transactionData.book_transaction_layout.data.tabs;
                 vm.fixedArea = transactionData.book_transaction_layout.data.fixedArea;
 
             }
@@ -393,10 +394,12 @@
 			vm.inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
             if (vm.inputsWithCalculations) {
-				vm.inputsWithCalculations.forEach(function (inputWithCalc) {
+
+            	vm.inputsWithCalculations.forEach(function (inputWithCalc) {
 
                     vm.userInputs.forEach(function (userInput) {
-                        if (userInput.name === inputWithCalc.name) {
+
+                    	if (userInput.name === inputWithCalc.name) {
 
                             if (!userInput.buttons) {
                                 userInput.buttons = [];
@@ -434,14 +437,16 @@
                                 })
                             }
 
-                            if (recalculationInfo && recalculationInfo.recalculatedInputs.indexOf(userInput.name) > -1) { // mark userInputs that were recalculated
+                            if (recalculationInfo && recalculationInfo.recalculatedInputs.includes(userInput.name)) { // mark userInputs that were recalculated
                                 userInput.frontOptions.recalculated = recalculationInfo.recalculationData;
                             }
 
                         }
+
                     })
 
                 });
+
             }
 
 
@@ -471,26 +476,30 @@
                 vm.transactionTypeId = data.transaction_type;
                 vm.editLayoutEntityInstanceId = data.transaction_type;
 
+				var keys = Object.keys(data.values);
+
 				if (inputsToRecalculate && inputsToRecalculate.length) {
 
-					inputsToRecalculate.forEach(input => {
-						vm.entity[input.name] = data.complex_transaction[input.name]
+					inputsToRecalculate.forEach(inputName => {
+
+						vm.entity[inputName] = data.values[inputName]
+
 					})
 
 				} else {
+
 					vm.entity = data.complex_transaction
+
+					keys.forEach(function (key) {
+						vm.entity[key] = data.values[key]
+					});
+
 				}
 
-                vm.transactionType = data.transaction_type_object;
+                vm.transactionType = data.transaction_type_object
 
                 vm.specialRulesReady = true;
                 vm.readyStatus.entity = true;
-
-                var keys = Object.keys(data.values);
-
-                keys.forEach(function (key) {
-                    vm.entity[key] = data.values[key];
-                });
 
                 data.complex_transaction.attributes.forEach(function (item) {
                     if (item.attribute_type_object.value_type === 10) {
@@ -507,12 +516,10 @@
                     }
                 });
 
-
                 var recalculationInfo = {
                     recalculatedInputs: inputsToRecalculate,
                     recalculationData: recalculationData
                 }
-
 
                 postBookComplexTransactionActions(data, recalculationInfo);
 
@@ -521,9 +528,9 @@
 
                 $scope.$apply();
 
-                if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
-                }
+				if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
+					vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+				}
 
             }).catch(function (reason) {
 

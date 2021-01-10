@@ -43,7 +43,11 @@
                     event: {}
                 };
 
-                var fieldsDataIsLoaded = false;
+				scope.inputTextObj = {
+					value: null
+				}
+
+				var fieldsDataIsLoaded = false;
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
@@ -408,7 +412,7 @@
 
                     //}
 
-                    scope.inputText = scope.getInputTextForEntitySearch()
+					scope.inputTextObj.value = scope.getInputTextForEntitySearch()
 
                 });
 
@@ -551,7 +555,7 @@
                     }
 
                     scope.fieldValue = {value: scope.entity[scope.fieldKey]};
-                    scope.inputText = scope.getInputTextForEntitySearch()
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch()
 
 					scope.modelKeyEntity = scope.getModelKeyEntity();
 
