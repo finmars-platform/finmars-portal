@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents')
+
     module.exports = function () {
         return {
             restrict: 'AE',
@@ -22,6 +24,9 @@
                 scope.cellWidth = 0;
                 scope.cellHeight = 0;
 
+                scope.tabPaddingLeft = 8;
+                scope.tabPaddingTop = 8;
+
                 scope.calculateSingleCellWidth = function () {
 
                     var tabWidth = elem.width();
@@ -36,19 +41,24 @@
 
                     // scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
 
-                    scope.cellHeight = 50; // Let it be fixed value
+                    scope.cellHeight = 64; // var it be fixed value
                 };
 
                 scope.resizeGridCells = function () {
 
                     var layout = scope.dashboardDataService.getData();
+                    var projection = scope.dashboardDataService.getProjection();
+
+                    console.log('resizeGridCells.projection', projection);
 
                     var tab;
+                    var projectionTab
 
-                    if(scope.tabNumber === 'fixed_area') {
+                    if (scope.tabNumber === 'fixed_area') {
                         tab = layout.data.fixed_area;
                     } else {
                         tab = layout.data.tabs[scope.tabNumber];
+                        projectionTab = projection[scope.tabNumber]
                     }
 
                     var elements = elem.find('.dashboard-cell');
@@ -60,7 +70,49 @@
                     var columnNumber;
 
 
+                    var accordionRowsIndexes = []
+
+                    console.log('resizeGridCells.tab', tab);
+
+                    if (tab.accordions) {
+                        tab.accordions.forEach(function (item) {
+                            accordionRowsIndexes.push(item.from)
+                        })
+                    }
+
+                    var hiddenRowsIndexes = []
+
+                    if (projectionTab) {
+
+                        projectionTab.accordion_layout.forEach(function (accordion){
+
+                            if (accordion.folded) {
+
+                                accordion.items.forEach(function (item){
+
+                                    hiddenRowsIndexes.push(parseInt(item.row_number, 10))
+
+                                })
+
+                            }
+
+
+                        })
+
+                    }
+
+                    console.log('resizeGridCells.hiddenRowsIndexes', hiddenRowsIndexes);
+
+                    var heightOffset;
+                    var accordionsBefore = 0;
+                    var hiddenRowsBefore = 0;
+                    var domElemOffsetTop;
+                    var domElemOffsetLeft;
+
                     for (var i = 0; i < elements.length; i = i + 1) {
+
+                        accordionsBefore = 0;
+                        hiddenRowsBefore = 0;
 
                         domElem = elements[i];
 
@@ -68,6 +120,7 @@
                         columnNumber = parseInt(domElem.dataset.column, 10);
 
                         layoutElem = tab.layout.rows[rowNumber].columns[columnNumber];
+
 
                         if (layoutElem.cell_type === 'empty') {
 
@@ -85,19 +138,36 @@
 
                         }
 
+                        accordionRowsIndexes.forEach(function (indx) {
+                            if (indx <= rowNumber) {
+                                accordionsBefore = accordionsBefore + 1;
+                            }
+                        })
+
+                        hiddenRowsIndexes.forEach(function (indx) {
+                            if (indx < rowNumber) {
+                                hiddenRowsBefore = hiddenRowsBefore + 1;
+                            }
+                        })
+
+                        heightOffset = (accordionsBefore - hiddenRowsBefore) * scope.cellHeight;
 
                         domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
                         domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
 
                         domElem.style.position = 'absolute';
-                        domElem.style.top = (rowNumber * scope.cellHeight) + 'px';
-                        domElem.style.left = (columnNumber * scope.cellWidth) + 'px';
+
+                        domElemOffsetTop =  (rowNumber * scope.cellHeight + heightOffset + scope.tabPaddingTop)
+                        domElemOffsetLeft =  (columnNumber * scope.cellWidth + scope.tabPaddingLeft)
+
+                        domElem.style.top = domElemOffsetTop + 'px';
+                        domElem.style.left = domElemOffsetLeft + 'px';
 
                     }
 
                     if (emptySpace) {
                         emptySpace.style.position = 'absolute';
-                        emptySpace.style.top = scope.rowsTotal * scope.cellHeight + 'px';
+                        emptySpace.style.top = scope.rowsTotal * (scope.cellHeight + scope.tabPaddingTop) + 'px';
                         emptySpace.style.left = 0;
                         emptySpace.style.height = '200px';
                         emptySpace.style.width = '100%';
@@ -111,7 +181,7 @@
                     var layout = scope.dashboardDataService.getData();
                     var tab;
 
-                    if(scope.tabNumber === 'fixed_area') {
+                    if (scope.tabNumber === 'fixed_area') {
                         tab = layout.data.fixed_area;
                     } else {
                         tab = layout.data.tabs[scope.tabNumber];
@@ -134,6 +204,10 @@
                         scope.resize()
 
                     }, 0);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.RESIZE, function () {
+                        scope.resize();
+                    })
 
                     window.addEventListener('resize', function () {
                         scope.resize();

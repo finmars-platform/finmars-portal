@@ -10,7 +10,7 @@
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
-    var checkIcon = renderHelper.getCheckIcon();
+    var checkIcon = renderHelper.getIconByKey('checkIcon');
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
 
@@ -396,6 +396,7 @@
 
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
+        var rowHeight = evDataService.getRowHeight();
 
         var rowSelection;
 
@@ -418,8 +419,9 @@
         }
 
         var classes = classList.join(' ');
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
-        var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         var textAlign;

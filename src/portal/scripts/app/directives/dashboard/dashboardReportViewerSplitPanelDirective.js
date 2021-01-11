@@ -6,8 +6,9 @@
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
-    var DashboardComponentEventService = require('../../services/dashboard/dashboardComponentEventService');
+    var DashboardComponentEventService = require('../../services/eventService');
 
+    // DEPRECATED
     module.exports = function ($mdDialog) {
         return {
             restriction: 'E',

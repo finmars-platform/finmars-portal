@@ -4,8 +4,8 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
     var utilsHelper = require('../../helpers/utils.helper');
-    var evEvents = require('../../services/entityViewerEvents');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
 
@@ -547,7 +547,8 @@
 
             }
 
-            if (!selection.length) {
+
+            if (clickData.isShiftPressed) {
 
                 if (event.detail === 1) {
 
@@ -568,7 +569,26 @@
                     }
                 }
 
+            } else if (!selection.length) {
 
+                if (event.detail === 1) {
+
+                    if (clickData.___type === 'group') {
+
+                        handleGroupClick(clickData, evDataService, evEventService);
+
+                    }
+
+                    if (clickData.___type === 'control') {
+                        handleControlClick(clickData, evDataService, evEventService);
+                    }
+
+                    if (clickData.___type === 'object') {
+
+                        handleObjectClick(clickData, evDataService, evEventService);
+
+                    }
+                }
 
             }
         });
@@ -594,8 +614,6 @@
             var dropdownAction = event.target.dataset.evDropdownAction;
 
             var dropdownActionData = {};
-
-            console.log('event.target.dataset', event.target.dataset);
 
             if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
@@ -640,12 +658,13 @@
 
         clearDropdowns();
 
+        /*var dropdownWidth = 320;
+        var dropdownOptionHeight = 24;
         var popup = document.createElement('div');
 
         // clearActivated(evDataService);
 
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-        var viewContext = evDataService.getViewContext();
 
         obj.___is_activated = true;
 
@@ -654,11 +673,18 @@
         popup.id = 'dropdown-' + objectId;
         popup.classList.add('ev-dropdown');
 
+        popup.style.width = dropdownWidth + 'px';
+        popup.style.cssText = menuPosition;
+        popup.style.position = 'absolute';*/
+
+        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, false);
+
         var innerHTMLString = '';
+        var viewContext = evDataService.getViewContext();
 
         if (viewContext === 'reconciliation_viewer') {
 
-            innerHTMLString = '<div>' +
+            innerHTMLString = '<div class="ev-dropdown-container">' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="recon_view_bank_file_line"' +
                 ' data-object-id="' + objectId + '"' +
@@ -680,7 +706,7 @@
 
         } else {
 
-            innerHTMLString = '<div>' +
+            innerHTMLString = '<div class="ev-dropdown-container">' +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="edit"' +
                 ' data-object-id="' + objectId + '"' +
@@ -740,8 +766,7 @@
 
         popup.innerHTML = innerHTMLString;
 
-        popup.style.cssText = menuPosition;
-        popup.style.position = 'absolute';
+        evDataHelper.calculateMenuPosition(popup, menuPosition);
 
         document.body.appendChild(popup);
 
@@ -820,7 +845,8 @@
                     ev.preventDefault();
                     ev.stopPropagation();
 
-                    var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                    //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+                    var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
                     createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
@@ -883,13 +909,21 @@
 
     var calculateTotalHeight = function (evDataService) {
 
-        var unfoldedGroups = evDataHelper.getUnfoldedGroups(evDataService);
+        // var unfoldedGroups = evDataHelper.getUnfoldedGroups(evDataService);
+        //
+        // var count = 0;
+        //
+        // unfoldedGroups.forEach(function (group) {
+        //     count = count + group.results.length + 1; // 1 for control row
+        // });
+        //
+        // var rowHeight = evDataService.getRowHeight();
+        //
+        // var extraHeight = 10 * rowHeight;
+        //
+        // return Math.floor(rowHeight * count) + extraHeight;
 
-        var count = 0;
-
-        unfoldedGroups.forEach(function (group) {
-            count = count + group.results.length + 1; // 1 for control row
-        });
+        var count = evDataService.getFlatList().length;
 
         var rowHeight = evDataService.getRowHeight();
 
@@ -899,7 +933,7 @@
 
     };
 
-    var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
+    /*var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
 
         var splitPanelIsActive = evDataService.isSplitPanelActive();
 
@@ -914,7 +948,7 @@
             contentWrapElement.style.height = "";
         }
 
-    };
+    };*/
 
     var calculateScroll = function (elements, evDataService, evScrollManager) {
 
@@ -922,8 +956,6 @@
         evScrollManager.setContentElem(elements.contentElem);
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
         evScrollManager.setRootWrapElem(elements.rootWrapElem);
-
-        var isRootEntityViewer = evDataService.isRootEntityViewer();
 
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
@@ -985,7 +1017,7 @@
         var totalHeight = calculateTotalHeight(evDataService);
 
         evScrollManager.setContentElemHeight(totalHeight);
-        evScrollManager.setContentElemPaddingTop(paddingTop);
+        // evScrollManager.setContentElemPaddingTop(paddingTop);
 
     };
 
@@ -1034,31 +1066,45 @@
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
-            console.log('View Context: ' + evDataService.getViewContext() + '. addScrollListener.viewportElem', viewportElem);
-            console.log('View Context: ' + evDataService.getViewContext() + '. addScrollListener. contentWrapElem', contentWrapElem);
+            var rowHeight = evDataService.getRowHeight();
+            var from = Math.ceil(viewportElem.scrollTop / rowHeight);
+            var lastFrom = evDataService.getProjectionLastFrom();
 
-            // if (lastScrollTop && lastScrollTop > viewportElem.scrollTop) {
-            //     direction = 'top'
-            // }
-            //
-            // if (lastScrollTop && lastScrollTop < viewportElem.scrollTop) {
-            //     direction = 'bottom'
-            // }
-
-            // evDataService.setVirtualScrollDirection(direction);
-            // evDataService.setVirtualScrollPreviousOffsetPx(lastScrollTop);
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
 
+            var step = evDataService.getVirtualScrollStep();
+            var halfstep = step / 2;
 
-            // calculateScroll(elements, evDataService);
+            // Example
+            // step = 200 rendered rows
+            // Users see 100 rows before Viewport, N rows in viewport and step - 100 - N after viewport
+            // Render happened, we render rows from 0 to 99, because we start from 0
+            // halfstep - (halfstep / 4) = 75, that means, we will render next step as
+            // from 0 - to 175 (+- 100)
+            // And so on
 
-            paddingTop = calculatePaddingTop(evDataService);
-            evScrollManager.setContentElemPaddingTop(paddingTop);
-            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+            // If we scroll upwards
+            // lets start lastFrom = 500
+            // it means we render from 300 and to 599
+            // step threshold is still 75
+            // lets scroll to from = 400
+            // 500 - 400 = 100 its bigger then 75
+            // lastFrom = 400 now,
+            // It means we render from 300 to 499
 
-            // lastScrollTop = viewportElem.scrollTop;
+            if (from < lastFrom) {
+                if(Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            } else {
+                if(Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            }
 
-        }, 10);
+            calculateScroll(elements, evDataService, evScrollManager)
+
+        }, 100);
 
         var scrollXHandler = function () {
 
@@ -1079,7 +1125,8 @@
         initEventDelegation: initEventDelegation,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         createPopupMenu: createPopupMenu,
-        calculateContentWrapHeight: calculateContentWrapHeight,
+        /*calculateContentWrapHeight: calculateContentWrapHeight,
+        calculateContentWrapWidth: calculateContentWrapWidth,*/
         calculateVirtualStep: calculateVirtualStep,
         calculateScroll: calculateScroll,
         addScrollListener: addScrollListener

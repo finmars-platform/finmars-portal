@@ -2,11 +2,9 @@
  * Created by szhitenev on 28.06.2016.
  */
 (function () {
+    "use strict";
 
-    'use strict';
-
-    var instrumentService = require('../../services/instrumentService');
-    var entityResolverService = require('../../services/entityResolverService');
+    var entityResolverService = require("../../services/entityResolverService");
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -21,233 +19,230 @@
         var selectedRow = data.selectedItem;
 
         var page = 1;
-        vm.pageSize = 40;
+        var pageSize = 40;
+        // var lastPageReached = false;
 
         vm.search = {
-            'instrument': {
-                'user_code': '',
-                'name': '',
-                'short_name': '',
-                'user_text_1': '',
-                'user_text_2': '',
-                'user_text_3': ''
+            instrument: {
+                user_code: "",
+                name: "",
+                short_name: "",
+                user_text_1: "",
+                user_text_2: "",
+                user_text_3: "",
             },
-            'account': {
-                'user_code': '',
-                'name': '',
-                'short_name': ''
+            account: {
+                user_code: "",
+                name: "",
+                short_name: "",
             },
-            'portfolio': {
-                'user_code': '',
-                'name': '',
-                'short_name': ''
+            portfolio: {
+                user_code: "",
+                name: "",
+                short_name: "",
             },
-            'responsible': {
-                'user_code': '',
-                'name': '',
-                'short_name': ''
+            responsible: {
+                user_code: "",
+                name: "",
+                short_name: "",
             },
-            'counterparty': {
-                'user_code': '',
-                'name': '',
-                'short_name': ''
+            counterparty: {
+                user_code: "",
+                name: "",
+                short_name: "",
             },
-            'currency': {
-                'user_code': '',
-                'name': '',
-                'short_name': ''
+            currency: {
+                user_code: "",
+                name: "",
+                short_name: "",
             },
-            'strategy-1': {
-                'user_code': '',
-                'name': '',
-                'short_name': ''
+            "strategy-1": {
+                user_code: "",
+                name: "",
+                short_name: "",
             },
-            'strategy-2': {
-                'user_code': '',
-                'name': '',
-                'short_name': ''
+            "strategy-2": {
+                user_code: "",
+                name: "",
+                short_name: "",
             },
-            'strategy-3': {
-                'user_code': '',
-                'name': '',
-                'short_name': ''
-            }
+            "strategy-3": {
+                user_code: "",
+                name: "",
+                short_name: "",
+            },
         };
 
         vm.columns = {
-            'instrument': [
+            instrument: [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
+                    key: "short_name",
+                    name: "Short name",
                 },
                 {
-                    key: 'user_text_1',
-                    name: 'User text 1'
+                    key: "user_text_1",
+                    name: "User text 1",
                 },
                 {
-                    key: 'user_text_2',
-                    name: 'User text 2'
+                    key: "user_text_2",
+                    name: "User text 2",
                 },
                 {
-                    key: 'user_text_3',
-                    name: 'User text 3'
+                    key: "user_text_3",
+                    name: "User text 3",
                 },
                 {
-                    key: 'instrument_type_object.name',
-                    sortParameter: 'instrument_type',
-                    name: 'Instrument type'
-                }
+                    key: "instrument_type_object.name",
+                    name: "Instrument type",
+                },
             ],
-            'account': [
+            account: [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
-                }
+                    key: "short_name",
+                    name: "Short name",
+                },
             ],
-            'portfolio': [
+            portfolio: [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
-                }
+                    key: "short_name",
+                    name: "Short name",
+                },
             ],
-            'responsible': [
+            responsible: [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
-                }
+                    key: "short_name",
+                    name: "Short name",
+                },
             ],
-            'counterparty': [
+            counterparty: [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
-                }
+                    key: "short_name",
+                    name: "Short name",
+                },
             ],
-            'currency': [
+            currency: [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
-                }
+                    key: "short_name",
+                    name: "Short name",
+                },
             ],
-            'strategy-1': [
+            "strategy-1": [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
-                }
+                    key: "short_name",
+                    name: "Short name",
+                },
             ],
-            'strategy-2': [
+            "strategy-2": [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
-                }
+                    key: "short_name",
+                    name: "Short name",
+                },
             ],
-            'strategy-3': [
+            "strategy-3": [
                 {
-                    key: 'user_code',
-                    name: 'User code'
+                    key: "user_code",
+                    name: "User code",
                 },
                 {
-                    key: 'name',
-                    name: 'Name'
+                    key: "name",
+                    name: "Name",
                 },
                 {
-                    key: 'short_name',
-                    name: 'Short name'
-                }
-            ]
+                    key: "short_name",
+                    name: "Short name",
+                },
+            ],
         };
 
         vm.items = [];
+        vm.recentlyCreatedItems = []
         vm.selectedItem = {};
 
-        var scrollElem = null;
-        var scrollAtTheEnd = false;
-        var elemScrollHeight = null;
-        var scrollPositionToLoadItems = null;
-
         vm.agree = function () {
-
             if (itemsToDelete.length > 0) {
                 itemsToDelete.forEach(function (itemId) {
                     entityResolverService.deleteByKey(vm.entityType, itemId);
                 });
             }
 
-            $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem, items: vm.items}});
+            $mdDialog.hide({
+                status: "agree",
+                data: {item: vm.selectedItem, items: vm.items},
+            });
         };
 
         vm.cancel = function () {
-            $mdDialog.hide('disagree');
+            $mdDialog.hide("disagree");
         };
 
         vm.getTdValue = function (item, columnKey) {
             // check if value positioned on a deeper level of an object
-            if (columnKey.indexOf('.') !== -1) {
-
-                var objectPathToValue = columnKey.split('.'); // an array of properties leading to a needed value inside of the object
+            if (columnKey.indexOf(".") !== -1) {
+                var objectPathToValue = columnKey.split("."); // an array of properties leading to a needed value inside of the object
                 var currentPath = item; // current nesting level in the object
 
                 var i;
@@ -266,15 +261,38 @@
         };
 
         vm.selectRow = function (item) {
+
             vm.items.forEach(function (item) {
                 item.active = false;
             });
-            vm.selectedItem = item;
-            item.active = true;
+
+            if (item) {
+                vm.selectedItem = item;
+                item.active = true;
+                vm.recentlyCreatedSelectRow(null);
+            }
+
         };
 
+        vm.recentlyCreatedSelectRow = function (item) {
+
+            vm.recentlyCreatedItems.forEach(function (item) {
+                item.active = false;
+            });
+
+            if (item) {
+                vm.selectedItem = item;
+                item.active = true;
+                vm.selectRow(null);
+            }
+
+        }
+
         vm.selectAndSave = function (item) {
-            $mdDialog.hide({status: 'agree', data: {item: item, items: vm.items}});
+            $mdDialog.hide({
+                status: "agree",
+                data: {item: item, items: vm.items},
+            });
         };
 
         vm.sort;
@@ -282,53 +300,50 @@
         vm.sortingOptions = undefined;
 
         vm.sortBy = function (sortParameter) {
-
-            var sortOrder = 'DSC';
+            var sortOrder = "DSC";
             if (vm.sort === sortParameter) {
-
                 vm.sortDescending = !vm.sortDescending;
 
                 if (vm.sortDescending) {
-                    sortOrder = 'DSC';
+                    sortOrder = "DSC";
                 } else {
-                    sortOrder = 'ASC';
+                    sortOrder = "ASC";
                 }
             } else {
-                vm.sort = sortParameter
+                vm.sort = sortParameter;
                 vm.sortDescending = true;
             }
 
             vm.sortingOptions = {
                 key: sortParameter,
-                direction: sortOrder
+                direction: sortOrder,
             };
 
-            vm.getEntityItems('reloadTable').then(refreshScrollHeight);
-
+            vm.getEntityItems("reloadTable");
         };
 
         vm.editItem = function (itemId, $event) {
-
-            $mdDialog.show({
-                controller: 'EntityViewerEditDialogController as vm',
-                templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                parent: $(''),
-                targetEvent: $event,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    entityType: vm.entityType,
-                    entityId: itemId,
-                    data: {}
-                }
-            }).then(function (data) {
-
-                if (data.res === 'agree') {
-                    vm.getEntityItems('reloadTable');
-                }
-
-            })
+            $mdDialog
+                .show({
+                    controller: "EntityViewerEditDialogController as vm",
+                    templateUrl:
+                        "views/entity-viewer/entity-viewer-edit-dialog-view.html",
+                    parent: $(""),
+                    targetEvent: $event,
+                    multiple: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        entityType: vm.entityType,
+                        entityId: itemId,
+                        data: {},
+                    },
+                })
+                .then(function (data) {
+                    if (data.res === "agree") {
+                        vm.getEntityItems("reloadTable");
+                    }
+                });
         };
 
         var itemsToDelete = [];
@@ -339,34 +354,43 @@
         };
 
         vm.loadOnScroll = function () {
+            var scrollAtTheEnd = false;
+            var scrollElem = document.querySelector(
+                ".entity-search-scroll-container"
+            );
+            var elemScrollHeight = scrollElem.scrollHeight;
+            var scrollPositionToLoadItems = scrollElem.clientHeight * 1.5; // start item loading when scroll almost at the end
 
-            scrollElem.addEventListener('scroll', function () {
-
+            scrollElem.addEventListener("scroll", function () {
                 // Call function when scroll reaches specified position
-                if (elemScrollHeight - scrollElem.scrollTop < scrollPositionToLoadItems && !scrollAtTheEnd) {
+                if (
+                    elemScrollHeight - scrollElem.scrollTop < scrollPositionToLoadItems &&
+                    !scrollAtTheEnd
+                ) {
                     scrollAtTheEnd = true;
 
                     if (vm.itemsCount && vm.itemsCount > vm.items.length) {
                         page = page + 1;
 
-                        vm.getEntityItems().then(refreshScrollHeight);
-
+                        vm.getEntityItems().then(function (data) {
+                            // refreshing of scroll height after loading new page of items
+                            elemScrollHeight = scrollElem.scrollHeight;
+                            scrollPositionToLoadItems = elemScrollHeight / 3;
+                            scrollAtTheEnd = false;
+                        });
                     }
-
                 }
-
             });
-
         };
 
         var getTableOptions = function () {
             var options = {};
 
             options.page = page;
-            options.pageSize = vm.pageSize;
+            options.pageSize = pageSize;
 
             if (vm.sortingOptions) {
-                options.sort = new Object();
+                //options.sort = new Object();
                 options.sort = vm.sortingOptions;
             }
 
@@ -375,89 +399,124 @@
             return options;
         };
 
-        var refreshScrollHeight = function () {
-
-            // refreshing of scroll height after loading new page of items
-            elemScrollHeight = scrollElem.scrollHeight;
-            scrollPositionToLoadItems = scrollElem.clientHeight * 1.5; // start item loading when scroll almost at the end
-            scrollAtTheEnd = false;
-
-        };
-
         vm.getEntityItems = function (reloadTable) {
-
             vm.processing = true;
+            //$scope.$apply();
 
             return new Promise(function (resolve, reject) {
-
                 // if reloadTable parameter exist, reset options and vm.items
                 if (reloadTable) {
                     page = 1;
                     vm.itemsCount = null;
-                    scrollElem.scrollTop = 0;
+                    $(".entity-search-scroll-container").scrollTop(0);
                 }
 
+                entityResolverService
+                    .getListLight(vm.entityType, getTableOptions())
+                    .then(function (data) {
+                        if (data.hasOwnProperty("count")) {
+                            vm.itemsCount = data.count;
+                        }
 
-                entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
+                        if (reloadTable) {
+                            vm.items = data.results;
+                        } else {
+                            vm.items = vm.items.concat(data.results);
+                        }
 
-                    if (data.hasOwnProperty('count')) {
-                        vm.itemsCount = data.count;
-                    }
+                        setTimeout(function () {
+                            vm.processing = false;
 
-                    if (reloadTable) {
-                        vm.items = data.results;
-                    } else {
-                        vm.items = vm.items.concat(data.results);
-                    }
-
-                    vm.processing = false;
-
-                    $scope.$apply();
-                    resolve({status: 'loaded'});
-
-                });
-            })
+                            $scope.$apply();
+                            resolve({status: "loaded"});
+                        }, 2000);
+                    });
+            });
         };
 
         vm.init = function () {
             setTimeout(function () {
-                vm.dialogElemToResize = document.querySelector('.entityEditorElemToResize');
+                vm.dialogElemToResize = document.querySelector(
+                    ".entityEditorElemToResize"
+                );
             }, 100);
 
-            entityResolverService.getList(vm.entityType, getTableOptions()).then(function (data) {
+            entityResolverService
+                .getListLight(vm.entityType, getTableOptions())
+                .then(function (data) {
+                    vm.readyStatus.data = true;
 
-                vm.readyStatus.data = true;
+                    if (data.hasOwnProperty("count")) {
+                        vm.itemsCount = data.count;
+                    }
 
-                if (data.hasOwnProperty('count')) {
-                    vm.itemsCount = data.count;
-                }
+                    vm.items = data.results;
 
-                vm.items = data.results;
+                    if (selectedRow) {
+                        vm.items = vm.items.map(function (item) {
+                            if (item.id === selectedRow) {
+                                item.active = true;
+                            }
 
-                if (selectedRow) {
-                    vm.items = vm.items.map(function (item) {
+                            return item;
+                        });
+                    }
 
-                        if (item.id === selectedRow) {
-                            item.active = true;
-                        }
+                    $scope.$apply();
+                    vm.loadOnScroll();
+                });
+        };
 
-                        return item;
-                    });
-                }
+        // Victor 09.10.2020
+        vm.createEntity = function ($event) {
 
-                $scope.$apply();
+            $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
 
-                scrollElem = document.querySelector('.entity-search-scroll-container');
-                refreshScrollHeight();
-
-                vm.loadOnScroll();
-
-            });
+            $mdDialog
+                .show({
+                    controller: "EntityViewerAddDialogController as vm",
+                    templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        entityType: vm.entityType,
+                        entity: {
+                            accrual_calculation_schedules: []
+                        },
+                        data: {},
+                    },
+                })
+                .then(function (res) {
+                    if (res && res.res === "agree") {
+                        vm.getEntityItems("reloadTable");
+                        var item = res.data;
+                        vm.recentlyCreatedItems.push(item);
+                        vm.recentlyCreatedSelectRow(item);
+                    }
+                });
 
         };
 
+        // Victor 09.10.2020
+        vm.downloadEntity = function ($event) {
+
+            $mdDialog.show({
+                controller: 'InstrumentDownloadDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    data: {}
+                }
+            }).then(function (res) {
+                vm.getEntityItems("reloadTable");
+                var item = res.data;
+                vm.recentlyCreatedItems.push(item)
+                vm.recentlyCreatedSelectRow(item);
+            })
+        };
+
         vm.init();
-
     };
-
-}());
+})();

@@ -7,7 +7,7 @@
 
     var getDefaultInterfaceLayout = function () {
 
-        var sidebarWidth = 200;
+        var sidebarWidth = 160;
         var sidebarHeight = document.body.clientHeight;
 
         var headerToolbarHeight = 64;
@@ -55,6 +55,9 @@
                 left: filterAreaLeft,
                 top: headerToolbarHeight,
                 width: filterAreaWidth
+            },
+            verticalSplitPanel: {
+                width: 0
             },
             splitPanel: {
                 height: 0
@@ -110,8 +113,11 @@
                 data: null
             },
             allRowsSelected: false,
+            activeGroupTypeSort: null,
+            activeColumnSort: null,
             rootEntityViewer: false,
             splitPanelIsActive: false,
+            verticalSplitPanelIsActive: false,
             splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
             splitPanelLayoutToOpen: null,
             additions: {},
@@ -138,7 +144,7 @@
             viewSettings: {},
             lastViewSettings: {},
             ev_options: {},
-            activeLayoutConfiguration: {},
+            activeLayoutConfiguration: {}, // used to check layout for changes
             interfaceLayout: null,
             requestParameters: {},
             activeRequestParametersId: null,
@@ -213,6 +219,14 @@
 
         function isSplitPanelActive() {
             return data.splitPanelIsActive;
+        }
+
+        function setVerticalSplitPanelStatus(status) {
+            data.verticalSplitPanelIsActive = status;
+        }
+
+        function isVerticalSplitPanelActive() {
+            return data.verticalSplitPanelIsActive;
         }
 
         function setEntityType(entityType) {
@@ -387,6 +401,14 @@
 
         function setProjection(projection) {
             data.projection = projection
+        }
+
+        function setProjectionLastFrom(from) {
+            data.projection_last_from = from
+        }
+
+        function getProjectionLastFrom() {
+            return data.projection_last_from;
         }
 
         function getProjection() {
@@ -604,8 +626,6 @@
         }
 
         function getRequestParameters(id) {
-
-            // console.log('data.requestParameters', data.requestParameters);
 
             if (data.requestParameters[id]) {
                 return data.requestParameters[id]
@@ -1066,18 +1086,19 @@
                 if (!entityViewerOptions) {
 
                     entityViewerOptions = {
-                        complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
-                        entity_filters: ['disabled', 'deleted', 'inactive']
+                        // complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
+                        entity_filters: ['enabled', 'disabled', 'active', 'inactive']
                     }
 
-                } else if (!entityViewerOptions.complex_transaction_filters) {
-
-                    entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
-
-
+                // } else if (!entityViewerOptions.complex_transaction_filters) {
+                //
+                //     entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
+                //
+                //
+                // } else if (!entityViewerOptions.entity_filters){
                 } else if (!entityViewerOptions.entity_filters){
 
-                    entityViewerOptions.entity_filters = ['disabled', 'deleted', 'inactive'];
+                    entityViewerOptions.entity_filters = ['enabled', 'disabled', 'active', 'inactive'];
                 }
 
                 setEntityViewerOptions(entityViewerOptions);
@@ -1177,7 +1198,7 @@
         }
 
         function getEntityViewerOptions() {
-            return data.ev_options || {};
+            return data.ev_options;
         }
 
         function setCurrentMember(member) {
@@ -1282,6 +1303,14 @@
         }
         // END: Methods for dashboard
 
+        function setMissingPrices(prices) {
+            data.missingPrices = prices;
+        }
+
+        function getMissingPrices() {
+            return data.missingPrices;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1333,6 +1362,9 @@
 
             setProjection: setProjection,
             getProjection: getProjection,
+
+            setProjectionLastFrom: setProjectionLastFrom,
+            getProjectionLastFrom: getProjectionLastFrom,
 
             setFlatList: setFlatList,
             getFlatList: getFlatList,
@@ -1434,6 +1466,8 @@
 
             setSplitPanelStatus: setSplitPanelStatus,
             isSplitPanelActive: isSplitPanelActive,
+            setVerticalSplitPanelStatus: setVerticalSplitPanelStatus,
+            isVerticalSplitPanelActive: isVerticalSplitPanelActive,
             setSplitPanelDefaultLayout: setSplitPanelDefaultLayout,
             getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
             setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,
@@ -1485,6 +1519,9 @@
 
             setDataLoadStatus: setDataLoadStatus,
             didDataLoadEnd: didDataLoadEnd,
+
+            setMissingPrices: setMissingPrices,
+            getMissingPrices: getMissingPrices,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

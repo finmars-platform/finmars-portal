@@ -350,6 +350,12 @@
                 controller: 'ProcessesController as vm'
             })
 
+            .state('app.system-messages', {
+                url: '/system-messages',
+                templateUrl: 'views/pages/system-messages-view.html',
+                controller: 'SystemMessagesController as vm'
+            })
+
             .state('app.pricing-policy', {
                 url: '/pricing-policies',
                 templateUrl: 'views/pages/pricing-policy-page-view.html',
@@ -645,7 +651,12 @@
             .state('app.settings.color-palettes', {
                 url: '/palettes',
                 templateUrl: 'views/colorPicker/color-palettes-settings-view.html',
-                controller: 'ColorPalettesSettingsController as vm'
+                controller: 'ColorPalettesSettingsController as vm',
+				resolve: {
+                	data: function() { // setting 'data' dependency
+                		return '';
+					}
+				}
             })
             .state('app.settings.import-configuration', {
                 url: '/import-configuration',

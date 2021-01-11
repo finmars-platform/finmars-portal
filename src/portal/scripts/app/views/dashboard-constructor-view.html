@@ -151,6 +151,9 @@
                             <md-button class="md-raised"
                                        data-ng-click="vm.openTabsEditor($event)"
                                        data-ng-disabled="!vm.layout.data.tabs || vm.layout.data.tabs.length < 2">Change order of tabs</md-button>
+                            <md-button class="md-raised"
+                                       data-ng-click="vm.openAccordionEditor($event)"
+                                       data-ng-disabled="!vm.layout.data.tabs">Accordion manager</md-button>
                         </div>
 
                         <div class="dashboard-constructor-tabs-holder">
@@ -331,6 +334,12 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
+                                <md-button ng-click="vm.createComponent('report_viewer_table_chart', $event)"
+                                           class="g-settings-option-btn">
+                                    <span>Report Viewer Table Chart</span>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
                                 <md-button ng-click="vm.createComponent('report_viewer_bars_chart', $event)"
                                            class="g-settings-option-btn">
                                     <span>Report Viewer Charts</span>
@@ -348,8 +357,29 @@
                                     <span>Entity Viewer Split Panel</span>
                                 </md-button>
                             </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="vm.importComponent('entity_viewer_split_panel', $event)"
+                                           class="g-settings-option-btn">
+                                    <span>Import from another dashboard</span>
+                                </md-button>
+                            </md-menu-item>
                         </md-menu-content>
                     </md-menu>
+                    <div class="p-t-24">
+
+                        <input type="text"
+                               aria-label="name filter"
+                               ng-model="nameFilterContext"
+                               placeholder="(o) Search by name"
+                               class="forms-data-constructor-filter-input">
+
+                        <input type="text"
+                               aria-label="type filter"
+                               ng-model="typeFilterContext"
+                               placeholder="(o) Search by type"
+                               class="forms-data-constructor-filter-input">
+
+                    </div>
 
                     <p class="dashboard-constructor-comp-cards-top-text">
                         Drag fields from here
@@ -357,7 +387,7 @@
 
                     <div class="dashboard-constructor-comp-cards-container">
                         <div class="dashboard-constructor-draggable-card"
-                             data-ng-repeat="item in vm.availableComponentsTypes track by item.id" style="padding: 4px">
+                             data-ng-repeat="item in vm.availableComponentsTypes | filter: {name: nameFilterContext, type: typeFilterContext} track by item.id" style="padding: 4px">
 
                             <md-card class=" dashboard-field-card" class="p-l-16" data-index="{{$index}}"
                                      data-component-id="{{item.id}}" layout="row">
@@ -397,7 +427,7 @@
                     <md-button ng-click="vm.goToDashboard($event)" class="md-raised">
                         Go to Dashboard
                     </md-button>
-                    <md-button ng-click="vm.saveLayout($event)" ng-class="{'disabled-btn': !vm.layout.name}"
+                    <md-button ng-click="vm.saveLayout()" ng-class="{'disabled-btn': !vm.layout.name}"
                                class="md-raised">
                         Save
                     </md-button>

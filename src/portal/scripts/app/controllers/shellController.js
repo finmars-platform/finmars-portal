@@ -6,6 +6,7 @@
     'use strict';
 
     var cookiesService = require('../../../../core/services/cookieService');
+    var localStorageService = require('../../../../core/services/localStorageService');
 
     var usersService = require('../services/usersService');
     var metaContentTypesService = require('../services/metaContentTypesService');
@@ -14,6 +15,7 @@
     var metaService = require('../services/metaService');
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
+    var websocketService = require('../services/websocketService');
 
     var crossTabEvents = {
         'MASTER_USER_CHANGED': 'MASTER_USER_CHANGED',
@@ -31,6 +33,7 @@
 
         vm.currentGlobalState = 'portal';
         vm.currentMasterUser = '';
+		var member = '';
 
         vm.broadcastManager = null;
 
@@ -57,30 +60,34 @@
 
         vm.getMasterUsersList = function () {
 
-            vm.readyStatus.masters = false;
+            vm.readyStatus.masters = false
 
             // return usersService.getMasterList().then(function (data) {
+			return new Promise(function (resolve, reject) {
 
-            return usersService.getMasterListLight().then(function (data) {
+				usersService.getMasterListLight().then(function (data) {
 
-                if (data.hasOwnProperty('results')) {
-                    vm.masters = data.results;
-                    vm.readyStatus.masters = true;
+					if (data.hasOwnProperty('results')) {
+						vm.masters = data.results
 
-                    if (vm.masters.length) {
-                        vm.updateCurrentMasterUser();
-                    }
+						if (vm.masters.length) {
+							vm.updateCurrentMasterUser();
+						}
 
-                    $scope.$apply();
-                } else {
+					} else {
+						vm.masters = []
+					}
 
-                    vm.masters = [];
-                    vm.readyStatus.masters = true;
-                    $scope.$apply();
+					vm.readyStatus.masters = true
+					$scope.$apply();
 
-                }
+					resolve();
 
-            });
+				}).catch(function (error) {
+					reject(error);
+				});
+
+			});
 
         };
 
@@ -89,7 +96,10 @@
             vm.masters.forEach(function (item) {
 
                 if (item.is_current) {
-                    vm.currentMasterUser = item;
+
+                    vm.currentMasterUser = item
+                    websocketService.send({action: "update_user_state", data: {master_user: vm.currentMasterUser}});
+
                 }
 
             });
@@ -225,7 +235,7 @@
             return metaService.getCurrentLocation($state).toUpperCase();
         };*/
         vm.currentLocation = function () {
-            return metaService.getHeaderTitleForCurrentLocation($state);
+            return metaService.getHeaderTitleForCurrentLocation($state).toLocaleLowerCase();
         };
 
         // Get name of active layout in the toolbar
@@ -243,10 +253,10 @@
 
                 pageStateName = transition.to().name;
                 pageStateParams.strategyNumber = transition.params().strategyNumber;
-                //pageStateParams.layoutName = transition.params().layoutName;
                 pageStateParams.layoutUserCode = transition.params().layoutUserCode;
 
                 if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
+
                     showLayoutName = true;
                     vm.activeLayoutName = null;
                     vm.activeSPLayoutName = false;
@@ -308,9 +318,8 @@
             } else {
 
                 var entityType = metaContentTypesService.getContentTypeUIByState(pageStateName, pageStateParams.strategyNumber);
-                //var layoutNameFromParams = pageStateParams.layoutName;
+                // var layoutNameFromParams = pageStateParams.layoutName;
                 var layoutUserCode = pageStateParams.layoutUserCode;
-                var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
                 var setLayoutName = function (layoutData) {
 
@@ -325,17 +334,11 @@
 
                 };
 
-                /*if (layoutNameFromParams) { // state params value updates earlier than window.location.href
-
-                    vm.activeLayoutName = layoutNameFromParams;
-
-                }*/
                 if (layoutUserCode) {
 
-                    uiService.getListLayoutDefault({
+                    uiService.getListLayout(entityType,{
                         pageSize: 1000,
                         filters: {
-                            content_type: contentType,
                             user_code: layoutUserCode
                         }
 
@@ -349,8 +352,10 @@
                         } else {
 
                             uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+
                                 var defaultLayoutRes = defaultLayoutData.results;
                                 setLayoutName(defaultLayoutRes);
+
                             });
 
                         }
@@ -381,10 +386,9 @@
 
                     });
 
-                    uiService.getListLayoutDefault({
+                    uiService.getListLayout(entityType, {
                         pageSize: 1000,
                         filters: {
-                            content_type: contentType,
                             name: layoutName
                         }
                     }).then(function (activeLayoutData) {
@@ -399,7 +403,6 @@
                     uiService.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
                         var defaultLayoutRes = defaultLayoutData.results;
-
                         setLayoutName(defaultLayoutRes);
 
                     });
@@ -734,20 +737,55 @@
 
         vm.getUser = function() {
 
-            usersService.getMe().then(function (data) {
+        	return new Promise(function (resolve, reject) {
 
-                vm.user = data;
+        		usersService.getMe().then(function (data) {
 
-                $scope.$apply();
-            });
+					vm.user = data;
+
+					resolve();
+
+				}).catch(function (error) {
+					reject(error);
+				});
+
+			});
+
 
         };
 
+        var getMember = function () {
+
+        	return new Promise(function (resolve, reject) {
+
+        		usersService.getMyCurrentMember().then(function (data) {
+
+        			member = data;
+
+                    websocketService.send({action: "update_user_state", data: {member: member}});
+
+        			resolve(member);
+
+				}).catch(function (error) {
+				    
+				    console.error(error);
+				    
+					reject(error);
+				});
+
+			});
+
+		}
+
+		var transactionsList = [
+			'app.settings.general.init-configuration', 'app.settings.init-configuration',
+			'app.settings.ecosystem-default-settings', 'app.settings.data-providers', 'app.settings.users-groups',
+			'app.processes'
+		];
+
         function enableAccessHandler($transitions) {
 
-            usersService.getMyCurrentMember().then(function (data) {
-
-                var member = data;
+            // usersService.getMyCurrentMember().then(function (data) {
 
                 $transitions.onStart({}, function (transition) {
 
@@ -757,34 +795,14 @@
 
                     console.log('transition.to().name', transition.to().name);
 
-                    if (transition.to().name === 'app.settings.general.init-configuration') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.settings.init-configuration') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.settings.ecosystem-default-settings') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.settings.data-providers') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.settings.users-groups') {
-                        return false;
-                    }
-
-                    if (transition.to().name === 'app.processes') {
-                        return false;
-                    }
+                    if (transactionsList.includes(transition.to().name)) {
+						return false;
+					}
 
                     return true;
                 })
 
-            })
+            // })
 
         }
 
@@ -802,8 +820,6 @@
             window.addEventListener('error', function (e) {
                 toastr.error(e.error);
             });
-
-            enableAccessHandler($transitions); // TODO Run after successful auth
 
             $transitions.onSuccess({}, function (trans) {
 
@@ -834,36 +850,43 @@
 
             vm.initTransitionListener();
 
-            vm.getUser();
+            var getUserProm = vm.getUser();
 
-            vm.getMasterUsersList().then(function () {
+            var getMasterUsersProm = vm.getMasterUsersList();
 
-                if (vm.masters.length) {
+            var getMemberProm = getMember();
 
-                    vm.getNotifications();
+            Promise.allSettled([getUserProm, getMasterUsersProm, getMemberProm]).then(function () {
 
-                    vm.isIdentified = true;
-                    console.log("User status: Identified");
+				localStorageService.setUMuM(vm.user.id, vm.currentMasterUser.id, member.id);
+				enableAccessHandler($transitions); // TODO Run after successful auth
 
-                    $scope.$apply();
+            	if (vm.masters.length) {
 
-                } else {
+					vm.getNotifications();
 
-                    if (vm.currentGlobalState !== 'profile') {
-                        $state.go('app.profile', {}, {reload: 'app'})
-                    }
+					vm.isIdentified = true;
+					console.log("User status: Identified");
 
-                }
+					$scope.$apply();
 
-            });
+				} else {
+
+					if (vm.currentGlobalState !== 'profile') {
+						$state.go('app.profile', {}, {reload: 'app'})
+					}
+
+				}
+
+				if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
+					showLayoutName = true;
+					vm.getActiveLayoutName();
+				}
+
+			})
 
             if (window.BroadcastChannel) {
                 vm.initCrossTabBroadcast();
-            }
-
-            if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
-                showLayoutName = true;
-                vm.getActiveLayoutName();
             }
 
             vm.importOnDragListeners();

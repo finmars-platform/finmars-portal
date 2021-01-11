@@ -208,8 +208,6 @@
         var obj;
         var i;
 
-        console.log('event', event);
-
         if (!event.___id) {
 
             var rootGroupData = entityViewerDataService.getRootGroupData();
@@ -407,6 +405,8 @@
 
                     objectsService.getFilteredList(entityType, options).then(function (data) {
 
+                        console.log('requestParameters', requestParameters);
+
                         requestParameters.pagination.count = data.count;
                         requestParameters.processedPages.push(pageToRequest);
 
@@ -416,16 +416,34 @@
 
                         resolveLocal();
 
+
                         if (requestParameters.loadAll) {
 
-                            requestParameters.body.page = requestParameters.body.page + 1;
-                            requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                            requestParameters.requestedPages.push(requestParameters.body.page);
+                            if (requestParameters.pagination.page * requestParameters.pagination.page_size >= requestParameters.pagination.count) {
 
-                            entityViewerDataService.setRequestParameters(requestParameters);
-                            entityViewerDataService.setActiveRequestParametersId(requestParameters.id);
+                                requestParameters.loadAll = false;
 
-                            entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                                entityViewerDataService.setRequestParameters(requestParameters);
+
+                                var errorMessage = 'Something went wrong. Please try again later.';
+
+                                evDataHelper.deleteDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
+
+                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            } else {
+
+                                requestParameters.body.page = requestParameters.body.page + 1;
+                                requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                                requestParameters.requestedPages.push(requestParameters.body.page);
+
+                                entityViewerDataService.setRequestParameters(requestParameters);
+                                entityViewerDataService.setActiveRequestParametersId(requestParameters.id);
+
+                                entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                            }
 
                         }
 

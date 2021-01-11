@@ -14,6 +14,26 @@
             </md-input-container>
 
             <div>
+                <md-input-container class="dashboard-constructor-field1">
+                    <label for="">Label</label>
+                    <input type="text" data-ng-model="vm.item.custom_component_name">
+                </md-input-container>
+            </div>
+
+
+            <div>
+
+                <md-input-container style="width: 200px;">
+
+                    <md-checkbox data-ng-model="vm.item.settings.showAsDropdown"
+                                 ng-change=""
+                                 style="margin-left: 10px;">Show as dropdown</md-checkbox>
+
+                </md-input-container>
+
+            </div>
+
+            <div>
 
                 <h5>Buttons Grid Projection Size</h5>
 
@@ -107,11 +127,18 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
+
+        <md-button ng-click="vm.exportToDashboards()" style="margin-right:20px;">
+            Export to dashboards
+        </md-button>
+
         <md-button ng-click="vm.cancel()" style="margin-right:20px;">
             Cancel
         </md-button>
+
         <md-button ng-click="vm.agree()" style="margin-right:20px;">
             OK
         </md-button>
+
     </md-dialog-actions>
 </md-dialog>

@@ -14,6 +14,8 @@
     var baseUrlService = require('../../services/baseUrlService');
     var usersService = require('../../services/usersService');
 
+    var websocketService = require('../../services/websocketService');
+
     var baseUrl = baseUrlService.resolve();
 
 
@@ -23,29 +25,17 @@
 
         vm.readyStatus = {
             schemes: false,
-            processing: false,
-            dailyModel: false,
-            priceDownloadScheme: false,
-            instrumentType: false,
-            currency: false
+            processing: false
         };
+
         vm.dataIsImported = false;
         vm.activeContentType = null;
 
-        vm.config = {
-            delimiter: ',',
-            error_handler: 'break',
-            mode: 'skip',
-            missing_data_handler: 'throw_error',
-            classifier_handler: 'skip'
-        };
+        vm.config = {};
+        vm.validateConfig = {};
 
         vm.processing = false;
         vm.loaderData = {};
-
-        vm.validateConfig = {
-            mode: 1
-        };
 
         vm.hasSchemeEditPermission = false;
 
@@ -63,15 +53,16 @@
             var options = {filters: {'content_type': vm.activeContentType}};
 
             csvImportSchemeService.getListLight(options).then(function (data) {
+
                 vm.entitySchemes = data.results;
                 vm.readyStatus.schemes = true;
                 $scope.$apply();
+
             });
 
         };
 
         vm.checkExtension = function (file, extension, $event) {
-            console.log('file', file);
 
             if (file) {
 
@@ -96,6 +87,7 @@
                     }).then(function () {
 
                         vm.config.file = null;
+
                     });
 
                 }
@@ -108,10 +100,8 @@
             vm.getSchemeList();
         };
 
-        vm.getFileUrl = function(id) {
-
+        vm.getFileUrl = function (id) {
             return baseUrl + 'file-reports/file-report/' + id + '/view/';
-
         };
 
         vm.createScheme = function ($event) {
@@ -150,7 +140,7 @@
                 }
             }).then(function (res) {
 
-                if(res && res.status === 'agree') {
+                if (res && res.status === 'agree') {
 
                     vm.getSchemeList();
 
@@ -174,15 +164,8 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                formData.append('error_handler', vm.config.error_handler);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('mode', vm.config.mode);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
-                formData.append('classifier_handler', vm.config.classifier_handler);
 
             }
-
-            console.log('vm.validateConfig', vm.validateConfig);
 
             importEntityService.validateImport(formData).then(function (data) {
 
@@ -195,21 +178,55 @@
                     status: vm.validateConfig.task_status
                 };
 
+
                 $scope.$apply();
 
-                if (vm.validateConfig.task_status === 'SUCCESS') {
+                if (websocketService.isOnline()) {
 
-                    console.log('resolve?');
+                    websocketService.addEventListener('simple_import_status', function (data) {
 
-                    resolve(data)
+                        console.log('simple_import_status.data', data);
+
+                        if (vm.validateConfig.task_id === data.task_id) {
+
+                            vm.loaderData = {
+                                current: data.processed_rows,
+                                total: data.total_rows,
+                                text: 'Validation Progress:',
+                                status: data.state
+                            };
+
+                            $scope.$apply();
+
+                            if (data.state === 'D') {
+                                websocketService.removeEventListener('simple_import_status');
+                                resolve(data)
+                            } else {
+                                if (data.state !== 'D' && data.state !== 'P') {
+                                    websocketService.removeEventListener('simple_import_status');
+                                    resolve(data);
+                                }
+                            }
+
+                        }
+
+                    })
 
                 } else {
 
-                    setTimeout(function () {
-                        vm.validate(resolve, $event);
-                    }, 1000)
+                    if (vm.validateConfig.task_status === 'SUCCESS') {
+                        resolve(data)
+
+                    } else {
+
+                        setTimeout(function () {
+                            vm.validate(resolve, $event);
+                        }, 1000)
+
+                    }
 
                 }
+
 
             })
 
@@ -308,7 +325,6 @@
 
                 }
 
-
             });
 
 
@@ -328,15 +344,8 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                formData.append('error_handler', vm.config.error_handler);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('mode', vm.config.mode);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
-                formData.append('classifier_handler', vm.config.classifier_handler);
 
             }
-
-            console.log('vm.config', vm.config);
 
             importEntityService.startImport(formData).then(function (data) {
 
@@ -351,17 +360,50 @@
 
                 $scope.$apply();
 
-                if (vm.config.task_status === 'SUCCESS') {
+                if (websocketService.isOnline()) {
 
-                    console.log('resolve?');
+                    websocketService.addEventListener('simple_import_status', function (data) {
 
-                    resolve(data)
+                        if (vm.config.task_id === data.task_id) {
+
+                            vm.loaderData = {
+                                current: data.processed_rows,
+                                total: data.total_rows,
+                                text: 'Import Progress:',
+                                status: data.state
+                            };
+
+                            $scope.$apply();
+
+                            if (data.state === 'D') {
+                                websocketService.removeEventListener('simple_import_status');
+                                resolve(data)
+                            } else {
+                                if (data.state !== 'D' && data.state !== 'P') {
+                                    websocketService.removeEventListener('simple_import_status');
+                                    resolve(data);
+                                }
+                            }
+
+                        }
+
+                    })
 
                 } else {
 
-                    setTimeout(function () {
-                        vm.import(resolve, $event);
-                    }, 1000)
+                    if (vm.config.task_status === 'SUCCESS') {
+
+                        console.log('resolve?');
+
+                        resolve(data)
+
+                    } else {
+
+                        setTimeout(function () {
+                            vm.import(resolve, $event);
+                        }, 1000)
+
+                    }
 
                 }
 
@@ -389,6 +431,8 @@
 
             }).then(function (data) {
 
+                vm.config = {};
+
                 vm.processing = false;
 
                 console.log('import.data', data);
@@ -398,42 +442,37 @@
 
                 $scope.$apply();
 
-
                 var errors = data.stats.filter(function (item) {
                     return item.level === 'error'
                 });
 
                 console.log('errors', errors);
 
-
                 var description;
 
-                if (vm.config.error_handler === 'continue') {
+                if (data.scheme_object.error_handler === 'continue') {
 
                     description = '<div>' +
-                        '<div>Rows total: ' + (data.total_rows - 1) + '</div>' +
+                        '<div>Rows total: ' + (data.total_rows) + '</div>' +
                         '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
                         '<div>Rows fail import: ' + errors.length + '</div>' +
                         '</div><br/>';
 
                 }
 
-                if (vm.config.error_handler === 'break') {
+                if (data.scheme_object.error_handler === 'break') {
 
                     description = '<div>' +
-                        '<div>Rows total: ' + (data.total_rows - 1) + '</div>' +
+                        '<div>Rows total: ' + (data.total_rows) + '</div>' +
                         '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
                         '<div>Rows fail import: ' + errors.length + '</div>' +
                         '</div><br/>';
 
                 }
-
-                console.log('description', description);
 
                 description = description + '<div> You have successfully imported csv file </div>';
 
-                description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
-
+                description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
 
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',
@@ -476,6 +515,8 @@
 
             }).then(function (data) {
 
+                vm.validateConfig = {};
+
                 vm.processing = false;
 
                 console.log('validateImport.data', data);
@@ -486,7 +527,6 @@
                 vm.dataIsImported = true;
 
                 $scope.$apply();
-
 
                 data.stats.forEach(function (item) {
 
@@ -527,13 +567,13 @@
                         locals: {
                             data: {
                                 validationResult: data,
-                                scheme: schemeObject,
                                 config: vm.config
                             }
                         }
                     }).then(function (res) {
 
                         if (res && res.status === 'agree') {
+
                             vm.startImport($event);
                         }
 
@@ -552,17 +592,17 @@
 
                 vm.currentMember = data;
 
-                if(vm.currentMember.is_admin) {
+                if (vm.currentMember.is_admin) {
                     vm.hasSchemeEditPermission = true
                 }
 
                 vm.currentMember.groups_object.forEach(function (group) {
 
-                    if(group.permission_table) {
+                    if (group.permission_table) {
 
                         group.permission_table.configuration.forEach(function (item) {
 
-                            if(item.content_type === 'csv_import.csvimportscheme') {
+                            if (item.content_type === 'csv_import.csvimportscheme') {
                                 if (item.data.creator_change) {
                                     vm.hasSchemeEditPermission = true
                                 }

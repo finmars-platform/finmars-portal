@@ -17,8 +17,6 @@
 
         vm.readyStatus = {transactionTypes: false};
 
-        console.log('eventActions', eventActions);
-
         vm.eventActions = eventActions || [];
 
         vm.toggleQuery = function () {
@@ -45,7 +43,7 @@
                 console.log('data', data);
                 vm.transactionTypes = data.results;
                 vm.readyStatus.transactionTypes = true;
-                //console.log('test?', vm.readyStatus.transactionTypes);
+
                 $scope.$apply();
             });
 
@@ -168,7 +166,6 @@
 
             }
 
-            console.log('eventActions', vm.eventActions);
         };
 
         vm.getRangeOfNumbers = function (number) {

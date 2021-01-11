@@ -2,12 +2,14 @@
 
     module.exports = function () {
 
-        var layoutData = { // basically its layout that we store on backend
+        var layoutData = { // basically its dashboard layout that we store on backend
             name: '',
             data: {
                 components_types: []
             }
         };
+
+        var projection;
 
         var data = {
             listLayout: null
@@ -16,7 +18,8 @@
         var tmpData = { // data that stored only in active session
             componentsStatuses: {},
             componentsRefreshRestriction: {},
-            componentsErrors: {}
+            componentsErrors: {},
+            actualRvLayouts: [] // id of layouts stored in cache that are actual
         };
 
         function setData(data) {
@@ -25,6 +28,14 @@
 
         function getData() {
             return layoutData
+        }
+
+        function setProjection(projectionData) {
+            projection = projectionData
+        }
+
+        function getProjection() {
+            return projection
         }
 
         function setAllComponentsOutputs(compsOutputs) {
@@ -147,12 +158,28 @@
             return data.listLayout;
         }
 
+        function pushToActualRvLayoutsInCache (layoutId) {
+
+            if (!tmpData.actualRvLayouts.includes(layoutId)) {
+                tmpData.actualRvLayouts.push(layoutId);
+            }
+
+        }
+
+        function getActualRvLayoutsInCache () {
+            return tmpData.actualRvLayouts;
+        }
+
         return {
 
             setData: setData,
             getData: getData,
             setListLayout: setListLayout,
             getListLayout: getListLayout,
+
+
+            setProjection: setProjection,
+            getProjection: getProjection,
 
             setAllComponentsOutputs: setAllComponentsOutputs,
             getAllComponentsOutputs: getAllComponentsOutputs,
@@ -163,8 +190,8 @@
             setComponentError: setComponentError,
             getComponentError: getComponentError,
             setComponentRefreshRestriction: setComponentRefreshRestriction,
-            /*getComponentRefreshRestriction: getComponentRefreshRestriction,
-            setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction,*/
+            /* getComponentRefreshRestriction: getComponentRefreshRestriction,
+            setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction, */
             getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
             getComponents: getComponents,
             setComponents: setComponents,
@@ -173,6 +200,9 @@
 
             setActiveTab: setActiveTab,
             getActiveTab: getActiveTab,
+
+            pushToActualRvLayoutsInCache: pushToActualRvLayoutsInCache,
+            getActualRvLayoutsInCache: getActualRvLayoutsInCache,
 
             getComponentStatusesAll: getComponentStatusesAll
         }

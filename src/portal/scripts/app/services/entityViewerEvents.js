@@ -55,6 +55,7 @@ module.exports = {
     'REPORT_EXPORT_OPTIONS_CHANGED': 'REPORT_EXPORT_OPTIONS_CHANGED',
     'REPORT_TABLE_VIEW_CHANGED': 'REPORT_TABLE_VIEW_CHANGED',
     'ENTITY_VIEWER_PAGINATION_CHANGED': 'ENTITY_VIEWER_PAGINATION_CHANGED',
+    'ENTITY_VIEWER_SETTINGS_CHANGED': 'ENTITY_VIEWER_SETTINGS_CHANGED',
     // < Events used only to track layout changes >
 
     // Trigger Split Panel events from root entity viewer
@@ -75,6 +76,10 @@ module.exports = {
     // < Trigger Entity Viewer methods from Split Panel >
 
     // Event for dashboard
-    'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR'
+    'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR',
+    'MISSING_PRICES_LOAD_END_TO_DASHBOARD': 'MISSING_PRICES_LOAD_END_TO_DASHBOARD',
     // < Event for dashboard >
+
+    'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END'
+
 };

@@ -1,0 +1,62 @@
+<div class="processes-page p-24">
+
+    <h1>System Messages</h1>
+
+    <div data-ng-if="vm.systemMessagesReady">
+
+        <div data-ng-if="vm.systemMessages.length">
+
+            <table>
+
+                <thead>
+                <tr>
+                    <td style="width: 140px;">
+                        Date
+                    </td>
+                    <td>
+                        Level
+                    </td>
+                    <td>
+                        Source
+                    </td>
+                    <td>
+                        Text
+                    </td>
+                    <td>
+                        Status
+                    </td>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr data-ng-repeat="item in vm.systemMessages">
+
+                    <td> {{item.verbose_created}}</td>
+                    <td> {{item.verbose_level}}</td>
+                    <td> {{item.source}}</td>
+                    <td> {{item.text}}</td>
+                    <td> {{item.verbose_status}}</td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div data-ng-if="!vm.systemMessages.length">
+            <h4 class="text-center">No Messages</h4>
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.systemMessagesReady" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+
+</div>

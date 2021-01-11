@@ -25,7 +25,8 @@
     var colorPalettesService = require('../../services/colorPalettesService');
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
-    var transactionHelper = require('../../helpers/transaction.helper');
+	var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
+	var transactionHelper = require('../../helpers/transaction.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -33,6 +34,8 @@
     module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $state, entityType, entity, data) {
 
         var vm = this;
+		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
+
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
         vm.entityType = entityType;
 
@@ -59,10 +62,11 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
-        var tabsWithErrors = {};
-        var errorFieldsList = [];
+		vm.tabsWithErrors = {};
+		vm.errorFieldsList = [];
+		vm.inputsWithCalculations = null;
+
         var notCopiedTransaction = true;
-        var inputsWithCalculations;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
         //var tooltipsList = [];
 
@@ -386,10 +390,10 @@
 
             });*/
 
-            inputsWithCalculations = transactionData.transaction_type_object.inputs;
+			vm.inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
-            if (inputsWithCalculations) {
-                inputsWithCalculations.forEach(function (inputWithCalc) {
+            if (vm.inputsWithCalculations) {
+				vm.inputsWithCalculations.forEach(function (inputWithCalc) {
 
                     vm.userInputs.forEach(function (userInput) {
                         if (userInput.name === inputWithCalc.name) {
@@ -400,7 +404,8 @@
 
                             if (inputWithCalc.can_recalculate === true) {
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    // iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    iconObj: {type: 'angular-material', icon: 'refresh'},
                                     tooltip: 'Recalculate this field',
                                     caption: '',
                                     classes: '',
@@ -416,7 +421,8 @@
                                 var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
 
                                 userInput.buttons.push({
-                                    iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    // iconObj: {type: 'fontawesome', icon: 'fas fa-sync-alt'},
+                                    iconObj: {type: 'angular-material', icon: 'loop'},
                                     tooltip: 'Recalculate linked fields',
                                     caption: '',
                                     classes: '',
@@ -529,7 +535,49 @@
             var inputs = paramsObj.inputs;
             var recalculationData = paramsObj.recalculationData;
 
-            bookComplexTransaction(inputs, recalculationData);
+            transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+
+            if (inputs && inputs.length) {
+                // rebookComplexTransaction(inputs, recalculationData);
+
+                var values = {};
+
+                vm.userInputs.forEach(function (item) {
+                    values[item.name] = vm.entity[item.name]
+                });
+
+                var book = {
+                    transaction_type: vm.entity.transaction_type,
+                    recalculate_inputs: inputs,
+                    process_mode: 'recalculate',
+                    values: values
+                };
+
+                transactionTypeService.recalculateComplexTransaction(book.transaction_type, book).then(function (data) {
+
+                    console.log('data', data);
+
+                    var recalculationInfo = {
+                        recalculatedInputs: inputs,
+                        recalculationData: recalculationData
+                    }
+
+                    var keys = Object.keys(data.values);
+
+                    keys.forEach(function (item) {
+                        vm.entity[item] = data.values[item];
+                    });
+
+                    $scope.$apply();
+
+                    if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
+                        vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
+                    }
+
+
+                })
+
+            }
 
         };
 
@@ -690,7 +738,7 @@
         };
 
         vm.getAttributeTypes = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
+            attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
@@ -828,7 +876,7 @@
 
             if (errors.length) {
 
-                tabsWithErrors = {};
+				vm.tabsWithErrors = {};
 
                 errors.forEach(function (errorObj) {
 
@@ -842,15 +890,15 @@
                         var tabNameElem = document.querySelector(selectorString);
                         tabNameElem.classList.add('error-tab');
 
-                        if (!tabsWithErrors.hasOwnProperty(tabName)) {
-                            tabsWithErrors[tabName] = [errorObj.key];
+                        if (!vm.tabsWithErrors.hasOwnProperty(tabName)) {
+							vm.tabsWithErrors[tabName] = [errorObj.key];
 
-                        } else if (tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
-                            tabsWithErrors[tabName].push(errorObj.key);
+                        } else if (vm.tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+							vm.tabsWithErrors[tabName].push(errorObj.key);
 
                         }
 
-                        errorFieldsList.push(errorObj.key);
+                        vm.errorFieldsList.push(errorObj.key);
 
                     }
 
@@ -1434,13 +1482,13 @@
             console.log('changedInput', changedInput);
             console.log('resultInput', resultInput);
 
-        };*/
+        }; */
 
-        vm.onFieldChange = function (fieldKey) {
+        /* vm.onFieldChange = function (fieldKey) {
 
             if (fieldKey) {
 
-                if (inputsWithCalculations) {
+                if (vm.inputsWithCalculations) {
 
                     var i, a;
                     for (i = 0; i < vm.userInputs.length; i++) {
@@ -1449,8 +1497,8 @@
 
                             var uInputName = vm.userInputs[i].name;
 
-                            for (a = 0; a < inputsWithCalculations.length; a++) {
-                                var inputWithCalc = inputsWithCalculations[a];
+                            for (a = 0; a < vm.inputsWithCalculations.length; a++) {
+                                var inputWithCalc = vm.inputsWithCalculations[a];
 
                                 if (inputWithCalc.name === uInputName &&
                                     inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
@@ -1486,7 +1534,8 @@
                     vm.entity, vm.entityType, vm.tabs);
             }
 
-        };
+        }; */
+		vm.onFieldChange = sharedLogicHelper.onFieldChange;
 
 
         vm.init();

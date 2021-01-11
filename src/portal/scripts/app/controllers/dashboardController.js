@@ -8,7 +8,7 @@
     var uiService = require('../services/uiService');
 
     var DashboardDataService = require('../services/dashboard/dashboardDataService');
-    var DashboardEventService = require('../services/dashboard/dashboardEventService');
+    var DashboardEventService = require('../services/eventService');
 
     var dashboardEvents = require('../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
@@ -27,6 +27,127 @@
         vm.dashboardEventService = null;
 
         vm.processing = false;
+
+        vm.toggleAccordion = function ($event, accordion) {
+
+            accordion.folded = !accordion.folded;
+
+            setTimeout(function () {
+                vm.dashboardEventService.dispatchEvent(dashboardEvents.RESIZE);
+            }, 100); // need for resize query .folded rows
+        }
+
+        vm.generateProjection = function (layout) {
+
+            var result = [];
+
+            console.log('generateProjection.vm.layout', layout);
+
+            var data = JSON.parse(JSON.stringify(layout.data));
+
+            data.tabs.forEach(function (tab) {
+
+                tab.accordion_layout = [];
+
+                if (tab.accordions) {
+
+                    var rowsUsedInAccordions = [];
+
+                    tab.accordions.forEach(function (accordionItem) {
+
+                        if (accordionItem.from === accordionItem.to) {
+                            rowsUsedInAccordions.push(accordionItem.from);
+                        } else {
+                            for (var i = accordionItem.from; i <= accordionItem.to; i = i + 1) {
+                                rowsUsedInAccordions.push(i)
+                            }
+                        }
+
+                    })
+
+                    console.log('rowsUsedInAccordions', rowsUsedInAccordions);
+
+                    tab.layout.rows.forEach(function (item, index) {
+
+                        if (rowsUsedInAccordions.indexOf(index) === -1) {
+
+                            var accordion = {
+                                name: '',
+                                from: index,
+                                to: index,
+                                type: 'proxy_accordion',
+                                items: [item]
+                            };
+
+                            tab.accordion_layout.push(accordion);
+
+                        }
+
+                    })
+
+                    tab.accordions.forEach(function (accordionItem) {
+
+                        var accordion = {
+                            name: accordionItem.name,
+                            from: accordionItem.from,
+                            to: accordionItem.to,
+                            type: 'accordion',
+                            items: []
+                        };
+
+                        tab.layout.rows.forEach(function (row, index) {
+
+                            if (index >= accordionItem.from && index <= accordionItem.to) {
+                                accordion.items.push(row)
+                            }
+
+                        })
+
+                        tab.accordion_layout.push(accordion);
+
+                    })
+
+                } else {
+
+                    var accordion = {
+                        name: "",
+                        type: "proxy_accordion",
+                        items: [],
+                        from: 0,
+                        to: tab.layout.rows.length - 1
+                    }
+
+                    tab.layout.rows.forEach(function (row) {
+                        accordion.items.push(row);
+                    })
+
+                    tab.accordion_layout.push(accordion);
+
+                }
+
+
+                tab.accordion_layout = tab.accordion_layout.sort(function (a, b) {
+
+                    if (a.from < b.from) {
+                        return -1;
+                    }
+
+                    if (a.from > b.from) {
+                        return 1;
+                    }
+
+                    return 0;
+                })
+
+                result.push(tab);
+
+            })
+
+            console.log('generateProjection.result', result);
+
+            return result;
+
+        }
 
         vm.getLayout = function (layoutId) {
 
@@ -48,6 +169,9 @@
 
                 vm.readyStatus.data = true;
 
+                vm.projection = vm.generateProjection(vm.layout);
+                vm.dashboardDataService.setProjection(vm.projection);
+
                 vm.initDashboardComponents();
 
                 $scope.$apply();
@@ -66,7 +190,8 @@
                     vm.layout = data.results[0];
                 }
 
-                console.log('vm.layout', vm.layout);
+                vm.projection = vm.generateProjection(vm.layout);
+                vm.dashboardDataService.setProjection(vm.projection);
 
                 vm.dashboardDataService.setData(vm.layout);
                 vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
@@ -107,6 +232,10 @@
 
                     vm.dashboardDataService.setData(vm.layout);
                     vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
+
+                    vm.projection = vm.generateProjection(vm.layout);
+
+                    vm.dashboardDataService.setProjection(vm.projection);
 
                     vm.readyStatus.data = true;
 
@@ -295,8 +424,6 @@
 
                 var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
-                // console.log('statusesObject', statusesObject);
-
                 var processed = false;
 
                 Object.keys(statusesObject).forEach(function (componentId) {
@@ -325,33 +452,54 @@
 
         };
 
-        var componentBuildingTimeTimeout;
+        var componentBuildingTimeTimeout = {};
         var onComponentBuildingForTooLong = function (compId) {
 
-            componentBuildingTimeTimeout = setTimeout(function () {
+            componentBuildingTimeTimeout[compId] = setTimeout(function () {
 
-                // var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var statusesObject = metaHelper.recursiveDeepCopy(vm.dashboardDataService.getComponentStatusesAll());
 
                 if (statusesObject[compId] === dashboardComponentStatuses.PROCESSING || statusesObject[compId] === dashboardComponentStatuses.START) {
+
                     vm.dashboardDataService.setComponentStatus(compId, dashboardComponentStatuses.ERROR);
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     throw "id of defective dashboard component " + compId;
+
                 }
 
-                // }, 8000);
-                // }, 15000);
             }, 60000);
 
         };
 
+        var areAllDependenciesCompleted = function (compId, statusesObject, waitingComponents) {
+
+            var componentData = vm.dashboardDataService.getComponentById(compId);
+
+            if (!componentData || !componentData.settings || !componentData.settings.linked_components || !componentData.settings.linked_components.report_settings) {
+                return true;
+            }
+
+            var reportSettings = componentData.settings.linked_components.report_settings;
+
+            var dependencies = Object.values(reportSettings).filter(function (id) { // prevent loop
+                var isComponentExist = vm.dashboardDataService.getComponentById(id);
+
+                return isComponentExist && !waitingComponents.includes(id);
+            });
+
+            return dependencies.every(function (id) {
+                return statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
+            });
+
+        };
+
+
         vm.initDashboardComponents = function () {
 
             var LIMIT = 2;
+            var waitingComponents = [];
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                clearTimeout(componentBuildingTimeTimeout);
 
                 var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
                 var nextComponentToStart = null;
@@ -365,15 +513,18 @@
 
                     key = keys[i];
 
+                    if (statusesObject[key] === dashboardComponentStatuses.ACTIVE || statusesObject[key] === dashboardComponentStatuses.ERROR) {
+                        if (componentBuildingTimeTimeout.hasOwnProperty(key)) {
+                            clearTimeout(componentBuildingTimeTimeout[key]);
+                            delete componentBuildingTimeTimeout[key];
+                        }
+                    }
+
                     if (statusesObject[key] === dashboardComponentStatuses.PROCESSING || statusesObject[key] === dashboardComponentStatuses.START) {
                         activeProcessingComponents = activeProcessingComponents + 1;
                     }
 
-
                 }
-
-                console.log('initDashboardComponents.activeProcessingComponents', activeProcessingComponents);
-                console.log('initDashboardComponents.statusesObject', statusesObject);
 
                 if (activeProcessingComponents < LIMIT) {
 
@@ -381,19 +532,35 @@
 
                         key = keys[i];
 
-                        console.log('initDashboardComponents.key', key);
-
                         if (statusesObject[key] === dashboardComponentStatuses.INIT) {
-                            vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
-                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                            onComponentBuildingForTooLong(key);
-                            break;
+                            if (areAllDependenciesCompleted(key, statusesObject, waitingComponents)) {
+
+                                waitingComponents = waitingComponents.filter(function (id) {
+                                    return id !== key;
+                                })
+
+                                vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
+                                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                                onComponentBuildingForTooLong(key);
+                                break;
+
+                            } else {
+
+                                if (!waitingComponents.includes(key)) {
+
+                                    waitingComponents.push(key);
+
+                                }
+
+                            }
+
                         }
 
                     }
-                }
 
+                }
 
             });
 

@@ -212,7 +212,7 @@
 
                     try {
 
-                        attributeTypeService.getList(entity).then(function (data) {
+                        attributeTypeService.getList(entity, {pageSize: 1000}).then(function (data) {
 
                             vm.attributeTypes[tab.content_type] = data.results;
 
