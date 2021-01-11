@@ -1,3 +1,6 @@
+@gRowSelectionWidth: 50px;
+@gRowSettingsWidth: 59px;
+
 .report-viewer-holder {
 
   .no-data-block {
@@ -170,6 +173,29 @@
         }
       }
     }
+
+    .g-grand-total-first-cell {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      position: absolute;
+      height: 100%;
+      top: 0;
+      left: 0;
+      font-size: 13px;
+      padding-left: 15px;
+    }
+
+    .g-subtotals-settings-menu {
+      position: relative;
+      top: 1px;
+      cursor: pointer;
+
+      .material-icons {
+        font-size: 18px;
+      }
+    }
+
   }
 
   .placeholder-row {
@@ -367,14 +393,6 @@
     margin-right: 0;
   }
 
-  div.g-cell.border-bottom-transparent {
-    border-bottom-color: transparent;
-  }
-
-  div.g-cell.border-right-transparent {
-    border-right-color: transparent;
-  }
-
   .g-cell-content-wrap {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -454,7 +472,7 @@
 
     .g-row-settings:not(.closed) {
       padding-right: 6px;
-      width: 59px;
+      width: @gRowSettingsWidth;
     }
 
     .ev-content {
@@ -477,7 +495,7 @@
 
       .g-row-selection {
         height: @gRowHeight;
-        width: 50px;
+        width: @gRowSelectionWidth;
         border-bottom: @gCellBorder;
         border-right: @gCellBorder;
         box-sizing: border-box;
@@ -553,9 +571,23 @@
 
     }
 
-
-
   }
 
 }
 
+// Must be at the bottom
+.report-viewer-holder {
+  .g-wrapper {
+    .g-row {
+
+      .border-right-transparent {
+        border-right: transparent;
+      }
+
+      .border-bottom-transparent {
+        border-bottom: transparent;
+      }
+
+    }
+  }
+}

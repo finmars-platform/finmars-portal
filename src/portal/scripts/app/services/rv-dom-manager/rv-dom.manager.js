@@ -138,7 +138,10 @@
             }
 
 			if (targetElem.classList.contains('ev-fold-button')) {
+
 				clickData.isFoldButtonPressed = true;
+
+				clickData.___parentId = targetElem.dataset.objectId;
 
 			} else {
 
@@ -199,7 +202,7 @@
 
     var handleFoldButtonClick = function (clickData, evDataService, evEventService) {
 
-        var group = evDataService.getData(clickData.___parentId);
+    	var group = evDataService.getData(clickData.___parentId);
 
         console.log('group', group);
 
@@ -1729,37 +1732,18 @@
 
 	};
 
-    var getSubtotalsType = function (evDataService) {
-
-    	var reportOptions = evDataService.getReportOptions();
-
-		// for old layouts
-    	if (!reportOptions.hasOwnProperty('subtotals_options')) {
-
-    		var groups = evDataService.getGroups();
-
-    		var groupWithSubtotal = groups.find(function (group) {
-				return group.report_settings.subtotal_type;
-			});
-
-    		return groupWithSubtotal || false;
-
-		}
-		// < for old layouts >
-
-    	return reportOptions.subtotals_options.type;
-	}
-
 	var createSubtotalSettingsMenu = function (clickData, evDataService, evEventService) {
 
 		var menuElem = clickData.actionElem;
 		var popup = evDataHelper.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup', 'ev-dropdown2']);
-		var report = evDataService.getRootGroupOptions();
+		var reportOptions = evDataService.getReportOptions();
 
 		var getOptionCheckbox = function (subtotalsType) {
 
-			if (subtotalsType === rootGroupOpts.subtotal_type) {
-				return '<span class="material-icons g-subtotal-opt-icon">done</span>'
+			if (reportOptions.subtotals_options && subtotalsType === reportOptions.subtotals_options.type) {
+
+				return '<span class="material-icons g-menu-opt-check-icon">done</span>';
+
 			}
 
 			return '';
@@ -1796,13 +1780,16 @@
 				subtotalsOpts.type = false
 
 			} else {
-				subtotalsOpts.subtotals_type = subtotalsType
+				subtotalsOpts.type = subtotalsType
 			}
 
-			/*evDataService.setRootGroupOptions(rootGroupOpts);
+			reportOptions.subtotals_options = subtotalsOpts
+			evDataService.setReportOptions(reportOptions);
 
 			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-			evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);*/
+			evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+			clearDropdowns();
 
 		};
 

@@ -832,12 +832,12 @@
     var calculateStaticMenuPosition = function (popup, menuElem, popupHeight) {
 
         var menuElemRect = menuElem.getBoundingClientRect();
-		console.log("testing menuElemRect", menuElemRect, popupHeight);
-		var popupTop = menuElemRect.top;
-        popup.style.left = menuElemRect.left + "px"
+        // "-24" to create more space between mouse and popup borders
+		var popupTop = menuElemRect.top - 24;
+        popup.style.left = (menuElemRect.left - 24) + "px"
 
 		var bodyHeight = document.body.clientHeight;
-		console.log("testing bodyHeight", bodyHeight);
+
         if (bodyHeight < popupTop + popupHeight) {
 
             popup.style.bottom = 0;
