@@ -41,24 +41,24 @@
 
     }; */
 
-    var getBorderClasses = function (evDataService, obj, column, columnNumber, groups) {
+    var getBorderClasses = function (evDataService, obj, column, columnNumber) {
 
-    	var columns = evDataService.getColumns();
-    	var nextColumn = columns[columnNumber]; // columnNumber is columnIndex + 1
-
-		var isSubtotalRow = obj.___subtotal_type || obj.___subtotal_subtype;
-		var colSubtotalOff = !column.report_settings || !column.report_settings.subtotal_formula_id;
-		var nextColSubtotalOff = !nextColumn || !nextColumn.report_settings || !nextColumn.report_settings.subtotal_formula_id;
-		var isNotGroupCol = columnNumber > groups.length;
-
-		if (isSubtotalRow && colSubtotalOff && nextColSubtotalOff && isNotGroupCol) {
-			return 'border-right-transparent';
-		}
+		var columns = evDataService.getColumns();
+		var nextColumn = columns[columnNumber]; // columnNumber is columnIndex + 1
 
 		var isGrandTotalFirstColumn = obj.___level === 0 && columnNumber === 1;
 		var notLastColumn = columns.length > 1;
 
 		if (isGrandTotalFirstColumn && notLastColumn) {
+			return 'border-right-transparent';
+		}
+
+		// var isSubtotalRow = obj.___subtotal_type || obj.___subtotal_subtype;
+		var colSubtotalOff = !column.report_settings || !column.report_settings.subtotal_formula_id;
+		var nextColSubtotalOff = !nextColumn || !nextColumn.report_settings || !nextColumn.report_settings.subtotal_formula_id;
+		var nextIsNotCellWithGroupName = columnNumber + 1 !== obj.___level - 1;
+
+		if (colSubtotalOff && nextColSubtotalOff && nextIsNotCellWithGroupName) {
 			return 'border-right-transparent';
 		}
 
@@ -247,10 +247,11 @@
 
         if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) { */
 		// in new rv interface, there is always Grand total row
-		if (obj.___level === 0 && columnNumber === 1) {
-            result.html_result = '<span class="text-bold">Grand Total</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>';
+
+		/* if (obj.___level === 0 && columnNumber === 1) {
+            result.html_result = '<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>';
             result.raw_text_result = 'Grand Total';
-        }
+        } */
 
         return result;
 
@@ -379,7 +380,7 @@
 			result.push(colorNegative);
 		}
 
-		var borderClasses = getBorderClasses(evDataService, obj, column, columnNumber, groups);
+		var borderClasses = getBorderClasses(evDataService, obj, column, columnNumber);
 		// grand total row
 		if (borderClasses) {
 			result.push(borderClasses);
@@ -420,21 +421,37 @@
             is_activated = parent.___is_area_subtotal_activated
         }
 
-        if (obj.___level === 0) {
-			rowClassList.push('g-grand-total-row');
-		}
-
+		var grandTotalCell = '';
         var rowSelection;
+		var rowSettings;
 
-        if (is_activated) {
-			rowClassList.push('selected');
-            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
-        } else {
-            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
-        }
+        if (obj.___level === 0) {
 
-		// TODO find out whether mark row should work for subtotals
-		var rowSettings = renderHelper.getRowSettings('disabled');
+        	rowClassList.push('g-grand-total-row');
+
+			grandTotalCell = '<div class="g-grand-total-first-cell">' +
+				'<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>' +
+			'</div>';
+
+			rowSelection = '<div class="g-row-selection border-right-transparent"></div>';
+
+			rowSettings = '<div class="g-row-settings g-row-settings-table border-right-transparent gRowSettings"></div>';
+
+		} else {
+
+			if (is_activated) {
+
+				rowClassList.push('selected');
+				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
+
+			} else {
+				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
+			}
+
+			// TODO find out whether mark row should work for subtotals
+			rowSettings = renderHelper.getRowSettings('disabled');
+
+		}
 
         if (is_activated) {
 			rowClassList.push('activated');
@@ -448,13 +465,14 @@
 
         if (obj.___subtotal_subtype) {
             result = '<div class="' + rowClasses + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
-        } else {
 
+        } else {
             result = '<div class="' + rowClasses + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         }
+
         var cell;
 
-        result = result + rowSelection + rowSettings;
+        result = result + grandTotalCell + rowSelection + rowSettings;
 
         obj.___cells_values = [];
 
@@ -493,9 +511,9 @@
             cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
                 // '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
 				'<div class="g-cell' + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
-				'<div class="g-cell-content-wrap">' +
-                resultValue +
-                '</div>' +
+					'<div class="g-cell-content-wrap">' +
+						resultValue +
+					'</div>' +
                 '</div>' +
                 '</div>';
 
