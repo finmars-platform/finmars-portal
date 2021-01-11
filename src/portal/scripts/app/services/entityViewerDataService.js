@@ -620,7 +620,7 @@
 
         }
 
-        function resetRequestParameters() {
+        function resetRequestParameters() { // resets number of row's pages
             data.requestParameters = {};
         }
 
@@ -726,6 +726,17 @@
         function setActiveRequestParametersId(id) {
             data.activeRequestParametersId = id;
         }
+
+        function resetTableContent () {
+
+        	resetData();
+			resetRequestParameters();
+
+			var rootGroup = getRootGroupData();
+
+			setActiveRequestParametersId(rootGroup.___id);
+
+		}
 
 
         // Activated Row just for selection purpose
@@ -1422,6 +1433,8 @@
 
             resetRequestParameters: resetRequestParameters,
             getAllRequestParameters: getAllRequestParameters,
+
+			resetTableContent: resetTableContent,
 
             setActiveObjectFromAbove: setActiveObjectFromAbove,
             getActiveObjectFromAbove: getActiveObjectFromAbove,

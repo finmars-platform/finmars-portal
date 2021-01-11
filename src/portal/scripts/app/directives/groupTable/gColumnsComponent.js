@@ -140,9 +140,12 @@
                 };
 
                 scope.changeRowFilterColor = function (color) {
-                    scope.rowFilterColor = color;
+
+                	scope.rowFilterColor = color;
                     scope.evDataService.setRowTypeFilters(scope.rowFilterColor);
+
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                 };
 
                 let rowTypeFilters = localStorage.getItem("row_type_filters");
