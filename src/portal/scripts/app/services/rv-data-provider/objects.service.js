@@ -40,17 +40,22 @@
                     return item
                 });
 
+                console.log('#69 items before filters', JSON.parse(JSON.stringify(items)))
+
                 var groupTypes = entityViewerDataService.getGroups();
 
                 items = filterService.filterTableRows(items, regularFilters);
+                console.log('#69 items after filterTableRows', JSON.parse(JSON.stringify(items)))
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
+                console.log('#69 items after filterByGroupsFilters', JSON.parse(JSON.stringify(items)))
 
                 const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
                 if (rowTypeFilters) {
 
                     items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
+                    console.log('#69 items after filterByRowType', JSON.parse(JSON.stringify(items)))
 
                 }
 
@@ -68,7 +73,6 @@
                 result.count = 0;
                 result.results = [];
             }
-
 
             resolve(result);
 
