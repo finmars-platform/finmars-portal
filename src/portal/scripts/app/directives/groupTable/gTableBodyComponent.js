@@ -426,7 +426,6 @@
 
                 scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
 
-                    console.log('#69 UPDATE_TABLE_VIEWPORT')
                     calculateElemsWrapsSizes();
 
                     if (isReport) {

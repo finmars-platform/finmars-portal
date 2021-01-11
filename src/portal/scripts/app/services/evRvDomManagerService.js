@@ -21,8 +21,6 @@
                 contentWrapElement.style.height = "";
             }
 
-            console.log('#69 calculateContentWrapHeight', contentWrapElement, contentWrapElement.style.height)
-
         }
 
         function calculateContentWrapWidth(rootWrapElem, contentWrapElement, evDataService) {
