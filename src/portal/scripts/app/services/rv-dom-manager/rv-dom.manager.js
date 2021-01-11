@@ -786,19 +786,15 @@
                     cellElem = event.target.parentElement.parentElement;
                 } */
 
-                cellElem = event.target.closest('.g-cell');
+                cellElem = event.target.closest('.g-cell-wrap');
 
                 if (cellElem) {
 
                     var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
                     var columns = evDataService.getColumns();
-                    console.log('obj', obj);
-
                     var columnNumber = parseInt(cellElem.dataset.column, 10);
 
                     var column = columns[columnNumber - 1];
-
-                    console.log('clickData', clickData);
 
                     if (['instrument_principal_price', 'instrument_accrued_price'].indexOf(column.key) !== -1) {
 

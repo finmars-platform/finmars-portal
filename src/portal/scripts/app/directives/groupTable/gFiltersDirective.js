@@ -650,12 +650,7 @@
 
 					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-					scope.evDataService.resetData();
-					scope.evDataService.resetRequestParameters();
-
-					var rootGroup = scope.evDataService.getRootGroupData();
-
-					scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+					scope.evDataService.resetTableContent();
 
 					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 

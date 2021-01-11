@@ -270,7 +270,7 @@
 
                 break;
 
-            /*case 'top_n':
+            /* case 'top_n':
                 if (valueToFilter < filterBy) {
                     return true;
                 }
@@ -280,7 +280,7 @@
                 if (valueToFilter > filterBy) {
                     return true;
                 }
-                break;*/
+                break; */
 
             case 'from_to':
 
