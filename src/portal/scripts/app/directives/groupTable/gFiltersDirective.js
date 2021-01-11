@@ -726,9 +726,13 @@
 					    scope.isFiltersOpened = !scope.isFiltersOpened;
 
                         setTimeout(() => {
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-                        }, 1000)
+                            const interfaceLayout = scope.evDataService.getInterfaceLayout();
+                            const gFiltersHeight = gFilterElem.clientHeight;
+                            interfaceLayout.filterArea.height = gFiltersHeight;
+                            scope.evDataService.setInterfaceLayout(interfaceLayout);
 
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                        }, 500); // Transition time for .g-filters
 
                     })
 
