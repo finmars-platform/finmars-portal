@@ -5,10 +5,6 @@
 
     var transactionTypeRepository = require('../repositories/transactionTypeRepository');
 
-    var getList = function (options) {
-        return transactionTypeRepository.getList(options);
-    };
-
     var getListLight = function (options) {
         return transactionTypeRepository.getListLight(options)
     };
@@ -57,6 +53,10 @@
         return transactionTypeRepository.bookComplexTransaction(id, transaction);
     };
 
+    var recalculateComplexTransaction = function (id, transaction){
+        return transactionTypeRepository.recalculateComplexTransaction(id, transaction);
+    }
+
     var initBookPendingComplexTransaction = function (id) {
         return transactionTypeRepository.initBookPendingComplexTransaction(id);
     };
@@ -70,7 +70,7 @@
     };
 
     module.exports = {
-        getList: getList,
+        // getList: getList,
         getListLight: getListLight,
         getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,
@@ -82,6 +82,7 @@
 
         initBookComplexTransaction: initBookComplexTransaction,
         bookComplexTransaction: bookComplexTransaction,
+        recalculateComplexTransaction: recalculateComplexTransaction,
 
         initBookPendingComplexTransaction: initBookPendingComplexTransaction,
         bookPendingComplexTransaction: bookPendingComplexTransaction,

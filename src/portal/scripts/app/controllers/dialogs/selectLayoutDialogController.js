@@ -15,19 +15,11 @@
 
         var vm = this;
 
-        var layoutsToLoad = options.entityType;
+        var layoutsToLoad = options.entityType || 'all';
 
         vm.items = [];
 
-        if (!layoutsToLoad) {
-            layoutsToLoad = 'all';
-        }
-
-        vm.dialogTitle = options.dialogTitle;
-
-        if (!vm.dialogTitle) {
-            vm.dialogTitle = "Select layout";
-        }
+        vm.dialogTitle = options.dialogTitle || "Select layout";
 
         vm.noFolding = options.noFolding;
 
@@ -95,7 +87,7 @@
         };
 
         metaService.getContentGroups('entityLayoutsGroups').then(function (data) {
-            vm.groups = data;
+            vm.groups = data
         });
 
         vm.readyStatus = {content: false};

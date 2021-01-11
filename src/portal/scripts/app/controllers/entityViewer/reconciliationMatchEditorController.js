@@ -10,6 +10,7 @@
     var reconciliationComplexTransactionFieldService = require('../../services/reconciliation/reconciliationComplexTransactionFieldService');
 
     var reconMatchHelper = require('../../helpers/reconMatchHelper');
+    var ScrollHelper = require('../../helpers/scrollHelper');
 
     var evEvents = require('../../services/entityViewerEvents');
 
@@ -65,6 +66,8 @@
                 id: 4
             }
         ];
+
+		var scrollHelper;
 
         vm.complexTransactionStatusChange = function ($event, field) {
 
@@ -566,38 +569,6 @@
             document.body.addEventListener('mouseup', vm.turnOffDragging, {once: true});
         };
 
-        // scroll while dragging
-        var DnDScrollElem;
-        var DnDScrollTimeOutId;
-        var scrollSize = null;
-
-        var DnDWheel = function (event) {
-            event.preventDefault();
-
-            var scrolled = DnDScrollElem.scrollTop;
-
-            if (scrollSize === null) {
-                scrollSize = scrolled
-            }
-
-            if (event.deltaY > 0) {
-                scrollSize = scrollSize + 100;
-            } else {
-                scrollSize = scrollSize - 100;
-            }
-
-            clearTimeout(DnDScrollTimeOutId);
-
-            DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
-                DnDScrollElem.scroll({
-                    top: Math.max(0, scrollSize)
-                });
-                scrollSize = null;
-            }, 30);
-
-        };
-        // < scroll while dragging >
-
         vm.initDragula = function () {
 
             vm.dragAndDropBankFileLines = {
@@ -616,7 +587,7 @@
                     });
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
+                        scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('out', function (elem, container, source) {
@@ -624,7 +595,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
+						scrollHelper.disableDnDWheelScroll();
                     });
 
                 },
@@ -671,7 +642,7 @@
                     });
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
+						scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('out', function (elem, container, source) {
@@ -679,7 +650,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
+						scrollHelper.disableDnDWheelScroll();
                     });
 
                 },
@@ -725,7 +696,7 @@
                     });
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
+						scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('over', function (elem, container, source) {
@@ -1113,7 +1084,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
+						scrollHelper.disableDnDWheelScroll();
                     });
 
                 },
@@ -1172,10 +1143,14 @@
             };
 
             setTimeout(function () {
-                DnDScrollElem = document.querySelector('.dndScrollableElem');
+
+            	var DnDScrollElem = document.querySelector('.dndScrollableElem');
+				scrollHelper.setDnDScrollElem(DnDScrollElem);
+
                 vm.dragAndDropBankFileLines.init();
                 vm.dragAndDropComplexTransactionLines.init();
                 vm.dragAndDropFields.init();
+
             }, 500);
 
         };
@@ -1287,11 +1262,11 @@
 
 
             vm.complexTransactionList = parentFlatList.filter(function (item) {
-                return item.___is_activated && !item.is_canceled
+				return item.___is_activated && !item.is_canceled && item.___type === "object";
             });
 
             vm.bankLinesList = flatList.filter(function (item) {
-                return item.___is_activated;
+				return item.___is_activated && item.___type === "object";
             });
 
             vm.syncStatuses();
@@ -1299,6 +1274,8 @@
         };
 
         vm.init = function () {
+
+        	var scrollHelper = new ScrollHelper();
 
             vm.parentEntityViewerEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 

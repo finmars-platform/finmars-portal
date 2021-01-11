@@ -2,7 +2,7 @@
     <md-toolbar md-scroll-shrink>
         <div class="md-toolbar-tools">
             <div class="sidenav-logo-wrapper">
-                <img src="portal/content/img/finmars_logo.png"
+                <img src="portal/content/img/logo.png"
                      alt=""
                      height="40"
                      class="sidenav-logo">
@@ -275,7 +275,7 @@
                         <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="history">
                             <md-button class="sidemenu-btn history-sidenav-menu-btn">
                             <span class="side-nav-icon">
-                                <ng-md-icon icon="history" size="24"></ng-md-icon>
+                                <ng-md-icon icon="layers" size="24"></ng-md-icon>
                             </span>
                                 <span class="side-nav-title">Valuations</span>
                                 <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
@@ -411,17 +411,6 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
-                                <li data-ng-if="vm.accessTable.configuration_mapping_tables">
-                                    <md-button ui-sref-active="active"
-                                               class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.import.mapping-tables">
-                                        <span class="side-nav-title">
-                                            Mapping Tables
-                                        </span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
                             </ul>
                         </div>
                     </li>
@@ -449,7 +438,7 @@
                         <span class="side-nav-icon">
                             <ng-md-icon icon="developer_dashboard" size="24"></ng-md-icon>
                         </span>
-                            <span class="side-nav-title">Developer Panel</span>
+                            <span class="side-nav-title">Dev Panel</span>
                         </md-button>
                     </li>
 
@@ -639,6 +628,18 @@
                                                        class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.import.reference-tables">
                                                 <span class="side-nav-title">Reference Tables</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li data-ng-if="vm.accessTable.configuration_mapping_tables">
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.import.mapping-tables">
+                                                <span class="side-nav-title">
+                                                    Mapping Tables
+                                                </span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>

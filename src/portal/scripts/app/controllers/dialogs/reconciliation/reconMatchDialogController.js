@@ -10,6 +10,7 @@
     var reconciliationComplexTransactionFieldService = require('../../../services/reconciliation/reconciliationComplexTransactionFieldService');
 
     var reconMatchHelper = require('../../../helpers/reconMatchHelper');
+    var ScrollHelper = require('../../../helpers/scrollHelper');
 
     module.exports = function reconMatchDialogController($scope, $mdDialog, data) {
 
@@ -63,6 +64,11 @@
                 id: 4
             }
         ];
+
+        var dragAndDropBankFileLines;
+        var dragAndDropComplexTransactionLines;
+        var dragAndDropFields;
+        var scrollHelper;
 
         vm.createBankField = function (bankLine, field) {
 
@@ -529,42 +535,149 @@
             document.body.addEventListener('mouseup', vm.turnOffDragging, {once: true});
         };
 
-        // scroll while dragging
-        var DnDScrollElem;
-        var DnDScrollTimeOutId;
-        var scrollSize = null;
+        var cardsAndContainersRelation = {
 
-        var DnDWheel = function (event) {
-            event.preventDefault();
+            'bank-file': {
+                'ignore': {
+                    'bank-file': {
+                        'resolved': {'interactionType': 'area'},
+                        'conflict': {'interactionType': 'area_cards'},
+                        'new': {'interactionType': 'area'}
+                    },
 
-            var scrolled = DnDScrollElem.scrollTop;
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'cards'},
+                        'ignore': {'interactionType': 'cards'}
+                    }
+                },
+                'auto_matched': {
+                    'bank-file': {
+                        'ignore': {'interactionType': 'area'},
+                        'resolved': {'interactionType': 'area'},
+                        'conflict': {'interactionType': 'area_cards'},
+                        'new': {'interactionType': 'area_cards'}
+                    },
 
-            if (scrollSize === null) {
-                scrollSize = scrolled
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'cards'},
+                        'ignore': {'interactionType': 'cards'}
+                    }
+                },
+                'matched': {
+                    'bank-file': {
+                        'ignore': {'interactionType': 'area'},
+                        'resolved': {'interactionType': 'area'},
+                        'conflict': {'interactionType': 'area_cards'},
+                        'new': {'interactionType': 'area_cards'}
+                    },
+
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'cards'},
+                        'ignore': {'interactionType': 'cards'}
+                    }
+                },
+                'resolved': {
+                    'bank-file': {
+                        'ignore': {'interactionType': 'area'},
+                        'conflict': {'interactionType': 'area'},
+                        'new': {'interactionType': 'area'}
+                    },
+
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'cards'},
+                        'ignore': {'interactionType': 'cards'}
+                    }
+                },
+                'conflict': {
+                    'bank-file': {
+                        'ignore': {'interactionType': 'area'},
+                        'resolved': {'interactionType': 'area'},
+                        'conflict': {'interactionType': 'cards'},
+                        'new': {'interactionType': 'area_cards'}
+                    },
+
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'cards'},
+                        'ignore': {'interactionType': 'cards'}
+                    }
+                },
+                'new': {
+                    'bank-file': {
+                        'ignore': {'interactionType': 'area'},
+                        'resolved': {'interactionType': 'area'},
+                        'conflict': {'interactionType': 'area_cards'},
+                        'new': {'interactionType': 'cards'}
+                    },
+
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'cards'},
+                        'ignore': {'interactionType': 'cards'}
+                    }
+                }
+            },
+
+            'complex-transaction': {
+                'unmatched': {
+                    'bank-file': {
+                        'ignore': {'interactionType': 'cards'},
+                        'resolved': {'interactionType': 'cards'},
+                        'conflict': {'interactionType': 'cards'},
+                        'new': {'interactionType': 'cards'}
+                    },
+
+                    'complex-transaction': {
+                        'matched': {'interactionType': 'area'},
+                        'ignore': {'interactionType': 'area'}
+                    }
+                },
+                'matched': {
+                    'bank-file': {},
+
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'area'},
+                        'ignore': {'interactionType': 'area'}
+                    }
+                },
+                'auto_matched': {
+                    'bank-file': [],
+
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'area'},
+                        'matched': {'interactionType': 'area'},
+                        'ignore': {'interactionType': 'area'}
+                    }
+                },
+                'ignore': {
+                    'bank-file': {
+                        'resolved': {'interactionType': 'cards'},
+                        'conflict': {'interactionType': 'cards'},
+                        'new': {'interactionType': 'cards'}
+                    },
+
+                    'complex-transaction': {
+                        'unmatched': {'interactionType': 'area'},
+                        'matched': {'interactionType': 'area'}
+                    }
+                }
             }
-
-            if (event.deltaY > 0) {
-                scrollSize = scrollSize + 100;
-            } else {
-                scrollSize = scrollSize - 100;
-            }
-
-            clearTimeout(DnDScrollTimeOutId);
-
-            DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
-                DnDScrollElem.scroll({
-                    top: Math.max(0, scrollSize)
-                });
-                scrollSize = null;
-            }, 30);
 
         };
-        // < scroll while dragging >
 
+        var getContainerInfo = function (cardType, cardContainerStatus, containerType, containerStatus) {
+
+            var onDropActions = cardsAndContainersRelation[cardType][cardContainerStatus][containerType];
+
+            if (Object.keys(onDropActions).indexOf(containerStatus) > -1) {
+                return onDropActions[containerStatus];
+            }
+
+            return null;
+
+        };
 
         vm.initDragula = function () {
 
-            var dragAndDropBankFileLines = {
+            dragAndDropBankFileLines = {
 
                 init: function () {
                     this.dragulaInit();
@@ -580,7 +693,7 @@
                     });
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
+                        scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('out', function (elem, container, source) {
@@ -589,8 +702,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
-
+                        scrollHelper.disableDnDWheelScroll();
                     });
 
                 },
@@ -612,10 +724,15 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
+                    dragAndDropBankFileLines = null;
                 }
             };
 
-            var dragAndDropComplexTransactionLines = {
+            dragAndDropComplexTransactionLines = {
 
                 init: function () {
                     this.dragulaInit();
@@ -631,7 +748,7 @@
                     });
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
+                        scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('out', function (elem, container, source) {
@@ -639,7 +756,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
+                        scrollHelper.disableDnDWheelScroll();
                     });
 
                 },
@@ -660,10 +777,15 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
+                    dragAndDropComplexTransactionLines = null;
                 }
             };
 
-            var dragAndDropFields = {
+            dragAndDropFields = {
 
                 init: function () {
                     this.dragulaInit();
@@ -671,69 +793,144 @@
                 },
 
                 eventListeners: function () {
+
                     var areaItemsChanged;
                     var drake = this.dragula;
+
+                    var draggedOverElem;
+                    var shadowElem;
 
                     drake.on('dragstart', function () {
                         areaItemsChanged = false;
                     });
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
-                    });
-
-                    drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
-
-                        vm.syncStatuses();
+                        scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('over', function (elem, container, source) {
 
-                        console.log('over.elem', elem);
-                        console.log('over.container', container);
-                        console.log('over.source', source);
-
                         areaItemsChanged = false;
+
                         $(container).addClass('active');
+                        draggedOverElem = container;
+
+                        /*var containerInfo = getContainerInfo(elemType, elemStatus, targetType, targetStatus);
+
+                        if (containerInfo && containerInfo.type === 'area') {
+                            $(container).addClass('recon-cards-container-dragged-over');
+                        }*/
+
                     });
 
-                    drake.on('out', function (elem, container, source) {
-                        $(container).removeClass('active');
-                    });
+                    drake.on('shadow', function (elem, container, source) { // used to prevent showing shadow of card in deletion area
 
-                    drake.on('shadow', function (elem, container) { // used to prevent showing shadow of card in deletion area
+                        /*var cardType = elem.dataset.type;
+                        var containerType;*/
+                        elem.classList.remove('display-none');
+                        shadowElem = elem;
 
-                        console.log('elem', {elem: elem});
+                        var elemType = elem.dataset.type;
+                        var elemContainerStatus = source.dataset.status;
+                        var targetType = container.dataset.type;
+                        var targetStatus = container.dataset.status;
 
-                        var cardType = elem.dataset.type;
-                        var containerType;
+                        var hideShadow = true;
 
-                        if (container.classList.contains('dialogComplexTransactionLineContainer')) {
+                        /*if (container.classList.contains('dialogComplexTransactionLineContainer')) {
                             containerType = 'complex-transaction'
                         }
 
                         if (container.classList.contains('dialogBankLineContainer')) {
                             containerType = 'bank-file'
-                        }
+                        }*/
 
-                        if (cardType !== containerType) {
+                        var nextSibling = elem.nextSibling;
+                        var containerInfo = getContainerInfo(elemType, elemContainerStatus, targetType, targetStatus);
+
+                        if (containerInfo && draggedOverElem === container) {
+
+                            switch (containerInfo.interactionType) {
+                                case 'area':
+                                    hideShadow = false;
+                                    container.classList.add('recon-cards-container-dragged-over');
+                                    break;
+
+                                case 'cards':
+
+                                    if (nextSibling) {
+                                        var lastDraggedOverCard = container.querySelector('.recon-dragged-over-card');
+                                        if (lastDraggedOverCard) {
+                                            lastDraggedOverCard.classList.remove('recon-dragged-over-card');
+                                        }
+
+                                        nextSibling.classList.add('recon-dragged-over-card');
+                                    }
+
+                                    break;
+
+                                case 'area_cards':
+
+                                    hideShadow = false;
+
+                                    if (nextSibling) {
+
+                                        var lastDraggedOverCard = container.querySelector('.recon-dragged-over-card');
+                                        if (lastDraggedOverCard) {
+                                            lastDraggedOverCard.classList.remove('recon-dragged-over-card');
+                                        }
+
+                                        container.classList.remove('recon-cards-container-dragged-over');
+                                        nextSibling.classList.add('recon-dragged-over-card');
+
+                                    } else {
+
+                                        var lastDraggedOverCard = container.querySelector('.recon-dragged-over-card');
+                                        if (lastDraggedOverCard) {
+                                            lastDraggedOverCard.classList.remove('recon-dragged-over-card');
+                                        }
+
+                                        container.classList.add('recon-cards-container-dragged-over');
+
+                                    }
+
+                                    break;
+                            }
+
+                        }
+                        /*if (cardType !== containerType) {
                             $(elem).hide();
                         } else {
                             $(elem).show();
+                        }*/
+
+                        if (hideShadow || nextSibling) {
+                            //$(elem).hide();
+                            elem.classList.add('display-none');
+                        }
+
+                    });
+
+                    drake.on('out', function (elem, container, source) {
+
+                        draggedOverElem = null;
+
+                        if (shadowElem) {
+                            shadowElem.classList.add('display-none');
+                            shadowElem = null;
+                        }
+
+                        container.classList.remove('active');
+                        container.classList.remove('recon-cards-container-dragged-over');
+
+                        var lastDraggedOverCard = container.querySelector('.recon-dragged-over-card');
+                        if (lastDraggedOverCard) {
+                            lastDraggedOverCard.classList.remove('recon-dragged-over-card');
                         }
 
                     });
 
                     drake.on('drop', function (elem, target, source, nextSibling) {
-
-                        console.log("Here vm", vm);
-                        console.log("nextSibling", nextSibling);
-
-                        console.log('target', target);
-                        console.log('elem', elem);
-
-                        vm.processing = true;
 
                         var targetStatus = target.dataset.status;
                         var targetType = target.dataset.type;
@@ -741,7 +938,7 @@
                         var elemType = elem.dataset.type;
                         var elemFieldType = elem.dataset.fieldType;
                         var elemFieldId = parseInt(elem.dataset.fieldId, 10);
-                        var elemParentIndex = parseInt(elem.dataset.parentIndex, 10);
+                        // var elemParentIndex = parseInt(elem.dataset.parentIndex, 10);
 
                         var nextSiblingFieldId;
                         var nextSiblingParentIndex;
@@ -753,14 +950,8 @@
                             nextSiblingFieldType = nextSibling.dataset.fieldType;
                         }
 
-                        console.log('elemType', elemType);
-                        console.log('targetType', targetType);
-                        console.log('targetStatus', targetStatus);
-                        console.log('elemFieldId', elemFieldId);
-                        console.log('elemParentIndex', elemParentIndex);
-
                         if (elemType === targetType) {
-
+                            // Dropped on the same die
                             var field;
                             var complexTransaction;
 
@@ -778,11 +969,6 @@
                                     var nextSiblingBankFileField = reconMatchHelper.getBankFileField(nextSiblingFieldId, nextSiblingFieldType, vm.bankLinesList);
 
                                     var nextSiblingBankFileFieldStatus = reconMatchHelper.getBankFieldStatusNameById(nextSiblingBankFileField.status);
-
-                                    console.log('targetStatus', targetStatus);
-                                    console.log('bankFileFieldStatus', bankFileFieldStatus);
-                                    console.log('nextSiblingBankFileFieldStatus', nextSiblingBankFileFieldStatus);
-
 
                                     if (bankFileFieldStatus === 'new' && nextSiblingBankFileFieldStatus === 'new' && targetStatus === 'new') {
 
@@ -940,6 +1126,7 @@
                                     }
 
                                     else if (targetStatus === 'ignore') {
+
                                         bankFileField.status = reconMatchHelper.getBankFieldStatusIdByName(targetStatus);
 
                                         if (bankFileFieldStatus === 'new') {
@@ -949,9 +1136,10 @@
                                             vm.createBankField(bankFileLine, bankFileField).then(function (value) {
 
                                                 vm.processing = false;
-
                                                 $scope.$apply();
+
                                             })
+
                                         } else {
 
                                             vm.processing = true;
@@ -959,15 +1147,17 @@
                                             vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
 
                                                 vm.processing = false;
-
                                                 $scope.$apply();
+
                                             })
                                         }
 
                                     } else {
-                                        vm.processing = false;
-                                        drake.cancel(true);
-                                        $(elem).show();
+
+                                        // vm.processing = false;
+                                        drake.cancel();
+                                        //$(elem).show();
+
                                     }
 
 
@@ -980,8 +1170,8 @@
                                         vm.createNewBankField(bankFileLine, bankFileField).then(function (value) {
 
                                             vm.processing = false;
-
                                             $scope.$apply();
+
                                         })
 
                                     } else {
@@ -995,8 +1185,8 @@
                                             vm.createBankField(bankFileLine, bankFileField).then(function (value) {
 
                                                 vm.processing = false;
-
                                                 $scope.$apply();
+
                                             })
                                         } else {
 
@@ -1029,24 +1219,24 @@
                                 vm.updateComplexTransactionFieldStatus(complexTransactionLine, complexTransactionField).then(function (value) {
 
                                     vm.processing = false;
-
                                     $scope.$apply();
+
                                 })
 
                             }
 
                             else {
 
-                                drake.cancel(true);
-                                $(elem).show();
+                                drake.cancel();
+                                //$(elem).show();
 
-                                vm.processing = false;
+                                // vm.processing = false;
+
                             }
 
 
                         } else {
-
-                            console.log("Drop on other side");
+                            // Dropped on the other side
 
                             if (nextSibling) {
 
@@ -1062,9 +1252,7 @@
                                     complexTransactionLine = reconMatchHelper.getComplexTransactionLineByFieldId(elemFieldId, vm.complexTransactionList);
                                     complexTransactionField = reconMatchHelper.getComplexTransactionField(elemFieldId, vm.complexTransactionList);
 
-                                }
-
-                                if (elemType === 'bank-file') {
+                                } else if (elemType === 'bank-file') {
 
                                     bankFileLine = reconMatchHelper.getBankLineByFieldId(elemFieldId, elemFieldType, vm.bankLinesList);
                                     bankFileField = reconMatchHelper.getBankFileField(elemFieldId, elemFieldType, vm.bankLinesList);
@@ -1077,11 +1265,11 @@
                                 var complexTransactionFieldStatus = reconMatchHelper.getComplexTransactionFieldStatusNameById(complexTransactionField.status);
 
 
-                                console.log("Result bankFileField?", bankFileField);
+                                /*console.log("Result bankFileField?", bankFileField);
                                 console.log("Result complexTransactionField?", complexTransactionField);
 
                                 console.log("Result bankFileFieldStatus?", bankFileFieldStatus);
-                                console.log("Result complexTransactionFieldStatus?", complexTransactionFieldStatus);
+                                console.log("Result complexTransactionFieldStatus?", complexTransactionFieldStatus);*/
 
 
                                 if (['new', 'conflict', 'resolved', 'ignore', 'matched', 'auto_matched'].indexOf(bankFileFieldStatus) !== -1 &&
@@ -1111,8 +1299,6 @@
                                         return item.id !== bankFileField.id
                                     });
 
-                                    console.log('bankFileLine', bankFileLine);
-
 
                                     bankFileLine.matched_fields.push(bankFileField);
 
@@ -1123,9 +1309,10 @@
                                         vm.createBankField(bankFileLine, bankFileField).then(function (value) {
 
                                             vm.processing = false;
-
                                             $scope.$apply();
+
                                         })
+
                                     } else {
 
                                         vm.processing = true;
@@ -1133,9 +1320,10 @@
                                         vm.updateBankFieldStatus(bankFileLine, bankFileField).then(function (value) {
 
                                             vm.processing = false;
-
                                             $scope.$apply();
+
                                         })
+
                                     }
 
 
@@ -1155,28 +1343,37 @@
                                     vm.updateComplexTransactionFieldStatus(complexTransactionLine, complexTransactionField).then(function (value) {
 
                                         vm.processing = false;
-
                                         $scope.$apply();
+
                                     })
 
                                 } else {
-                                    drake.cancel(true);
-                                    $(elem).show();
+                                    drake.cancel();
+                                    //$(elem).show();
                                 }
 
 
                             } else {
 
-                                vm.processing = false;
+                                // vm.processing = false;
 
-                                drake.cancel(true);
-                                $(elem).show();
+                                drake.cancel();
+                                //$(elem).show();
 
                             }
 
                         }
 
                         vm.syncStatuses();
+
+                    });
+
+                    drake.on('dragend', function (elem) {
+
+                    	scrollHelper.disableDnDWheelScroll();
+
+                        vm.syncStatuses();
+                        elem.classList.remove('display-none');
 
                     });
 
@@ -1241,12 +1438,19 @@
                         }
                     });
 
+                },
+
+                destroy: function () {
+                    this.dragula.destroy();
+                    dragAndDropFields = null;
                 }
             };
 
             setTimeout(function () {
 
-                DnDScrollElem = document.querySelector('.dndScrollableElem');
+                var DnDScrollElem = document.querySelector('.dndScrollableElem');
+                scrollHelper.setDnDScrollElem(DnDScrollElem);
+
                 dragAndDropBankFileLines.init();
                 dragAndDropComplexTransactionLines.init();
                 dragAndDropFields.init();
@@ -1377,18 +1581,21 @@
 
             console.log("vm", vm);
 
+            scrollHelper = new ScrollHelper();
+
             var parentFlatList = vm.parentEntityViewerDataService.getFlatList();
 
             var flatList = vm.reconViewerDataService.getFlatList();
 
+            // same code in reconciliationMatchEditorController.js
             vm.complexTransactionList = parentFlatList.filter(function (item) {
-                return item.___is_activated && !item.is_canceled
+				return item.___is_activated && !item.is_canceled && item.___type === "object";
             });
 
             vm.bankLinesList = flatList.filter(function (item) {
-                return item.___is_activated;
+                return item.___is_activated && item.___type === "object";
             });
-
+			// < same code in reconciliationMatchEditorController.js >
 
             vm.syncStatuses();
 
@@ -1400,6 +1607,13 @@
         };
 
         vm.init();
+
+        $scope.$on("$destroy", function () {
+            dragAndDropBankFileLines.destroy();
+            dragAndDropComplexTransactionLines.destroy();
+            dragAndDropFields.destroy();
+        });
+
     }
 
 }());

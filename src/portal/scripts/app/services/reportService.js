@@ -12,11 +12,18 @@
     };
 
     var getBalanceReport = function (options) {
-        return reportRepository.getBalanceReport(options);
+
+        //TODO refactor soon
+        var isSql = window.location.search.indexOf('report=legacy') === -1;
+
+        return reportRepository.getBalanceReport(options, isSql);
     };
 
     var getPnlReport = function (options) {
-        return reportRepository.getPnlReport(options);
+
+        var isSql = window.location.search.indexOf('report=legacy') === -1;
+
+        return reportRepository.getPnlReport(options, isSql);
     };
 
     var getCashFlowProjectionReport = function (options) {
@@ -24,7 +31,10 @@
     };
 
     var getTransactionReport = function (options) {
-        return reportRepository.getTransactionReport(options);
+
+        var isSql = window.location.search.indexOf('report=legacy') === -1;
+
+        return reportRepository.getTransactionReport(options, isSql);
     };
 
     var getPerformanceReport = function (options) {

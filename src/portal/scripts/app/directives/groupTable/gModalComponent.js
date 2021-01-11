@@ -10,6 +10,7 @@
     var uiService = require('../../services/uiService');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evEvents = require('../../services/entityViewerEvents');
+    var ScrollHelper = require('../../helpers/scrollHelper');
 
     var metaService = require('../../services/metaService');
 
@@ -43,6 +44,8 @@
         var filters = vm.entityViewerDataService.getFilters();
         var groups = vm.entityViewerDataService.getGroups();
 
+		var scrollHelper;
+
         vm.attrsList = [];
 
         var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'tags', 'content_types'];
@@ -63,14 +66,12 @@
                 vm.entityAttrs = columns.map(function (item) {
                     return item
                 });*/
-
                 vm.entityAttrs = vm.attributeDataService.getReconciliationAttributes();
 
                 syncAttrs();
                 getSelectedAttrs();
 
                 vm.readyStatus.content = true;
-
 
             } else {
 
@@ -84,9 +85,8 @@
                     if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
                         item.name = 'Group';
                     }
+
                     item.entity = vm.entityType;
-
-
 
                     if (vm.entityType === 'instrument') {
 
@@ -213,8 +213,14 @@
         };
 
         var syncAttrs = function () {
+
             syncTypeAttrs(vm.entityAttrs);
             syncTypeAttrs(vm.attrs);
+
+            syncTypeAttrs(vm.userTextFields);
+            syncTypeAttrs(vm.userNumberFields);
+            syncTypeAttrs(vm.userDateFields);
+
         };
 
         function syncTypeAttrs(attrs) {
@@ -377,46 +383,101 @@
         var selectedColumns = [];
         var selectedFilters = [];
 
+		var isAttrInsideOfAnotherGroup = function (attrKey, groupType) {
+
+			let group1, group2;
+
+			switch (groupType) {
+				case 'groups':
+					group1 = columns;
+					group2 = filters;
+					break;
+
+				case 'columns':
+					group1 = groups;
+					group2 = filters;
+					break;
+
+				case 'filters':
+					group1 = groups;
+					group2 = columns;
+					break;
+			}
+
+			let attrIndex = group1.findIndex(attr => {return attr.key === attrKey});
+
+			if (attrIndex < 0) {
+				attrIndex = group2.findIndex(attr => {return attr.key === attrKey});
+			}
+
+			return attrIndex > -1;
+
+		}
+
+		var updateSelectedAttr = function (attr, selectedAttrs) {
+
+			const existingAttrIndex = selectedAttrs.findIndex(selAttr => attr.key === selAttr.key);
+
+			if (existingAttrIndex < 0) {
+				selectedAttrs.push(attr);
+			} else {
+				selectedAttrs[existingAttrIndex] = attr
+			}
+
+		};
+
         var separateSelectedAttrs = function (attributes, attrsVmKey) {
 
             for (var i = 0; i < attributes.length; i++) {
-                var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute['attrsVmKey'] = attrsVmKey;
+
+            	var attribute = JSON.parse(angular.toJson(attributes[i]));
+                attribute['attrsVmKey'] = attrsVmKey; // used inside HTML for vm.onSelectedAttrsChange()
 
                 // attrsVmKey used in vm.updateAttrs and selectedDnD
                 if (attribute.columns) {
-                    selectedColumns.push(attribute);
+					updateSelectedAttr(attribute, selectedColumns);
+
                 } else if (attribute.groups) {
-                    selectedGroups.push(attribute);
+					updateSelectedAttr(attribute, selectedGroups);
+
                 }
 
                 if (attribute.filters) {
-                    selectedFilters.push(attribute);
+					updateSelectedAttr(attribute, selectedFilters);
                 }
+
             }
 
         };
 
-        var groupSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
+        var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
 
-            var orderedSelAttrs = [];
+            // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
+			let selectedAttrsObj = {};
+            let inactiveAttrs = [];
 
-            var a;
-            for (a = 0; a < insideTable.length; a++) {
-                var attr = insideTable[a];
+            selectedAttrs.forEach((attr) => {
 
-                for (var i = 0; i < selectedAttrs.length; i++) {
-                    var sAttr = selectedAttrs[i];
+                if (attr[groupType]) {
+					selectedAttrsObj[attr.key] = attr
 
-                    if (sAttr.key === attr.key) {
-                        orderedSelAttrs.push(sAttr);
-                        break;
-                    }
-                }
+                } else if (!isAttrInsideOfAnotherGroup(attr.key, groupType)) {
 
-            }
+					inactiveAttrs.push(attr);
 
-            return orderedSelAttrs;
+				}
+
+            });
+
+			let orderedAttrs = insideTable.map(function (attr) {
+
+				return selectedAttrsObj[attr.key];
+
+			});
+
+			orderedAttrs = orderedAttrs.concat(inactiveAttrs);
+
+            return orderedAttrs;
 
         };
 
@@ -426,22 +487,28 @@
 
         var getSelectedAttrs = function () {
 
-            selectedGroups = [];
-            selectedColumns = [];
-            selectedFilters = [];
+            selectedGroups = vm.selectedGroups;
+            selectedColumns = vm.selectedColumns;
+            selectedFilters = vm.selectedFilters;
 
             separateSelectedAttrs(vm.entityAttrs, 'entityAttrs');
             separateSelectedAttrs(vm.attrs, 'attrs');
 
-            vm.selectedGroups = groupSelectedGroups(groups, selectedGroups);
-            vm.selectedColumns = groupSelectedGroups(columns, selectedColumns);
-            vm.selectedFilters = groupSelectedGroups(filters, selectedFilters);
+            separateSelectedAttrs(vm.userTextFields, 'userTextFields');
+            separateSelectedAttrs(vm.userNumberFields, 'userNumberFields');
+            separateSelectedAttrs(vm.userDateFields, 'userDateFields');
+
+            // Order selected as they are inside the table
+			vm.selectedGroups = organizeSelectedAttrs(groups, selectedGroups, 'groups');
+			vm.selectedColumns = organizeSelectedAttrs(columns, selectedColumns, 'columns');
+			vm.selectedFilters = organizeSelectedAttrs(filters, selectedFilters, 'filters');
 
         };
 
         // < format data for SELECTED tab >
 
         vm.onSelectedAttrsChange = function (attributesList, selectedAttr) {
+            console.log('onSelectedAttrsChange', attributesList, selectedAttr)
 
             for (var i = 0; i < attributesList.length; i++) {
                 if (attributesList[i].key === selectedAttr.key) {
@@ -467,9 +534,7 @@
             eventListeners: function () {
 
                 var exist = false;
-                var columnExist = false;
-                var groupExist = false;
-                var filterExist = false;
+                var existedAttrGroup = '';
 
                 this.dragula.on('over', function (elem, container, source) {
                     $(container).addClass('active');
@@ -485,14 +550,14 @@
                     var identifier = $(elem).attr('data-key-identifier');
                     var i;
 
-
                     exist = false;
+
                     if (target === contentWrapElement.querySelector('#columnsbag') ||
                         target === contentWrapElement.querySelector('.g-columns-holder')) {
                         for (i = 0; i < columns.length; i = i + 1) {
                             if (columns[i].key === identifier) {
                                 exist = true;
-                                columnExist = true;
+								existedAttrGroup = 'column';
                             }
                             /*if (columns[i].name === name) {
                                 exist = true;
@@ -508,7 +573,7 @@
                             }*/
                             if (groups[i].key === identifier) {
                                 exist = true;
-                                groupExist = true;
+								existedAttrGroup = 'group';
                             }
                         }
                     }
@@ -522,7 +587,7 @@
 
                             if (filters[i].key === identifier) {
                                 exist = true;
-                                filterExist = true;
+								existedAttrGroup = 'filter';
                             }
                         }
                     }
@@ -607,13 +672,9 @@
 
                         var errorMessage = 'Item should be unique';
 
-                        if (columnExist) {
-                            errorMessage = 'There is already such column in Column Area';
-                        } else if (groupExist) {
-                            errorMessage = 'There is already such group in Grouping Area';
-                        } else if (filterExist) {
-                            errorMessage = 'There is already such filter in Filter Area';
-                        }
+                        if (existedAttrGroup) {
+							errorMessage = 'There is already such ' + existedAttrGroup + ' in Filter Area';
+						}
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
@@ -680,7 +741,7 @@
         };
 
         // scroll while dragging
-        var DnDScrollElem;
+        /* var DnDScrollElem;
         var DnDScrollTimeOutId;
         var scrollSize = null;
 
@@ -708,7 +769,7 @@
                 scrollSize = null;
             }, 30);
 
-        };
+        }; */
         // < scroll while dragging >
 
         var selectedDnD = {
@@ -742,7 +803,7 @@
                 });
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', DnDWheel);
+                    scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('drop', function (elem, target, source, nextSibling) {
@@ -780,36 +841,71 @@
                                         vm[attrsVmKey][i].columns = false;
                                         vm[attrsVmKey][i].filters = true;
                                         GCFItems = filters;
+
                                         updateGCFMethod = function () {
-                                            vm.entityViewerDataService.setFilters(GCFItems);
+                                        	vm.entityViewerDataService.setFilters(GCFItems);
                                         };
+
                                         break;
                                 }
 
                                 var attrData = JSON.parse(JSON.stringify(vm[attrsVmKey][i]));
+								var insertAttr = true;
+
+                                if (nextSibling) {
+									var nextSiblingKey = nextSibling.dataset.attributeKey;
+								}
 
                                 attributeChanged = true;
 
-                                for (var a = 0; a < GCFItems.length; a++) { // remove same element from selected group
-                                    if (GCFItems[a].key === attributeKey) {
-                                        GCFItems.splice(a, 1);
+								for (var a = 0; a < GCFItems.length; a++) { // search for the same attr
+
+								 	if (GCFItems[a].key === attributeKey) {
+
+										GCFItems[a].groups = attrData.groups
+										GCFItems[a].columns = attrData.columns
+										GCFItems[a].groups = attrData.groups
+
+										if (nextSiblingKey === attributeKey) { // attr already in right place
+
+											insertAttr = false;
+
+										} else { // remove attribute before inserting it into another index
+
+											attrData = JSON.parse(JSON.stringify(GCFItems[a]));
+											GCFItems.splice(a, 1);
+
+										}
+
                                         break;
                                     }
+
                                 }
 
-                                if (nextSibling) {
-                                    var nextSiblingKey = nextSibling.dataset.attributeKey;
+                                if (insertAttr) {
 
-                                    for (var a = 0; a < GCFItems.length; a++) {
-                                        var GCFElem = GCFItems[a];
+                                	if (nextSibling) {
 
-                                        if (GCFElem.key === nextSiblingKey) {
-                                            GCFItems.splice(a, 0, attrData);
-                                            updateGCFMethod();
-                                            break;
-                                        }
-                                    }
+                                		for (var a = 0; a < GCFItems.length; a++) {
+
+                                			var GCFElem = GCFItems[a];
+
+											if (GCFElem.key === nextSiblingKey) {
+
+												GCFItems.splice(a, 0, attrData);
+												break;
+
+											}
+
+										}
+
+									} else {
+										GCFItems.push(attrData);
+									}
+
                                 }
+
+								updateGCFMethod();
 
                                 break;
                             }
@@ -918,7 +1014,7 @@
                     }
                     // < dragging from filters >
 
-                    if (attributeChanged) { // does not trigger on order change
+                    if (attributeChanged) { // do not trigger on order change
 
                         vm.updateAttrs(vm[attrsVmKey]);
                         drake.remove(); // adds delay if called when only attributes order changed in group
@@ -928,14 +1024,17 @@
                 });
 
                 drake.on('dragend', function () {
-                    if (sourceContainer) {
+
+                	if (sourceContainer) {
                         sourceContainer.classList.remove('dragged-out-card-space');
                     }
 
                     if (containerWithShadow) {
                         containerWithShadow.classList.remove('remove-card-space');
                     }
-                    document.removeEventListener('wheel', DnDWheel);
+
+                    scrollHelper.disableDnDWheelScroll();
+
                 });
 
             },
@@ -1376,11 +1475,17 @@
         };
 
         vm.initDnd = function () {
-            setTimeout(function () {
-                DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
-                viewConstructorDnD.init();
+
+        	setTimeout(function () {
+
+        		var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
+        		scrollHelper.setDnDScrollElem(DnDScrollElem);
+
+        		viewConstructorDnD.init();
                 selectedDnD.init();
+
             }, 500);
+
         };
 
         vm.cancel = function () {
@@ -1396,6 +1501,8 @@
         };
 
         var init = function () {
+
+			scrollHelper = new ScrollHelper();
 
             vm.getAttributes();
 

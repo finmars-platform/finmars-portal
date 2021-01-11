@@ -64,6 +64,7 @@
             delete vm.item.settings.legends_position;
             delete vm.item.settings.legends_columns_number;
             delete vm.item.settings.chart_form;
+            delete vm.item.settings.pie_size_percent;
 
         };
 
@@ -147,6 +148,7 @@
                     vm.item.settings.legends_position = 'right';
                     vm.item.settings.tooltip_font_size = 10;
                     vm.item.settings.chart_form = 'doughnut';
+                    vm.item.settings.pie_size_percent = 100;
                     break;
             }
 
@@ -210,6 +212,10 @@
 
         };
 
+		vm.clearSelect = function (item, propToDelete) {
+			delete item[propToDelete];
+		}
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
@@ -263,6 +269,16 @@
             dataService.setComponents(vm.componentsTypes);
 
             $mdDialog.hide({status: 'agree'});
+        };
+
+        vm.isFormValid = function () {
+            var pie_size_percent = vm.item.settings.pie_size_percent;
+            return vm.item.type && (!pie_size_percent || pie_size_percent > 0 && pie_size_percent <= 100);
+        };
+
+        // Victor 2020.10.26 Issue #47
+        vm.exportToDashboards = function () {
+            dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
         };
 
         vm.init = function () {

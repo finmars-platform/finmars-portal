@@ -805,7 +805,7 @@
 
             var entityType = metaContentTypesService.findEntityByContentType(layout.content_type, 'ui');
 
-            attributeTypeService.getList(entityType).then(function (data) {
+            attributeTypeService.getList(entityType, {pageSize: 1000}).then(function (data) {
 
                 var layoutAttrs = data.results;
 
@@ -1113,12 +1113,21 @@
 
         return new Promise(function (resolve, reject) {
 
-            uiService.getListLayoutDefault({
+            /* uiService.getListLayoutDefault({
                 filters: {
                     content_type: componentType.settings.content_type,
                     name: componentType.settings.layout_name
                 }
-            }).then(function (data) {
+            }) */
+            uiService.getListLayout(
+                null,
+                {
+                    filters: {
+                        content_type: componentType.settings.content_type,
+                        name: componentType.settings.layout_name
+                    }
+                }
+            ).then(function (data) {
 
                 console.log('mapDashboardComponentType data', data);
 

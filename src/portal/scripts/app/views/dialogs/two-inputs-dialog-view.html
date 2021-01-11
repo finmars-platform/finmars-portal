@@ -5,22 +5,22 @@
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
 
-            <h2>Choose color name and tooltip.</h2>
+            <h2 ng-bind="vm.title"></h2>
             <span flex></span>
         </div>
     </md-toolbar>
 
     <md-dialog-content class="p-16 height-100">
-        <div class="flex-row flex-content-space-between">
+        <div class="flex-row fc-space-between">
             <div>
                 <text-input model="vm.firstInputData.value"
-                            label="Name"
+                            label="{{vm.firstInputData.label}}"
                             placeholder-text="Text"
                             small-options="vm.firstInputData.smallOptions"></text-input>
             </div>
 
             <text-input model="vm.secondInputData.value"
-                        label="User Code"
+                        label="{{vm.secondInputData.label}}"
                         placeholder-text="Text"
                         small-options="vm.secondInputData.smallOptions"
                         event-signal="vm.eventObj"></text-input>

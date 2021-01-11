@@ -8,6 +8,7 @@
     var evEvents = require('../../../services/entityViewerEvents');
 
     var userFilterService = require('../../../services/rv-data-provider/user-filter.service');
+    var specificDataService = require('../../../services/specificDataService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -21,23 +22,30 @@
             link: function (scope, elem, attrs) {
 
                 scope.filters = scope.evDataService.getFilters();
+                scope.entityType = scope.evDataService.getEntityType();
+                scope.contentType = scope.evDataService.getContentType();
 
-                scope.filterValue = undefined;
                 scope.columnRowsContent = [];
                 scope.showSelectMenu = false;
 
                 var dataLoadEndId;
-                var toggleFilterAreaID;
+                // var toggleFilterAreaID;
 
                 var getDataForSelects = function () {
 
-                    var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
+                    console.log('getDataForSelects.scope', scope)
 
-                    scope.columnRowsContent = columnRowsContent.map(function (cRowsContent) {
-                        return {id: cRowsContent, name: cRowsContent}
-                    });
+                    specificDataService.getValuesForSelect(scope.contentType, scope.filter.key, scope.filter.value_type).then(function (data) {
 
-                    scope.$apply();
+                        // var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
+
+                        scope.columnRowsContent = data.results.map(function (value) {
+                            return {id: value, name: value}
+                        });
+
+                        scope.$apply();
+
+                    })
 
                 };
 
@@ -114,7 +122,8 @@
                 scope.showFRCheckMark = function (filterRegime) {
                     if (scope.filter.options.filter_type === filterRegime) {
                         return true;
-                    };
+                    }
+                    ;
 
                     return false;
                 };

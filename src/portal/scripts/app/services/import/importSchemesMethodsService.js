@@ -139,10 +139,16 @@
 
             if (item.frontOptions && item.frontOptions.noNameExpr) {
                 return 'btn-error';
+
+            }
+            else if (item.name_expr &&
+                     item.name !== item.name_expr) {
+
+                return 'md-primary';
+
             }
 
             return '';
-
         }
 
         var openCalcFieldFxBtnExprBuilder = function (item, viewModel, $event) {

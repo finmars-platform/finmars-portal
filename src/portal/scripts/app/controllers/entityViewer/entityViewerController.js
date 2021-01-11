@@ -17,7 +17,7 @@
 
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
-        var EntityViewerEventService = require('../../services/entityViewerEventService');
+        var EntityViewerEventService = require('../../services/eventService');
         var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
         var AttributeDataService = require('../../services/attributeDataService');
 
@@ -74,6 +74,46 @@
             //     console.log('Resolved??', data);
             //
             // });
+
+            var updateTableAfterEntitiesDeletion = function (deletedEntitiesIds) {
+
+                var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
+                var objects = vm.entityViewerDataService.getObjects();
+
+                objects.forEach(function (obj) {
+
+                    if (deletedEntitiesIds.includes(obj.id)) {
+
+                        var parent = vm.entityViewerDataService.getData(obj.___parentId)
+
+                        // if deleted entities shown, mark them
+                        if (evOptions.entity_filters && evOptions.entity_filters.includes('deleted')) {
+
+                            parent.results.forEach(function (resultItem) {
+
+                                if (deletedEntitiesIds.includes(resultItem.id)) {
+                                    resultItem.is_deleted = true
+                                }
+
+                            });
+
+                        } else { // if deleted entities hidden, remove them
+
+                            parent.results = parent.results.filter(function (resultItem) {
+                                return !deletedEntitiesIds.includes(resultItem.id);
+                            });
+
+                        }
+
+                        vm.entityViewerDataService.setData(parent);
+
+                    }
+
+                });
+
+                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            };
 
             var initTransitionHooks = function () {
 
@@ -197,7 +237,7 @@
                         var selectedRows = flatList.filter(function (row) {
                             return row.___is_activated;
                         });
-
+						console.log("testing manageInstrumentProps selectedRows", selectedRows);
                         selectedRows.forEach(function (row) {
 
                             var obj = vm.entityViewerDataService.getObject(row.___id, row.___parentId);
@@ -206,18 +246,21 @@
 
                                 case 'deactivate':
 
-                                    obj.is_active = false;
+                                	if (obj.is_active) {
+										obj.is_active = false;
 
-                                    instrumentService.patch(obj.id,
-                                        {
-                                            is_active: obj.is_active
-                                        }
-                                    );
+										instrumentService.patch(obj.id,
+											{
+												is_active: obj.is_active
+											}
+										);
+									}
 
                                     break;
 
                                 case 'activate':
-                                    if (obj.is_active) {
+
+                                	if (!obj.is_active) {
 
                                         obj.is_active = true;
 
@@ -262,25 +305,7 @@
 
                                     if (res.status === 'agree') {
 
-                                        var objects = vm.entityViewerDataService.getObjects();
-
-                                        objects.forEach(function (obj) {
-
-                                            if (res.data.ids.indexOf(obj.id) !== -1) {
-
-                                                var parent = vm.entityViewerDataService.getData(obj.___parentId)
-
-                                                parent.results = parent.results.filter(function (resultItem) {
-                                                    return res.data.ids.indexOf(resultItem.id) === -1
-                                                });
-
-                                                vm.entityViewerDataService.setData(parent)
-
-                                            }
-
-                                        });
-
-                                        vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                        updateTableAfterEntitiesDeletion(res.data.ids);
 
                                     }
                                 });
@@ -311,7 +336,7 @@
 
                                                 if (res.data.action === 'delete') {
 
-                                                    var objects = vm.entityViewerDataService.getObjects();
+                                                    /* var objects = vm.entityViewerDataService.getObjects();
 
                                                     objects.forEach(function (obj) {
 
@@ -329,7 +354,8 @@
 
                                                     });
 
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
+                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                                 } else {
 
@@ -462,7 +488,7 @@
 
                                                 if (res.data.action === 'delete') {
 
-                                                    var objects = vm.entityViewerDataService.getObjects();
+                                                    /* var objects = vm.entityViewerDataService.getObjects();
 
                                                     objects.forEach(function (obj) {
 
@@ -480,7 +506,8 @@
 
                                                     });
 
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
+                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                                 } else {
 
@@ -635,7 +662,7 @@
 
                                                 if (res.data.action === 'delete') {
 
-                                                    var objects = vm.entityViewerDataService.getObjects();
+                                                    /* var objects = vm.entityViewerDataService.getObjects();
 
                                                     objects.forEach(function (obj) {
 
@@ -653,7 +680,8 @@
 
                                                     });
 
-                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
+                                                    updateTableAfterEntitiesDeletion([activeObject.id]);
 
                                                 } else {
 
@@ -812,70 +840,7 @@
                 return window.location.href.indexOf('?layout=') !== -1
             };
 
-            // deprecated
-            vm.getLayoutByName = function (name) {
-
-                console.log('vm.getLayoutByName.name', name);
-
-                var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
-
-                uiService.getListLayoutDefault({
-                    pageSize: 1000,
-                    filters: {
-                        content_type: contentType,
-                        name: name
-                    }
-                }).then(function (activeLayoutData) {
-
-                    var activeLayout = null;
-
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
-
-                        for (var i = 0; i < activeLayoutData.results.length; i++) {
-                            var item = activeLayoutData.results[i];
-
-                            if (item.name === name) {
-                                activeLayout = item;
-                                break;
-                            }
-                        }
-
-                    }
-
-                    if (activeLayout) {
-
-                        vm.setLayout(activeLayout);
-
-                    } else {
-
-                        $mdDialog.show({
-                            controller: 'InfoDialogController as vm',
-                            templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
-                            clickOutsideToClose: false,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            locals: {
-                                info: {
-                                    title: 'Warning',
-                                    description: "Layout " + name + " is not found. Switching back to Default Layout."
-                                }
-                            }
-                        }).then(function (value) {
-
-                            vm.getDefaultLayout();
-
-                        })
-
-                    }
-
-                });
-
-            };
-
-            vm.getLayoutByUserCode = function (userCode) {
+            /* vm.getLayoutByUserCode = function (userCode) {
 
                 console.log('vm.getLayoutByUserCode.userCode', userCode);
 
@@ -891,7 +856,7 @@
 
                     var activeLayout = null;
 
-                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results.length > 0) {
+                    if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
                         activeLayout = activeLayoutData.results[0];
                     }
 
@@ -926,10 +891,10 @@
 
                 });
 
-            };
+            }; */
 
 
-            vm.getDefaultLayout = function () {
+            /* vm.getDefaultLayout = function () {
 
                 uiService.getDefaultListLayout(vm.entityType).then(function (defaultLayoutData) {
 
@@ -942,7 +907,7 @@
 
                 });
 
-            };
+            }; */
 
             vm.getView = function () {
 
@@ -961,6 +926,7 @@
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
                 vm.entityViewerDataService.setCurrentMember(vm.currentMember);
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 vm.downloadAttributes();
 
@@ -991,15 +957,18 @@
 
                     });
 
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
-                    vm.getLayoutByUserCode(layoutUserCode);
+                    // vm.getLayoutByUserCode(layoutUserCode);
+                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
                 } else {
-                    vm.getDefaultLayout();
+                    // vm.getDefaultLayout();
+                    evHelperService.getDefaultLayout(vm, 'entity_viewer');
                 }
 
 
@@ -1043,7 +1012,7 @@
                 });
             };
 
-            var checkLayoutForChanges = function () {
+            var checkLayoutForChanges = function () { // called on attempt to change or reload page
 
                 return new Promise(function (resolve, reject) {
 
@@ -1091,13 +1060,17 @@
                                         var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
 
                                             if (spChangedLayout.hasOwnProperty('id')) {
-                                                uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
+
+                                            	uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
                                                     spLayoutSaveRes(true);
                                                 });
+
                                             } else {
-                                                uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
+
+                                            	uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
                                                     spLayoutSaveRes(true);
                                                 });
+
                                             }
 
                                         });
@@ -1123,6 +1096,7 @@
                                                     layoutCurrentConfig.name = res.data.layoutName;
                                                 }
 
+                                                /* When saving is_default: true layout on backend, others become is_default: false
                                                 uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
                                                     layoutCurrentConfig.is_default = true;
@@ -1145,7 +1119,11 @@
                                                         });
                                                     }
 
-                                                });
+                                                }); */
+
+												uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+													saveLayoutRes(true);
+												});
 
                                             }
 

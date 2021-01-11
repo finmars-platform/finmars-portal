@@ -176,7 +176,7 @@
             //},
             {
                 "key": "gross_cost_price_loc",
-                "name": "Gross cost price (LOC)",
+                "name": "Gross cost price (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -189,6 +189,12 @@
                 "name": "Time invested",
                 "value_type": 20
             },
+
+            {
+                "key": "return_annually",
+                "name": "Return annually",
+                "value_type": 20
+            },
             //{
             //    "key": "net_cost_price",
             //    "name": "Net cost price",
@@ -196,12 +202,20 @@
             //},
             {
                 "key": "net_cost_price_loc",
-                "name": "Net cost price (LOC)",
+                "name": "Net cost price (Pricing Currency)",
                 "value_type": 20
             },
             {
                 "key": "currency",
                 "name": "Currency",
+                "value_type": "field",
+                "value_entity": "currency",
+                "value_content_type": "currencies.currency",
+                "code": "user_code"
+            },
+            {
+                "key": "exposure_currency",
+                "name": " Exposure Currency",
                 "value_type": "field",
                 "value_entity": "currency",
                 "value_content_type": "currencies.currency",
@@ -255,7 +269,7 @@
             },
             {
                 "key": "principal_invested_loc",
-                "name": "Principal invested (LOC)",
+                "name": "Principal invested (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -265,7 +279,7 @@
             },
             {
                 "key": "amount_invested_loc",
-                "name": "Amount invested (LOC)",
+                "name": "Amount invested (Pricing Currency)",
                 "value_type": 20
             },
 
@@ -276,7 +290,7 @@
             },
             {
                 "key": "market_value_loc",
-                "name": "Market value (LOC)",
+                "name": "Market value (Pricing Currency)",
                 "value_type": 20
             },
             {
@@ -296,7 +310,7 @@
             },
             {
                 "key": "exposure_loc",
-                "name": "Exposure (LOC)",
+                "name": "Exposure (Pricing Currency)",
                 "value_type": 20
             },
             {

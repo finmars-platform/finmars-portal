@@ -40,6 +40,7 @@
                 <input type="text" data-ng-model="vm.entity.notes">
             </md-input-container>
         </div>
+
         <div layout="row">
             <md-input-container>
                 <md-checkbox data-ng-model="vm.entity.is_valid_for_all_instruments"
@@ -54,6 +55,7 @@
                 </md-checkbox>
             </md-input-container>
         </div>
+
         <div layout="row">
 
             <two-fields-multiselect data-ng-model="vm.entity.instrument_types"
@@ -93,7 +95,7 @@
             <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.date_expr"></expression-editor-button>-->
             <expression-input label="Complex Transaction Date"
                               model="vm.entity.date_expr"
-                              data-data="vm.expressionEditorData"
+                              data-data="vm.expressionData"
                               style="margin-left: 12px;"></expression-input>
         </div>
 
@@ -107,7 +109,7 @@
             <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.display_expr"></expression-editor-button>-->
             <expression-input label="Display Expression"
                               model="vm.entity.display_expr"
-                              data-data="vm.expressionEditorData"
+                              data-data="vm.expressionData"
                               style="margin-left: 12px;"></expression-input>
         </div>
 

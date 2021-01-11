@@ -1,33 +1,53 @@
 (function () {
 
+	var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var colorPalettesService = require('../../services/colorPalettesService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
+        if (data && data.openedInside) {
+        	vm.openedInside = data.openedInside
+		}
+
         vm.openedPalette = null;
         vm.openedPaletteId = null;
+        var openedPaletteOriginal = null;
+
         vm.palettesList = [];
         vm.readyStatus = false;
         vm.palettesList = [];
 
-        var openDefaultPalette = function () {
+		var openPalette = function (property, value) {
 
-            for (var i = 0; i < vm.palettesList.length; i++) {
-                if (vm.palettesList[i].is_default) {
+			let isLookedForPalette = (palette) => {
 
-                    vm.openedPalette = vm.palettesList[i];
-                    vm.openedPaletteId = vm.palettesList[i].id;
-                    break;
+				if (property === 'is_default') {
+					return palette.is_default;
 
-                }
-            }
+				} else {
+					return palette[property] === value;
+				}
 
-        };
+			}
 
-        var selectPalette = function (paletteToSelectUC) {
+			for (var i = 0; i < vm.palettesList.length; i++) {
+
+				if (isLookedForPalette(vm.palettesList[i])) {
+
+					vm.openedPalette = vm.palettesList[i];
+					openedPaletteOriginal = JSON.parse(JSON.stringify(vm.palettesList[i]));
+					vm.openedPaletteId = vm.palettesList[i].id;
+					break;
+
+				}
+			}
+
+		};
+
+        /* var selectPaletteByUserCode = function (paletteToSelectUC) {
 
             for (var i = 0; i < vm.palettesList.length; i++) {
                 if (vm.palettesList[i].user_code === paletteToSelectUC) {
@@ -39,7 +59,7 @@
                 }
             }
 
-        }
+        } */
 
         var getPalettesList = function (paletteToSelectUC) {
 
@@ -48,14 +68,15 @@
                 vm.palettesList = data.results;
 
                 if (paletteToSelectUC) {
-                    selectPalette(paletteToSelectUC);
+					openPalette('user_code', paletteToSelectUC);
 
                 } else {
-                    openDefaultPalette();
+					openPalette('is_default');
                 }
 
                 vm.readyStatus = true;
                 $scope.$apply();
+
             });
         }
 
@@ -77,23 +98,6 @@
             var selPaletteText = vm.openedPalette.name;
             var selPaletteUserCode = vm.openedPalette.user_code;
 
-            var localsData = {
-                firstInput: {
-                    value: selPaletteText
-                },
-                secondInput: {
-                    value: selPaletteUserCode,
-                    smallOptions: {
-                        noIndicatorBtn: true,
-                        disabled: true
-                    }
-                }
-            }
-
-            /*if (selPaletteUserCode === 'Default Palette') {
-                localsData.secondInput.disabled = true;
-            }*/
-
             $mdDialog.show({
                 controller: 'TwoInputsDialogController as vm',
                 templateUrl: 'views/dialogs/two-inputs-dialog-view.html',
@@ -101,7 +105,21 @@
                 targetEvent: $event,
                 multiple: true,
                 locals: {
-                    data: localsData
+                    data: {
+						title: "Choose palette name and user code.",
+						firstInput: {
+							value: selPaletteText,
+							label: "Name"
+						},
+						secondInput: {
+							value: selPaletteUserCode,
+							label: "User code",
+							smallOptions: {
+								noIndicatorBtn: true,
+								disabled: true
+							}
+						}
+					}
                 }
 
             }).then(function (res) {
@@ -112,8 +130,8 @@
 
                         vm.openedPalette.name = res.data.text;
                         vm.openedPalette.user_code = res.data.text2;
-                        var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
-                        colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate);
+                        /* var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
+                        colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate); */
 
                     }
 
@@ -145,27 +163,38 @@
                 multiple: true,
                 locals: {
                     data: {
+                    	title: "Enter name and user code for new palette.",
                         firstInput: {
-                            value: paletteCopyName
+                            value: paletteCopyName,
+							label: "Name"
                         },
                         secondInput: {
                             value: paletteCopyUserCode,
+							label: "User code"
                         },
                         palettesList: vm.palettesList
                     }
                 }
 
-            }).then(function (res) {
+            }).then(async function (res) {
 
                 if (res.status === 'agree') {
 
-                    paletteCopy.name = res.data.text;
-                    paletteCopy.user_code = res.data.text2;
+					var actionBeforeCopying = await vm.beforeShowingPaletteChange();
 
-                    /*colorPalettesService.create(paletteCopy).then(function () {
-                        vm.readyStatus = false;
-                        getPalettesList(paletteCopy.user_code);
-                    });*/
+                	if (actionBeforeCopying !== "disagree") {
+
+                		paletteCopy.name = res.data.text
+						paletteCopy.user_code = res.data.text2
+
+						colorPalettesService.create(paletteCopy).then(function () {
+
+							vm.readyStatus = false;
+							getPalettesList(paletteCopy.user_code);
+
+						});
+
+					}
 
                 }
 
@@ -194,40 +223,53 @@
             var tooltipText = color.tooltip;
 
             $mdDialog.show({
-                controller: 'RenameColorDialogController as vm',
-                templateUrl: 'views/dialogs/rename-color-dialog-view.html',
+                controller: 'TwoInputsDialogController as vm',
+                templateUrl: 'views/dialogs/two-inputs-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
                     data: {
-                        name: colorName,
-                        tooltip: tooltipText
-                    }
+						title: "Choose color name and tooltip.",
+						firstInput: {
+							value: colorName,
+							label: "Name"
+						},
+						secondInput: {
+							value: tooltipText,
+							label: "Tooltip",
+							smallOptions: {
+								noIndicatorBtn: true,
+								disabled: true
+							}
+						}
+					}
                 }
 
             }).then(function (res) {
 
                 if (res.status === 'agree') {
-                    if (colorName !== res.data.name || tooltipText !== res.data.tooltipText) {
 
-                        color.name = res.data.name;
-                        color.tooltip = res.data.tooltipText;
-                        vm.onColorChange();
+                	if (colorName !== res.data.text || tooltipText !== res.data.text2) {
+
+						color.name = res.data.text;
+						color.tooltip = res.data.text2;
+                        // vm.onColorChange();
 
                     }
+
                 }
 
             })
 
-        }
+        };
 
         //vm.openColorPicker = function (paletteId, colorOrder) {
         vm.openColorPicker = function (color, $event) {
-            /*var selectorValue = ".colorPaletteColorPicker[data-color-palette='" + paletteId + "'][data-color-order='" + colorOrder + "']";
+            /* var selectorValue = ".colorPaletteColorPicker[data-color-palette='" + paletteId + "'][data-color-order='" + colorOrder + "']";
             var colorInput = document.querySelector(selectorValue);
 
-            colorInput.click();*/
+            colorInput.click(); */
             var colorValue = color.value;
 
             $mdDialog.show({
@@ -248,7 +290,7 @@
                     if (color.value !== res.data.color) {
 
                         color.value = res.data.color;
-                        vm.onColorChange();
+                        // vm.onColorChange();
 
                     }
                 }
@@ -256,10 +298,108 @@
             })
         };
 
-        vm.onColorChange = function () {
+        /* vm.onColorChange = function () {
             var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
             colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate);
-        };
+        }; */
+
+		vm.beforeShowingPaletteChange = function (paletteId, $event) {
+
+			vm.openedPaletteId = paletteId
+			var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
+
+			return new Promise(function (resolve) {
+
+				if (objectComparisonHelper.areObjectsTheSame(paletteToUpdate, openedPaletteOriginal)) {
+
+					openPalette('id', vm.openedPaletteId);
+					resolve('no_changes');
+
+				} else {
+
+					let warningDescription = "All unsaved changes for " +
+						openedPaletteOriginal.name +
+						" will be lost after switch. Do you still want to proceed?";
+
+					$mdDialog.show({
+						controller: 'WarningDialogController as vm',
+						templateUrl: 'views/dialogs/warning-dialog-view.html',
+						parent: angular.element(document.body),
+						targetEvent: $event,
+						clickOutsideToClose: false,
+						locals: {
+							warning: {
+								title: 'Warning',
+								description: warningDescription,
+								actionsButtons: [
+									{
+										name: "Save Layout",
+										response: {status: 'save'}
+									},
+									{
+										name: "Don't Save",
+										response: {status: 'do_not_save'}
+									},
+									{
+										name: "Cancel",
+										response: {status: 'disagree'}
+									}
+								]
+							}
+						}
+
+					}).then(function (res) {
+
+						switch (res.status) {
+
+							case 'save':
+								vm.savePaletteSettings();
+
+							case 'do_not_save':
+								openPalette('id', vm.openedPaletteId);
+
+								break;
+
+							case 'disagree':
+								vm.openedPaletteId = openedPaletteOriginal.id
+								break;
+
+						}
+
+						resolve(res.status);
+
+					}).catch(function () {
+						resolve('disagree');
+					});
+
+				}
+
+			});
+
+		};
+
+		vm.savePaletteSettings = function () {
+
+			var paletteToUpdate = JSON.parse(angular.toJson(vm.openedPalette));
+			colorPalettesService.updateById(vm.openedPalette.id, paletteToUpdate).then(function () {
+				toastNotificationService.success('Palette ' + vm.openedPalette.name + 'was saved');
+			});
+
+		};
+
+		if (vm.openedInside === 'dialog') {
+
+			vm.cancel = function () {
+				$mdDialog.hide({status: 'disagree'});
+			}
+
+			vm.agree = function () {
+
+				vm.savePaletteSettings()
+				$mdDialog.hide({status: 'agree', data: {palettesList: vm.palettesList}});
+			};
+
+		}
 
         var init = function () {
 

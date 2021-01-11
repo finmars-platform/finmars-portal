@@ -797,12 +797,21 @@
                         case 'ui.listlayout':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /* uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
-                                }).then(function (data) {
+                                }) */
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     if (data.results.length) {
 
@@ -977,12 +986,21 @@
                         case 'ui.reportlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /* uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
-                                }).then(function (data) {
+                                }) */
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     if (data.results.length) {
 
@@ -1654,12 +1672,21 @@
                         case 'ui.listlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /* uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
-                                }).then(function (data) {
+                                }) */
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     if (data.results.length) {
 
@@ -1839,12 +1866,21 @@
                         case 'ui.reportlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /* uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
-                                }).then(function (data) {
+                                }) */
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.name,
+                                            content_type: item.content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     if (data.results.length) {
 
@@ -1948,12 +1984,21 @@
                         case 'ui.bookmark':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getListLayoutDefault({
+                                /*uiRepository.getListLayoutDefault({
                                     filters: {
                                         name: item.___layout_name,
                                         content_type: item.___content_type
                                     }
-                                }).then(function (data) {
+                                })*/
+                                uiRepository.getListLayout(
+                                    null,
+                                    {
+                                        filters: {
+                                            name: item.___layout_name,
+                                            content_type: item.___content_type
+                                        }
+                                    }
+                                ).then(function (data) {
 
                                     console.log('BOOKMARK', data);
 
@@ -1971,12 +2016,21 @@
 
                                             promises.push(new Promise(function (localResolve) {
 
-                                                uiRepository.getListLayoutDefault({
+                                                /* uiRepository.getListLayoutDefault({
                                                     filters: {
                                                         name: child.___layout_name,
                                                         content_type: child.___content_type
                                                     }
-                                                }).then(function (data) {
+                                                }) */
+                                                uiRepository.getListLayout(
+                                                    null,
+                                                    {
+                                                        filters: {
+                                                            name: child.___layout_name,
+                                                            content_type: child.___content_type
+                                                        }
+                                                    }
+                                                ).then(function (data) {
 
                                                     if (data.results.length) {
 

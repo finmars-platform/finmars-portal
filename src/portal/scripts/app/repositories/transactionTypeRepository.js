@@ -12,7 +12,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (options) {
+    /*var getList = function (options) {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type/', options),
             {
                 method: 'GET',
@@ -23,7 +23,7 @@
                     'Content-type': 'application/json'
                 }
             })
-    };
+    };*/
 
     var getListLight = function (options) {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/transaction-type-light/', options),
@@ -210,6 +210,20 @@
             })
     };
 
+    var recalculateComplexTransaction = function (id, transaction) {
+        return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/recalculate/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(transaction)
+            })
+    }
+
     var initBookPendingComplexTransaction = function (id) {
         return xhrService.fetch(baseUrl + 'transactions/transaction-type/' + id + '/book-pending/',
             {
@@ -257,7 +271,7 @@
     };
 
     module.exports = {
-        getList: getList,
+        // getList: getList,
         getListLight: getListLight,
         getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,
@@ -270,6 +284,8 @@
 
         initBookComplexTransaction: initBookComplexTransaction,
         bookComplexTransaction: bookComplexTransaction,
+
+        recalculateComplexTransaction: recalculateComplexTransaction,
 
         initBookPendingComplexTransaction: initBookPendingComplexTransaction,
         bookPendingComplexTransaction: bookPendingComplexTransaction,

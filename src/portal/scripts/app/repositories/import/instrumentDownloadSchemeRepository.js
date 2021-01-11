@@ -13,7 +13,7 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (providerId) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme/?provider=' + providerId,
+        return xhrService.fetch(baseUrl + 'import/instrument-scheme/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -25,7 +25,7 @@
     };
 
     var getListLight = function (providerId) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme-light/?provider=' + providerId,
+        return xhrService.fetch(baseUrl + 'import/instrument-scheme-light/',
             {
                 method: 'GET',
                 credentials: 'include',

@@ -21,7 +21,7 @@
         vm.validationEnabled = false;
         vm.dragAndDropInited = false;
 
-        vm.filterTerms = {
+        vm.filterTerms = { // for angularjs ng-repeat filter
             key: "",
             value: ""
         };
@@ -97,7 +97,7 @@
                 var drake = this.dragula;
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('drop', function (elem, target, source, nextSiblings) {
@@ -133,7 +133,7 @@
                 });
 
                 drake.on('dragend', function (elem) {
-                    document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+                    scrollHelper.disableDnDWheelScroll();
                 });
             },
 
@@ -144,6 +144,7 @@
 
                 this.dragula = dragula(items, {
                     moves: function () {
+                        // drag and drop works if filter is inactive
                         if (vm.dragIconGrabbed && !vm.filterTerms.key && !vm.filterTerms.value) {
                             return true;
                         }
@@ -218,7 +219,8 @@
         };
 
         var init = function () {
-            setTimeout(function () {
+
+        	setTimeout(function () {
                 var DnDScrollElem = document.querySelector('.dndScrollableElem');
                 scrollHelper.setDnDScrollElem(DnDScrollElem);
             }, 500);
