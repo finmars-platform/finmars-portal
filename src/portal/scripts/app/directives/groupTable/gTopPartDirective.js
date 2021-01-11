@@ -49,6 +49,8 @@
 
                 scope.toggleFilterBlock = function () {
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
+                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
                 };
 
                 var openReportSettings = function ($event) {

@@ -725,6 +725,11 @@
 
 					    scope.isFiltersOpened = !scope.isFiltersOpened;
 
+                        setTimeout(() => {
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                        }, 1000)
+
+
                     })
 
 				};
