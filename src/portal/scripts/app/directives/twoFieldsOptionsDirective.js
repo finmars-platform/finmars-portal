@@ -324,7 +324,7 @@
                         var drake = this.dragula;
 
                         drake.on('drag', function () {
-                            document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+							scrollHelper.enableDnDWheelScroll();
                         });
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
@@ -370,7 +370,7 @@
                         });
 
                         drake.on('dragend', function (elem) {
-                            document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+							scrollHelper.disableDnDWheelScroll();
                         });
 
                     },
