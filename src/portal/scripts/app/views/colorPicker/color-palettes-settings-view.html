@@ -1,15 +1,16 @@
 <div class="color-palette-settings">
 
     <div data-ng-if="vm.readyStatus">
+
         <div layout="row">
             <h4 style="margin: 10px 0 0;">Palette</h4>
 
             <md-input-container class="color-palette-selector-container">
-                <md-select data-ng-model="vm.openedPaletteId"
-                           data-ng-change="vm.changeShowingPalette()">
+                <md-select data-ng-model="vm.openedPaletteId">
                     <md-option data-ng-repeat="palette in vm.palettesList track by palette.user_code"
                                data-ng-bind="palette.name"
-                               ng-value="palette.id"></md-option>
+                               ng-value="palette.id"
+                               ng-click="vm.beforeShowingPaletteChange(palette.id, $event)"></md-option>
                 </md-select>
             </md-input-container>
 
@@ -30,32 +31,42 @@
             </md-button>
         </div>
 
-        <div data-ng-repeat="palette in vm.palettesList track by palette.user_code"
-             data-ng-show="palette.id === vm.openedPalette.id"
-             class="color-palette-container">
+        <div class="m-b-35">
+            <div data-ng-repeat="palette in vm.palettesList track by palette.user_code"
+                 data-ng-show="palette.id === vm.openedPalette.id"
+                 class="color-palette-container">
 
-            <div data-ng-repeat="color in palette.colors | orderBy: 'order' track by color.order" class="palette-color-wrap">
-                <div class="palette-color-label-holder">
-                    <text-input model="color.name"
-                                placeholder-text="Label name"
-                                small-options="{noIndicatorBtn: true, readonly: true, tooltipText: color.tooltip}"></text-input>
+                <div ng-repeat="color in palette.colors | orderBy: 'order' track by color.order"
+                     class="palette-color-wrap">
+                    <div class="palette-color-label-holder colorLabelHolder">
 
-                    <md-button class="color-palette-rename-color-btn"
-                               data-ng-click="vm.renameColor(color, $event)">
-                        <i class="fas fa-pen"></i>
-                    </md-button>
+                        <text-input model="color.name"
+                                    placeholder-text="Label name"
+                                    small-options="{noIndicatorBtn: true, readonly: true}"></text-input>
+
+                        <md-button class="color-palette-rename-color-btn"
+                                   data-ng-click="vm.renameColor(color, $event)">
+                            <span class="material-icons">edit</span>
+                        </md-button>
+
+                    </div>
+
+                    <div class="palette-color-sample"
+                         style="background-color: {{color.value}};"
+                         data-ng-click="vm.openColorPicker(color, $event)"></div>
+
+                    <md-tooltip data-ng-if="color.tooltip"
+                                class="tooltip_1"
+                                md-direction="top"
+                                data-ng-bind="color.tooltip"></md-tooltip>
                 </div>
 
-                <div class="palette-color-sample"
-                     style="background-color: {{color.value}};"
-                     data-ng-click="vm.openColorPicker(color, $event)"></div>
-
-                <md-tooltip data-ng-if="color.tooltip"
-                            class="tooltip_1"
-                            md-direction="top"
-                            data-ng-bind="color.tooltip"></md-tooltip>
             </div>
+        </div>
 
+        <div ng-if="!vm.openedInside">
+            <md-button ng-click="vm.savePaletteSettings()"
+                       class="md-raised">SAVE CURRENT PALETTE</md-button>
         </div>
     </div>
 
