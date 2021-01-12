@@ -280,7 +280,7 @@
 
                         drake.on('shadow', function (elem, container, source) {
 
-                            if (container.classList.contains("vcSelectedGroups")) {
+                            if (container.classList.contains("vcSelectedGroups") || container.classList.contains("vcSelectedFilters")) {
 
                                 if (containerWithShadow) {
                                     containerWithShadow.classList.remove('remove-card-space');
@@ -394,7 +394,7 @@
 
                                                 $mdDialog.show({
                                                     controller: 'WarningDialogController as vm',
-                                                    templateUrl: 'views/warning-dialog-view.html',
+                                                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                                                     parent: angular.element(document.body),
                                                     clickOutsideToClose: false,
                                                     multiple: true,
@@ -448,7 +448,7 @@
 
 											if (insertAttr) {
 
-												if (nextSibling) {
+												if (nextSibling && draggedTo !== 'filters') { // the user can only spill filters at the end of the list
 
 													for (var a = 0; a < GCFItems.length; a++) {
 
@@ -623,7 +623,7 @@
 
                                         $mdDialog.show({
                                             controller: 'WarningDialogController as vm',
-                                            templateUrl: 'views/warning-dialog-view.html',
+                                            templateUrl: 'views/dialogs/warning-dialog-view.html',
                                             parent: angular.element(document.body),
                                             clickOutsideToClose: false,
                                             multiple: true,
