@@ -17,11 +17,16 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
+    var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         logService.controller('gModalController', 'initialized');
 
         var vm = this;
+
+        var gModalSharedLogicHelper = new GModalSharedLogicHelper(vm);
+
         vm.readyStatus = {content: false};
 
         vm.entityViewerDataService = entityViewerDataService;
@@ -506,101 +511,35 @@
         };
 
         // format data for SELECTED tab
-        var selectedGroups = [];
-        var selectedColumns = [];
-        var selectedFilters = [];
-
-        var separateSelectedAttrs = function (attributes, attrsVmKey) {
-
-            for (var i = 0; i < attributes.length; i++) {
-                var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute['attrsVmKey'] = attrsVmKey;
-
-                // attrsVmKey used in vm.updateAttrs and selectedDnD
-                /*if (attribute.groups) {
-                    selectedGroups.push(attribute);
-                } else if (attribute.columns) {
-                    selectedColumns.push(attribute);
-                } else if (attribute.filters) {
-                    selectedFilters.push(attribute);
-                };*/
-
-                if (attribute.groups) {
-                    selectedGroups.push(attribute);
-                }
-
-                if (attribute.columns) {
-                    selectedColumns.push(attribute);
-                }
-
-                if (attribute.filters) {
-                    selectedFilters.push(attribute);
-                }
-
-            }
-        };
-
-        var groupSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
-
-            var orderedSelAttrs = [];
-
-            var a;
-            for (a = 0; a < insideTable.length; a++) {
-                var attr = insideTable[a];
-
-                for (var i = 0; i < selectedAttrs.length; i++) {
-                    var sAttr = selectedAttrs[i];
-
-                    if (sAttr.key === attr.key) {
-                        orderedSelAttrs.push(sAttr);
-                        break;
-                    }
-
-                }
-
-            }
-
-            return orderedSelAttrs;
-
-        };
-
         vm.selectedGroups = [];
         vm.selectedColumns = [];
         vm.selectedFilters = [];
 
         var getSelectedAttrs = function () {
 
-            selectedGroups = [];
-            selectedColumns = [];
-            selectedFilters = [];
+            const attributes = [
+                'balanceAttrs',
+                'balancePerformanceAttrs',
+                'balanceMismatchAttrs',
+                'custom',
+                'allocationAttrs',
+                'allocationDynamicAttrs',
+                'instrumentAttrs',
+                'instrumentDynamicAttrs',
+                'linkedInstrumentAttrs',
+                'linkedInstrumentDynamicAttrs',
+                'accountAttrs',
+                'accountDynamicAttrs',
+                'portfolioAttrs',
+                'portfolioDynamicAttrs',
+                'strategy1attrs',
+                'strategy2attrs',
+                'strategy3attrs'
+            ];
 
-            separateSelectedAttrs(vm.balanceAttrs, 'balanceAttrs');
-            separateSelectedAttrs(vm.balancePerformanceAttrs, 'balancePerformanceAttrs');
-            separateSelectedAttrs(vm.balanceMismatchAttrs, 'balanceMismatchAttrs');
-            separateSelectedAttrs(vm.custom, 'custom');
-            separateSelectedAttrs(vm.allocationAttrs, 'allocationAttrs');
-            separateSelectedAttrs(vm.allocationDynamicAttrs, 'allocationDynamicAttrs');
+            const attrGroups = {groups, columns, filters}; // Victor 2020.12.10 I need variables: groups, columns, filters in gModalSharedLogicHelper
 
-            separateSelectedAttrs(vm.instrumentAttrs, 'instrumentAttrs');
-            separateSelectedAttrs(vm.instrumentDynamicAttrs, 'instrumentDynamicAttrs');
-
-            separateSelectedAttrs(vm.linkedInstrumentAttrs, 'linkedInstrumentAttrs');
-            separateSelectedAttrs(vm.linkedInstrumentDynamicAttrs, 'linkedInstrumentDynamicAttrs');
-
-            separateSelectedAttrs(vm.accountAttrs, 'accountAttrs');
-            separateSelectedAttrs(vm.accountDynamicAttrs, 'accountDynamicAttrs');
-
-            separateSelectedAttrs(vm.portfolioAttrs, 'portfolioAttrs');
-            separateSelectedAttrs(vm.portfolioDynamicAttrs, 'portfolioDynamicAttrs');
-
-            separateSelectedAttrs(vm.strategy1attrs, 'strategy1attrs');
-            separateSelectedAttrs(vm.strategy2attrs, 'strategy2attrs');
-            separateSelectedAttrs(vm.strategy3attrs, 'strategy3attrs');
-
-
-            vm.selectedGroups = groupSelectedGroups(groups, selectedGroups);
-            vm.selectedColumns = groupSelectedGroups(columns, selectedColumns);
-            vm.selectedFilters = groupSelectedGroups(filters, selectedFilters);
+            gModalSharedLogicHelper.getSelectedAttrs(attributes, attrGroups);
 
         };
         // < format data for SELECTED tab >
