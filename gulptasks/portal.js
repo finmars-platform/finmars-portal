@@ -35,6 +35,7 @@
     var PROJECT_ENV = process.env.PROJECT_ENV || 'local';
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
     var WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
+    var HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
 
     var appName = 'portal';
 
@@ -134,6 +135,7 @@
 		console.log('PROJECT_ENV: ' + PROJECT_ENV);
         console.log('API_HOST: ' + API_HOST);
         console.log('WS_HOST: ' + WS_HOST);
+        console.log('HEALTHCHECK_HOST: ' + HEALTHCHECK_HOST);
         // console.log('API_HOST: ' + API_HOST);
 
         var pathToJS = ['src/' + appName + '/scripts/main.js'];
@@ -175,6 +177,7 @@
             .pipe(preprocess())
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__API_HOST__/g, API_HOST)))
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__WS_HOST__/g, WS_HOST)))
+            .pipe(gulpif(PROJECT_ENV === 'local', replace(/__HEALTHCHECK_HOST__/g, HEALTHCHECK_HOST)))
             // .pipe(replace(/__BUILD_DATE__/g, build_date))
             .pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
             .pipe(gulpif(PROJECT_ENV === 'production', uglify()))

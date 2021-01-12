@@ -1,243 +1,254 @@
 <div class="healthcheck-page p-24">
 
-    <div layout="row">
-        <h1>Healthcheck</h1>
-    </div>
+    <div data-ng-if="!vm.noInfo">
 
-    <div data-ng-if="vm.readyStatus.data">
+        <div layout="row">
+            <h1>Healthcheck</h1>
+        </div>
 
-        <div>
+        <div data-ng-if="vm.readyStatus.data">
 
-            <md-card class="p-8 float-left" style="width: 260px;">
+            <div>
 
-                <h4>API Server</h4>
+                <md-card class="p-8 float-left" style="width: 260px;">
 
-                <div data-ng-if="vm.dataBaseConnectionInfo">
+                    <h4>API Server</h4>
 
-                    <h3>Database Connection</h3>
+                    <div data-ng-if="vm.dataBaseConnectionInfo">
 
-                    <div>
-                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}
-                        {{vm.dataBaseConnectionInfo.observedUnit}}
+                        <h3>Database Connection</h3>
+
+                        <div>
+                            Connection time: {{vm.dataBaseConnectionInfo.observedValue}}
+                            {{vm.dataBaseConnectionInfo.observedUnit}}
+                        </div>
+
                     </div>
 
-                </div>
+                    <div data-ng-if="vm.updateInfo">
 
-                <div data-ng-if="vm.updateInfo">
+                        <h3>Uptime</h3>
 
-                    <h3>Uptime</h3>
+                        <div>
+                            Hours: {{vm.updateInfo.hours}}
+                        </div>
 
-                    <div>
-                        Hours: {{vm.updateInfo.hours}}
                     </div>
 
-                </div>
+                    <div data-ng-if="vm.memoryInfo">
 
-                <div data-ng-if="vm.memoryInfo">
+                        <h3>Memory</h3>
 
-                    <h3>Memory</h3>
+                        <div>
+                            Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}
+                        </div>
 
-                    <div>
-                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}
                     </div>
 
-                </div>
+                </md-card>
 
-            </md-card>
+                <md-card class="p-8 float-left" style="width: 260px;">
 
-            <md-card class="p-8 float-left" style="width: 260px;">
+                    <h4>Mediator Service</h4>
 
-                <h4>Mediator Service</h4>
+                    <div data-ng-if="vm.dataBaseConnectionInfo">
 
-                <div data-ng-if="vm.dataBaseConnectionInfo">
+                        <h3>Database Connection</h3>
 
-                    <h3>Database Connection</h3>
+                        <div>
+                            Connection time: {{vm.dataBaseConnectionInfo.observedValue}}
+                            {{vm.dataBaseConnectionInfo.observedUnit}}
+                        </div>
 
-                    <div>
-                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}
-                        {{vm.dataBaseConnectionInfo.observedUnit}}
                     </div>
 
-                </div>
+                    <div data-ng-if="vm.updateInfo">
 
-                <div data-ng-if="vm.updateInfo">
+                        <h3>Uptime</h3>
 
-                    <h3>Uptime</h3>
+                        <div>
+                            Hours: {{vm.updateInfo.hours}}
+                        </div>
 
-                    <div>
-                        Hours: {{vm.updateInfo.hours}}
                     </div>
 
-                </div>
+                    <div data-ng-if="vm.memoryInfo">
 
-                <div data-ng-if="vm.memoryInfo">
+                        <h3>Memory</h3>
 
-                    <h3>Memory</h3>
+                        <div>
+                            Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}
+                        </div>
 
-                    <div>
-                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}
                     </div>
 
-                </div>
+                </md-card>
 
-            </md-card>
+                <!--            <md-card class="p-8 float-left" style="width: 260px;">-->
 
-<!--            <md-card class="p-8 float-left" style="width: 260px;">-->
+                <!--                <h4>Data File Provider Service</h4>-->
 
-<!--                <h4>Data File Provider Service</h4>-->
+                <!--                <div data-ng-if="vm.dataBaseConnectionInfo">-->
 
-<!--                <div data-ng-if="vm.dataBaseConnectionInfo">-->
+                <!--                    <h3>Database Connection</h3>-->
 
-<!--                    <h3>Database Connection</h3>-->
+                <!--                    <div>-->
+                <!--                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}-->
+                <!--                        {{vm.dataBaseConnectionInfo.observedUnit}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}-->
-<!--                        {{vm.dataBaseConnectionInfo.observedUnit}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--                <div data-ng-if="vm.updateInfo">-->
 
-<!--                <div data-ng-if="vm.updateInfo">-->
+                <!--                    <h3>Uptime</h3>-->
 
-<!--                    <h3>Uptime</h3>-->
+                <!--                    <div>-->
+                <!--                        Hours: {{vm.updateInfo.hours}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Hours: {{vm.updateInfo.hours}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--                <div data-ng-if="vm.memoryInfo">-->
 
-<!--                <div data-ng-if="vm.memoryInfo">-->
+                <!--                    <h3>Memory</h3>-->
 
-<!--                    <h3>Memory</h3>-->
+                <!--                    <div>-->
+                <!--                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--            </md-card>-->
 
-<!--            </md-card>-->
+                <!--            <md-card class="p-8 float-left" style="width: 260px;">-->
 
-<!--            <md-card class="p-8 float-left" style="width: 260px;">-->
+                <!--                <h4>SFTP Server</h4>-->
 
-<!--                <h4>SFTP Server</h4>-->
+                <!--                <div data-ng-if="vm.dataBaseConnectionInfo">-->
 
-<!--                <div data-ng-if="vm.dataBaseConnectionInfo">-->
+                <!--                    <h3>Database Connection</h3>-->
 
-<!--                    <h3>Database Connection</h3>-->
+                <!--                    <div>-->
+                <!--                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}-->
+                <!--                        {{vm.dataBaseConnectionInfo.observedUnit}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}-->
-<!--                        {{vm.dataBaseConnectionInfo.observedUnit}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--                <div data-ng-if="vm.updateInfo">-->
 
-<!--                <div data-ng-if="vm.updateInfo">-->
+                <!--                    <h3>Uptime</h3>-->
 
-<!--                    <h3>Uptime</h3>-->
+                <!--                    <div>-->
+                <!--                        Hours: {{vm.updateInfo.hours}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Hours: {{vm.updateInfo.hours}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--                <div data-ng-if="vm.memoryInfo">-->
 
-<!--                <div data-ng-if="vm.memoryInfo">-->
+                <!--                    <h3>Memory</h3>-->
 
-<!--                    <h3>Memory</h3>-->
+                <!--                    <div>-->
+                <!--                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--            </md-card>-->
 
-<!--            </md-card>-->
+                <md-card class="p-8 float-left" style="width: 260px;">
 
-            <md-card class="p-8 float-left" style="width: 260px;">
+                    <h4>Bloomberg Data Provider Service</h4>
 
-                <h4>Bloomberg Data Provider Service</h4>
+                    <div data-ng-if="vm.dataBaseConnectionInfo">
 
-                <div data-ng-if="vm.dataBaseConnectionInfo">
+                        <h3>Database Connection</h3>
 
-                    <h3>Database Connection</h3>
+                        <div>
+                            Connection time: {{vm.dataBaseConnectionInfo.observedValue}}
+                            {{vm.dataBaseConnectionInfo.observedUnit}}
+                        </div>
 
-                    <div>
-                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}
-                        {{vm.dataBaseConnectionInfo.observedUnit}}
                     </div>
 
-                </div>
+                    <div data-ng-if="vm.updateInfo">
 
-                <div data-ng-if="vm.updateInfo">
+                        <h3>Uptime</h3>
 
-                    <h3>Uptime</h3>
+                        <div>
+                            Hours: {{vm.updateInfo.hours}}
+                        </div>
 
-                    <div>
-                        Hours: {{vm.updateInfo.hours}}
                     </div>
 
-                </div>
+                    <div data-ng-if="vm.memoryInfo">
 
-                <div data-ng-if="vm.memoryInfo">
+                        <h3>Memory</h3>
 
-                    <h3>Memory</h3>
+                        <div>
+                            Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}
+                        </div>
 
-                    <div>
-                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}
                     </div>
 
-                </div>
+                </md-card>
 
-            </md-card>
+                <!--            <md-card class="p-8 float-left" style="width: 260px;">-->
 
-<!--            <md-card class="p-8 float-left" style="width: 260px;">-->
+                <!--                <h4>Websocket Server</h4>-->
 
-<!--                <h4>Websocket Server</h4>-->
+                <!--                <div data-ng-if="vm.dataBaseConnectionInfo">-->
 
-<!--                <div data-ng-if="vm.dataBaseConnectionInfo">-->
+                <!--                    <h3>Database Connection</h3>-->
 
-<!--                    <h3>Database Connection</h3>-->
+                <!--                    <div>-->
+                <!--                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}-->
+                <!--                        {{vm.dataBaseConnectionInfo.observedUnit}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Connection time: {{vm.dataBaseConnectionInfo.observedValue}}-->
-<!--                        {{vm.dataBaseConnectionInfo.observedUnit}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--                <div data-ng-if="vm.updateInfo">-->
 
-<!--                <div data-ng-if="vm.updateInfo">-->
+                <!--                    <h3>Uptime</h3>-->
 
-<!--                    <h3>Uptime</h3>-->
+                <!--                    <div>-->
+                <!--                        Hours: {{vm.updateInfo.hours}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Hours: {{vm.updateInfo.hours}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--                <div data-ng-if="vm.memoryInfo">-->
 
-<!--                <div data-ng-if="vm.memoryInfo">-->
+                <!--                    <h3>Memory</h3>-->
 
-<!--                    <h3>Memory</h3>-->
+                <!--                    <div>-->
+                <!--                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}-->
+                <!--                    </div>-->
 
-<!--                    <div>-->
-<!--                        Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}-->
-<!--                    </div>-->
+                <!--                </div>-->
 
-<!--                </div>-->
+                <!--            </md-card>-->
 
-<!--            </md-card>-->
+            </div>
 
         </div>
 
+        <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+        </div>
+
+
     </div>
 
-    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
-        <div layout="row" layout-sm="column" layout-align="space-around">
-            <progress-circular diameter="100"></progress-circular>
-        </div>
+    <div data-ng-if="vm.noInfo">
+
+        <h3 class="text-center">Healthcheck is not available</h3>
+
     </div>
 
 

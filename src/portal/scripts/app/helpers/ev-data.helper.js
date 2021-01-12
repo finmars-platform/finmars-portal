@@ -909,7 +909,8 @@
         isSelected: isSelected,
 
         getGroupsTypesToLevel: getGroupsTypesToLevel,
-        getGroupsValuesByItem: getGroupsValuesByItem
+        getGroupsValuesByItem: getGroupsValuesByItem,
+
     }
 
 

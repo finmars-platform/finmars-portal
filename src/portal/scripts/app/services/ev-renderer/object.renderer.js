@@ -75,21 +75,20 @@
             result = 'lock2Icon';
         }
 
-        /* TODO uncomment after enabling angular material icons
         else if (obj.is_deleted) {
-            result = 'deletedIcon'
+            result = 'deletedIcon';
         }
 
         else if (!obj.is_enabled) {
-            result = 'disabledIcon'
+            result = 'disabledIcon';
         }
 
         else if (!obj.is_active) {
-            result = 'inactiveIcon'
-        } */
+            result = 'inactiveIcon';
+        }
 
         else if (currentMember && currentMember.is_admin) {
-            result = 'starIcon'
+            result = 'starIcon';
         }
 
         return renderHelper.getIconByKey(result);
@@ -99,7 +98,7 @@
     var getValue = function (obj, column) {
 
         if (column.status === 'missing') {
-            return "Deleted"
+            return "Deleted";
         }
 
         if (obj[column.key]) {

@@ -18,6 +18,8 @@
         vm.updateInfo = null;
         vm.memoryInfo = null;
 
+        vm.noInfo = false;
+
         vm.getData = function () {
 
             return new Promise(function (resolve, reject) {
@@ -55,6 +57,12 @@
 
                     $scope.$apply();
 
+                }).catch(function (error){
+
+                    vm.noInfo = true;
+
+                    $scope.$apply();
+
                 })
 
             })
@@ -64,7 +72,13 @@
 
         vm.init = function () {
 
-            vm.getData()
+            if ('__HEALTHCHECK_HOST__') {
+
+                vm.getData()
+
+            } else {
+                vm.noInfo = true;
+            }
 
         };
 
