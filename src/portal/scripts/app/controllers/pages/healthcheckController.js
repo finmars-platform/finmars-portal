@@ -72,9 +72,12 @@
 
                                         service.uptimeInfo = service.data.checks[key][0]
 
+
                                     } else {
                                         service.uptimeInfo = service.data.checks[key]
                                     }
+
+                                    service.uptimeInfo.hours = Math.floor(service.uptimeInfo.observedValue / 60 / 60)
 
                                 }
 
