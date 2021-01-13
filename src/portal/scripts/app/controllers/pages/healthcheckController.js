@@ -28,15 +28,22 @@
 
                     vm.healthcheckData = data;
 
-                    vm.healthcheckData = vm.healthcheckData.map(function(service){
+                    vm.healthcheckData = vm.healthcheckData.map(function (service) {
 
                         if (service.status === 200) {
 
-                            Object.keys(service.data.checks).forEach(function (key){
+                            Object.keys(service.data.checks).forEach(function (key) {
 
                                 if (key === 'database:responseTime') {
 
-                                    service.dataBaseConnectionInfo = service.data.checks[key]
+                                    if (Array.isArray(service.data.checks[key])) {
+
+                                        service.dataBaseConnectionInfo = service.data.checks[key][0]
+
+                                    } else {
+                                        service.dataBaseConnectionInfo = service.data.checks[key]
+                                    }
+
 
                                 }
 
@@ -48,13 +55,26 @@
 
                                 if (key === 'memory:utilization') {
 
-                                    service.memoryInfo = service.data.checks[key]
+
+                                    if (Array.isArray(service.data.checks[key])) {
+
+                                        service.memoryInfo = service.data.checks[key][0]
+
+                                    } else {
+                                        service.memoryInfo = service.data.checks[key]
+                                    }
 
                                 }
 
                                 if (key === 'uptime') {
 
-                                    service.uptimeInfo = service.data.checks[key]
+                                    if (Array.isArray(service.data.checks[key])) {
+
+                                        service.uptimeInfo = service.data.checks[key][0]
+
+                                    } else {
+                                        service.uptimeInfo = service.data.checks[key]
+                                    }
 
                                 }
 
@@ -78,7 +98,7 @@
 
                     $scope.$apply();
 
-                }).catch(function (error){
+                }).catch(function (error) {
 
                     console.log('error', error);
 
