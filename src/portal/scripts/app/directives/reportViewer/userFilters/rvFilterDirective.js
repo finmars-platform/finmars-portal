@@ -160,7 +160,13 @@
 				}
 
 				let isUseFromAbove = (filterData) => {
-					return filterData.options.use_from_above && Object.keys(filterData.options.use_from_above).length
+
+					if (filterData.options.use_from_above && Object.keys(filterData.options.use_from_above).length) {
+						return true;
+					}
+
+					return false;
+
 				};
 
 				vm.saveFilterSettings = function () {
