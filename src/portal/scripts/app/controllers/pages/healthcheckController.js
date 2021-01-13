@@ -28,28 +28,49 @@
 
                     vm.healthcheckData = data;
 
+                    vm.healthcheckData = vm.healthcheckData.map(function(service){
+
+                        if (service.status === 200) {
+
+                            Object.keys(service.data.checks).forEach(function (key){
+
+                                if (key === 'database:responseTime') {
+
+                                    service.dataBaseConnectionInfo = service.data.checks[key]
+
+                                }
+
+                                // if (key === 'disk:utilization') {
+                                //
+                                //     service.dataBaseConnectionInfo = service.data.checks[key]
+                                //
+                                // }
+
+                                if (key === 'memory:utilization') {
+
+                                    service.memoryInfo = service.data.checks[key]
+
+                                }
+
+                                if (key === 'uptime') {
+
+                                    service.uptimeInfo = service.data.checks[key]
+
+                                }
+
+                            })
+
+
+                        }
+
+
+                        return service;
+
+                    })
+
+                    vm.noInfo = false;
+
                     console.log('HealthcheckController.vm.healthcheckData', vm.healthcheckData);
-
-                    Object.keys(vm.healthcheckData.checks).forEach(function (key) {
-
-                        var item = vm.healthcheckData.checks[key][0];
-
-                        if (key === 'database:responseTime') {
-                            vm.dataBaseConnectionInfo = item;
-                        }
-
-                        if (key === 'memory:utilization') {
-                            vm.memoryInfo = item;
-                        }
-
-                        if (key === 'uptime') {
-                            vm.updateInfo = item;
-
-                            vm.updateInfo.hours = Math.floor(vm.updateInfo.observedValue / 60 / 60)
-                        }
-
-
-                    });
 
                     vm.readyStatus.data = true;
 
@@ -58,6 +79,8 @@
                     $scope.$apply();
 
                 }).catch(function (error){
+
+                    console.log('error', error);
 
                     vm.noInfo = true;
 
