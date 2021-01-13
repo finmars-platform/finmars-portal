@@ -58,12 +58,46 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     console.log("angular.js info: " + directivesCount + ' directives registered');
 
     var developerConsoleService = require('./app/services/developerConsoleService');
+    var websocketService = require('./app/services/websocketService');
+    var toastNotificationService = require('../../core/services/toastNotificationService');
+
 
     window.developerConsoleService = developerConsoleService;
 
     developerConsoleService.init();
 
-}]);
+    try {
+
+        window.ws = new WebSocket("__WS_HOST__");
+
+        websocketService.addEventListener('simple_message', function (data) {
+            toastNotificationService.info(data.message)
+        })
+
+        window.ws.onopen = function () {
+            console.log("Websocket. Initial Auth");
+            window.ws.send(JSON.stringify({action: "initial_auth"}));
+        }
+
+    } catch (error) {
+
+        console.error("Can't connect to Websocket server. Error ", error);
+
+        window.ws = null;
+
+    }
+
+    if (window.ws) {
+        ws.onerror = function (error) {
+
+            console.error("Can't connect to Websocket server. Error ", error);
+
+            window.ws = null;
+        };
+    }
+
+}
+]);
 
 app.factory('pickmeup', ['$window', function ($window) {
     if ($window.pickmeup) {
@@ -267,7 +301,7 @@ app.controller('TransactionImportSchemeSelectorValuesDialogController', ['$scope
 
 // Color palettes
 
-app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', require('./app/controllers/colorPicker/colorPalettesSettingsController')]);
+app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', 'data', require('./app/controllers/colorPicker/colorPalettesSettingsController')]);
 app.controller('ColorPalettesSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/colorPicker/colorPalettesSettingsDialogController')]);
 app.controller('TwoInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoInputsDialogController')]);
 app.controller('RenameColorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameColorDialogController')]);
@@ -313,8 +347,6 @@ app.controller('EntityViewerPermissionEditorController', ['$scope', '$mdDialog',
 
 app.controller('PriceHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/priceHistoryErrorEditDialogController')]);
 app.controller('CurrencyHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/currencyHistoryErrorEditDialogController')]);
-
-
 
 
 // Transaction type form
@@ -544,7 +576,6 @@ app.controller('PricingPolicyAddDialogController', ['$scope', '$mdDialog', 'data
 app.controller('PricingPolicyEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyEditDialogController')]);
 
 
-
 app.controller('PricingMultipleParametersDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingMultipleParametersDialogController')]);
 
 
@@ -600,7 +631,7 @@ app.directive('useFromAboveButton', ['$mdDialog', require('./app/controls/use-fr
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
 app.directive('groupTableBody', ['evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
-app.directive('groupSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
+app.directive('gSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/groupTable/gDashboardFilterComponent')]);
 app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
@@ -715,7 +746,7 @@ app.directive('ngRightClick', ['$parse', function ($parse) {
         element.bind('contextmenu', function (event) {
             scope.$apply(function () {
                 event.preventDefault();
-                fn(scope, { $event: event });
+                fn(scope, {$event: event});
             });
         });
     };

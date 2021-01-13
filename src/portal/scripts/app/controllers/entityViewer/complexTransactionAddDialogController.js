@@ -333,7 +333,7 @@
 
         };
 
-        var postBookComplexTransactionActions = function (transactionData, recalculationInfo) {
+        var postBookComplexTransactionActions = function (transactionData) {
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
@@ -437,10 +437,6 @@
                                 })
                             }
 
-                            if (recalculationInfo && recalculationInfo.recalculatedInputs.includes(userInput.name)) { // mark userInputs that were recalculated
-                                userInput.frontOptions.recalculated = recalculationInfo.recalculationData;
-                            }
-
                         }
 
                     })
@@ -454,108 +450,19 @@
 
         };
 
-        var bookComplexTransaction = function (inputsToRecalculate, recalculationData) {
-
-            // vm.processing = true;
-
-            var values = {};
-
-            vm.userInputs.forEach(function (item) {
-                values[item.name] = vm.entity[item.name]
-            });
-
-            var book = {
-                transaction_type: vm.entity.transaction_type,
-                recalculate_inputs: inputsToRecalculate,
-                process_mode: 'recalculate',
-                values: values
-            };
-
-            transactionTypeService.bookComplexTransaction(book.transaction_type, book).then(function (data) {
-
-                vm.transactionTypeId = data.transaction_type;
-                vm.editLayoutEntityInstanceId = data.transaction_type;
-
-				var keys = Object.keys(data.values);
-
-				if (inputsToRecalculate && inputsToRecalculate.length) {
-
-					inputsToRecalculate.forEach(inputName => {
-
-						vm.entity[inputName] = data.values[inputName]
-
-					})
-
-				} else {
-
-					vm.entity = data.complex_transaction
-
-					keys.forEach(function (key) {
-						vm.entity[key] = data.values[key]
-					});
-
-				}
-
-                vm.transactionType = data.transaction_type_object
-
-                vm.specialRulesReady = true;
-                vm.readyStatus.entity = true;
-
-                data.complex_transaction.attributes.forEach(function (item) {
-                    if (item.attribute_type_object.value_type === 10) {
-                        vm.entity[item.attribute_type_object.name] = item.value_string;
-                    }
-                    if (item.attribute_type_object.value_type === 20) {
-                        vm.entity[item.attribute_type_object.name] = item.value_float;
-                    }
-                    if (item.attribute_type_object.value_type === 30) {
-                        vm.entity[item.attribute_type_object.name] = item.classifier;
-                    }
-                    if (item.attribute_type_object.value_type === 40) {
-                        vm.entity[item.attribute_type_object.name] = item.value_date;
-                    }
-                });
-
-                var recalculationInfo = {
-                    recalculatedInputs: inputsToRecalculate,
-                    recalculationData: recalculationData
-                }
-
-                postBookComplexTransactionActions(data, recalculationInfo);
-
-
-                // vm.processing = false;
-
-                $scope.$apply();
-
-				if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-					vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
-				}
-
-            }).catch(function (reason) {
-
-                console.log("Something went wrong with recalculation");
-
-                // vm.processing = false;
-				vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
-                vm.readyStatus.layout = true;
-
-                $scope.$apply();
-
-            })
-
-        }
-
         vm.recalculate = function (paramsObj) {
 
 			var inputs = paramsObj.inputs;
-			var recalculationData = paramsObj.recalculationData;
+			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
-			sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+			if (inputs && inputs.length) {
 
-            if (inputs && inputs.length) {
-                bookComplexTransaction(inputs, recalculationData);
-            }
+				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+
+				var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
+				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
+
+			}
 
         };
 
