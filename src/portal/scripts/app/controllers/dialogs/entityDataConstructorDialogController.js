@@ -1350,7 +1350,7 @@
                 });
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('out', function (elem, container, source) {
@@ -1403,7 +1403,8 @@
 
                 drake.on('dragend', function (el) {
 
-                    document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.disableDnDWheelScroll();
+
                     $scope.$apply();
                     drake.remove();
 

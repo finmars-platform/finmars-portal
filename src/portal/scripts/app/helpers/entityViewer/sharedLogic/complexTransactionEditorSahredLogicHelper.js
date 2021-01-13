@@ -7,9 +7,51 @@
 
 	module.exports = function (viewModel, $scope, $mdDialog) {
 
-		let preRecalculationActions = function (inputs, updateScope) {
+		let removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
 
-			removeUserInputsInvalidForRecalculation(inputs, viewModel.transactionType.inputs);
+			inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+
+				let inputInvalid = true;
+
+				for (let i = 0; i < actualUserInputs.length; i++) {
+
+					if (inputName === actualUserInputs[i].name) { // whether input actually exist
+
+						if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+
+							inputInvalid = false;
+
+						}
+
+
+						break;
+
+					}
+
+				}
+
+				if (inputInvalid) {
+					inputsList.splice(index, 1);
+				}
+
+			});
+
+			// return inputsList;
+
+		};
+
+		let preRecalculationActions = (inputs, updateScope) => {
+
+			let book = {
+				transaction_type: viewModel.entity.transaction_type,
+				recalculate_inputs: inputs,
+				process_mode: 'recalculate',
+				values: {}
+			};
+
+			viewModel.userInputs.forEach(function (item) {
+				book.values[item.name] = viewModel.entity[item.name]
+			});
 
 			viewModel.evEditorDataService.setUserInputsToRecalculate(inputs);
 			viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_START);
@@ -17,6 +59,29 @@
 			if (updateScope) {
 				$scope.$apply();
 			}
+
+			return book;
+
+		};
+
+		let processRecalculationResolve = function (recalculationPromise, inputs, recalculationData) {
+
+			recalculationPromise.then(function (data) {
+
+				inputs.forEach(inputName => {
+
+					viewModel.entity[inputName] = data.values[inputName]
+
+					let userInputIndex = viewModel.userInputs.findIndex(input => input.name === inputName);
+					viewModel.userInputs[userInputIndex].frontOptions.recalculated = recalculationData;
+
+				});
+
+				viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+
+				$scope.$apply();
+
+			});
 
 		};
 
@@ -83,8 +148,8 @@
 					let calcInput = viewModel.inputsWithCalculations.find(input => {
 
 						return input.name === userInput.name &&
-						       input.settings &&
-						       input.settings.recalc_on_change_linked_inputs;
+							input.settings &&
+							input.settings.recalc_on_change_linked_inputs;
 
 					});
 
@@ -125,43 +190,13 @@
 
 			}
 
-		}
-
-		let removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
-
-			inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
-
-				let inputInvalid = true;
-
-				for (let i = 0; i < actualUserInputs.length; i++) {
-
-					if (inputName === actualUserInputs[i].name) { // whether input actually exist
-
-						if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
-
-							inputInvalid = false;
-
-						}
-
-
-						break;
-
-					}
-
-				}
-
-				if (inputInvalid) {
-					inputsList.splice(index, 1);
-				}
-
-			});
-
-			// return inputsList;
-
-		}
+		};
 
 		return {
 			preRecalculationActions: preRecalculationActions,
+			removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
+			processRecalculationResolve: processRecalculationResolve,
+
 			onFieldChange: onFieldChange
 		}
 
