@@ -19,20 +19,37 @@
         <div ng-if="filter.options.filter_type !== 'from_to' && filter.options.filter_type !== 'date_tree'"
              class="height-100">
 
-            <zh-date-picker data-date-value="filter.options.filter_values[0]"
-                            data-position="left"></zh-date-picker>
+            <md-input-container class="md-block">
+                <label>
+                    <span ng-bind="getFilterRegime()"></span>
+                </label>
+
+                <zh-date-picker data-date-value="filter.options.filter_values[0]"
+                                data-position="left"></zh-date-picker>
+            </md-input-container>
 
         </div>
 
         <div ng-if="filter.options.filter_type === 'from_to'"
              class="height-100">
 
-            <zh-date-picker data-date-value="filter.options.filter_values.min_value"
-                            data-position="left"></zh-date-picker>
+            <md-input-container class="md-block">
+                <label>
+                    <span>From (incl)</span>
+                </label>
 
-            <zh-date-picker class="to_date"
-                            data-date-value="filter.options.filter_values.max_value"
-                            data-position="left"></zh-date-picker>
+                <zh-date-picker data-date-value="filter.options.filter_values.min_value"
+                                data-position="left"></zh-date-picker>
+            </md-input-container>
+
+            <md-input-container class="md-block">
+                <label>
+                    <span>To (incl)</span>
+                </label>
+
+                <zh-date-picker data-date-value="filter.options.filter_values.max_value"
+                                data-position="left"></zh-date-picker>
+            </md-input-container>
 
         </div>
 

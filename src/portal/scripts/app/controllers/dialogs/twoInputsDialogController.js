@@ -6,6 +6,8 @@
 
         var vm = this;
 
+        vm.title = data.title;
+
         vm.firstInputData = {
             value: "",
             smallOptions: {

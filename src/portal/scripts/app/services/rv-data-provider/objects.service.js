@@ -40,6 +40,7 @@
                     return item
                 });
 
+
                 var groupTypes = entityViewerDataService.getGroups();
 
                 items = filterService.filterTableRows(items, regularFilters);
@@ -68,7 +69,6 @@
                 result.count = 0;
                 result.results = [];
             }
-
 
             resolve(result);
 

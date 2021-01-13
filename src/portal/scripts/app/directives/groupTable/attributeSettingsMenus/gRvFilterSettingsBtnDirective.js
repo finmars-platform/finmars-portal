@@ -6,6 +6,9 @@
     'use strict';
 
     var evEvents = require('../../../services/entityViewerEvents');
+    const popupEvents = require('../../../services/events/popupEvents');
+
+    const EventService = require('../../../services/eventService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -13,7 +16,8 @@
             scope: {
                 filterKey: '=',
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+                attributeDataService: '='
             },
             templateUrl: 'views/directives/groupTable/attributeSettingsMenus/g-rv-filter-settings-btn-view.html',
             link: function (scope, elem, attrs) {
@@ -30,10 +34,38 @@
                     }
                 });
 
-                var filterEnabled = scope.filter.options.enabled;
+                // Victor 2021.01.12 filter setting popup
+                scope.fpBackClasses = "z-index-48"
+                scope.fpClasses = "z-index-49"
+                scope.popupEventService = new EventService();
+                scope.popupData = {
+                    evDataService: scope.evDataService,
+                    evEventService: scope.evEventService,
+                    attributeDataService: scope.attributeDataService,
+
+                    filterKey: scope.filter.key
+                };
+
+                scope.filterSettingsChange = function () {
+
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
+
+                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                };
+                // <Victor 2021.01.12 filter setting popup>
+
+/*                var filterEnabled = scope.filter.options.enabled;*/
 
 
-                var updateFilter = function () {
+/*                var updateFilter = function () {
 
                     for (var i = 0; i < filters.length; i++) {
                         if (filters[i].key === scope.filterKey) {
@@ -44,17 +76,17 @@
 
                     scope.evDataService.setFilters(filters);
 
-                };
+                };*/
 
-                var isUseFromAboveActive = function () {
+/*                var isUseFromAboveActive = function () {
                     if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length > 0) {
                         return true;
                     };
 
                     return false;
-                };
+                };*/
 
-                scope.showFRCheckMark = function (filterRegime) {
+/*                scope.showFRCheckMark = function (filterRegime) {
                     if (scope.filter.options.filter_type === filterRegime &&
                         !isUseFromAboveActive()) {
 
@@ -62,9 +94,9 @@
                     };
 
                     return false;
-                };
+                };*/
 
-                // for filter with 'date' data type
+/*                // for filter with 'date' data type
                 var convertDatesTreeToFlatList = function () {
 
                     var datesList = [];
@@ -110,9 +142,9 @@
                     }
 
                 };
-                // < for filter with 'date' data type >
+                // < for filter with 'date' data type >*/
 
-                scope.filterSettingsChange = function () {
+/*                scope.filterSettingsChange = function () {
 
                     if (scope.filter.options.enabled || filterEnabled) {
 
@@ -133,9 +165,9 @@
 
                     }
 
-                };
+                };*/
 
-                scope.changeFilterType = function (filterType) {
+                /*scope.changeFilterType = function (filterType) {
 
                     scope.filter.options.use_from_above = {};
                     scope.filter.options.filter_type = filterType;
@@ -184,15 +216,15 @@
 
                     scope.filterSettingsChange();
 
-                };
+                };*/
 
-                scope.createUseFromAboveDir = function () {
+/*                scope.createUseFromAboveDir = function () {
                     if (!scope.filter.options.use_from_above) {
                         scope.filter.options.use_from_above = {};
                     }
-                };
+                };*/
 
-                scope.renameFilter = function ($mdMenu, $event) {
+/*                scope.renameFilter = function ($mdMenu, $event) {
 
                     $mdMenu.close($event);
 
@@ -208,7 +240,7 @@
 
                     });
 
-                };
+                };*/
 
             }
         }
