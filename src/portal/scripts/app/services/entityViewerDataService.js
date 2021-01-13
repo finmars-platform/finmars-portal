@@ -1064,7 +1064,9 @@
 
                 listLayout = Object.assign({}, activeListLayout);
 
-            } else {
+            }
+
+            else {
 
                 var defaultList = uiService.getListLayoutTemplate();
 
@@ -1107,7 +1109,9 @@
                     }
                 }
 
-            } else {
+            }
+
+            else {
 
                 setPagination(listLayout.data.pagination);
 
@@ -1169,6 +1173,10 @@
                 layoutManager: true,
                 autoReportRequest: false
             };
+
+            if (isReport) {
+				listLayout.data.components.groupingArea = false
+			}
 
             setComponents(listLayout.data.components);
             setEditorTemplateUrl('views/additions-editor-view.html');

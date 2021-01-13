@@ -5,10 +5,11 @@
 
     'use strict';
 
-    var evEvents = require('../../services/entityViewerEvents');
+	const evEvents = require('../../services/entityViewerEvents');
 
-    var metaService = require('../../services/metaService');
-    var evHelperService = require('../../services/entityViewerHelperService');
+	const metaService = require('../../services/metaService');
+	const evHelperService = require('../../services/entityViewerHelperService');
+	const evDataHelper = require('../../helpers/ev-data.helper');
 
     module.exports = function ($mdDialog) {
         return {
@@ -84,7 +85,7 @@
                             var changeOrder = function (orderOf) {
 
                                 var htmlElems = [];
-                                var GCFitems = [];
+                                var GCitems = [];
                                 var GCFKeyProp = '';
                                 var itemsAfterDragging = [];
                                 var updateGCFMethod = null;
@@ -92,7 +93,7 @@
                                 switch (orderOf) {
                                     case 'groups':
                                         htmlElems = target.querySelectorAll('.g-groups-holder .group-item');
-                                        GCFitems = groups;
+                                        GCitems = groups;
                                         GCFKeyProp = 'groupKey';
                                         updateGCFMethod = function () {
                                             scope.evDataService.setGroups(itemsAfterDragging);
@@ -101,7 +102,7 @@
                                         break;
                                     case 'columns':
                                         htmlElems = target.querySelectorAll('.g-columns-holder .g-cell.g-column');
-                                        GCFitems = columns;
+                                        GCitems = columns;
                                         GCFKeyProp = 'columnKey';
                                         updateGCFMethod = function () {
                                             scope.evDataService.setColumns(itemsAfterDragging);
@@ -112,10 +113,10 @@
 
                                 for (var i = 0; i < htmlElems.length; i = i + 1) {
 
-                                    for (var x = 0; x < GCFitems.length; x = x + 1) {
+                                    for (var x = 0; x < GCitems.length; x = x + 1) {
 
-                                        if (htmlElems[i].dataset[GCFKeyProp] === GCFitems[x].key) {
-                                            itemsAfterDragging.push(GCFitems[x]);
+                                        if (htmlElems[i].dataset[GCFKeyProp] === GCitems[x].key) {
+                                            itemsAfterDragging.push(GCitems[x]);
                                             break;
                                         }
 
@@ -128,7 +129,7 @@
                                 for (var i = 0; i < itemsAfterDragging.length; i++) {
                                     var item = itemsAfterDragging[i];
 
-                                    if (item.key !== GCFitems[i].key) {
+                                    if (item.key !== GCitems[i].key) {
                                         isChanged = true;
                                         break;
                                     }
@@ -143,22 +144,22 @@
 
                             var deleteItem = function (deletionOf) {
 
-                                var GCFitems = [];
+                                var GCitems = [];
                                 var identifier = '';
                                 var updateGCFMethod = null;
                                 var allowColDeletion = true;
 
                                 switch (deletionOf) {
                                     case 'group':
-                                        GCFitems = groups;
+                                        GCitems = groups;
                                         identifier = elem.dataset['groupKey'];
                                         updateGCFMethod = function () {
-                                            scope.evDataService.setGroups(GCFitems);
+                                            scope.evDataService.setGroups(GCitems);
                                             scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                                         };
                                         break;
                                     case 'column':
-                                        GCFitems = columns;
+                                        GCitems = columns;
                                         identifier = elem.dataset['columnKey'];
 
                                         if (isReport) { // prevent column deletion, if there is group with same attr
@@ -171,7 +172,7 @@
                                         }
 
                                         updateGCFMethod = function () {
-                                            scope.evDataService.setColumns(GCFitems);
+                                            scope.evDataService.setColumns(GCitems);
                                             scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                                         };
                                         break;
@@ -179,10 +180,10 @@
 
                                 if (allowColDeletion) {
 
-                                    for (var g = 0; 0 < GCFitems.length; g++) {
+                                    for (var g = 0; 0 < GCitems.length; g++) {
 
-                                        if (GCFitems[g].key === identifier) {
-                                            GCFitems.splice(g, 1);
+                                        if (GCitems[g].key === identifier) {
+                                            GCitems.splice(g, 1);
                                             break;
                                         }
 
@@ -194,7 +195,9 @@
                                     updateGCFMethod();
                                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                                } else {
+                                }
+
+                                else {
 
                                     drake.cancel();
 
@@ -245,7 +248,7 @@
                                             }
                                         }
 
-                                        var groupToAdd = evHelperService.getTableAttrInFormOf('group', activeColumn);;
+                                        var groupToAdd = evHelperService.getTableAttrInFormOf('group', activeColumn);
 
                                         groups.push(groupToAdd);
 
@@ -302,7 +305,9 @@
                             // < Methods for column's cards dragging >
 
                             // Methods for group's cards dragging
-                            } else {
+                            }
+
+                            else {
 
                                 // If group's card dragged to column area
                                 if (target === columnsHolder || target === columnsBag) {
@@ -381,69 +386,18 @@
                                 // < If group's card dragged to column area >
 
                                 // If group's cards order changed
-                                } else if (target === groupsHolder) {
+                                }
 
-                                    /*var groupElems = source.querySelectorAll('.g-groups-holder .group-item');
+                                else if (target === groupsHolder) {
 
-                                    var groupsAfterDragging = [];
-
-                                    for (var i = 0; i < groupElems.length; i = i + 1) {
-
-                                        for (var x = 0; x < groups.length; x = x + 1) {
-
-                                            if (groupElems[i].dataset.groupKey === groups[x].key) {
-                                                groupsAfterDragging.push(groups[x]);
-                                                break;
-                                            }
-
-                                        }
-
-                                    }
-
-                                    var isChanged = false;
-
-                                    for (var i = 0; i < groupsAfterDragging.length; i++) {
-                                        var group = groupsAfterDragging[i];
-
-                                        if (group.key !== groups[i].key) {
-                                            isChanged = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (isChanged) {
-
-                                        areaItemsChanged = true;
-                                        scope.evDataService.setGroups(groupsAfterDragging);
-
-                                        scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                                        scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                                    }*/
                                     changeOrder("groups");
 
                                 // < If group's cards order changed >
 
                                 // If group needs to be deleted
-                                } else if (target === deleteArea) {
+                                }
 
-                                    /*var identifier = elem.dataset.groupKey;
-                                    for (var g = 0; 0 < groups.length; g++) {
-
-                                        if (groups[g].key === identifier) {
-                                            groups.splice(g, 1);
-                                            break;
-                                        }
-
-                                    }
-
-                                    drake.remove();
-
-                                    areaItemsChanged = true;
-                                    scope.evDataService.setGroups(groups);
-
-                                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
-                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+                                else if (target === deleteArea) {
                                     deleteItem("group");
 
                                     // < If group needs to be deleted >
@@ -515,9 +469,269 @@
                     }
                 };
 
-                setTimeout(function () {
-                    dragAndDrop.init();
-                }, 500);
+				var dragAndDropNewInterface = {
+
+					init: function () {
+						this.dragulaInit();
+						this.eventListeners();
+					},
+
+					eventListeners: function () {
+
+						let areaItemsChanged;
+						const drake = this.dragula;
+
+						drake.on('dragstart', function () {
+							areaItemsChanged = false;
+						});
+
+						/* drake.on('over', function (elem, container, source) {
+							areaItemsChanged = false;
+							$(container).addClass('active');
+						}); */
+
+						drake.on('out', function (elem, container, source) {
+							elem.classList.remove('display-none');
+						});
+
+						drake.on('shadow', function (elem, container, source) { // used to prevent showing shadow of card in deletion area
+
+						 	if (container !== source) {
+						 		elem.classList.add('display-none');
+							}
+
+						});
+
+						drake.on('drop', function (elem, target, source, nextSibling) {
+
+							let columnsHolder = scope.contentWrapElement.querySelector('.gColumnsHolder');
+							let groupsHolder = scope.contentWrapElement.querySelector('.gGroupsHolder');
+							let groups = scope.evDataService.getGroups();
+							let columns = scope.evDataService.getColumns();
+
+							let attrKey = elem.dataset.attrKey;
+
+							let changeOrder = function (orderOf) {
+
+								let htmlElems = [];
+								let GCitems = [];
+								let itemsAfterDragging = [];
+								let updateGCFMethod = null;
+
+								switch (orderOf) {
+
+									case 'groups':
+
+										htmlElems = target.querySelectorAll('.gDraggableHead');
+										GCitems = groups;
+
+										updateGCFMethod = function () {
+											scope.evDataService.setGroups(itemsAfterDragging);
+											scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+										};
+
+										break;
+
+									case 'columns':
+
+										htmlElems = target.querySelectorAll('.gDraggableHead');
+
+										let allColumns = [];
+
+										GCitems = columns.filter((column, index) => {
+
+											if (index < groups.length) { // columns under groups
+
+												allColumns.push(column);
+												return false;
+
+											}
+
+											return true;
+
+										});
+
+										updateGCFMethod = function () {
+
+											allColumns = allColumns.concat(itemsAfterDragging);
+
+											scope.evDataService.setColumns(allColumns);
+											scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+
+										};
+
+										break;
+
+								}
+
+								for (let i = 0; i < htmlElems.length; i = i + 1) {
+
+									let elemAttrKey = htmlElems[i].dataset.attrKey;
+									let GCitem = GCitems.find(item => item.key === elemAttrKey);
+
+									itemsAfterDragging.push(GCitem);
+
+								}
+								var isChanged = false;
+
+								for (let i = 0; i < itemsAfterDragging.length; i++) {
+
+									let item = itemsAfterDragging[i];
+
+									if (item.key !== GCitems[i].key) {
+										isChanged = true;
+										break;
+									}
+
+								}
+
+								if (isChanged) {
+
+									areaItemsChanged = true;
+									updateGCFMethod();
+
+									scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+								}
+
+							};
+							// Methods for column's cards dragging
+							if (source === columnsHolder) {
+
+								if (target === groupsHolder) {
+
+									areaItemsChanged = true;
+
+									let draggedColumn = columns.find(column => column.key === attrKey);
+									let groupToAdd = evHelperService.getTableAttrInFormOf('group', draggedColumn);
+
+									groups.push(groupToAdd);
+
+									scope.evDataService.setGroups(groups);
+
+									scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+									scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+								}
+
+								else if (target === columnsHolder) {
+									changeOrder("columns");
+								}
+
+							}
+							// < Methods for column's cards dragging >
+							else if (source === groupsHolder) {
+
+								if (target === columnsHolder) {
+
+									drake.remove(); // in this case drake.cancel() causes groups to disappear
+									areaItemsChanged = true;
+
+									let draggedGroupIndex;
+									let draggedGroup = groups.find((column, index) => {
+
+										if (column.key === attrKey) {
+											draggedGroupIndex = index;
+										}
+
+										return column.key === attrKey;
+
+									});
+
+									groups.splice(draggedGroupIndex, 1);
+
+									scope.evDataService.setGroups(JSON.parse(JSON.stringify(groups)));
+
+									const firstColWithoutGroupIndex = groups.length;
+									const columnToAdd = evHelperService.getTableAttrInFormOf('column', draggedGroup);
+
+									columns.splice(draggedGroupIndex, 1);
+									columns.splice(firstColWithoutGroupIndex, 0, columnToAdd);
+
+									scope.evDataService.setColumns(columns);
+
+									scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+									scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+									scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
+
+									scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+								}
+
+								else if (target === groupsHolder) {
+									changeOrder("groups");
+								}
+
+							}
+
+						});
+
+						drake.on('dragend', function () {
+
+							if (areaItemsChanged) {
+								scope.$apply();
+							}
+
+						});
+
+					},
+
+					dragulaInit: function () {
+
+						var items = [
+							scope.contentWrapElement.querySelector('.gColumnsHolder'),
+							scope.contentWrapElement.querySelector('.gGroupsHolder')
+						];
+
+						if (isReport) {
+
+							this.dragula = dragula(items, {
+								/* moves: function (elem, source, handle, sibling) { // prevents from moving columns that have groupings
+
+									var colKey = elem.dataset.columnKey;
+
+									if (source === colsHolder && doesColumnHasGrouping(colKey)) {
+										return false;
+									}
+
+									return true;
+								},
+
+								accepts: function (elem, target, source, sibling) {
+
+									if (sibling) {
+										var colKey = sibling.dataset.columnKey;
+
+										if (doesColumnHasGrouping(colKey)) {
+											return false;
+										}
+									}
+
+									return true;
+
+								}, */
+
+								revertOnSpill: true
+							});
+
+						}
+
+					}
+				};
+
+				if (isReport) {
+
+					setTimeout(function () {
+						dragAndDropNewInterface.init();
+					}, 500);
+
+				} else {
+
+					setTimeout(function () {
+						dragAndDrop.init();
+					}, 500);
+
+				}
 
             }
         }

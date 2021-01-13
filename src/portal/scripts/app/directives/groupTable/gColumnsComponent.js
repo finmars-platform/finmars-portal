@@ -977,6 +977,98 @@
                     }
                 };*/
 
+				let updateGroupTypeIds = function () {
+
+					let groups = scope.evDataService.getGroups();
+
+					groups.forEach(item => {
+
+						item.___group_type_id = evDataHelper.getGroupTypeId(item);
+
+					});
+
+					scope.evDataService.setGroups(groups);
+
+				};
+
+				let setDefaultGroupType = function () {
+
+					let groups = scope.evDataService.getGroups();
+
+					if (scope.isReport) {
+
+						let reportOptions = scope.evDataService.getReportOptions();
+						let reportOptionsChanged = false;
+
+						if (!reportOptions.subtotals_options) {
+							reportOptions.subtotals_options = {}
+						}
+
+						if (!reportOptions.subtotals_options.type) {
+
+							reportOptions.subtotals_options.type = 'line'
+
+							scope.evDataService.setReportOptions(reportOptions);
+							scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+						}
+
+					}
+
+					groups.forEach(function (group) {
+
+						if (!group.hasOwnProperty('report_settings')) {
+							group.report_settings = {}
+						}
+
+						if (!scope.isReport && !group.hasOwnProperty('ev_folded')) {
+							group.ev_group_folded = true
+						}
+
+					});
+
+					scope.evDataService.setGroups(groups);
+
+				};
+
+				let syncColumnsWithGroups = function () {
+
+					let columns = scope.evDataService.getColumns();
+					let groups = scope.evDataService.getGroups();
+
+					let columnsSynced = false;
+
+					groups.forEach((group, groupIndex) => {
+
+						if (group.key !== columns[groupIndex].key) {
+
+							columnsSynced = true;
+							let columnToAdd;
+							let groupColumnIndex = columns.findIndex(column => group.key === column.key);
+
+							if (groupColumnIndex > -1) {
+
+								columnToAdd = JSON.parse(JSON.stringify(columns[groupColumnIndex]));
+								columns.splice(groupColumnIndex, 1);
+
+							} else {
+
+								columnToAdd = evHelperService.getTableAttrInFormOf("column", group);
+
+							}
+
+							columns.splice(groupIndex, 0, columnToAdd);
+
+						}
+
+					});
+
+					if (columnsSynced) {
+						scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+					}
+
+				};
+
                 scope.hasFoldingBtn = function ($index) {
                     var groups = scope.evDataService.getGroups();
 
@@ -1238,10 +1330,71 @@
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 };
 
-                var init = function () {
+                let initEventListeners = function () {
+
+                	scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
+						updateGroupTypeIds();
+
+						setDefaultGroupType();
+
+                		scope.groups = scope.evDataService.getGroups();
+                		scope.evDataService.resetTableContent();
+
+						if (scope.isReport) {
+							syncColumnsWithGroups();
+						}
+
+                		evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
+
+						scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+
+						// setFiltersLayoutNames();
+
+						scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+					});
+
+					scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+						evDataHelper.updateColumnsIds(scope.evDataService);
+						evDataHelper.setColumnsDefaultWidth(scope.evDataService);
+
+						scope.columns = scope.evDataService.getColumns();
+
+						getColsAvailableForAdditions();
+						flagMissingColumns();
+
+						scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+						setFiltersLayoutNames()
+						//keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
+
+					});
+
+					scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {
+
+						scope.groups = scope.evDataService.getGroups();
+						evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
+						scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+						setFiltersLayoutNames()
+
+					});
+
+					if (!scope.isReport) {
+						scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+							getDownloadedTableItemsCount();
+						});
+					}
+
+				};
+
+                const init = function () {
+
+					updateGroupTypeIds();
 
                     scope.columns = scope.evDataService.getColumns();
                     flagMissingColumns();
+
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                     setFiltersLayoutNames();
 
@@ -1252,43 +1405,7 @@
                         //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
                     }
 
-                    scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
-
-                        scope.groups = scope.evDataService.getGroups();
-                        evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
-                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                        setFiltersLayoutNames();
-
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
-
-                        evDataHelper.updateColumnsIds(scope.evDataService);
-                        evDataHelper.setColumnsDefaultWidth(scope.evDataService);
-
-                        scope.columns = scope.evDataService.getColumns();
-                        getColsAvailableForAdditions();
-                        flagMissingColumns();
-                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                        setFiltersLayoutNames()
-                        //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
-
-                    });
-
-                    scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, function () {
-
-                        scope.groups = scope.evDataService.getGroups();
-                        evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
-                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                        setFiltersLayoutNames()
-
-                    });
-
-                    if (!scope.isReport) {
-                        scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                            getDownloadedTableItemsCount();
-                        });
-                    }
+					initEventListeners();
 
                 };
 
