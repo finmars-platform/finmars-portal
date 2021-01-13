@@ -96,6 +96,59 @@
 					scope.$apply();
 				};
 
+				var isUseFromAboveActive = function () {
+					if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length) {
+						return true;
+					}
+
+					return false;
+				};
+
+				scope.getFilterRegime = function () {
+
+					var filterRegime = "";
+
+					if (isUseFromAboveActive()) {
+
+						filterRegime = "Linked to Selection";
+
+					} else {
+
+						switch (scope.filter.options.filter_type) {
+
+							case "equal":
+								filterRegime = "Equal";
+								break;
+							case "not_equal":
+								filterRegime = "Not equal";
+								break;
+							case "greater":
+								filterRegime = "Greater than";
+								break;
+							case "greater_equal":
+								filterRegime = "Greater or equal to";
+								break;
+							case "less":
+								filterRegime = "Less than";
+								break;
+							case "less_equal":
+								filterRegime = "Less or equal to";
+								break;
+							case "empty":
+								filterRegime = "Show empty cells";
+								break;
+							case "date_tree":
+								filterRegime = "Date tree";
+								break;
+
+						}
+
+					}
+
+					return filterRegime;
+
+				};
+
 
 				const init = function () {
 

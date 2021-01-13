@@ -1,13 +1,24 @@
-<div data-ng-if="filter.value_type === 10 || filter.value_type === 30"
-     class="settings-btn">
-    <md-menu>
+<!-- Victor 2021.01.12 all types of filters have one popup-->
+<!--<div data-ng-if="filter.value_type === 10 || filter.value_type === 30"-->
+<div class="settings-btn">
+<!--    <md-menu>-->
         <md-button aria-label="report viewer filter settings"
                    class="md-icon-button"
-                   ng-click="$mdMenu.open($event)">
+                   popup
+                   popup-template-url="'views/popups/g-filter-settings.html'"
+                   popup-data="popupData"
+                   popup-event-service="popupEventService"
+                   open-on="click"
+                   position-relative-to="element"
+                   offset-x="-370"
+                   backdrop-classes="fpBackClasses"
+                   popup-classes="fpClasses"
+                   on-save-callback="filterSettingsChange()">
             <ng-md-icon icon="settings"></ng-md-icon>
         </md-button>
 
-        <md-menu-content width="3">
+<!--    Victor 2021.01.12 on filter setting click the filter setting popup is appear but not menu-->
+        <!--<md-menu-content width="3">
             <md-menu-item>
                 <md-menu>
                     <md-button class="g-settings-option-btn"
@@ -93,19 +104,20 @@
                 <md-menu-content style="display: none"></md-menu-content>
             </md-menu-item>
 
-        </md-menu-content>
-    </md-menu>
+        </md-menu-content>-->
+<!--    </md-menu>-->
 
 </div>
 
+<!--
 <div ng-if="filter.value_type === 20" class="settings-btn">
-    <md-menu>
+&lt;!&ndash;    <md-menu>&ndash;&gt;
         <md-button aria-label="Open phone interactions menu"
                    class="md-icon-button"
                    ng-click="$mdMenu.open($event)">
             <ng-md-icon icon="settings"></ng-md-icon>
         </md-button>
-        <md-menu-content width="3">
+&lt;!&ndash;        <md-menu-content width="3">
             <md-menu-item>
                 <md-menu>
                     <md-button class="g-settings-option-btn"
@@ -215,18 +227,18 @@
             </md-menu-item>
 
         </md-menu-content>
-    </md-menu>
+    </md-menu>&ndash;&gt;
 
 </div>
 
 <div ng-if="filter.value_type === 40" class="settings-btn">
-    <md-menu>
+&lt;!&ndash;    <md-menu>&ndash;&gt;
         <md-button aria-label="Open phone interactions menu"
                    class="md-icon-button"
                    ng-click="$mdMenu.open($event)">
             <ng-md-icon icon="settings"></ng-md-icon>
         </md-button>
-        <md-menu-content width="3">
+        &lt;!&ndash;<md-menu-content width="3">
             <md-menu-item>
                 <md-menu>
                     <md-button class="g-settings-option-btn"
@@ -344,6 +356,6 @@
             </md-menu-item>
 
         </md-menu-content>
-    </md-menu>
+    </md-menu>&ndash;&gt;
 
-</div>
+</div>-->
