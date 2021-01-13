@@ -509,6 +509,7 @@
     var getNewDataInstance = function (evDataService) {
 
         var sourceData = evDataService.getData();
+        console.log('#52 sourceData', sourceData)
         var result = {};
 
         // console.log('sourceData', evDataService.getData());
@@ -523,6 +524,73 @@
         return result;
 
     };
+
+
+    Object.compare = function (obj1, obj2) {
+        // Цикл через свойства объекта obj1
+        for (var p in obj1) {
+            //Проверка на то, что оба объекта существуют
+            if (obj1.hasOwnProperty(p) !== obj2.hasOwnProperty(p)) return false;
+
+            switch (typeof (obj1[p])) {
+                // Глубокое сравнение объектов по ключам и значения:
+                case 'object':
+                    if (!Object.compare(obj1[p], obj2[p])) return false;
+                    break;
+                // Сравнение данных типа function:
+                case 'function':
+                    if (typeof (obj2[p]) == 'undefined' || (p != 'compare' && obj1[p].toString() != obj2[p].toString())) return false;
+                    break;
+                // Сравнение значений:
+                default:
+                    if (obj1[p] != obj2[p]) {
+                        console.log(`#52 property ${p} Obj1: ${obj1[p]}  Obj2: ${obj2[p]}`)
+                        return false
+                    };
+            }
+        }
+
+        // Проверка объекта obj2 на дополнительные свойства:
+        for (var p in obj2) {
+            if (typeof (obj1[p]) == 'undefined') return false;
+        }
+        return true;
+    }
+
+    const getDuplicateLines = (lines) => {
+        const res = lines.reduce((acc, row) => {
+            if (!row.id) {
+                return acc;
+            }
+
+            if (acc.hasOwnProperty(row.id)) {
+                acc[row.id].count++
+                console.log('#52 compare', row.id);
+                acc[row.id].isEqual = Object.compare(acc[row.id].row, row)
+            } else {
+                acc[row.id] = {
+                    count: 1,
+                    position_size: row.position_size,
+                    row: row
+                };
+
+
+            }
+            return acc;
+        }, {});
+
+        Object.keys(res).forEach(key => {
+            if (res[key].count < 2) {
+                delete res[key]
+                return
+            }
+            res[key].rows
+
+        });
+
+        return res;
+
+    }
 
     var getFlatStructure = function (evDataService) {
 
@@ -546,6 +614,7 @@
             console.time("Copying data");
 
             data = getNewDataInstance(evDataService);
+            console.log('#52 data', data);
 
             console.log('data', data);
 
@@ -573,6 +642,8 @@
             // console.log("d3 service data2", data);
         }
 
+
+
         var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
@@ -592,6 +663,12 @@
         // console.log('getFlatStructure.list', list);
 
         list = removeItemsFromFoldedGroups(list, evDataService);
+
+        console.log('#52 getFlatStructire list', list)
+
+        const duplicateLines = getDuplicateLines(list);
+
+        console.log('#52 duplicateLines', duplicateLines)
 
         return list;
 
