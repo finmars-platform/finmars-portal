@@ -4,6 +4,8 @@
 
     function getMatrixUniqueValues(itemList, key, valueKey) {
 
+        console.log('#52 getMatrixUniqueValues', itemList)
+
         var result = [];
         var foundItems = [];
 
