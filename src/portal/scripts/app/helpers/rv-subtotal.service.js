@@ -17,6 +17,10 @@
 
                 result = result + parseFloat(items[i][column.key]);
 
+            }  else {
+
+                result = '#Error';
+
             }
 
         }
@@ -38,6 +42,10 @@
                 if (!isNaN(parseFloat(items[i][column.key]))) {
 
                     result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["market_value"]);
+
+                } else {
+
+                    result = '#Error';
 
                 }
 
@@ -66,6 +74,10 @@
 
                     result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["market_value_percent"]);
 
+                } else {
+
+                    result = '#Error';
+
                 }
 
             } else if (items[i]["market_value_percent"] !== 0) {
@@ -91,6 +103,10 @@
                 if (!isNaN(parseFloat(items[i][column.key]))) {
 
                     result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["exposure"]);
+
+                }  else {
+
+                    result = '#Error';
 
                 }
 
@@ -118,6 +134,10 @@
                 if (!isNaN(parseFloat(items[i][column.key]))) {
 
                     result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["exposure_percent"]);
+
+                } else {
+
+                    result = '#Error';
 
                 }
 
@@ -165,10 +185,13 @@
 
             }
 
+        } else {
+
+            result = '#Error';
+
         }
 
         return result;
-
     }
 
     function weightedAverageMarketValuePercent(items, column) {
@@ -203,6 +226,10 @@
                 }
 
             }
+
+        } else {
+
+            result = '#Error';
 
         }
 
@@ -243,6 +270,10 @@
 
             }
 
+        } else {
+
+            result = '#Error';
+
         }
 
 
@@ -282,6 +313,10 @@
                 }
 
             }
+
+        }  else {
+
+            result = '#Error';
 
         }
 
