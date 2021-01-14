@@ -18,6 +18,10 @@
 
         var gridTableHelperService = new GridTableHelperService();
 
+        vm.readyStatus = {
+        	actionsGridTable: false
+		};
+
         vm.event = data.event;
         vm.eventClasses = data.eventClasses;
         vm.notificationClasses = data.notificationClasses;
@@ -205,8 +209,6 @@
                     Object.assign(headerData.styles['grid-table-cell'], {'text-align': 'center'})
                 }
 
-
-
                 return headerData;
 
             });
@@ -214,13 +216,14 @@
 
             // assemble body rows
             vm.event.actions.forEach(function (action, actionIndex) {
-                rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
+
+            	rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
                 rowObj.key = action.id || action.frontOptions.gtKey;
                 rowObj.order = actionIndex;
 
                 var transactionType = gridTableHelperService.getCellFromRowByKey(rowObj, 'transaction_type');
                 transactionType.settings.value = action.transaction_type;
-                transactionType.settings.selectorOptions = vm.transactionTypes;
+                transactionType.settings.selectorOptions = vm.transactionTypes || [];
 
                 var text = gridTableHelperService.getCellFromRowByKey(rowObj, 'text');
                 text.settings.value = action.text;
@@ -236,6 +239,7 @@
                 buttonPosition.settings.selectorOptions = getRangeOfNumbers(vm.event.actions.length);
 
                 vm.eventActionsGridTableData.body.push(rowObj);
+
             });
             // < assemble body rows >
         };
@@ -313,15 +317,17 @@
 
             transactionTypeService.getListLight().then(function (data) {
 
-                vm.transactionTypes = data.results;
+            	vm.transactionTypes = data.results;
 
-                formatDataForActionsGridTable();
+				formatDataForActionsGridTable();
 
-                $scope.$apply();
+				vm.eventActionsGridTableDataService.setTableData(vm.eventActionsGridTableData);
 
-            })
+				vm.readyStatus.actionsGridTable = true
 
-            vm.eventActionsGridTableDataService.setTableData(vm.eventActionsGridTableData);
+				$scope.$apply();
+
+			});
 
         };
 
