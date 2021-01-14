@@ -141,9 +141,23 @@
 
                 scope.updateRowControlsHolderPosition = function (event) {
 
+                    var layout = scope.dashboardConstructorDataService.getData();
+
                     var rowControlsOffset = 100;
 
-                    scope.rowControlsHolderElem.style.left = (event.target.clientWidth + event.target.scrollLeft - rowControlsOffset) + 'px'
+                    var tab;
+
+                    if (scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
+
+                    scope.columnsTotal = tab.layout.columns_count;
+
+                    var columnWidth = 121;
+
+                    scope.rowControlsHolderElem.style.left = ((scope.columnsTotal * columnWidth)) + 'px'
 
                 };
 
