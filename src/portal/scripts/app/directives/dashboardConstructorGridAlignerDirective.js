@@ -58,8 +58,9 @@
                 scope.resizeLayoutWidth = function () {
 
                     var rowControlsWidth = 110;
+                    var accordionGuideWidth = 110;
 
-                    scope.dashboardLayoutElem.style.width = (scope.columnsTotal * scope.cellWidth + rowControlsWidth) + 'px'
+                    scope.dashboardLayoutElem.style.width = (scope.columnsTotal * scope.cellWidth + rowControlsWidth - accordionGuideWidth) + 'px'
 
                 };
 
