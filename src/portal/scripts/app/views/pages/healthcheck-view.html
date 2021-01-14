@@ -1,54 +1,84 @@
 <div class="healthcheck-page p-24">
 
-    <div layout="row">
-        <h1>Healthcheck</h1>
-    </div>
+    <div data-ng-if="!vm.noInfo">
 
-    <div data-ng-if="vm.readyStatus.data">
+        <div layout="row">
+            <h1>Healthcheck</h1>
+        </div>
 
-        <div layout-align="center center">
+        <div data-ng-if="vm.readyStatus.data">
 
-            <md-card data-ng-if="vm.dataBaseConnectionInfo" class="p-8">
+            <div>
 
-                <h3>Database Connection</h3>
+                <md-card class="p-8 float-left" style="width: 260px;" data-ng-repeat="service in vm.healthcheckData">
 
-                <div>
-                    Connection time: {{vm.dataBaseConnectionInfo.observedValue}} {{vm.dataBaseConnectionInfo.observedUnit}}
-                </div>
+                    <h4>{{service.name}}</h4>
 
 
-            </md-card>
+                    <div data-ng-if="service.status == 200">
 
-            <md-card data-ng-if="vm.updateInfo" class="p-8">
+                        <div><b>Status</b>: Online</div>
 
-                <h3>Uptime</h3>
+                        <div data-ng-if="service.dataBaseConnectionInfo">
 
-                <div>
-                    Hours: {{vm.updateInfo.hours}}
-                </div>
+                            <h3>Database Connection</h3>
+
+                            <div>
+                                Connection time: {{service.dataBaseConnectionInfo.observedValue}}
+                                {{service.dataBaseConnectionInfo.observedUnit}}
+                            </div>
+
+                        </div>
+
+                        <div data-ng-if="service.uptimeInfo">
+
+                            <h3>Uptime</h3>
+
+                            <div>
+                                Hours: {{service.uptimeInfo.hours}}
+                            </div>
+
+                        </div>
+
+                        <div data-ng-if="service.memoryInfo">
+
+                            <h3>Memory</h3>
+
+                            <div>
+                                Used: {{service.memoryInfo.observedValue}} {{service.memoryInfo.observedUnit}}
+                            </div>
+
+                        </div>
 
 
-            </md-card>
+                    </div>
 
-            <md-card data-ng-if="vm.memoryInfo" class="p-8">
+                    <div data-ng-if="service.status == 503">
 
-                <h3>Memory</h3>
+                        <div><b>Status</b>: Service unavailable</div>
 
-                <div>
-                    Used: {{vm.memoryInfo.observedValue}} {{vm.memoryInfo.observedUnit}}
-                </div>
+                    </div>
 
 
-            </md-card>
+                </md-card>
+
+            </div>
 
         </div>
 
+        <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+        </div>
+
+
     </div>
 
-    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
-        <div layout="row" layout-sm="column" layout-align="space-around">
-            <progress-circular diameter="100"></progress-circular>
-        </div>
+    <div data-ng-if="vm.noInfo">
+
+        <h3 class="text-center">Healthcheck is not available</h3>
+
     </div>
 
 
