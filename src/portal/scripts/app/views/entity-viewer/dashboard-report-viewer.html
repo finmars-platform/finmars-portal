@@ -38,13 +38,20 @@
 
                 <div data-ng-if="!vm.grandTotalProcessing" class="dashboard-grand-total-component">
 
-                    <number-input
-                            label="{{vm.componentData.custom_component_name}}"
-                            model="vm.grandTotalValue"
-                            number-format="vm.componentData.settings.number_format"
-                            small-optinos="{noIndicatorBtn: true}"
-                            is-disabled="true"
-                    ></number-input>
+<!--                    <div data-ng-if="vm.grandTotalError" class="text-center">-->
+<!--                        Something went wrong-->
+<!--                    </div>-->
+
+<!--                    <div data-ng-if="!vm.grandTotalError">-->
+
+                        <text-input
+                                label="{{vm.componentData.custom_component_name}}"
+                                model="vm.grandTotalValue"
+                                small-options="{noIndicatorBtn: true}"
+                                is-disabled="true"
+                        ></text-input>
+
+<!--                    </div>-->
 
 <!--                    <div class="grand-total-value" ng-class="{'negative-red': vm.grandTotalNegative}">{{vm.grandTotalValue}}</div>-->
                 </div>
