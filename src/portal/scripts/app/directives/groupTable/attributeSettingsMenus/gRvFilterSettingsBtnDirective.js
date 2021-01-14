@@ -35,8 +35,6 @@
                 });
 
                 // Victor 2021.01.12 filter setting popup
-                scope.fpBackClasses = "z-index-48"
-                scope.fpClasses = "z-index-49"
                 scope.popupEventService = new EventService();
                 scope.popupData = {
                     evDataService: scope.evDataService,

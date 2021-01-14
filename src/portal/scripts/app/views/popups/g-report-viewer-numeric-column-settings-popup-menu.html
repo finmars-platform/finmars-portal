@@ -20,7 +20,7 @@
         </div>
 
         <div data-ng-if="!popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
-            <md-button data-ng-click="addColumnEntityToGrouping(popupData.data.column)"
+            <md-button data-ng-click="popupData.data.addColumnEntityToGrouping(popupData.data.column)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"
                             style="visibility: hidden;"></ng-md-icon>
@@ -346,6 +346,14 @@
         </div>
 
         <div data-ng-if="!popupData.data.isReport || popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
+            <md-button ng-click="popupData.data.removeGroup(popupData.data.column.___column_id || popupData.data.column.___group_type_id)"
+                       class="popup-menu-item">
+                <ng-md-icon icon="visibility_off"></ng-md-icon>
+                <span>Remove</span>
+            </md-button>
+        </div>
+
+        <div data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
             <md-button ng-click="popupData.data.removeColumn(popupData.data.column)"
                        class="popup-menu-item">
                 <ng-md-icon icon="visibility_off"></ng-md-icon>
