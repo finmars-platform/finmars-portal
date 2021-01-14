@@ -460,6 +460,7 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
                 vm.entityViewerDataService.setViewContext('reconciliation_viewer');
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 var components = {
                     columnArea: true,

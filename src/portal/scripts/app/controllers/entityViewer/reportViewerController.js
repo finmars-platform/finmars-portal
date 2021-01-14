@@ -1089,9 +1089,9 @@
                     if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-
                         var spChangedLayout = false;
                         var additions = vm.entityViewerDataService.getAdditions();
+
                         if (additions.isOpen) {
                             spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
                         }
