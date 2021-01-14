@@ -264,6 +264,10 @@
 
         var value = obj[column.key];
 
+        if (value === '#Error') {
+            return value;
+        }
+
         if (value === null || value === undefined || isNaN(value)) {
             value = '';
         }
