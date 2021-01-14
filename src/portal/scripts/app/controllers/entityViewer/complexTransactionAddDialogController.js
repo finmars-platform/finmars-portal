@@ -1272,7 +1272,9 @@
                     })
 
 
-                } /*else if (entity.hasOwnProperty('transaction_type')) {
+                }
+
+                /*else if (entity.hasOwnProperty('transaction_type')) {
 
                     vm.transactionTypeId = entity.transaction_type;
 
@@ -1285,7 +1287,9 @@
                         $scope.$apply();
                     })
 
-                }*/ else if (data.isCopy) { // if copy
+                } */
+
+				else if (data.isCopy) { // if copy
 
                     console.log("Apply from make copy", entity);
                     notCopiedTransaction = false;

@@ -594,13 +594,7 @@
 					}
 
 					if (scope.item.frontOptions) {
-						/*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
-														scope.ciEventObj.event = {key: 'set_style_preset1'};
 
-												} else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-														scope.ciEventObj.event = {key: 'set_style_preset2'};
-
-												}*/
 						if (scope.item.frontOptions.recalculated) {
 
 							scope.ciEventObj.event = {key: "set_style_preset1"};
@@ -637,27 +631,10 @@
 						}
 
 						if (scope.item &&
-							scope.item.frontOptions &&
+							scope.item.frontOptions && scope.item.frontOptions.recalculated &&
 							(scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
 							setItemSpecificSettings();
-
-							/* if (scope.item.frontOptions.recalculated === 'input') {
-								scope.ciEventObj.event = {key: 'set_style_preset1'};
-
-							} else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-								scope.ciEventObj.event = {key: 'set_style_preset2'};
-
-							} */
-
-							/* if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
-
-								// setTimeout removes delay before applying preset1 to custom input
-								setTimeout(function () {
-									scope.ciEventObj.event = {key: "set_style_preset1"};
-								}, 50);
-
-							} */
 
 						}
 

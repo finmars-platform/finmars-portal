@@ -72,6 +72,12 @@
 
 					viewModel.entity[inputName] = data.values[inputName]
 
+					if (data.values[inputName + '_object']) {
+
+						viewModel.entity[inputName + '_object'] = data.values[inputName + '_object']
+
+					}
+
 					let userInputIndex = viewModel.userInputs.findIndex(input => input.name === inputName);
 					viewModel.userInputs[userInputIndex].frontOptions.recalculated = recalculationData;
 
