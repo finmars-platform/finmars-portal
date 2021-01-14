@@ -333,7 +333,7 @@
 
             vm.updateGrandTotalComponent = function(){
 
-                vm.grandTotalError = false;
+                // vm.grandTotalError = false;
 
                 rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
@@ -381,9 +381,9 @@
                     vm.grandTotalValue = val
                 }
 
-                if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
-                    vm.grandTotalError = true
-                }
+                // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
+                //     vm.grandTotalError = true
+                // }
 
                 console.log('vm.grandTotalValue', vm.grandTotalValue);
 
