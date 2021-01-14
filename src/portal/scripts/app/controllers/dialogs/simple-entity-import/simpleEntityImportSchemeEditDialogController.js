@@ -107,9 +107,24 @@
 
                 var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
 
+
+                var deprecated_fields = {
+                    'instruments.instrument': ['price_download_scheme']
+                }
+
+                if (deprecated_fields.hasOwnProperty(vm.scheme.content_type)) {
+
+                    vm.scheme.entity_fields = vm.scheme.entity_fields.filter(function(field) {
+
+                        return deprecated_fields[vm.scheme.content_type].indexOf(field.system_property_key) === -1;
+
+                    })
+
+                }
+
                 vm.scheme.entity_fields.map(function (entityField, entityFieldIndex) {
 
-                    if (entityField.system_property_key) {
+                        if (entityField.system_property_key) {
 
                         modelAttributes.forEach(function (attribute) {
 

@@ -34,7 +34,11 @@
             {
                 "name": "Selector",
                 "id": 110
-            }
+            },
+            {
+                "name": "Button",
+                "id": 120
+            },
         ];
 
         var getValueTypes = function() {
@@ -805,6 +809,12 @@
                     inputCalcExpression.settings.value = res.data.value_expr;
                     linkedInputs.settings.value = res.data.linked_inputs_names;
 
+                    if (valueType.settings.value === 120) { // Button
+
+                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+
+                    }
+
                     changeCellsBasedOnValueType(newRow);
                     viewModel.inputsGridTableData.body.unshift(newRow);
 
@@ -1083,6 +1093,12 @@
 						return linkedInput;
 
 					});
+
+					if (input.value_type === 120) { // Button
+
+                        rowObj.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+
+                    }
 
 				}
 
