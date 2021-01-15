@@ -53,6 +53,7 @@
                 //scope.isLayoutDefault = false;
 
                 scope.hasCreatePermission = false;
+                scope.isBaseTransaction = $state.current.name === 'app.data.transaction'; // Victor 2021.01.06 #72 remove ADD TRANSACTION button
 
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
@@ -757,7 +758,7 @@
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
-                            templateUrl: 'views/warning-dialog-view.html',
+                            templateUrl: 'views/dialogs/warning-dialog-view.html',
                             parent: angular.element(document.body),
                             targetEvent: $event,
                             clickOutsideToClose: false,
