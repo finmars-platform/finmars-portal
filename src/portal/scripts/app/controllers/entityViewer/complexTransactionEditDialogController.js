@@ -1453,7 +1453,7 @@
 
                     $mdDialog.show({
                         controller: "WarningDialogController as vm",
-                        templateUrl: "views/warning-dialog-view.html",
+                        templateUrl: "views/dialogs/warning-dialog-view.html",
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {
@@ -1514,6 +1514,8 @@
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
+
+            vm.evEditorDataService.setRecalculationFunction(vm.recalculate);
 
             var tooltipsOptions = {
                 pageSize: 1000,

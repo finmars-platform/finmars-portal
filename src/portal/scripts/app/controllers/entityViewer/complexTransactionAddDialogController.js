@@ -931,6 +931,11 @@
                         keys.forEach(function (key) {
                             if (key === userInput.name) {
                                 resultEntity.values[userInput.name] = vm.entity[userInput.name];
+
+                                if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
+                                    resultEntity.values[userInput.name] = true;
+                                }
+
                             }
                         });
                     }
@@ -1209,7 +1214,7 @@
 
                     $mdDialog.show({
                         controller: "WarningDialogController as vm",
-                        templateUrl: "views/warning-dialog-view.html",
+                        templateUrl: "views/dialogs/warning-dialog-view.html",
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {
@@ -1347,6 +1352,8 @@
 
             vm.evEditorEventService = new EntityViewerEditorEventService();
             vm.evEditorDataService = new EntityViewerEditorDataService();
+
+            vm.evEditorDataService.setRecalculationFunction(vm.recalculate);
 
             console.log('entity', entity);
             console.log('data', data);

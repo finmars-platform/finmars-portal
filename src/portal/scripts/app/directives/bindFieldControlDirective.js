@@ -44,6 +44,8 @@
 				scope.ciEventObj = {
 					event: {},
 				};
+
+				scope.recalculateFunction = null;
 				//scope.numericInputValue = {};
 
 				scope.isEditableField = function () {
@@ -664,6 +666,19 @@
 										}
 								});*/
 
+				scope.recalculate = function () {
+
+					if (scope.recalculateFunction) {
+						const paramsObj = scope.item && scope.item.buttons[0] && scope.item.buttons[0].action && scope.item.buttons[0].action.parameters;
+
+						if (paramsObj) {
+							scope.recalculateFunction(paramsObj);
+						}
+
+					}
+
+				};
+
 				scope.init = function () {
 
 					scope.fieldKey = scope.getModelKey();
@@ -695,6 +710,7 @@
 
 					if (scope.evEditorDataService) {
 						tooltipsList = scope.evEditorDataService.getTooltipsData();
+						scope.recalculateFunction = scope.evEditorDataService.getRecalculationFunction();
 					}
 
 					for (var i = 0; i < tooltipsList.length; i++) {
