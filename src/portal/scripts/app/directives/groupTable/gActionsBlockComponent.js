@@ -53,6 +53,7 @@
                 //scope.isLayoutDefault = false;
 
                 scope.hasCreatePermission = false;
+                scope.isBaseTransaction = $state.current.name === 'app.data.transaction'; // Victor 2021.01.06 #72 remove ADD TRANSACTION button
 
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
