@@ -30,7 +30,8 @@
                 evDataService: '=',
                 evEventService: '=',
                 attributeDataService: '=',
-                contentWrapElement: '='
+                contentWrapElement: '=',
+				workareaWrapElement: '='
             },
 			templateUrl: 'views/directives/groupTable/g-filters-view.html',
             link: function (scope, elem, attrs) {
@@ -53,7 +54,11 @@
 					filters: false
 				}
 
-				let gFilterElem;
+				const gFiltersElem = elem[0].querySelector('.gFilters');
+				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
+
+				const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
+				const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
 
 				let entityAttrs = [];
 				let dynamicAttrs = [];
@@ -518,7 +523,9 @@
 
                 };
 
-                scope.toggleUseFromAboveFilters = function () {
+
+				// <editor-fold desc="Chips filters">
+				scope.toggleUseFromAboveFilters = function () {
 
                 	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters
 					formatFiltersForChips();
@@ -586,6 +593,24 @@
 						}
 
 					});
+
+				};
+
+				let calculateFilterChipsContainerWidth = function () {
+
+					let filtersChipsContainerWidth = 800;
+
+					// using workareaWrapElement because .g-filters not always assume full width in time
+					const filterAreaWidth = scope.workareaWrapElement.clientWidth;
+					const availableSpace = filterAreaWidth - gFiltersLeftPartWidth - gFiltersRightPartWidth;
+
+					if (availableSpace < 800) {
+
+						filtersChipsContainerWidth = Math.max(availableSpace, 500);
+
+					}
+
+					filtersChipsContainer.style.width = filtersChipsContainerWidth + 'px';
 
 				};
 
@@ -659,7 +684,7 @@
                 let updateFilterAreaHeight = () => {
 
                 	let interfaceLayout = scope.evDataService.getInterfaceLayout();
-					const gFiltersHeight = gFilterElem.clientHeight;
+					const gFiltersHeight = gFiltersElem.clientHeight;
 					const originalHeight = interfaceLayout.filterArea.height;
 
 					interfaceLayout.filterArea.height = gFiltersHeight
@@ -676,26 +701,13 @@
                 	scope.evEventService.dispatchEvent(evEvents.FILTERS_RENDERED);
 
 				};
+				// </editor-fold>
 
-				let init = function () {
+                const initEventListeners = function () {
 
-					gFilterElem = elem[0].querySelector('.g-filters');
-
-					scope.popupEventService = new EventService();
-					scope.chipsListEventService = new EventService();
-
-					scope.popupData = {
-						evDataService: scope.evDataService,
-						evEventService: scope.evEventService,
-						attributeDataService: scope.attributeDataService
-					}
-
-					scope.evDataService.setFilters(scope.filters);
-					scope.evDataService.setFilters(scope.filters);
-
-					formatFiltersForChips();
-
-					scope.readyStatus.filters = true;
+                	scope.evEventService.addEventListener(evEvents.TABLE_INITIALIZED, function () {
+						calculateFilterChipsContainerWidth();
+					});
 
 					scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
@@ -718,18 +730,40 @@
 
 					scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_BLOCK, function () {
 
-					    scope.isFiltersOpened = !scope.isFiltersOpened;
+						scope.isFiltersOpened = !scope.isFiltersOpened;
 
-                        setTimeout(() => {
-                            const interfaceLayout = scope.evDataService.getInterfaceLayout();
-                            const gFiltersHeight = gFilterElem.clientHeight;
-                            interfaceLayout.filterArea.height = gFiltersHeight;
-                            scope.evDataService.setInterfaceLayout(interfaceLayout);
+						setTimeout(() => {
+							const interfaceLayout = scope.evDataService.getInterfaceLayout();
+							const gFiltersHeight = gFiltersElem.clientHeight;
+							interfaceLayout.filterArea.height = gFiltersHeight;
+							scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-                        }, 500); // Transition time for .g-filters
+							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+						}, 500); // Transition time for .g-filters
 
-                    })
+					});
+
+				};
+
+				let init = function () {
+
+					scope.popupEventService = new EventService();
+					scope.chipsListEventService = new EventService();
+
+					scope.popupData = {
+						evDataService: scope.evDataService,
+						evEventService: scope.evEventService,
+						attributeDataService: scope.attributeDataService
+					}
+
+					scope.evDataService.setFilters(scope.filters);
+					scope.evDataService.setFilters(scope.filters);
+
+					formatFiltersForChips();
+
+					scope.readyStatus.filters = true;
+
+					initEventListeners();
 
 				};
 

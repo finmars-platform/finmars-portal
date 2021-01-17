@@ -1,38 +1,43 @@
-<div class="g-filters width-100"
+<div class="g-filters width-100 gFilters"
      data-ng-class="{'open-filters': isFiltersOpened}">
 
     <div class="g-filters-holder width-100 flex-row fc-space-between flex-i-start">
         <div class="flex-row flex-i-start">
 
-            <md-button class="md-icon-button primary-button rounded" data-ng-click="calculateReport()">
-                <div class="flex-row flex-c-center flex-i-center">
-                    <ng-md-icon icon="refresh" size="20">
-                        <md-tooltip md-direction="top">Calculate</md-tooltip>
-                    </ng-md-icon>
-                </div>
-            </md-button>
+            <div class="g-filter-left-part gFiltersLeftPart">
+                <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                           ng-click="calculateReport()">
+                    <div class="flex-row flex-c-center flex-i-center">
+                        <ng-md-icon icon="refresh" size="20">
+                            <md-tooltip md-direction="top">Calculate</md-tooltip>
+                        </ng-md-icon>
+                    </div>
+                </md-button>
 
-            <md-button class="md-icon-button chain-button" data-ng-click="toggleUseFromAboveFilters()">
-                <div class="flex-row flex-c-center flex-i-center">
-                    <ng-md-icon icon="link" size="20"></ng-md-icon>
-                </div>
-            </md-button>
+                <md-button class="g-toggle-use-from-above-filters md-icon-button chain-button"
+                           data-ng-click="toggleUseFromAboveFilters()">
+                    <div class="flex-row flex-c-center flex-i-center">
+                        <ng-md-icon icon="link" size="20"></ng-md-icon>
+                    </div>
+                </md-button>
+            </div>
 
-            <div ng-if="readyStatus.filters">
-                <div popup
-                     popup-template-url="'views/popups/g-filter-settings.html'"
-                     popup-data="popupData"
-                     popup-event-service="popupEventService"
-                     popup-x="popupPosX"
-                     popup-y="popupPosY"
-                     backdrop-classes="fpBackClasses"
-                     popup-classes="fpClasses"
-                     on-save-callback="filterSettingsChange()"
-                     class="g-filter-chips-wrap">
+            <div class="gFiltersContainerWidth">
+
+                <div ng-if="readyStatus.filters">
+                    <div popup
+                         popup-template-url="'views/popups/entity-viewer/g-filter-settings.html'"
+                         popup-data="popupData"
+                         popup-event-service="popupEventService"
+                         popup-x="popupPosX"
+                         popup-y="popupPosY"
+                         backdrop-classes="fpBackClasses"
+                         popup-classes="fpClasses"
+                         on-save-callback="filterSettingsChange()"
+                         class="g-filter-chips-wrap"></div>
                     <chips-list chips-list="filtersChips"
                                 chips-deletion="true"
                                 chips-addition="ADD FILTER"
-                                chips-container-width="800"
                                 on-chip-click="onFilterChipClick(chipsData, event)"
                                 hide-overflowing-chips="false"
                                 on-chips-deletion="removeFilter(chipsData)"
@@ -40,11 +45,12 @@
                                 on-first-render-ending="onChipsFirstRender()"
                                 class="g-filter-chips"></chips-list>
                 </div>
+
             </div>
 
         </div>
 
-        <div class="icon-buttons">
+        <div class="icon-buttons gFiltersRightPart">
             <md-menu class="full-width" data-ng-if="isRootEntityViewer">
                 <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
                     <div class="flex-column flex-i-center">

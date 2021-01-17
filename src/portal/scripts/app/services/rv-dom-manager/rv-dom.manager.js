@@ -823,12 +823,13 @@
 
 							break;
 
+						/* TO DELETE: 2021-01-17
 						case 'open_subtotal_position_options':
 
 							event.stopPropagation();
 							createSubtotalSettingsMenu(clickData, evDataService, evEventService);
 
-							break;
+							break; */
 
 					}
 
@@ -1728,7 +1729,7 @@
 
 	};
 
-	var createSubtotalSettingsMenu = function (clickData, evDataService, evEventService) {
+	/* var createSubtotalSettingsMenu = function (clickData, evDataService, evEventService) {
 
 		var menuElem = clickData.actionElem;
 		var popup = evDataHelper.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup', 'ev-dropdown2']);
@@ -1791,7 +1792,7 @@
 
 		addEventListenersForPopupMenuOpions(popup, onOptionClick);
 
-	};
+	}; */
 
     module.exports = {
         initEventDelegation: initEventDelegation,
