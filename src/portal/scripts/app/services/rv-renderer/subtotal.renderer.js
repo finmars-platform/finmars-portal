@@ -176,12 +176,9 @@
                     if (parentGroup.___is_open) {
 
                         var foldButton = '';
+                        var foldButtonSign = currentGroup.___is_open ? '-': '+';
 
-                        if (currentGroup.___is_open) {
-                            foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '"><div>-</div></div>';
-                        } else {
-                            foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '"><div>+</div></div>';
-                        }
+						foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
 
                         result.html_result = foldButton + '<span class="">' + currentGroup.___group_name + '</span>';
                         result.raw_text_result = currentGroup.___group_name;
@@ -196,7 +193,7 @@
 
         }
 
-        if (columnNumber === obj.___level - 1) {
+        else if (columnNumber === obj.___level - 1) {
 
             var foldButton = '';
             var foldButtonStr = '';
@@ -206,11 +203,9 @@
 
             if (parentGroup.___is_open) {
 
-                if (group.___is_open) {
-                    foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">-</div></div>';
-                } else {
-                    foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">+</div></div>';
-                }
+				var foldButtonSign = group.___is_open ? '-': '+';
+
+				foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' + foldButtonSign + '</div></div>';
 
                 if (obj.___level - 1 === columnNumber) {
                     foldButtonStr = foldButton
@@ -225,7 +220,7 @@
 
         }
 
-        if (columnNumber > obj.___level - 1) {
+        else if (columnNumber > obj.___level - 1) {
 
             if (column.report_settings && column.report_settings.subtotal_formula_id && !column.report_settings.hide_subtotal) {
 
@@ -429,9 +424,12 @@
 
         	rowClassList.push('g-grand-total-row');
 
-			grandTotalCell = '<div class="g-grand-total-first-cell">' +
+			/* grandTotalCell = '<div class="g-grand-total-first-cell">' +
 				'<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>' +
-			'</div>';
+			'</div>'; */
+			grandTotalCell = '<div class="g-grand-total-first-cell">' +
+					'<span class="text-bold">GRAND TOTAL</span>' +
+				'</div>';
 
 			rowSelection = '<div class="g-row-selection border-right-transparent"></div>';
 
@@ -510,11 +508,11 @@
 
             cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
                 // '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
-				'<div class="g-cell' + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
-					'<div class="g-cell-content-wrap">' +
-						resultValue +
+					'<div class="g-cell' + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
+						'<div class="g-cell-content-wrap">' +
+							resultValue +
+						'</div>' +
 					'</div>' +
-                '</div>' +
                 '</div>';
 
             result = result + cell

@@ -43,17 +43,20 @@
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
 
-                <div ng-if="isReport">
+                <div ng-if="isReport && components.topPart">
                     <g-top-part ev-data-service="evDataService"
                                 ev-event-service="evEventService"
                                 attribute-data-service="attributeDataService"
                                 sp-exchange-service="spExchangeService">
                     </g-top-part>
+                </div>
 
+                <div ng-if="isReport">
                     <g-filters ev-data-service="evDataService"
                                ev-event-service="evEventService"
                                attribute-data-service="attributeDataService"
-                               content-wrap-element="contentWrapElem">
+                               content-wrap-element="contentWrapElem"
+                               workarea-wrap-element="workareaWrapElem">
                     </g-filters>
                 </div>
 
@@ -93,7 +96,7 @@
                                               data-ng-class="{
                                                 'g-font-size-small': reportOptions.table_font_size === 'small',
                                                 'g-font-size-medium': reportOptions.table_font_size === 'medium',
-                                                'g-font-size-large': reportOptions.table_font_size === 'large',
+                                                'g-font-size-large': reportOptions.table_font_size === 'large'
                                               }"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"

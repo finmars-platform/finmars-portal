@@ -487,7 +487,6 @@
         font-family: 'Roboto-Regular', 'Roboto', sans-serif;
         font-weight: 400;
         font-style: normal;
-        font-size: 13px;
         color: #666666;
         line-height: 36px;
         padding: 0 15px;
@@ -573,7 +572,31 @@
 
   }
 
+  .g-cell { // have to be here for table font size change to work
+    font-size: 13px;
+  }
+
 }
+
+// Inside dashboard START
+
+.dashboard-component:not(.dashboard-component-filled-in) {
+
+  .g-filter-settings-big-left-btn {
+    display: none;
+  }
+
+  .g-filter-left-part {
+    flex-basis: 52px;
+  }
+
+  .icon-buttons {
+    display: none;
+  }
+
+}
+
+// Inside dashboard END
 
 // Must be at the bottom
 .report-viewer-holder {

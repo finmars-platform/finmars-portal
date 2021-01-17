@@ -1,4 +1,7 @@
-<div class="height-100" data-ng-if="readyStatus.data === 'ready'" layout="column">
+<div data-ng-if="readyStatus.data === 'ready'"
+     layout="column"
+     class="dashboard-component height-100"
+     ng-class="{'dashboard-component-filled-in': fillInModeData}">
 
     <div class="dashboard-component-header" flex="noshrink">
         <div class="dashboard-component-name">

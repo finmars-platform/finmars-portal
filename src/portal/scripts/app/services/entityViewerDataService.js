@@ -1162,6 +1162,7 @@
 
             listLayout.data.components = {
 				filterArea: true,
+				topPart: true,
             	columnArea: true,
                 viewer: true,
                 sidebar: true,

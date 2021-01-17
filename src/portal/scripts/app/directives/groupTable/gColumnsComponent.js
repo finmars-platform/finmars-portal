@@ -83,7 +83,7 @@
 
                 scope.getPopupData = function (column, $index) {
 
-                    return {
+                    let data = {
                         $index: $index,
                         column: column,
                         viewContext: scope.viewContext,
@@ -103,8 +103,16 @@
                         changeColumnTextAlign: scope.changeColumnTextAlign, // + 7
                         checkColTextAlign: scope.checkColTextAlign,
                         removeGroup: scope.removeGroup, // + 2
-                        reportHideSubtotal: scope.reportHideSubtotal, //
+                        reportHideSubtotal: scope.reportHideSubtotal //
                     };
+
+                    const groups = scope.evDataService.getGroups();
+
+                    if (groups.length && $index < groups.length) {
+                    	data.reportSetSubtotalType = scope.reportSetSubtotalType
+					}
+
+                    return data;
 
                 };
 
@@ -113,11 +121,11 @@
 
                     if (scope.isReport && column.value_type == 20) {
 
-                        return "'views/popups/g-report-viewer-numeric-column-settings-popup-menu.html'"; // Victor 2020.12.14 #69 string in string must returned for template binding
+                        return "'views/popups/entity-viewer/g-report-viewer-numeric-column-settings-popup-menu.html'"; // Victor 2020.12.14 #69 string in string must returned for template binding
 
                     }
 
-                    return "'views/popups/g-report-viewer-column-settings-popup-menu.html'";
+                    return "'views/popups/entity-viewer/g-report-viewer-column-settings-popup-menu.html'";
                 };
 
                 scope.rowFiltersToggle = function () {
@@ -249,6 +257,23 @@
                     return allAttrsList;
 
                 };
+
+				scope.reportSetSubtotalType = function (group, type) {
+
+					if (!group.hasOwnProperty('report_settings') || group.report_settings === undefined) {
+						group.report_settings = {};
+					}
+
+					if (group.report_settings.subtotal_type === type) {
+						group.report_settings.subtotal_type = false;
+					} else {
+						group.report_settings.subtotal_type = type;
+					}
+
+					scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+					scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+
+				};
 
                 scope.columnHasCorrespondingGroup = function (columnKey) {
 
