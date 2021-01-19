@@ -29,14 +29,15 @@
                 contentWrapElement: '=',
                 workareaWrapElement: '='
             },
-            template: '<div>' +
+/*            template: '<div>' +
                 '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
                 '            <progress-linear class="ev-progressbar"></progress-linear>\n' +
                 '        </div>' +
                 '<div class="ev-viewport">' +
                 '<div class="ev-content"></div>' +
                 '</div>' +
-                '</div>',
+                '</div>',*/
+            templateUrl: 'views/directives/groupTable/g-table-body-view.html',
             link: function (scope, elem) {
 
                 var contentElem = elem[0].querySelector('.ev-content');

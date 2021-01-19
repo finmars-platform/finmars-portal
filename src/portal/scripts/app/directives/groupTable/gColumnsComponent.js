@@ -383,6 +383,7 @@
                     scope.evDataService.setColumns(columns);
 
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                    console.log('#69 sortHandler notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
 
                     scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -865,6 +866,7 @@
 
                     scope.evDataService.setColumns(scope.columns);
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                    console.log('#69 removeGroup notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
 
@@ -1349,6 +1351,7 @@
                 		evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
 
 						scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        console.log('#69 initEventListeners GROUPS_CHANGE notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
 
 						// setFiltersLayoutNames();
 
@@ -1368,7 +1371,8 @@
 
 						scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 						setFiltersLayoutNames()
-						//keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
+
+                        console.log('#69 COLUMNS_CHANGE notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
 
 					});
 
@@ -1377,6 +1381,7 @@
 						scope.groups = scope.evDataService.getGroups();
 						evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
 						scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        console.log('#69 GROUPS_LEVEL_UNFOLD notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
 						setFiltersLayoutNames()
 
 					});
@@ -1398,6 +1403,8 @@
 
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                     setFiltersLayoutNames();
+
+                    console.log('#69 init notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);
