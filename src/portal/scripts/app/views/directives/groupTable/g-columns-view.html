@@ -783,6 +783,7 @@
 
 <!--Victor #69 New report viewer interface-->
 <div ng-if="isReport" class="g-scrollable-area">
+<!--    <div>{{ notGroupingColumns }}</div>-->
 <!--<div class="g-scrollable-area">-->
     <div class="g-column-bottom-row g-table-header flex-row">
         <div class="g-cell g-cell-select-all">
@@ -855,11 +856,12 @@
 
             <div class="g-table-header-cell-wrapper gDraggableHead"
                  data-ng-repeat="column in groups track by column.key"
+                 data-ng-class="{'last-dragged': column.lastDragged}"
                  data-ng-style="column.style"
                  data-column-id="{{column.___group_type_id}}"
                  data-attr-key="{{column.key}}">
 
-                <div class="g-cell g-table-header-cell">
+                <div class="g-cell g-table-header-cell g-table-header-group-cell">
 
                     <md-button class="g-cell-button" data-ng-if="column.report_settings.is_level_folded" data-ng-click="unfoldLevel(column, $index)">
                         +
@@ -884,19 +886,23 @@
                                backdrop-classes="'low-z-index-backdrop'"
                                popup-event-service="evEventService">
 
-                        <div ng-if="!column.layout_name">
-                            <span ng-bind="column.name"></span>
-                            <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                        </div>
+                        <div  class="column-name-wrapper">
 
-                        <div ng-if="column.layout_name">
-                            <span ng-bind="column.layout_name"></span>
-                            <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                        </div>
+                            <div ng-if="!column.layout_name">
+                                <span ng-bind="column.name"></span>
+                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                            </div>
 
-                        <div class="sort">
-                            <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
-                            <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+                            <div ng-if="column.layout_name">
+                                <span ng-bind="column.layout_name"></span>
+                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                            </div>
+
+                            <div class="sort">
+                                <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
+                                <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+                            </div>
+
                         </div>
 
                     </md-button>
@@ -912,9 +918,10 @@
         </div>
 
         <div class="flex-row width-100 gColumnsHolder">
-
+<!--            data-ng-repeat="column in notGroupingColumns track by column.key"-->
             <div class="g-table-header-cell-wrapper gDraggableHead"
                  data-ng-repeat="column in notGroupingColumns track by column.key"
+                 data-ng-class="{'last-dragged': column.lastDragged}"
                  data-ng-style="column.style"
                  data-column-id="{{column.___column_id}}"
                  data-attr-key="{{column.key}}">
@@ -936,19 +943,24 @@
                                backdrop-classes="'low-z-index-backdrop'"
                                popup-event-service="evEventService">
 
-                        <div ng-if="!column.layout_name">
-                            <span ng-bind="column.name"></span>
-                            <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                        </div>
+                        <div  class="column-name-wrapper">
 
-                        <div ng-if="column.layout_name">
-                            <span ng-bind="column.layout_name"></span>
-                            <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                        </div>
+                            <div ng-if="!column.layout_name">
+                                <span ng-bind="column.name"></span>
+                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                            </div>
 
-                        <div class="sort">
-                            <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
-                            <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+                            <div ng-if="column.layout_name">
+                                <span ng-bind="column.layout_name"></span>
+                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                            </div>
+
+                            <div class="sort">
+                                <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
+                                <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+                            </div>
+
+
                         </div>
 
                     </md-button>

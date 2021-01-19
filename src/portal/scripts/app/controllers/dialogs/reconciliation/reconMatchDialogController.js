@@ -800,11 +800,12 @@
                     var draggedOverElem;
                     var shadowElem;
 
-                    drake.on('dragstart', function () {
+/*                    drake.on('dragstart', function () {
                         areaItemsChanged = false;
-                    });
+                    });*/
 
                     drake.on('drag', function () {
+                        areaItemsChanged = false;
                         scrollHelper.enableDnDWheelScroll();
                     });
 

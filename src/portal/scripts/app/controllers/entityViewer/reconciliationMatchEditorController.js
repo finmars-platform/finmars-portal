@@ -691,11 +691,12 @@
                     var areaItemsChanged;
                     var drake = this.dragula;
 
-                    drake.on('dragstart', function () {
+/*                    drake.on('dragstart', function () {
                         areaItemsChanged = false;
-                    });
+                    });*/
 
                     drake.on('drag', function () {
+                        areaItemsChanged = false;
 						scrollHelper.enableDnDWheelScroll();
                     });
 
