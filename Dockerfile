@@ -2,8 +2,6 @@ FROM node:9.10-alpine
 USER root
 ARG PROJECT_ENV
 
-RUN echo $PROJECT_ENV
-
 WORKDIR /var/www/portal
 ADD docker/portal-run.sh /var/www/portal/docker/portal-run.sh
 COPY . .
