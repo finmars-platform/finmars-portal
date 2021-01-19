@@ -492,7 +492,11 @@
 						var components = scope.evDataService.getComponents();
 
 						components.groupingArea = false
-						components.topPart = true
+
+						if (viewContext !== 'dashboard') {
+							components.topPart = true
+						}
+
 						interfaceLayout.columnArea.height = 50
 						// interfaceLayout.filterArea.height = 50
 
@@ -557,6 +561,8 @@
                             evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
 
                         }
+
+						scope.evEventService.dispatchEvent(evEvents.TABLE_INITIALIZED);
 
                     }, 500);
 

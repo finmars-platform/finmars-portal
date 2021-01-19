@@ -23,7 +23,7 @@ module.exports = {
     'REQUEST_REPORT': 'REQUEST_REPORT',
     'DATA_LOAD_END': 'DATA_LOAD_END',
     'DATA_LOAD_START': 'DATA_LOAD_START',
-
+	'TABLE_INITIALIZED': 'TABLE_INITIALIZED',
 
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
     'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
