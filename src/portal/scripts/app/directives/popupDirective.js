@@ -41,7 +41,6 @@
             link: function (scope, elem, attrs) {
                 console.log('#69 popup', scope)
 
-
                 scope.isPopupOpen = false;
 
                 // var templateElem = elem[0].querySelector('template');

@@ -2010,6 +2010,8 @@
 
                 var components = vm.entityViewerDataService.getComponents();
                 components.sidebar = true;
+				components.topPart = true;
+
             };
 
             var getViewInsideFilledInComponent = function () {

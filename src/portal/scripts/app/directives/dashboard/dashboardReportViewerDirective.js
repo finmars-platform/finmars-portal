@@ -146,12 +146,17 @@
                 };
 
                 scope.disableFillInMode = function () {
+
                     var tableComponents = scope.fillInModeData.entityViewerDataService.getComponents();
-                    tableComponents.sidebar = false;
+
+                    tableComponents.topPart = false;
+					tableComponents.sidebar = false;
+
                     scope.fillInModeData.entityViewerDataService.setComponents(tableComponents);
 
                     scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
                     scope.fillInModeData = null;
+
                 };
 
                 scope.clearUseFromAboveFilters = function () {
@@ -319,6 +324,8 @@
                         scope.readyStatus.data = 'ready';
 
                     } else {
+
+                    	scope.vm.componentData.settings.components.topPart = false; // for already existing layouts
 
                         scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
 
