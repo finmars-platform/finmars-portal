@@ -815,6 +815,9 @@
 						});
 
 						drake.on('dragend', function () {
+
+						    [columnsHolder, groupsHolder].forEach(holder => holder.classList.remove('container-shadowed'));
+
                             filtersHolder.style.display = 'none';
                             removeAreaHolder.style.display = 'none';
                             leftSideGroupsHolder.style.display = 'none';
