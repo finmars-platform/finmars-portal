@@ -19,8 +19,9 @@
         </md-button>
     </div>
 
-    <div data-ng-if="popupData.data.checkForFilteringBySameAttr(popupData.data.column.key) && popupData.data.viewContext !== 'dashboard'">
-        <md-button data-ng-click="popupData.data.addFiltersWithColAttr(popupData.data.column)"
+    <div>
+        <md-button data-ng-disabled="!popupData.data.checkForFilteringBySameAttr(popupData.data.column.key) || popupData.data.viewContext === 'dashboard'"
+                   data-ng-click="popupData.data.addFiltersWithColAttr(popupData.data.column)"
                    class="popup-menu-item">
             <ng-md-icon icon="visibility_off"
                         style="visibility: hidden;"></ng-md-icon>
