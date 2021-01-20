@@ -491,10 +491,15 @@
 
 
 						drake.on('drag', function () {
+
 							areaItemsChanged = false;
-							filtersHolder.style.display = 'block';
-                            removeAreaHolder.style.display = 'block';
-                            leftSideGroupsHolder.style.display = 'block';
+
+                            [filtersHolder, removeAreaHolder, leftSideGroupsHolder].forEach(holder => {
+
+                                holder.style.display = 'block';
+                                holder.nextSibling.style.display = 'block';
+
+                            });
 
 						});
 
@@ -513,22 +518,23 @@
 						 		elem.classList.add('display-none');
 							}
 
-						 	if (container === groupsHolder) {
-                                groupsHolder.classList.add('container-shadowed')
+						 	if (source === columnsHolder && container === groupsHolder) {
+						 	    groupsHolder.classList.add('container-shadowed');
                             } else {
-                                groupsHolder.classList.remove('container-shadowed')
+                                groupsHolder.classList.remove('container-shadowed');
                             }
 
-                            if (container === columnsHolder) {
-                                columnsHolder.classList.add('container-shadowed')
+                            if (source === groupsHolder && container === columnsHolder) {
+                                columnsHolder.classList.add('container-shadowed');
                             } else {
-                                columnsHolder.classList.remove('container-shadowed')
+                                columnsHolder.classList.remove('container-shadowed');
                             }
 
 						});
 
 						drake.on('drop', function (elem, target, source, nextSibling) {
 
+						    elem.classList.remove('last-dragged');
 						    target.classList.remove('container-shadowed');
 
                             let groups = scope.evDataService.getGroups();
@@ -623,6 +629,8 @@
 
                             const deleteItem = function (deletionOf) {
 
+                                drake.remove();
+
                                 let GCitems = [];
                                 const identifier = attrKey;
                                 let updateGCFMethod = null;
@@ -656,8 +664,6 @@
                                     }
 
                                 }
-
-                                drake.remove();
 
                                 areaItemsChanged = true;
                                 updateGCFMethod();
@@ -695,7 +701,7 @@
 
                                 if (filters.find(filter => filter.key === filterToAdd.key)) {
 
-                                    $mdDialog.show({
+                                    return $mdDialog.show({
                                         controller: 'WarningDialogController as vm',
                                         templateUrl: 'views/dialogs/warning-dialog-view.html',
                                         parent: angular.element(document.body),
@@ -713,7 +719,6 @@
                                         }
                                     });
 
-                                    return;
                                 }
 
                                 filters.push(filterToAdd);
@@ -731,20 +736,25 @@
 
                                     removeColumnToGroups();
 
-
 								}
 
 								else if (target === columnsHolder) {
+
 									changeOrder("columns");
+
 								}
 
 								else if (target === filtersHolder) {
-                                    addFilter(elem)
                                     drake.cancel();
+                                    addFilter(elem)
+
+
                                 }
 
 								else if (target === removeAreaHolder) {
+
                                     deleteItem("column");
+
                                 }
 
 							}
@@ -797,8 +807,8 @@
 								}
 
 								else if (target === filtersHolder) {
-                                    addFilter(elem);
                                     drake.cancel();
+                                    addFilter(elem);
                                 }
 
                                 else if (target === removeAreaHolder) {
@@ -818,9 +828,12 @@
 
 						    [columnsHolder, groupsHolder].forEach(holder => holder.classList.remove('container-shadowed'));
 
-                            filtersHolder.style.display = 'none';
-                            removeAreaHolder.style.display = 'none';
-                            leftSideGroupsHolder.style.display = 'none';
+                            [filtersHolder, removeAreaHolder, leftSideGroupsHolder].forEach(holder => {
+
+                                holder.style.display = 'none';
+                                holder.nextSibling.style.display = 'none';
+
+                            });
 
 							if (areaItemsChanged) {
 								scope.$apply();
@@ -834,13 +847,16 @@
 
                         const groupsHolder = scope.contentWrapElement.querySelector('.gGroupsHolder');
                         const leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
+                        const columnsHolder = scope.contentWrapElement.querySelector('.gColumnsHolder');
+                        const filtersHolder = scope.contentWrapElement.querySelector('.gFiltersHolder');
+                        const removeAreaHolder = scope.contentWrapElement.querySelector('.gRemoveAreaHolder');
 
 						var items = [
-							scope.contentWrapElement.querySelector('.gColumnsHolder'),
-							scope.contentWrapElement.querySelector('.gGroupsHolder'),
-							scope.contentWrapElement.querySelector('.gFiltersHolder'),
-							scope.contentWrapElement.querySelector('.gRemoveAreaHolder'),
-							scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder'),
+                            groupsHolder,
+                            leftSideGroupsHolder,
+                            columnsHolder,
+                            filtersHolder,
+                            removeAreaHolder
 						];
 
 						if (isReport) {

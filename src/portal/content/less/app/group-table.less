@@ -1009,27 +1009,44 @@
   }
 
   .drop-area {
-    display: none;
     position: absolute;
     top: 0;
     height: 100%;
-    box-sizing: border-box;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1;
-    padding: 10px;
-    box-sizing: border-box;
+    pointer-events: none;
+
 
     &.active {
       background-color: rgba(0, 0, 0, 0.5);
     }
 
-    div {
+    .drop-area-holder {
+      //display: none;
+      width: 100%;
+      height: 100%;
+
+
+
+      pointer-events: auto;
+    }
+
+    .drop-area-content {
+      display: none;
       pointer-events: none;
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
+
       height: 100%;
       width: 100%;
+
       box-sizing: border-box;
-      border: 5px dashed #acacac;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1;
+
+      box-sizing: border-box;
+
+      outline: 5px dashed #acacac;
+      outline-offset: -10px;
 
       span {
         position: absolute;
@@ -1048,7 +1065,7 @@
     left: 0;
     width: 85%;
 
-    div {
+    .drop-area-content {
       span {
         font-size: 32px;
       }
@@ -1059,9 +1076,9 @@
     right: 0;
     width: 15%;
 
-    div {
+    .drop-area-content {
       span {
-        font-size: 20px;
+        font-size: 30px;
       }
     }
   }
@@ -1071,7 +1088,7 @@
     width: 150px;
     transform: rotate(180deg);
 
-    div {
+    .drop-area-content {
       span {
         font-size: 20px;
         writing-mode: tb;
@@ -1294,16 +1311,17 @@
 
     @keyframes flash {
       0% {background-color: rgba(240, 90, 34, 1);}
-      25% {background-color: rgba(240, 90, 34, 0.75);}
-      50% {background-color: rgba(240, 90, 34, 0.5);}
-      75% {background-color: rgba(240, 90, 34, 0.25);}
+      90% {background-color: rgba(240, 90, 34, 1);}
+      92% {background-color: rgba(240, 90, 34, 0.75);}
+      95% {background-color: rgba(240, 90, 34, 0.5);}
+      97% {background-color: rgba(240, 90, 34, 0.25);}
       100% {background-color: rgba(240, 90, 34, 0);}
     }
 
+
     .last-dragged {
       animation-name: flash;
-      //animation-delay: 0.2s;
-      animation-duration: 0.5s;
+      animation-duration: 5.5s;
     }
 
     .container-shadowed {
