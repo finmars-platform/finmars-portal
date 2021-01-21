@@ -8,21 +8,26 @@
          class="entity-editor-fixed-area"
          data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">
 
-        <div layout="row"
-             class="entity-editor-row">
+        <div class="entity-editor-row flex-row fc-space-between">
 
-            <div class="cursor-pointer"
+            <div class="cursor-pointer fa-field1"
                  ng-class="{
-                        'width-33': vm.fixedAreaPopup.tabColumns === 6,
-                        'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
-                        'width-66': vm.fixedAreaPopup.tabColumns === 3,
-                        'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
+                        'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6,
+                        'flex-basis-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
+                        'flex-basis-66': vm.fixedAreaPopup.tabColumns === 3,
+                        'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }"
                  popup
-                 popup-template-url="'views/entity-viewer/entity-viewer-edit-fixed-area-popup-view.html'"
-                 popup-y="top"
+                 popup-template-url="'views/popups/entity-viewer-edit-fixed-area-popup-view.html'"
+                 popup-width="element"
+                 position-relative-to="element"
+                 open-on="click"
+                 close-on-click-outside="true"
+                 relative-popup-y="top"
                  offset-y="-24"
                  popup-data="vm.fixedAreaPopup"
+                 prevent-default="true"
+                 on-cancel="vm.onFixedAreaPopupCancel()"
                  on-save-callback="vm.onPopupSaveCallback()">
 
                 <text-input label="{{vm.entityTypeSlug()}}"
@@ -35,10 +40,11 @@
             </div>
 
             <div data-ng-if="vm.fixedAreaPopup.tabColumns > 2"
+                 class="fa-field2"
                  data-ng-class="{
-                        'width-33': vm.fixedAreaPopup.tabColumns === 6 || vm.fixedAreaPopup.tabColumns === 3,
-                        'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
-                        'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
+                        'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6 || vm.fixedAreaPopup.tabColumns === 3,
+                        'flex-basis-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
+                        'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }">
 
                 <dropdown-select data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
@@ -59,7 +65,7 @@
             </div>
 
             <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
-                 class="width-33">
+                 class="fa-field3">
                 <dropdown-select label="Status"
                                  model="vm.entityStatus"
                                  placeholder-text="System List"
@@ -69,107 +75,12 @@
                                  class="ev-editor-field"></dropdown-select>
             </div>
 
-<!--            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="50">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
-                                    entity-type="vm.entityType"
-                                    entity="vm.entity"
-                                    event-signal="vm.evEditorEvent"
-                                    ev-editor-event-service="vm.evEditorEventService"
-                                    ev-editor-data-service="vm.evEditorDataService"
-                                    item="vm.fixedFieldsAttributes[0]"
-                                    entity-change="vm.onFieldChange(fieldKey)"
-                                    on-field-blur="vm.onNameInputBlur()"></bind-field-control>
-            </div>-->
-
-<!--            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="35">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]"
-                                    entity-type="vm.entityType"
-                                    entity="vm.entity"
-                                    event-signal="vm.evEditorEvent"
-                                    ev-editor-event-service="vm.evEditorEventService"
-                                    ev-editor-data-service="vm.evEditorDataService"
-                                    item="vm.fixedFieldsAttributes[1]"
-                                    entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-            </div>-->
-
-<!--            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="15">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]"
-                                    entity-type="vm.entityType"
-                                    entity="vm.entity"
-                                    ev-editor-event-service="vm.evEditorEventService"
-                                    ev-editor-data-service="vm.evEditorDataService"
-                                    item="vm.fixedFieldsAttributes[2]"
-                                    entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-            </div>-->
         </div>
 
-<!--        <div layout="row"
-             class="entity-editor-row">-->
-
-<!--            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="50">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]"
-                                    entity-type="vm.entityType"
-                                    entity="vm.entity"
-                                    ev-editor-event-service="vm.evEditorEventService"
-                                    ev-editor-data-service="vm.evEditorDataService"
-                                    item="vm.fixedFieldsAttributes[3]"
-                                    entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-            </div>-->
-
-<!--            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="35">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]"
-                                    entity-type="vm.entityType"
-                                    entity="vm.entity"
-                                    ev-editor-event-service="vm.evEditorEventService"
-                                    ev-editor-data-service="vm.evEditorDataService"
-                                    item="vm.fixedFieldsAttributes[4]"
-                                    entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
-            </div>-->
-
-<!--            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="15">
-                <dropdown-select label="Status"
-                                 model="vm.entityStatus"
-                                 placeholder-text="System List"
-                                 menu-options="vm.statusSelectorOptions"
-                                 small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
-                                 on-change-callback="vm.entityStatusChanged()"
-                                 class="ev-editor-field"></dropdown-select>
-
-                &lt;!&ndash;<md-input-container class="md-block">
-                    <label>Status</label>
-                    <md-select data-ng-model="vm.entityStatus"
-                               data-ng-change="vm.entityStatusChanged()">
-                        <md-option data-ng-if="vm.entityType === 'instrument'" value="active">Active</md-option>
-                        <md-option data-ng-if="vm.entityType === 'instrument'" value="inactive">Inactive</md-option>
-
-                        <md-option data-ng-if="vm.entityType !== 'instrument'"
-                                   value="enabled">Enabled</md-option>
-                        <md-option value="disabled">Disabled</md-option>
-                        <md-option value="deleted">Deleted</md-option>
-                    </md-select>
-                </md-input-container>&ndash;&gt;
-
-            </div>-->
-<!--        </div>-->
-
-<!--        <div class="entity-editor-divider-holder">
-            <div></div>
-        </div>-->
     </div>
 
     <div class="position-relative">
+
         <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
             <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" md-on-select="vm.activeTab = tab">
@@ -205,7 +116,7 @@
 
             <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)" md-active="vm.activeTab === tab">
 
-                <!--                        Victor 2020.10.28 EntityTabs labels move to md-menu-->
+                <!-- Victor 2020.10.28 EntityTabs labels move to md-menu-->
                 <!--                         <md-tab-label>
                                             <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">
                                                 <span class="grey-tab">{{tab.label}}</span>
@@ -363,30 +274,29 @@
 
         </md-tabs>
 
-        <div class="entity-tabs-menu" data-ng-class="{'active': vm.isEntityTabActive()}">
+        <div class="entity-tabs-menu entityTabsMenu"
+             data-ng-class="{'active': vm.isEntityTabActive()}"
+             popup
+             popup-template="vm.entityTabsMenuTplt"
+             popup-data="vm.entityTabsMenuPopupData"
+             position-relative-to="element"
+             relative-popup-x="left"
+             open-on="click"
+             close-on-click-outside="true"
+             popup-classes="vm.entityTablePopupClasses">
 
-            <!--                        Victor 2020.10.29 md-menu manage Entity tabs and Permission tab contents -->
-            <md-menu md-position-mode="target-right bottom">
-                <md-button aria-label="open entity tabs"
-                           class="md-icon-button"
-                           ng-click="$mdOpenMenu($event)">
-                    <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
-                </md-button>
+            <md-button aria-label="open entity tabs"
+                       class="md-icon-button entity-tabs-menu-btn">
+                <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
+            </md-button>
 
-                <md-menu-content width="3" class="universal-editor-menu-content">
-
-                    <md-menu-item data-ng-repeat="tab in vm.entityTabs" ng-click="vm.activeTab = tab">
-                        <md-button data-ng-class="{'active-tab-button': vm.activeTab === tab}"><span>{{tab.label}}</span></md-button>
-                    </md-menu-item>
-
-                    <md-menu-item data-ng-if="vm.checkPermissions() && vm.canManagePermissions" ng-click="vm.activeTab = 'permissions'">
-                        <md-button data-ng-class="{'active-tab-button': vm.activeTab === 'permissions'}"><span>Permissions</span></md-button>
-                    </md-menu-item>
-
-                </md-menu-content>
-            </md-menu>
+            <div class="tabs-menu-error-icon">
+                <span class="material-icons">info</span>
+                <md-tooltip class="error-tooltip" md-direction="top">Tabs with error</md-tooltip>
+            </div>
 
         </div>
+
     </div>
 
 </div>

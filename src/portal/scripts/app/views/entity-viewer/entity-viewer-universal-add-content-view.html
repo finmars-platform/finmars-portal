@@ -93,23 +93,28 @@
     <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-area">
 
-        <div layout="row"
-             class="entity-editor-row">
+        <div class="entity-editor-row flex-row fc-space-between">
 
-            <div class="cursor-pointer"
+            <div class="cursor-pointer fa-field1"
                  data-ng-if="vm.entityType !== 'currency' || vm.fixedAreaPopup.tabColumns < 6"
                  data-ng-class="{
-                        'width-33': vm.fixedAreaPopup.tabColumns === 6,
-                        'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
-                        'width-66': vm.fixedAreaPopup.tabColumns === 3,
-                        'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
+                        'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6,
+                        'flex-basis-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
+                        'flex-basis-66': vm.fixedAreaPopup.tabColumns === 3,
+                        'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }"
                  popup
-                 popup-template-url="'views/entity-viewer/entity-viewer-add-fixed-area-popup-view.html'"
-                 popup-y="top"
+                 popup-template-url="'views/popups/entity-viewer-add-fixed-area-popup-view.html'"
+                 popup-width="element"
+                 position-relative-to="element"
+                 open-on="click"
+                 close-on-click-outside="true"
+                 relative-popup-y="top"
+                 popup-width="element"
                  offset-y="-24"
                  popup-data="vm.fixedAreaPopup"
-                 prevent-default="'true'"
+                 prevent-default="true"
+                 on-cancel="vm.onFixedAreaPopupCancel()"
                  on-save-callback="vm.onPopupSaveCallback()">
 
                 <text-input label="{{vm.entityTypeSlug()}}"
@@ -122,11 +127,12 @@
             </div>
 
             <div data-ng-if="vm.entityType === 'currency' && vm.fixedAreaPopup.tabColumns === 6"
+                 class="fa-field2"
                  data-ng-class="{
-                        'width-33': vm.fixedAreaPopup.tabColumns === 6,
-                        'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
-                        'width-66': vm.fixedAreaPopup.tabColumns === 3,
-                        'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
+                        'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6,
+                        'flex-basis-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
+                        'flex-basis-66': vm.fixedAreaPopup.tabColumns === 3,
+                        'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }">
 
                 <text-input
@@ -136,11 +142,11 @@
 
             </div>
 
-            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 2"
+            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 2" class="fa-field3"
                  data-ng-class="{
-                        'width-33': vm.fixedAreaPopup.tabColumns === 6 || vm.fixedAreaPopup.tabColumns === 3,
-                        'width-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
-                        'width-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1,
+                        'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6 || vm.fixedAreaPopup.tabColumns === 3,
+                        'flex-basis-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
+                        'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }">
 
                 <dropdown-select data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
@@ -198,7 +204,7 @@
 
     </div>
 
-<!--    Victor 2020.11.20 move tabs to div with md menu-->
+    <!-- Victor 2020.11.20 move tabs to div with md menu-->
     <!--<md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
         <md-tab data-ng-repeat="tab in vm.tabs">
             <md-tab-label>
@@ -347,6 +353,7 @@
     </md-tabs>-->
 
     <div class="position-relative">
+
         <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
             <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" md-on-select="vm.activeTab = tab">
@@ -494,30 +501,29 @@
 
         </md-tabs>
 
-        <div class="entity-tabs-menu" data-ng-class="{'active': vm.isEntityTabActive()}">
+        <div class="entity-tabs-menu entityTabsMenu"
+             ng-class="{'active': vm.isEntityTabActive()}"
+             popup
+             popup-template="vm.entityTabsMenuTplt"
+             popup-data="vm.entityTabsMenuPopupData"
+             position-relative-to="element"
+             relative-popup-x="left"
+             open-on="click"
+             close-on-click-outside="true"
+             popup-classes="vm.entityTablePopupClasses">
 
-            <!--                        Victor 2020.11.20 md-menu manage Entity tabs and Permission tab contents -->
-            <md-menu md-position-mode="target-right bottom">
-                <md-button aria-label="open entity tabs"
-                           class="md-icon-button"
-                           ng-click="$mdOpenMenu($event)">
-                    <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
-                </md-button>
+            <md-button aria-label="open entity tabs"
+                       class="md-icon-button entity-tabs-menu-btn">
+                <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
+            </md-button>
 
-                <md-menu-content width="3" class="universal-editor-menu-content">
-
-                    <md-menu-item data-ng-repeat="tab in vm.entityTabs" ng-click="vm.activeTab = tab">
-                        <md-button data-ng-class="{'active-tab-button': vm.activeTab === tab}"><span>{{tab.label}}</span></md-button>
-                    </md-menu-item>
-
-                    <md-menu-item data-ng-if="vm.canManagePermissions" ng-click="vm.activeTab = 'permissions'">
-                        <md-button data-ng-class="{'active-tab-button': vm.activeTab === 'permissions'}"><span>Permissions</span></md-button>
-                    </md-menu-item>
-
-                </md-menu-content>
-            </md-menu>
+            <div class="tabs-menu-error-icon">
+                <span class="material-icons">info</span>
+                <md-tooltip class="error-tooltip" md-direction="top">Tabs with error</md-tooltip>
+            </div>
 
         </div>
+
     </div>
 </div>
 
