@@ -403,6 +403,14 @@
             data.projection = projection
         }
 
+        function setProjectionLastFrom(from) {
+            data.projection_last_from = from
+        }
+
+        function getProjectionLastFrom() {
+            return data.projection_last_from;
+        }
+
         function getProjection() {
             return data.projection;
         }
@@ -1078,15 +1086,16 @@
                 if (!entityViewerOptions) {
 
                     entityViewerOptions = {
-                        complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
+                        // complex_transaction_filters: ['ignored', 'locked', 'partially_visible'],
                         entity_filters: ['enabled', 'disabled', 'active', 'inactive']
                     }
 
-                } else if (!entityViewerOptions.complex_transaction_filters) {
-
-                    entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
-
-
+                // } else if (!entityViewerOptions.complex_transaction_filters) {
+                //
+                //     entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
+                //
+                //
+                // } else if (!entityViewerOptions.entity_filters){
                 } else if (!entityViewerOptions.entity_filters){
 
                     entityViewerOptions.entity_filters = ['enabled', 'disabled', 'active', 'inactive'];
@@ -1353,6 +1362,9 @@
 
             setProjection: setProjection,
             getProjection: getProjection,
+
+            setProjectionLastFrom: setProjectionLastFrom,
+            getProjectionLastFrom: getProjectionLastFrom,
 
             setFlatList: setFlatList,
             getFlatList: getFlatList,

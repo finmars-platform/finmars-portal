@@ -364,7 +364,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: ev,
                     clickOutsideToClose: false,
@@ -617,7 +617,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     clickOutsideToClose: false,
                     multiple: true,
@@ -728,7 +728,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         clickOutsideToClose: false,
                         multiple: true,
@@ -809,7 +809,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     // targetEvent: $event,
                     autoWrap: true,
                     skipHide: true,
@@ -1355,7 +1355,7 @@
                 });
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('out', function (elem, container, source) {
@@ -1408,7 +1408,8 @@
 
                 drake.on('dragend', function (el) {
 
-                    document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.disableDnDWheelScroll();
+
                     $scope.$apply();
                     drake.remove();
 

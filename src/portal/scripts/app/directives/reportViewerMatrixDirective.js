@@ -87,7 +87,8 @@
 
                     cellWidth = Math.floor(elemWidth / columnsCount);
                     //var cellHeight = Math.floor(elemHeight / rowsCount);
-                    var cellHeight = 25;
+                    // var cellHeight = 25;
+                    var cellHeight = 48;
 
                     if (scope.matrixSettings.auto_scaling) {
 
