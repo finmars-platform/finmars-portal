@@ -122,6 +122,8 @@
 
                 vm.readyStatus.dataProcedures = true;
 
+                vm.orderProcedures();
+
                 $scope.$apply();
 
             })
@@ -159,8 +161,7 @@
 
             vm.schedule.procedures = vm.schedule.procedures.map(function (item, index) {
 
-                item.order = index + 1;
-                item.dragOrder = index;
+                item.order = index;
 
                 return item
             })
@@ -207,7 +208,7 @@
                     if (siblingRowOrder !== null) {
 
                         for (var i = 0; i < vm.schedule.procedures.length; i++) {
-                            if (vm.schedule.procedures[i].dragOrder === siblingRowOrder) {
+                            if (vm.schedule.procedures[i].order === siblingRowOrder) {
 
                                 vm.schedule.procedures.splice(i, 0, rowToInsert);
                                 break;
@@ -220,7 +221,7 @@
                     }
 
                     for (var i = 0; i < vm.schedule.procedures.length; i++) {
-                        vm.schedule.procedures[i].dragOrder = i;
+                        vm.schedule.procedures[i].order = i;
                     }
 
                     $scope.$apply();
