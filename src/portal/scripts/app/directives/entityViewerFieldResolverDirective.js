@@ -43,6 +43,10 @@
                     event: {}
                 };
 
+                scope.inputTextObj = {
+                    value: null
+                };
+
                 var fieldsDataIsLoaded = false;
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
@@ -391,7 +395,7 @@
 
                         if (item_object) {
 
-                            if (Array.isArray(item_object)) {
+                            if (Array.isArray(item_object)) { // For multiselector
                                 scope.fields = item_object;
                                 var items = scope.fields.slice(0);
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
@@ -408,7 +412,7 @@
 
                     //}
 
-                    scope.inputText = scope.getInputTextForEntitySearch()
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
                 });
 
@@ -551,7 +555,7 @@
                     }
 
                     scope.fieldValue = {value: scope.entity[scope.fieldKey]};
-                    scope.inputText = scope.getInputTextForEntitySearch()
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
 					scope.modelKeyEntity = scope.getModelKeyEntity();
 

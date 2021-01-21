@@ -91,7 +91,7 @@
 
                 $mdDialog({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     clickOutsideToClose: false,
                     locals: {
                         warning: {
