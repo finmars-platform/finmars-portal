@@ -1,5 +1,6 @@
 <div class="custom-input-container text-input-container textInputContainer" data-ng-class="getInputContainerClasses()">
-  <div class="custom-input-top-row">
+  <div ng-if="label || label === ''"
+       class="custom-input-top-row">
     <span class="custom-input-textarea-span-pan">{{label}}</span>
   </div>
   <!-- <div class="custom-input-top-row">
@@ -73,8 +74,10 @@
 
                   <div class="custom-input-custom-btns-holder">
                     <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
-                      <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
-                              data-ng-click="callFnForCustomBtn(button.action)">
+                      <button ng-repeat="button in customButtons"
+                              ng-disabled="isDisabled"
+                              ng-click="callFnForCustomBtn(button.action)"
+                              class="{{button.classes}} custom-input-custom-btn">
                         {{button.caption}}
                         <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
                                     size="24"

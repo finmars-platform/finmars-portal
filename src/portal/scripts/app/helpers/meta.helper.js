@@ -163,13 +163,25 @@
 
 	};
 
+    let closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
+
+        if (openedIn === 'big-drawer') {
+            $bigDrawer.hide(response);
+
+        } else { // opened in mdDialog
+            $mdDialog.hide(response);
+        }
+
+    };
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
         textWithDashSort: textWithDashSort,
-		openLinkInNewTab: openLinkInNewTab
+		openLinkInNewTab: openLinkInNewTab,
+
+        closeComponent: closeComponent
     }
 
 }());
-

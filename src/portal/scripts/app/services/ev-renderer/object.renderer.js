@@ -76,21 +76,20 @@
             result = 'lock2Icon';
         }
 
-        /* TODO uncomment after enabling angular material icons
         else if (obj.is_deleted) {
-            result = 'deletedIcon'
+            result = 'deletedIcon';
         }
 
         else if (!obj.is_enabled) {
-            result = 'disabledIcon'
+            result = 'disabledIcon';
         }
 
         else if (!obj.is_active) {
-            result = 'inactiveIcon'
-        } */
+            result = 'inactiveIcon';
+        }
 
         else if (currentMember && currentMember.is_admin) {
-            result = 'starIcon'
+            result = 'starIcon';
         }
 
         return renderHelper.getIconByKey(result);
@@ -100,7 +99,7 @@
     var getValue = function (obj, column) {
 
         if (column.status === 'missing') {
-            return "Deleted"
+            return "Deleted";
         }
 
         if (obj[column.key]) {
@@ -305,11 +304,12 @@
 
     }
 
-    var render = function (obj, columns, currentMember, viewContext, verticalAdditions) {
+    var render = function (evDataService, obj, columns, currentMember, viewContext, verticalAdditions) {
 
         var classList = ['g-row'];
 
         var rowSelection;
+        var rowHeight = evDataService.getRowHeight();
 
         getRowGeneralClasses(obj, classList);
 
@@ -319,7 +319,9 @@
 
         var classes = classList.join(' ');
 
-        var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
+
+        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         result = result + rowSelection;

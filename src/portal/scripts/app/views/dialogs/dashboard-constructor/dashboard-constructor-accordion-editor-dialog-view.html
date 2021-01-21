@@ -34,27 +34,45 @@
                                     <div data-ng-repeat="item in tab.accordions track by $index"
                                          class="accordion-constructor-row-accordion" layout="column">
 
-                                        <div layout="row" data-ng-if="item.type === 'accordion'">
 
-                                            <div class="m-r-8" style="padding-top: 4px;">
-                                                {{item.name}}
+                                            <div layout="row" class="width-100" data-ng-if="item.type === 'accordion'"
+                                                 style="margin: 0; padding: 8px; height: {{((item.to - item.from)+ 1) * 50}}px">
+
+                                                <md-card title="{{item.name}}"
+                                                         class="width-100 p-8 accordion-constructor-row-accordion-guide-card">
+                                                    <div class="m-r-8" style="padding-top: 4px;">
+                                                        {{item.name}}
+                                                    </div>
+
+                                                    <div>
+
+                                                        <md-button class="ec-tab-btn md-raised md-warn"
+                                                                   data-ng-click="vm.deleteAccordion($event, tab, $index)">
+                                                            <ng-md-icon icon="delete" class="ng-scope"></ng-md-icon>
+                                                        </md-button>
+
+                                                        <md-button class="ec-tab-btn md-raised"
+                                                                   data-ng-click="vm.increaseAccordion($event, item)"
+                                                                   data-ng-disabled="vm.isNextSlotAnAccordion(item, tab)">
+                                                            <ng-md-icon icon="expand_more" size="16"></ng-md-icon>
+                                                        </md-button>
+
+                                                        <md-button class="ec-tab-btn md-raised"
+                                                                   data-ng-click="vm.decreaseAccordion($event, item)"
+                                                                   data-ng-disabled="item.from == item.to - 1">
+                                                            <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
+                                                        </md-button>
+                                                    </div>
+
+                                                </md-card>
+
                                             </div>
 
-                                            <md-button class="ec-tab-btn md-raised md-warn"
-                                                       data-ng-click="vm.deleteAccordion($event, tab, $index)">
-                                                <ng-md-icon icon="delete" class="ng-scope"></ng-md-icon>
-                                            </md-button>
+                                            <div layout="row"
+                                                 data-ng-if="item.type != 'accordion' && !vm.isAccordionOverlapped($index, tab)"
+                                                 style="height: 50px;">
 
-                                            <md-button class="ec-tab-btn md-raised" data-ng-click="vm.increaseAccordion($event, item)">
-                                                <ng-md-icon icon="expand_more" size="16"></ng-md-icon>
-                                            </md-button>
-
-                                            <md-button class="ec-tab-btn md-raised" data-ng-click="vm.decreaseAccordion($event, item)"
-                                                       data-ng-disabled="item.from >= item.to">
-                                                <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
-                                            </md-button>
-
-                                        </div>
+                                            </div>
 
                                     </div>
 

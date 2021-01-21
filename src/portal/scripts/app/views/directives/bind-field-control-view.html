@@ -146,4 +146,16 @@
                           item-change="itemChange()">
     </ev-selector-resolver>
   </div>
+
+  <div data-ng-if="fieldType['display_name'] === 'Button'">
+    <div class="custom-input-container">
+      <md-button class="md-raised md-primary" data-ng-click="recalculate()">
+        {{getName()}}
+      </md-button>
+    </div>
+
+
+  </div>
+
+
 </div>

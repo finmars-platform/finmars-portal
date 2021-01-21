@@ -5,11 +5,7 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     module.exports = function ($scope, $mdDialog, data) {
-
-        logService.controller('TransactionImportErrorsDialogController', 'initialized');
 
         var vm = this;
 
@@ -25,7 +21,7 @@
 
         vm.error_rows = []
 
-        vm.scheme = data.scheme;
+        vm.scheme = data.validationResult.scheme_object;
         vm.config = data.config;
 
         vm.getUniqueColumns = function (validationResult) {
@@ -191,13 +187,14 @@
         };
 
         vm.agree = function ($event) {
+
             if (vm.config.process_mode !== 'validate') {
 
-                if (vm.config.error_handling === 'break') {
+                if (vm.validationResult.scheme_object.error_handler === 'break') {
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,
@@ -231,11 +228,11 @@
 
                 }
 
-                if (vm.config.error_handling === 'continue') {
+                if (vm.validationResult.scheme_object.error_handler === 'continue') {
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,
@@ -293,7 +290,7 @@
             });
 
 
-            if (vm.config.error_handling === 'break') {
+            if (vm.validationResult.scheme_object.error_handler === 'break') {
                 vm.rowsSuccessCount = vm.validationResult.error_row_index - 1;
             } else {
 

@@ -58,12 +58,46 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     console.log("angular.js info: " + directivesCount + ' directives registered');
 
     var developerConsoleService = require('./app/services/developerConsoleService');
+    var websocketService = require('./app/services/websocketService');
+    var toastNotificationService = require('../../core/services/toastNotificationService');
+
 
     window.developerConsoleService = developerConsoleService;
 
     developerConsoleService.init();
 
-}]);
+    try {
+
+        window.ws = new WebSocket("__WS_HOST__");
+
+        websocketService.addEventListener('simple_message', function (data) {
+            toastNotificationService.info(data.message)
+        })
+
+        window.ws.onopen = function () {
+            console.log("Websocket. Initial Auth");
+            window.ws.send(JSON.stringify({action: "initial_auth"}));
+        }
+
+    } catch (error) {
+
+        console.error("Can't connect to Websocket server. Error ", error);
+
+        window.ws = null;
+
+    }
+
+    if (window.ws) {
+        ws.onerror = function (error) {
+
+            console.error("Can't connect to Websocket server. Error ", error);
+
+            window.ws = null;
+        };
+    }
+
+}
+]);
 
 app.factory('pickmeup', ['$window', function ($window) {
     if ($window.pickmeup) {
@@ -267,7 +301,7 @@ app.controller('TransactionImportSchemeSelectorValuesDialogController', ['$scope
 
 // Color palettes
 
-app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', require('./app/controllers/colorPicker/colorPalettesSettingsController')]);
+app.controller('ColorPalettesSettingsController', ['$scope', '$mdDialog', 'data', require('./app/controllers/colorPicker/colorPalettesSettingsController')]);
 app.controller('ColorPalettesSettingsDialogController', ['$scope', '$mdDialog', require('./app/controllers/colorPicker/colorPalettesSettingsDialogController')]);
 app.controller('TwoInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoInputsDialogController')]);
 app.controller('RenameColorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameColorDialogController')]);
@@ -303,8 +337,8 @@ app.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$sta
 app.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', require('./app/controllers/entityViewer/reportViewerController')]);
 app.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 app.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
-app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
-app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
+app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 app.controller('EntityViewerDeleteBulkDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/entityViewer/entityViewerDeleteBulkDialogController')]);
 app.controller('EvAddEditValidationDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/evAddEditValidationDialogController')]);
@@ -313,8 +347,6 @@ app.controller('EntityViewerPermissionEditorController', ['$scope', '$mdDialog',
 
 app.controller('PriceHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/priceHistoryErrorEditDialogController')]);
 app.controller('CurrencyHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/currencyHistoryErrorEditDialogController')]);
-
-
 
 
 // Transaction type form
@@ -338,7 +370,7 @@ app.controller('TransactionTypeAddInputDialogController', ['$scope', '$mdDialog'
 
 // Complex transaction form
 
-app.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
+app.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
 app.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
 app.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/complex-transaction/bookTransactionActionsTabController')]);
 app.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/complex-transaction/bookTransactionTransactionsTabController')]);
@@ -544,7 +576,6 @@ app.controller('PricingPolicyAddDialogController', ['$scope', '$mdDialog', 'data
 app.controller('PricingPolicyEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyEditDialogController')]);
 
 
-
 app.controller('PricingMultipleParametersDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingMultipleParametersDialogController')]);
 
 
@@ -600,7 +631,7 @@ app.directive('useFromAboveButton', ['$mdDialog', require('./app/controls/use-fr
 
 app.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
 app.directive('groupTableBody', ['evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
-app.directive('groupSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
+app.directive('gSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/groupTable/gDashboardFilterComponent')]);
 app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
@@ -611,7 +642,7 @@ app.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityVi
 app.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evDateFilterDirective')]);
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);
-app.directive('groupActionsBlock', ['$mdDialog', '$state', require('./app/directives/groupTable/gActionsBlockComponent')]);
+app.directive('groupActionsBlock', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/gActionsBlockComponent')]);
 // app.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
 app.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
 app.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
@@ -678,7 +709,8 @@ app.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDire
 app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
-app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
+// app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
+app.directive('popup', ['$compile', require('./app/directives/popupDirective')]);
 app.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
 app.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
@@ -715,7 +747,7 @@ app.directive('ngRightClick', ['$parse', function ($parse) {
         element.bind('contextmenu', function (event) {
             scope.$apply(function () {
                 event.preventDefault();
-                fn(scope, { $event: event });
+                fn(scope, {$event: event});
             });
         });
     };

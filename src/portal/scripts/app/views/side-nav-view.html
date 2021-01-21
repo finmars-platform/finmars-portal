@@ -606,14 +606,14 @@
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
                                         </li>
-                                        <li data-ng-if="vm.accessTable.configuration_pricing_policy">
+                                        <!-- <li data-ng-if="vm.accessTable.configuration_pricing_policy">
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.data.pricing-policy">
                                                 <span class="side-nav-title">Pricing Policies</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
-                                        </li>
+                                        </li> -->
                                         <li data-ng-if="vm.accessTable.configuration_user_attributes">
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.settings.entities-custom-attributes">
@@ -925,4 +925,4 @@
     </div>
 </md-sidenav>
 
-<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'">Build date: __BUILD_DATE__</div>
+<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.healthcheck">Build date: __BUILD_DATE__</div>

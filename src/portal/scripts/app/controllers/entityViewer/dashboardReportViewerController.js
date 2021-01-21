@@ -305,7 +305,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
                     preserveScope: true,
@@ -332,6 +332,8 @@
             // < Functions for context menu >
 
             vm.updateGrandTotalComponent = function(){
+
+                // vm.grandTotalError = false;
 
                 rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
@@ -378,6 +380,10 @@
                 } else {
                     vm.grandTotalValue = val
                 }
+
+                // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
+                //     vm.grandTotalError = true
+                // }
 
                 console.log('vm.grandTotalValue', vm.grandTotalValue);
 
@@ -1881,6 +1887,7 @@
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 /* if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
@@ -1929,6 +1936,23 @@
                                     } else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+
+                                        var listLayout = vm.entityViewerDataService.getListLayout();
+                                        var layoutColumns = listLayout.data.columns;
+
+                                        layoutColumns.forEach(function(layoutColumn) {
+
+                                            var column = columns.find(function(itemColumn){
+                                                return itemColumn.key === layoutColumn.key
+                                            })
+
+                                            if(column && !column.layout_name) {
+                                                column.layout_name = layoutColumn.layout_name
+                                            }
+
+                                        })
+
+
                                         vm.entityViewerDataService.setColumns(columns);
 
                                     }

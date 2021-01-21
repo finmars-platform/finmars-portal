@@ -15,6 +15,7 @@
     var metaService = require('../services/metaService');
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
+    var websocketService = require('../services/websocketService');
 
     var crossTabEvents = {
         'MASTER_USER_CHANGED': 'MASTER_USER_CHANGED',
@@ -97,6 +98,7 @@
                 if (item.is_current) {
 
                     vm.currentMasterUser = item
+                    websocketService.send({action: "update_user_state", data: {master_user: vm.currentMasterUser}});
 
                 }
 
@@ -168,7 +170,7 @@
 
                 $mdDialog.show({
                     controller: "WarningDialogController as vm",
-                    templateUrl: "views/warning-dialog-view.html",
+                    templateUrl: "views/dialogs/warning-dialog-view.html",
                     multiple: true,
                     clickOutsideToClose: false,
                     locals: {
@@ -534,7 +536,7 @@
 
             $mdDialog.show({
                 controller: "WarningDialogController as vm",
-                templateUrl: "views/warning-dialog-view.html",
+                templateUrl: "views/dialogs/warning-dialog-view.html",
                 multiple: true,
                 clickOutsideToClose: false,
                 locals: {
@@ -623,7 +625,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         clickOutsideToClose: false,
                         locals: {
@@ -702,7 +704,7 @@
 
                                 $mdDialog.show({
                                     controller: 'WarningDialogController as vm',
-                                    templateUrl: 'views/warning-dialog-view.html',
+                                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                                     parent: angular.element(document.body),
                                     targetEvent: ev,
                                     clickOutsideToClose: false,
@@ -759,9 +761,15 @@
         		usersService.getMyCurrentMember().then(function (data) {
 
         			member = data;
+
+                    websocketService.send({action: "update_user_state", data: {member: member}});
+
         			resolve(member);
 
 				}).catch(function (error) {
+				    
+				    console.error(error);
+				    
 					reject(error);
 				});
 

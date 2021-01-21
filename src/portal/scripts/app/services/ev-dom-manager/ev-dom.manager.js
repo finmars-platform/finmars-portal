@@ -918,13 +918,21 @@
 
     var calculateTotalHeight = function (evDataService) {
 
-        var unfoldedGroups = evDataHelper.getUnfoldedGroups(evDataService);
+        // var unfoldedGroups = evDataHelper.getUnfoldedGroups(evDataService);
+        //
+        // var count = 0;
+        //
+        // unfoldedGroups.forEach(function (group) {
+        //     count = count + group.results.length + 1; // 1 for control row
+        // });
+        //
+        // var rowHeight = evDataService.getRowHeight();
+        //
+        // var extraHeight = 10 * rowHeight;
+        //
+        // return Math.floor(rowHeight * count) + extraHeight;
 
-        var count = 0;
-
-        unfoldedGroups.forEach(function (group) {
-            count = count + group.results.length + 1; // 1 for control row
-        });
+        var count = evDataService.getFlatList().length;
 
         var rowHeight = evDataService.getRowHeight();
 
@@ -1018,7 +1026,7 @@
         var totalHeight = calculateTotalHeight(evDataService);
 
         evScrollManager.setContentElemHeight(totalHeight);
-        evScrollManager.setContentElemPaddingTop(paddingTop);
+        // evScrollManager.setContentElemPaddingTop(paddingTop);
 
     };
 
@@ -1067,31 +1075,45 @@
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
-            console.log('View Context: ' + evDataService.getViewContext() + '. addScrollListener.viewportElem', viewportElem);
-            console.log('View Context: ' + evDataService.getViewContext() + '. addScrollListener. contentWrapElem', contentWrapElem);
+            var rowHeight = evDataService.getRowHeight();
+            var from = Math.ceil(viewportElem.scrollTop / rowHeight);
+            var lastFrom = evDataService.getProjectionLastFrom();
 
-            // if (lastScrollTop && lastScrollTop > viewportElem.scrollTop) {
-            //     direction = 'top'
-            // }
-            //
-            // if (lastScrollTop && lastScrollTop < viewportElem.scrollTop) {
-            //     direction = 'bottom'
-            // }
-
-            // evDataService.setVirtualScrollDirection(direction);
-            // evDataService.setVirtualScrollPreviousOffsetPx(lastScrollTop);
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
 
+            var step = evDataService.getVirtualScrollStep();
+            var halfstep = step / 2;
 
-            // calculateScroll(elements, evDataService);
+            // Example
+            // step = 200 rendered rows
+            // Users see 100 rows before Viewport, N rows in viewport and step - 100 - N after viewport
+            // Render happened, we render rows from 0 to 99, because we start from 0
+            // halfstep - (halfstep / 4) = 75, that means, we will render next step as
+            // from 0 - to 175 (+- 100)
+            // And so on
 
-            paddingTop = calculatePaddingTop(evDataService);
-            evScrollManager.setContentElemPaddingTop(paddingTop);
-            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+            // If we scroll upwards
+            // lets start lastFrom = 500
+            // it means we render from 300 and to 599
+            // step threshold is still 75
+            // lets scroll to from = 400
+            // 500 - 400 = 100 its bigger then 75
+            // lastFrom = 400 now,
+            // It means we render from 300 to 499
 
-            // lastScrollTop = viewportElem.scrollTop;
+            if (from < lastFrom) {
+                if(Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            } else {
+                if(Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            }
 
-        }, 10);
+            calculateScroll(elements, evDataService, evScrollManager)
+
+        }, 100);
 
         var scrollXHandler = function () {
 

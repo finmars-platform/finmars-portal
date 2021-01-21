@@ -35,13 +35,25 @@
 				scope.fullTextEnabled = false;
 				scope.fullText = {value: scope.model}
 
-				// TIPS
-				// scope.smallOptions probable properties
-					// tooltipText: custom tolltip text
-					// notNull: turn on error mode if field is not filled
-					// noIndicatorBtn: whether to show button at the right part of input
-					// readonly: making input readonly
-					// dialogParent: 'string' - querySelector content for element to insert mdDialog into
+				/*
+				TIPS
+				customButtons
+					iconObj,
+                    tooltip: string with tooltip text,
+                    caption: string,
+                    classes: string with classes for elem,
+                    action: Object
+                    	key: identifier for an action
+                    	callback: function
+                    	parameters: parameter object for callback function
+
+				scope.smallOptions probable properties
+				  tooltipText: custom tolltip text
+				  notNull: turn on error mode if field is not filled
+				  noIndicatorBtn: whether to show button at the right part of input
+				  readonly: making input readonly
+				  dialogParent: 'string' - querySelector content for element to insert mdDialog into
+				 */
 
 				if (scope.smallOptions) {
 
@@ -65,9 +77,9 @@
 					} else if (stylePreset) {
 						classes = 'custom-input-preset' + stylePreset;
 
-			} else if (scope.valueIsValid) {
-				classes = 'custom-input-is-valid';
-			}
+					} else if (scope.valueIsValid) {
+						classes = 'custom-input-is-valid';
+					}
 
 					if (scope.noIndicatorBtn) {
 						classes += " no-indicator-btn";
@@ -299,15 +311,32 @@
 							inputContainer.classList.add("custom-input-full-text-focused");
 							fullTextElem.focus();
 
-						});
+							fullTextWrapper.addEventListener("mouseleave", function () {
 
-						fullTextWrapper.addEventListener("mouseleave", function () {
-							fullTextElem.blur();
+								fullTextElem.blur();
+
+							}, {once: true});
+
 						});
 
 						fullTextElem.addEventListener("blur", closeFulltext);
 
 					}
+
+					fullTextElem.addEventListener("blur", function () {
+
+						inputContainer.classList.remove("custom-input-full-text-focused");
+
+						if (scope.onBlurCallback) {
+
+							setTimeout(function () {
+								// without timeout changes will be discarded on fast blur
+								scope.onBlurCallback();
+							}, 250);
+
+						}
+
+					});
 
 				};
 
