@@ -58,7 +58,7 @@
     </div>
   </div>
 
-  <div ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
+    <div ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
 
     <date-input
       label="{{getName()}}"
@@ -145,4 +145,16 @@
                           item-change="itemChange()">
     </ev-selector-resolver>
   </div>
+
+  <div data-ng-if="fieldType['display_name'] === 'Button'">
+    <div class="custom-input-container">
+      <md-button class="md-raised md-primary" data-ng-click="recalculate()">
+        {{getName()}}
+      </md-button>
+    </div>
+
+
+  </div>
+
+
 </div>

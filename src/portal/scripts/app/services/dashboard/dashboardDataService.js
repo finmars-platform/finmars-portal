@@ -9,6 +9,8 @@
             }
         };
 
+        var projection;
+
         var data = {
             listLayout: null
         };
@@ -26,6 +28,14 @@
 
         function getData() {
             return layoutData
+        }
+
+        function setProjection(projectionData) {
+            projection = projectionData
+        }
+
+        function getProjection() {
+            return projection
         }
 
         function setAllComponentsOutputs(compsOutputs) {
@@ -166,6 +176,10 @@
             getData: getData,
             setListLayout: setListLayout,
             getListLayout: getListLayout,
+
+
+            setProjection: setProjection,
+            getProjection: getProjection,
 
             setAllComponentsOutputs: setAllComponentsOutputs,
             getAllComponentsOutputs: getAllComponentsOutputs,

@@ -467,6 +467,37 @@
 
                     </div>
 
+                    <div data-ng-if="vm.entityType == 'balance-report'">
+
+                        <h2>Exposure details</h2>
+
+                        <div layout="row">
+
+                            <md-input-container>
+                                <md-checkbox data-ng-model="vm.reportOptions.show_balance_exposure_details">
+                                    Show exposure details
+                                </md-checkbox>
+                            </md-input-container>
+
+                        </div>
+
+                        <h2>Market Value/Exposure % calculation grouping</h2>
+
+                        <div layout="row">
+                            <md-radio-group ng-model="vm.reportOptions.calculationGroup" layout="row">
+
+                                <md-radio-button value="portfolio" class="md-primary">Portfolio</md-radio-button>
+                                <md-radio-button value="account" class="md-primary">Account</md-radio-button>
+                                <md-radio-button value="strategy1" class="md-primary">Strategy 1</md-radio-button>
+                                <md-radio-button value="strategy2" class="md-primary">Strategy 2</md-radio-button>
+                                <md-radio-button value="strategy3" class="md-primary">Strategy 3</md-radio-button>
+
+                            </md-radio-group>
+
+                        </div>
+
+                    </div>
+
                     <div data-ng-if="vm.entityType == 'balance-report' || vm.entityType == 'pl-report'">
 
                         <h2>Transaction details</h2>

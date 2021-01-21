@@ -25,9 +25,15 @@
     </md-dialog-content>
 
     <md-dialog-actions>
-        <md-button ng-click="vm.close()">
-            Close
-        </md-button>
+        <div class="width-100 flex-row flex_cb">
+            <md-button ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+
+            <md-button ng-click="vm.agree()">
+                Save
+            </md-button>
+        </div>
 
         <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
                                data-elem-to-resize="vm.dialogElemToResize"
