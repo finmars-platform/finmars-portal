@@ -485,6 +485,9 @@
                 case 'control':
                     verboseName = 'Control';
                     break;
+                case 'accordion':
+                    verboseName = 'Accordion';
+                    break;
                 case 'button_set':
                     verboseName = 'Button Set';
                     break;
@@ -713,6 +716,10 @@
                                 targetRow.columns[column_number].cell_type = 'component';
                                 targetRow.columns[column_number].data.type = JSON.parse(JSON.stringify(component.type));
                                 targetRow.columns[column_number].data.id = component_id;
+
+                            }
+
+                            if (newColComponentType === 'accordion') {
 
                             }
 
@@ -1186,6 +1193,10 @@
                 editorController: 'DashboardConstructorControlComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html'
             },
+            accordion: {
+                editorController: 'DashboardConstructorAccordionComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-accordion-component-dialog-view.html'
+            },
             report_viewer: {
                 editorController: 'DashboardConstructorReportViewerComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html'
@@ -1528,6 +1539,7 @@
 
         };
 
+        // DEPRECATED SINCE 01.2021
         vm.clearProxyAccordions = function (layout) {
 
             layout.data.tabs.forEach(function (tab) {
@@ -1550,6 +1562,7 @@
 
         }
 
+        // DEPRECATED SINCE 01.2021
         vm.updateProxyAccordions = function () {
 
             vm.layout.data.tabs.forEach(function (tab) {
@@ -1606,6 +1619,7 @@
 
         }
 
+        // DEPRECATED SINCE 01.2021
         vm.isAccordionOverlapped = function (index, tab) {
 
             var overlappedIndexes = [];
