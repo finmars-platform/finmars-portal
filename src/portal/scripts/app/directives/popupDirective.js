@@ -215,7 +215,7 @@
 
                     	/* var contentElem = popupTemplate.querySelector('.popup-content-template');
                         contentElem.innerHTML = scope.popupTemplate; */
-						popUpElem.innerHtml = scope.popupTemplate;
+						popUpElem.innerHTML = scope.popupTemplate;
                     }
 
 					$compile(popUpElem)(scope);

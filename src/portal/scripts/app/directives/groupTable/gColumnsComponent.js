@@ -55,6 +55,10 @@
 
                 };
 
+                scope.isSubtotalWeightedShouldBeExcluded = function (column) {
+                    return ['market_value', 'market_value_percent', 'exposure', 'exposure_percent'].some(excludedKey => column.key === excludedKey);
+                }
+
                 // Victor 2020.12.11 scope.notGroupingColumns should update on any scope.columns or scope.groups change (if not dispatched evEvents.COLUMNS_CHANGE)
                 scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                 console.log('#69 scope.notGroupingColumns', scope.notGroupingColumns)
@@ -87,23 +91,24 @@
                         $index: $index,
                         column: column,
                         viewContext: scope.viewContext,
-                        renameColumn: scope.renameColumn, // + 1
+                        renameColumn: scope.renameColumn,
                         isReport: scope.isReport,
                         columnHasCorrespondingGroup: scope.columnHasCorrespondingGroup,
-                        addColumnEntityToGrouping: scope.addColumnEntityToGrouping, // + 5
+                        addColumnEntityToGrouping: scope.addColumnEntityToGrouping,
                         checkForFilteringBySameAttr: scope.checkForFilteringBySameAttr,
-                        addFiltersWithColAttr: scope.addFiltersWithColAttr, // + 6
+                        addFiltersWithColAttr: scope.addFiltersWithColAttr,
                         activateColumnNumberRenderingPreset: scope.activateColumnNumberRenderingPreset,
                         openColumnNumbersRenderingSettings: scope.openColumnNumbersRenderingSettings,
-                        selectSubtotalType: scope.selectSubtotalType, // + 8
+                        selectSubtotalType: scope.selectSubtotalType,
                         checkSubtotalFormula: scope.checkSubtotalFormula,
-                        resizeColumn: scope.resizeColumn, // + 4
-                        removeColumn: scope.removeColumn, // + 3
+                        resizeColumn: scope.resizeColumn,
+                        removeColumn: scope.removeColumn,
 
-                        changeColumnTextAlign: scope.changeColumnTextAlign, // + 7
+                        changeColumnTextAlign: scope.changeColumnTextAlign,
                         checkColTextAlign: scope.checkColTextAlign,
-                        removeGroup: scope.removeGroup, // + 2
-                        reportHideSubtotal: scope.reportHideSubtotal //
+                        removeGroup: scope.removeGroup,
+                        reportHideSubtotal: scope.reportHideSubtotal,
+                        isSubtotalWeightedShouldBeExcluded: scope.isSubtotalWeightedShouldBeExcluded
                     };
 
                     const groups = scope.evDataService.getGroups();
