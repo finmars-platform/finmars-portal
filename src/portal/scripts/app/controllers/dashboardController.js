@@ -28,15 +28,6 @@
 
         vm.processing = false;
 
-        vm.toggleAccordion = function ($event, accordion) {
-
-            accordion.folded = !accordion.folded;
-
-            setTimeout(function () {
-                vm.dashboardEventService.dispatchEvent(dashboardEvents.RESIZE);
-            }, 100); // need for resize query .folded rows
-        }
-
         vm.generateProjection = function (layout) {
 
             var result = [];
