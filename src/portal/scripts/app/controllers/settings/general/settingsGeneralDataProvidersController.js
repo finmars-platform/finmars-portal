@@ -137,8 +137,6 @@
 
         vm.testBloombergCall = function ($event) {
 
-            console.log("Test bloomberg request")
-
             vm.testCertificateConfig = {};
             vm.testCertificateProcessing = true;
 

@@ -67,8 +67,8 @@
         vm.entityId = entityId;
 
         vm.entity = {$_isValid: true};
-        var dataConstructorLayout = {};
-        var dcLayoutHasBeenFixed = false;
+		vm.dataConstructorLayout = {};
+		vm.dcLayoutHasBeenFixed = false;
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
@@ -1161,8 +1161,8 @@
                 // var result = entityEditorHelper.removeNullFields(vm.entity);
                 var result = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
 
-                if (dcLayoutHasBeenFixed) {
-                    uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+                if (vm.dcLayoutHasBeenFixed) {
+                    uiService.updateEditLayout(vm.dataConstructorLayout.id, vm.dataConstructorLayout);
                 }
 
                 vm.processing = true;
@@ -1185,7 +1185,8 @@
                             metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                         } else {
-							vm.entity.modified = responseData.modified
+							vm.entity = responseData;
+							vm.entity.$_isValid = true;
 						}
 
 
@@ -2063,7 +2064,8 @@
             vm.getCurrencies();
 
             vm.getItem().then(function () {
-                getEntityStatus();
+
+            	getEntityStatus();
 
 				entityViewerHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
 
