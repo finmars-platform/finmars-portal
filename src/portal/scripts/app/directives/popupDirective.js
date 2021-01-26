@@ -243,7 +243,6 @@
                 }
 
 				let removePopUp = function (event) {
-                    console.log('#69 removePopUp', event)
 
 					document.body.removeChild(popupBackdropElem);
 					document.body.removeChild(popupElem);
@@ -280,7 +279,7 @@
 
 					}
 
-                }
+                };
 
                 scope.save = function () {
 
@@ -298,15 +297,15 @@
 					scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
                 };
 
-                const getOpenEvent =function (openOn) {
-                    switch (openOn) {
-                        case 'right_click':
-                            return 'contextmenu';
-                        case 'mouse_over':
-                            return 'mouseenter';
-                        default:
-                            return 'click';
-                    };
+                const onTargetElementMouseEnter = function (event) {
+
+                    if (scope.isPopupOpen) {
+                        return;
+                    }
+
+                    createPopup();
+                    setPopupPosition(event);
+
                 };
 
                 const onElementMouseLeave = function (event) {
@@ -321,13 +320,24 @@
 
                 };
 
+                const getOpenEvent =function (openOn) {
+                    switch (openOn) {
+                        case 'right_click':
+                            return {event: 'contextmenu', handler: scope.onTargetElementClick};
+                        case 'mouse_over':
+                            return {event: 'mouseenter', handler: onTargetElementMouseEnter};
+                        default:
+                            return {event: 'click', handler: scope.onTargetElementClick};
+                    }
+                };
+
                 scope.init = function () {
 
                 	if (scope.openOn) {
 
-                		let openEvent = getOpenEvent(scope.openOn);
+                		const {event, handler}  = getOpenEvent(scope.openOn);
 
-						elem[0].addEventListener(openEvent, scope.onTargetElementClick);
+						elem[0].addEventListener(event, handler);
 
 					}
 
