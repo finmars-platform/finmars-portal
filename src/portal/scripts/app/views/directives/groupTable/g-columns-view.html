@@ -874,6 +874,7 @@
                     <md-button class="g-group-button flex-row"
                                data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')"
                                popup
+                               popup-id="{{column.key}}"
                                popup-template-url="{{getPopupMenuTemplate(column)}}"
                                position-relative-to="mouse"
                                open-on="right_click"
@@ -931,6 +932,7 @@
                     <md-button class="g-group-button flex-row"
                                data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')"
                                popup
+                               popup-id="{{column.key}}"
                                popup-template-url="{{getPopupMenuTemplate(column)}}"
                                position-relative-to="mouse"
                                open-on="right_click"
