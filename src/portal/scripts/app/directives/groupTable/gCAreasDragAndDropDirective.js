@@ -22,6 +22,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.entityType = scope.evDataService.getEntityType();
+                scope.viewContext = scope.evDataService.getViewContext();
 
                 var entityType = scope.evDataService.getEntityType();
                 var isReport = metaService.isReport(entityType);
@@ -482,7 +483,6 @@
 						const drake = this.dragula;
 
                         let columnsHolder = scope.contentWrapElement.querySelector('.gColumnsHolder');
-
                         let groupsHolder = scope.contentWrapElement.querySelector('.gGroupsHolder');
 
 						const filtersHolder = scope.contentWrapElement.querySelector('.gFiltersHolder');
@@ -494,6 +494,7 @@
 
 							areaItemsChanged = false;
 
+                            scope.viewContext !== 'dashboard' &&
                             [filtersHolder, removeAreaHolder, leftSideGroupsHolder].forEach(holder => {
 
                                 holder.style.display = 'block';
@@ -600,7 +601,11 @@
 									let elemAttrKey = htmlElems[i].dataset.attrKey;
 									let GCitem = GCitems.find(item => item.key === elemAttrKey);
 
-									itemsAfterDragging.push(GCitem);
+									if (GCitem) {
+
+                                        itemsAfterDragging.push(GCitem);
+
+                                    }
 
 								}
 								var isChanged = false;
@@ -816,7 +821,6 @@
                                 }
 
                                 else if (target === leftSideGroupsHolder) {
-                                    console.log('#69 target leftSideGroupsHolder', target)
                                     drake.cancel();
                                 }
 
@@ -828,6 +832,7 @@
 
 						    [columnsHolder, groupsHolder].forEach(holder => holder.classList.remove('container-shadowed'));
 
+                            scope.viewContext !== 'dashboard' &&
                             [filtersHolder, removeAreaHolder, leftSideGroupsHolder].forEach(holder => {
 
                                 holder.style.display = 'none';
@@ -845,19 +850,20 @@
 
 					dragulaInit: function () {
 
+                        const columnsHolder = scope.contentWrapElement.querySelector('.gColumnsHolder');
+
                         const groupsHolder = scope.contentWrapElement.querySelector('.gGroupsHolder');
                         const leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
-                        const columnsHolder = scope.contentWrapElement.querySelector('.gColumnsHolder');
                         const filtersHolder = scope.contentWrapElement.querySelector('.gFiltersHolder');
                         const removeAreaHolder = scope.contentWrapElement.querySelector('.gRemoveAreaHolder');
 
-						var items = [
-                            groupsHolder,
-                            leftSideGroupsHolder,
-                            columnsHolder,
-                            filtersHolder,
-                            removeAreaHolder
-						];
+                        let items = [columnsHolder];
+
+                        if (scope.viewContext !== 'dashboard') {
+
+                            items = items.concat([groupsHolder, leftSideGroupsHolder, filtersHolder, removeAreaHolder]);
+
+                        }
 
 						if (isReport) {
 
