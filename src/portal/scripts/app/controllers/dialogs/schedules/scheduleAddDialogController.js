@@ -9,10 +9,7 @@
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
     var dataProcedureService = require('../../../services/procedures/dataProcedureService');
 
-    const ScrollHelper = require('../../../helpers/scrollHelper');
-    const scrollHelper = new ScrollHelper();
-
-    const schedulesHelper = require('../../../helpers/schedules.helper')
+    const schedulesHelper = require('../../../helpers/schedules.helper');
 
     module.exports = function scheduleAddDialogController($scope, $mdDialog, data) {
 
@@ -183,77 +180,6 @@
             vm.dragIconGrabbed = true;
             document.body.addEventListener('mouseup', turnOffDragging, {once: true});
         };
-
-/*        vm.dragAndDrop = {
-            init: function () {
-                this.dragulaInit();
-                this.eventListeners();
-                vm.dragAndDropInited = true;
-            },
-
-            eventListeners: function () {
-                var drake = this.dragula;
-
-                drake.on('drag', function () {
-                    scrollHelper.enableDnDWheelScroll();
-                });
-
-                drake.on('drop', function (elem, target, source, nextSiblings) {
-
-                    var draggedRowOrder = parseInt(elem.dataset.rowOrder);
-                    var siblingRowOrder = null;
-                    if (nextSiblings) {
-                        siblingRowOrder = parseInt(nextSiblings.dataset.rowOrder);
-                    }
-
-                    var rowToInsert = vm.schedule.procedures[draggedRowOrder];
-                    vm.schedule.procedures.splice(draggedRowOrder, 1);
-
-                    if (siblingRowOrder !== null) {
-
-                        for (var i = 0; i < vm.schedule.procedures.length; i++) {
-                            if (vm.schedule.procedures[i].order === siblingRowOrder) {
-
-                                vm.schedule.procedures.splice(i, 0, rowToInsert);
-                                break;
-
-                            }
-                        }
-
-                    } else {
-                        vm.schedule.procedures.push(rowToInsert);
-                    }
-
-                    for (var i = 0; i < vm.schedule.procedures.length; i++) {
-                        vm.schedule.procedures[i].order = i;
-                    }
-
-                    $scope.$apply();
-
-                });
-
-                drake.on('dragend', function (elem) {
-                    scrollHelper.disableDnDWheelScroll();
-                });
-            },
-
-            dragulaInit: function () {
-                var items = [
-                    document.querySelector('.pricingSchedulesTableRowsHolder')
-                ];
-
-                this.dragula = dragula(items, {
-                    moves: function () {
-                        if (vm.dragIconGrabbed) {
-                            return true;
-                        }
-
-                        return false;
-                    },
-                    revertOnSpill: true
-                })
-            }
-        };*/
 
         vm.dragAndDrop = schedulesHelper.createDragAndDropObject($scope, vm);
 
