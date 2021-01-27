@@ -12,6 +12,8 @@
     const ScrollHelper = require('../../../helpers/scrollHelper');
     const scrollHelper = new ScrollHelper();
 
+    const schedulesHelper = require('../../../helpers/schedules.helper')
+
     module.exports = function scheduleAddDialogController($scope, $mdDialog, data) {
 
         var vm = this;
@@ -19,7 +21,9 @@
         vm.readyStatus = {pricingProcedures: false};
 
         vm.days = [];
-        vm.schedule = {};
+        vm.schedule = {
+            procedures: []
+        };
 
         vm.cron = {
             periodicity: 1
@@ -180,7 +184,7 @@
             document.body.addEventListener('mouseup', turnOffDragging, {once: true});
         };
 
-        vm.dragAndDrop = {
+/*        vm.dragAndDrop = {
             init: function () {
                 this.dragulaInit();
                 this.eventListeners();
@@ -249,7 +253,9 @@
                     revertOnSpill: true
                 })
             }
-        };
+        };*/
+
+        vm.dragAndDrop = schedulesHelper.createDragAndDropObject($scope, vm);
 
         vm.init = function () {
             vm.getPricingProcedures();
