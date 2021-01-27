@@ -1245,9 +1245,6 @@
 
       &.g-table-header-group-cell {
         padding-right: 0;
-        .g-group-button {
-        }
-
       }
 
       .column-name-wrapper {
@@ -1277,6 +1274,22 @@
     .g-table-header-cell-wrapper {
       position: relative;
 
+      &:hover {
+        background-color: rgba(158,158,158,0.2);
+
+        .g-group-button:not([disabled]) {
+          background-color: inherit;
+        }
+
+        .resize-slider {
+          background-color: rgba(158,158,158,0.2);
+        }
+      }
+
+      .g-group-button:not([disabled]):hover {
+        background-color: rgba(158,158,158,0.2);
+      }
+
       .resize-slider {
         width: 3px;
         height: 100%;
@@ -1286,6 +1299,10 @@
         top: 0;
         cursor: col-resize;
         border-right: 1px solid @g-table-border-color;
+
+        &:hover {
+          background-color: rgba(158,158,158,0.2);
+        }
       }
 
     }
