@@ -820,7 +820,6 @@
                         //originalEntity = JSON.parse(angular.toJson(vm.entity));
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
 
-
                         vm.processing = false;
                         $scope.$apply();
 

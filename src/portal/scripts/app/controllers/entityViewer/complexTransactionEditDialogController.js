@@ -74,11 +74,11 @@
         vm.baseTransactions = [];
         vm.reconFields = [];
 
-    vm.tabsWithErrors = {};
-    vm.errorFieldsList = [];
-    vm.inputsWithCalculations = null;
+		vm.tabsWithErrors = {};
+		vm.errorFieldsList = [];
+		vm.inputsWithCalculations = null;
 
-    var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
+		var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 
         /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
@@ -1175,7 +1175,9 @@
                     }
                 })
 
-            } else {
+            }
+
+            else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -1238,6 +1240,7 @@
                             vm.processing = false;
 
                             resolve(data);
+
                         }).catch(function (data) {
 
                             if (data.hasOwnProperty('message') && data.message.reason == 410) {

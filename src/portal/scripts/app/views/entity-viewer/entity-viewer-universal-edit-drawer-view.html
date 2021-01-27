@@ -1,0 +1,217 @@
+<!--Victor 2020.11.02 This view implements new design for all entities.-->
+<!--Now I develop new design for: instruments, ... -->
+<!--When all entities will have new design, we can rename entity-viewer-universal-edit-drawer-view.html to  entity-viewer-edit-drawer-view.html -->
+<div class="big-drawer-content universal-editor">
+    <div class="big-drawer-header">
+
+        <div data-ng-if="vm.checkReadyStatus()"
+             data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
+
+            <h2 ng-if="vm.hasEditPermission" class="big-drawer-header-h">Edit {{vm.entityTypeSlug()}}</h2>
+            <h2 ng-if="!vm.hasEditPermission" class="big-drawer-header-h">View {{vm.entityTypeSlug()}}</h2>
+
+            <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">
+                <ng-md-icon icon="lock" size="24">
+                        <md-tooltip md-direction="bottom">You don't have permission to edit this form</md-tooltip>
+                </ng-md-icon>
+            </span>
+
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+                — Processing
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="big-drawer-main"
+         data-ng-include="'views/entity-viewer/entity-viewer-universal-edit-content-view.html'"></div>
+
+    <div class="big-drawer-footer big-drawer-actions flex-row fc-space-between">
+
+        <div layout="row">
+            <md-button class="link-button" ng-click="vm.cancel()">
+                <span data-ng-if="vm.entityType !== 'transaction'">Cancel</span>
+                <span data-ng-if="vm.entityType === 'transaction'">Close</span>
+            </md-button>
+        </div>
+
+        <div style="margin-right: 10px;">
+<!--            <md-button ng-click="" class="md-raised">-->
+<!--                <div class="flex-row flex-c-center">-->
+<!--                    <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>-->
+<!--                </div>-->
+<!--                -->
+<!--                -->
+<!--                -->
+<!--            </md-button>-->
+
+            <md-menu md-position-mode="target-right target">
+
+                <md-button class="outline-button" ng-click="$mdOpenMenu($event)">
+                    <div class="flex-row flex-c-center">
+                        <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>
+                    </div>
+                </md-button>
+
+                <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
+
+                    <md-menu-item data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType != 'transaction'">
+                        <md-button ng-click="vm.copy()"
+                                   data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Duplicate</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history' && vm.entityType != 'transaction'">
+                        <md-button ng-click="vm.copy()"
+                                   data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.hasEditPermission || vm.processing}">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Duplicate</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-divider></md-menu-divider>
+
+                    <md-menu-item>
+                        <md-button ng-click="vm.editLayout($event)">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="edit" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Edit Form</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item data-ng-if="vm.entityType != 'transaction'">
+                        <md-button ng-click="vm.manageAttrs($event)">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="list" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Manage Attributes</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item data-ng-if="vm.hasEnabledStatus && vm.entityType != 'transaction'">
+                        <md-button ng-click="vm.toggleEnableStatus()"
+                                   data-ng-class="{'disabled-btn': !vm.hasEditPermission || vm.processing}">
+
+                            <div class="flex-row flex-i-center" data-ng-if="vm.entity.is_enabled">
+                                <ng-md-icon icon="not_interested" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Disable</span>
+                            </div>
+
+                            <div class="flex-row flex-i-center"  data-ng-if="!vm.entity.is_enabled">
+                                <ng-md-icon icon="check_circle" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Enable</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+
+
+                    <md-menu-divider></md-menu-divider>
+
+                    <md-menu-item data-ng-if="vm.entityType != 'transaction'">
+                        <md-button ng-click="vm.delete($event)"
+                                   data-ng-class="{'disabled-btn': !vm.hasEditPermission || vm.processing}">
+                            <div class="flex-row flex-i-center color-delete">
+                                <ng-md-icon icon="delete" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Delete</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                </md-menu-content>
+            </md-menu>
+
+<!--            Victor 2020.10.30 moved to md-menu-->
+<!--            <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
+                Edit Form
+            </md-button>-->
+
+<!--            Victor 2020.10.30 moved to md-menu-->
+<!--            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" data-ng-if="vm.entityType != 'transaction'">
+                            Manage attributes
+                        </md-button>-->
+
+<!--            Victor 2020.10.30 moved to md-menu-->
+<!--            <md-button
+                    data-ng-if="vm.hasEnabledStatus && vm.entityType != 'transaction'"
+                    ng-click="vm.toggleEnableStatus()"
+                    data-ng-class="{'disabled-btn': !vm.hasEditPermission || vm.processing}"
+                    class="md-raised">
+                <span data-ng-show="vm.entity.is_enabled">Disable</span>
+                <span data-ng-show="!vm.entity.is_enabled">Enable</span>
+            </md-button>-->
+
+            <!--<md-button
+                    data-ng-if="!vm.entity.is_enabled && vm.hasEnabledStatus && vm.entityType != 'transaction'"
+                    ng-click="vm.toggleEnableStatus()"
+                    data-ng-class="{'disabled-btn': !vm.hasEditPermission}"
+                    class="md-raised">
+
+            </md-button>-->
+
+<!--            Victor 2020.10.30 moved to md-menu-->
+<!--            <md-button
+                    data-ng-if="vm.entityType != 'transaction'"
+                    ng-click="vm.delete($event)"
+                    data-ng-class="{'disabled-btn': !vm.hasEditPermission || vm.processing}"
+                    class="md-raised md-warn">
+                Delete
+            </md-button>-->
+
+
+<!--            Victor 2020.10.30 moved to md-menu-->
+<!--            <md-button class="md-raised m-r-24" ng-click="vm.copy()" data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType != 'transaction'"
+                       ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing">
+                Make a copy
+            </md-button>
+
+            <md-button class="md-raised m-r-24" ng-click="vm.copy()" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history' && vm.entityType != 'transaction'"
+                       ng-disabled="!vm.checkReadyStatus() || !vm.hasEditPermission || vm.processing">
+                Make a copy
+            </md-button>-->
+
+            <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
+                       ng-click="vm.save($event, false)"
+                       class="outline-button">
+                Save
+            </md-button>
+            <md-button class="outline-button" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history'"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission || vm.processing}"
+                       ng-click="vm.save($event, false)">
+                Save
+            </md-button>
+
+            <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
+                       ng-click="vm.save($event, true)"
+                       class="m-r-24 primary-button">
+                Save and Exit
+            </md-button>
+            <md-button class="m-r-24 primary-button" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history'"
+                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission || vm.processing}"
+                       ng-click="vm.save($event, true)">
+                Save and Exit
+            </md-button>
+        </div>
+
+    </div>
+
+</div>

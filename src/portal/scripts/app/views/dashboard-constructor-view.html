@@ -151,9 +151,10 @@
                             <md-button class="md-raised"
                                        data-ng-click="vm.openTabsEditor($event)"
                                        data-ng-disabled="!vm.layout.data.tabs || vm.layout.data.tabs.length < 2">Change order of tabs</md-button>
-                            <md-button class="md-raised"
-                                       data-ng-click="vm.openAccordionEditor($event)"
-                                       data-ng-disabled="!vm.layout.data.tabs">Accordion manager</md-button>
+<!--                            Deprecated since 01.2021-->
+<!--                            <md-button class="md-raised"-->
+<!--                                       data-ng-click="vm.openAccordionEditor($event)"-->
+<!--                                       data-ng-disabled="!vm.layout.data.tabs">Accordion manager</md-button>-->
                         </div>
 
                         <div class="dashboard-constructor-tabs-holder">
@@ -196,31 +197,31 @@
                                              dashboard-constructor-data-service="vm.dashboardConstructorDataService"
                                              dashboard-constructor-event-service="vm.dashboardConstructorEventService"
                                              tab-number="tab.tab_number">
+<!--Deprecated since 01.2021-->
+<!--                                            <div class="dashboard-constructor-accordion-guide">-->
 
-                                            <div class="dashboard-constructor-accordion-guide">
+<!--                                                <div >-->
 
-                                                <div >
+<!--                                                    <div data-ng-repeat="item in tab.accordions track by $index"-->
+<!--                                                         class="accordion-constructor-row-accordion-guide" layout="column">-->
 
-                                                    <div data-ng-repeat="item in tab.accordions track by $index"
-                                                         class="accordion-constructor-row-accordion-guide" layout="column">
+<!--                                                        <div layout="row" data-ng-if="item.type === 'accordion'" style="margin: 0; padding: 8px; height: {{((item.to - item.from)+ 1) * 50}}px">-->
 
-                                                        <div layout="row" data-ng-if="item.type === 'accordion'" style="margin: 0; padding: 8px; height: {{((item.to - item.from)+ 1) * 50}}px">
+<!--                                                            <md-card title="{{item.name}}" class="width-100 p-8 accordion-constructor-row-accordion-guide-card" >-->
+<!--                                                                {{item.name}}-->
+<!--                                                            </md-card>-->
 
-                                                            <md-card title="{{item.name}}" class="width-100 p-8 accordion-constructor-row-accordion-guide-card" >
-                                                                {{item.name}}
-                                                            </md-card>
+<!--                                                        </div>-->
 
-                                                        </div>
+<!--                                                        <div layout="row" data-ng-if="item.type != 'accordion' && !vm.isAccordionOverlapped($index, tab)" style="height: 50px;">-->
 
-                                                        <div layout="row" data-ng-if="item.type != 'accordion' && !vm.isAccordionOverlapped($index, tab)" style="height: 50px;">
+<!--                                                        </div>-->
 
-                                                        </div>
+<!--                                                    </div>-->
 
-                                                    </div>
+<!--                                                </div>-->
 
-                                                </div>
-
-                                            </div>
+<!--                                            </div>-->
 
                                             <div class="dashboard-layout position-relative">
 
@@ -319,6 +320,11 @@
                         </md-button>
 
                         <md-menu-content width="3">
+                            <md-menu-item>
+                                <md-button ng-click="vm.createComponent('accordion', $event)" class="g-settings-option-btn">
+                                    <span>Add Accordion</span>
+                                </md-button>
+                            </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="vm.createComponent('control', $event)" class="g-settings-option-btn">
                                     <span>Add Control</span>
