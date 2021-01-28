@@ -32,7 +32,16 @@
             if (!vm.cron.day) {
                 vm.cron.day = [];
             }
-            vm.cron.day.push(day);
+
+            if (vm.cron.day.indexOf(day) === -1) {
+                vm.cron.day.push(day);
+            } else {
+                vm.cron.day = vm.cron.day.filter(function (day_number){
+                    return day_number !== day
+                })
+            }
+
+
         };
 
         vm.resetCronExpr = function () {
@@ -113,8 +122,11 @@
             vm.schedule.is_enabled = true;
 
             console.log('cron.time', vm.cron.time);
+            console.log('vm.cron.', vm.cron);
             console.log('minutes', minutes);
             console.log('hours', hours);
+
+            vm.cron.periodicity = parseInt(vm.cron.periodicity, 10);
 
             if (vm.cron.periodicity === 1) {
                 console.log(parseInt(minutes) + ' ' + parseInt(hours) + ' * * *');
@@ -122,12 +134,14 @@
             }
             if (vm.cron.periodicity === 2) {
                 //console.log(minutes + ' ' + parseInt(hours) + ' * * ' + vm.cron.day);
-                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' * * ' + vm.cron.day;
+                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' * * ' + vm.cron.day.join(',');
             }
             if (vm.cron.periodicity === 3) {
                 //console.log(minutes + ' ' + parseInt(hours) + ' * ' + vm.cron.month + ' ' + vm.cron.day);
-                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day + ' ' + vm.cron.month + ' *'
+                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day.join(',') + ' ' + vm.cron.month.join(',') + ' *'
             }
+
+            console.log('vm.schedule', vm.schedule)
 
             scheduleService.update(vm.schedule.id, vm.schedule).then(function (data) {
 
