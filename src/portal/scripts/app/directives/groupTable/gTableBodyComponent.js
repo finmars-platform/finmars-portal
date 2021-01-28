@@ -63,9 +63,38 @@
 
                 var activeLayoutConfigIsSet = false;
 
+                const getColoredSubtotals = function () {
+                    const flatList = scope.evDataService.getFlatList();
+
+                    const coloredItems = flatList.filter(item => !!item.___backgrond_color);
+                    const coloredRows = {};
+
+                    coloredItems.forEach(item => {
+
+                        coloredRows[item.___id] = item.___backgrond_color
+
+                    });
+
+                    return coloredRows;
+                };
+
+                const setColorsForSubtotals = function (flatList, coloredSubtotals) {
+
+                    return flatList.map(item => {
+                        if (coloredSubtotals.hasOwnProperty(item.___id)) {
+                            item.___backgrond_color = coloredSubtotals[item.___id];
+                        }
+
+                        return item;
+                    })
+
+                };
+
                 function renderReportViewer() {
 
                     console.log('renderReportViewer');
+
+                    const coloredSubtotals = getColoredSubtotals();
 
                     rvDataHelper.syncLevelFold(scope.evDataService);
 
@@ -98,7 +127,7 @@
                     });
                     console.log("flat list", flatList);
 
-
+                    flatList = setColorsForSubtotals(flatList, coloredSubtotals);
 
                     scope.evDataService.setFlatList(flatList);
 
