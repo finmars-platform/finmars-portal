@@ -187,7 +187,7 @@
 
         document.addEventListener('keyup', function (event) {
 
-            if (event.keyCode === 96 || event.key === '`' || event.keyCode === 1105 || event.key === 'ё') {
+            if (event.key === '`' || event.key === 'ё' || event.key === '~') {
 
                 if (consoleStatus === 'hidden') {
 
