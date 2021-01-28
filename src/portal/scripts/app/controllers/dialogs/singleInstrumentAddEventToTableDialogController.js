@@ -261,14 +261,15 @@
 
         vm.agree = function () {
             var hashTableOfButtonPositions = {};
-            var buttonPositionWithSameValue = false;
+            var buttonPositionNotValid = false;
 
             for (var i = 0; i < vm.event.actions.length; i++) {
-                var prop = vm.event.actions[i].button_position;
 
-                if (hashTableOfButtonPositions.hasOwnProperty(prop)) {
+            	var prop = vm.event.actions[i].button_position;
 
-                    buttonPositionWithSameValue = true;
+                if ((!prop && prop !== 0) || hashTableOfButtonPositions.hasOwnProperty(prop)) {
+
+					buttonPositionNotValid = true;
                     break;
 
                 } else {
@@ -279,7 +280,7 @@
 
             }
 
-            if (buttonPositionWithSameValue) {
+            if (buttonPositionNotValid) {
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
@@ -308,6 +309,42 @@
 
         };
 
+        const getTransactionTypes = function () {
+
+        	let ttypeList = [];
+
+        	let options = {
+				pageSize: 1000,
+				page: 1
+			}
+
+			const loadAllPages = (resolve, reject) => {
+
+        		transactionTypeService.getListLight(options).then(function (data) {
+
+					ttypeList = ttypeList.concat(data.results);
+
+					if (data.next) {
+
+						options.page = options.page + 1;
+						loadAllPages(resolve, reject);
+
+					} else {
+						resolve(ttypeList);
+					}
+
+				}).catch(error => reject(error));
+
+			};
+
+			return new Promise((resolve, reject) => {
+
+				loadAllPages(resolve, reject);
+
+			});
+
+		}
+
         vm.init = function () {
 
             vm.eventActionsGridTableDataService = new GridTableDataService();
@@ -315,9 +352,11 @@
 
             initGridTableEvents();
 
-            transactionTypeService.getListLight().then(function (data) {
+            // transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
+			getTransactionTypes().then(data => {
 
-            	vm.transactionTypes = data.results;
+            	// vm.transactionTypes = data.results;
+				vm.transactionTypes = data;
 
 				formatDataForActionsGridTable();
 

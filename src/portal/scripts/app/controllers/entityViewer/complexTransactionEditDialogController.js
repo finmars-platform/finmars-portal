@@ -1240,6 +1240,7 @@
                             vm.processing = false;
 
                             resolve(data);
+
                         }).catch(function (data) {
 
                             if (data.hasOwnProperty('message') && data.message.reason == 410) {
