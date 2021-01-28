@@ -105,7 +105,7 @@
 				   class="two-fields-filter-input">
 
             <div class="selected-options-field two-fields-options twoFieldsSelRowsContainer">
-				<div ng-repeat="sOption in selectedOptions | orderBy: selOptionsOrderSettings | filter: {name: selOptionsFilter} as results track by sOption.id"
+				<div ng-repeat="sOption in selectedOptions | orderBy: selOptionsOrderSettings | filter: {[nameProperty]: selOptionsFilter} as results track by sOption.id"
                      class="two-fields-selected-option two-fields-option"
                      ng-class="{'active-option': sOption.isActive}"
                      data-ng-click="sOption.isActive = !sOption.isActive"
