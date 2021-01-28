@@ -62,9 +62,9 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     var toastNotificationService = require('../../core/services/toastNotificationService');
 
 
-    window.developerConsoleService = developerConsoleService;
+    // window.developerConsoleService = developerConsoleService;
 
-    developerConsoleService.init();
+    // developerConsoleService.init();
 
     try {
 
