@@ -399,6 +399,10 @@
 			rowClassList.push('proxyline');
         }
 
+        if (obj.___backgrond_color) {
+            rowClassList.push('g-row-marked-' + obj.___backgrond_color)
+        }
+
         var is_activated = false;
         var subtotal_type;
 
@@ -446,8 +450,7 @@
 				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
 			}
 
-			// TODO find out whether mark row should work for subtotals
-			rowSettings = renderHelper.getRowSettings('disabled');
+			rowSettings = renderHelper.getRowSettings();
 
 		}
 

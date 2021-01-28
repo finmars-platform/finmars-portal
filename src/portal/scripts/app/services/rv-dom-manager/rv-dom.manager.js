@@ -1350,6 +1350,28 @@
     var markRowByColor = function (objectId, parentGroupHashId, evDataService, evEventService, color) {
 
 		var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+        if (obj === null) { // row is subtotal
+
+            const flatList = evDataService.getFlatList();
+            const subtotalIndex = flatList.findIndex(item => item.___id === objectId)
+
+            if (subtotalIndex === -1) {
+                return;
+            }
+
+            if (color === 'undo_mark_row') {
+                delete flatList[subtotalIndex].___backgrond_color
+            } else {
+                flatList[subtotalIndex].___backgrond_color = color;
+            }
+
+            evDataService.setFlatList(flatList);
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            return;
+
+        }
+
 		var markedReportRows = localStorage.getItem("marked_report_rows");
 
 		if (markedReportRows) {
@@ -1676,7 +1698,7 @@
 
     };
 
-	var addEventListenersForPopupMenuOpions = function (popupMenuElem, optionClickCallback) {
+	var addEventListenersForPopupMenuOptions = function (popupMenuElem, optionClickCallback) {
 
 		var colorOpts = popupMenuElem.querySelectorAll('.gPopupMenuOption');
 
@@ -1725,7 +1747,7 @@
 
 		};
 
-		addEventListenersForPopupMenuOpions(popup, onOptionClick);
+		addEventListenersForPopupMenuOptions(popup, onOptionClick);
 
 	};
 
@@ -1790,7 +1812,7 @@
 
 		};
 
-		addEventListenersForPopupMenuOpions(popup, onOptionClick);
+		addEventListenersForPopupMenuOptions(popup, onOptionClick);
 
 	}; */
 
