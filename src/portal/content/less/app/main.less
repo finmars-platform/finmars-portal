@@ -2934,6 +2934,21 @@ md-checkbox.md-indeterminate .md-icon:after {
   }
 }
 
+.md-button.align-button {
+  background-color: #ffffff;
+  color: @g-top-part-color;
+
+  &:hover {
+    color: @primary-button-color;
+  }
+
+  &.active {
+    color: @primary-button-color;
+    background-color: rgba(240, 90, 34, 0.1);
+  }
+
+}
+
 button.md-raised.md-warn.md-button {
   fill: #fff;
 }
@@ -3059,7 +3074,6 @@ button.md-raised.md-warn.md-button {
   display: flex;
   flex-direction: column;
   padding: 8px 0;
-  max-height: 304px;
   overflow-y: auto;
 
   .popup-menu-item {
@@ -3075,6 +3089,8 @@ button.md-raised.md-warn.md-button {
     padding-left: 16px;
     padding-right: 16px;
     width: 100%;
+
+    color: @g-top-part-color;
 
     ng-md-icon {
       position: relative;
@@ -3105,6 +3121,8 @@ button.md-raised.md-warn.md-button {
 }
 // <popup menu>
 @g-top-part-color: #747474;
+@primary-button-color: #f05a22;
+//@g-top-part-color: rgb(51, 51, 51);
 @layout-manager-item-height: 48px;
 
 // layouts manager
