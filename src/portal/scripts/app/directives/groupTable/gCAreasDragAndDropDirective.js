@@ -22,6 +22,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.entityType = scope.evDataService.getEntityType();
+                scope.viewContext = scope.evDataService.getViewContext();
 
                 const entityType = scope.evDataService.getEntityType();
                 const isReport = metaService.isReport(entityType);
@@ -497,7 +498,6 @@
 						let draggedOverElem;
 
                         let columnsHolder = scope.contentWrapElement.querySelector('.gColumnsHolder');
-
                         let groupsHolder = scope.contentWrapElement.querySelector('.gGroupsHolder');
 
 						dndAreas.filtersHolder = scope.contentWrapElement.querySelector('.gFiltersHolder');
@@ -509,7 +509,8 @@
 
 							areaItemsChanged = false;
 
-                            Object.keys(dndAreas).forEach(areaProp => {
+                            scope.viewContext !== 'dashboard' &&
+							Object.keys(dndAreas).forEach(areaProp => {
 
 								dndAreas[areaProp].style.display = 'block';
 								dndAreas[areaProp].nextSibling.style.display = 'block';
@@ -655,7 +656,11 @@
 									const elemAttrKey = htmlElems[i].dataset.attrKey;
 									const GCitem = GCitems.find(item => item.key === elemAttrKey);
 
-									itemsAfterDragging.push(GCitem);
+									if (GCitem) {
+
+                                        itemsAfterDragging.push(GCitem);
+
+                                    }
 
 								}
 
@@ -890,6 +895,7 @@
 
 						    [columnsHolder, groupsHolder].forEach(holder => holder.classList.remove('container-shadowed'));
 
+                            scope.viewContext !== 'dashboard' &&
                             [filtersHolder, removeAreaHolder, leftSideGroupsHolder].forEach(holder => {
 
                                 holder.style.display = 'none';
@@ -913,19 +919,20 @@
 
 					dragulaInit: function () {
 
+                        const columnsHolder = scope.contentWrapElement.querySelector('.gColumnsHolder');
+
                         const groupsHolder = scope.contentWrapElement.querySelector('.gGroupsHolder');
                         const leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
-                        const columnsHolder = scope.contentWrapElement.querySelector('.gColumnsHolder');
                         const filtersHolder = scope.contentWrapElement.querySelector('.gFiltersHolder');
                         const removeAreaHolder = scope.contentWrapElement.querySelector('.gRemoveAreaHolder');
 
-						var items = [
-                            groupsHolder,
-                            leftSideGroupsHolder,
-                            columnsHolder,
-                            filtersHolder,
-                            removeAreaHolder
-						];
+                        let items = [columnsHolder];
+
+                        if (scope.viewContext !== 'dashboard') {
+
+                            items = items.concat([groupsHolder, leftSideGroupsHolder, filtersHolder, removeAreaHolder]);
+
+                        }
 
 						if (isReport) {
 

@@ -195,7 +195,8 @@
         </div>
     </div>
 
-    <div class="drop-area-wrap column-to-filters-drop-area display-none gFiltersDropArea">
+    <div data-ng-if="viewContext !== 'dashboard'"
+         class="drop-area-wrap column-to-filters-drop-area display-none gFiltersDropArea">
         <div class="g-drop-area gDropArea"></div>
 
         <div class="drop-area-content">
@@ -203,7 +204,8 @@
         </div>
     </div>
 
-    <div class="drop-area-wrap remove-column-drop-area display-none gDeletionDropArea">
+    <div data-ng-if="viewContext !== 'dashboard'"
+         class="drop-area-wrap remove-column-drop-area display-none gDeletionDropArea">
         <div class="g-drop-area gDropArea"></div>
 
         <div class="drop-area-content">
