@@ -860,7 +860,26 @@
                  data-ng-style="column.style"
                  data-column-id="{{column.___group_type_id}}"
                  data-attr-key="{{column.key}}"
-                 draggable="true">
+                 draggable="true"
+                 popup
+                 popup-id="{{column.key}}"
+                 popup-template-url="{{getPopupMenuTemplate(column)}}"
+                 position-relative-to="mouse"
+                 open-on="right_click"
+                 close-on-click-outside="true"
+                 prevent-default="'true'"
+                 on-save-callback=""
+                 popup-data="{data: getPopupData(column, $index)}"
+                 offset-x="-10"
+                 offset-y="-10"
+                 popup-classes="'rounded-border'"
+                 backdrop-classes="'low-z-index-backdrop'"
+                 popup-event-service="evEventService">
+
+                <md-tooltip md-direction="top">
+                    <span ng-bind="column.name"></span>
+                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                </md-tooltip>
 
                 <div class="g-cell g-table-header-cell g-table-header-group-cell">
 
@@ -873,19 +892,7 @@
                     </md-button>
 
                     <md-button class="g-group-button flex-row"
-                               data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')"
-                               popup
-                               popup-template-url="{{getPopupMenuTemplate(column)}}"
-                               position-relative-to="mouse"
-                               open-on="right_click"
-                               close-on-click-outside="true"
-                               prevent-default="'true'"
-                               on-save-callback=""
-                               popup-data="{data: getPopupData(column, $index)}"
-                               offset-x="-10"
-                               offset-y="-10"
-                               backdrop-classes="'low-z-index-backdrop'"
-                               popup-event-service="evEventService">
+                               data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
 
                         <div  class="column-name-wrapper">
 
@@ -930,24 +937,31 @@
                  data-ng-style="column.style"
                  data-column-id="{{column.___column_id}}"
                  data-attr-key="{{column.key}}"
-                 draggable="true">
+                 draggable="true"
+                 popup
+                 popup-id="{{column.key}}"
+                 popup-template-url="{{getPopupMenuTemplate(column)}}"
+                 position-relative-to="mouse"
+                 open-on="right_click"
+                 close-on-click-outside="true"
+                 prevent-default="'true'"
+                 on-save-callback=""
+                 popup-data="{data: getPopupData(column, $index)}"
+                 offset-x="-10"
+                 offset-y="-10"
+                 popup-classes="'rounded-border'"
+                 backdrop-classes="'low-z-index-backdrop'"
+                 popup-event-service="evEventService">
+
+                <md-tooltip md-direction="top">
+                    <span ng-bind="column.name"></span>
+                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                </md-tooltip>
 
                 <div class="g-cell g-table-header-cell">
 
                     <md-button class="g-group-button flex-row"
-                               data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')"
-                               popup
-                               popup-template-url="{{getPopupMenuTemplate(column)}}"
-                               position-relative-to="mouse"
-                               open-on="right_click"
-                               close-on-click-outside="true"
-                               prevent-default="'true'"
-                               on-save-callback=""
-                               popup-data="{data: getPopupData(column, $index)}"
-                               offset-x="-10"
-                               offset-y="-10"
-                               backdrop-classes="'low-z-index-backdrop'"
-                               popup-event-service="evEventService">
+                               data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
 
                         <div  class="column-name-wrapper">
 
