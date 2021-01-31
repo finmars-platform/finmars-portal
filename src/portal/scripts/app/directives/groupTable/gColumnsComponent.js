@@ -1023,10 +1023,10 @@
 
 					let groups = scope.evDataService.getGroups();
 
+					/* TO DELETE: date 2021-01-24
 					if (scope.isReport) {
 
 						let reportOptions = scope.evDataService.getReportOptions();
-						let reportOptionsChanged = false;
 
 						if (!reportOptions.subtotals_options) {
 							reportOptions.subtotals_options = {}
@@ -1041,12 +1041,16 @@
 
 						}
 
-					}
+					} */
 
 					groups.forEach(function (group) {
 
 						if (!group.hasOwnProperty('report_settings')) {
 							group.report_settings = {}
+						}
+
+						if (!group.report_settings.subtotal_type) {
+							group.report_settings.subtotal_type = 'line'
 						}
 
 						if (!scope.isReport && !group.hasOwnProperty('ev_folded')) {
@@ -1064,13 +1068,14 @@
 					let columns = scope.evDataService.getColumns();
 					let groups = scope.evDataService.getGroups();
 
-					let columnsSynced = false;
+					let columnsHaveBeenSynced = false;
 
 					groups.forEach((group, groupIndex) => {
 
 						if (group.key !== columns[groupIndex].key) {
 
-							columnsSynced = true;
+							columnsHaveBeenSynced = true;
+
 							let columnToAdd;
 							let groupColumnIndex = columns.findIndex(column => group.key === column.key);
 
@@ -1080,9 +1085,7 @@
 								columns.splice(groupColumnIndex, 1);
 
 							} else {
-
 								columnToAdd = evHelperService.getTableAttrInFormOf("column", group);
-
 							}
 
 							columns.splice(groupIndex, 0, columnToAdd);
@@ -1091,20 +1094,24 @@
 
 					});
 
-					if (columnsSynced) {
+					scope.evDataService.setColumns(columns);
+
+					if (columnsHaveBeenSynced) {
 						scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
 					}
 
 				};
 
                 scope.hasFoldingBtn = function ($index) {
-                    var groups = scope.evDataService.getGroups();
+
+                	var groups = scope.evDataService.getGroups();
 
                     if (scope.isReport && $index < groups.length) {
                         return true;
                     }
 
                     return false;
+
                 };
 
                 scope.foldLevel = function (key, $index) {
