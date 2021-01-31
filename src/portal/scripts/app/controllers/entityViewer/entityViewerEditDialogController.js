@@ -149,7 +149,8 @@
 
         var formLayoutFromAbove = data.editLayout;
 
-        var getShowByDefaultOptions = function (columns, entityType) {
+		//<editor-fold desc="Description">
+		var getShowByDefaultOptions = function (columns, entityType) {
             if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
                 return vm.showByDefaultOptions.filter(option => option.id !== 'short_name')
             }
@@ -157,6 +158,7 @@
             return vm.showByDefaultOptions;
 
         };
+		//</editor-fold>
 
         var bigDrawerResizeButton;
 

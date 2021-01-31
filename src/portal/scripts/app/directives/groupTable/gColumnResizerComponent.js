@@ -146,7 +146,8 @@
                 function initColumnSliderListener() {
 
                     $(elem).bind('mousedown', function (e) {
-                        e.preventDefault();
+
+                    	e.preventDefault();
                         e.stopPropagation();
 
                         scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_START);

@@ -665,9 +665,11 @@
                     if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
 
                         if (ev.dataTransfer.items[0].kind === 'file') {
-                            if (!shellViewDnDDiv.contains(dragBackdropElem)) {
+
+                        	if (!shellViewDnDDiv.contains(dragBackdropElem)) {
                                 shellViewDnDDiv.appendChild(dragBackdropElem);
                             }
+
                         }
 
                     }
@@ -686,9 +688,10 @@
                 ev.preventDefault();
             }, false);
 
-            window.addEventListener('drop', function (ev) {
+			dragBackdropElem.addEventListener('drop', function (ev) {
 
                 ev.preventDefault();
+                ev.stopPropagation();
 
                 if (vm.currentGlobalState === 'profile' || vm.currentGlobalState === 'portal') {
 
@@ -704,7 +707,7 @@
 
                                 $mdDialog.show({
                                     controller: 'WarningDialogController as vm',
-                                    templateUrl: 'views/warning-dialog-view.html',
+                                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                                     parent: angular.element(document.body),
                                     targetEvent: ev,
                                     clickOutsideToClose: false,
@@ -726,7 +729,7 @@
 
                     }
 
-                    shellViewDnDDiv.removeChild(dragBackdropElem);
+					shellViewDnDDiv.removeChild(dragBackdropElem);
 
                 }
 
