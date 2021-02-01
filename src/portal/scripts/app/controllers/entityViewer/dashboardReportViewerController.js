@@ -305,7 +305,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
                     preserveScope: true,
@@ -332,6 +332,8 @@
             // < Functions for context menu >
 
             vm.updateGrandTotalComponent = function(){
+
+                // vm.grandTotalError = false;
 
                 rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
@@ -378,6 +380,10 @@
                 } else {
                     vm.grandTotalValue = val
                 }
+
+                // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
+                //     vm.grandTotalError = true
+                // }
 
                 console.log('vm.grandTotalValue', vm.grandTotalValue);
 

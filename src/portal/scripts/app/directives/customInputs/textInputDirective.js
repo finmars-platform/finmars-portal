@@ -1,5 +1,9 @@
 (function () {
+
 	"use strict";
+
+	let stringHelper = require('../../helpers/stringHelper');
+	let metaHelper = require('../../helpers/meta.helper');
 
 	module.exports = function ($mdDialog) {
 		return {
@@ -13,21 +17,23 @@
 				eventSignal: "=",
 				smallOptions: "=",
 				isDisabled: "=",
+				renderHyperlinks: "=",
 				onChangeCallback: "&?",
 				onBlurCallback: "&?"
 			},
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {
 
-				var inputContainer = elem[0].querySelector(".textInputContainer");
+				var inputContainer; // = elem[0].querySelector(".textInputContainer");
 
-				var inputElem = elem[0].querySelector(".textInputElem");
-				var fullTextElem = elem[0].querySelector(".customInputFullText");
-				var fullTextTextarea = fullTextElem.querySelector("textarea");
+				var inputElem; // = elem[0].querySelector(".textInputElem");
+				var fullTextWrapper;
+				var fullTextElem;
 				var stylePreset;
 
 				scope.isReadonly = false;
 				scope.fullTextEnabled = false;
+				scope.fullText = {value: scope.model}
 
 				/*
 				TIPS
@@ -79,11 +85,19 @@
 						classes += " no-indicator-btn";
 					}
 
+					if (scope.renderHyperlinks) {
+						classes += " render-hyperlinks"
+					}
+
 					return classes;
 
 				};
 
-				scope.onInputChange = function () {
+				scope.onInputChange = function (modelVal) {
+
+					if (modelVal !== undefined) { // needed for textarea.customInputFullText
+						scope.model = modelVal
+					}
 
 					scope.error = "";
 					stylePreset = "";
@@ -138,6 +152,10 @@
 
 				};
 
+				scope.getHyperlinks = () => {
+					return stringHelper.parseAndInsertHyperlinks(scope.model, "class='openLinkInNewTab'");
+				};
+
 				scope.openTextInDialog = function ($event) {
 
 					var dialogParent = angular.element(document.body);
@@ -181,11 +199,10 @@
 							}
 
 						}
-
 					});
 				};
 
-				var initScopeWatchers = function () {
+				let initScopeWatchers = function () {
 
 					scope.$watch("model", function () {
 						if (scope.error && scope.model) {
@@ -213,28 +230,46 @@
 
 										break;
 
-								case "error":
-									scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
-									break;
+									case "error":
+										scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+										break;
 
-								case "set_style_preset1":
-									stylePreset = 1;
-									break;
+									case "set_style_preset1":
+										stylePreset = 1;
+										break;
 
-								case "set_style_preset2":
-									stylePreset = 2;
-									break;
-								}
+									case "set_style_preset2":
+										stylePreset = 2;
+										break;
+									}
 
 								scope.eventSignal = {};
 							}
 						});
+					}
+				};
+
+				let closeFulltext = function () {
+
+					inputContainer.classList.remove("custom-input-full-text-focused");
+
+					// for hyperlink mode
+					inputElem.blur();
+					document.removeEventListener("keypress", closeFulltext);
+					// < for hyperlink mode >
+
+					if (scope.onBlurCallback) {
+
+						setTimeout(function () {
+							// without timeout changes will be discarded on fast blur
+							scope.onBlurCallback();
+						}, 250);
 
 					}
 
 				};
 
-				var initEventListeners = function () {
+				let initEventListeners = function () {
 
 					elem[0].addEventListener("mouseover", function () {
 						inputContainer.classList.add("custom-input-hovered");
@@ -244,20 +279,51 @@
 						inputContainer.classList.remove("custom-input-hovered");
 					});
 
-					inputElem.addEventListener("focus", function () {
+					if (scope.renderHyperlinks) {
 
-						inputContainer.classList.add("custom-input-full-text-focused");
-						fullTextTextarea.focus();
+						inputElem.addEventListener("click", function (event) {
 
-						fullTextElem.addEventListener("mouseleave", function () {
+							if (event.target.classList.contains('openLinkInNewTab')) {
 
-							fullTextTextarea.blur();
+								metaHelper.openLinkInNewTab(event);
 
-						}, {once: true});
+							} else {
 
-					});
+								inputContainer.classList.add("custom-input-full-text-focused");
+								fullTextElem.focus();
 
-					fullTextTextarea.addEventListener("blur", function () {
+								if (scope.renderHyperlinks) {
+									document.addEventListener("keyup", closeFulltext);
+								}
+
+							}
+
+
+						});
+
+						fullTextWrapper.addEventListener("mouseleave", closeFulltext);
+						fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab);
+
+					} else {
+
+						inputElem.addEventListener("focus", function () {
+
+							inputContainer.classList.add("custom-input-full-text-focused");
+							fullTextElem.focus();
+
+							fullTextWrapper.addEventListener("mouseleave", function () {
+
+								fullTextElem.blur();
+
+							}, {once: true});
+
+						});
+
+						fullTextElem.addEventListener("blur", closeFulltext);
+
+					}
+
+					fullTextElem.addEventListener("blur", function () {
 
 						inputContainer.classList.remove("custom-input-full-text-focused");
 
@@ -274,7 +340,25 @@
 
 				};
 
-				var init = function () {
+				let elemsInintedNum = 0;
+
+				scope.elemInited = function () {
+
+					elemsInintedNum++;
+
+					if (elemsInintedNum === 2) { // textInputElem, customInputFullText
+						scope.init();
+					}
+
+				};
+
+				scope.init = function () { // called from view by ngInit
+
+					inputContainer = elem[0].querySelector(".textInputContainer");
+					inputElem = elem[0].querySelector(".textInputElem");
+
+					fullTextWrapper = elem[0].querySelector(".customInputFullTextWrapper");
+					fullTextElem = fullTextWrapper.querySelector(".customInputFullText");
 
 					initScopeWatchers();
 
@@ -286,8 +370,7 @@
 
 				};
 
-				init();
-			},
+			}
 		};
 	};
 })();

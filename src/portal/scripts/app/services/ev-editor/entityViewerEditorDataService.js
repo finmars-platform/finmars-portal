@@ -54,6 +54,14 @@
 			return data.userInputsToRecalc;
 		}
 
+        function setRecalculationFunction (fn) {
+            data.recalculate = fn;
+        }
+
+        function getRecalculationFunction () {
+            return data.recalculate;
+        }
+
         return {
             /*setChangedUserInputData: setChangedUserInputData,
             getChangedUserInputData: getChangedUserInputData,*/
@@ -64,6 +72,9 @@
             getTooltipsData: getTooltipsData,
             setColorPalettesList: setColorPalettesList,
             getColorPalettesList: getColorPalettesList,
+
+            setRecalculationFunction: setRecalculationFunction,
+            getRecalculationFunction: getRecalculationFunction
         }
     }
 
