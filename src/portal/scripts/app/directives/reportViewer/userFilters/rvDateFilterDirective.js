@@ -181,7 +181,7 @@
                         scope.filter.options.dates_tree = [];
                     }
 
-                    if (filterType === 'from_to') {
+                    if (filterType === 'from_to' || filterType === 'out_of_range') {
 
                         scope.filter.options.filter_values = {};
 
