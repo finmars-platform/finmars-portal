@@ -1109,6 +1109,10 @@
             return true;
         }
 
+        if (option.action === 'select_row') {
+            return true;
+        }
+
         return false;
     };
 
@@ -1208,6 +1212,10 @@
 
             if (item.action === 'mark_row') {
                 ttype_specific_attr = ' data-ev-dropdown-action-data-color="' + item.action_data + '"'
+            }
+
+            if (item.action === 'select_row') {
+                item.name = obj.___is_activated ? 'Unselect row' : 'Select row';
             }
 
             if (item.action === 'open_layout') {
@@ -1330,6 +1338,32 @@
 
                 }
 
+                clearDropdowns();
+
+            } else if (dropdownAction === 'select_row') {
+
+                const obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+                if (obj.___is_activated) {
+
+                    obj.___is_activated = false;
+                    obj.___is_last_selected = false;
+
+                } else {
+
+                    const objects = evDataService.getObjects();
+
+                    objects.forEach(item => {
+                        item.___is_activated = false;
+                        item.___is_last_selected = false;
+                    });
+
+                    obj.___is_activated = true;
+                    obj.___is_last_selected = true;
+
+                }
+
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 clearDropdowns();
 
             } else {
@@ -1660,6 +1694,12 @@
                         }
                     };
                 }
+
+                const selectRowMenuItem = { // required item in first position
+                        name: 'Select/Unselect row',
+                        action: 'select_row'
+                };
+                contextMenu.root.items.unshift(selectRowMenuItem)
 
                 ttypes = data;
 
