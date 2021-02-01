@@ -833,8 +833,8 @@
     var preparePopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
 
         var popup = document.createElement('div');
-
-        if (isReport) {
+// Victor 2021.02.01 #75 On right mouse click row don't need selected
+/*        if (isReport) {
 
             var objects = evDataService.getObjects();
 
@@ -846,15 +846,17 @@
 
             });
 
-        }
+        }*/
 
         var obj = getObject(objectId, parentGroupHashId, evDataService);
 
-        obj.___is_activated = true;
+// Victor 2021.02.01 #75 On right mouse click row don't need selected
+/*        obj.___is_activated = true;
 
         if (isReport) {
+
             obj.___is_last_selected = true;
-        }
+        }*/
 
         evDataService.setObject(obj);
 
