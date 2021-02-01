@@ -44,7 +44,7 @@
 
                     <input ng-if="!renderHyperlinks"
                            ng-model="model"
-                           ng-model-options="{debounce: 1000}"
+                           ng-model-options="{debounce: 500}"
                            ng-readonly="isReadonly"
                            ng-disabled="isDisabled"
                            ng-init="elemInited()"
@@ -63,7 +63,7 @@
           <!--<input type="text"
                      data-ng-model="model"
                      data-ng-change="onInputChange()"
-                     data-ng-model-options="{debounce: 1000}"
+                     data-ng-model-options="{debounce: 500}"
                      placeholder="{{placeholderText}}"
                      class="custom-input text-input textInputElem"
                      ng-readonly="isReadonly"
@@ -113,7 +113,7 @@
 
             <div ng-if="!renderHyperlinks">
                 <textarea ng-model="model"
-                          ng-model-options="{debounce: 1000}"
+                          ng-model-options="{debounce: 500}"
                           ng-change="onInputChange(model)"
                           class="custom-input-full-text customInputBackgroundColor customInputFullText"
                           ng-readonly="isReadonly"

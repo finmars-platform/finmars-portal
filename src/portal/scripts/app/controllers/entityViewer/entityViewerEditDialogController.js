@@ -1185,8 +1185,11 @@
                             metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                         } else {
-							vm.entity = responseData;
+
+                        	vm.entity = {...vm.entity, ...responseData};
 							vm.entity.$_isValid = true;
+							$scope.$apply();
+
 						}
 
 

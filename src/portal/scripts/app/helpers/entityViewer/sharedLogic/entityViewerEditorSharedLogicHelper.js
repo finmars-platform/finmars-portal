@@ -308,7 +308,9 @@
 
 				viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
-			} else {
+			}
+
+			else {
 				viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
 			}
 
@@ -412,7 +414,7 @@
 					metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, responseObj);
 
 				} else {
-					viewModel.entity = responseData;
+					viewModel.entity = {...viewModel.entity, ...responseData};
 					viewModel.entity.$_isValid = true;
 				}
 
