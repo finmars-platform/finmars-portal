@@ -28,6 +28,7 @@
 					{name: 'Less than', value: 'less'},
 					{name: 'Less or equal to', value: 'less_equal'},
 					{name: 'From ... to ... (incl)', value: 'from_to'},
+					{name: 'Out of range (incl)', value: 'out_of_range'},
 					{name: 'Empty cells', value: 'empty'},
 					{name: 'Date tree', value: 'date_tree'},
 				];
@@ -75,7 +76,7 @@
 						scope.filter.options.dates_tree = [];
 					}
 
-					if (scope.activeFilterType === 'from_to') {
+					if (scope.activeFilterType === 'from_to' || scope.activeFilterType === 'out_of_range') {
 
 						scope.filter.options.filter_values = {};
 

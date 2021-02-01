@@ -30,6 +30,7 @@
 					{name: 'Less than', value: 'less'},
 					{name: 'Less or equal to', value: 'less_equal'},
 					{name: 'From ... to ... (incl)', value: 'from_to'},
+					{name: 'Out of range (incl)', value: 'out_of_range'},
 					{name: 'Empty cells', value: 'empty'},
 				];
 
@@ -39,7 +40,7 @@
 					scope.filter.options.use_from_above = {};
 					scope.filter.options.filter_type = scope.activeFilterType;
 
-					if (scope.activeFilterType === 'from_to') {
+					if (scope.activeFilterType === 'from_to' || scope.activeFilterType === 'out_of_range') {
 
 						scope.filter.options.filter_values = {}
 

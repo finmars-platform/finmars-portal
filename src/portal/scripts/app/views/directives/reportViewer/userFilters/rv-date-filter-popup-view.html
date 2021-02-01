@@ -16,7 +16,7 @@
     </md-input-container>
 
     <div class="g-filter-value-wrap">
-        <div ng-if="filter.options.filter_type !== 'from_to' && filter.options.filter_type !== 'date_tree'"
+        <div ng-if="filter.options.filter_type !== 'from_to' && filter.options.filter_type !== 'out_of_range' && filter.options.filter_type !== 'date_tree'"
              class="height-100">
 
             <md-input-container class="md-block">
@@ -30,7 +30,7 @@
 
         </div>
 
-        <div ng-if="filter.options.filter_type === 'from_to'"
+        <div ng-if="filter.options.filter_type === 'from_to' || filter.options.filter_type === 'out_of_range'"
              class="height-100">
 
             <md-input-container class="md-block">

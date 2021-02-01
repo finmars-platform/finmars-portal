@@ -16,7 +16,7 @@
     </md-input-container>
 
     <div class="g-filter-value-wrap">
-        <div ng-if="filter.options.filter_type !== 'from_to'"
+        <div ng-if="filter.options.filter_type !== 'from_to' && filter.options.filter_type !== 'out_of_range'"
              class="height-100">
 
             <input type="number"
@@ -26,7 +26,7 @@
 
         </div>
 
-        <div ng-if="filter.options.filter_type === 'from_to'"
+        <div ng-if="filter.options.filter_type === 'from_to' || filter.options.filter_type === 'out_of_range'"
              class="height-100">
 
             <input type="number"
