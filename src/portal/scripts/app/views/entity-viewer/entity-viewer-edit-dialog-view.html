@@ -81,7 +81,8 @@
                 <span data-ng-if="vm.entityType !== 'transaction'">Cancel</span>
                 <span data-ng-if="vm.entityType === 'transaction'">Close</span>
             </md-button>
-            <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
+
+            <!-- <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.save()"
                        class="md-raised m-r-24">
@@ -91,7 +92,20 @@
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.save()">
                 Save and Exit
+            </md-button> -->
+            <md-button class="outline-button" data-ng-if="vm.entityType !== 'transaction'"
+                       ng-disabled="vm.saveBtnDisabled()"
+                       ng-click="vm.save($event, false)">
+                Save
             </md-button>
+
+            <md-button data-ng-if="vm.entityType !== 'transaction'"
+                       ng-disabled="vm.saveBtnDisabled()"
+                       ng-click="vm.save($event, true)"
+                       class="m-r-24 primary-button">
+                Save and Exit
+            </md-button>
+
         </div>
 
         <dialog-window-resizer data-ng-if="vm.dialogElemToResize"

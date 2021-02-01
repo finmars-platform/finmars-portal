@@ -121,7 +121,7 @@
 
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
-        vm.fixedAreaPopup = evEditorSharedLogicHelper.fixedAreaPopup;
+        vm.fixedAreaPopup = evEditorSharedLogicHelper.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
 
@@ -1151,7 +1151,7 @@
 
                     } else {
 
-                    	vm.entity = responseData;
+                    	vm.entity = {...vm.entity, ...responseData};
 						vm.entity.$_isValid = true;
 
 					}
