@@ -623,7 +623,13 @@
 					scope.filters.forEach(filter => {
 
 						const filterOpts = filter.options || {};
-						const filterVal = filterOpts.filter_values || "";
+						let filterVal = filterOpts.filter_values || "";
+
+						if (filterOpts.filter_type === 'from_to') {
+                            filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`
+                        } else if (filterOpts.filter_type === 'out_of_range' ) {
+                            filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`
+                        }
 
 						// hide use from above filters if needed
 						if (
