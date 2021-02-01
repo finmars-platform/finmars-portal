@@ -441,9 +441,6 @@
 
                 scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-					var groups = scope.evDataService.getGroups();
-					var cols = scope.evDataService.getColumns();
-
                     calculateElemsWrapsSizes();
 
                     updateTableContent();

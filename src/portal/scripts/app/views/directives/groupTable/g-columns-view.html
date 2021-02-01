@@ -852,14 +852,15 @@
             </md-button>
         </div>
 
-        <div class="flex-row gGroupsHolder">
+        <div class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
 
-            <div class="g-table-header-cell-wrapper gDraggableHead"
+            <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
                  data-ng-repeat="column in groups track by column.key"
                  data-ng-class="{'last-dragged': column.lastDragged}"
                  data-ng-style="column.style"
                  data-column-id="{{column.___group_type_id}}"
                  data-attr-key="{{column.key}}"
+                 draggable="true"
                  popup
                  popup-id="{{column.key}}"
                  popup-template-url="{{getPopupMenuTemplate(column)}}"
@@ -916,22 +917,27 @@
 
                 </div>
 
-                <div class="resize-slider" data-group-column-resizer
+                <div class="resize-slider"
+                     data-group-column-resizer
                      ev-data-service="evDataService"
                      ev-event-service="evEventService"></div>
+
+                <div class="g-table-header-drop gDraggableHeadArea"
+                     data-attr-key="{{column.key}}"></div>
 
             </div>
 
         </div>
 
-        <div class="flex-row width-100 gColumnsHolder">
+        <div class="flex-row width-100 g-cols-holder gColumnsHolder gcAreaDnD">
 <!--            data-ng-repeat="column in notGroupingColumns track by column.key"-->
-            <div class="g-table-header-cell-wrapper gDraggableHead"
+            <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
                  data-ng-repeat="column in notGroupingColumns track by column.key"
                  data-ng-class="{'last-dragged': column.lastDragged}"
                  data-ng-style="column.style"
                  data-column-id="{{column.___column_id}}"
                  data-attr-key="{{column.key}}"
+                 draggable="true"
                  popup
                  popup-id="{{column.key}}"
                  popup-template-url="{{getPopupMenuTemplate(column)}}"
@@ -984,6 +990,9 @@
                 <div class="resize-slider" data-group-column-resizer
                      ev-data-service="evDataService"
                      ev-event-service="evEventService"></div>
+
+                <div class="g-table-header-drop gDraggableHeadArea"
+                     data-attr-key="{{column.key}}"></div>
             </div>
 
         </div>
