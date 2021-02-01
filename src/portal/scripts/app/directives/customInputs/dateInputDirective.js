@@ -23,7 +23,7 @@
 
 				scope.dateValue = ""; // prevents from calling on change method when date changed to the same date
 
-				var onChangeDelay = 1000; // should be same as debounce of input.date-input
+				var onChangeDelay = 800; // should be same as debounce of input.date-input
 				var stylePreset;
 				var pickmeupChangeTimeout;
 

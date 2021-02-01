@@ -453,17 +453,26 @@
 
         };
 
+		let recalculateTimeoutID;
+
         vm.recalculate = function (paramsObj) {
+
+			clearTimeout(recalculateTimeoutID);
 
 			var inputs = paramsObj.inputs;
 			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
 			if (inputs && inputs.length) {
 
-				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+				recalculateTimeoutID = setTimeout(() => {
 
-				var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
-				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
+					var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+
+					var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
+					sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
+
+				}, 1200);
+
 
 			}
 
