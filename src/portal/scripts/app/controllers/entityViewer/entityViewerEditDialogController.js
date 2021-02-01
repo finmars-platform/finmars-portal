@@ -1992,6 +1992,18 @@
 
         };
 
+        vm.saveBtnDisabled = function () {
+
+			const disabled = !vm.formIsValid || !vm.hasEditPermission || vm.processing;
+
+        	if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
+        		return disabled;
+			}
+
+			return disabled || !vm.entity.is_enabled;
+
+		};
+
         vm.init = function () {
 
         	setTimeout(function () {
