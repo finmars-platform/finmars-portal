@@ -43,11 +43,11 @@
                     event: {}
                 };
 
-				scope.inputTextObj = {
-					value: null
-				}
+                scope.inputTextObj = {
+                    value: null
+                };
 
-				var fieldsDataIsLoaded = false;
+                var fieldsDataIsLoaded = false;
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
@@ -391,11 +391,11 @@
 
 					if (item_object) {
 
-						if (Array.isArray(item_object)) {
-							scope.fields = item_object;
-							var items = scope.fields.slice(0);
-							scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
-							scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'scheme_name'));
+                            if (Array.isArray(item_object)) { // For multiselector
+                                scope.fields = item_object;
+                                var items = scope.fields.slice(0);
+                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'scheme_name'));
 
 						} else {
 							scope.fields.push(item_object);
@@ -410,13 +410,15 @@
 
 				};
 
-                scope.$watch('item', function () {
+				scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-                    fieldsDataIsLoaded = false;
+				scope.$watch('item', function () {
+
+					fieldsDataIsLoaded = false;
 
 					prepareDataForSelector();
 
-                });
+				});
 
                 scope.changeHandler = function () {
                     if (scope.itemChange) {
@@ -549,7 +551,7 @@
                     }
 
                     scope.fieldValue = {value: scope.entity[scope.fieldKey]};
-                    scope.inputTextObj.value = scope.getInputTextForEntitySearch()
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
 					scope.modelKeyEntity = scope.getModelKeyEntity();
 

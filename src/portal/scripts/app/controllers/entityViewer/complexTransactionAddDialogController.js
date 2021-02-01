@@ -24,6 +24,7 @@
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
+    var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 	var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
 	var transactionHelper = require('../../helpers/transaction.helper');
@@ -31,7 +32,9 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $state, entityType, entity, data) {
+    module.exports = function complexTransactionAddDialogController(
+    	$scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
+	) {
 
         var vm = this;
 		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
@@ -570,8 +573,21 @@
 
         };
 
+		/* var closeComponent = function (response) {
+
+			if (data.openedIn === 'big-drawer') {
+				$bigDrawer.hide(response);
+
+			} else { // opened in mdDialog
+				$mdDialog.hide(response);
+			}
+
+		}; */
+
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            /* $mdDialog.hide({status: 'disagree'});
+			$bigDrawer.hide({status: 'disagree'}); */
+			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         vm.editLayout = function (ev) {
@@ -816,6 +832,11 @@
                         keys.forEach(function (key) {
                             if (key === userInput.name) {
                                 resultEntity.values[userInput.name] = vm.entity[userInput.name];
+
+                                if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
+                                    resultEntity.values[userInput.name] = true;
+                                }
+
                             }
                         });
                     }
@@ -1094,7 +1115,7 @@
 
                     $mdDialog.show({
                         controller: "WarningDialogController as vm",
-                        templateUrl: "views/warning-dialog-view.html",
+                        templateUrl: "views/dialogs/warning-dialog-view.html",
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {
@@ -1232,6 +1253,8 @@
 
             vm.evEditorEventService = new EntityViewerEditorEventService();
             vm.evEditorDataService = new EntityViewerEditorDataService();
+
+            vm.evEditorDataService.setRecalculationFunction(vm.recalculate);
 
             console.log('entity', entity);
             console.log('data', data);

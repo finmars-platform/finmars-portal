@@ -19,7 +19,7 @@
             </number-input>
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'String'">
+        <div ng-if="fieldType['display_name'] === 'String'">
 
             <text-input label="{{getName()}}"
                         placeholder-text="text"
@@ -28,6 +28,7 @@
                         custom-styles="customStyles"
                         event-signal="ciEventObj.event"
                         small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                        render-hyperlinks="item.options.isHyperlink"
                         on-change-callback="itemChange()"
                         on-blur-callback="inputBlur()"></text-input>
 
@@ -150,6 +151,14 @@
             </ev-selector-resolver>
         </div>
 
+        <div data-ng-if="fieldType['display_name'] === 'Button'">
+            <div class="custom-input-container">
+                <md-button class="md-raised md-primary" data-ng-click="recalculate()">
+                    {{getName()}}
+                </md-button>
+            </div>
+        </div>
+
     </div>
 
     <div ng-if="!readyStatus.content" class="bind-field-loader" style="height: 42px; margin-bottom: 13px;">
@@ -157,4 +166,5 @@
             <progress-circular diameter="30"></progress-circular>
         </div>
     </div>
+
 </div>
