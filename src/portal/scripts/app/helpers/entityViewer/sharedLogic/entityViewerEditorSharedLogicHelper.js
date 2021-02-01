@@ -15,14 +15,16 @@
 
 		let bigDrawerResizeButton;
 
-		const fixedAreaPopup = {
-			fields: {
-				showByDefault: {
-					value: viewModel.showByDefault
-				}
-			},
-			entityType: viewModel.entityType,
-			tabColumns: null
+		const getFixedAreaPopup = function () {
+			return {
+				fields: {
+					showByDefault: {
+						value: viewModel.showByDefault
+					}
+				},
+				entityType: viewModel.entityType,
+				tabColumns: null
+			};
 		};
 
 		const entityTabsMenuTplt = '<div class="ev-editor-tabs-popup-content popup-menu">' +
@@ -164,7 +166,7 @@
 		};
 
 		const onBigDrawerResizeButtonClick = function () {
-
+			viewModel.fixedAreaPopup.tabColumns = 6;
 			viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
 			$scope.$apply();
@@ -421,7 +423,7 @@
 
 		return {
 
-			fixedAreaPopup: fixedAreaPopup,
+			getFixedAreaPopup: getFixedAreaPopup,
 			entityTabsMenuTplt: entityTabsMenuTplt,
 
 			onPopupSaveCallback: onPopupSaveCallback,

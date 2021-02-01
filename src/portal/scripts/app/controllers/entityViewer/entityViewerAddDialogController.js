@@ -121,7 +121,7 @@
 
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
-        vm.fixedAreaPopup = evEditorSharedLogicHelper.fixedAreaPopup;
+        vm.fixedAreaPopup = evEditorSharedLogicHelper.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
 

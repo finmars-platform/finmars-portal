@@ -129,7 +129,7 @@
 		// id of popup field which value will be shown when popup closed
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
-        vm.fixedAreaPopup = evEditorSharedLogicHelper.fixedAreaPopup;
+        vm.fixedAreaPopup = evEditorSharedLogicHelper.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
 
