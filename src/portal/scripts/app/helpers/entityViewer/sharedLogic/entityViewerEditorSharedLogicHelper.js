@@ -15,14 +15,16 @@
 
 		let bigDrawerResizeButton;
 
-		const fixedAreaPopup = {
-			fields: {
-				showByDefault: {
-					value: viewModel.showByDefault
-				}
-			},
-			entityType: viewModel.entityType,
-			tabColumns: null
+		const getFixedAreaPopup = function () {
+			return {
+				fields: {
+					showByDefault: {
+						value: viewModel.showByDefault
+					}
+				},
+				entityType: viewModel.entityType,
+				tabColumns: null
+			};
 		};
 
 		const entityTabsMenuTplt = '<div class="ev-editor-tabs-popup-content popup-menu">' +
@@ -164,7 +166,7 @@
 		};
 
 		const onBigDrawerResizeButtonClick = function () {
-
+			viewModel.fixedAreaPopup.tabColumns = 6;
 			viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
 			$scope.$apply();
@@ -306,7 +308,9 @@
 
 				viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
-			} else {
+			}
+
+			else {
 				viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
 			}
 
@@ -410,7 +414,7 @@
 					metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, responseObj);
 
 				} else {
-					viewModel.entity = responseData;
+					viewModel.entity = {...viewModel.entity, ...responseData};
 					viewModel.entity.$_isValid = true;
 				}
 
@@ -421,7 +425,7 @@
 
 		return {
 
-			fixedAreaPopup: fixedAreaPopup,
+			getFixedAreaPopup: getFixedAreaPopup,
 			entityTabsMenuTplt: entityTabsMenuTplt,
 
 			onPopupSaveCallback: onPopupSaveCallback,
