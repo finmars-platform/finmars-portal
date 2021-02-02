@@ -1707,6 +1707,7 @@
 
                     var objectId;
                     var parentGroupHashId;
+                    let isSubtotal = false;
 
                     if (event.target.offsetParent.classList.contains('ev-viewport')) {
 
@@ -1720,6 +1721,12 @@
                             objectId = event.target.offsetParent.dataset.objectId;
                             parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
 
+                            if (event.target.offsetParent.dataset.subtotalType) {
+
+                                isSubtotal = !!event.target.offsetParent.dataset.subtotalType;
+
+                            }
+
                         }
 
                     }
@@ -1732,6 +1739,10 @@
 
                         ev.preventDefault();
                         ev.stopPropagation();
+
+                        if (isSubtotal) { // TODO Victor 2021.02.02 I need to know items for subtotals context menu
+                            return;
+                        }
 
                         //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
                         var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
