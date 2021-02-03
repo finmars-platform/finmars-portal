@@ -15,7 +15,7 @@
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents')
 
     var gridHelperService = require('../../services/gridHelperService');
-    var entityViewerHelperService = require('../../services/entityViewerHelperService');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
@@ -625,7 +625,7 @@
             });
         };
 
-        vm.copy = function ($event) {
+        vm.copy = function (windowType) {
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
@@ -634,11 +634,17 @@
 
             console.log('copy entity', entity);
 
+            if (windowType === 'big_drawer') {
+
+                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity}};
+                return metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+            }
+
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: $event,
                 locals: {
                     entityType: vm.entityType,
                     entity: entity,
@@ -2065,7 +2071,7 @@
             vm.getItem().then(function () {
                 getEntityStatus();
 
-				entityViewerHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
+				evHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
 
 					vm.fixedAreaPopup.fields = fields;
 					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fields));
