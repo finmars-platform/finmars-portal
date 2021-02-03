@@ -129,7 +129,7 @@
 		// id of popup field which value will be shown when popup closed
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
-        vm.fixedAreaPopup = evEditorSharedLogicHelper.fixedAreaPopup;
+        vm.fixedAreaPopup = evEditorSharedLogicHelper.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
 
@@ -1185,8 +1185,11 @@
                             metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                         } else {
-							vm.entity = responseData;
+
+                        	vm.entity = {...vm.entity, ...responseData};
 							vm.entity.$_isValid = true;
+							$scope.$apply();
+
 						}
 
 
@@ -1991,6 +1994,18 @@
             }
 
         };
+
+        vm.saveBtnDisabled = function () {
+
+			const disabled = !vm.formIsValid || !vm.hasEditPermission || vm.processing;
+
+        	if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
+        		return disabled;
+			}
+
+			return disabled || !vm.entity.is_enabled;
+
+		};
 
         vm.init = function () {
 
