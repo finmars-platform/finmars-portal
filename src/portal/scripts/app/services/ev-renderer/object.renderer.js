@@ -170,7 +170,7 @@
 
                 obj.attributes.forEach(function (item) {
 
-                    if (item.attribute_type_object.user_code === user_code) {
+                    if (item.attribute_type_object && item.attribute_type_object.user_code === user_code) {
 
                         if (column.value_type === 20 && item.value_float) {
 
