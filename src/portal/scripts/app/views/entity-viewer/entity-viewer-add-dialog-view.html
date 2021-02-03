@@ -39,7 +39,7 @@
                 Cancel
             </md-button>
             <md-button class="md-raised" data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
-                ng-click="vm.save()" style="margin-right:20px;">
+                ng-click="vm.save($event, true)" style="margin-right:20px;">
                 Add and Exit
             </md-button>
         </div>

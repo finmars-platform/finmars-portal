@@ -1130,7 +1130,7 @@
 
                 console.log('resultEntity', resultEntity);
 
-                if (dcLayoutHasBeenFixed) {
+                if (vm.dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(vm.dataConstructorLayout.id, vm.dataConstructorLayout);
                 }
 
