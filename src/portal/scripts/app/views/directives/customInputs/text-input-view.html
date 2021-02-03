@@ -112,12 +112,13 @@
         <div class="custom-input-full-text-container customInputFullTextWrapper">
 
             <div ng-if="!renderHyperlinks">
-                <textarea
-                        ng-model="model"
-                        ng-model-options="{debounce: 500}"
-                        ng-change="onInputChange(model)"
-                        class="custom-input-full-text customInputBackgroundColor customInputFullText"
-                        ng-init="elemInited()"></textarea>
+                <textarea ng-model="model"
+                          ng-model-options="{debounce: 500}"
+                          ng-change="onInputChange(model)"
+                          class="custom-input-full-text customInputBackgroundColor customInputFullText"
+                          ng-readonly="isReadonly"
+                          ng-disabled="isDisabled"
+                          ng-init="elemInited()"></textarea>
             </div>
 
             <div ng-if="renderHyperlinks"
