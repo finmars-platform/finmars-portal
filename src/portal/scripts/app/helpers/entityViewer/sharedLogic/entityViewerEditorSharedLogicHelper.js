@@ -39,7 +39,7 @@
 				'</md-button>' +
 			'</div>';
 
-		const onPopupSaveCallback = function () {
+		const getEditFormFieldsInFixedArea = function () {
 
 			const fieldsInFixedArea = [];
 
@@ -55,6 +55,47 @@
 				}
 
 			}
+
+			return fieldsInFixedArea;
+
+		};
+
+		const getAddFormFieldsInFixedArea = function () {
+			const fieldsInFixedArea = [];
+
+			if (viewModel.fixedAreaPopup.tabColumns > 2) {
+
+				if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+
+					fieldsInFixedArea.push(viewModel.typeFieldName);
+
+				} else {
+
+					fieldsInFixedArea.push('short_name');
+				}
+
+			}
+
+
+			if (viewModel.fixedAreaPopup.tabColumns > 5) {
+
+				if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+
+					fieldsInFixedArea.push('short_name');
+
+				} else {
+
+					fieldsInFixedArea.push('user_code');
+				}
+
+			}
+
+			return fieldsInFixedArea;
+		}
+
+		const onPopupSaveCallback = function () {
+
+			const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
 
 			viewModel.keysOfFixedFieldsAttrs.forEach(key => {
 
