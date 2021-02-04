@@ -108,6 +108,7 @@
         vm.currencies = []; // need for instrument pricing tab;
 
         // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
+        vm.action = 'edit';
         vm.typeFieldName = 'type';
         vm.typeFieldLabel = 'Type';
 
