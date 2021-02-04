@@ -488,7 +488,7 @@
             });
 
             return dependencies.every(function (id) {
-                return statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
+                return !statusesObject[id] || statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
             });
 
         };
