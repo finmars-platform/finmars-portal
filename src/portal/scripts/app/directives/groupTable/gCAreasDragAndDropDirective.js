@@ -31,7 +31,7 @@
                 let columns = scope.evDataService.getColumns();
 
                 let dndAreas = {};
-                const hiddenDnDAreas = ['filtersHolder', 'deletionAreaHolder', 'leftSideGroupsHolder'];
+                const hiddenDnDAreas = ['filtersHolder', 'deletionAreaHolder', 'leftSideGroupsHolder', 'rightSideColumnsHolder'];
 
                 var doesColumnHasGrouping = function (colKey) {
 
@@ -1159,8 +1159,14 @@
 					const filterDropArea = dndAreas.filtersHolder.querySelector('.gDropArea');
 					filterDropArea.addEventListener('drop', onDropToFilters);
 
-					const deletionDropArea = dndAreas.deletionAreaHolder.querySelector('.gDropArea');
-					deletionDropArea.addEventListener('drop', onDropToDeletionArea);
+                    const deletionDropArea = dndAreas.deletionAreaHolder.querySelector('.gDropArea');
+                    deletionDropArea.addEventListener('drop', onDropToDeletionArea);
+
+                    // Victor 210205 Add right side columns drop area
+                    const rightSideColumnsDropArea = dndAreas.rightSideColumnsHolder.querySelector('.gDropArea');
+                    rightSideColumnsDropArea.addEventListener('drop', onDropToColumns, {once: true});
+                    // <Victor 210205 Add right side columns drop area>
+
 
 					let gcElems;
 
@@ -1463,6 +1469,10 @@
 						dndAreas.filtersHolder = scope.contentWrapElement.querySelector('.gFiltersDropArea');
 						dndAreas.deletionAreaHolder = scope.contentWrapElement.querySelector('.gDeletionDropArea');
 						dndAreas.leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
+
+                        // Victor 210205 Add right side columns drop area
+						dndAreas.rightSideColumnsHolder = scope.contentWrapElement.querySelector('.gRightSideColumnsHolder');
+                        // <Victor 210205 Add right side columns drop area>
 
 						initDnDFromColumns();
 
