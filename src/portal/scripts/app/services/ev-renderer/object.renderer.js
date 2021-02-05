@@ -1,6 +1,7 @@
 (function () {
 
     var renderHelper = require('../../helpers/render.helper');
+    var stringHelper = require('../../helpers/stringHelper');
 
     /* var checkIcon = renderHelper.getCheckIcon();
     var lockIcon = renderHelper.getLockIcon();
@@ -104,7 +105,7 @@
         if (obj[column.key]) {
 
             if (typeof obj[column.key] === 'string') {
-                return obj[column.key]
+                return stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
             }
 
             if (typeof obj[column.key] === 'number') {
@@ -134,12 +135,15 @@
                 }
 
                 if (column.key === 'status') {
-                    if (obj[column.key] === 1) {
+
+                	if (obj[column.key] === 1) {
                         return 'Booked'
                     }
+
                     if (obj[column.key] === 2) {
                         return 'Pending'
                     }
+
                 }
 
                 return obj[column.key]
@@ -166,7 +170,7 @@
 
                 obj.attributes.forEach(function (item) {
 
-                    if (item.attribute_type_object.user_code === user_code) {
+                    if (item.attribute_type_object && item.attribute_type_object.user_code === user_code) {
 
                         if (column.value_type === 20 && item.value_float) {
 
@@ -176,7 +180,7 @@
 
                         if (column.value_type === 10 && item.value_string) {
 
-                            result = item.value_string;
+                            result = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
 
                         }
 

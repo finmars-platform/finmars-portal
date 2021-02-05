@@ -368,7 +368,9 @@
 
 				viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
-			} else {
+			}
+
+			else {
 				viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
 			}
 
@@ -453,6 +455,33 @@
 			});
 
 		};
+
+		const onSuccessfulEntitySave = function (responseData, isAutoExitAfterSave) {
+
+			viewModel.processing = false;
+
+			if (responseData.status === 400) {
+				viewModel.handleErrors(responseData);
+
+			} else {
+
+				var entityTypeVerbose = viewModel.entityType.split('-').join(' ').capitalizeFirstLetter();
+				toastNotificationService.success(entityTypeVerbose + " " + viewModel.entity.name + ' was successfully saved');
+
+				if (isAutoExitAfterSave) {
+
+					let responseObj = {res: 'agree', data: responseData};
+					metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+				} else {
+					viewModel.entity = {...viewModel.entity, ...responseData};
+					viewModel.entity.$_isValid = true;
+				}
+
+
+			}
+
+		}
 
 		return {
 

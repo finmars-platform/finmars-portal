@@ -51,7 +51,7 @@
                     return clean;
                 });
 
-                elem.bind('keypress', function (event) {
+                elem.bind('keyup', function (event) {
                     if (event.keyCode === 32) {
                         event.preventDefault();
                     }

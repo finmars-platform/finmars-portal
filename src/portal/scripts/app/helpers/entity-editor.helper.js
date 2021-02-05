@@ -18,14 +18,16 @@
                 }
 
                 if (entity.event_schedules) { // TODO Victor: may be make a deepClearFrontOptions?
-                    entity.event_schedules.forEach(function (event) {
+
+                	entity.event_schedules.forEach(function (event) {
                         delete event.frontOptions;
                         if (event.actions) {
                             event.actions.forEach(function (action) {
                                 delete action.frontOptions;
                             })
                         }
-                    })
+                    });
+
                 }
 
                 break;
@@ -78,11 +80,13 @@
 
     var clearEntityBeforeSave = function (entity, entityType) {
 
-        entity = removeNullFields(entity);
+    	let clearedEntity = JSON.parse(JSON.stringify(entity));
 
-        clearFrontProperties(entity, entityType);
+		clearedEntity = removeNullFields(clearedEntity);
 
-        return entity;
+        clearFrontProperties(clearedEntity, entityType);
+
+        return clearedEntity;
 
     }
 

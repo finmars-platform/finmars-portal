@@ -12,7 +12,7 @@
 
 	module.exports = function () {
 		return {
-			restrict: "AE",
+			restrict: "E",
 			templateUrl: "views/directives/bind-field-control-view.html",
 			scope: {
 				item: "=",
@@ -25,7 +25,7 @@
 			},
 			link: function (scope, elem, attr) {
 
-				scope.readyStatus = { classifier: false };
+				scope.readyStatus = { classifier: false, content: true };
 
 				var attrs = scope.$parent.vm.attrs || [];
 				var userInputs = scope.$parent.vm.userInputs || [];
@@ -33,9 +33,6 @@
 				var entityAttrs = metaService.getEntityAttrs(scope.entityType) || [];
 
 				var palettesList = [];
-
-				/*var numberInputElem = null;
-								var numberInputContainerElem = null;*/
 
 				scope.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -263,13 +260,11 @@
 
 					// ----------------------- Background Color -----------------
 
-					if (scope.options.backgroundColor) {
-						styleValue =
-							styleValue +
-							"background-color: " +
-							scope.options.backgroundColor +
-							";";
-					}
+          if (scope.options.backgroundColor) {
+            styleValue =
+              styleValue +
+              "background-color: " + scope.options.backgroundColor + ";";
+          }
 
 					return styleValue;
 				};
@@ -421,15 +416,21 @@
 										}
 								};*/
 				var checkForNotNull = function () {
+
 					if (scope.item.options && scope.item.options.notNull) {
 						scope.options.notNull = true;
-					} else if (
+
+					}
+
+					else if (
 						scope.item.frontOptions &&
-						(scope.item.frontOptions.notNull ||
-							scope.item.frontOptions.usedInExpr)
+						(scope.item.frontOptions.notNull ||scope.item.frontOptions.usedInExpr)
 					) {
+
 						scope.options.notNull = true;
+
 					} else if (scope.item.key) {
+
 						var requiredAttrs = metaService.getRequiredEntityAttrs(
 							scope.entityType
 						);
@@ -437,34 +438,37 @@
 						if (requiredAttrs.indexOf(scope.item.key) > -1) {
 							scope.options.notNull = true;
 						}
+
 					}
+
 				};
 
-				var getFieldBackgroundColor = function () {
-					if (scope.item.backgroundColor) {
-						if (typeof scope.item.backgroundColor === "string") {
-							// allows old layouts keep its background color
-							scope.options.backgroundColor = scope.item.backgroundColor;
-						} else if (typeof scope.item.backgroundColor === "object") {
-							var paletteData = scope.item.backgroundColor;
-							var paletteNotFound = true;
+        var getFieldBackgroundColor = function () {
 
-							var i, a;
-							loop1: for (i = 0; i < palettesList.length; i++) {
-								if (palettesList[i].user_code === paletteData.paletteUserCode) {
-									paletteNotFound = false;
+        	if (scope.item.backgroundColor) {
 
-									for (a = 0; a < palettesList[i].colors.length; a++) {
-										if (
-											palettesList[i].colors[a].order === paletteData.colorOrder
-										) {
-											scope.options.backgroundColor =
-												palettesList[i].colors[a].value;
-											break loop1;
-										}
-									}
-								}
-							}
+        		if (typeof scope.item.backgroundColor === "string") {
+				  // allows old layouts keep its background color
+				  scope.options.backgroundColor = scope.item.backgroundColor;
+
+        		} else if (typeof scope.item.backgroundColor === "object") {
+
+        			var paletteData = scope.item.backgroundColor;
+        			var paletteNotFound = true;
+
+				  var i, a;
+				  loop1: for (i = 0; i < palettesList.length; i++) {
+					if (palettesList[i].user_code === paletteData.paletteUserCode) {
+					  paletteNotFound = false;
+
+					  for (a = 0; a < palettesList[i].colors.length; a++) {
+						if (palettesList[i].colors[a].order === paletteData.colorOrder) {
+						  scope.options.backgroundColor = palettesList[i].colors[a].value;
+						  break loop1;
+						}
+					  }
+					}
+				  }
 
 							if (paletteNotFound) {
 								// if palette was not found, use default palette
@@ -489,6 +493,7 @@
 				};
 
 				var setItemSpecificSettings = function () {
+
 					if (scope.evEditorDataService) {
 						palettesList = scope.evEditorDataService.getColorPalettesList();
 					}
@@ -536,6 +541,7 @@
 
 						// prepare data for date field
 						if (scope.fieldType.value === 40) {
+
 							if (!scope.item.buttons) {
 								scope.item.buttons = [];
 							}
@@ -545,7 +551,7 @@
 									iconObj: {type: "angular-material", icon: "add"},
 									tooltip: "Increase by one day",
 									classes: "date-input-specific-btns",
-									action: { callback: scope.setDatePlus },
+									action: { callback: scope.setDatePlus }
 								});
 							}
 
@@ -554,7 +560,7 @@
 									iconObj: {type: "angular-material", icon: "radio_button_unchecked"},
 									tooltip: "Set today's date",
 									classes: "date-input-specific-btns",
-									action: { callback: scope.setDateToday },
+									action: { callback: scope.setDateToday }
 								});
 							}
 
@@ -563,18 +569,20 @@
 									iconObj: {type: "angular-material", icon: "remove"},
 									tooltip: "Decrease by one day",
 									classes: "date-input-specific-btns",
-									action: { callback: scope.setDateMinus },
+									action: { callback: scope.setDateMinus }
 								});
 							}
 						}
 						// < prepare data for date field >
 
 						if (scope.item.options.tooltipValue) {
-							scope.tooltipText = scope.item.options.tooltipValue;
+							scope.tooltipText = scope.item.options.tooltipValue
+
 						} else if (scope.item.tooltip) {
-							scope.tooltipText = scope.item.tooltip;
+							scope.tooltipText = scope.item.tooltip
+
 						} else {
-							scope.tooltipText = scope.getName();
+							scope.tooltipText = scope.getName()
 						}
 					}
 
@@ -587,13 +595,7 @@
 					}
 
 					if (scope.item.frontOptions) {
-						/*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
-														scope.ciEventObj.event = {key: 'set_style_preset1'};
 
-												} else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-														scope.ciEventObj.event = {key: 'set_style_preset2'};
-
-												}*/
 						if (scope.item.frontOptions.recalculated) {
 
 							scope.ciEventObj.event = {key: "set_style_preset1"};
@@ -604,62 +606,63 @@
 				};
 
 				var initListeners = function () {
-					scope.evEditorEventService.addEventListener(
-						evEditorEvents.MARK_FIELDS_WITH_ERRORS,
-						function () {
+
+					scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
 							scope.ciEventObj.event = { key: "mark_not_valid_fields" };
 						}
 					);
 
-			scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATED, function () {
+					scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_START, function () {
 
-				if (scope.item &&
-					scope.item.frontOptions &&
-					(scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
+							var userInputToRecalc = scope.evEditorDataService.getUserInputsToRecalculate();
 
-					setItemSpecificSettings();
+							if (userInputToRecalc && userInputToRecalc.includes(scope.fieldKey)) {
+								scope.readyStatus.content = false;
+							}
 
-					/*if (scope.item.frontOptions.recalculated === 'input') {
-									scope.ciEventObj.event = {key: 'set_style_preset1'};
+						}
+					);
 
-								} else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-									scope.ciEventObj.event = {key: 'set_style_preset2'};
+					scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
-								}*/
+						var userInputToRecalc = scope.evEditorDataService.getUserInputsToRecalculate();
 
-					if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
+						if (userInputToRecalc && userInputToRecalc.includes(scope.fieldKey)) {
+							scope.readyStatus.content = true
+						}
 
-						// setTimeout removes delay before applying preset1 to custom input
-						setTimeout(function () {
-							scope.ciEventObj.event = {key: "set_style_preset1"};
-						}, 50);
+						if (scope.item &&
+							scope.item.frontOptions && scope.item.frontOptions.recalculated &&
+							(scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
-					}
-				}
+							setItemSpecificSettings();
 
-			});
+						}
 
-			/* scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
+					});
 
-				var changedUserInputData;
+					/* scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
 
-				if (scope.evEditorDataService) {
-					changedUserInputData = scope.evEditorDataService.getChangedUserInputData();
-				}
+						var changedUserInputData;
 
-				if (changedUserInputData &&
-					changedUserInputData.frontOptions &&
-					changedUserInputData.frontOptions.linked_inputs_names) {
+						if (scope.evEditorDataService) {
+							changedUserInputData = scope.evEditorDataService.getChangedUserInputData();
+						}
 
-					if (changedUserInputData.frontOptions.linked_inputs_names.includes(scope.fieldKey)) {
-						scope.ciEventObj.event = {key: "set_style_preset2"};
-					}
+						if (changedUserInputData &&
+							changedUserInputData.frontOptions &&
+							changedUserInputData.frontOptions.linked_inputs_names) {
 
-				}
+							if (changedUserInputData.frontOptions.linked_inputs_names.includes(scope.fieldKey)) {
+								scope.ciEventObj.event = {key: "set_style_preset2"};
+							}
 
-			}); */
+						}
+
+					}); */
 
 				};
+
 				/*scope.$watch('eventSignal', function () {
 										if (scope.eventSignal) {
 												scope.ciEventObj.event = scope.eventSignal;
@@ -690,19 +693,20 @@
 					}
 
 					if (scope.fieldKey === "tags") {
+
 						scope.options = {
 							entityType: scope.entityType,
 						};
+
 					} else {
-						if (
-							metaService
-								.getEntitiesWithSimpleFields()
-								.indexOf(scope.entityType) !== -1
-						) {
+
+						if (metaService.getEntitiesWithSimpleFields().includes(scope.entityType)) {
+
 							scope.options = {
 								entityType: scope.entityType,
 								key: scope.fieldKey,
 							};
+
 						}
 					}
 
