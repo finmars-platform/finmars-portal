@@ -1074,16 +1074,27 @@
     width: 15%;
   }
 
-  .left-side-groups-drop-area {
-    left: 0;
+  .left-right-drop-area() {
     width: 150px;
-    transform: rotate(180deg);
 
     .drop-area-content {
       span {
         writing-mode: tb;
       }
     }
+  }
+
+  .left-side-groups-drop-area {
+    left: 0;
+    transform: rotate(180deg);
+
+    .left-right-drop-area();
+  }
+
+  .right-side-columns-drop-area {
+    right: 0;
+
+    .left-right-drop-area();
   }
 
   .g-filters-holder {
