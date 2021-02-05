@@ -413,9 +413,8 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-					   setTimeout(function () {
-						  vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-					  }, 50);
+
+					  vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
 
 					  vm.entityViewerDataService.setDataLoadStatus(false);
 
@@ -1180,8 +1179,18 @@
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                     vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
-                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-                    // $scope.$apply(); // cause $digest error
+                    var filters = vm.entityViewerDataService.getFilters();
+                    var useFromAboveFilterIndex = filters.findIndex(function (filter) {
+
+                    	return filter.options.use_from_above && Object.keys(filter.options.use_from_above).length && // is use from above filter
+							componentOutput.data && typeof componentOutput.data === 'object' && // active object is an object
+							componentOutput.data.hasOwnProperty(filter.key); // active object contains data for filter
+
+					});
+
+                    if (useFromAboveFilterIndex > -1) { // use from above filters will change from active object
+						vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+					}
 
                 }
 
@@ -1367,16 +1376,14 @@
                             vm.handleDashboardActiveObject(lastActiveComponentId);
                         }
 
-                    } else {
+                    }
+
+                    else {
 
                         var componentId = vm.componentData.settings.linked_components.active_object;
                         vm.handleDashboardActiveObject(componentId);
 
                     }
-
-					 /* var componentId = vm.componentData.settings.linked_components.active_object;
-
-					 vm.handleDashboardActiveObject(componentId); */
 
                  }
 
@@ -1436,19 +1443,16 @@
                     })
 
                     console.log('updateReportSettingsUsingDashboardData', reportOptions);
-					if (vm.componentData.name === "BALANCE_TYPES") {
-						console.log("rv matrix vm.componentData", reportOptions, reportOptionsChanged);
-					}
-                    if (reportOptionsChanged) {
-						if (vm.componentData.name === "BALANCE_TYPES") {
-							console.log("rv matrix reportOptionsChanged");
-						}
-                        vm.entityViewerDataService.setReportOptions(reportOptions);
+
+					if (reportOptionsChanged) {
+
+						vm.entityViewerDataService.setReportOptions(reportOptions);
 						vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
 						vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
 
                         vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+
                     }
 
                 }
@@ -1578,7 +1582,8 @@
 
                 };
 
-                vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
+				//<editor-fold desc="Dashboard events">
+				vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
                     //vm.applyDashboardChanges();
                     updateReportSettingsUsingDashboardData();
                     cleanComponentsOutputsToDelete();
@@ -1642,8 +1647,11 @@
                     }
 
                 });
+				//</editor-fold>
 
-                vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
+
+				//<editor-fold desc="Dashboard component events">
+				vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
 
                     var columns = vm.dashboardComponentDataService.getViewerTableColumns();
                     vm.entityViewerDataService.setColumns(columns);
@@ -1678,7 +1686,8 @@
                         controller: 'SaveLayoutDialogController as vm',
                         templateUrl: 'views/save-layout-dialog-view.html',
                         clickOutsideToClose: false
-                    })
+                    });
+
                 });
 
                 vm.dashboardComponentEventService.addEventListener(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS, clearUseFromAboveFilters);
@@ -1686,6 +1695,11 @@
                 vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
                     vm.getView()
                 });
+
+				vm.dashboardComponentEventService.addEventListener(dashboardEvents.TOGGLE_FILTER_BLOCK, function () {
+					vm.entityViewerEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
+				});
+				//</editor-fold>
 
             };
 
@@ -1926,31 +1940,51 @@
 
                                         var listLayout = vm.entityViewerDataService.getListLayout();
                                         var columns = listLayout.data.columns;
-                                        vm.entityViewerDataService.setColumns(columns);
-
-                                    } else {
-
-                                        var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
-
-                                        var listLayout = vm.entityViewerDataService.getListLayout();
-                                        var layoutColumns = listLayout.data.columns;
-
-                                        layoutColumns.forEach(function(layoutColumn) {
-
-                                            var column = columns.find(function(itemColumn){
-                                                return itemColumn.key === layoutColumn.key
-                                            })
-
-                                            if(column && !column.layout_name) {
-                                                column.layout_name = layoutColumn.layout_name
-                                            }
-
-                                        })
-
-
-                                        vm.entityViewerDataService.setColumns(columns);
 
                                     }
+
+                                    else {
+
+                                        var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+                                        var listLayout = vm.entityViewerDataService.getListLayout();
+                                        var layoutColumns = listLayout.data.columns;
+                                        var layoutGroups = listLayout.data.grouping;
+										var groupColumns = [];
+
+										if (layoutGroups.length) {
+											groupColumns = layoutColumns.slice(0, layoutGroups.length)
+										}
+
+                                        layoutColumns.forEach(function(layoutColumn, lColIndex) {
+
+                                        	var groupColumnIndex = layoutGroups.findIndex(function (group) {
+												return group.key === layoutColumn.key;
+											});
+
+                                        	if (groupColumnIndex > -1) { // remove groups column
+												columns.splice(lColIndex, 1);
+											}
+
+                                        	else {
+
+                                        		var column = columns.find(function(itemColumn){
+													return itemColumn.key === layoutColumn.key;
+												});
+
+												if (column && !column.layout_name) {
+													column.layout_name = layoutColumn.layout_name;
+												}
+
+											}
+
+                                        });
+
+										columns = groupColumns.concat(columns);
+
+                                    }
+
+									vm.entityViewerDataService.setColumns(columns);
+
                                 }
                                 // < set dashboard columns list for small rv table >
                             }

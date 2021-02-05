@@ -134,16 +134,17 @@
         };
 
         var groups = evDataService.getGroups();
-        var reportOptions = evDataService.getReportOptions();
+        // var reportOptions = evDataService.getReportOptions();
 
         var proxylineIsActive = function () {
 
-        	if (reportOptions.subtotals_options) {
+        	/*if (reportOptions.subtotals_options) {
         		return reportOptions.subtotals_options.type === 'area';
 
 			} else { // for old layouts
         		return groups[columnNumber - 1].report_settings.subtotal_type === 'area';
-			}
+			}*/
+			return groups[columnNumber - 1].report_settings.subtotal_type === 'area';
 
 		};
 
@@ -184,13 +185,9 @@
 
                 if (parentGroup.___is_open) {
 
-                    var foldButton = '';
+					var foldButtonSign = currentGroup.___is_open ? '-': '+';
 
-                    if (currentGroup.___is_open) {
-                        foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">-</div></div>';
-                    } else {
-                        foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div></div>';
-                    }
+					var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
 
                     result.html_result = foldButton + '<span>' + currentGroup.___group_name + '</span>';
                     result.raw_text_result = currentGroup.___group_name;

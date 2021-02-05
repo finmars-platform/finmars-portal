@@ -687,6 +687,8 @@
             data = getNewDataInstance(evDataService)
         }
 
+
+
         var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
