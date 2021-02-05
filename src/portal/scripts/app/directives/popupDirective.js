@@ -22,7 +22,7 @@
 
 				positionRelativeTo: '@', // ('mouse', 'element').
 
-				popupClasses: '=', // add css classes to popup-container, example: popup-classes="class1 class2"
+				popupClasses: '<', // add css classes to popup-container, example: popup-classes="class1 class2"
 				backdropClasses: '=', // add css classes to backdrop
 
 				/*
@@ -109,7 +109,7 @@
 
 					}
 
-					else if (scope.positionRelativeTo === 'mouse') {
+					else if (scope.positionRelativeTo === 'mouse' && event) {
 
 						if (!positionX) { positionX = event.clientX; }
 
@@ -174,10 +174,14 @@
 				let resizeThrottler = function () {
 
 					if ( !resizeTimeout ) {
+
 						resizeTimeout = setTimeout(function() {
+
 							resizeTimeout = null;
 							resizeHandler();
+
 						}, 66);
+
 					}
 
 				};
@@ -239,7 +243,7 @@
 				};
 
 				let removePopUp = function (event) {
-
+					console.trace();
 					document.body.removeChild(popupBackdropElem);
 					document.body.removeChild(popupElem);
 
@@ -362,6 +366,7 @@
 
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
 						popupBackdropElem.addEventListener('mouseenter', removePopUp);
+
 					}
 
 					if (scope.popupEventService) {
