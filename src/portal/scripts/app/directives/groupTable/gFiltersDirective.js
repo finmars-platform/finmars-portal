@@ -57,10 +57,13 @@
 				}
 
 				const gFiltersElem = elem[0].querySelector('.gFilters');
+				const gFiltersElemWidth = gFiltersElem.clientWidth;
 				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
 
 				const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
 				const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
+
+				let useFromAboveFilters = [];
 
 				let entityAttrs = [];
 				let dynamicAttrs = [];
@@ -70,7 +73,7 @@
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 };
 
-				let getAttributes = () => {
+				const getAttributes = () => {
 
 					let allAttrsList;
 
@@ -78,7 +81,9 @@
 
 						allAttrsList = scope.attributeDataService.getReconciliationAttributes();
 
-					} else {
+					}
+
+					else {
 
 						switch (scope.entityType) {
 							case 'balance-report':
@@ -532,6 +537,17 @@
                 	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters
 					formatFiltersForChips();
 
+                	setTimeout(() => {
+
+                		const filterAreaHeightChanged = updateFilterAreaHeight();
+
+						if (filterAreaHeightChanged) {
+							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+						}
+
+					}, 0);
+
+
 				};
 
 				scope.removeFilter = function (filtersToRemove) {
@@ -588,6 +604,22 @@
 
 							res.data.groups = true;
 
+							if (!res.data.options) {
+								res.data.options = {};
+							}
+
+							if (!res.data.options.filter_type) {
+								res.data.options.filter_type = "contains";
+							}
+
+							if (!res.data.options.filter_values) {
+								res.data.options.filter_values = [];
+							}
+
+							if (!res.data.options.hasOwnProperty('exclude_empty_cells')) {
+								res.data.options.exclude_empty_cells = false;
+							}
+
 							scope.filters.push(res.data);
 							scope.evDataService.setFilters(scope.filters);
 							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
@@ -598,69 +630,107 @@
 
 				};
 
-				let calculateFilterChipsContainerWidth = function () {
+				const getUseFromAboveFilters = function () {
 
-					let filtersChipsContainerWidth = 800;
+					useFromAboveFilters = scope.filters.filter((filter, index) => {
 
-					// using workareaWrapElement because .g-filters not always assume full width in time
-					const filterAreaWidth = scope.workareaWrapElement.clientWidth;
-					const availableSpace = filterAreaWidth - gFiltersLeftPartWidth - gFiltersRightPartWidth;
+						if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
 
-					if (availableSpace < 800) {
+							filter.filtersListIndex = index;
+							return true;
 
-						filtersChipsContainerWidth = Math.max(availableSpace, 500);
+						}
 
-					}
+						return false;
 
-					filtersChipsContainer.style.width = filtersChipsContainerWidth + 'px';
+					});
 
 				};
 
-                let formatFiltersForChips = function () {
+				let calculateFilterChipsContainerWidth = function () {
+
+					// let filtersChipsContainerWidth = 800;
+
+					// using workareaWrapElement because .g-filters not always assume full width in time
+					// TODO use only scope.contentWrapElement.clientWidth after removing gSidebarFilter
+					let filterAreaWidth;
+					if (scope.workareaWrapElement) {
+						filterAreaWidth = scope.workareaWrapElement.clientWidth;
+					}
+
+					else if (scope.contentWrapElement) {
+						filterAreaWidth = scope.contentWrapElement.clientWidth;
+					}
+
+					else if (scope.viewContext === 'dashboard') { // For dashboard components without wrapElems e.g. matrix
+						filterAreaWidth = gFiltersElemWidth;
+					}
+					// < TODO use only scope.contentWrapElement.clientWidth after removing gSidebarFilter >
+
+					const availableSpace = filterAreaWidth - gFiltersLeftPartWidth - gFiltersRightPartWidth;
+					/* if (availableSpace < 800) {
+
+						filtersChipsContainerWidth = Math.max(availableSpace, 500);
+
+					} */
+
+					filtersChipsContainer.style.width = availableSpace + 'px';
+
+				};
+
+                const formatFiltersForChips = function () {
 
 					scope.filtersChips = [];
 
 					scope.filters.forEach(filter => {
 
-						const filterOpts = filter.options || {};
-						let filterVal = filterOpts.filter_values || "";
+						if (filter.type !== "filter_link") { // not filter from dashboard component
 
-						if (filterOpts.filter_type === 'from_to') {
-                            filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`
-                        } else if (filterOpts.filter_type === 'out_of_range' ) {
-                            filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`
-                        }
+							const filterOpts = filter.options || {};
+							let filterVal = filterOpts.filter_values || "";
 
-						// hide use from above filters if needed
-						if (
-							scope.showUseFromAboveFilters ||
-							(!filterOpts.use_from_above || !Object.keys(filterOpts.use_from_above).length)
-						) {
+							if (filterOpts.filter_type === 'from_to') {
 
-							let filterData = {
-								id: filter.key
-							};
+								filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`
 
-							const filterName = filter.layout_name ? filter.layout_name : filter.name;
+							} else if (filterOpts.filter_type === 'out_of_range' ) {
 
-							let chipText = '<span class="g-filter-chips-text">' +
-								'<span class="g-filter-chip-name">' + filterName + ':</span>' +
-								'<span class="g-filter-chip-value text-bold"> ' + filterVal + '</span>' +
-								'</span>'
-
-							if (filterOpts.use_from_above &&
-								Object.keys(filterOpts.use_from_above).length) {
-
-								filterData.classes = "use-from-above-filter-chip"
-								filterData.tooltipContent = chipText
-
-								chipText = '<span class="material-icons">link</span>' + chipText;
+								filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`
 
 							}
 
-							filterData.text = chipText
+							// hide use from above filters if needed
+							if (
+								scope.showUseFromAboveFilters ||
+								(!filterOpts.use_from_above || !Object.keys(filterOpts.use_from_above).length)
+							) {
 
-							scope.filtersChips.push(filterData);
+								let filterData = {
+									id: filter.key
+								};
+
+								const filterName = filter.layout_name ? filter.layout_name : filter.name;
+
+								let chipText = '<span class="g-filter-chips-text">' +
+									'<span class="g-filter-chip-name">' + filterName + ':</span>' +
+									'<span class="g-filter-chip-value text-bold"> ' + filterVal + '</span>' +
+									'</span>'
+
+								if (filterOpts.use_from_above &&
+									Object.keys(filterOpts.use_from_above).length) {
+
+									filterData.classes = "use-from-above-filter-chip"
+									filterData.tooltipContent = chipText
+
+									chipText = '<span class="material-icons">link</span>' + chipText;
+
+								}
+
+								filterData.text = chipText;
+
+								scope.filtersChips.push(filterData);
+
+							}
 
 						}
 
@@ -713,13 +783,13 @@
 
                 const initEventListeners = function () {
 
-                	scope.evEventService.addEventListener(evEvents.TABLE_INITIALIZED, function () {
-						calculateFilterChipsContainerWidth();
-					});
+                	scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, calculateFilterChipsContainerWidth);
 
 					scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
 						scope.filters = scope.evDataService.getFilters();
+
+						getUseFromAboveFilters();
 
 						formatFiltersForChips();
 
@@ -741,13 +811,94 @@
 						scope.isFiltersOpened = !scope.isFiltersOpened;
 
 						setTimeout(() => {
+
 							const interfaceLayout = scope.evDataService.getInterfaceLayout();
 							const gFiltersHeight = gFiltersElem.clientHeight;
+
 							interfaceLayout.filterArea.height = gFiltersHeight;
 							scope.evDataService.setInterfaceLayout(interfaceLayout);
 
 							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
 						}, 500); // Transition time for .g-filters
+
+					});
+
+					scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+
+						if (useFromAboveFilters.length) {
+
+							let filterChangedFromAbove = false;
+
+							useFromAboveFilters.forEach((useFromAboveFilter) => {
+
+								let filter = scope.filters[useFromAboveFilter.filtersListIndex];
+								let key = filter.options.use_from_above; // for old layouts
+
+								if (typeof filter.options.use_from_above === 'object') {
+									key = filter.options.use_from_above.key;
+								}
+
+								var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
+
+								if (activeObjectFromAbove && typeof activeObjectFromAbove === 'object') {
+
+									var value = activeObjectFromAbove[key];
+									filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
+
+									filterChangedFromAbove = true;
+
+								}
+
+							});
+
+							if (filterChangedFromAbove) {
+
+								scope.evDataService.setFilters(scope.filters);
+
+								formatFiltersForChips();
+								scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+							}
+
+						}
+
+					});
+
+					scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
+
+						/* var hasUseFromAboveFilter = false;
+
+						scope.filters.forEach(function (filter) {
+
+							if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length > 0) {
+
+								if (filter.options.filter_values.length) {
+									hasUseFromAboveFilter = true;
+									filter.options.filter_values = [];
+								}
+
+							}
+
+						}); */
+
+						if (useFromAboveFilters.length) {
+
+							useFromAboveFilters.forEach(ufaFilter => {
+
+								scope.filters[ufaFilter.filtersListIndex].options.filter_values = [];
+
+							});
+
+							scope.evDataService.setFilters(scope.filters);
+
+							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+							scope.evDataService.resetTableContent();
+
+							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+						}
 
 					});
 
@@ -763,9 +914,6 @@
 						evEventService: scope.evEventService,
 						attributeDataService: scope.attributeDataService
 					}
-
-					scope.evDataService.setFilters(scope.filters);
-					scope.evDataService.setFilters(scope.filters);
 
 					formatFiltersForChips();
 

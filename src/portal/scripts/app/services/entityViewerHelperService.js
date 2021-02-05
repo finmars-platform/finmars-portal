@@ -157,14 +157,35 @@
         }
 
         switch (form) {
-            case 'group':
+
+        	case 'group':
                 attrTypeToAdd.groups = true;
                 break;
+
             case 'column':
                 attrTypeToAdd.columns = true;
                 break;
+
             case 'filter':
-                attrTypeToAdd.filters = true;
+
+            	attrTypeToAdd.filters = true;
+
+				if (!attrTypeToAdd.options) {
+					attrTypeToAdd.options = {};
+				}
+
+				if (!attrTypeToAdd.options.filter_type) {
+					attrTypeToAdd.options.filter_type = "contains";
+				}
+
+				if (!attrTypeToAdd.options.filter_values) {
+					attrTypeToAdd.options.filter_values = [];
+				}
+
+				if (!attrTypeToAdd.options.hasOwnProperty('exclude_empty_cells')) {
+					attrTypeToAdd.options.exclude_empty_cells = false;
+				}
+
                 break;
         }
 

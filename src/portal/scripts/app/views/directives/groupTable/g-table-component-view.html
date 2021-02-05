@@ -51,7 +51,7 @@
                     </g-top-part>
                 </div>
 
-                <div ng-if="isReport">
+                <div ng-if="isReport && components.filterArea">
                     <g-filters ev-data-service="evDataService"
                                ev-event-service="evEventService"
                                attribute-data-service="attributeDataService"
@@ -125,7 +125,7 @@
             </div>
         </div>
 
-        <div data-ng-if="isInsideDashboard && !components.sidebar" class="g-dashboard-filter-holder">
+         <div data-ng-if="isInsideDashboard && !components.filterArea" class="g-dashboard-filter-holder">
 
             <md-button class="toggle-dashboard-filter-btn"
                        ng-click="toggleDashboardFilter()">

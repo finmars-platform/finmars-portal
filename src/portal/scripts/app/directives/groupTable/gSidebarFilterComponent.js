@@ -1203,10 +1203,10 @@
                         checkIsLayoutDefault();
                     }
 
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+                    /* var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed; */
+					scope.sideNavCollapsed = true;
 
-                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 
                 };
 

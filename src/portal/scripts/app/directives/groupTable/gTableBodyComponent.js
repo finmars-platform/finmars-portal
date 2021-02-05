@@ -445,6 +445,8 @@
 
                     updateTableContent();
 
+					scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
+
                 });
 
                 /* scope.evEventService.addEventListener(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE, function () {
@@ -463,6 +465,8 @@
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
                     }
+
+					scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                 });
 
@@ -514,8 +518,17 @@
 					// TO DELETE remove after applying new interface for ev and rv
                     if (isReport) {
 
-                    	var interfaceLayout = scope.evDataService.getInterfaceLayout();
 						var components = scope.evDataService.getComponents();
+						var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+						if (components.sidebar) {
+
+							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE after removing sidebar
+
+							interfaceLayout.filterArea.collapsed = true;
+							interfaceLayout.filterArea.width = 74;
+
+						}
 
 						components.groupingArea = false
 
@@ -588,7 +601,7 @@
 
                         }
 
-						scope.evEventService.dispatchEvent(evEvents.TABLE_INITIALIZED);
+						scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                     }, 500);
 

@@ -2,6 +2,12 @@
 
 @star-icon-size: 25px;
 
+.new-interface() {
+  color: @g-top-part-color;
+  font-size: 14px;
+  background-color: white;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;
@@ -33,6 +39,26 @@
   animation-name: fadeout;
   animation-duration: .2s;
   animation-fill-mode: forwards;
+}
+
+.g-filters {
+  position: relative;
+  max-height: 0;
+  transition: max-height 0.5s linear;
+  .new-interface();
+
+  &.open-filters {
+    max-height: 300px;
+  }
+
+  .g-filter-left-part {
+    flex: 0 0 104px;
+  }
+
+  .icon-buttons {
+    flex: 0 0 191px;
+  }
+
 }
 
 .g-wrapper {
@@ -885,16 +911,9 @@
   // Victor 2020.1202 #69 New report viewer interface
   @g-top-part-height: 50px;
   @icon-size: 20px;
-  @g-top-part-color: #747474;
+  @g-top-part-color: @gray;
   @g-table-header-background-color: rgba(242, 242, 242, 1);
-  @primary-button-color: #f05a22;
   @g-table-border-color: rgb(219, 219, 219);
-
-  .new-interface {
-    color: @g-top-part-color;
-    font-size: 14px;
-    background-color: white;
-  }
 
   .md-button {
     ng-md-icon{
@@ -907,12 +926,6 @@
 
       ng-md-icon svg {
         fill: white;
-      }
-    }
-
-    &.chain-button {
-      ng-md-icon svg {
-        fill: @primary-button-color;
       }
     }
 
@@ -929,17 +942,13 @@
         fill: @g-top-part-color;
       }
     }
-    &.filter-toggle {
-      min-width: auto;
-      margin: 0;
-      color: @primary-button-color;
-    }
+
   }
 
   .g-top-part {
     box-sizing: border-box;
     z-index: 1;
-    .new-interface;
+    .new-interface();
 
     position: relative;
     height: @g-top-part-height;
@@ -983,47 +992,22 @@
 
   }
 
-  .g-filters {
-    position: relative;
-    max-height: 0;
-    transition: max-height 0.5s linear;
-
-    &.open-filters {
-      max-height: 300px;
-    }
-
-    .new-interface;
-
-    .g-filter-left-part {
-      flex: 0 0 104px;
-    }
-
-    .icon-buttons {
-      flex: 0 0 191px;
-    }
-
-  }
-
   .drop-area-wrap {
     position: absolute;
     top: 0;
     height: 100%;
 
-    &.active {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .drop-area-holder {
+    /* .drop-area-holder {
       display: block;
       position: relative;
       width: 100%;
       height: 100%;
       pointer-events: auto;
 
-      &.active + .drop-area-content {
+       &.dragged-over + .drop-area-content {
         background-color: rgba(0, 0, 0, 0.5);
       }
-    }
+    } */
 
     .drop-area-content {
       pointer-events: none;
@@ -1035,7 +1019,7 @@
       width: 100%;
 
       box-sizing: border-box;
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: transparent;
       z-index: 1;
 
       box-sizing: border-box;
@@ -1060,6 +1044,12 @@
       top: 0;
       left: 0;
       z-index: 1;
+      background-color: rgba(0, 0, 0, 0.7);
+
+      &.dragged-over {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
     }
 
   }
@@ -1396,6 +1386,27 @@
   }
   // <Victor 2020.1202 #69 New report viewer interface>
 
+}
+
+.md-button.chain-button {
+  ng-md-icon svg {
+    fill: @orange;
+  }
+
+  &.g-use-from-above-filters-hidden {
+    ng-md-icon svg {
+      fill: @gray;
+    }
+  }
+}
+
+.md-button.g-filter-area-toggle {
+  min-width: auto;
+  color: @gray;
+
+  &.active {
+    color: @orange;
+  }
 }
 
 .ev-dropdown {

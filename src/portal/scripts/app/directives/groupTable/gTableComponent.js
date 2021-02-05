@@ -45,8 +45,10 @@
                 var activeLayoutConfigIsSet = false;
 
                 scope.isInsideDashboard = false;
+
                 if (viewContext === 'dashboard') {
-                    scope.isInsideDashboard = true;
+
+                	scope.isInsideDashboard = true;
 
                     interfaceLayout.groupingArea.collapsed = true;
                     interfaceLayout.groupingArea.height = 2;
@@ -57,6 +59,7 @@
 
                     scope.additions.isOpen = false;
                     scope.evDataService.setAdditions(scope.additions);
+
                 }
 
 
