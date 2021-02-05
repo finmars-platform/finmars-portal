@@ -149,6 +149,20 @@
         });
     }
 
+    let openLinkInNewTab = function (event) {
+
+		event.preventDefault();
+		let targetElem = event.target;
+
+		if (targetElem.classList.contains('openLinkInNewTab')) {
+
+			let url = targetElem.href;
+			window.open(url);
+
+		}
+
+	};
+
     let closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
 
         if (openedIn === 'big-drawer') {
@@ -165,6 +179,7 @@
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
         textWithDashSort: textWithDashSort,
+		openLinkInNewTab: openLinkInNewTab,
 
         closeComponent: closeComponent
     }

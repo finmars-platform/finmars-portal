@@ -1143,14 +1143,19 @@
 
                     var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
 
-                    toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully created');
+                    toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + " was successfully created");
 
                     if (isAutoExitAfterSave) {
 
                         let responseObj = {res: 'agree', data: responseData};
                         metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
 
-                    }
+                    } else {
+
+                    	vm.entity = {...vm.entity, ...responseData};
+						vm.entity.$_isValid = true;
+
+					}
 
                 }).catch(function (data) {
 

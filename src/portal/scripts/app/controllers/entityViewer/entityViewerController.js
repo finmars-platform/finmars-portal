@@ -637,7 +637,7 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                    evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                    evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
 
                 });
 
@@ -911,7 +911,7 @@
                 vm.setFiltersValuesFromQueryParameters();
                 vm.readyStatus.layout = true;
                 console.log('vm', vm);
-                evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
 
                 var additions = vm.entityViewerDataService.getAdditions();
                 var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
