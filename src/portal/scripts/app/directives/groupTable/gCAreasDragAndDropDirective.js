@@ -31,7 +31,11 @@
                 let columns = scope.evDataService.getColumns();
 
                 let dndAreas = {};
-                const hiddenDnDAreas = ['filtersHolder', 'deletionAreaHolder', 'leftSideGroupsHolder'];
+                let hiddenDnDAreas = [];
+
+                if (scope.viewContext !== 'dashboard') {
+					hiddenDnDAreas = ['filtersHolder', 'deletionAreaHolder', 'leftSideGroupsHolder'];
+				}
 
                 var doesColumnHasGrouping = function (colKey) {
 
@@ -1016,7 +1020,7 @@
 					}
 				}; */
 
-				let attrKey;
+				let draggableAttrKey;
 				let draggableColIndex;
 				let draggableCol;
 
@@ -1027,7 +1031,7 @@
 
 					const nextSiblingKey = nextSibling ? nextSibling.dataset.attrKey : null;
 
-					if (nextSiblingKey && attrKey !== nextSiblingKey) {
+					if (draggableAttrKey !== nextSiblingKey) {
 
 						let GCitems = [];
 						let updateGCFMethod = null;
@@ -1060,7 +1064,7 @@
 
 						const draggableItem = GCitems.find((item, index) => {
 
-							if (item.key === attrKey) {
+							if (item.key === draggableAttrKey) {
 								GCitems.splice(index, 1);
 								return true;
 							}
@@ -1089,10 +1093,10 @@
 
 				const onDragstart = function (ev, itemOrigin) {
 
-					attrKey = ev.target.dataset.attrKey;
+					draggableAttrKey = ev.target.dataset.attrKey;
 					draggableCol = columns.find((col, index) => {
 
-						if (col.key === attrKey) {
+						if (col.key === draggableAttrKey) {
 							draggableColIndex = index;
 							return true;
 						}
@@ -1102,14 +1106,14 @@
 					});
 
 					let dragData = {
-						attrKey: attrKey,
+						attrKey: draggableAttrKey,
 						itemOrigin: itemOrigin
 					};
 
 					dragData = JSON.stringify(dragData);
 
 					ev.dataTransfer.setData("attributeData", dragData);
-					ev.dataTransfer.setData(attrKey, "");
+					ev.dataTransfer.setData(draggableAttrKey, "");
 					ev.dataTransfer.setData(itemOrigin, "");
 
 					ev.dataTransfer.dropEffect = 'none';
@@ -1145,7 +1149,7 @@
 
 				};
 
-				const initListenersOnDragstart = function (sameHolder, anotherHolder) {
+				const onDragstartListeners = function (sameHolder, anotherHolder) {
 
 					dndAreas[sameHolder].addEventListener('dragenter', onSameHolderDragenter);
 					dndAreas[anotherHolder].addEventListener('dragover', onAnotherHolderDragover);
@@ -1156,24 +1160,23 @@
 					dndAreas.groups.addEventListener('drop', onDropToGroups, {once: true});
 					dndAreas.columns.addEventListener('drop', onDropToColumns, {once: true});
 
+					const leftSideGroupsDropArea = dndAreas.leftSideGroupsHolder.querySelector('.gDropArea');
+					leftSideGroupsDropArea.addEventListener('drop', onDropToGroups);
+
 					const filterDropArea = dndAreas.filtersHolder.querySelector('.gDropArea');
 					filterDropArea.addEventListener('drop', onDropToFilters);
 
 					const deletionDropArea = dndAreas.deletionAreaHolder.querySelector('.gDropArea');
 					deletionDropArea.addEventListener('drop', onDropToDeletionArea);
 
-					let gcElems;
+					hiddenDnDAreas.forEach((hiddenAreaProp) => {
 
-					if (sameHolder === "groups") {
-						gcElems = groupsElems;
+						dndAreas[hiddenAreaProp].addEventListener('dragenter', onDropAreaDragenter);
+						dndAreas[hiddenAreaProp].addEventListener('dragleave', onDropAreaDragleave);
 
-					} else {
+					});
 
-						gcElems = colsElems;
-						const leftSideGroupsDropArea = dndAreas.leftSideGroupsHolder.querySelector('.gDropArea');
-						leftSideGroupsDropArea.addEventListener('drop', onDropToGroups);
-
-					}
+					let gcElems = (sameHolder === "groups") ? groupsElems : colsElems;
 
 					gcElems.forEach(gcElem => {
 
@@ -1183,6 +1186,31 @@
 					});
 
 				};
+
+				const onDragstartInsideDashboardListeners = function () {
+
+					dndAreas.columns.addEventListener('dragenter', onSameHolderDragenter);
+					dndAreas.columns.addEventListener('drop', onDropToColumns, {once: true});
+
+					colsElems.forEach(gcElem => {
+
+						const draggableArea = gcElem.querySelector(".gDraggableHeadArea");
+						draggableArea.addEventListener('dragleave', removeDraggedOverClasses);
+
+					});
+
+				};
+
+				let initListenersOnDragstart;
+
+				if (scope.viewContext !== 'dashboard') {
+
+					initListenersOnDragstart = onDragstartListeners;
+
+				} else {
+					initListenersOnDragstart = onDragstartInsideDashboardListeners;
+				}
+
 
 				const onSameHolderDragenter = function (ev) {
 
@@ -1224,11 +1252,20 @@
 					dndAreas[anotherHolder].classList.add("container-shadowed", "draggedOver");
 				};
 
+				const onDropAreaDragenter = function (ev) {
+					ev.stopPropagation();
+					ev.target.classList.add("dragged-over");
+				};
+
 				const onAnotherHolderDragleave = function (ev) {
 					const anotherHolder = ev.dataTransfer.types.includes("columns") ? "groups": "columns";
 					dndAreas[anotherHolder].classList.remove("container-shadowed", "draggedOver");
 				};
 
+				const onDropAreaDragleave = function (ev) {
+					ev.stopPropagation();
+					ev.target.classList.remove("dragged-over");
+				};
 
 				const onColumnDragstart = function (ev) {
 					onDragstart(ev, "columns");
@@ -1304,7 +1341,7 @@
 					ev.stopPropagation();
 
 					const filters = scope.evDataService.getFilters();
-					const filterAlreadyExist = filters.find(filter => filter.key === attrKey);
+					const filterAlreadyExist = filters.find(filter => filter.key === draggableAttrKey);
 
 					if (filterAlreadyExist) {
 
@@ -1388,7 +1425,23 @@
 
 				const removeListenersOnDragend = function () {
 
-					[dndAreas.columns, dndAreas.groups].forEach(holder => {
+					let elemsToRemoveListeners = [dndAreas.columns];
+
+					const removeElemDragListeners = function (gcElem) {
+
+						const draggableArea = gcElem.querySelector(".gDraggableHeadArea");
+						draggableArea.removeEventListener('dragleave', removeDraggedOverClasses);
+
+					};
+
+					if (scope.viewContext !== 'dashboard') {
+
+						elemsToRemoveListeners.push(dndAreas.groups);
+						groupsElems.forEach(removeElemDragListeners);
+
+					}
+
+					elemsToRemoveListeners.forEach(holder => {
 
 						holder.removeEventListener('dragenter', onSameHolderDragenter);
 						holder.removeEventListener('dragleave', removeDraggedOverClasses);
@@ -1397,14 +1450,8 @@
 						holder.removeEventListener('drop', onDropToColumns);
 						holder.removeEventListener('drop', onDropToGroups);
 
-					})
+					});
 
-					const removeElemDragListeners = function (gcElem) {
-						const draggableArea = gcElem.querySelector(".gDraggableHeadArea");
-						draggableArea.removeEventListener('dragleave', removeDraggedOverClasses);
-					};
-
-					groupsElems.forEach(removeElemDragListeners);
 					colsElems.forEach(removeElemDragListeners);
 
 				};
@@ -1413,7 +1460,7 @@
 
 					scope.contentWrapElement.classList.remove("g-groups-columns-dnd");
 
-					attrKey = null;
+					draggableAttrKey = null;
 					draggableColIndex = null;
 					draggableCol = null;
 
@@ -1430,7 +1477,7 @@
 				const initDnDFromColumns = function () {
 
 					colsElems = dndAreas.columns.querySelectorAll(".gDraggableHead");
-					console.log("testing colsElems", colsElems);
+
 					colsElems.forEach(colElem => {
 
 						colElem.addEventListener('dragstart', onColumnDragstart);
@@ -1466,8 +1513,6 @@
 
 						initDnDFromColumns();
 
-						initDnDFromGroups();
-
 						scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
 							columns = scope.evDataService.getColumns();
@@ -1476,13 +1521,19 @@
 
 						});
 
-						scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+						if (scope.viewContext !== 'dashboard') {
 
-							groups = scope.evDataService.getGroups();
-							// wait for groups ngRepeat inside gColumnsComponent
-							setTimeout(() => initDnDFromGroups(), 200);
+							initDnDFromGroups();
 
-						});
+							scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
+								groups = scope.evDataService.getGroups();
+								// wait for groups ngRepeat inside gColumnsComponent
+								setTimeout(() => initDnDFromGroups(), 200);
+
+							});
+
+						}
 
 					}, 500);
 

@@ -1,8 +1,23 @@
 <div class="height-100" data-ng-if="readyStatus.data === 'ready'" layout="column" style="min-height: 100%;">
     <div class="dashboard-component-header" flex="noshrink">
-        <div class="dashboard-component-name">
-            <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
-            <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
+
+        <div class="dashboard-component-header-left">
+
+            <div ng-if="customName || (item && item.data.name)" class="dashboard-component-name">
+                <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
+                <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
+            </div>
+
+            <!-- <div class="flex-row fi-start">
+                <md-button class="small-button-icon dashboard-comp-h-btn"
+                           ng-click="toggleFilterBlock()">
+
+                    <span class="material-icons">filter_list</span>
+                    <md-tooltip data-md-direction="top">Toggle filter area</md-tooltip>
+
+                </md-button>
+            </div> -->
+
         </div>
 
         <!--<md-button class="md-button dashboard-component-settings-btn"
@@ -12,7 +27,7 @@
             <md-tooltip class="tooltip_2"
                         md-direction="top">Component settings</md-tooltip>
         </md-button>-->
-        <div class="dashboard-component-header-left">
+        <div class="dashboard-component-header-right">
 
             <md-button  data-ng-if="missingPricesData.items.length" class="md-raised md-warn" data-ng-click="openMissingPricesDialog($event)">
                 <ng-md-icon size="24" icon="warning"></ng-md-icon>

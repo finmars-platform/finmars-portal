@@ -165,7 +165,7 @@
                 }
 
                 if (proxyLineSubtotal && proxyLineSubtotal.___level < obj.___level && obj.___type === 'subtotal' && obj.___subtotal_type === 'area') {
-                    skip = true;
+                	skip = true;
                 }
 
                 if (skip === false) {
@@ -175,10 +175,9 @@
 
                     if (parentGroup.___is_open) {
 
-                        var foldButton = '';
-                        var foldButtonSign = currentGroup.___is_open ? '-': '+';
+						var foldButtonSign = currentGroup.___is_open ? '-': '+';
 
-						foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
+						var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
 
                         result.html_result = foldButton + '<span class="">' + currentGroup.___group_name + '</span>';
                         result.raw_text_result = currentGroup.___group_name;

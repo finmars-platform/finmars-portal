@@ -36,6 +36,8 @@
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
+                scope.filterAreaHidden = false;
+
                 var componentData;
 
                 if (scope.item && scope.item.data) {
@@ -163,7 +165,18 @@
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
+                scope.toggleFilterBlock = function ($event) {
+
+                	const elem = $event.currentTarget;
+					elem.classList.contains('active') ? elem.classList.remove('active') : elem.classList.add('active');
+
+					scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
+
+				};
+
                 scope.initEventListeners = function () {
+
+                	dashboardHelper.initEventListeners(scope);
 
                     if (scope.fillInModeData) { // if dashboard is in fillIn mode
 
@@ -214,7 +227,9 @@
 
                         });
 
-                    } else {
+                    }
+
+                    else {
 
                         scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
@@ -260,24 +275,6 @@
                         } else {
                             scope.customName = null;
                         }
-
-                    });
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
-
-                    	if (scope.vm.componentData.name === "BALANCE_TYPES") {
-							console.log("rv matrix COMPONENT_BLOCKAGE_ON");
-						}
-
-                    	scope.readyStatus.disabled = true;
-
-                    });
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
-						if (scope.vm.componentData.name === "BALANCE_TYPES") {
-							console.log("rv matrix COMPONENT_BLOCKAGE_OFF");
-						}
-                        scope.readyStatus.disabled = false;
 
                     });
 

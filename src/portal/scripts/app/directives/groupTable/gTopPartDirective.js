@@ -47,9 +47,12 @@
                     evEventService: scope.evEventService
                 }
 
-                scope.toggleFilterBlock = function () {
-                    scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
-                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                scope.toggleFilterBlock = function ($event) {
+
+					const elem = $event.currentTarget;
+					elem.classList.contains('active') ? elem.classList.remove('active') : elem.classList.add('active');
+
+					scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
 
                 };
 
