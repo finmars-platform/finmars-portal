@@ -540,12 +540,12 @@ md-progress-circular.progress-circular-white {
   justify-content: space-around;
 }
 
-.fc-flex-end {
-  justify-content: flex-end;
+.flex-c-center, .fc-center {
+  justify-content: center;
 }
 
-.flex-c-center {
-  justify-content: center;
+.fc-flex-end {
+  justify-content: flex-end;
 }
 
 .flex-i-center, .fi-center {
@@ -553,7 +553,16 @@ md-progress-circular.progress-circular-white {
 }
 
 .flex-i-start, .fi-start {
-  align-items: start;
+  align-items: flex-start;
+}
+
+.fi-end {
+  align-items: flex-end;
+}
+
+.flex-center {
+  justify-content: center;
+  align-items: center;
 }
 
 .flex-1-1-100 {
@@ -566,6 +575,26 @@ md-progress-circular.progress-circular-white {
 
 .flex-0-1-100 {
   flex: 0 1 100%;
+}
+
+.flex-1-1-33, .flex-33 {
+  flex: 1 1 33%;
+}
+
+.flex-basis-33 {
+  flex-basis: 33% !important;
+}
+
+.flex-basis-50 {
+  flex-basis: 50% !important;
+}
+
+.flex-basis-66 {
+  flex-basis: 66% !important;
+}
+
+.flex-basis-100 {
+  flex-basis: 100% !important;
 }
 /* < Flexes > */
 
@@ -638,6 +667,10 @@ md-input-container:not(.md-input-focused):not(.md-input-has-value) {
   color: #fa393e;
 }
 
+.orange-text {
+  color: @orange;
+}
+
 md-input-container.no-input-arrows {
   input[type="number"] {
     -webkit-appearance: textfield;
@@ -678,6 +711,10 @@ input.no-input-arrows[type="number"] {
     bottom: 0;
     padding-right: 16px;
   }
+}
+
+.border-radius-2 {
+  border-radius: 2px;
 }
 
 .disabled-element {

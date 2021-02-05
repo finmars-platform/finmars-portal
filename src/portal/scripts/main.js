@@ -62,9 +62,9 @@ app.run(['$rootScope', '$transitions', '$state', function ($rootScope, $transiti
     var toastNotificationService = require('../../core/services/toastNotificationService');
 
 
-    window.developerConsoleService = developerConsoleService;
+    // window.developerConsoleService = developerConsoleService;
 
-    developerConsoleService.init();
+    // developerConsoleService.init();
 
     try {
 
@@ -133,7 +133,10 @@ app.controller('DashboardLayoutManagerController', ['$scope', '$mdDialog', requi
 app.controller('DashboardConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dashboardConstructorController')]);
 app.controller('DashboardConstructorSocketSettingsDialogController', ['$scope', '$mdDialog', 'dashboardConstructorDataService', 'dashboardConstructorEventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorSocketSettingsDialogController')]);
 
+// DEPRECATED SINCE 01.2021
 app.controller('DashboardConstructorAccordionEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorAccordionEditorDialogController')]);
+
+app.controller('DashboardConstructorAccordionComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorAccordionComponentDialogController')]);
 app.controller('DashboardConstructorControlComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorControlComponentDialogController')]);
 app.controller('DashboardConstructorButtonSetComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorButtonSetComponentDialogController')]);
 app.controller('DashboardConstructorInputFormComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorInputFormComponentDialogController')]);
@@ -159,6 +162,7 @@ app.controller('DashboardController', ['$scope', '$stateParams', '$mdDialog', re
 
 app.directive('dashboardGridAligner', [require('./app/directives/dashboard/dashboardGridAlignerDirective')]);
 
+app.directive('dashboardAccordion', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardAccordionDirective')]);
 app.directive('dashboardButtonSet', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardButtonSetDirective')]);
 app.directive('dashboardControl', [require('./app/directives/dashboard/dashboardControlDirective')]);
 app.directive('dashboardEntityViewer', [require('./app/directives/dashboard/dashboardEntityViewerDirective')]);
@@ -380,7 +384,7 @@ app.controller('BookUniquenessWarningDialogController', ['$scope', '$mdDialog', 
 
 // Instrument form - tabs
 
-app.controller('AccrualCalculationSchedulesTabController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
+app.controller('AccrualCalculationSchedulesController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
 app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);

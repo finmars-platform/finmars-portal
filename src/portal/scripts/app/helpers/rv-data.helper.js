@@ -679,6 +679,10 @@
 
             data = insertBlankLinesToResults(data, evDataService);
 
+            localStorage.setItem('flags', [
+                '2,2,1,1,1,1', '2,2,1,1,1,1'
+            ])
+
             console.timeEnd("Calculating blankline");
 
             // console.log('data', data);

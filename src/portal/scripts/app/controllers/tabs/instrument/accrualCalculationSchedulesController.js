@@ -38,9 +38,7 @@
                 vm.readyStatus.accrualModals = true;
                 resolve();
 
-            }).catch(function () {
-                resolve();
-            });
+            }).catch(() => resolve());
 
         });
 
@@ -52,11 +50,10 @@
 
                 vm.periodicityItems = data;
                 vm.readyStatus.periodicityItems = true;
+
                 resolve();
 
-            }).catch(function () {
-                resolve();
-            });
+            }).catch(() => resolve());
 
         });
 
@@ -273,7 +270,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -386,6 +383,7 @@
                                 },
                                 fieldsData: [
                                     {selectorOptions: vm.periodicityItems},
+									null,
                                     {selectorOptions: vm.accrualModels}
                                 ]
                             }
@@ -395,7 +393,18 @@
 
                                 var periodicityCell = gtDataService.getCellByKey(rowData.order, 'periodicity');
 
-                                for (var i = 0; i < vm.periodicityItems.length; i++) {
+								periodicityCell.settings.cellText = '';
+
+                                if (periodicityCell.settings.value[2]) {
+
+									const selectedPeriodicity = vm.periodicityItems.find(item => {
+										return item.id === periodicityCell.settings.value[2];
+									});
+									periodicityCell.settings.cellText = selectedPeriodicity.name
+
+								}
+
+                                /* for (var i = 0; i < vm.periodicityItems.length; i++) {
 
                                     if (vm.periodicityItems[i].id === periodicityCell.settings.value[2]) {
 
@@ -404,7 +413,7 @@
 
                                     }
 
-                                }
+                                } */
 
                             }
                         },
@@ -441,7 +450,7 @@
             // Needed to update data after downloading it from server
             var tmplRowPeriodicityPopup = vm.schedulesGridTableData.templateRow.columns[3].settings.popupSettings;
             tmplRowPeriodicityPopup.fieldsData[0].selectorOptions = vm.accrualModels;
-            tmplRowPeriodicityPopup.fieldsData[1].selectorOptions = vm.periodicityItems;
+            tmplRowPeriodicityPopup.fieldsData[2].selectorOptions = vm.periodicityItems;
 
             // assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);

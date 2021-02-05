@@ -476,7 +476,7 @@
 
 						};
 
-						if (scope.model || scope.model.length) {
+						if (scope.model && scope.model.length) {
 
 							getItems().then(function () {
 
