@@ -77,10 +77,11 @@
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
                 scope.isAllStarsSelected = false;
                 scope.hideRowFilters = false;
+                scope.groupsAreaDraggable = scope.viewContext !== 'dashboard';
 
                 var entityAttrs = [];
                 var dynamicAttrs = [];
-                var keysOfColsToHide = [];
+                // var keysOfColsToHide = [];
 
                 // Victor 2020.12.14 #69 New report viewer design
                 scope.rowFilterColor = 'none';

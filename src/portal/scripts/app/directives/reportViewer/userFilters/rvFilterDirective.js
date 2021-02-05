@@ -41,7 +41,7 @@
 				let isUseFromAboveFilter = false;
 				let filterIndex;
 
-				let findFilter = function () {
+				const findFilter = function () {
 
 					let allFilters = JSON.parse(JSON.stringify(vm.evDataService.getFilters()));
 					filters = [];
@@ -159,14 +159,8 @@
 
 				}
 
-				let isUseFromAbove = (filterData) => {
-
-					if (filterData.options.use_from_above && Object.keys(filterData.options.use_from_above).length) {
-						return true;
-					}
-
-					return false;
-
+				const isUseFromAbove = (filterData) => {
+					return !!(filterData.options.use_from_above && Object.keys(filterData.options.use_from_above).length);
 				};
 
 				vm.saveFilterSettings = function () {
@@ -188,6 +182,7 @@
 					}
 
 					let allFilters = useFromAboveFilters.concat(filters);
+
 					vm.evDataService.setFilters(allFilters);
 
 					$scope.onSave();
