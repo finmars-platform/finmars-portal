@@ -3,26 +3,31 @@
 
     module.exports = function () {
 
-        var data = {};
+        var data = {
+			changedUserInputData: null,
+			tooltipsList: [],
+			colorPalettes: [],
+			userInputsToRecalc: null
+		};
 
-        function setChangedUserInputData (uInputData) {
+        /* function setChangedUserInputData (uInputData) {
             data.changedUserInputData = uInputData;
         }
 
         function getChangedUserInputData () {
             return data.changedUserInputData;
-        }
+        } */
 
         function setTooltipsData (tooltips) {
-            data.tooltipsObj = tooltips;
+            data.tooltipsList = tooltips;
         }
 
         function getTooltipsData () {
-            if (Array.isArray(data.tooltipsObj)) {
-                return data.tooltipsObj
+            if (Array.isArray(data.tooltipsList)) {
+                return data.tooltipsList
             }
 
-            return  [];
+            return [];
         }
 
         function setColorPalettesList (palettesList) {
@@ -30,21 +35,46 @@
         }
 
         function getColorPalettesList () {
-            if (data.colorPalettes) {
-                return data.colorPalettes;
-            } else {
+
+        	if (data.colorPalettes) {
+
+        		return data.colorPalettes;
+
+        	} else {
                 return [];
             }
+
+        }
+
+        function setUserInputsToRecalculate (userInputs) {
+        	data.userInputsToRecalc = userInputs
+		}
+
+		function getUserInputsToRecalculate () {
+			return data.userInputsToRecalc;
+		}
+
+        function setRecalculationFunction (fn) {
+            data.recalculate = fn;
+        }
+
+        function getRecalculationFunction () {
+            return data.recalculate;
         }
 
         return {
-            setChangedUserInputData: setChangedUserInputData,
-            getChangedUserInputData: getChangedUserInputData,
+            /*setChangedUserInputData: setChangedUserInputData,
+            getChangedUserInputData: getChangedUserInputData,*/
+			setUserInputsToRecalculate: setUserInputsToRecalculate,
+			getUserInputsToRecalculate: getUserInputsToRecalculate,
 
             setTooltipsData: setTooltipsData,
             getTooltipsData: getTooltipsData,
             setColorPalettesList: setColorPalettesList,
-            getColorPalettesList: getColorPalettesList
+            getColorPalettesList: getColorPalettesList,
+
+            setRecalculationFunction: setRecalculationFunction,
+            getRecalculationFunction: getRecalculationFunction
         }
     }
 

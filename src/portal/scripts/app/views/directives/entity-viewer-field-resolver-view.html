@@ -4,7 +4,7 @@
         <div data-ng-if="isSpecialSearchRelation()">
             <entity-search-select item="entity[fieldKey]"
                                   label="getName()"
-                                  item-name="inputText"
+                                  item-name="inputTextObj.value"
                                   on-change-callback="changeHandler()"
                                   custom-buttons="item.buttons"
                                   custom-styles="customStyles"
@@ -228,7 +228,7 @@
                                     model="entity[fieldKey]"
                                     items="sortedFields"
                                     name-property="bindFieldsName"
-                                    data-selected-items-indication="array"
+                                    selected-items-indication="chips"
                                     on-change-callback="changeHandler()"></two-fields-multiselect>
 
         </div>
@@ -271,7 +271,7 @@
                                         model="entity[fieldKey]"
                                         name-property="bindFieldsName"
                                         items="sortedFields"
-                                        data-selected-items-indication="array"
+                                        data-selected-items-indication="chips"
                                         on-change-callback="changeHandler()"></two-fields-multiselect>
 
 

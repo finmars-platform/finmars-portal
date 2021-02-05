@@ -95,6 +95,7 @@
                                   class="width-100"
                                   label="Default value"
                                   model="vm.defaultValue"
+                                  is-disabled="vm.valueType === 120"
                                   data-data="vm.expressionData"></expression-input>
                 <dropdown-select ng-if="vm.valueType === 100"
                                  class="width-100"
@@ -113,6 +114,7 @@
             <expression-input class="width-50 p-r-8"
                               label="Input expression"
                               model="vm.valueExpression"
+                              is-disabled="vm.valueType === 120"
                               data-data="vm.expressionData"></expression-input>
 
             <two-fields-multiselect ng-model="vm.linkedInputsNames"

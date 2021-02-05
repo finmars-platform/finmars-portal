@@ -137,8 +137,6 @@
 
         vm.testBloombergCall = function ($event) {
 
-            console.log("Test bloomberg request")
-
             vm.testCertificateConfig = {};
             vm.testCertificateProcessing = true;
 
@@ -164,7 +162,7 @@
 
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         preserveScope: true,

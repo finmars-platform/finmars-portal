@@ -881,13 +881,22 @@ md-card.small-width {
   margin-right: 10px;
 }
 
-.permissions-checkbox-holder md-checkbox {
-  margin: 0 auto;
+.permissions-checkbox-holder {
+
+  md-checkbox {
+    margin: 0 auto;
+  }
+
+  & > div {
+    margin-right: 10px;
+    text-align: center;
+  }
 }
 
-.permissions-checkbox-holder > div {
-  margin-right: 10px;
-  text-align: center;
+.permissions-table {
+  .permissions-checkbox-holder > div {
+    margin-right: 0;
+  }
 }
 
 button.header-account-btn.md-button {
@@ -2086,6 +2095,11 @@ md-menu-content md-menu.md-menu {
   font-size: 12px;
   text-align: center;
   margin: 16px;
+  cursor: pointer;
+}
+
+.build-date:hover {
+  opacity: .5;
 }
 
 .active-button,
@@ -2963,7 +2977,7 @@ button.md-raised.md-warn.md-button {
   font-display: block;
 }
 
-// chips
+//<editor-fold desc="Chips multiselector">
 .chips-list-container {
   display: flex;
   flex-direction: row;
@@ -3065,12 +3079,13 @@ button.md-raised.md-warn.md-button {
   }
 
 }
+//</editor-fold>
 
 // < chips >
 
 //popup menu
 .popup-menu {
-  min-width: 256px;
+  padding: 8px 0;
 
   display: flex;
   flex-direction: column;
@@ -3106,6 +3121,14 @@ button.md-raised.md-warn.md-button {
       opacity: .5;
     }
 
+  }
+
+  .popup-menu-option {
+    width: 100%;
+    text-align: left;
+    padding: 0 16px;
+    margin: 0;
+    box-sizing: border-box;
   }
 
   md-menu-divider {
@@ -3219,3 +3242,7 @@ button.md-raised.md-warn.md-button {
 }
 // <layouts manager>
 
+.homepage-messages-container {
+  max-height: 350px;
+  overflow: auto;
+}
