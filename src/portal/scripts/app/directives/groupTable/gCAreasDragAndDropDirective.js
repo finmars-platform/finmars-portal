@@ -1087,6 +1087,28 @@
 
 				};
 
+                // Victor 2021.02.05 Add right side columns drop area
+				const removeColumnToEndOfList = function () {
+				    const GCitems = columns;
+
+                    const draggableItem = GCitems.find(item => item.key === attrKey);
+                    const draggableItemIndex = GCitems.indexOf(draggableItem);
+
+                    if (draggableItemIndex === -1) {
+                        return;
+                    }
+
+                    GCitems.splice(draggableItemIndex, 1);
+                    GCitems.push(draggableItem);
+
+                    scope.evDataService.setColumns(GCitems);
+                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.$apply();
+
+                };
+                // Victor 2021.02.05 Add right side columns drop area
+
 				const onDragstart = function (ev, itemOrigin) {
 
 					attrKey = ev.target.dataset.attrKey;
@@ -1162,10 +1184,10 @@
                     const deletionDropArea = dndAreas.deletionAreaHolder.querySelector('.gDropArea');
                     deletionDropArea.addEventListener('drop', onDropToDeletionArea);
 
-                    // Victor 210205 Add right side columns drop area
+                    // Victor 2021.02.05 Add right side columns drop area
                     const rightSideColumnsDropArea = dndAreas.rightSideColumnsHolder.querySelector('.gDropArea');
                     rightSideColumnsDropArea.addEventListener('drop', onDropToColumns, {once: true});
-                    // <Victor 210205 Add right side columns drop area>
+                    // <Victor 2021.02.05 Add right side columns drop area>
 
 
 					let gcElems;
@@ -1261,6 +1283,19 @@
 					}
 
 					else if (droppedItemData.itemOrigin === 'columns') {
+
+                        // Victor 2021.02.05 Add right side columns drop area
+					    const rightSideColumnsDropArea = dndAreas.rightSideColumnsHolder.querySelector('.gDropArea');
+                        const isRightSideTarget = ev.currentTarget === rightSideColumnsDropArea;
+
+
+                        if (isRightSideTarget) {
+                            
+                            removeColumnToEndOfList();
+                            return;
+
+                        }
+                        // <Victor 2021.02.05 Add right side columns drop area>
 
 						const nextSibling = ev.target.closest('.gDraggableHead');
 						changeOrder('columns', nextSibling);
@@ -1470,9 +1505,9 @@
 						dndAreas.deletionAreaHolder = scope.contentWrapElement.querySelector('.gDeletionDropArea');
 						dndAreas.leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
 
-                        // Victor 210205 Add right side columns drop area
+                        // Victor 2021.02.05 Add right side columns drop area
 						dndAreas.rightSideColumnsHolder = scope.contentWrapElement.querySelector('.gRightSideColumnsHolder');
-                        // <Victor 210205 Add right side columns drop area>
+                        // <Victor 2021.02.05 Add right side columns drop area>
 
 						initDnDFromColumns();
 
