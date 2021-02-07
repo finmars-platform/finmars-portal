@@ -174,6 +174,15 @@
 
     };
 
+    let getDefaultFilterType = valueType => {
+
+    	const defaultTextFilterType = "contains";
+    	const defaultNumberAndDateFilterType = "equal";
+
+		return valueType === 10 ? defaultTextFilterType: defaultNumberAndDateFilterType;
+
+	};
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
@@ -181,7 +190,8 @@
         textWithDashSort: textWithDashSort,
 		openLinkInNewTab: openLinkInNewTab,
 
-        closeComponent: closeComponent
+        closeComponent: closeComponent,
+		getDefaultFilterType: getDefaultFilterType,
     }
 
 }());

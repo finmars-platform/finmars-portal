@@ -63,20 +63,7 @@
 
 				const init = function () {
 
-					if (scope.filter.options.use_from_above &&
-						Object.keys(scope.filter.options.use_from_above).length) {
-
-						scope.activeFilterType = 'use_from_above'
-
-					} else {
-
-						let activeType = scope.filterTypes.find(type => {
-							return type.value === scope.filter.options.filter_type;
-						});
-
-						scope.activeFilterType = activeType.value
-
-					}
+					scope.activeFilterType = rvFilterVm.getActiveFilterType(scope.filterTypes);
 
 					if (!rvFilterVm.columnRowsContent || !rvFilterVm.columnRowsContent.length) {
 

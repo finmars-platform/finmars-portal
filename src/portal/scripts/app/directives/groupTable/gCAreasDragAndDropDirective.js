@@ -9,7 +9,6 @@
 
 	const metaService = require('../../services/metaService');
 	const evHelperService = require('../../services/entityViewerHelperService');
-	const evDataHelper = require('../../helpers/ev-data.helper');
 
     module.exports = function ($mdDialog) {
         return {
@@ -1021,8 +1020,8 @@
 				}; */
 
 				let draggableAttrKey;
-				let draggableColIndex;
-				let draggableCol;
+				let draggableItemIndex;
+				let draggableItem;
 
 				let groupsElems;
 				let colsElems;
@@ -1092,7 +1091,7 @@
 				};
 
                 // Victor 2021.02.05 Add right side columns drop area
-				const removeColumnToEndOfList = function () {
+				/* const removeColumnToEndOfList = function () {
 				    const GCitems = columns;
 
                     const draggableItem = GCitems.find(item => item.key === draggableAttrKey);
@@ -1110,20 +1109,20 @@
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.$apply();
 
-                };
+                }; */
                 // Victor 2021.02.05 Add right side columns drop area
 
 				const onDragstart = function (ev, itemOrigin) {
 
 					draggableAttrKey = ev.target.dataset.attrKey;
-					draggableCol = columns.find((col, index) => {
+					draggableItem = columns.find((col, index) => {
 
 						if (col.key === draggableAttrKey) {
-							draggableColIndex = index;
+							draggableItemIndex = index;
 							return true;
 						}
 
-						return false
+						return false;
 
 					});
 
@@ -1182,19 +1181,24 @@
 					dndAreas.groups.addEventListener('drop', onDropToGroups, {once: true});
 					dndAreas.columns.addEventListener('drop', onDropToColumns, {once: true});
 
-					const leftSideGroupsDropArea = dndAreas.leftSideGroupsHolder.querySelector('.gDropArea');
-					leftSideGroupsDropArea.addEventListener('drop', onDropToGroups);
-
-					const filterDropArea = dndAreas.filtersHolder.querySelector('.gDropArea');
+					/* const filterDropArea = dndAreas.filtersHolder.querySelector('.gDropArea');
 					filterDropArea.addEventListener('drop', onDropToFilters);
 
 					const deletionDropArea = dndAreas.deletionAreaHolder.querySelector('.gDropArea');
 					deletionDropArea.addEventListener('drop', onDropToDeletionArea);
 
-                    // Victor 2021.02.05 Add right side columns drop area
-                    const rightSideColumnsDropArea = dndAreas.rightSideColumnsHolder.querySelector('.gDropArea');
-                    rightSideColumnsDropArea.addEventListener('drop', onDropToColumns, {once: true});
-                    // <Victor 2021.02.05 Add right side columns drop area>
+					const leftSideGroupsDropArea = dndAreas.leftSideGroupsHolder.querySelector('.gDropArea');
+					leftSideGroupsDropArea.addEventListener('drop', onDropToGroups);
+
+					// Victor 2021.02.05 Add right side columns drop area
+					const rightSideColumnsDropArea = dndAreas.rightSideColumnsHolder.querySelector('.gDropArea');
+					rightSideColumnsDropArea.addEventListener('drop', onDropToColumns, {once: true});
+					// <Victor 2021.02.05 Add right side columns drop area> */
+
+					dndAreas.filtersHolder.addEventListener('drop', onDropToFilters);
+					dndAreas.deletionAreaHolder.addEventListener('drop', onDropToDeletionArea);
+					dndAreas.leftSideGroupsHolder.addEventListener('drop', onDropToGroups);
+					dndAreas.rightSideColumnsHolder.addEventListener('drop', onDropToColumns);
 
 					hiddenDnDAreas.forEach((hiddenAreaProp) => {
 
@@ -1256,7 +1260,7 @@
 						const types = ev.dataTransfer.types;
 						const nextSiblingKey = draggedOverElem.dataset.attrKey;
 
-						const nextColumn = columns[draggableColIndex + 1];
+						const nextColumn = columns[draggableItemIndex + 1];
 						const beforeNextCol = nextColumn && nextColumn.key === nextSiblingKey;
 
 						if (types.includes(nextSiblingKey) || beforeNextCol) { // dragged over element itself or next element
@@ -1308,8 +1312,16 @@
 
 					if (droppedItemData.itemOrigin === 'groups') {
 
-						const groupToDeleteIndex = groups.findIndex(group => group.key === droppedItemData.attrKey);
-						groups.splice(groupToDeleteIndex, 1);
+						// const groupToDeleteIndex = groups.findIndex(group => group.key === droppedItemData.attrKey);
+						groups.splice(draggableItemIndex, 1);
+						let groupColumn = columns[draggableItemIndex];
+
+						if (!groupColumn.frontOptions) {
+							groupColumn.frontOptions = {};
+						}
+
+						groupColumn.frontOptions.lastDragged = true;
+						scope.evDataService.setColumns(columns);
 
 						scope.evDataService.setGroups(groups);
 
@@ -1321,7 +1333,7 @@
 					else if (droppedItemData.itemOrigin === 'columns') {
 
                         // Victor 2021.02.05 Add right side columns drop area
-					    const rightSideColumnsDropArea = dndAreas.rightSideColumnsHolder.querySelector('.gDropArea');
+					    /* const rightSideColumnsDropArea = dndAreas.rightSideColumnsHolder.querySelector('.gDropArea');
                         const isRightSideTarget = ev.currentTarget === rightSideColumnsDropArea;
 
 
@@ -1330,13 +1342,14 @@
                             removeColumnToEndOfList();
                             return;
 
-                        }
+                        } */
                         // <Victor 2021.02.05 Add right side columns drop area>
 
 						const nextSibling = ev.target.closest('.gDraggableHead');
 						changeOrder('columns', nextSibling);
 
 					}
+
 				};
 
 
@@ -1361,9 +1374,13 @@
 
 					else if (droppedItemData.itemOrigin === 'columns') {
 
-						const groupToAdd = evHelperService.getTableAttrInFormOf('groups', draggableCol);
+						const groupToAdd = evHelperService.getTableAttrInFormOf('groups', draggableItem);
 
-						const groups = scope.evDataService.getGroups();
+						if (!groupToAdd.frontOptions) {
+							groupToAdd.frontOptions = {};
+						}
+
+						groupToAdd.frontOptions.lastDragged = true;
 						groups.push(groupToAdd);
 
 						scope.evDataService.setGroups(groups);
@@ -1409,7 +1426,7 @@
 
 					else {
 
-						const filterToAdd = evHelperService.getTableAttrInFormOf('filter', draggableCol);
+						const filterToAdd = evHelperService.getTableAttrInFormOf('filter', draggableItem);
 
 						filters.push(filterToAdd);
 
@@ -1465,6 +1482,11 @@
 
 				const removeListenersOnDragend = function () {
 
+					dndAreas.filtersHolder.removeEventListener('drop', onDropToFilters);
+					dndAreas.deletionAreaHolder.removeEventListener('drop', onDropToDeletionArea);
+					dndAreas.leftSideGroupsHolder.removeEventListener('drop', onDropToGroups);
+					dndAreas.rightSideColumnsHolder.removeEventListener('drop', onDropToColumns);
+
 					let elemsToRemoveListeners = [dndAreas.columns];
 
 					const removeElemDragListeners = function (gcElem) {
@@ -1501,8 +1523,8 @@
 					scope.contentWrapElement.classList.remove("g-groups-columns-dnd");
 
 					draggableAttrKey = null;
-					draggableColIndex = null;
-					draggableCol = null;
+					draggableItemIndex = null;
+					draggableItem = null;
 
 					hiddenDnDAreas.forEach(areaProp => {
 						dndAreas[areaProp].classList.add("display-none");
@@ -1540,54 +1562,62 @@
 
 				};
 
-				if (isReport) {
+				const init = function () {
 
-					setTimeout(function () {
+					if (isReport) {
 
-						dndAreas.columns = scope.contentWrapElement.querySelector(".gColumnsHolder");
-						dndAreas.groups = scope.contentWrapElement.querySelector(".gGroupsHolder");
+						setTimeout(function () {
 
-						dndAreas.filtersHolder = scope.contentWrapElement.querySelector('.gFiltersDropArea');
-						dndAreas.deletionAreaHolder = scope.contentWrapElement.querySelector('.gDeletionDropArea');
-						dndAreas.leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
+							dndAreas.columns = scope.contentWrapElement.querySelector(".gColumnsHolder");
+							dndAreas.groups = scope.contentWrapElement.querySelector(".gGroupsHolder");
 
-                        // Victor 2021.02.05 Add right side columns drop area
-						dndAreas.rightSideColumnsHolder = scope.contentWrapElement.querySelector('.gRightSideColumnsHolder');
-                        // <Victor 2021.02.05 Add right side columns drop area>
+							dndAreas.filtersHolder = scope.contentWrapElement.querySelector('.gFiltersDropArea');
+							dndAreas.deletionAreaHolder = scope.contentWrapElement.querySelector('.gDeletionDropArea');
+							dndAreas.leftSideGroupsHolder = scope.contentWrapElement.querySelector('.gLeftSideGroupsHolder');
 
-						initDnDFromColumns();
+							// Victor 2021.02.05 Add right side columns drop area
+							dndAreas.rightSideColumnsHolder = scope.contentWrapElement.querySelector('.gRightSideColumnsHolder');
+							// <Victor 2021.02.05 Add right side columns drop area>
 
-						scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+							initDnDFromColumns();
 
-							columns = scope.evDataService.getColumns();
-							// wait for columns ngRepeat inside gColumnsComponent
-							setTimeout(() => initDnDFromColumns(), 200);
+							scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-						});
+								columns = scope.evDataService.getColumns();
+								// wait for columns ngRepeat inside gColumnsComponent
+								setTimeout(() => initDnDFromColumns(), 200);
 
-						if (scope.viewContext !== 'dashboard') {
+							});
 
-							initDnDFromGroups();
+							if (scope.viewContext !== 'dashboard') {
+								initDnDFromGroups();
+							}
 
 							scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
 								groups = scope.evDataService.getGroups();
 								// wait for groups ngRepeat inside gColumnsComponent
-								setTimeout(() => initDnDFromGroups(), 200);
+								if (scope.viewContext !== 'dashboard') {
+									setTimeout(() => initDnDFromGroups(), 200);
+								}
 
 							});
 
-						}
+						}, 500);
 
-					}, 500);
+					}
 
-				} else {
+					else {
 
-					setTimeout(function () {
-						dragAndDrop.init();
-					}, 500);
+						setTimeout(function () {
+							dragAndDrop.init();
+						}, 500);
 
-				}
+					}
+
+				};
+
+				init();
 
             }
         }

@@ -7,12 +7,14 @@
  */
 (function () {
 
-    let objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    let uiService = require('../services/uiService');
+    const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
+	const uiService = require('../services/uiService');
 
-    var entityResolverService = require('../services/entityResolverService');
+	const entityResolverService = require('../services/entityResolverService');
 
-    var middlewareService = require('../services/middlewareService');
+	const middlewareService = require('../services/middlewareService');
+
+	const metaHelper = require('../helpers/meta.helper');
 
     'use strict';
 
@@ -156,26 +158,33 @@
             attrTypeToAdd.filters = attrInstance.filters;
         }
 
-        switch (form) {
+        attrTypeToAdd.name = attrInstance.name;
+        attrTypeToAdd.value_type = attrInstance.value_type;
 
-        	case 'group':
-                attrTypeToAdd.groups = true;
-                break;
+        if (attrInstance.layout_name) {
+            attrTypeToAdd.layout_name = attrInstance.layout_name;
+        }
 
-            case 'column':
-                attrTypeToAdd.columns = true;
-                break;
+		switch (form) {
 
-            case 'filter':
+			case 'group':
+				attrTypeToAdd.groups = true;
+				break;
 
-            	attrTypeToAdd.filters = true;
+			case 'column':
+				attrTypeToAdd.columns = true;
+				break;
+
+			case 'filter':
+
+				attrTypeToAdd.filters = true;
 
 				if (!attrTypeToAdd.options) {
 					attrTypeToAdd.options = {};
 				}
 
 				if (!attrTypeToAdd.options.filter_type) {
-					attrTypeToAdd.options.filter_type = "contains";
+					attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
 				}
 
 				if (!attrTypeToAdd.options.filter_values) {
@@ -186,15 +195,8 @@
 					attrTypeToAdd.options.exclude_empty_cells = false;
 				}
 
-                break;
-        }
-
-        attrTypeToAdd.name = attrInstance.name;
-        attrTypeToAdd.value_type = attrInstance.value_type;
-
-        if (attrInstance.layout_name) {
-            attrTypeToAdd.layout_name = attrInstance.layout_name;
-        }
+				break;
+		}
 
         return attrTypeToAdd;
 
