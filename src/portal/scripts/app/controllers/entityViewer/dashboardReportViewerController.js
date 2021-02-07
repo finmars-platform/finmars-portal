@@ -1013,7 +1013,7 @@
 
             vm.setLayout = function (layout) {
 
-                return new Promise(function (resolve, reject) {
+                return new Promise(async function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
@@ -1060,13 +1060,8 @@
                             noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
                         }
 
-                        rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions).then(function () {
-                            resolve();
-
-                        }).catch(function () {
-                            resolve();
-
-                        });
+                        await rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
+                        resolve();
 
                     } else {
                         resolve();
@@ -1655,7 +1650,6 @@
                 });
 				//</editor-fold>
 
-
 				//<editor-fold desc="Dashboard component events">
 				vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
 
@@ -1848,8 +1842,6 @@
                     };
                 }
 
-
-
             };
 
             let getLayoutById = function (layoutId) {
@@ -1923,17 +1915,18 @@
                             // needed to prevent saving layout as collapsed when saving it from dashboard
                             var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
                             savedInterfaceLayout = JSON.parse(JSON.stringify(interfaceLayout));
+
                             var additions = vm.entityViewerDataService.getAdditions();
                             savedAddtions = JSON.parse(JSON.stringify(additions));
 
-                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                            // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                             if (vm.componentData.type === 'report_viewer' ||
                                 vm.componentData.type === 'report_viewer_split_panel') {
 
                                 var evComponents = vm.entityViewerDataService.getComponents();
 
-                                Object.keys(vm.componentData.settings.components).forEach(function (key) {
+                                Object.keys(vm.componentData.settings.components).forEach(key => {
                                     evComponents[key] = vm.componentData.settings.components[key];
                                 });
 
@@ -1999,9 +1992,10 @@
 
                             vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                            vm.readyStatus.layout = true;
+                            /* vm.readyStatus.layout = true;
 
-                            $scope.$apply();
+                            $scope.$apply(); */
+							rvSharedLogicHelper.onSetLayoutEnd();
 
                             resolve();
 
