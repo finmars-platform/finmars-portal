@@ -600,7 +600,7 @@
         };
 
         vm.cancel = function () {
-			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
             // $mdDialog.hide({status: 'disagree'});
         };
 
@@ -638,7 +638,7 @@
             if (windowType === 'big_drawer') {
 
                 const responseObj = {res: 'agree', data: {action: 'copy', entity: entity}};
-                return metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
             }
 
@@ -662,7 +662,7 @@
             });
 
             // $mdDialog.hide();
-			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {});
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
 
         };
 
@@ -712,7 +712,7 @@
 				});
 			}
 
-			if (data.openedIn === 'big-drawer') {
+			if (vm.openedIn === 'big-drawer') {
 
 				// Victor 2020.11.20 #59 Fixed area popup
 				if (vm.fixedArea && vm.fixedArea.showByDefault) {
@@ -1003,7 +1003,7 @@
 
                 	// $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
 					let responseObj = {res: 'agree', data: {action: 'delete'}};
-					metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+					metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                 }
 
@@ -1189,7 +1189,7 @@
                         if (isAutoExitAfterSave) {
 
                             let responseObj = {res: 'agree', data: responseData};
-                            metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                         } else {
 
