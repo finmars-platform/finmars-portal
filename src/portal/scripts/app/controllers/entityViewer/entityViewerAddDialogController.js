@@ -776,7 +776,7 @@
 
         vm.cancel = function () {
             // $mdDialog.hide({status: 'disagree'});
-			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         vm.editLayout = function (ev) {
@@ -877,7 +877,7 @@
 				});
 			}
 
-			if (data.openedIn === 'big-drawer') {
+			if (vm.openedIn === 'big-drawer') {
 
 				// Victor 2020.11.20 #59 Fixed area popup
 				if (vm.fixedArea && vm.fixedArea.showByDefault) {
@@ -1148,7 +1148,7 @@
                     if (isAutoExitAfterSave) {
 
                         let responseObj = {res: 'agree', data: responseData};
-                        metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                        metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     } else {
 
@@ -1570,7 +1570,7 @@
 
         	/*setTimeout(function () {
 
-				if (data.openedIn === 'big-drawer') {
+				if (vm.openedIn === 'big-drawer') {
 
 					vm.bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
 
