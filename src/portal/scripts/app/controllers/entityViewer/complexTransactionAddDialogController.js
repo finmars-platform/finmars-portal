@@ -69,6 +69,8 @@
 		vm.errorFieldsList = [];
 		vm.inputsWithCalculations = null;
 
+		vm.openedIn = data.openedIn;
+
         var notCopiedTransaction = true;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
         //var tooltipsList = [];
@@ -596,7 +598,7 @@
         vm.cancel = function () {
             /* $mdDialog.hide({status: 'disagree'});
 			$bigDrawer.hide({status: 'disagree'}); */
-			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         vm.editLayout = function (ev) {
@@ -828,7 +830,9 @@
                     }
                 })
 
-            } else {
+            }
+
+            else {
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
                 var resultEntity = vm.entity;
 
@@ -837,18 +841,23 @@
                 vm.userInputs.forEach(function (userInput) {
 
                     if (userInput !== null) {
-                        var keys = Object.keys(vm.entity);
-                        keys.forEach(function (key) {
-                            if (key === userInput.name) {
-                                resultEntity.values[userInput.name] = vm.entity[userInput.name];
+
+						Object.keys(vm.entity).forEach(function (key) {
+
+                    		if (key === userInput.name) {
+
+                            	resultEntity.values[userInput.name] = vm.entity[userInput.name];
 
                                 if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
                                     resultEntity.values[userInput.name] = true;
                                 }
 
                             }
+
                         });
+
                     }
+
                 });
 
                 resultEntity.store = true;
@@ -883,7 +892,8 @@
 
                             resolve(data);
 
-                        }).catch(function (data) {
+                        })
+						.catch(function (data) {
 
                             console.log('here?', data);
 
@@ -911,8 +921,8 @@
                                     }
 
                                     if(response.reaction === 'skip') {
-                                        $mdDialog.hide({res: 'agree', data: null});
-                                    }
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: null});
+									}
 
                                     if(response.reaction === 'book_without_unique_code') {
 
@@ -933,7 +943,7 @@
 
                                     }
 
-                                    if(response.reaction === 'overwrite') {
+                                    if (response.reaction === 'overwrite') {
 
                                         // TODO refactor here
                                         //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
@@ -984,7 +994,6 @@
 
                 }).then(function (data) {
 
-
                     if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
                         $mdDialog.show({
@@ -1002,11 +1011,8 @@
                         })
 
                     } else {
-
-                        $mdDialog.hide({res: 'agree', data: data});
-
-                    }
-
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
+					}
 
                 })
             }
@@ -1063,7 +1069,8 @@
                             });
                         });
 
-                    }).then(function (data) {
+                    })
+					.then(function (data) {
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
@@ -1085,13 +1092,11 @@
                             })
 
                         } else {
+							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree'});
+						}
 
-                            $mdDialog.hide({res: 'agree'});
-                        }
-
-                        $mdDialog.hide({res: 'agree'});
-
-                    }).catch(function (data) {
+                    })
+					.catch(function (data) {
 
                         $mdDialog.show({
                             controller: 'ValidationDialogController as vm',
@@ -1110,9 +1115,11 @@
                             skipHide: true
                         })
 
-                    })
+                    });
 
-                } else {
+                }
+
+                else {
 
                     var warningDescription = '<p>Next fields should have positive number value to proceed:';
 
