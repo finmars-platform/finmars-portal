@@ -813,7 +813,7 @@
 				vm.processing = true;
 
 				// Victor 2020.12.01 #64
-				const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+				const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(resultEntity, vm.userInputs, vm.transactionType);
 				await Promise.allSettled(missingFieldsPromises);
 				// <Victor 2020.12.01 #64>
 
@@ -965,7 +965,7 @@
 						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
 					}
 
-                })
+                });
 
             }
 
@@ -982,11 +982,6 @@
             if (vm.entity.$_isValid) {
 
                 if (hasProhibitNegNums.length === 0) {
-
-                    // Victor 2020.12.01 #64
-                    const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-                    await Promise.allSettled(missingFieldsPromises);
-                    // <Victor 2020.12.01 #64>
 
                     var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -1008,6 +1003,10 @@
                     resultEntity.calculate = true;
 
                     console.log('resultEntity', resultEntity);
+					// Victor 2020.12.01 #64
+					const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(resultEntity, vm.userInputs, vm.transactionType);
+					await Promise.allSettled(missingFieldsPromises);
+					// <Victor 2020.12.01 #64>
 
                     new Promise(function (resolve, reject) {
 

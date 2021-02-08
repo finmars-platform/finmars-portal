@@ -1147,11 +1147,11 @@
                 vm.processing = true;
 
 				// Victor 2020.12.01 #64
-				const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+				const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
 				await Promise.allSettled(missingFieldsPromises);
 				// <Victor 2020.12.01 #64>
 
-                new Promise(function (resolve, reject) {
+            	new Promise(function (resolve, reject) {
 
                     complexTransactionService.initRebookComplexTransaction(result.id).then(function (data) {
 
@@ -1290,7 +1290,8 @@
                         });
                     });
 
-                }).then(function (data) {
+                })
+				.then(function (data) {
 
                     if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
@@ -1306,7 +1307,7 @@
                     vm.processing = false;
                     $scope.$apply();
 
-                })
+                });
 
             }
 
@@ -1343,7 +1344,7 @@
                     vm.processing = true;
 
 					// Victor 2020.12.01 #64
-					const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+					const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
 					await Promise.allSettled(missingFieldsPromises);
 					// <Victor 2020.12.01 #64>
 
@@ -1385,7 +1386,8 @@
 
                         });
 
-                    }).then(function (data) {
+                    })
+					.then(function (data) {
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
@@ -1395,13 +1397,14 @@
 							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree'});
                         }
 
-                    }).catch(function (reason) {
+                    })
+					.catch(function (reason) {
 
                         vm.processing = false;
 
                         $scope.$apply();
 
-                    })
+                    });
 
                 }
 
