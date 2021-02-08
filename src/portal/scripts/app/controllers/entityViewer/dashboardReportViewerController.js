@@ -1097,16 +1097,16 @@
 
                     if (linkedFilter) {
 
-                        linkedFilter.options.filter_values = [componentOutput.data.value]
+                        linkedFilter.options.filter_values = [componentOutput.data.value];
 
 						if ((linkedFilter.value_type === 100 || linkedFilter.value_type === 'field') &&
 							Array.isArray(componentOutput.data.value)) {
 
-							linkedFilter.options.filter_values = componentOutput.data.value
+							linkedFilter.options.filter_values = componentOutput.data.value;
 
 						}
 
-                        filters[linkedFilterIndex] = linkedFilter
+                        filters[linkedFilterIndex] = linkedFilter;
 
                     } else {
 
@@ -1127,25 +1127,24 @@
 
 							case 10:
 							case 30:
-								linkedFilter.options.filter_type = 'contains'
+								linkedFilter.options.filter_type = 'contains';
 								break;
 
 							case 20:
 							case 40:
-								linkedFilter.options.filter_type = 'equal'
+								linkedFilter.options.filter_type = 'equal';
 								break;
 
 							case 100:
 							case 'field':
 
 								// even if component is single selector, multiselector filter will work
-
 								// console.log('componentOutput.value', componentOutput.data.value)
-								linkedFilter.value_type = 'field'
-								linkedFilter.options.filter_type = 'multiselector'
+								linkedFilter.value_type = 'field';
+								linkedFilter.options.filter_type = 'multiselector';
 
 								if (Array.isArray(componentOutput.data.value)) {
-									linkedFilter.options.filter_values = componentOutput.data.value
+									linkedFilter.options.filter_values = componentOutput.data.value;
 								}
 
 								break;
