@@ -180,14 +180,14 @@
                     layoutUserCode: null
                 }
             })
-            .state('app.data.pricing-policy', {
+            /* .state('app.data.pricing-policy', {
                 url: '/pricing-policy',
                 templateUrl: 'views/data/data-pricing-policy-view.html',
                 controller: 'DataPricingPolicyController as vm',
                 params: {
                     layoutUserCode: null
                 }
-            })
+            }) */
             .state('app.data.complex-transaction', {
                 url: '/complex-transactions',
                 templateUrl: 'views/data/data-complex-transaction-view.html',
@@ -651,7 +651,12 @@
             .state('app.settings.color-palettes', {
                 url: '/palettes',
                 templateUrl: 'views/colorPicker/color-palettes-settings-view.html',
-                controller: 'ColorPalettesSettingsController as vm'
+                controller: 'ColorPalettesSettingsController as vm',
+				resolve: {
+                	data: function() { // setting 'data' dependency
+                		return '';
+					}
+				}
             })
             .state('app.settings.import-configuration', {
                 url: '/import-configuration',

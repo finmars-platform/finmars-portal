@@ -14,7 +14,6 @@
     module.exports = function () {
         return {
             restriction: 'E',
-            templateUrl: 'views/directives/dashboard/dashboard-control-view.html',
             scope: {
                 tabNumber: '=',
                 rowNumber: '=',
@@ -23,10 +22,15 @@
                 dashboardDataService: '=',
                 dashboardEventService: '='
             },
+			templateUrl: 'views/directives/dashboard/dashboard-control-view.html',
             link: function (scope, elem, attr) {
 
                 scope.fields = [];
                 scope.entityType = null;
+
+                scope.attribute = {
+                    key: 'value'
+                }
 
                 scope.getEntityTypeByContentType = function (contentType) {
 
@@ -65,7 +69,7 @@
 
                     var getEntitiesMethod = function (resolve, reject) {
 
-                        entityResolverService.getList(scope.entityType, options).then(function (data) {
+                        entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
                             //scope.fields = data.results;
                             fields = fields.concat(data.results);
@@ -98,7 +102,7 @@
 
                     }
 
-                    return new Promise (function (resolve, reject) {
+                    return new Promise(function (resolve, reject) {
                         getEntitiesMethod(resolve, reject);
                     })
 
@@ -150,13 +154,13 @@
 
                 scope.clearValue = function () {
 
-                    scope.item.data.store.value = null;
+                    scope.item.data.store.value = scope.componentData.settings.multiple ? [] : null;
                     scope.item.data.store.name = '';
                     scope.valueChanged()
 
                 };
 
-                scope.initEventListeners = function(){
+                scope.initEventListeners = function () {
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
@@ -172,6 +176,9 @@
                 };
 
                 var getItemDataStore = function (componentData) {
+
+                    console.log('getItemDataStore.item', scope.item)
+                    console.log('getItemDataStore.componentData', scope.componentData)
 
                     var promisify = function (value) {
                         return new Promise(function (resolve) {
@@ -190,18 +197,69 @@
                     var mode = componentData.settings.defaultValue.mode;
 
                     if (mode === 1) { // Set default value
+
                         var value = componentData.settings.defaultValue.setValue;
                         var name = componentData.settings.defaultValue.setValueName;
                         var label = componentData.settings.defaultValue.setValueLabel;
 
-                        return promisify({value: value, name: name, label: label});
+                        console.log("Setting default value", componentData)
+
+                        if (componentData.settings.value_type === 100) {
+
+                            return entityResolverService.getListLight(scope.entityType, {
+                                filters: {
+                                    user_code: value
+                                }
+                            }).then(function (data){
+
+                                var result;
+
+                                if(data.results) {
+
+                                    result = data.results.find(function(item){
+                                        return item.user_code === value;
+                                    })
+
+                                }
+
+                                if (result) {
+                                    return promisify({value: result.id, name: name, label: label});
+                                } else {
+
+                                    return promisify({});
+                                }
+
+                            })
+
+                        } else {
+
+                            return promisify({value: value, name: name, label: label});
+                        }
                     }
 
-                    if (mode === 0) { // Get default value from report
+                    else if (mode === 0) { // Get default value from report
 
-                        var layoutId = componentData.settings.defaultValue.layout;
+                        var user_code = componentData.settings.defaultValue.layout;
 
-                        return uiService.getListLayoutByKey(layoutId).then(function (layout) {
+                        return uiService.getListLayout(scope.entityType, {
+                            filters: {
+                                user_code: user_code
+                            }
+                        }).then(function (data) {
+
+                            var layout;
+
+                            if (data.results) {
+
+                                layout = data.results.find(function (item) {
+                                    return item.user_code === user_code
+                                })
+
+                            }
+
+                            if (!layout) {
+                                return {}
+                            }
 
                             var key = componentData.settings.defaultValue.reportOptionsKey;
                             var value = layout.data.reportOptions[key];
@@ -243,16 +301,19 @@
                         });
                     }
 
-                    return promisify({});
-
+                    else {
+                        return promisify({});
+                    }
                 };
 
                 scope.settingUpDefaultValue = function (componentData) {
 
                     getItemDataStore(componentData).then(function (store) {
+
                         if (!store.value) {
                             return;
                         }
+
                         scope.item.data.store = store;
                         scope.$apply();
                         scope.valueChanged();
@@ -260,29 +321,94 @@
 
                 };
 
+                scope.setDateToday = function () {
+                    scope.item.data.store.value = moment(new Date()).format(
+                        "YYYY-MM-DD"
+                    );
+                };
+
+                scope.setDatePlus = function () {
+                    scope.item.data.store.value = moment(
+                        new Date(scope.item.data.store.value)
+                    )
+                        .add(1, "days")
+                        .format("YYYY-MM-DD");
+                };
+
+                scope.setDateMinus = function () {
+                    scope.item.data.store.value = moment(
+                        new Date(scope.item.data.store.value)
+                    )
+                        .subtract(1, "days")
+                        .format("YYYY-MM-DD");
+                };
+
+
                 scope.init = function () {
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
                     scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
 
+                    scope.buttons = [];
+
+                    if (scope.componentData.settings.value_type === 40) {
+
+                        scope.buttons.push({
+                            iconObj: {type: "angular-material", icon: "add"},
+                            tooltip: "Increase by one day",
+                            classes: "date-input-specific-btns",
+                            action: {callback: scope.setDatePlus},
+                        });
+
+                        scope.buttons.push({
+                            iconObj: {type: "angular-material", icon: "radio_button_unchecked"},
+                            tooltip: "Set today's date",
+                            classes: "date-input-specific-btns",
+                            action: {callback: scope.setDateToday},
+                        });
+
+                        scope.buttons.push({
+                            iconObj: {type: "angular-material", icon: "remove"},
+                            tooltip: "Decrease by one day",
+                            classes: "date-input-specific-btns",
+                            action: {callback: scope.setDateMinus},
+                        });
+
+                    }
+
                     if (scope.entityType) {
 
-                        scope.getData()
-                            .then(function() {
+                        scope.getData().then(function () {
 
-                                scope.settingUpDefaultValue(scope.componentData);
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+							scope.settingUpDefaultValue(scope.componentData);
+							scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+							scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                            });
+                        });
 
-                    } else {
+                    }
+
+                    else {
+
+                        scope.item.data.store = {};
 
                         scope.settingUpDefaultValue(scope.componentData);
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     }
+
+                    if (scope.componentData.settings.multiple) {
+
+                    	if (!scope.item.data.store) {
+							scope.item.data.store = {}
+						}
+
+                    	if (!Array.isArray(scope.item.data.store.value)) {
+							scope.item.data.store.value = [];
+						}
+
+					}
 
                     if (scope.componentData.custom_component_name) {
                         scope.customName = scope.componentData.custom_component_name;

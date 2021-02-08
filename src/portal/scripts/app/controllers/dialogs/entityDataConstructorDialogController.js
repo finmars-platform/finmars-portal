@@ -364,7 +364,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: ev,
                     clickOutsideToClose: false,
@@ -617,7 +617,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     clickOutsideToClose: false,
                     multiple: true,
@@ -651,6 +651,11 @@
 
             } else {
 
+                console.log('vm.fieldsTree[tab.tabOrder]', vm.fieldsTree[tab.tabOrder], row)
+
+                // TODO this line get throw
+                // Error: [$interpolate:interr] Can't interpolate: {{vm.bindFlex(tab, row, column)}}
+                // vm.fieldsTree[tab.tabOrder] have not property [row]
                 for (i = 0; i < vm.fieldsTree[tab.tabOrder][row].length; i++) {
                     var colFromRow = vm.fieldsTree[tab.tabOrder][row][i];
                     totalColspans = totalColspans + parseInt(colFromRow.colspan, 10);
@@ -723,7 +728,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         clickOutsideToClose: false,
                         multiple: true,
@@ -804,7 +809,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     // targetEvent: $event,
                     autoWrap: true,
                     skipHide: true,
@@ -850,7 +855,7 @@
 
                 if (res.status === 'agree') {
 
-                    attributeTypeService.getList(vm.entityType).then(function (data) {
+                    attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
 
                         vm.readyStatus.constructor = false;
 
@@ -989,7 +994,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                attributeTypeService.getList(vm.entityType).then(function (data) {
+                attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
 
                     vm.attrs = data.results;
                     var entityAttrs = metaService.getEntityAttrs(vm.entityType);
@@ -1350,7 +1355,7 @@
                 });
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('out', function (elem, container, source) {
@@ -1403,7 +1408,8 @@
 
                 drake.on('dragend', function (el) {
 
-                    document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.disableDnDWheelScroll();
+
                     $scope.$apply();
                     drake.remove();
 

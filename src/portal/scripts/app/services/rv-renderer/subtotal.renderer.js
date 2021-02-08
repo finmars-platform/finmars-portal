@@ -3,6 +3,7 @@
     var renderHelper = require('../../helpers/render.helper');
     var rvHelper = require('../../helpers/rv.helper');
     var evDataHelper = require('../../helpers/ev-data.helper');
+	var stringHelper = require('../../helpers/stringHelper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
@@ -159,7 +160,15 @@
                             foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '"><div>+</div></div>';
                         }
 
-                        result.html_result = foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span>';
+                        var groupName = currentGroup.___group_name;
+
+						if (groupName && typeof groupName === 'string') {
+
+							groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+
+						}
+
+                        result.html_result = foldButton + '<span class="text-bold">' + groupName + '</span>';
                         result.raw_text_result = currentGroup.___group_name;
 
                     }
@@ -194,7 +203,15 @@
                     foldButtonStr = ''
                 }
 
-                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="text-bold">' + obj.___group_name + '</span></span>';
+                var groupName = obj.___group_name;
+
+				if (groupName && typeof groupName === 'string') {
+
+					groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+
+				}
+
+                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="text-bold">' + groupName + '</span></span>';
                 result.raw_text_result = obj.___group_name;
 
             }
@@ -341,6 +358,7 @@
 
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
+        var rowHeight = evDataService.getRowHeight();
 
         var parent = evDataService.getData(obj.___parentId);
 
@@ -382,13 +400,15 @@
 
         var classes = classList.join(' ');
 
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
+
         var result;
 
         if (obj.___subtotal_subtype) {
-            result = '<div class="' + classes + '" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+            result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         } else {
 
-            result = '<div class="' + classes + '" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+            result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         }
         var cell;
 

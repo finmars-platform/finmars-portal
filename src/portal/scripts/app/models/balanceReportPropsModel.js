@@ -213,6 +213,14 @@
                 "value_content_type": "currencies.currency",
                 "code": "user_code"
             },
+            {
+                "key": "exposure_currency",
+                "name": " Exposure Currency",
+                "value_type": "field",
+                "value_entity": "currency",
+                "value_content_type": "currencies.currency",
+                "code": "user_code"
+            },
             //{
             //    "key": "report_currency_history",
             //    "name": "Report currency history",

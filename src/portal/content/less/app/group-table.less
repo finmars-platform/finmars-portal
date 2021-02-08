@@ -1,3 +1,5 @@
+@gRowIconColor: #888;
+
 .g-wrapper {
   overflow: hidden;
   height: 100%;
@@ -257,6 +259,24 @@
     overflow: auto;
     width: 100%;
     display: block;
+
+    &.g-font-size-small {
+      .g-cell {
+        font-size: 12px;
+      }
+    }
+
+    &.g-font-size-medium {
+      .g-cell {
+        font-size: 16px;
+      }
+    }
+
+    &.g-font-size-large {
+      .g-cell {
+        font-size: 20px;
+      }
+    }
   }
 
   .g-group-holder {
@@ -602,17 +622,26 @@
 
   .g-row-selection {
     width: 25px;
-    float: left;
     height: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    float: left;
     background: #fff;
     fill: #f5f5f5;
     border-right: 1px solid #ddd;
     text-align: center;
 
+    .material-icons {
+      font-size: 20px;
+      color: @gRowIconColor;
+    }
+
     svg {
       width: 20px;
       height: 20px;
-      fill: #888;
+      fill: @gRowIconColor;
     }
   }
 
@@ -2042,6 +2071,7 @@ md-checkbox.g-filter-options-checkbox {
 }
 
 .g-report-settings-dialog-view {
+
   md-card {
     padding-top: 16px;
   }
@@ -2054,6 +2084,12 @@ md-checkbox.g-filter-options-checkbox {
     min-width: 190px;
     height: 34px;
   }
+
+  .multiselector-input-container {
+    min-width: 190px;
+    margin: 0 10px;
+  }
+
 }
 
 .g-cell {

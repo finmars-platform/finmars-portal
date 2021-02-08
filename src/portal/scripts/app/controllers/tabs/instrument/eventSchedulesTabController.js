@@ -16,7 +16,7 @@
     var md5Helper = require('../../../helpers/md5.helper');
     var GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
-    var EVENT_INIT_OBJECT = {
+    var eventObj = {
         "name": '',
         "description": "",
         "notification_class": '',
@@ -127,109 +127,109 @@
         };
 
         // Victor 06.10.2020 Not used after switching to grid table
-        // vm.bindPeriodicity = function (row) {
-        //     var name;
-        //     if (vm.periodicityItems) {
-        //         vm.periodicityItems.forEach(function (item) {
-        //             if (row.periodicity == item.id) {
-        //                 row.periodicity_name = item.name;
-        //                 name = item.name
-        //             }
-        //         });
-        //     }
-        //
-        //     return name;
-        // };
+        /* vm.bindPeriodicity = function (row) {
+            var name;
+            if (vm.periodicityItems) {
+                vm.periodicityItems.forEach(function (item) {
+                    if (row.periodicity == item.id) {
+                        row.periodicity_name = item.name;
+                        name = item.name
+                    }
+                });
+            }
 
-        vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
+            return name;
+        }; */
+
+        vm.newItem = JSON.parse(JSON.stringify(eventObj));
 
         // Victor 01.10.2020 I use EVENT_INIT_OBJECT
-        // vm.newItem = {
-        //     "name": '',
-        //     "description": "",
-        //     "notification_class": '',
-        //     "notify_in_n_days": '',
-        //     "periodicity": '',
-        //     "periodicity_n": '',
-        //     "action_is_sent_to_pending": null,
-        //     "action_is_book_automatic": null,
-        //     "actions": [],
-        //     "effective_date": null,
-        //     "final_date": null,
-        //     "event_class": null
-        // };
+        /* vm.newItem = {
+            "name": '',
+            "description": "",
+            "notification_class": '',
+            "notify_in_n_days": '',
+            "periodicity": '',
+            "periodicity_n": '',
+            "action_is_sent_to_pending": null,
+            "action_is_book_automatic": null,
+            "actions": [],
+            "effective_date": null,
+            "final_date": null,
+            "event_class": null
+        };
 
-        // Victor 06.10.2020 Not used after switching to grid table
+        Victor 06.10.2020 Not used after switching to grid table
 
-        // vm.editItem = function (item) {
-        //     item.editStatus = true;
-        //
-        //     activeItemOriginal = JSON.stringify(item)
-        // };
+        vm.editItem = function (item) {
+            item.editStatus = true;
 
-        // vm.saveItem = function (item) {
-        //
-        //     if (activeItemOriginal !== JSON.stringify(item)) {
-        //         item.is_auto_generated = false;
-        //     }
-        //
-        //     item.editStatus = false;
-        // };
+            activeItemOriginal = JSON.stringify(item)
+        };
 
-        // vm.deleteItem = function (item, index) {
-        //     vm.entity.event_schedules.splice(index, 1);
-        // };
+        vm.saveItem = function (item) {
 
-        // vm.createActions = function ($event, actions) {
-        //     $mdDialog.show({
-        //         controller: 'InstrumentEventActionsDialogController as vm',
-        //         templateUrl: 'views/dialogs/instrument-event-actions-dialog-view.html',
-        //         targetEvent: $event,
-        //         preserveScope: true,
-        //         autoWrap: true,
-        //         multiple: true,
-        //         clickOutsideToClose: false,
-        //         locals: {
-        //             eventActions: actions
-        //         }
-        //     });
-        // };
+            if (activeItemOriginal !== JSON.stringify(item)) {
+                item.is_auto_generated = false;
+            }
 
-        // vm.addRow = function () {
-        //     vm.entity.event_schedules.push({
-        //         "name": vm.newItem.name,
-        //         "description": vm.newItem.description,
-        //         "notification_class": vm.newItem.notification_class,
-        //         "notify_in_n_days": vm.newItem.notify_in_n_days,
-        //         "action_text": vm.newItem.action_text,
-        //         "event_class": vm.newItem.event_class,
-        //         "action_is_sent_to_pending": vm.newItem.action_is_sent_to_pending,
-        //         "action_is_book_automatic": vm.newItem.action_is_book_automatic,
-        //         "actions": vm.newItem.actions,
-        //         "effective_date": vm.newItem.effective_date,
-        //         "final_date": vm.newItem.final_date,
-        //         "periodicity": vm.newItem.periodicity,
-        //         "periodicity_n": vm.newItem.periodicity_n
-        //     });
-        //
-        //     vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
-        //
-        //     // Victor 01.10.2020 I use EVENT_INIT_OBJECT
-        //     // vm.newItem = {
-        //     //     "name": '',
-        //     //     "description": "",
-        //     //     "notification_class": '',
-        //     //     "notify_in_n_days": '',
-        //     //     "periodicity": '',
-        //     //     "periodicity_n": '',
-        //     //     "action_is_sent_to_pending": null,
-        //     //     "action_is_book_automatic": null,
-        //     //     "actions": [],
-        //     //     "effective_date": null,
-        //     //     "final_date": null,
-        //     //     // "event_class": null
-        //     // };
-        // }
+            item.editStatus = false;
+        };
+
+        vm.deleteItem = function (item, index) {
+            vm.entity.event_schedules.splice(index, 1);
+        };
+
+        vm.createActions = function ($event, actions) {
+            $mdDialog.show({
+                controller: 'InstrumentEventActionsDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-actions-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                clickOutsideToClose: false,
+                locals: {
+                    eventActions: actions
+                }
+            });
+        };
+
+        vm.addRow = function () {
+            vm.entity.event_schedules.push({
+                "name": vm.newItem.name,
+                "description": vm.newItem.description,
+                "notification_class": vm.newItem.notification_class,
+                "notify_in_n_days": vm.newItem.notify_in_n_days,
+                "action_text": vm.newItem.action_text,
+                "event_class": vm.newItem.event_class,
+                "action_is_sent_to_pending": vm.newItem.action_is_sent_to_pending,
+                "action_is_book_automatic": vm.newItem.action_is_book_automatic,
+                "actions": vm.newItem.actions,
+                "effective_date": vm.newItem.effective_date,
+                "final_date": vm.newItem.final_date,
+                "periodicity": vm.newItem.periodicity,
+                "periodicity_n": vm.newItem.periodicity_n
+            });
+
+            vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
+
+            // Victor 01.10.2020 I use EVENT_INIT_OBJECT
+            // vm.newItem = {
+            //     "name": '',
+            //     "description": "",
+            //     "notification_class": '',
+            //     "notify_in_n_days": '',
+            //     "periodicity": '',
+            //     "periodicity_n": '',
+            //     "action_is_sent_to_pending": null,
+            //     "action_is_book_automatic": null,
+            //     "actions": [],
+            //     "effective_date": null,
+            //     "final_date": null,
+            //     // "event_class": null
+            // };
+        } */
 
         vm.generateEventInstrument = function($event) {
 
@@ -288,16 +288,13 @@
                 parent: angular.element(document.body),
                 // targetEvent: $event,
                 clickOutsideToClose: false,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
                 multiple: true,
                 locals: {
                     data: {
                         eventClasses: vm.eventClasses,
                         notificationClasses: vm.notificationClasses,
                         periodicityItems: vm.periodicityItems,
-                        event: event
+                        event: JSON.parse(JSON.stringify(event))
                     }
 
                 }
@@ -318,7 +315,7 @@
                     return;
                 }
 
-                vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
+                vm.newItem = JSON.parse(JSON.stringify(eventObj));
 
                 var event = res.data.event;
 
@@ -525,7 +522,8 @@
 
             // assemble body rows
             vm.entity.event_schedules.forEach(function (event, eventIndex) {
-                rowObj = metaHelper.recursiveDeepCopy(vm.eventsGridTableData.templateRow, true);
+
+            	rowObj = metaHelper.recursiveDeepCopy(vm.eventsGridTableData.templateRow, true);
                 rowObj.key = event.id;
                 rowObj.order = eventIndex;
 
@@ -545,6 +543,7 @@
                 eventClass.settings.value = vm.bindEventClass(event);
 
                 vm.eventsGridTableData.body.push(rowObj);
+
             });
             // < assemble body rows >
         };

@@ -21,13 +21,14 @@
                                 <h3 class="margin-0 m-b-8">Info</h3>
 
                                 <div><b>Type</b>: Transaction Import</div>
-                                <div><b>Error handler</b>: {{vm.config.error_handling}}</div>
+                                <div><b>Error handler</b>: {{vm.scheme.error_handler}}</div>
                                 <div><b>Filename</b>: {{vm.config.file.name}}</div>
-                                <div><b>Import Rules - if object is not found</b>: {{vm.config.missing_data_handler}}
+                                <div><b>Import Rules - if object is not found</b>: {{vm.scheme.missing_data_handler}}
                                 </div>
 
                                 <div class="m-t-8">
-                                    <a href="javascript:void(0)" class="download-error-link">Download error file</a>
+<!--                                    <a href="javascript:void(0)" class="download-error-link">Download error file</a>-->
+                                    <a href="{{vm.getFileUrl(vm.validationResult.stats_file_report)}}" download>Download Report File</a>
                                 </div>
 
                             </div>

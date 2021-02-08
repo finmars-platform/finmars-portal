@@ -15,8 +15,10 @@
     var replace = require('gulp-replace');
 
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
+    var WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
+    var HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
 
-    gulp.task('default', gulp.parallel('core-min-All', 'portal-min-All'));
+    gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All'));
 
     gulp.task('doc-clean', function () {
         return gulp.src(['./docs'], {read: false, allowEmpty: true })
@@ -33,8 +35,9 @@
     gulp.task('after-build-env-set',  function () {
 
         console.log('API_HOST: ' + API_HOST);
+        console.log('WS_HOST: ' + WS_HOST);
 
-        if (API_HOST.indexOf('https://') === -1) {
+        if (API_HOST.indexOf('https://') === -1 && API_HOST.indexOf('http://') === -1) {
 
             API_HOST  = "https://" + API_HOST;
 
@@ -43,6 +46,8 @@
 
         return gulp.src(['dist/portal/scripts/main.min.js'])
             .pipe(replace(/__API_HOST__/g, API_HOST))
+            .pipe(replace(/__WS_HOST__/g, WS_HOST))
+            .pipe(replace(/__HEALTHCHECK_HOST__/g, HEALTHCHECK_HOST))
             .pipe(gulp.dest('dist/portal/scripts/'))
 
     });

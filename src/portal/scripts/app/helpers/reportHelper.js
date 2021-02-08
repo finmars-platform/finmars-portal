@@ -151,6 +151,10 @@
                 item.currency_object = findEntityObject(report, 'item_currencies', item.currency);
             }
 
+            if (item.exposure_currency && report.item_currencies.length) {
+                item.exposure_currency_object = findEntityObject(report, 'item_currencies', item.exposure_currency);
+            }
+
             if (item.pricing_currency && report.item_currencies.length) {
                 item.pricing_currency_object = findEntityObject(report, 'item_currencies', item.pricing_currency);
             }
@@ -450,6 +454,7 @@
             'account_position': 'accounts.account',
             'currency': 'currencies.currency',
             'pricing_currency': 'currencies.currency',
+            'exposure_currency': 'currencies.currency',
             'accrued_currency': 'currencies.currency',
             'settlement_currency': 'currencies.currency',
             'transaction_currency': 'currencies.currency',
