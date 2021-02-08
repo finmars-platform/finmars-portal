@@ -25,6 +25,21 @@
                 scope.$watch('item', function () {
                     scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
 
+                    if (scope.componentData && scope.componentData.type === 'accordion') {
+
+                        scope.item.rowspan = 1
+
+                        var maxColspan = scope.colspanList[scope.colspanList.length - 1];
+
+                        scope.item.colspan = maxColspan;
+
+                        scope.hideOverlaidSockets();
+
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+
+                    }
+
                 });
 
                 scope.getVerboseType = function () {
@@ -68,6 +83,9 @@
                             break;
                         case 'control':
                             verboseType = 'Control';
+                            break;
+                        case 'accordion':
+                            verboseType = 'Accordion';
                             break;
                         case 'button_set':
                             verboseType = 'Button Set';
@@ -268,7 +286,7 @@
 
                     }*/
 
-                    var r,c;
+                    var r, c;
                     rowLoop: for (r = scope.rowNumber + rowspan; r < tab.layout.rows.length; r++) {
 
                         row = tab.layout.rows[r];
@@ -714,6 +732,22 @@
                 var init = function () {
                     scope.calculateColspanList();
                     scope.calculateRowspanList();
+
+                    if (scope.componentData && scope.componentData.type === 'accordion') {
+
+                        scope.item.rowspan = 1
+
+                        var maxColspan = scope.colspanList[scope.colspanList.length - 1];
+
+                        scope.item.colspan = maxColspan;
+
+                        scope.hideOverlaidSockets();
+
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                        scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+
+                    }
+
                 };
 
                 init();

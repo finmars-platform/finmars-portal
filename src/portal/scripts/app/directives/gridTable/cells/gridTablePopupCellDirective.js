@@ -104,7 +104,7 @@
                         }
                     }, {once: true});
 
-                    if (scope.column.settings.closeOnMouseOut !== false) {
+                    if (scope.column.settings.closeOnMouseOut) {
                         popupBackdropElem.addEventListener('mouseenter', closePopupArea, {once: true});
                     }
 

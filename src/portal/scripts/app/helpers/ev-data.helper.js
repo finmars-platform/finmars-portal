@@ -7,7 +7,7 @@
 
     // IMPORTANT: if you are changing popupMenu variables, also change them in 'entity-viewer.less'
     var popupMenuWidth = 320;
-    var popupMenuOptionHeight = 24;
+    var popupMenuOptionHeight = 33;
 
     var getNextPage = function (options, event, entityViewerDataService) {
 
@@ -795,10 +795,10 @@
     };
 
     var calculateMenuPosition = function (popup, menuPosition) {
-
+		console.log("ev submenu menuPosition", menuPosition);
         var bodyWidth = document.body.clientWidth;
         var bodyHeight = document.body.clientHeight;
-
+		console.log("ev submenu bodyHeight", bodyHeight);
         var menuOptionsContainer = popup.querySelector('.ev-dropdown-container');
         var submenuItem = menuOptionsContainer.querySelector('.ev-dropdown-submenu');
 
@@ -820,10 +820,10 @@
         if (bodyHeight < menuPosition.positionY + menuHeight) {
 
             popup.classList.add('ev-dropdown-opens-top');
-            popup.style.bottom = 0;
+            popup.style.bottom = 0
 
         } else {
-            popup.style.top = menuPosition.positionY + 'px';
+            popup.style.top = menuPosition.positionY + 'px'
         }
 
         //popup.style.cssText = menuPosition;
