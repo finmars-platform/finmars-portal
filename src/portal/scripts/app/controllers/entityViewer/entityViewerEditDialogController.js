@@ -15,7 +15,7 @@
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents')
 
     var gridHelperService = require('../../services/gridHelperService');
-    var entityViewerHelperService = require('../../services/entityViewerHelperService');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
@@ -108,6 +108,7 @@
         vm.currencies = []; // need for instrument pricing tab;
 
         // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
+        vm.action = 'edit';
         vm.typeFieldName = 'type';
         vm.typeFieldLabel = 'Type';
 
@@ -599,7 +600,7 @@
         };
 
         vm.cancel = function () {
-			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
             // $mdDialog.hide({status: 'disagree'});
         };
 
@@ -625,7 +626,7 @@
             });
         };
 
-        vm.copy = function ($event) {
+        vm.copy = function (windowType) {
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
@@ -634,11 +635,17 @@
 
             console.log('copy entity', entity);
 
+            if (windowType === 'big_drawer') {
+
+                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity}};
+                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+            }
+
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: $event,
                 locals: {
                     entityType: vm.entityType,
                     entity: entity,
@@ -655,7 +662,7 @@
             });
 
             // $mdDialog.hide();
-			metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, {});
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
 
         };
 
@@ -705,7 +712,7 @@
 				});
 			}
 
-			if (data.openedIn === 'big-drawer') {
+			if (vm.openedIn === 'big-drawer') {
 
 				// Victor 2020.11.20 #59 Fixed area popup
 				if (vm.fixedArea && vm.fixedArea.showByDefault) {
@@ -996,7 +1003,7 @@
 
                 	// $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
 					let responseObj = {res: 'agree', data: {action: 'delete'}};
-					metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+					metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                 }
 
@@ -1182,7 +1189,7 @@
                         if (isAutoExitAfterSave) {
 
                             let responseObj = {res: 'agree', data: responseData};
-                            metaHelper.closeComponent(data.openedIn, $mdDialog, $bigDrawer, responseObj);
+                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                         } else {
 
@@ -2082,7 +2089,7 @@
 
             	getEntityStatus();
 
-				entityViewerHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
+				evHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
 
 					vm.fixedAreaPopup.fields = fields;
 					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fields));

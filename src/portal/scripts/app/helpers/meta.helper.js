@@ -166,6 +166,7 @@
     let closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
 
         if (openedIn === 'big-drawer') {
+
             $bigDrawer.hide(response);
 
         } else { // opened in mdDialog

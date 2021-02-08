@@ -3,7 +3,7 @@
     var stringHelper = require('./stringHelper');
 
     var _getParent = function (parentId, evDataService, results) {
-
+		console.trace();
         var item = evDataService.getData(parentId);
 
         results.push(item);
