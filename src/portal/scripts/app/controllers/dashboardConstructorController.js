@@ -153,7 +153,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -302,6 +302,39 @@
             });
         };
 
+        vm.openAccordionEditor = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardConstructorAccordionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-accordion-editor-dialog-view.html',
+                multiple: true,
+                locals: {
+                    data: {
+                        layout: vm.layout
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.layout = res.data.layout;
+
+                    vm.dashboardConstructorDataService.setData(vm.layout);
+
+                    vm.updateProxyAccordions();
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+
+                    vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
+                } else {
+                    vm.updateProxyAccordions();
+                }
+
+            });
+
+        }
+
         var tabNameInput = null;
 
         var removeKeydownListener = function () {
@@ -397,7 +430,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     // targetEvent: $event,
                     autoWrap: true,
                     skipHide: true,
@@ -437,6 +470,9 @@
                 case 'report_viewer_matrix':
                     verboseName = 'Report Viewer Matrix';
                     break;
+                case 'report_viewer_table_chart':
+                    verboseName = 'Report Viewer Table Chart';
+                    break;
                 case 'entity_viewer':
                     verboseName = 'Entity Viewer';
                     break;
@@ -448,6 +484,9 @@
                     break;
                 case 'control':
                     verboseName = 'Control';
+                    break;
+                case 'accordion':
+                    verboseName = 'Accordion';
                     break;
                 case 'button_set':
                     verboseName = 'Button Set';
@@ -677,6 +716,10 @@
                                 targetRow.columns[column_number].cell_type = 'component';
                                 targetRow.columns[column_number].data.type = JSON.parse(JSON.stringify(component.type));
                                 targetRow.columns[column_number].data.id = component_id;
+
+                            }
+
+                            if (newColComponentType === 'accordion') {
 
                             }
 
@@ -1042,6 +1085,8 @@
 
                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_GRID_CELLS_SIZE);
 
+                vm.updateProxyAccordions();
+
                 console.log('vm.layout', JSON.parse(angular.toJson(vm.layout)));
 
                 $scope.$apply(function () {
@@ -1061,6 +1106,8 @@
         vm.saveLayout = function () {
 
             var layout = JSON.parse(angular.toJson(vm.layout)); // removing angular properties
+
+            vm.clearProxyAccordions(layout);
 
             var components = vm.dashboardConstructorDataService.getComponents();
             layout.data.components_types = components;
@@ -1146,6 +1193,10 @@
                 editorController: 'DashboardConstructorControlComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html'
             },
+            accordion: {
+                editorController: 'DashboardConstructorAccordionComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-accordion-component-dialog-view.html'
+            },
             report_viewer: {
                 editorController: 'DashboardConstructorReportViewerComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html'
@@ -1169,6 +1220,10 @@
             report_viewer_pie_chart: {
                 editorController: 'DashboardConstructorReportViewerChartsComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html'
+            },
+            report_viewer_table_chart: {
+                editorController: 'DashboardConstructorReportViewerTableChartComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-table-chart-component-dialog-view.html'
             },
             report_viewer_matrix: {
                 editorController: 'DashboardConstructorReportViewerMatrixComponentDialogController as vm',
@@ -1394,7 +1449,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 targetEvent: $event,
                 autoWrap: true,
                 skipHide: true,
@@ -1484,6 +1539,108 @@
 
         };
 
+        // DEPRECATED SINCE 01.2021
+        vm.clearProxyAccordions = function (layout) {
+
+            layout.data.tabs.forEach(function (tab) {
+
+                if (tab.accordions) {
+
+                    tab.accordions = tab.accordions.filter(function (item) {
+                        return item.type === 'accordion';
+                    })
+
+                    tab.accordions.forEach(function (accordion) {
+
+                        delete accordion.type;
+
+                    })
+
+                }
+
+            })
+
+        }
+
+        // DEPRECATED SINCE 01.2021
+        vm.updateProxyAccordions = function () {
+
+            vm.layout.data.tabs.forEach(function (tab) {
+
+                if (tab.accordions) {
+
+                    var newAccordions = [];
+
+                    tab.accordions.forEach(function (accordion) {
+
+                        accordion.type = 'accordion';
+
+                    })
+
+                    tab.layout.rows.forEach(function (row, index) {
+
+                        var isEmpty = true;
+                        var findedAccordion = null;
+
+                        tab.accordions.forEach(function (accordion) {
+
+                            if (index >= accordion.from && index <= accordion.to) {
+                                isEmpty = false;
+
+                                if (index !== accordion.from) {
+                                    findedAccordion = {
+                                        type: 'proxy'
+                                    };
+                                } else {
+                                    findedAccordion = accordion;
+                                }
+
+
+                            }
+
+                        });
+
+                        if (isEmpty) {
+                            newAccordions.push({
+                                type: 'proxy'
+                            })
+                        } else {
+                            newAccordions.push(findedAccordion)
+                        }
+
+                    })
+
+                    tab.accordions = newAccordions;
+
+
+                }
+
+            });
+
+        }
+
+        // DEPRECATED SINCE 01.2021
+        vm.isAccordionOverlapped = function (index, tab) {
+
+            var overlappedIndexes = [];
+
+            tab.accordions.forEach(function (accordionItem){
+
+                for (var i = accordionItem.from; i <= accordionItem.to; i = i + 1) {
+                    overlappedIndexes.push(i);
+                }
+
+            })
+
+            if (overlappedIndexes.indexOf(index) !== -1) {
+                return true
+            }
+
+            return false
+
+
+        }
+
         vm.init = function () {
 
             vm.dashboardConstructorDataService = new DashboardConstructorDataService();
@@ -1502,6 +1659,8 @@
                 vm.getLayout();
 
             } else {
+
+                vm.updateProxyAccordions();
 
                 vm.dashboardConstructorDataService.setData(vm.layout);
                 vm.dashboardConstructorDataService.setComponents(vm.layout.data.components_types);

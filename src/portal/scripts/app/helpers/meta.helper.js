@@ -61,8 +61,10 @@
 
     }
 
+    // sorts array alphabetically but puts text that starts with '-' at the beginning
     let textWithDashSort = (arr, field)  => {
-        const keys = ['name', 'user_code', 'public_name']; // preferred fields for sort
+
+    	const keys = ['name', 'user_code', 'public_name']; // preferred fields for sort
         const key = field || keys.find(key => arr.every(item => item.hasOwnProperty(key)));
 
         if (!key) {
@@ -110,16 +112,20 @@
             // }
 
             if (aStartsWithDash && bStartsWithDash) {
-                const aWithoutDash = a.name.slice(1);
+
+            	const aWithoutDash = a.name.slice(1);
                 const bWithoutDash = b.name.slice(1);
 
                 if (aWithoutDash > bWithoutDash) {
                     return 1
                 }
+
                 if (aWithoutDash < bWithoutDash) {
                     return -1
                 }
+
                 return 0;
+
             }
 
             // if (a.name > b.name) {
@@ -143,12 +149,40 @@
         });
     }
 
+    let openLinkInNewTab = function (event) {
+
+		event.preventDefault();
+		let targetElem = event.target;
+
+		if (targetElem.classList.contains('openLinkInNewTab')) {
+
+			let url = targetElem.href;
+			window.open(url);
+
+		}
+
+	};
+
+    let closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
+
+        if (openedIn === 'big-drawer') {
+
+            $bigDrawer.hide(response);
+
+        } else { // opened in mdDialog
+            $mdDialog.hide(response);
+        }
+
+    };
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
-        textWithDashSort: textWithDashSort
+        textWithDashSort: textWithDashSort,
+		openLinkInNewTab: openLinkInNewTab,
+
+        closeComponent: closeComponent
     }
 
 }());
-

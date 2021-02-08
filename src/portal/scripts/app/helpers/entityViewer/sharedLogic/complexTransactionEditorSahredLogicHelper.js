@@ -2,9 +2,94 @@
 
 	'use strict';
 
-	let entityEditorHelper = require('../../../helpers/entity-editor.helper');
+	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
+	const entityEditorHelper = require('../../../helpers/entity-editor.helper');
 
 	module.exports = function (viewModel, $scope, $mdDialog) {
+
+		let removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
+
+			inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+
+				let inputInvalid = true;
+
+				for (let i = 0; i < actualUserInputs.length; i++) {
+
+					if (inputName === actualUserInputs[i].name) { // whether input actually exist
+
+						if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+
+							inputInvalid = false;
+
+						}
+
+
+						break;
+
+					}
+
+				}
+
+				if (inputInvalid) {
+					inputsList.splice(index, 1);
+				}
+
+			});
+
+			// return inputsList;
+
+		};
+
+		let preRecalculationActions = (inputs, updateScope) => {
+
+			let book = {
+				transaction_type: viewModel.entity.transaction_type,
+				recalculate_inputs: inputs,
+				process_mode: 'recalculate',
+				values: {}
+			};
+
+			viewModel.userInputs.forEach(function (item) {
+				book.values[item.name] = viewModel.entity[item.name]
+			});
+
+			viewModel.evEditorDataService.setUserInputsToRecalculate(inputs);
+			viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_START);
+
+			if (updateScope) {
+				$scope.$apply();
+			}
+
+			return book;
+
+		};
+
+		let processRecalculationResolve = function (recalculationPromise, inputs, recalculationData) {
+
+			recalculationPromise.then(function (data) {
+
+				inputs.forEach(inputName => {
+
+					viewModel.entity[inputName] = data.values[inputName]
+
+					if (data.values[inputName + '_object']) {
+
+						viewModel.entity[inputName + '_object'] = data.values[inputName + '_object']
+
+					}
+
+					let userInputIndex = viewModel.userInputs.findIndex(input => input.name === inputName);
+					viewModel.userInputs[userInputIndex].frontOptions.recalculated = recalculationData;
+
+				});
+
+				viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+
+				$scope.$apply();
+
+			});
+
+		};
 
 		let onFieldChange = function (fieldKey) {
 
@@ -62,26 +147,34 @@
 
 				} */
 
-				let userInput = viewModel.userInputs.find(function (input) {
-					return input.key === fieldKey;
-				});
+				let userInput = viewModel.userInputs.find(input => input.key === fieldKey);
 
 				if (userInput) {
 
-					let calcInput = viewModel.inputsWithCalculations && viewModel.inputsWithCalculations.find(function (input) {
-						return input.name === userInput.name &&
-						       input.settings &&
-						       input.settings.recalc_on_change_linked_inputs;
-					});
+					let calcInput;
+
+					if (viewModel.inputsWithCalculations) {
+
+						calcInput = viewModel.inputsWithCalculations.find(input => {
+
+							return input.name === userInput.name &&
+								input.settings &&
+								input.settings.recalc_on_change_linked_inputs;
+						});
+
+					}
 
 					if (calcInput) {
 
 						let linkedInputsNames = calcInput.settings.recalc_on_change_linked_inputs.split(',');
 
+						viewModel.evEditorDataService.setUserInputsToRecalculate(linkedInputsNames);
+
 						viewModel.recalculate({
-								inputs: linkedInputsNames,
-								recalculationData: "linked_inputs"
-							});
+							inputs: linkedInputsNames,
+							recalculationData: "linked_inputs",
+							updateScope: true
+						});
 
 					}
 
@@ -108,9 +201,13 @@
 
 			}
 
-		}
+		};
 
 		return {
+			preRecalculationActions: preRecalculationActions,
+			removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
+			processRecalculationResolve: processRecalculationResolve,
+
 			onFieldChange: onFieldChange
 		}
 

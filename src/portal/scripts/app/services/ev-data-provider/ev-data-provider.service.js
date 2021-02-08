@@ -88,7 +88,7 @@
 
     };
 
-    var deserializeObjects = function (entityViewerDataService, entityViewerEventService, data, requestParameters, page) {
+    var deserializeObjects = function (entityViewerDataService, entityViewerEventService, attributeDataService, data, requestParameters, page) {
 
         var step = requestParameters.pagination.page_size;
         var pageAsIndex = parseInt(page, 10) - 1;
@@ -194,6 +194,34 @@
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
         obj.results.push(controlObj);
+
+        console.log('attributeDataService', attributeDataService);
+
+        var attribute_type_map = {};
+        var entityType = entityViewerDataService.getEntityType()
+        var attrs = attributeDataService.getDynamicAttributesByEntityType(entityType);
+
+        attrs.forEach(function (item) {
+
+            attribute_type_map[item.id] = item
+
+        })
+
+        console.log('attribute_type_map', attribute_type_map);
+
+        obj.results.forEach(function (item) {
+
+            if (item.attributes) {
+                item.attributes.forEach(function (attr) {
+
+                    attr.attribute_type_object = attribute_type_map[attr.attribute_type]
+
+                })
+            }
+
+        })
+
+        console.log('obj', obj);
 
         entityViewerDataService.setData(obj);
 
@@ -336,7 +364,7 @@
 
     };
 
-    var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
+    var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService, attributeDataService) {
 
         entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
@@ -405,31 +433,53 @@
 
                     objectsService.getFilteredList(entityType, options).then(function (data) {
 
+                        console.log('requestParameters', requestParameters);
+
                         requestParameters.pagination.count = data.count;
                         requestParameters.processedPages.push(pageToRequest);
 
                         entityViewerDataService.setRequestParameters(requestParameters);
 
-                        deserializeObjects(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
+                        deserializeObjects(entityViewerDataService, entityViewerEventService, attributeDataService, data, requestParameters, pageToRequest);
 
                         resolveLocal();
 
+
                         if (requestParameters.loadAll) {
 
-                            requestParameters.body.page = requestParameters.body.page + 1;
-                            requestParameters.pagination.page = requestParameters.pagination.page + 1;
-                            requestParameters.requestedPages.push(requestParameters.body.page);
+                            if (requestParameters.pagination.page * requestParameters.pagination.page_size >= requestParameters.pagination.count) {
 
-                            entityViewerDataService.setRequestParameters(requestParameters);
-                            entityViewerDataService.setActiveRequestParametersId(requestParameters.id);
+                                requestParameters.loadAll = false;
 
-                            entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                                entityViewerDataService.setRequestParameters(requestParameters);
+
+                                var errorMessage = 'Something went wrong. Please try again later.';
+
+                                evDataHelper.deleteDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
+
+                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            } else {
+
+                                requestParameters.body.page = requestParameters.body.page + 1;
+                                requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                                requestParameters.requestedPages.push(requestParameters.body.page);
+
+                                entityViewerDataService.setRequestParameters(requestParameters);
+                                entityViewerDataService.setActiveRequestParametersId(requestParameters.id);
+
+                                entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                            }
 
                         }
 
                     }).catch(function (data) {
 
-                        console.log('error request requestParameters', requestParameters);
+                        console.log('data', data);
+
+                        // console.log('error request requestParameters', requestParameters);
 
                         requestParameters.loadAll = false;
 
@@ -598,7 +648,7 @@
 
     };
 
-    var updateDataStructure = function (entityViewerDataService, entityViewerEventService) {
+    var updateDataStructure = function (entityViewerDataService, entityViewerEventService, attributeDataService) {
 
         console.time('Updating data structure');
         injectEntityViewerOptions(entityViewerDataService);
@@ -610,7 +660,7 @@
 
         if (requestParameters.requestType === 'objects') {
 
-            getObjects(requestParameters, entityViewerDataService, entityViewerEventService)
+            getObjects(requestParameters, entityViewerDataService, entityViewerEventService, attributeDataService)
                 .then(function () {
                     entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                 })

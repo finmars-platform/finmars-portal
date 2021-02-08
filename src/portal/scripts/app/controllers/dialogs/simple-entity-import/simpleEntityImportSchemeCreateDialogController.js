@@ -97,7 +97,9 @@
 
             var entity = vm.scheme.content_type.split('.')[1];
 
-            attributeTypeService.getList(entity).then(function (data) {
+            attributeTypeService.getList(entity, {
+                pageSize: 1000
+            }).then(function (data) {
 
                 vm.dynamicAttributes = data.results;
 
@@ -358,7 +360,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     locals: {

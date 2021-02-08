@@ -72,13 +72,13 @@
                     if (scope.item.backgroundColor) {
 
                         scope.fieldUsesBackgroundColor = true;
-                        //scope.fieldBackgroundColor = scope.item.backgroundColor;
                         scope.backgroundColor.color = scope.item.backgroundColor;
 
                     } else {
+
                         scope.fieldUsesBackgroundColor = false;
-                        //scope.fieldBackgroundColor = '#000000';
                         scope.backgroundColor.color = {};
+
                     }
 
                     if (scope.item.attribute && scope.item.attribute.value_type !== "decoration") {
@@ -582,19 +582,28 @@
 
                         if (scope.item.attribute['value_type'] === 'field'
                             && metaService.getRestrictedEntitiesWithTypeField().indexOf(scope.item.attribute.key) === -1) {
-                            scope.specialOptionTemplate = 'views/attribute-options/field.html';
+
+                        	scope.specialOptionTemplate = 'views/attribute-options/field.html';
                             return true;
+
                         }
 
-                        if (scope.item.attribute['value_type'] === 'decoration' && scope.item.attribute.key === 'layoutLineWithLabel') {
-                            scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
+                        if (scope.item.attribute['value_type'] === 'decoration' &&
+							scope.item.attribute.key === 'layoutLineWithLabel') {
+
+                        	scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
                             return true;
+
                         }
 
-                        if (scope.item.attribute['value_type'] === 'decoration' && scope.item.attribute.key === 'layoutPlainText') {
-                            scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
+                        if (scope.item.attribute['value_type'] === 'decoration' &&
+							scope.item.attribute.key === 'layoutPlainText') {
+
+                        	scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
                             return true;
+
                         }
+
                     }
 
                     return false;
@@ -614,7 +623,21 @@
                 };
 
                 scope.toggleBackgroundColor = function () {
+
                     scope.fieldUsesBackgroundColor = !scope.fieldUsesBackgroundColor;
+
+                    if (scope.fieldUsesBackgroundColor) {
+
+                        if (!scope.backgroundColor || !Object.keys(scope.backgroundColor.color).length) {
+
+                            scope.backgroundColor = {
+                                color: {colorOrder: 0, paletteUserCode: "Default Palette"}
+                            };
+
+                        }
+
+                    }
+
                 };
 
                 /*scope.setFieldBackgroundColor = function (color) {

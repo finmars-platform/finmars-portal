@@ -14,6 +14,7 @@
 				selectedOptions: "=",
 				nameProperty: "@",
 				classes: "=",
+				orderOptions: "=", // object with properties: options, selectedOptions
                 strictOrder: "=", // enable order change for selected items
 				optionsCheckboxes: "=" // contains object with properties optionsCheckbox, selectedOptions
 			},
@@ -22,18 +23,15 @@
 
                 scope.selOptionsFilter = ""
                 scope.initDnDEnabled = scope.strictOrder // if true scope.selOptionsDragAndDrop.init() will be called
-                scope.selOptionsOrderSettings = scope.nameProperty
+                scope.optionsOrderSettings = scope.nameProperty
+				scope.selOptionsOrderSettings = scope.nameProperty
 
-                if (scope.strictOrder) {
-                    scope.selOptionsOrderSettings = null
-                }
-
-                scope.unselOptionsCheckboxes = false
+                scope.availableOptionsCheckboxes = false
 				scope.selOptionsCheckboxes = false
 
                 if (scope.optionsCheckboxes) {
 
-                	scope.unselOptionsCheckboxes = scope.optionsCheckboxes.unselectedOptions
+                	scope.availableOptionsCheckboxes = scope.optionsCheckboxes.availableOptions
 					scope.selOptionsCheckboxes = scope.optionsCheckboxes.selectedOptions
 
 				}
@@ -326,7 +324,7 @@
                         var drake = this.dragula;
 
                         drake.on('drag', function () {
-                            document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+							scrollHelper.enableDnDWheelScroll();
                         });
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
@@ -372,7 +370,7 @@
                         });
 
                         drake.on('dragend', function (elem) {
-                            document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+							scrollHelper.disableDnDWheelScroll();
                         });
 
                     },
@@ -407,9 +405,27 @@
 				let init = function () {
 
                     setTimeout(function () {
-                        var DnDScrollElem = elem[0].querySelector('.twoFieldsSelRowsContainer');
+
+                    	var DnDScrollElem = elem[0].querySelector('.twoFieldsSelRowsContainer');
                         scrollHelper.setDnDScrollElem(DnDScrollElem);
+
                     }, 500);
+
+					if (scope.orderOptions) { // disable order if it is specifically set so
+
+						if (scope.orderOptions.options === false) {
+							scope.optionsOrderSettings = null
+						}
+
+						if (scope.orderOptions.selectedOptions === false) {
+							scope.selOptionsOrderSettings = null
+						}
+
+					}
+
+					if (scope.strictOrder) {
+						scope.selOptionsOrderSettings = null
+					}
 
 				    scope.allOptions.forEach(function (allOption) {
                         allOption.isActive = false

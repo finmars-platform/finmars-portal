@@ -34,7 +34,11 @@
             {
                 "name": "Selector",
                 "id": 110
-            }
+            },
+            {
+                "name": "Button",
+                "id": 120
+            },
         ];
 
         var getValueTypes = function() {
@@ -700,7 +704,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 preserveScope: true,
                 autoWrap: true,
@@ -804,6 +808,12 @@
                     defaultValue.settings.value = res.data.value;
                     inputCalcExpression.settings.value = res.data.value_expr;
                     linkedInputs.settings.value = res.data.linked_inputs_names;
+
+                    if (valueType.settings.value === 120) { // Button
+
+                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+
+                    }
 
                     changeCellsBasedOnValueType(newRow);
                     viewModel.inputsGridTableData.body.unshift(newRow);
@@ -1063,22 +1073,34 @@
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
                 // linked_inputs_names
-                rowObj.columns[8].settings.value = input.settings && input.settings.linked_inputs_names && input.settings.linked_inputs_names.map(function (linkedInputName) {
+				rowObj.columns[8].settings.value = []
 
-                	var linkedInput = {
-                		id: linkedInputName,
-						isChecked: false
-					};
+                if (input.settings && input.settings.linked_inputs_names) {
 
-                	if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
+					rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
 
-						linkedInput.isChecked = true;
+						var linkedInput = {
+							id: linkedInputName,
+							isChecked: false
+						};
 
-					}
+						if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
 
-					return linkedInput;
+							linkedInput.isChecked = true;
 
-				});
+						}
+
+						return linkedInput;
+
+					});
+
+					if (input.value_type === 120) { // Button
+
+                        rowObj.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+
+                    }
+
+				}
 
                 rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
                 // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;

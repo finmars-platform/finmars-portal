@@ -10,6 +10,8 @@
     let objectComparisonHelper = require('../helpers/objectsComparisonHelper');
     let uiService = require('../services/uiService');
 
+    var entityResolverService = require('../services/entityResolverService');
+
     var middlewareService = require('../services/middlewareService');
 
     'use strict';
@@ -238,71 +240,207 @@
 
     };
 
-    let getLayoutByUserCode = function (viewModel, userCode, $mdDialog) {
+    let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
 
-        uiService.getListLayout(viewModel.entityType, {
-            pageSize: 1000,
-            filters: {
-                user_code: userCode
-            }
+    	return new Promise(function (resolve) {
 
-        }).then(function (activeLayoutData) {
+    		uiService.getListLayout(viewModel.entityType, {
+				pageSize: 1000,
+				filters: {
+					user_code: userCode
+				}
 
-            let activeLayout = null;
+			}).then(async function (activeLayoutData) {
 
-            if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
-                activeLayout = activeLayoutData.results[0];
-            }
+				let activeLayout = null;
 
-            if (activeLayout) {
-                viewModel.setLayout(activeLayout);
+				if (activeLayoutData.hasOwnProperty('results') && activeLayoutData.results[0]) {
+					activeLayout = activeLayoutData.results[0];
+				}
 
-            } else {
+				if (activeLayout) {
 
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        info: {
-                            title: 'Warning',
-                            description: "Layout " + name + " is not found. Switching back to Default Layout."
-                        }
-                    }
-                }).then(function (value) {
+					await viewModel.setLayout(activeLayout);
 
-                    viewModel.getDefaultLayout()
+					resolve();
 
-                })
+				} else {
 
-            }
+					$mdDialog.show({
+						controller: 'InfoDialogController as vm',
+						templateUrl: 'views/info-dialog-view.html',
+						parent: angular.element(document.body),
+						clickOutsideToClose: false,
+						preserveScope: true,
+						autoWrap: true,
+						skipHide: true,
+						multiple: true,
+						locals: {
+							info: {
+								title: 'Warning',
+								description: "Layout " + name + " is not found. Switching back to Default Layout."
+							}
+						}
+					}).then(async function (value) {
 
-        });
+						await getDefaultLayout(viewModel, viewContext);
+
+						resolve();
+
+					})
+
+				}
+
+			});
+
+		});
 
     };
 
     let getDefaultLayout = function (viewModel, viewContext) {
 
-        uiService.getDefaultListLayout(viewModel.entityType).then(function (defaultLayoutData) {
+    	return new Promise(function (resolve, reject) {
 
-            var defaultLayout = null;
-            if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
+    		uiService.getDefaultListLayout(viewModel.entityType).then(async function (defaultLayoutData) {
 
-                defaultLayout = defaultLayoutData.results[0];
-                if (viewContext === 'split_panel') {
-                    middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
-                }
+				let defaultLayout = null;
+				if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
 
-            }
+					defaultLayout = defaultLayoutData.results[0];
+					if (viewContext === 'split_panel') {
+						middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
+					}
 
-            viewModel.setLayout(defaultLayout);
+				}
 
-        });
+				await viewModel.setLayout(defaultLayout);
+
+				resolve();
+
+			}).catch(function (error) {
+				reject(error);
+			});
+
+		});
+
+    };
+
+
+    /**
+     * Get max columns from tabs of Edit Layout
+     * @param {Array} editLayoutTabs
+     * @memberOf module:EntityViewerHelperService
+     * @returns {number}
+     */
+    var getEditLayoutMaxColumns = function (editLayoutTabs) {
+
+    	let maxCols = 0;
+
+		editLayoutTabs.forEach(function (tab) {
+
+			if (tab.layout && tab.layout.columns &&
+				tab.layout.columns > maxCols) {
+
+				maxCols = tab.layout.columns;
+
+			}
+
+		})
+
+		/* const widths = editLayoutTabs
+            .map(tab => tab.layout && tab.layout.columns)
+            .filter(num => Boolean(Number(num)));
+
+        const maxWidth = Math.max(...widths) */
+
+        return maxCols ? maxCols : 6;
+
+    }
+
+    /**
+     * Get big drawer width percentage by fixed area columns
+     * @param {number} columns
+     * @returns {string}
+     */
+    var getBigDrawerWidthPercent = function (columns) {
+
+    	let viewportWidth = window.innerWidth;
+
+    	let widthPercent = 75;
+
+    	switch (columns) {
+            case 5:
+            case 4:
+				widthPercent = 49;
+				break;
+            case 3:
+                widthPercent = 39;
+                break;
+            case 2:
+            case 1:
+				widthPercent = 27;
+				break;
+
+        }
+
+		let drawerWidth = (viewportWidth * widthPercent / 100) + 'px';
+
+    	return drawerWidth;
+
+    }
+
+	/**
+	 * Format data for popupDirective in fixed area
+	 * @param {object} viewModel - of add / edit controller
+	 * @param {array} keysOfFixedFieldsAttrs - array of strings that are keys of entity attributes
+	 * @returns {object} object where each property corresponding to field inside popup
+	 */
+    var getFieldsForFixedAreaPopup = function (viewModel) {
+
+    	return new Promise(function (resolve, reject) {
+
+			const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc,key) => {
+
+				const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
+
+				if (!attr) {
+					return acc;
+				}
+
+				const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
+				const field = {
+					[fieldKey]: {name: attr.name, value: viewModel.entity[key]}
+				};
+
+				if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
+					field[fieldKey].value_entity = attr.value_entity;
+				}
+
+				return {...acc, ...field};
+
+			}, {});
+
+			fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
+			fields.showByDefault = {key: 'Show by default', value: viewModel.showByDefault, options: viewModel.showByDefaultOptions}
+
+			// get options for 'type' or 'instrument type' fields
+			if (fields.hasOwnProperty('type')) {
+
+				entityResolverService.getListLight(fields.type.value_entity).then((data) => {
+
+					const options = Array.isArray(data) ? data : data.results;
+					fields.type.options = options;
+					viewModel.setTypeSelectorOptions(options);
+
+					resolve(fields);
+
+				}).catch(error => reject(error));
+
+			} else {
+				resolve(fields);
+			}
+
+		});
 
     };
 
@@ -312,9 +450,13 @@
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
-        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
         getLayoutByUserCode: getLayoutByUserCode,
-        getDefaultLayout: getDefaultLayout
+        getDefaultLayout: getDefaultLayout,
+        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
+
+        getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
+        getEditLayoutMaxColumns: getEditLayoutMaxColumns,
+        getBigDrawerWidthPercent: getBigDrawerWidthPercent
     }
 
 }());

@@ -69,6 +69,11 @@
 
                             <group-table-body data-ng-if="viewType == 'report_viewer'"
                                               class="group-table-body"
+                                              data-ng-class="{
+                                                'g-font-size-small': reportOptions.table_font_size === 'small',
+                                                'g-font-size-medium': reportOptions.table_font_size === 'medium',
+                                                'g-font-size-large': reportOptions.table_font_size === 'large',
+                                              }"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"
                                               workarea-wrap-element="workareaWrapElem"
@@ -117,11 +122,11 @@
         <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar && domElemsAreReady">
             <div>
                 <div class="g-filter" id="filtersbag">
-                    <group-sidebar-filter ev-data-service="evDataService"
+                    <g-sidebar-filter ev-data-service="evDataService"
                                           ev-event-service="evEventService"
                                           attribute-data-service="attributeDataService"
                                           sp-exchange-service="spExchangeService"
-                                          content-wrap-element="contentWrapElem"></group-sidebar-filter>
+                                          content-wrap-element="contentWrapElem"></g-sidebar-filter>
                 </div>
             </div>
         </div>

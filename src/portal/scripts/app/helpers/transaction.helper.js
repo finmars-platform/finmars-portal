@@ -63,10 +63,137 @@
 
     };
 
-    var getTransactionUserInputsNotPlacedInTheForm = function (userInputs, ttype) {
-        const formFieldsNames = userInputs.map(input => input.name)
-        return ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
-    };
+	var removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
+
+		inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+
+			let inputInvalid = true;
+
+			for (let i = 0; i < actualUserInputs.length; i++) {
+
+				if (inputName === actualUserInputs[i].name) { // whether input actually exist
+
+					if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+
+						inputInvalid = false;
+
+					}
+
+
+					break;
+
+				}
+
+			}
+
+			if (inputInvalid) {
+				inputsList.splice(index, 1);
+			}
+
+		});
+
+		// return inputsList;
+
+	};
+
+	var getTransactionUserInputsNotPlacedInTheForm = function (userInputs, ttype) {
+		const formFieldsNames = userInputs.map(input => input.name);
+		return ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
+	};
+
+	var fillMissingFieldsByDefaultValues = function (entity, userInputs, ttype) {
+
+		const userInputsNotPlacedInTheForm = getTransactionUserInputsNotPlacedInTheForm(userInputs, ttype);
+
+		return userInputsNotPlacedInTheForm
+			.filter(input => input.value !== null)
+			.map(input => {
+				if (input.value_type === 20) { // Expression
+					return expressionService.getResultOfExpression({'expression': input.value})
+						.then(data => entity[input.name] = data.result)
+				}
+
+				entity[input.name] = input.value;
+				return;
+			});
+
+	};
+
+	var updateEntityBeforeSave = function (viewModel) {
+
+		if (metaService.getEntitiesWithoutDynAttrsList().includes(viewModel.entityType)) {
+			viewModel.entity.attributes = [];
+		}
+
+		if (viewModel.entity.attributes) {
+
+			var i, a, c;
+			var keys = Object.keys(viewModel.entity),
+				attrExist;
+
+			for (i = 0; i < viewModel.attrs.length; i = i + 1) {
+
+				for (a = 0; a < keys.length; a = a + 1) {
+
+					if (viewModel.attrs[i].name === keys[a]) {
+
+						attrExist = false;
+
+						for (c = 0; c < viewModel.entity.attributes.length; c = c + 1) {
+
+							if (viewModel.entity.attributes[c]['attribute_type'] === viewModel.attrs[i].id) {
+								attrExist = true;
+								viewModel.entity.attributes[c] = entityEditorHelper.updateValue(viewModel.entity.attributes[c], viewModel.attrs[i], viewModel.entity[keys[a]]);
+							}
+
+						}
+
+						if (!attrExist) {
+							viewModel.entity.attributes.push(entityEditorHelper.appendAttribute(viewModel.attrs[i], viewModel.entity[keys[a]]));
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+		if (viewModel.entity.attributes) {
+
+			viewModel.entity = entityEditorHelper.checkEntityAttrTypes(viewModel.entity, viewModel.entityAttrs);
+			viewModel.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(viewModel.entity.attributes);
+
+		}
+
+		viewModel.entity.object_permissions = [];
+
+		if (viewModel.groups) {
+
+			viewModel.groups.forEach(function (group) {
+
+				if (group.objectPermissions && group.objectPermissions.manage === true) {
+					viewModel.entity.object_permissions.push({
+						member: null,
+						group: group.id,
+						permission: "manage_" + viewModel.entityType.split('-').join('')
+					})
+				}
+
+				if (group.objectPermissions && group.objectPermissions.change === true) {
+					viewModel.entity.object_permissions.push({
+						member: null,
+						group: group.id,
+						permission: "change_" + viewModel.entityType.split('-').join('')
+					})
+				}
+
+			});
+
+		}
+
+	};
 
     // updating user inputs from input form editor layout using user inputs inside transaction type
     var updateTransactionUserInputs = function (userInputs, tabs, fixedArea, ttype) {
@@ -122,120 +249,14 @@
     };
     // < updating user inputs from input form editor layout using user inputs inside transaction type >
 
-    var removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
-
-        inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
-
-            let inputInvalid = true;
-
-            for (let i = 0; i < actualUserInputs.length; i++) {
-
-                if (inputName === actualUserInputs[i].name) { // whether input actually exist
-
-                	if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
-
-                		inputInvalid = false;
-
-					}
-
-
-                    break;
-
-                }
-
-            }
-
-            if (inputInvalid) {
-                inputsList.splice(index, 1);
-            }
-
-        });
-
-        // return inputsList;
-
-    };
-
-    // Victor 2020.12.01 #64
-    var fillMissingFieldsByDefaultValues = function (entity, userInputsNotPlacedInTheForm) {
-        return userInputsNotPlacedInTheForm
-            .filter(input => input.value !== null)
-            .map(input => {
-                if (input.value_type === 20) { // Expression
-                    return expressionService.getResultOfExpression({'expression': input.value})
-                        .then(data => entity[input.name] = data.result)
-                }
-
-                entity[input.name] = input.value;
-                return;
-            })
-    };
-
-    var updateEntityBeforeSave = function (viewModel) {
-        const vm = viewModel
-
-        if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
-            vm.entity.attributes = [];
-        }
-
-        if (vm.entity.attributes) {
-            var i, a, c;
-            var keys = Object.keys(vm.entity), attrExist;
-            for (i = 0; i < vm.attrs.length; i = i + 1) {
-                for (a = 0; a < keys.length; a = a + 1) {
-                    if (vm.attrs[i].name === keys[a]) {
-                        attrExist = false;
-                        for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
-                            if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-                                attrExist = true;
-                                vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
-                            }
-                        }
-                        if (!attrExist) {
-                            vm.entity.attributes.push(entityEditorHelper.appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
-                        }
-                    }
-                }
-            }
-        }
-
-        if (vm.entity.attributes) {
-            vm.entity = entityEditorHelper.checkEntityAttrTypes(vm.entity, vm.entityAttrs);
-            vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
-        }
-
-        vm.entity.object_permissions = [];
-
-        if (vm.groups) {
-            vm.groups.forEach(function (group) {
-
-                if (group.objectPermissions && group.objectPermissions.manage === true) {
-                    vm.entity.object_permissions.push({
-                        member: null,
-                        group: group.id,
-                        permission: "manage_" + vm.entityType.split('-').join('')
-                    })
-                }
-
-                if (group.objectPermissions && group.objectPermissions.change === true) {
-                    vm.entity.object_permissions.push({
-                        member: null,
-                        group: group.id,
-                        permission: "change_" + vm.entityType.split('-').join('')
-                    })
-                }
-
-            });
-        }
-    };
-
     module.exports = {
         isUserInputUsedInTTypeExpr: isUserInputUsedInTTypeExpr,
         updateTransactionUserInputs: updateTransactionUserInputs,
-		removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
-        getTransactionUserInputsNotPlacedInTheForm: getTransactionUserInputsNotPlacedInTheForm,
+		updateEntityBeforeSave: updateEntityBeforeSave,
 
-        updateEntityBeforeSave: updateEntityBeforeSave,
-        fillMissingFieldsByDefaultValues: fillMissingFieldsByDefaultValues
+		removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
+
+		fillMissingFieldsByDefaultValues: fillMissingFieldsByDefaultValues
     }
 
 }());

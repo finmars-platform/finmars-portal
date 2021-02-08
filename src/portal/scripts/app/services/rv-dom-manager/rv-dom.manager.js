@@ -6,6 +6,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+	var metaHelper = require('../../helpers/meta.helper');
 
     var priceHistoryService = require('../../services/priceHistoryService'); // TODO this is temp service here
 
@@ -32,7 +33,7 @@
 
         var rowHeight = evDataService.getRowHeight();
 
-        var extraHeight = 20 * rowHeight;
+        var extraHeight = 10 * rowHeight;
 
         return Math.floor(rowHeight * count) + extraHeight;
 
@@ -49,15 +50,46 @@
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
-            // offset = Math.floor(viewportElem.scrollTop / rowHeight);
-            // evDataService.setVirtualScrollOffset(offset);
+            var rowHeight = evDataService.getRowHeight();
+            var from = Math.ceil(viewportElem.scrollTop / rowHeight);
+            var lastFrom = evDataService.getProjectionLastFrom();
+
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
-            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+
+            var step = evDataService.getVirtualScrollStep();
+            var halfstep = step / 2;
+
+            // Example
+            // step = 200 rendered rows
+            // Users see 100 rows before Viewport, N rows in viewport and step - 100 - N after viewport
+            // Render happened, we render rows from 0 to 99, because we start from 0
+            // halfstep - (halfstep / 4) = 75, that means, we will render next step as
+            // from 0 - to 175 (+- 100)
+            // And so on
+
+            // If we scroll upwards
+            // lets start lastFrom = 500
+            // it means we render from 300 and to 599
+            // step threshold is still 75
+            // lets scroll to from = 400
+            // 500 - 400 = 100 its bigger then 75
+            // lastFrom = 400 now,
+            // It means we render from 300 to 499
+
+            if (from < lastFrom) {
+                if(Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            } else {
+                if(Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            }
 
             calculateScroll(elements, evDataService)
 
+        }, 100);
 
-        }, 10);
 
         var scrollXHandler = function () {
 
@@ -68,6 +100,9 @@
             columnBottomRow.style.left = -viewportElem.scrollLeft + 'px';
 
         };
+
+        viewportElem.removeEventListener('scroll', scrollYHandler);
+        viewportElem.removeEventListener('scroll', scrollXHandler);
 
         viewportElem.addEventListener('scroll', scrollYHandler);
 
@@ -80,27 +115,36 @@
         var clickData = {};
         var rowElem = event.target.closest('.g-row');
 
-        clickData.isShiftPressed = event.shiftKey;
-        clickData.isCtrlPressed = event.ctrlKey;
+        clickData.isShiftPressed = event.shiftKey
+        clickData.isCtrlPressed = event.ctrlKey
+		clickData.target = event.target
 
         if (rowElem) {
 
-            clickData.___type = rowElem.dataset.type;
-            clickData.___id = rowElem.dataset.objectId;
-            clickData.___parentId = rowElem.dataset.parentGroupHashId;
+			if (clickData.target.classList.contains('openLinkInNewTab')) {
+
+				clickData.___type = 'hyperlink'
+
+			} else {
+
+				clickData.___type = rowElem.dataset.type;
+				clickData.___id = rowElem.dataset.objectId;
+				clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 
-            if (event.target.classList.contains('ev-fold-button')) {
-                clickData.isFoldButtonPressed = true;
-            }
+				if (event.target.classList.contains('ev-fold-button')) {
+					clickData.isFoldButtonPressed = true
+				}
 
-            if (rowElem.dataset.subtotalType) {
-                clickData.___subtotal_type = rowElem.dataset.subtotalType;
-            }
+				if (rowElem.dataset.subtotalType) {
+					clickData.___subtotal_type = rowElem.dataset.subtotalType
+				}
 
-            if (rowElem.dataset.subtotalSubtype) {
-                clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-            }
+				if (rowElem.dataset.subtotalSubtype) {
+					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype
+				}
+
+			}
 
         }
 
@@ -714,15 +758,23 @@
 
             var clickData = getClickData(event);
 
-            if (event.detail === 2) { // double click handler
+            if (clickData.___type === 'hyperlink') {
+
+            	metaHelper.openLinkInNewTab(event);
+
+			}
+
+            else if (event.detail === 2) { // double click handler
 
                 var cellElem;
 
                 // TODO make recursive get parent of g-cell
                 if (event.target.classList.contains('g-cell')) {
-                    cellElem = event.target
+                    cellElem = event.target;
+
                 } else if (event.target.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement;
+
                 } else if (event.target.parentElement.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement.parentElement;
                 }
@@ -759,7 +811,20 @@
 
                     console.log('selection', selection);
 
-                    if (!selection.length) {
+                    if (clickData.isShiftPressed) {
+
+                        switch (clickData.___type) {
+
+                            case 'object':
+                                handleObjectClick(clickData, evDataService, evEventService);
+                                break;
+
+                            case 'subtotal':
+                                handleSubtotalClick(clickData, evDataService, evEventService);
+                                break;
+                        }
+
+                    } else if (!selection.length) {
 
                         switch (clickData.___type) {
 
@@ -785,7 +850,9 @@
 
     var calculatePaddingTop = function (evDataService) {
 
-        return evDataService.getVirtualScrollOffsetPx();
+        var scrollOffsetPx = evDataService.getVirtualScrollOffsetPx();
+
+        return scrollOffsetPx;
 
     };
 
@@ -860,11 +927,12 @@
             rvScrollManager.setViewportWidth(viewportWidth);
         }
 
-        var paddingTop = calculatePaddingTop(evDataService);
-        //var totalHeight = calculateTotalHeight(evDataService);
+        // var paddingTop = calculatePaddingTop(evDataService);
+        var totalHeight = calculateTotalHeight(evDataService);
 
         //rvScrollManager.setRootEntityContentWrapElemHeight(viewportHeight);
-        rvScrollManager.setContentElemPaddingTop(paddingTop);
+        rvScrollManager.setContentElemHeight(totalHeight);
+        // rvScrollManager.setContentElemPaddingTop(paddingTop);
 
         // there is another method that calculates contentElemWidth resizeScrollableArea() form gColumnResizerComponent.js
         var areaWidth = 0;
@@ -1290,7 +1358,6 @@
             if (!event.target.classList.contains('ev-dropdown-option')) {
                 clearDropdowns();
             }
-
 
 
         }

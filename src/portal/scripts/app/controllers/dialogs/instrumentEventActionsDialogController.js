@@ -43,7 +43,7 @@
                 console.log('data', data);
                 vm.transactionTypes = data.results;
                 vm.readyStatus.transactionTypes = true;
-                //console.log('test?', vm.readyStatus.transactionTypes);
+
                 $scope.$apply();
             });
 
@@ -96,7 +96,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: $event,
                     clickOutsideToClose: false,
@@ -151,7 +151,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: $event,
                     clickOutsideToClose: false,
@@ -197,7 +197,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: $event,
                     clickOutsideToClose: false,

@@ -5,10 +5,10 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var utilsHelper = require('../../helpers/utils.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+	var metaHelper = require('../../helpers/meta.helper');
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
-
 
     var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
 
@@ -480,30 +480,37 @@
         var clickData = {};
         var rowElem = event.target.closest('.g-row');
 
-
-        clickData.isShiftPressed = event.shiftKey;
-        clickData.isCtrlPressed = event.ctrlKey;
-        clickData.target = event.target;
+        clickData.isShiftPressed = event.shiftKey
+        clickData.isCtrlPressed = event.ctrlKey
+        clickData.target = event.target
 
         if (rowElem) {
 
-            clickData.___type = rowElem.dataset.type;
-            clickData.___id = rowElem.dataset.objectId;
+        	if (clickData.target.classList.contains('openLinkInNewTab')) {
 
-            clickData.___parentId = rowElem.dataset.parentGroupHashId;
+        		clickData.___type = 'hyperlink'
+
+			} else {
+
+				clickData.___type = rowElem.dataset.type;
+				clickData.___id = rowElem.dataset.objectId;
+
+				clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 
-            if (event.target.classList.contains('ev-fold-button')) {
-                clickData.isFoldButtonPressed = true;
-            }
+				if (event.target.classList.contains('ev-fold-button')) {
+					clickData.isFoldButtonPressed = true;
+				}
 
-            if (rowElem.dataset.subtotalType) {
-                clickData.___subtotal_type = rowElem.dataset.subtotalType;
-            }
+				if (rowElem.dataset.subtotalType) {
+					clickData.___subtotal_type = rowElem.dataset.subtotalType;
+				}
 
-            if (rowElem.dataset.subtotalSubtype) {
-                clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-            }
+				if (rowElem.dataset.subtotalSubtype) {
+					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
+				}
+
+			}
 
         }
 
@@ -520,14 +527,18 @@
             var clickData = getClickData(event);
 
             console.log('clickData', clickData);
-
             console.log('detail', event.detail);
 
             var selection = window.getSelection().toString();
 
             console.log('selection', selection);
+            if (clickData.___type === 'hyperlink') {
 
-            if (event.detail === 2) { // double click handler
+				metaHelper.openLinkInNewTab(event);
+
+			}
+
+            else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -547,32 +558,50 @@
 
             }
 
-            if (!selection.length) {
+			else if (clickData.isShiftPressed) {
+
+				if (event.detail === 1) {
+
+					if (clickData.___type === 'group') {
+
+						handleGroupClick(clickData, evDataService, evEventService);
+
+					}
+
+					if (clickData.___type === 'control') {
+						handleControlClick(clickData, evDataService, evEventService);
+					}
+
+					if (clickData.___type === 'object') {
+
+						handleObjectClick(clickData, evDataService, evEventService);
+
+					}
+				}
+
+			}
+
+            else if (!selection.length) {
 
                 if (event.detail === 1) {
 
                     if (clickData.___type === 'group') {
-
                         handleGroupClick(clickData, evDataService, evEventService);
-
                     }
 
-                    if (clickData.___type === 'control') {
+                    else if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
                     }
 
-                    if (clickData.___type === 'object') {
-
+                    else if (clickData.___type === 'object') {
                         handleObjectClick(clickData, evDataService, evEventService);
-
                     }
-                }
 
+                }
 
 
             }
         });
-
 
     };
 
@@ -762,7 +791,7 @@
 
         if (!metaService.isReport(entityType)) {
 
-            function sendContextMenuActionToActiveObj(event) {
+            /* function sendContextMenuActionToActiveObj(event) {
 
                 var objectId = event.target.dataset.objectId;
                 var parentGroupHashId = event.target.dataset.parentGroupHashId;
@@ -793,30 +822,30 @@
 
                 }
 
-            }
+            } */
 
             elem.addEventListener('contextmenu', function (ev) {
 
                 var objectId;
                 var parentGroupHashId;
 
-                if (event.target.offsetParent.classList.contains('ev-viewport')) {
+                if (ev.target.offsetParent.classList.contains('ev-viewport')) {
 
-                    objectId = event.target.dataset.objectId;
-                    parentGroupHashId = event.target.dataset.parentGroupHashId;
+                    objectId = ev.target.dataset.objectId;
+                    parentGroupHashId = ev.target.dataset.parentGroupHashId;
 
                 } else {
 
-                    if (event.target.offsetParent.classList.contains('g-row')) {
+                    if (ev.target.offsetParent.classList.contains('g-row')) {
 
-                        objectId = event.target.offsetParent.dataset.objectId;
-                        parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+                        objectId = ev.target.offsetParent.dataset.objectId;
+                        parentGroupHashId = ev.target.offsetParent.dataset.parentGroupHashId;
 
                     }
 
                 }
 
-                console.log('initContextMenuEventDelegation.event', event);
+                console.log('initContextMenuEventDelegation.event', ev);
 
                 console.log('initContextMenuEventDelegation.objectId', objectId);
 
@@ -840,7 +869,7 @@
                 clearDropdowns();
             });
 
-            /*window.addEventListener('click', function (event) {
+            /* window.addEventListener('click', function (event) {
 
                 if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
 
@@ -889,13 +918,21 @@
 
     var calculateTotalHeight = function (evDataService) {
 
-        var unfoldedGroups = evDataHelper.getUnfoldedGroups(evDataService);
+        // var unfoldedGroups = evDataHelper.getUnfoldedGroups(evDataService);
+        //
+        // var count = 0;
+        //
+        // unfoldedGroups.forEach(function (group) {
+        //     count = count + group.results.length + 1; // 1 for control row
+        // });
+        //
+        // var rowHeight = evDataService.getRowHeight();
+        //
+        // var extraHeight = 10 * rowHeight;
+        //
+        // return Math.floor(rowHeight * count) + extraHeight;
 
-        var count = 0;
-
-        unfoldedGroups.forEach(function (group) {
-            count = count + group.results.length + 1; // 1 for control row
-        });
+        var count = evDataService.getFlatList().length;
 
         var rowHeight = evDataService.getRowHeight();
 
@@ -960,7 +997,7 @@
 
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
-        /*if (!isRootEntityViewer) {
+        /* if (!isRootEntityViewer) {
 
             if (components.groupingArea) {
                 viewportTop = viewportTop + interfaceLayout.groupingArea.height
@@ -977,7 +1014,7 @@
 
             viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
 
-        }*/
+        } */
 
         evScrollManager.setViewportHeight(viewportHeight);
 
@@ -989,7 +1026,7 @@
         var totalHeight = calculateTotalHeight(evDataService);
 
         evScrollManager.setContentElemHeight(totalHeight);
-        evScrollManager.setContentElemPaddingTop(paddingTop);
+        // evScrollManager.setContentElemPaddingTop(paddingTop);
 
     };
 
@@ -1038,31 +1075,45 @@
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
-            console.log('View Context: ' + evDataService.getViewContext() + '. addScrollListener.viewportElem', viewportElem);
-            console.log('View Context: ' + evDataService.getViewContext() + '. addScrollListener. contentWrapElem', contentWrapElem);
+            var rowHeight = evDataService.getRowHeight();
+            var from = Math.ceil(viewportElem.scrollTop / rowHeight);
+            var lastFrom = evDataService.getProjectionLastFrom();
 
-            // if (lastScrollTop && lastScrollTop > viewportElem.scrollTop) {
-            //     direction = 'top'
-            // }
-            //
-            // if (lastScrollTop && lastScrollTop < viewportElem.scrollTop) {
-            //     direction = 'bottom'
-            // }
-
-            // evDataService.setVirtualScrollDirection(direction);
-            // evDataService.setVirtualScrollPreviousOffsetPx(lastScrollTop);
             evDataService.setVirtualScrollOffsetPx(viewportElem.scrollTop);
 
+            var step = evDataService.getVirtualScrollStep();
+            var halfstep = step / 2;
 
-            // calculateScroll(elements, evDataService);
+            // Example
+            // step = 200 rendered rows
+            // Users see 100 rows before Viewport, N rows in viewport and step - 100 - N after viewport
+            // Render happened, we render rows from 0 to 99, because we start from 0
+            // halfstep - (halfstep / 4) = 75, that means, we will render next step as
+            // from 0 - to 175 (+- 100)
+            // And so on
 
-            paddingTop = calculatePaddingTop(evDataService);
-            evScrollManager.setContentElemPaddingTop(paddingTop);
-            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+            // If we scroll upwards
+            // lets start lastFrom = 500
+            // it means we render from 300 and to 599
+            // step threshold is still 75
+            // lets scroll to from = 400
+            // 500 - 400 = 100 its bigger then 75
+            // lastFrom = 400 now,
+            // It means we render from 300 to 499
 
-            // lastScrollTop = viewportElem.scrollTop;
+            if (from < lastFrom) {
+                if(Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            } else {
+                if(Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
+                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+                }
+            }
 
-        }, 10);
+            calculateScroll(elements, evDataService, evScrollManager)
+
+        }, 100);
 
         var scrollXHandler = function () {
 
