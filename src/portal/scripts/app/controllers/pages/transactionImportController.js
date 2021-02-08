@@ -283,6 +283,8 @@
 
         vm.startImportWithValidation = function ($event) {
 
+            console.log('startImportWithValidation starting validation')
+
             return new Promise(function (resolve, reject) {
 
                 vm.processing = true;
@@ -300,6 +302,9 @@
 
             }).then(function (data) {
 
+                console.log('startImportWithValidation validation finished')
+                console.log('startImportWithValidation validation finished data', data)
+
                 var errorsCount = 0;
 
                 data.error_rows.forEach(function (item) {
@@ -309,6 +314,8 @@
                     }
 
                 });
+
+                console.log('startImportWithValidation validation errorsCount', errorsCount)
 
                 if (errorsCount) {
 
@@ -364,6 +371,8 @@
                         status: vm.config.task_status
                     };
 
+                    console.log('startImportWithValidation starting import')
+
                     vm.startImport($event);
                 }
 
@@ -372,6 +381,8 @@
         }
 
         vm.validate = function (resolve, $event) {
+
+            console.log("Validate")
 
             vm.readyStatus.processing = true;
 
@@ -401,10 +412,12 @@
                 $scope.$apply();
 
                 if (websocketService.isOnline()) {
+                    
+                    console.log('Websocket Online. Fetching status')
 
                     websocketService.addEventListener('transaction_import_status', function (data) {
 
-                        console.log('simple_import_status.data', data);
+                        console.log('transaction_import_status.data', data);
 
                         if (vm.validateConfig.task_id === data.task_id) {
 
@@ -432,6 +445,8 @@
                     })
 
                 } else {
+
+                    console.log('Websocket is Offline. Falling back to polling')
 
                     if (vm.validateConfig.task_status === 'SUCCESS') {
                         resolve(data)
