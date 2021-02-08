@@ -110,7 +110,8 @@
                     rvDomManager.calculateScroll(elements, scope.evDataService);
 
                     window.requestAnimationFrame(function (){
-                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService)
+                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+						cellContentOverflow();
                     });
 
                 }
@@ -235,7 +236,6 @@
                 function updateTableContent() {
                     if (isReport) {
                         renderReportViewer();
-                        cellContentOverflow();
                     } else {
                         renderEntityViewer();
                     }

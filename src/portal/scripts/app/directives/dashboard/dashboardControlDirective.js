@@ -14,7 +14,6 @@
     module.exports = function () {
         return {
             restriction: 'E',
-            templateUrl: 'views/directives/dashboard/dashboard-control-view.html',
             scope: {
                 tabNumber: '=',
                 rowNumber: '=',
@@ -23,6 +22,7 @@
                 dashboardDataService: '=',
                 dashboardEventService: '='
             },
+			templateUrl: 'views/directives/dashboard/dashboard-control-view.html',
             link: function (scope, elem, attr) {
 
                 scope.fields = [];
@@ -58,7 +58,7 @@
 
                 };
 
-                    scope.getData = function () {
+                scope.getData = function () {
 
                     var options = {
                         pageSize: 1000,
@@ -154,7 +154,7 @@
 
                 scope.clearValue = function () {
 
-                    scope.item.data.store.value = null;
+                    scope.item.data.store.value = scope.componentData.settings.multiple ? [] : null;
                     scope.item.data.store.name = '';
                     scope.valueChanged()
 
@@ -349,8 +349,7 @@
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
                     scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
 
-                    console.log('scope.componentData, ', scope.componentData);
-                    scope.buttons = []
+                    scope.buttons = [];
 
                     if (scope.componentData.settings.value_type === 40) {
 
@@ -379,16 +378,17 @@
 
                     if (scope.entityType) {
 
-                        scope.getData()
-                            .then(function () {
+                        scope.getData().then(function () {
 
-                                scope.settingUpDefaultValue(scope.componentData);
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+							scope.settingUpDefaultValue(scope.componentData);
+							scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+							scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                            });
+                        });
 
-                    } else {
+                    }
+
+                    else {
 
                         scope.item.data.store = {};
 
@@ -397,6 +397,18 @@
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     }
+
+                    if (scope.componentData.settings.multiple) {
+
+                    	if (!scope.item.data.store) {
+							scope.item.data.store = {}
+						}
+
+                    	if (!Array.isArray(scope.item.data.store.value)) {
+							scope.item.data.store.value = [];
+						}
+
+					}
 
                     if (scope.componentData.custom_component_name) {
                         scope.customName = scope.componentData.custom_component_name;
