@@ -175,10 +175,15 @@
 
 				var setInputText = function () {
 
-					if (scope.selectedItemsIndication === "array") {
+					if (scope.selectedItemsIndication === 'array') {
 						arrayLikeInputText();
+					}
 
-					} else {
+					else if (scope.selectedItemsIndication === 'chips') {
+						formatDataForChips();
+					}
+
+					else {
 						defaultInputText();
 					}
 
@@ -485,10 +490,10 @@
 
 						}
 
-					} else {
+					}
 
+					else {
 						$(elem).click(scope.openMultiselectorDialog);
-
 					}
 
 					if (scope.customStyles) {

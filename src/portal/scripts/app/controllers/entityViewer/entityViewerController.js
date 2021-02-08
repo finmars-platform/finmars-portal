@@ -121,6 +121,39 @@
 
             };
 
+            const duplicateEntity = async function (entity) {
+
+                var editLayout = await uiService.getEditLayout(vm.entityType);
+                var bigDrawerWidthPercent;
+                var fixedAreaColumns;
+
+                if (editLayout.results.length) {
+
+                    var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
+                    fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+
+                    bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
+
+                }
+
+                $bigDrawer.show({
+                    controller: 'EntityViewerAddDialogController as vm',
+                    templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
+                    addResizeButton: true,
+                    drawerWidth: bigDrawerWidthPercent,
+                    locals: {
+                        entityType: vm.entityType,
+                        entity: entity,
+                        data: {
+                            openedIn: 'big-drawer',
+                            editLayout: editLayout
+                        }
+                    }
+
+                }).then(res => {});
+
+            };
+
             let postEditionActions = function (res, activeObject) {
 
             	vm.entityViewerDataService.setActiveObjectAction(null);
@@ -132,7 +165,11 @@
 
 						updateTableAfterEntitiesDeletion([activeObject.id]);
 
-					} else {
+					} else if (res.data.action === 'copy') {
+
+					    duplicateEntity(res.data.entity);
+
+                    } else {
 
 						var objects = vm.entityViewerDataService.getObjects();
 
@@ -586,7 +623,7 @@
 
 						}).then(function (res) {
 
-							postEditionActions(res, activeObject);
+                            postEditionActions(res, activeObject);
 
 						});
 
