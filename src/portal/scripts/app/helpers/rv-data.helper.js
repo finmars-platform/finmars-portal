@@ -640,6 +640,79 @@
 
     };
 
+    const getMarkedRowsAndSubtotals = function (color, evDataService) {
+
+        let markedReportRows = localStorage.getItem("marked_report_rows");
+
+        if (markedReportRows) {
+            markedReportRows = JSON.parse(markedReportRows);
+        } else {
+            markedReportRows = {};
+        }
+
+        const markedSubtotals = evDataService.getMarkedSubtotals();
+
+        const markedRowsAndSubtotals = Object.keys(markedReportRows)
+            .filter(key => markedReportRows[key].color === color)
+            .concat(
+                Object.keys(markedSubtotals).filter(key => markedSubtotals[key] === color)
+            );
+
+        return markedRowsAndSubtotals;
+
+    }
+
+    const filterByRowColor = function (data, evDataService) {
+/*        const rowTypeFilters = evDataService.getRowTypeFilters();
+        const color = rowTypeFilters.markedRowFilters;
+
+        if (color === 'none') { //  color filter disabled
+            return data;
+        }
+
+        const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService);
+
+        const undeletedKeys = [];
+
+        Object.keys(data).forEach(key => {
+
+            const isRoot = data[key].___group_name === 'root'
+
+            if (!isRoot) { // root row mast present always
+
+                const logicGroup = data[key].results.slice();
+                const subtotal = logicGroup.shift(); // first element on logic group is subtotal
+
+                const coloredRows = logicGroup.filter(item => markedRowsAndSubtotals.includes(item.id));
+                const isSubtotalColored = markedRowsAndSubtotals.includes(subtotal.___id);
+                console.log('#69')
+
+                if (isSubtotalColored || coloredRows.length >0) {
+                    const parents = evRvCommonHelper.getParents(subtotal.___parentId, evDataService)
+
+                    console.log('#69 parents', parents)
+
+                    undeletedKeys.push(key)
+                    undeletedKeys.push(...parents.map(parent => parent.___id))
+                    data[key].results = [subtotal, ... coloredRows];
+                }
+            } else {
+                undeletedKeys.push(key)
+            }
+
+        });
+
+        console.log('#69 undeletedKeys', undeletedKeys)
+
+        Object.keys(data).forEach(key => {
+            if (!undeletedKeys.includes(key)) {
+                delete data[key]
+            }
+        })*/
+
+        return data;
+    }
+
     var getFlatStructure = function (evDataService) {
 
         var rootGroupOptions = evDataService.getRootGroupOptions();
@@ -687,7 +760,7 @@
             data = getNewDataInstance(evDataService)
         }
 
-
+        data = filterByRowColor(data, evDataService);
 
         var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 

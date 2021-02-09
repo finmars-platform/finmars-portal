@@ -63,21 +63,6 @@
 
                 var activeLayoutConfigIsSet = false;
 
-                const getColoredSubtotals = function () {
-                    const flatList = scope.evDataService.getFlatList();
-
-                    const coloredItems = flatList.filter(item => !!item.___backgrond_color);
-                    const coloredRows = {};
-
-                    coloredItems.forEach(item => {
-
-                        coloredRows[item.___id] = item.___backgrond_color
-
-                    });
-
-                    return coloredRows;
-                };
-
                 const setColorsForSubtotals = function (flatList, coloredSubtotals) {
 
                     return flatList.map(item => {
@@ -94,7 +79,7 @@
 
                     console.log('renderReportViewer');
 
-                    const coloredSubtotals = getColoredSubtotals();
+                    const coloredSubtotals = scope.evDataService.getMarkedSubtotals();
 
                     rvDataHelper.syncLevelFold(scope.evDataService);
 

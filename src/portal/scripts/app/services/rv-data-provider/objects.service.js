@@ -47,13 +47,15 @@
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
-                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+
+                // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js and filter flatList
+/*                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
                 if (rowTypeFilters) {
 
                     items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
 
-                }
+                }*/
 
                 // console.log('groups filters length', items.length);
 

@@ -159,7 +159,8 @@
             projection: [],
             activeObject: null,
             activeObjectsCount: 0,
-            dataLoadEnded: false
+            dataLoadEnded: false,
+            markedSubtotals: {}
         };
 
         var dashboardData = {
@@ -1351,6 +1352,14 @@
             return data.missingPrices;
         }
 
+        function setMarkedSubtotals (markedSubtotals) {
+            data.markedSubtotals = markedSubtotals;
+        }
+
+        function getMarkedSubtotals() {
+            return data.markedSubtotals;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1568,6 +1577,9 @@
 
             setRowTypeFilters: setRowTypeFilters,
             getRowTypeFilters: getRowTypeFilters,
+
+            setMarkedSubtotals: setMarkedSubtotals,
+            getMarkedSubtotals: getMarkedSubtotals,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

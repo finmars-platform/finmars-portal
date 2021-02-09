@@ -1353,20 +1353,15 @@
 
         if (obj === null) { // row is subtotal
 
-            const flatList = evDataService.getFlatList();
-            const subtotalIndex = flatList.findIndex(item => item.___id === objectId)
-
-            if (subtotalIndex === -1) {
-                return;
-            }
+            const markedSubtotals = evDataService.getMarkedSubtotals();
 
             if (color === 'undo_mark_row') {
-                delete flatList[subtotalIndex].___backgrond_color
+                delete markedSubtotals[objectId]
             } else {
-                flatList[subtotalIndex].___backgrond_color = color;
+                markedSubtotals[objectId] = color;
             }
 
-            evDataService.setFlatList(flatList);
+            evDataService.setMarkedSubtotals(markedSubtotals);
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
             return;
 
