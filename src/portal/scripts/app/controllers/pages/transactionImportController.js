@@ -521,6 +521,7 @@
             importTransactionService.startImport(formData).then(function (data) {
 
                 vm.config = data;
+                vm.subTasksInfo = {}
 
                 vm.loaderData = {
                     current: vm.config.processed_rows,
