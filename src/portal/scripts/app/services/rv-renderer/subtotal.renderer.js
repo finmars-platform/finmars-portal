@@ -3,6 +3,7 @@
     var renderHelper = require('../../helpers/render.helper');
     var rvHelper = require('../../helpers/rv.helper');
     var evDataHelper = require('../../helpers/ev-data.helper');
+	var stringHelper = require('../../helpers/stringHelper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
@@ -179,7 +180,15 @@
 
 						var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
 
-                        result.html_result = foldButton + '<span class="">' + currentGroup.___group_name + '</span>';
+						var groupName = currentGroup.___group_name;
+
+						if (groupName && typeof groupName === 'string') {
+
+							groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+
+						}
+
+                        result.html_result = foldButton + '<span class="">' + groupName + '</span>';
                         result.raw_text_result = currentGroup.___group_name;
 
                     }
@@ -212,7 +221,15 @@
                     foldButtonStr = ''
                 }
 
-                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="">' + obj.___group_name + '</span></span>';
+				var groupName = obj.___group_name;
+
+				if (groupName && typeof groupName === 'string') {
+
+					groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+
+				}
+
+                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="">' + groupName + '</span></span>';
                 result.raw_text_result = obj.___group_name;
 
             }

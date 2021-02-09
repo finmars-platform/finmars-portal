@@ -41,8 +41,6 @@
 
                     newRow.order = lowestOrder - 1 */
 
-                    // newRow.order = "newRow" + newRowsKeys.length
-
                     return newRow;
 
                 };
@@ -100,7 +98,9 @@
                             tableMethods.addRow(scope.gtDataService, scope.gtEventService)
                         }
 
-                    } /* TODO delete later
+                    }
+
+                    /* TODO delete later
                         else if (gridTableSettings.addRowMode) { // default for cases when row changes after addition
 
                         scope.addRow = function () {
@@ -112,11 +112,11 @@
 
                         }
 
-                    }*/ else {
+                    }*/
+
+					else {
                         scope.addRow = addRow
-
                     }
-
 
                 };
 

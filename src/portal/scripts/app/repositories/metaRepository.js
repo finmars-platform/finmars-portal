@@ -154,6 +154,9 @@
             "value": 110,
             "display_name": "Selector"
         },{
+            "value": 120,
+            "display_name": "Button"
+        },{
             "value": "decoration",
             "display_name": "Decoration"
         }, {

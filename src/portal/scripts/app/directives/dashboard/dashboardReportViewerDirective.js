@@ -41,7 +41,8 @@
                 var componentData;
 
                 if (scope.item && scope.item.data) {
-                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                	componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                     if (componentData.type === 'report_viewer_split_panel') {
                         componentData.type = 'report_viewer';

@@ -67,6 +67,9 @@
                 case 'Decoration':
                     item['caption_name'] = 'Decoration';
                     break;
+                case 'Button':
+                    item['caption_name'] = 'Button';
+                    break;
                 default:
                     item['caption_name'] = item['display_name'];
                     break;
@@ -144,7 +147,6 @@
             case "complex-transaction":
             case "strategies":
                 return true;
-                break;
             default:
                 return false;
         }

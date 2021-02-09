@@ -625,7 +625,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         clickOutsideToClose: false,
                         locals: {

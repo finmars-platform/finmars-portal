@@ -27,7 +27,7 @@
 
     <md-dialog-content style="height: 100%">
 
-        <div data-ng-include="'views/entity-viewer/entity-viewer-edit-content-view.html'"
+        <div data-ng-include="'views/entity-viewer/entity-viewer-universal-edit-content-view.html'"
              style="min-width: 1450px"></div>
 
     </md-dialog-content>
@@ -81,17 +81,31 @@
                 <span data-ng-if="vm.entityType !== 'transaction'">Cancel</span>
                 <span data-ng-if="vm.entityType === 'transaction'">Close</span>
             </md-button>
-            <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
+
+            <!-- <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
-                       ng-click="vm.save()"
+                       ng-click="vm.save($event, true)"
                        class="md-raised m-r-24">
                 Save and Exit
             </md-button>
             <md-button class="md-raised m-r-24" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history'"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission || vm.processing}"
-                       ng-click="vm.save()">
+                       ng-click="vm.save($event, true)">
+                Save and Exit
+            </md-button> -->
+            <md-button class="outline-button" data-ng-if="vm.entityType !== 'transaction'"
+                       ng-disabled="vm.saveBtnDisabled()"
+                       ng-click="vm.save($event, false)">
+                Save
+            </md-button>
+
+            <md-button data-ng-if="vm.entityType !== 'transaction'"
+                       ng-disabled="vm.saveBtnDisabled()"
+                       ng-click="vm.save($event, true)"
+                       class="m-r-24 primary-button">
                 Save and Exit
             </md-button>
+
         </div>
 
         <dialog-window-resizer data-ng-if="vm.dialogElemToResize"

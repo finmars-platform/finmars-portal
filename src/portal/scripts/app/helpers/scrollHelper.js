@@ -12,7 +12,8 @@
         var scrollSize = null;
 
         function DnDWheelScroll (event) {
-            event.preventDefault();
+
+        	event.preventDefault();
 
             var scrolled = DnDScrollElem.scrollTop;
 
@@ -29,10 +30,13 @@
             clearTimeout(DnDScrollTimeOutId);
 
             DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
-                DnDScrollElem.scroll({
+
+            	DnDScrollElem.scroll({
                     top: Math.max(0, scrollSize)
                 });
-                scrollSize = null;
+
+            	scrollSize = null;
+
             }, 30);
 
         }
@@ -42,10 +46,12 @@
         }
 
         function enableDnDWheelScroll () {
+			console.log("testing enableDnDWheelScroll fired");
 			document.addEventListener('wheel', DnDWheelScroll, {passive: false});
 		}
 
 		function disableDnDWheelScroll () {
+			console.log("testing disableDnDWheelScroll fired");
 			document.removeEventListener('wheel', DnDWheelScroll);
 		}
 
