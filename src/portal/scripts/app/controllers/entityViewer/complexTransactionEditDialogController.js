@@ -616,24 +616,18 @@
 
         vm.recalculate = function (paramsObj) {
 
-			clearTimeout(recalculateTimeoutID);
-
             var inputs = paramsObj.inputs;
 			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
 
-				recalculateTimeoutID = setTimeout(() => {
+				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
-            		var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+				book.id = vm.entityId;
+				book.complex_transaction = vm.entity;
 
-					book.id = vm.entityId;
-					book.complex_transaction = vm.entity;
-
-					var recalcProm = complexTransactionService.recalculateComplexTransaction(book.id, book);
-					sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
-
-				}, 1200);
+				var recalcProm = complexTransactionService.recalculateComplexTransaction(book.id, book);
+				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
 
             }
 
