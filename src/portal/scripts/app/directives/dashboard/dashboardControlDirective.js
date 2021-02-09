@@ -58,7 +58,7 @@
 
                 };
 
-                    scope.getData = function () {
+                scope.getData = function () {
 
                     var options = {
                         pageSize: 1000,
