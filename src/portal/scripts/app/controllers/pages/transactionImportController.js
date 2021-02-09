@@ -444,9 +444,17 @@
                             var keys = Object.keys(vm.subTasksInfo)
 
                             var processedRows = 0
+                            var processed
 
                             keys.forEach(function(task_id){
-                                processedRows = processedRows + vm.subTasksInfo[task_id].processed_rows
+
+                                processed = 0
+
+                                if (vm.subTasksInfo[task_id].processed_rows) {
+                                    processed = vm.subTasksInfo[task_id].processed_rows - 1
+                                }
+
+                                processedRows = processedRows + processed
                             })
 
                             vm.loaderData = {
@@ -513,6 +521,7 @@
             importTransactionService.startImport(formData).then(function (data) {
 
                 vm.config = data;
+                vm.subTasksInfo = {}
 
                 vm.loaderData = {
                     current: vm.config.processed_rows,
@@ -548,9 +557,17 @@
                             var keys = Object.keys(vm.subTasksInfo)
 
                             var processedRows = 0
+                            var processed
 
                             keys.forEach(function(task_id){
-                                processedRows = processedRows + vm.subTasksInfo[task_id].processed_rows
+
+                                processed = 0
+
+                                if (vm.subTasksInfo[task_id].processed_rows) {
+                                    processed = vm.subTasksInfo[task_id].processed_rows - 1
+                                }
+
+                                processedRows = processedRows + processed
                             })
 
                             vm.loaderData = {

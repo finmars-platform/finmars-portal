@@ -455,26 +455,19 @@
 
         };
 
-		let recalculateTimeoutID;
-
         vm.recalculate = function (paramsObj) {
 
-			clearTimeout(recalculateTimeoutID);
+
 
 			var inputs = paramsObj.inputs;
 			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
 			if (inputs && inputs.length) {
 
-				recalculateTimeoutID = setTimeout(() => {
+				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
-					var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
-
-					var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
-					sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
-
-				}, 1200);
-
+				var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
+				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
 
 			}
 
