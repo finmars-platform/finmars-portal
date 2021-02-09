@@ -35,6 +35,8 @@
 
         vm.hasSchemeEditPermission = false;
 
+        vm.subTasksInfo = {}
+
         vm.loadIsAvailable = function () {
             return !vm.readyStatus.processing && vm.config.scheme;
         };
@@ -401,6 +403,7 @@
             importTransactionService.validateImport(formData).then(function (data) {
 
                 vm.validateConfig = data;
+                vm.subTasksInfo = {}
 
                 vm.loaderData = {
                     current: vm.validateConfig.processed_rows,
@@ -419,17 +422,8 @@
 
                         console.log('transaction_import_status.data', data);
 
+                        // If parent task is finished
                         if (vm.validateConfig.task_id === data.task_id) {
-
-                            vm.loaderData = {
-                                current: data.processed_rows,
-                                total: data.total_rows,
-                                text: 'Validation Progress:',
-                                status: data.state
-                            };
-
-                            $scope.$apply();
-
                             if (data.state === 'D') {
                                 websocketService.removeEventListener('transaction_import_status');
                                 resolve(data)
@@ -439,6 +433,30 @@
                                     resolve(data);
                                 }
                             }
+                        }
+
+
+                        // Update subtask status
+                        if (vm.validateConfig.task_id === data.parent_task_id) {
+
+                            vm.subTasksInfo[data.task_id] = data
+
+                            var keys = Object.keys(vm.subTasksInfo)
+
+                            var processedRows = 0
+
+                            keys.forEach(function(task_id){
+                                processedRows = processedRows + vm.subTasksInfo[task_id].processed_rows
+                            })
+
+                            vm.loaderData = {
+                                current: processedRows,
+                                total: data.parent_total_rows,
+                                text: 'Validation Progress:',
+                                status: vm.validateConfig.state
+                            };
+
+                            $scope.$apply();
 
                         }
 
@@ -511,15 +529,6 @@
 
                         if (vm.config.task_id === data.task_id) {
 
-                            vm.loaderData = {
-                                current: data.processed_rows,
-                                total: data.total_rows,
-                                text: 'Import Progress:',
-                                status: data.state
-                            };
-
-                            $scope.$apply();
-
                             if (data.state === 'D') {
                                 websocketService.removeEventListener('transaction_import_status');
                                 resolve(data)
@@ -529,6 +538,29 @@
                                     resolve(data);
                                 }
                             }
+
+                        }
+
+                        if (vm.config.task_id === data.parent_task_id) {
+
+                            vm.subTasksInfo[data.task_id] = data
+
+                            var keys = Object.keys(vm.subTasksInfo)
+
+                            var processedRows = 0
+
+                            keys.forEach(function(task_id){
+                                processedRows = processedRows + vm.subTasksInfo[task_id].processed_rows
+                            })
+
+                            vm.loaderData = {
+                                current: processedRows,
+                                total: data.parent_total_rows,
+                                text: 'Import Progress:',
+                                status: data.state
+                            };
+
+                            $scope.$apply();
 
                         }
 
