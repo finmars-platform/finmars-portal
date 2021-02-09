@@ -189,6 +189,14 @@
 
                 $scope.$apply();
 
+                setTimeout(function (){
+
+                    var elem = document.querySelector('.homepage-messages-container');
+
+                    elem.scrollTop = elem.scrollHeight;
+
+                }, 0)
+
             })
 
         };

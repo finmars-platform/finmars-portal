@@ -149,9 +149,24 @@
         });
     }
 
+    let openLinkInNewTab = function (event) {
+
+		event.preventDefault();
+		let targetElem = event.target;
+
+		if (targetElem.classList.contains('openLinkInNewTab')) {
+
+			let url = targetElem.href;
+			window.open(url);
+
+		}
+
+	};
+
     let closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
 
         if (openedIn === 'big-drawer') {
+
             $bigDrawer.hide(response);
 
         } else { // opened in mdDialog
@@ -160,13 +175,24 @@
 
     };
 
+    let getDefaultFilterType = valueType => {
+
+    	const defaultTextFilterType = "contains";
+    	const defaultNumberAndDateFilterType = "equal";
+
+		return valueType === 10 ? defaultTextFilterType: defaultNumberAndDateFilterType;
+
+	};
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
         textWithDashSort: textWithDashSort,
+		openLinkInNewTab: openLinkInNewTab,
 
-        closeComponent: closeComponent
+        closeComponent: closeComponent,
+		getDefaultFilterType: getDefaultFilterType,
     }
 
 }());

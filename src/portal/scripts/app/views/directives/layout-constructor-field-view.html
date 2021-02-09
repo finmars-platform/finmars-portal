@@ -130,14 +130,14 @@
                 <input data-ng-model="item.options.tooltipValue">
             </md-input-container>
 
-            <div data-ng-if="checkForSpecialOptions()" class="ec-attr-row">
+            <div data-ng-if="checkForSpecialOptions()">
                 <div data-ng-include="specialOptionTemplate"></div>
             </div>
 
             <div data-ng-if="hasEditablesToggle()">
 
                 <md-input-container class="ec-input-color-checkbox-container">
-                    <md-checkbox ng-model="item.editable">
+                    <md-checkbox ng-model="item.editable" aria-label="text input is editable">
                         Editable
                     </md-checkbox>
                 </md-input-container>

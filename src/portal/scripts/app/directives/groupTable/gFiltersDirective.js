@@ -49,7 +49,7 @@
 				scope.popupPosY = { value: null }
 				scope.fpBackClasses = "z-index-48"
 				scope.fpClasses = "z-index-49"
-
+				console.log("testing filters", JSON.parse(JSON.stringify(scope.filters)));
 				scope.showUseFromAboveFilters = true;
 
 				scope.readyStatus = {
@@ -553,9 +553,7 @@
 				scope.removeFilter = function (filtersToRemove) {
 
 					scope.filters = scope.filters.filter(filter => {
-
 						return filtersToRemove.find(item => item.id !== filter.key);
-
 					});
 
 					scope.evDataService.setFilters(scope.filters);
@@ -684,7 +682,7 @@
 
 					scope.filters.forEach(filter => {
 
-						if (filter.type !== "filter_link") { // not filter from dashboard component
+						if (filter.type !== "filter_link") { // don't show filter from dashboard component
 
 							const filterOpts = filter.options || {};
 							let filterVal = filterOpts.filter_values || "";

@@ -856,11 +856,12 @@
 
             <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
                  data-ng-repeat="column in groups track by column.key"
-                 data-ng-class="{'last-dragged': column.lastDragged}"
+                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged}"
                  data-ng-style="column.style"
                  data-column-id="{{column.___group_type_id}}"
                  data-attr-key="{{column.key}}"
                  draggable="{{groupsAreaDraggable}}"
+
                  popup
                  popup-id="{{column.key}}"
                  popup-template-url="{{getPopupMenuTemplate(column)}}"
@@ -872,7 +873,7 @@
                  popup-data="{data: getPopupData(column, $index)}"
                  offset-x="-10"
                  offset-y="-10"
-                 popup-classes="'rounded-border'"
+                 popup-classes="'rounded-border g-column-context-menu-popup'"
                  backdrop-classes="'low-z-index-backdrop'"
                  popup-event-service="evEventService">
 
@@ -933,7 +934,7 @@
 <!--            data-ng-repeat="column in notGroupingColumns track by column.key"-->
             <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
                  data-ng-repeat="column in notGroupingColumns track by column.key"
-                 data-ng-class="{'last-dragged': column.lastDragged}"
+                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged}"
                  data-ng-style="column.style"
                  data-column-id="{{column.___column_id}}"
                  data-attr-key="{{column.key}}"
@@ -949,7 +950,7 @@
                  popup-data="{data: getPopupData(column, $index)}"
                  offset-x="-10"
                  offset-y="-10"
-                 popup-classes="'rounded-border'"
+                 popup-classes="'rounded-border g-column-context-menu-popup'"
                  backdrop-classes="'low-z-index-backdrop'"
                  popup-event-service="evEventService">
 

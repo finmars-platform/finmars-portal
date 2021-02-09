@@ -305,7 +305,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
                     preserveScope: true,
@@ -332,6 +332,8 @@
             // < Functions for context menu >
 
             vm.updateGrandTotalComponent = function(){
+
+                // vm.grandTotalError = false;
 
                 rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
@@ -378,6 +380,10 @@
                 } else {
                     vm.grandTotalValue = val
                 }
+
+                // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
+                //     vm.grandTotalError = true
+                // }
 
                 console.log('vm.grandTotalValue', vm.grandTotalValue);
 
@@ -1007,7 +1013,7 @@
 
             vm.setLayout = function (layout) {
 
-                return new Promise(function (resolve, reject) {
+                return new Promise(async function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
@@ -1054,13 +1060,8 @@
                             noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
                         }
 
-                        rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions).then(function () {
-                            resolve();
-
-                        }).catch(function () {
-                            resolve();
-
-                        });
+                        await rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
+                        resolve();
 
                     } else {
                         resolve();
@@ -1096,16 +1097,16 @@
 
                     if (linkedFilter) {
 
-                        linkedFilter.options.filter_values = [componentOutput.data.value]
+                        linkedFilter.options.filter_values = [componentOutput.data.value];
 
 						if ((linkedFilter.value_type === 100 || linkedFilter.value_type === 'field') &&
 							Array.isArray(componentOutput.data.value)) {
 
-							linkedFilter.options.filter_values = componentOutput.data.value
+							linkedFilter.options.filter_values = componentOutput.data.value;
 
 						}
 
-                        filters[linkedFilterIndex] = linkedFilter
+                        filters[linkedFilterIndex] = linkedFilter;
 
                     } else {
 
@@ -1126,25 +1127,24 @@
 
 							case 10:
 							case 30:
-								linkedFilter.options.filter_type = 'contains'
+								linkedFilter.options.filter_type = 'contains';
 								break;
 
 							case 20:
 							case 40:
-								linkedFilter.options.filter_type = 'equal'
+								linkedFilter.options.filter_type = 'equal';
 								break;
 
 							case 100:
 							case 'field':
 
 								// even if component is single selector, multiselector filter will work
-
 								// console.log('componentOutput.value', componentOutput.data.value)
-								linkedFilter.value_type = 'field'
-								linkedFilter.options.filter_type = 'multiselector'
+								linkedFilter.value_type = 'field';
+								linkedFilter.options.filter_type = 'multiselector';
 
 								if (Array.isArray(componentOutput.data.value)) {
-									linkedFilter.options.filter_values = componentOutput.data.value
+									linkedFilter.options.filter_values = componentOutput.data.value;
 								}
 
 								break;
@@ -1649,7 +1649,6 @@
                 });
 				//</editor-fold>
 
-
 				//<editor-fold desc="Dashboard component events">
 				vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
 
@@ -1842,8 +1841,6 @@
                     };
                 }
 
-
-
             };
 
             let getLayoutById = function (layoutId) {
@@ -1917,17 +1914,18 @@
                             // needed to prevent saving layout as collapsed when saving it from dashboard
                             var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
                             savedInterfaceLayout = JSON.parse(JSON.stringify(interfaceLayout));
+
                             var additions = vm.entityViewerDataService.getAdditions();
                             savedAddtions = JSON.parse(JSON.stringify(additions));
 
-                            rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                            // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
                             if (vm.componentData.type === 'report_viewer' ||
                                 vm.componentData.type === 'report_viewer_split_panel') {
 
                                 var evComponents = vm.entityViewerDataService.getComponents();
 
-                                Object.keys(vm.componentData.settings.components).forEach(function (key) {
+                                Object.keys(vm.componentData.settings.components).forEach(key => {
                                     evComponents[key] = vm.componentData.settings.components[key];
                                 });
 
@@ -1993,9 +1991,10 @@
 
                             vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                            vm.readyStatus.layout = true;
+                            /* vm.readyStatus.layout = true;
 
-                            $scope.$apply();
+                            $scope.$apply(); */
+							rvSharedLogicHelper.onSetLayoutEnd();
 
                             resolve();
 

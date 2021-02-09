@@ -6,6 +6,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+	var metaHelper = require('../../helpers/meta.helper');
 
     var priceHistoryService = require('../../services/priceHistoryService'); // TODO this is temp service here
 
@@ -118,24 +119,33 @@
         var clickData = {};
         var rowElem = event.target.closest('.g-row');
 
-        clickData.isShiftPressed = event.shiftKey;
-        clickData.isCtrlPressed = event.ctrlKey;
+        clickData.isShiftPressed = event.shiftKey
+        clickData.isCtrlPressed = event.ctrlKey
+		clickData.target = event.target
 
         if (rowElem) {
 
-            clickData.___type = rowElem.dataset.type;
-            clickData.___id = rowElem.dataset.objectId;
-            clickData.___parentId = rowElem.dataset.parentGroupHashId;
+			var targetElem = event.target;
 
-            var targetElem = event.target;
+			if (clickData.target.classList.contains('openLinkInNewTab')) {
 
-            if (rowElem.dataset.subtotalType) {
-                clickData.___subtotal_type = rowElem.dataset.subtotalType;
-            }
+				clickData.___type = 'hyperlink'
 
-            if (rowElem.dataset.subtotalSubtype) {
-                clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-            }
+			} else {
+
+				clickData.___type = rowElem.dataset.type;
+				clickData.___id = rowElem.dataset.objectId;
+				clickData.___parentId = rowElem.dataset.parentGroupHashId;
+
+				if (rowElem.dataset.subtotalType) {
+					clickData.___subtotal_type = rowElem.dataset.subtotalType
+				}
+
+				if (rowElem.dataset.subtotalSubtype) {
+					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype
+				}
+
+			}
 
 			if (targetElem.classList.contains('ev-fold-button')) {
 
@@ -773,7 +783,13 @@
 
             var clickData = getClickData(event);
 
-            if (event.detail === 2) { // double click handler
+            if (clickData.___type === 'hyperlink') {
+
+            	metaHelper.openLinkInNewTab(event);
+
+			}
+
+            else if (event.detail === 2) { // double click handler
 
                 var cellElem;
 
@@ -782,6 +798,7 @@
                     cellElem = event.target
                 } else if (event.target.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement;
+
                 } else if (event.target.parentElement.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement.parentElement;
                 } */

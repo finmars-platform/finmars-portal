@@ -10,7 +10,7 @@
 
             <div layout="row">
 
-                <div class="dc-extend-btns-holder" layout="row" style="margin-right: 5px">
+                <div class="dc-extend-btns-holder" layout="row" style="margin-right: 5px" data-ng-if="componentData.type != 'accordion'">
                     <button class="md-button md-raised" ng-click="decreaseRowspan()">
                         <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
                     </button>
@@ -20,7 +20,7 @@
                     </button>
                 </div>
 
-                <div class="dc-extend-btns-holder" layout="row">
+                <div class="dc-extend-btns-holder" layout="row" data-ng-if="componentData.type != 'accordion'">
                     <button class="md-button md-raised" ng-click="decreaseColspan()">
                         <ng-md-icon icon="chevron_left" size="16"></ng-md-icon>
                     </button>
@@ -40,6 +40,7 @@
                         <ng-md-icon icon="delete"  size="14"></ng-md-icon>
                     </md-button>
                     <md-button aria-label="edit attribute" class=""
+                               data-ng-if="componentData.type != 'accordion'"
                                data-ng-click="toggleFieldEditMode()">
                         <ng-md-icon icon="mode_edit" size="14"></ng-md-icon>
                     </md-button>

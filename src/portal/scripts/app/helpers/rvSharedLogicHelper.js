@@ -88,7 +88,8 @@
             var entityType = viewModel.entityViewerDataService.getEntityType();
 
             if (entityType !== 'transaction-report') {
-                pricesCheckerService.check(reportOptions).then(function (data) {
+
+            	pricesCheckerService.check(reportOptions).then(function (data) {
 
                     data.items = data.items.map(function (item) {
 
@@ -103,7 +104,6 @@
                             })
 
                         }
-
 
                         if (item.type === 'fixed_calc' || item.type === 'stl_cur_fx' || item.type === 'missing_instrument_currency_fx_rate') {
 
@@ -127,9 +127,10 @@
 
                     viewModel.entityViewerDataService.setMissingPrices(data);
 
-                    viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END)
+                    viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
 
                 });
+
             }
 
 			putUseFromAboveFiltersFirst();

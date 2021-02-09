@@ -60,7 +60,7 @@
                 <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
 
                     <md-menu-item data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType != 'transaction'">
-                        <md-button ng-click="vm.copy()"
+                        <md-button ng-click="vm.copy('big_drawer')"
                                    data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}">
                             <div class="flex-row flex-i-center">
                                 <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
@@ -71,7 +71,7 @@
                     </md-menu-item>
 
                     <md-menu-item data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history' && vm.entityType != 'transaction'">
-                        <md-button ng-click="vm.copy()"
+                        <md-button ng-click="vm.copy('big_drawer')"
                                    data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.hasEditPermission || vm.processing}">
                             <div class="flex-row flex-i-center">
                                 <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
@@ -187,29 +187,25 @@
                 Make a copy
             </md-button>-->
 
-            <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
+            <!-- <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.save($event, false)"
                        class="outline-button">
                 Save
-            </md-button>
-            <md-button class="outline-button" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history'"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission || vm.processing}"
+            </md-button> -->
+            <md-button class="outline-button" data-ng-if="vm.entityType !== 'transaction'"
+                       ng-disabled="vm.saveBtnDisabled()"
                        ng-click="vm.save($event, false)">
                 Save
             </md-button>
 
-            <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
+            <md-button data-ng-if="vm.entityType !== 'transaction'"
+                       ng-disabled="vm.saveBtnDisabled()"
                        ng-click="vm.save($event, true)"
                        class="m-r-24 primary-button">
                 Save and Exit
             </md-button>
-            <md-button class="m-r-24 primary-button" data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history'"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.hasEditPermission || vm.processing}"
-                       ng-click="vm.save($event, true)">
-                Save and Exit
-            </md-button>
+
         </div>
 
     </div>

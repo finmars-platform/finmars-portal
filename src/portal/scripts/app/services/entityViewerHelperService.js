@@ -7,12 +7,14 @@
  */
 (function () {
 
-    let objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    let uiService = require('../services/uiService');
+    const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
+	const uiService = require('../services/uiService');
 
-    var entityResolverService = require('../services/entityResolverService');
+	const entityResolverService = require('../services/entityResolverService');
 
-    var middlewareService = require('../services/middlewareService');
+	const middlewareService = require('../services/middlewareService');
+
+	const metaHelper = require('../helpers/meta.helper');
 
     'use strict';
 
@@ -156,26 +158,33 @@
             attrTypeToAdd.filters = attrInstance.filters;
         }
 
-        switch (form) {
+        attrTypeToAdd.name = attrInstance.name;
+        attrTypeToAdd.value_type = attrInstance.value_type;
 
-        	case 'group':
-                attrTypeToAdd.groups = true;
-                break;
+        if (attrInstance.layout_name) {
+            attrTypeToAdd.layout_name = attrInstance.layout_name;
+        }
 
-            case 'column':
-                attrTypeToAdd.columns = true;
-                break;
+		switch (form) {
 
-            case 'filter':
+			case 'group':
+				attrTypeToAdd.groups = true;
+				break;
 
-            	attrTypeToAdd.filters = true;
+			case 'column':
+				attrTypeToAdd.columns = true;
+				break;
+
+			case 'filter':
+
+				attrTypeToAdd.filters = true;
 
 				if (!attrTypeToAdd.options) {
 					attrTypeToAdd.options = {};
 				}
 
 				if (!attrTypeToAdd.options.filter_type) {
-					attrTypeToAdd.options.filter_type = "contains";
+					attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
 				}
 
 				if (!attrTypeToAdd.options.filter_values) {
@@ -186,15 +195,8 @@
 					attrTypeToAdd.options.exclude_empty_cells = false;
 				}
 
-                break;
-        }
-
-        attrTypeToAdd.name = attrInstance.name;
-        attrTypeToAdd.value_type = attrInstance.value_type;
-
-        if (attrInstance.layout_name) {
-            attrTypeToAdd.layout_name = attrInstance.layout_name;
-        }
+				break;
+		}
 
         return attrTypeToAdd;
 
@@ -434,42 +436,52 @@
 	 * @param {array} keysOfFixedFieldsAttrs - array of strings that are keys of entity attributes
 	 * @returns {object} object where each property corresponding to field inside popup
 	 */
-    var getFieldsForFixedAreaPopup = function (viewModel, keysOfFixedFieldsAttrs) {
+    var getFieldsForFixedAreaPopup = function (viewModel) {
 
-        const fields = keysOfFixedFieldsAttrs.reduce((acc,key) => {
+    	return new Promise(function (resolve, reject) {
 
-        	const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
+			const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc,key) => {
 
-            if (!attr) {
-                return acc;
-            }
+				const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
 
-            const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
-            const field = {
-                [fieldKey]: {name: attr.name, value: viewModel.entity[key]}
-            };
+				if (!attr) {
+					return acc;
+				}
 
-            if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
-                field[fieldKey].value_entity = attr.value_entity;
-            }
+				const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
+				const field = {
+					[fieldKey]: {name: attr.name, value: viewModel.entity[key]}
+				};
 
-            return {...acc, ...field};
+				if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
+					field[fieldKey].value_entity = attr.value_entity;
+				}
 
-        }, {});
+				return {...acc, ...field};
 
-        fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
-        fields.showByDefault = {key: 'Show by default', value: viewModel.showByDefault, options: viewModel.showByDefaultOptions}
+			}, {});
 
-        // get options for 'type' or 'instrument type' fields
-        fields.hasOwnProperty('type') && entityResolverService.getListLight(fields.type.value_entity).then((data) => {
+			fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
+			fields.showByDefault = {key: 'Show by default', value: viewModel.showByDefault, options: viewModel.showByDefaultOptions}
 
-        	const options = Array.isArray(data) ? data : data.results;
-            fields.type.options = options;
-            viewModel.setTypeSelectorOptions(options);
+			// get options for 'type' or 'instrument type' fields
+			if (fields.hasOwnProperty('type')) {
 
-        });
+				entityResolverService.getListLight(fields.type.value_entity).then((data) => {
 
-        return fields;
+					const options = Array.isArray(data) ? data : data.results;
+					fields.type.options = options;
+					viewModel.setTypeSelectorOptions(options);
+
+					resolve(fields);
+
+				}).catch(error => reject(error));
+
+			} else {
+				resolve(fields);
+			}
+
+		});
 
     };
 

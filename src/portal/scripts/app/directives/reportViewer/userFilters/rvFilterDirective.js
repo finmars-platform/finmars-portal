@@ -4,6 +4,8 @@
 	const evEvents = require("../../../services/entityViewerEvents");
 	const userFilterService = require('../../../services/rv-data-provider/user-filter.service');
 
+	const metaHelper = require('../../../helpers/meta.helper');
+
 	'use strict';
 
 	module.exports = function ($mdDialog) {
@@ -63,8 +65,9 @@
 
 							}
 
+						}
 
-						} else {
+						else {
 
 							filters.push(filter);
 
@@ -77,12 +80,14 @@
 
 						}
 
-
-
 					});
 
 					if (!vm.filter.options) {
 						vm.filter.options = {}
+					}
+
+					if (!vm.filter.options.filter_type) {
+						vm.filter.options.filter_type = metaHelper.getDefaultFilterType(vm.filter.value_type);
 					}
 
 					if (!vm.filter.options.filter_values) {
@@ -161,6 +166,25 @@
 
 				const isUseFromAbove = (filterData) => {
 					return !!(filterData.options.use_from_above && Object.keys(filterData.options.use_from_above).length);
+				};
+
+				vm.getActiveFilterType = (filterTypesList) => {
+
+					if (vm.filter.options.use_from_above &&
+						Object.keys(vm.filter.options.use_from_above).length) {
+
+						return 'use_from_above';
+
+					} else {
+
+						let activeType = filterTypesList.find(type => {
+							return type.value === vm.filter.options.filter_type;
+						});
+
+						return activeType.value;
+
+					}
+
 				};
 
 				vm.saveFilterSettings = function () {
