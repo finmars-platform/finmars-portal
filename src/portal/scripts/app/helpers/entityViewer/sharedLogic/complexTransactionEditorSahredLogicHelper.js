@@ -91,6 +91,8 @@
 
 		};
 
+		let recalculateTimeoutID;
+
 		let onFieldChange = function (fieldKey) {
 
 			if (fieldKey) {
@@ -165,11 +167,17 @@
 
 						viewModel.evEditorDataService.setUserInputsToRecalculate(linkedInputsNames);
 
-						viewModel.recalculate({
-							inputs: linkedInputsNames,
-							recalculationData: "linked_inputs",
-							updateScope: true
-						});
+						clearTimeout(recalculateTimeoutID);
+
+						recalculateTimeoutID = setTimeout(() => {
+
+							viewModel.recalculate({
+								inputs: linkedInputsNames,
+								recalculationData: "linked_inputs",
+								updateScope: true
+							});
+
+						}, 1200);
 
 					}
 

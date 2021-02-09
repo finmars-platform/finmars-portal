@@ -1077,7 +1077,9 @@
                     }
                 }
 
-            } else {
+            }
+
+            else {
 
                 setPagination(listLayout.data.pagination);
 
