@@ -1,17 +1,140 @@
 (function () {
 
-	let uiService = require('../../../services/uiService');
-	let entityViewerHelperService = require('../../../services/entityViewerHelperService');
+	const uiService = require('../../../services/uiService');
+	const entityViewerHelperService = require('../../../services/entityViewerHelperService');
 
-	var attributeTypeService = require('../../../services/attributeTypeService');
+	const attributeTypeService = require('../../../services/attributeTypeService');
 
-	let entityEditorHelper = require('../../../helpers/entity-editor.helper');
+	const entityEditorHelper = require('../../../helpers/entity-editor.helper');
+
+	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
 	'use strict';
 
-	module.exports = function (viewModel, $scope, $mdDialog) {
+	module.exports = function (viewModel, $scope, $mdDialog, $bigDrawer) {
 
-		let fixFieldsLayoutWithMissingSockets = function () {
+		let bigDrawerResizeButton;
+
+		const getFixedAreaPopup = function () {
+			return {
+				fields: {
+					showByDefault: {
+						value: viewModel.showByDefault
+					}
+				},
+				entityType: viewModel.entityType,
+				tabColumns: null
+			};
+		};
+
+		const entityTabsMenuTplt = '<div class="ev-editor-tabs-popup-content popup-menu">' +
+				'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" class="entity-tabs-menu-option popup-menu-option" ng-class="popupData.viewModel.getTabBtnClasses(tab)" ng-click="popupData.viewModel.activeTab = tab">' +
+					'<span>{{tab.label}}</span>' +
+					'<div ng-if="popupData.viewModel.tabWithErrors(tab)" class="tab-option-error-icon">' +
+						'<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
+					'</div>' +
+				'</md-button>' +
+				'<md-button ng-if="popupData.viewModel.canManagePermissions" class="entity-tabs-menu-option popup-menu-option" ng-class="{\'active-tab-button\': popupData.viewModel.activeTab === \'permissions\'}" ng-click="popupData.viewModel.activeTab = \'permissions\'">' +
+					'<span>Permissions</span>' +
+				'</md-button>' +
+			'</div>';
+
+		const getEditFormFieldsInFixedArea = function () {
+
+			const fieldsInFixedArea = [];
+
+			if (viewModel.fixedAreaPopup.tabColumns > 2)  {
+
+				if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+
+					fieldsInFixedArea.push(viewModel.typeFieldName);
+
+				} else {
+
+					fieldsInFixedArea.push('short_name');
+				}
+
+			}
+
+			return fieldsInFixedArea;
+
+		};
+
+		const getAddFormFieldsInFixedArea = function () {
+			const fieldsInFixedArea = [];
+
+			if (viewModel.fixedAreaPopup.tabColumns > 2) {
+
+				if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+
+					fieldsInFixedArea.push(viewModel.typeFieldName);
+
+				} else {
+
+					fieldsInFixedArea.push('short_name');
+				}
+
+			}
+
+
+			if (viewModel.fixedAreaPopup.tabColumns > 5) {
+
+				if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+
+					fieldsInFixedArea.push('short_name');
+
+				} else {
+
+					fieldsInFixedArea.push('user_code');
+				}
+
+			}
+
+			return fieldsInFixedArea;
+		}
+
+		const onPopupSaveCallback = function () {
+
+			const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
+
+			viewModel.keysOfFixedFieldsAttrs.forEach(key => {
+
+				if (!key || fieldsInFixedArea.includes(key)) {
+					return;
+				}
+
+				const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
+				viewModel.entity[key] = viewModel.fixedAreaPopup.fields[fieldKey].value; // save from popup to fixed area
+
+			});
+
+			if (viewModel.fixedAreaPopup.tabColumns <= 5)  {
+
+				if (viewModel.entityStatus !== viewModel.fixedAreaPopup.fields.status.value) {
+					viewModel.entityStatus = viewModel.fixedAreaPopup.fields.status.value;
+					viewModel.entityStatusChanged();
+				}
+
+			}
+
+			if (viewModel.showByDefault !== viewModel.fixedAreaPopup.fields.showByDefault.value) {
+
+				viewModel.showByDefault = viewModel.fixedAreaPopup.fields.showByDefault.value;
+				// save layout settings
+				viewModel.dataConstructorLayout.data.fixedArea.showByDefault = viewModel.showByDefault;
+				uiService.updateEditLayout(viewModel.dataConstructorLayout.id, viewModel.dataConstructorLayout);
+
+			}
+
+			viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
+
+		};
+
+		const onFixedAreaPopupCancel = function () {
+			viewModel.fixedAreaPopup.fields = JSON.parse(JSON.stringify(viewModel.originalFixedAreaPopupFields));
+		};
+
+		const fixFieldsLayoutWithMissingSockets = function () {
 
 			let socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(viewModel.tabs, viewModel.dataConstructorLayout);
 
@@ -25,7 +148,7 @@
 
 		};
 
-		let mapAttributesToLayoutFields = function () {
+		const mapAttributesToLayoutFields = function () {
 
 			let attributes = {
 				entityAttrs: viewModel.entityAttrs,
@@ -49,20 +172,22 @@
 
 		};
 
-		let mapAttributesAndFixFieldsLayout = function () {
+		const mapAttributesAndFixFieldsLayout = function () {
+
 			viewModel.dcLayoutHasBeenFixed = false;
 
 			fixFieldsLayoutWithMissingSockets();
 			mapAttributesToLayoutFields();
+
 		};
 
-		let getAttributeTypes = function () {
+		const getAttributeTypes = function () {
 			return attributeTypeService.getList(viewModel.entityType, {pageSize: 1000}).then(function (data) {
 				viewModel.attributeTypes = data.results;
 			});
 		};
 
-		let getInstrumentUserFields = function () {
+		const getInstrumentUserFields = function () {
 
 			uiService.getInstrumentFieldList().then(function (data) {
 
@@ -100,61 +225,174 @@
 
 		};
 
+		const onBigDrawerResizeButtonClick = function () {
+			viewModel.fixedAreaPopup.tabColumns = 6;
+			viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
+
+			$scope.$apply();
+			const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(6);
+
+			$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+			bigDrawerResizeButton.classList.add('display-none');
+			bigDrawerResizeButton.classList.remove('display-block');
+
+		};
+
+		const onEditorStart = function () {
+
+			if (viewModel.openedIn === 'big-drawer') {
+
+				bigDrawerResizeButton = document.querySelector('.onResizeButtonClick');
+
+				if (bigDrawerResizeButton) {
+					bigDrawerResizeButton.addEventListener('click', onBigDrawerResizeButtonClick);
+				}
+
+				return false;
+
+			} else {
+				 return document.querySelector('.evEditorDialogElemToResize');
+			}
+
+		};
+
+		const getShowByDefaultOptions = function (columns, entityType) {
+
+			let result = viewModel.showByDefaultOptions;
+
+			if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
+				result = result.filter(option => option.id !== 'short_name')
+			}
+
+			if (columns >5) {
+
+				if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+					result = result.filter(option => option.id !== 'short_name');
+				} else {
+					result = result.filter(option => option.id !== 'user_code')
+				}
+
+			}
+
+			return result;
+
+		};
+
 		/**
 		 *
 		 * @param editorType: string - indicates whether function called from entityViewerEditDialogController.js or entityViewerAddDialogController.js
 		 */
-		let getFormLayout = function (editorType) {
+		const getFormLayout = async function (editorType, formLayoutFromAbove) {
 
-			uiService.getEditLayout(viewModel.entityType).then(function (data) {
+			let editLayout;
+			let gotEditLayout = true;
 
-				if (data.results.length && data.results.length > 0 && data.results[0].data) {
+			if (formLayoutFromAbove) {
+				editLayout = formLayoutFromAbove;
 
-					viewModel.dataConstructorLayout = data.results[0];
+			} else {
 
-					if (Array.isArray(data.results[0].data)) {
-						viewModel.tabs = data.results[0].data;
+				try {
+					editLayout = await uiService.getEditLayout(viewModel.entityType);
 
-					} else {
+				} catch (error) {
+					gotEditLayout = false;
+				}
 
-						viewModel.tabs = data.results[0].data.tabs;
-						viewModel.fixedArea = data.results[0].data.fixedArea;
+			}
 
-					}
+			if (gotEditLayout &&
+				editLayout.results.length && editLayout.results[0].data) {
+
+				viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
+
+				if (Array.isArray(editLayout.results[0].data)) {
+
+					viewModel.tabs = editLayout.results[0].data
 
 				} else {
-					viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
-					viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
-				}
 
-				if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) {
-
-					viewModel.tabs.forEach(function (tab, index) {
-						tab.tabOrder = index;
-					});
+					viewModel.tabs = editLayout.results[0].data.tabs
+					viewModel.fixedArea = editLayout.results[0].data.fixedArea
 
 				}
 
-				getAttributeTypes().then(function () {
+			}
 
-					entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+			else {
 
-					viewModel.getEntityPricingSchemes();
-					mapAttributesAndFixFieldsLayout();
+				viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
+				viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
 
-					if (editorType === 'addition') {
+			}
 
-						viewModel.readyStatus.content = true;
-						viewModel.readyStatus.entity = true;
+			if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
+				viewModel.tabs.forEach(function (tab, index) {
+					tab.tabOrder = index;
+				});
+			}
+
+			if (viewModel.openedIn === 'big-drawer') {
+
+				// Victor 2020.11.20 #59 Fixed area popup
+				if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
+					viewModel.showByDefault = viewModel.fixedArea.showByDefault;
+					viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
+				}
+
+				const columns = entityViewerHelperService.getEditLayoutMaxColumns(viewModel.tabs);
+
+				if (viewModel.fixedAreaPopup.tabColumns !== columns) {
+
+					viewModel.fixedAreaPopup.tabColumns = columns;
+					viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(viewModel.fixedAreaPopup.tabColumns, viewModel.entityType);
+
+					const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(viewModel.fixedAreaPopup.tabColumns);
+					$bigDrawer.setWidth(bigDrawerWidthPercent);
+
+					if (viewModel.fixedAreaPopup.tabColumns !== 6) {
+
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
 
 					} else {
-						viewModel.readyStatus.layout = true;
-						viewModel.readyStatus.attributeTypes = true;
+
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
+						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
+
 					}
 
+				}
+				// <Victor 2020.11.20 #59 Fixed area popup>
 
-					if (viewModel.entityType === 'instrument') {
-						getInstrumentUserFields();
+				viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
+
+			}
+
+			else {
+				viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
+			}
+
+			getAttributeTypes().then(function () {
+
+				entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+
+				viewModel.getEntityPricingSchemes();
+				mapAttributesAndFixFieldsLayout();
+
+				if (editorType === 'addition') {
+
+					viewModel.readyStatus.content = true;
+					viewModel.readyStatus.entity = true;
+
+				} else {
+					viewModel.readyStatus.layout = true;
+					viewModel.readyStatus.attributeTypes = true;
+				}
+
+				if (viewModel.entityType === 'instrument') {
+					getInstrumentUserFields();
 
 					} else {
 						viewModel.readyStatus.userFields = true;
@@ -164,14 +402,104 @@
 
 				});
 
+		};
+
+		const processTabsErrors = function (errors, tabsWithErrors, errorFieldsList, $event) {
+
+			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+
+			errors.forEach(function (errorObj) {
+
+				if (errorObj.locationData &&
+					errorObj.locationData.type === 'tab') {
+
+					const tabName = errorObj.locationData.name.toLowerCase();
+
+					const selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
+					const tabNameElem = document.querySelector(selectorString);
+
+					if (tabNameElem) {
+						tabNameElem.classList.add('error-tab');
+
+					} else {
+						entityTabsMenuBtn.classList.add('error-tab');
+					}
+
+					if (!tabsWithErrors.hasOwnProperty(tabName)) {
+						tabsWithErrors[tabName] = [errorObj.key];
+
+					} else if (tabsWithErrors[tabName].includes(errorObj.key)) {
+
+						tabsWithErrors[tabName].push(errorObj.key);
+
+					}
+
+					errorFieldsList.push(errorObj.key);
+
+				}
+
+			});
+
+			viewModel.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
+
+			$mdDialog.show({
+				controller: 'EvAddEditValidationDialogController as vm',
+				templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+				targetEvent: $event,
+				multiple: true,
+				locals: {
+					data: {
+						errorsList: errors
+					}
+				}
 			});
 
 		};
 
+		const onSuccessfulEntitySave = function (responseData, isAutoExitAfterSave) {
+
+			viewModel.processing = false;
+
+			if (responseData.status === 400) {
+				viewModel.handleErrors(responseData);
+
+			} else {
+
+				var entityTypeVerbose = viewModel.entityType.split('-').join(' ').capitalizeFirstLetter();
+				toastNotificationService.success(entityTypeVerbose + " " + viewModel.entity.name + ' was successfully saved');
+
+				if (isAutoExitAfterSave) {
+
+					let responseObj = {res: 'agree', data: responseData};
+					metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+				} else {
+					viewModel.entity = {...viewModel.entity, ...responseData};
+					viewModel.entity.$_isValid = true;
+				}
+
+
+			}
+
+		}
+
 		return {
-			getFormLayout: getFormLayout
+
+			getFixedAreaPopup: getFixedAreaPopup,
+			entityTabsMenuTplt: entityTabsMenuTplt,
+
+			onPopupSaveCallback: onPopupSaveCallback,
+			onFixedAreaPopupCancel: onFixedAreaPopupCancel,
+
+			getFormLayout: getFormLayout,
+			onEditorStart: onEditorStart,
+
+			processTabsErrors: processTabsErrors
+
 		}
 
 	};
+
+
 
 }());

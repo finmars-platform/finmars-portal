@@ -244,11 +244,23 @@
 
             if (defaultValue.mode === 1) {
 
+                console.log('defaultValue', defaultValue)
+
                 var setValueLabel = vm.currentContentType ? vm.currentContentType.name : '';
+
+                var value =  defaultValue.setValue
+
+                if (defaultValue.setValueObject){
+
+                    if(defaultValue.setValueObject.hasOwnProperty('user_code')) {
+                        value = defaultValue.setValueObject.user_code;
+                    }
+
+                }
 
                 return {
                     mode: 1,
-                    setValue: defaultValue.setValue,
+                    setValue: value,
                     setValueName: defaultValue.setValueName,
                     setValueLabel: setValueLabel
                 };
@@ -290,7 +302,14 @@
 
                 vm.layouts = data.results;
 
-                vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts).map(function (item){
+
+                    item.id = item.user_code;
+
+                    return item
+                })
+                
+                console.log('layoutsWithLinkToFilters', vm.layoutsWithLinkToFilters);
 
                 vm.processing = false;
                 $scope.$apply();
@@ -456,6 +475,10 @@
 
                 });
 
+            }
+            
+            if (!vm.defaultValue.setValueObject) {
+                vm.defaultValue.setValueObject = {};
             }
 
 

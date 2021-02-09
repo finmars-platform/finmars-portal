@@ -254,6 +254,8 @@
                 var dialogController = 'EntityViewerEditDialogController as vm';
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
 
+				locals.openedIn = 'modal'
+
                 if (locals.entityType && locals.entityType === 'complex-transaction') {
                     dialogController = 'ComplexTransactionEditDialogController as vm';
                     dialogTemplateUrl = 'views/entity-viewer/complex-transaction-edit-dialog-view.html';
@@ -278,7 +280,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
                     preserveScope: true,
@@ -1014,6 +1016,7 @@
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
@@ -1088,9 +1091,9 @@
                     if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-
                         var spChangedLayout = false;
                         var additions = vm.entityViewerDataService.getAdditions();
+
                         if (additions.isOpen) {
                             spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
                         }

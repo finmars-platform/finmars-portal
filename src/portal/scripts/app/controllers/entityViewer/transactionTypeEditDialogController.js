@@ -822,7 +822,6 @@
                         //originalEntity = JSON.parse(angular.toJson(vm.entity));
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
 
-
                         vm.processing = false;
                         $scope.$apply();
 
@@ -961,7 +960,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     clickOutsideToClose: false,
                     multiple: true,
@@ -1429,7 +1428,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
@@ -1594,7 +1593,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,
@@ -1619,7 +1618,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: $event,
                     clickOutsideToClose: false,
@@ -1959,7 +1958,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,

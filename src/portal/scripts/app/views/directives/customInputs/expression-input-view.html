@@ -35,8 +35,10 @@
 
           <div class="custom-input-custom-btns-holder">
             <div data-ng-if="customButtons && customButtons.length" class="height-100">
-              <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
-                      data-ng-click="callFnForCustomBtn(button.action)">
+              <button ng-repeat="button in customButtons"
+                      ng-click="callFnForCustomBtn(button.action)"
+                      ng-disabled="isDisabled"
+                      class="{{button.classes}} custom-input-custom-btn">
                 {{button.caption}}
                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
                             size="24"
@@ -71,6 +73,8 @@
     <div class="custom-input-full-text-container customInputFullText">
       <textarea data-ng-model="model"
                 data-ng-change="onInputChange()"
+                ng-readonly="isReadonly"
+                ng-disabled="isDisabled"
                 class="custom-input-full-text customInputBackgroundColor"></textarea>
     </div>
   </div>

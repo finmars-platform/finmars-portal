@@ -22,6 +22,10 @@
 
 `npm run server-proxy`
 
+4) How to run tests
+
+`HOST=http://0.0.0.0:8080/ USERNAME=user PASSWORD=pass protractor protractor.config.js`
+
 
 ### Repository structure:
 

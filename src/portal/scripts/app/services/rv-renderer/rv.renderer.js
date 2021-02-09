@@ -2,7 +2,6 @@
 
     'use strict';
 
-    var groupRender = require('./group.renderer');
     var objectRender = require('./object.renderer');
     var subtotalRender = require('./subtotal.renderer');
     var blanlineRender = require('./blankline.renderer');
@@ -12,7 +11,7 @@
 
         // console.log('render.projection.length', projection.length);
 
-        console.time("Rendering projection");
+        console.time("Generating projection as HTML");
 
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
@@ -38,10 +37,6 @@
                 rows.push('<div class="placeholder-row"></div>')
             }
 
-            if (item.___type === 'group') {
-                rows.push(groupRender.render(item))
-            }
-
             if (item.___type === 'blankline') {
                 rows.push(blanlineRender.render(evDataService, item))
             }
@@ -51,11 +46,14 @@
             }
 
             if (item.___type === 'subtotal' && item.___subtotal_type !== 'proxyline') {
-            // if (item.___type === 'subtotal') {
                 rows.push(subtotalRender.render(evDataService, item));
             }
 
         }
+
+        console.timeEnd("Generating projection as HTML");
+
+        console.time("Rendering projection");
 
         if (!rows.length) {
             elem.innerHTML = "<div class='no-data-block'>No data available.</div>"
