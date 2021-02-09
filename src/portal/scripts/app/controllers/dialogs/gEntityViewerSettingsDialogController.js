@@ -97,14 +97,17 @@
 
             var entityViewerOptions = entityViewerDataService.getEntityViewerOptions();
 
+            console.log('entityViewerOptions', entityViewerOptions);
+
             var multselData = getMultiselectorData();
             vm.multiselectorOptions = multselData.optionsList;
             //vm.complexTransactionFilters = entityViewerOptions.complex_transaction_filters;
 			vm.entityFilters = entityViewerOptions.entity_filters;
 
-			if (vm.entityType === "complex-transaction") {
-				vm.entityFilters = entityViewerOptions.complex_transaction_filters;
-			}
+			// DEPRECATED
+			// if (vm.entityType === "complex-transaction" && entityViewerOptions.complex_transaction_filters) {
+			// 	vm.entityFilters = entityViewerOptions.complex_transaction_filters;
+			// }
 
             if (!vm.entityFilters) {
                 vm.entityFilters = multselData.selectedByDefault;

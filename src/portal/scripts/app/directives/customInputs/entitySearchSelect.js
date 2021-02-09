@@ -15,6 +15,7 @@
                 label: '=',
                 item: '=',
                 itemName: '=',
+                itemObject: '=',
                 entityType: '=',
                 customButtons: '=',
                 customStyles: '=',
@@ -135,6 +136,11 @@
                         scope.error = '';
                         //scope.item.value = item.id;
                         scope.item = item.id;
+
+                        if (scope.itemObject !== undefined) {
+                            scope.itemObject = item;
+                        }
+
                         scope.valueIsValid = true;
 
                         if (item.short_name) {
@@ -267,6 +273,10 @@
                                 stylePreset = '';
                                 //scope.item.value = res.data.item.id;
                                 scope.item = res.data.item.id;
+
+                                if (scope.itemObject !== undefined) {
+                                    scope.itemObject = res.data.item;
+                                }
 
                                 scope.itemName = res.data.item.short_name;
                                 scope.inputText = res.data.item.short_name;

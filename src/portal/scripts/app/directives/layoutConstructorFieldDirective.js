@@ -582,19 +582,28 @@
 
                         if (scope.item.attribute['value_type'] === 'field'
                             && metaService.getRestrictedEntitiesWithTypeField().indexOf(scope.item.attribute.key) === -1) {
-                            scope.specialOptionTemplate = 'views/attribute-options/field.html';
+
+                        	scope.specialOptionTemplate = 'views/attribute-options/field.html';
                             return true;
+
                         }
 
-                        if (scope.item.attribute['value_type'] === 'decoration' && scope.item.attribute.key === 'layoutLineWithLabel') {
-                            scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
+                        if (scope.item.attribute['value_type'] === 'decoration' &&
+							scope.item.attribute.key === 'layoutLineWithLabel') {
+
+                        	scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
                             return true;
+
                         }
 
-                        if (scope.item.attribute['value_type'] === 'decoration' && scope.item.attribute.key === 'layoutPlainText') {
-                            scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
+                        if (scope.item.attribute['value_type'] === 'decoration' &&
+							scope.item.attribute.key === 'layoutPlainText') {
+
+                        	scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
                             return true;
+
                         }
+
                     }
 
                     return false;

@@ -11,6 +11,8 @@
     var baseUrlService = require('../../services/baseUrlService');
     var usersService = require('../../services/usersService');
 
+    var websocketService = require('../../services/websocketService');
+
     var baseUrl = baseUrlService.resolve();
 
     module.exports = function transactionImportController($scope, $mdDialog) {
@@ -25,28 +27,21 @@
         };
         vm.dataIsImported = false;
 
-        vm.config = {
-            delimiter: ',',
-            mode: 1,
-            missing_data_handler: 'throw_error',
-            error_handling: 'break'
-        };
+        vm.config = {};
+        vm.validateConfig = {};
 
         vm.processing = false;
         vm.loaderData = {};
 
-        vm.validateConfig = {
-            mode: 1
-        };
-
         vm.hasSchemeEditPermission = false;
 
+        vm.subTasksInfo = {}
+
         vm.loadIsAvailable = function () {
-            return !vm.readyStatus.processing && vm.config.scheme && vm.config.error_handling;
+            return !vm.readyStatus.processing && vm.config.scheme;
         };
 
         vm.checkExtension = function (file, extension, $event) {
-            console.log('file', file);
 
             if (file) {
 
@@ -99,11 +94,14 @@
 
             }).then(function (data) {
 
+                vm.validateConfig = {};
+
                 vm.processing = false;
+                vm.readyStatus.processing = false;
 
                 var errorsCount = 0;
 
-                vm.validateConfig.error_rows.forEach(function (item) {
+                data.error_rows.forEach(function (item) {
 
                     if (item.level === 'error') {
                         errorsCount = errorsCount + 1;
@@ -125,8 +123,8 @@
 
                     });
 
-                    vm.validateConfig.file = {};
-                    vm.validateConfig.file.name = vm.fileLocal.name;
+                    // vm.validateConfig.file = {};
+                    // vm.validateConfig.file.name = vm.fileLocal.name;
 
                     $mdDialog.show({
                         controller: 'TransactionImportErrorsDialogController as vm',
@@ -143,17 +141,11 @@
                         multiple: true,
                         autoWrap: true,
                         skipHide: true
-                    }).then(function (res) {
-
-                        // vm.validateConfig = {};
-                        vm.readyStatus.processing = false;
-
-                    });
+                    })
 
 
                 } else {
 
-                    // vm.validateConfig = {};
                     vm.readyStatus.processing = false;
 
                     $mdDialog.show({
@@ -183,7 +175,121 @@
 
             new Promise(function (resolve, reject) {
 
+                delete vm.config.task_id;
+                delete vm.config.task_status;
+
                 vm.processing = true
+
+                vm.loaderData = {
+                    current: vm.config.processed_rows,
+                    total: vm.config.total_rows,
+                    text: 'Import Progress:',
+                    status: vm.config.task_status
+                };
+
+                vm.import(resolve, $event)
+
+            }).then(function (data) {
+
+                var error_rows = data.error_rows.filter(function (item) {
+                    return item.level === 'error';
+                });
+
+
+                var description = '';
+
+                if (!data.total_rows && error_rows.length === 0) {
+
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            success: {
+                                title: "Warning",
+                                description: 'Nothing to import, check file format!'
+                            }
+                        }
+
+                    });
+
+                } else {
+
+                    if (data.scheme_object.error_handler === 'break') {
+
+                        if (data.error_row_index) {
+                            description = '<div>' +
+                                '<div>Rows total: ' + data.total_rows + '</div>' +
+                                '<div>Rows success import: ' + (data.error_row_index - 1) + '</div>' +
+                                '<div>Rows fail import: ' + error_rows.length + '</div>' +
+                                '</div><br/>';
+                        } else {
+
+                            description = '<div>' +
+                                '<div>Rows total: ' + data.total_rows + '</div>' +
+                                '<div>Rows success import: ' + data.total_rows + '</div>' +
+                                '<div>Rows fail import: ' + error_rows.length + '</div>' +
+                                '</div><br/>';
+                        }
+
+
+
+                    }
+
+                    if (data.scheme_object.error_handler === 'continue') {
+
+                        description = '<div>' +
+                            '<div>Rows total: ' + data.total_rows + '</div>' +
+                            '<div>Rows success import: ' + (data.total_rows - error_rows.length) + '</div>' +
+                            '<div>Rows fail import: ' + error_rows.length + '</div>' +
+                            '</div><br/>';
+
+                    }
+
+                    description = description + '<div> You have successfully imported transactions file </div>';
+
+                    description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
+
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            success: {
+                                title: "Success",
+                                description: description
+                            }
+                        }
+
+                    });
+
+                }
+
+                vm.processing  = false;
+                vm.dataIsImported = true;
+
+            }).catch(function (error) {
+                console.log("error occurred", error);
+            });
+
+
+        };
+
+        vm.startImportWithValidation = function ($event) {
+
+            console.log('startImportWithValidation starting validation')
+
+            return new Promise(function (resolve, reject) {
+
+                vm.processing = true;
 
                 vm.validateConfig = Object.assign({}, vm.config);
 
@@ -194,20 +300,24 @@
                     status: vm.validateConfig.task_status
                 };
 
-
                 vm.validate(resolve, $event)
 
             }).then(function (data) {
 
+                console.log('startImportWithValidation validation finished')
+                console.log('startImportWithValidation validation finished data', data)
+
                 var errorsCount = 0;
 
-                vm.validateConfig.error_rows.forEach(function (item) {
+                data.error_rows.forEach(function (item) {
 
                     if (item.level === 'error') {
                         errorsCount = errorsCount + 1;
                     }
 
                 });
+
+                console.log('startImportWithValidation validation errorsCount', errorsCount)
 
                 if (errorsCount) {
 
@@ -234,7 +344,6 @@
                         locals: {
                             data: {
                                 validationResult: data,
-                                scheme: transactionScheme,
                                 config: config
                             }
                         },
@@ -246,7 +355,7 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            vm.load($event);
+                            vm.startImport($event);
                         } else {
                             vm.validateConfig = {};
                             vm.readyStatus.processing = false;
@@ -256,7 +365,6 @@
 
 
                 } else {
-                    console.log("load triggered");
 
                     vm.loaderData = {
                         current: vm.config.processed_rows,
@@ -265,17 +373,18 @@
                         status: vm.config.task_status
                     };
 
-                    vm.load($event);
+                    console.log('startImportWithValidation starting import')
+
+                    vm.startImport($event);
                 }
 
-            }).catch(function (error) {
-                console.log("error occurred", error);
-            });
+            })
 
-
-        };
+        }
 
         vm.validate = function (resolve, $event) {
+
+            console.log("Validate")
 
             vm.readyStatus.processing = true;
 
@@ -287,9 +396,6 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                formData.append('error_handling', vm.config.error_handling);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
 
                 vm.fileLocal = vm.config.file;
             }
@@ -297,6 +403,7 @@
             importTransactionService.validateImport(formData).then(function (data) {
 
                 vm.validateConfig = data;
+                vm.subTasksInfo = {}
 
                 vm.loaderData = {
                     current: vm.validateConfig.processed_rows,
@@ -307,17 +414,76 @@
 
                 $scope.$apply();
 
-                console.log('VALIDATE IMPORT data', data);
+                if (websocketService.isOnline()) {
+                    
+                    console.log('Websocket Online. Fetching status')
 
-                if (vm.validateConfig.task_status === 'SUCCESS') {
+                    websocketService.addEventListener('transaction_import_status', function (data) {
 
-                    resolve(data)
+                        console.log('transaction_import_status.data', data);
+
+                        // If parent task is finished
+                        if (vm.validateConfig.task_id === data.task_id) {
+                            if (data.state === 'D') {
+                                websocketService.removeEventListener('transaction_import_status');
+                                resolve(data)
+                            } else {
+                                if (data.state !== 'D' && data.state !== 'P') {
+                                    websocketService.removeEventListener('transaction_import_status');
+                                    resolve(data);
+                                }
+                            }
+                        }
+
+
+                        // Update subtask status
+                        if (vm.validateConfig.task_id === data.parent_task_id) {
+
+                            vm.subTasksInfo[data.task_id] = data
+
+                            var keys = Object.keys(vm.subTasksInfo)
+
+                            var processedRows = 0
+                            var processed
+
+                            keys.forEach(function(task_id){
+
+                                processed = 0
+
+                                if (vm.subTasksInfo[task_id].processed_rows) {
+                                    processed = vm.subTasksInfo[task_id].processed_rows - 1
+                                }
+
+                                processedRows = processedRows + processed
+                            })
+
+                            vm.loaderData = {
+                                current: processedRows,
+                                total: data.parent_total_rows,
+                                text: 'Validation Progress:',
+                                status: vm.validateConfig.state
+                            };
+
+                            $scope.$apply();
+
+                        }
+
+                    })
 
                 } else {
 
-                    setTimeout(function () {
-                        vm.validate(resolve, $event);
-                    }, 1000)
+                    console.log('Websocket is Offline. Falling back to polling')
+
+                    if (vm.validateConfig.task_status === 'SUCCESS') {
+                        resolve(data)
+
+                    } else {
+
+                        setTimeout(function () {
+                            vm.validate(resolve, $event);
+                        }, 1000)
+
+                    }
 
                 }
 
@@ -326,13 +492,7 @@
 
         };
 
-        vm.getFileUrl = function(id) {
-
-            return baseUrl + 'file-reports/file-report/' + id + '/view/';
-
-        };
-
-        vm.load = function ($event) {
+        vm.import = function (resolve, $event) {
             vm.processing = true;
 
             var formData = new FormData();
@@ -343,9 +503,6 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                formData.append('error_handling', vm.config.error_handling);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
 
                 vm.fileLocal = vm.config.local;
 
@@ -364,6 +521,7 @@
             importTransactionService.startImport(formData).then(function (data) {
 
                 vm.config = data;
+                vm.subTasksInfo = {}
 
                 vm.loaderData = {
                     current: vm.config.processed_rows,
@@ -374,101 +532,73 @@
 
                 $scope.$apply();
 
-                if (vm.config.task_status === 'SUCCESS') {
+                if (websocketService.isOnline()) {
 
-                    var error_rows = data.error_rows.filter(function (item) {
-                        return item.level === 'error';
-                    });
+                    websocketService.addEventListener('transaction_import_status', function (data) {
 
+                        if (vm.config.task_id === data.task_id) {
 
-                    var description = '';
-
-                    if (!data.total_rows && error_rows.length === 0) {
-
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                success: {
-                                    title: "Warning",
-                                    description: 'Nothing to import, check file format!'
-                                }
-                            }
-
-                        });
-
-                    } else {
-
-                        if (vm.config.error_handling === 'break') {
-
-                            if (data.error_row_index) {
-                                description = '<div>' +
-                                    '<div>Rows total: ' + data.total_rows + '</div>' +
-                                    '<div>Rows success import: ' + (data.error_row_index - 1) + '</div>' +
-                                    '<div>Rows fail import: ' + error_rows.length + '</div>' +
-                                    '</div><br/>';
+                            if (data.state === 'D') {
+                                websocketService.removeEventListener('transaction_import_status');
+                                resolve(data)
                             } else {
-
-                                description = '<div>' +
-                                    '<div>Rows total: ' + data.total_rows + '</div>' +
-                                    '<div>Rows success import: ' + data.total_rows + '</div>' +
-                                    '<div>Rows fail import: ' + error_rows.length + '</div>' +
-                                    '</div><br/>';
-                            }
-
-
-
-                        }
-
-                        if (vm.config.error_handling === 'continue') {
-
-                            description = '<div>' +
-                                '<div>Rows total: ' + data.total_rows + '</div>' +
-                                '<div>Rows success import: ' + (data.total_rows - error_rows.length) + '</div>' +
-                                '<div>Rows fail import: ' + error_rows.length + '</div>' +
-                                '</div><br/>';
-
-                        }
-
-                        description = description + '<div> You have successfully imported transactions file </div>';
-
-                        description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
-
-                        $mdDialog.show({
-                            controller: 'SuccessDialogController as vm',
-                            templateUrl: 'views/dialogs/success-dialog-view.html',
-                            targetEvent: $event,
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: {
-                                success: {
-                                    title: "Success",
-                                    description: description
+                                if (data.state !== 'D' && data.state !== 'P') {
+                                    websocketService.removeEventListener('transaction_import_status');
+                                    resolve(data);
                                 }
                             }
 
-                        });
+                        }
 
-                    }
+                        if (vm.config.task_id === data.parent_task_id) {
 
+                            vm.subTasksInfo[data.task_id] = data
 
-                    vm.processing  = false;
-                    vm.dataIsImported = true;
+                            var keys = Object.keys(vm.subTasksInfo)
+
+                            var processedRows = 0
+                            var processed
+
+                            keys.forEach(function(task_id){
+
+                                processed = 0
+
+                                if (vm.subTasksInfo[task_id].processed_rows) {
+                                    processed = vm.subTasksInfo[task_id].processed_rows - 1
+                                }
+
+                                processedRows = processedRows + processed
+                            })
+
+                            vm.loaderData = {
+                                current: processedRows,
+                                total: data.parent_total_rows,
+                                text: 'Import Progress:',
+                                status: data.state
+                            };
+
+                            $scope.$apply();
+
+                        }
+
+                    })
 
                 } else {
 
-                    setTimeout(function () {
-                        vm.load($event);
-                    }, 1000)
+                    if (vm.config.task_status === 'SUCCESS') {
+
+                        resolve(data)
+
+                    } else {
+
+                        setTimeout(function () {
+                            vm.import(resolve, $event);
+                        }, 1000)
+
+                    }
 
                 }
+
 
             }).catch(function (reason) {
 
@@ -489,6 +619,12 @@
 
             })
 
+
+        };
+
+        vm.getFileUrl = function(id) {
+
+            return baseUrl + 'file-reports/file-report/' + id + '/view/';
 
         };
 

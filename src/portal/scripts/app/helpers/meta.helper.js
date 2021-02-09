@@ -149,12 +149,40 @@
         });
     }
 
+    let openLinkInNewTab = function (event) {
+
+		event.preventDefault();
+		let targetElem = event.target;
+
+		if (targetElem.classList.contains('openLinkInNewTab')) {
+
+			let url = targetElem.href;
+			window.open(url);
+
+		}
+
+	};
+
+    let closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
+
+        if (openedIn === 'big-drawer') {
+
+            $bigDrawer.hide(response);
+
+        } else { // opened in mdDialog
+            $mdDialog.hide(response);
+        }
+
+    };
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
-        textWithDashSort: textWithDashSort
+        textWithDashSort: textWithDashSort,
+		openLinkInNewTab: openLinkInNewTab,
+
+        closeComponent: closeComponent
     }
 
 }());
-

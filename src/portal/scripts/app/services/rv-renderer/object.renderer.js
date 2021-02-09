@@ -7,6 +7,7 @@
 
     var renderHelper = require('../../helpers/render.helper');
     var rvHelper = require('../../helpers/rv.helper');
+	var stringHelper = require('../../helpers/stringHelper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
@@ -41,20 +42,20 @@
 
                     }
 
-                    if (column.value_type === 10 && item.value_string) {
+                    else if (column.value_type === 10 && item.value_string) {
 
-                        result.html_result = item.value_string;
+                        result.html_result = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
                         result.raw_text_result = item.value_string;
 
                     }
 
-                    if (column.value_type === 30 && item.classifier_object) {
+                    else if (column.value_type === 30 && item.classifier_object) {
 
                         result.html_result = item.classifier_object.name;
                         result.raw_text_result = item.classifier_object.name;
                     }
 
-                    if (column.value_type === 40 && item.value_date) {
+                    else if (column.value_type === 40 && item.value_date) {
 
                         result.html_result = item.value_date;
                         result.raw_text_result = item.value_date;
@@ -85,8 +86,10 @@
         };
 
         if (typeof obj[column.key] === 'string') {
-            result.html_result = obj[column.key];
+
+			result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
             result.raw_text_result = obj[column.key];
+
         } else {
 
             // Works only for 1 level entities
@@ -97,7 +100,11 @@
 
                 if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
 
-                    result.html_result = obj[column.key + '_object'].name;
+                    result.html_result = stringHelper.parseAndInsertHyperlinks(
+                    	obj[column.key + '_object'].name,
+						"class='openLinkInNewTab'"
+					);
+
                     result.raw_text_result = obj[column.key + '_object'].name;
 
                 } else {
@@ -179,7 +186,15 @@
                         foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">+</div></div>';
                     }
 
-                    result.html_result = foldButton + '<span class="text-bold">' + currentGroup.___group_name + '</span>';
+                    var groupName = currentGroup.___group_name;
+
+					if (groupName && typeof groupName === 'string') {
+
+						groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+
+					}
+
+                    result.html_result = foldButton + '<span class="text-bold">' + groupName + '</span>';
                     result.raw_text_result = currentGroup.___group_name;
 
                 }
@@ -246,7 +261,7 @@
             }
 
             if (column.status === 'missing') {
-                return result = {
+                return {
                     html_result: 'Deleted',
                     numeric_result: null,
                     raw_text_result: 'Deleted'
@@ -396,6 +411,7 @@
 
         var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
+        var rowHeight = evDataService.getRowHeight();
 
         var rowSelection;
 
@@ -418,8 +434,9 @@
         }
 
         var classes = classList.join(' ');
+        var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
-        var result = '<div class="' + classes + '" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         var textAlign;

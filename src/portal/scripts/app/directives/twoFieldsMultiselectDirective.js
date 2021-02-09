@@ -175,10 +175,15 @@
 
 				var setInputText = function () {
 
-					if (scope.selectedItemsIndication === "array") {
+					if (scope.selectedItemsIndication === 'array') {
 						arrayLikeInputText();
+					}
 
-					} else {
+					else if (scope.selectedItemsIndication === 'chips') {
+						formatDataForChips();
+					}
+
+					else {
 						defaultInputText();
 					}
 
@@ -468,7 +473,7 @@
 
 						};
 
-						if (scope.model || scope.model.length) {
+						if (scope.model && scope.model.length) {
 
 							getItems().then(function () {
 
@@ -485,10 +490,10 @@
 
 						}
 
-					} else {
+					}
 
+					else {
 						$(elem).click(scope.openMultiselectorDialog);
-
 					}
 
 					if (scope.customStyles) {

@@ -305,7 +305,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
                     preserveScope: true,
@@ -332,6 +332,8 @@
             // < Functions for context menu >
 
             vm.updateGrandTotalComponent = function(){
+
+                // vm.grandTotalError = false;
 
                 rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
@@ -378,6 +380,10 @@
                 } else {
                     vm.grandTotalValue = val
                 }
+
+                // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
+                //     vm.grandTotalError = true
+                // }
 
                 console.log('vm.grandTotalValue', vm.grandTotalValue);
 
@@ -1097,16 +1103,16 @@
 
                     if (linkedFilter) {
 
-                        linkedFilter.options.filter_values = [componentOutput.data.value]
+                        linkedFilter.options.filter_values = [componentOutput.data.value];
 
 						if ((linkedFilter.value_type === 100 || linkedFilter.value_type === 'field') &&
 							Array.isArray(componentOutput.data.value)) {
 
-							linkedFilter.options.filter_values = componentOutput.data.value
+							linkedFilter.options.filter_values = componentOutput.data.value;
 
 						}
 
-                        filters[linkedFilterIndex] = linkedFilter
+                        filters[linkedFilterIndex] = linkedFilter;
 
                     } else {
 
@@ -1127,25 +1133,24 @@
 
 							case 10:
 							case 30:
-								linkedFilter.options.filter_type = 'contains'
+								linkedFilter.options.filter_type = 'contains';
 								break;
 
 							case 20:
 							case 40:
-								linkedFilter.options.filter_type = 'equal'
+								linkedFilter.options.filter_type = 'equal';
 								break;
 
 							case 100:
 							case 'field':
 
 								// even if component is single selector, multiselector filter will work
-
 								// console.log('componentOutput.value', componentOutput.data.value)
-								linkedFilter.value_type = 'field'
-								linkedFilter.options.filter_type = 'multiselector'
+								linkedFilter.value_type = 'field';
+								linkedFilter.options.filter_type = 'multiselector';
 
 								if (Array.isArray(componentOutput.data.value)) {
-									linkedFilter.options.filter_values = componentOutput.data.value
+									linkedFilter.options.filter_values = componentOutput.data.value;
 								}
 
 								break;
@@ -1881,6 +1886,7 @@
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 /* if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
@@ -1929,6 +1935,23 @@
                                     } else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+
+                                        var listLayout = vm.entityViewerDataService.getListLayout();
+                                        var layoutColumns = listLayout.data.columns;
+
+                                        layoutColumns.forEach(function(layoutColumn) {
+
+                                            var column = columns.find(function(itemColumn){
+                                                return itemColumn.key === layoutColumn.key
+                                            })
+
+                                            if(column && !column.layout_name) {
+                                                column.layout_name = layoutColumn.layout_name
+                                            }
+
+                                        })
+
+
                                         vm.entityViewerDataService.setColumns(columns);
 
                                     }
