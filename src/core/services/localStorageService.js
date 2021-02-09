@@ -5,7 +5,15 @@
     let UMuM = ''; // <user.id>_<masterUser.id>_<member.id>
 
     let setUMuM = function (userId, masterUserId, memberId) {
-		UMuM = userId + '_' + masterUserId + '_' + memberId;
+
+    	if ((userId || userId === 0) &&
+			(masterUserId || masterUserId === 0) &&
+			(memberId || memberId === 0)) {
+
+    		UMuM = userId + '_' + masterUserId + '_' + memberId;
+
+		}
+
     };
 
     let getCache = () => {
@@ -132,8 +140,10 @@
 
     let cacheDefaultLayout = function (layout) {
 
-        let defLayoutDataPath = ['layouts', 'defaultLayouts', layout.content_type];
-        let layoutPath = ['layouts', 'layoutsList', layout.id];
+        const defLayoutDataPath = ['layouts', 'defaultLayouts', layout.content_type];
+        const cachedLayoutsList = ['layouts', 'layoutsList']
+        const layoutPath = ['layouts', 'layoutsList', layout.id];
+
         let defaultLayoutData = {
             content_type: layout.content_type,
             id: layout.id,
@@ -143,8 +153,20 @@
 
         if (UMuM) {
 
-            let cache = cacheData(defLayoutDataPath, defaultLayoutData);
-            cache = cacheData(layoutPath, layout, cache);
+			const cachedLayouts = getCacheProp(cachedLayoutsList);
+
+			Object.keys(cachedLayouts).forEach(layoutId => {
+
+				if (cachedLayouts[layoutId].content_type === layout.content_type) {
+					cachedLayouts[layoutId].is_default = false;
+				}
+
+			});
+
+			let cache = cacheData(cachedLayoutsList, cachedLayouts);
+
+            cacheData(defLayoutDataPath, defaultLayoutData, cache);
+            cacheData(layoutPath, layout, cache);
 
             localStorage.setItem(UMuM, JSON.stringify(cache));
 

@@ -194,7 +194,7 @@
 
 					}
 
-                    result.html_result = foldButton + '<span class="text-bold" data-testing="test">' + groupName + '</span>';
+                    result.html_result = foldButton + '<span class="text-bold">' + groupName + '</span>';
                     result.raw_text_result = currentGroup.___group_name;
 
                 }
