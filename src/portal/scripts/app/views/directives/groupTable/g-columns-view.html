@@ -884,15 +884,15 @@
 
                 <div class="g-cell g-table-header-cell g-table-header-group-cell">
 
-                    <md-button class="g-cell-button" data-ng-if="column.report_settings.is_level_folded" data-ng-click="unfoldLevel(column, $index)">
-                        +
-                    </md-button>
+                    <div class="g-cell-button" data-ng-if="column.report_settings.is_level_folded" data-ng-click="unfoldLevel(column, $index)">
+                        <span class="material-icons">add</span>
+                    </div>
 
-                    <md-button class="g-cell-button" data-ng-if="!column.report_settings.is_level_folded" data-ng-click="foldLevel(column, $index)">
-                        -
-                    </md-button>
+                    <div class="g-cell-button" data-ng-if="!column.report_settings.is_level_folded" data-ng-click="foldLevel(column, $index)">
+                        <span class="material-icons">remove</span>
+                    </div>
 
-                    <md-button class="g-group-button flex-row"
+                    <div class="g-group-button flex-row"
                                data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
 
                         <div  class="column-name-wrapper">
@@ -914,7 +914,7 @@
 
                         </div>
 
-                    </md-button>
+                    </div>
 
                 </div>
 
@@ -961,7 +961,7 @@
 
                 <div class="g-cell g-table-header-cell">
 
-                    <md-button class="g-group-button flex-row"
+                    <div class="g-group-button flex-row"
                                data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
 
                         <div  class="column-name-wrapper">
@@ -984,7 +984,7 @@
 
                         </div>
 
-                    </md-button>
+                    </div>
 
                 </div>
 
