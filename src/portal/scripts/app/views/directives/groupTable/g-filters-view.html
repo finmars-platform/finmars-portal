@@ -7,19 +7,14 @@
             <div class="g-filter-left-part gFiltersLeftPart">
                 <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
                            ng-click="calculateReport()">
-                    <div class="flex-row flex-c-center flex-i-center">
-                        <ng-md-icon icon="refresh" size="20">
-                            <md-tooltip md-direction="top">Calculate</md-tooltip>
-                        </ng-md-icon>
-                    </div>
+                    <span class="material-icons">refresh</span>
+                    <md-tooltip md-direction="top">Calculate</md-tooltip>
                 </md-button>
 
                 <md-button class="g-toggle-use-from-above-filters md-icon-button chain-button"
                            ng-class="{'g-use-from-above-filters-hidden': !showUseFromAboveFilters}"
                            data-ng-click="toggleUseFromAboveFilters()">
-                    <div class="flex-row flex-c-center flex-i-center">
-                        <ng-md-icon icon="link" size="20"></ng-md-icon>
-                    </div>
+                    <span class="material-icons">link</span>
                 </md-button>
             </div>
 
@@ -64,42 +59,36 @@
                     <md-menu-item>
                         <md-button data-ng-click="toggleSplitPanel($event, 'balance-report')"
                                    class="g-settings-option-btn">
-                            <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type !== 'balance-report'"
-                                        class="z-menu-icon"
-                                        style="visibility: hidden;"></ng-md-icon>
-                            <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type == 'balance-report'"
-                                        class="z-menu-icon"></ng-md-icon>
+
+                            <span class="material-icons" data-ng-show="currentAdditions.type === 'balance-report'">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'balance-report'" style="visibility: hidden;">done</span>
+
                             <span>Open Balance Report view panel</span>
+
                         </md-button>
                     </md-menu-item>
 
                     <md-menu-item>
                         <md-button data-ng-click="toggleSplitPanel($event, 'pl-report')"
                                    class="g-settings-option-btn">
-                            <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type !== 'pl-report'"
-                                        class="z-menu-icon"
-                                        style="visibility: hidden;"></ng-md-icon>
-                            <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type === 'pl-report'"
-                                        class="z-menu-icon"></ng-md-icon>
+
+                            <span class="material-icons" data-ng-show="currentAdditions.type === 'pl-report'">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'pl-report'" style="visibility: hidden;">done</span>
+
                             <span>Open P&L Report view panel</span>
+
                         </md-button>
                     </md-menu-item>
 
                     <md-menu-item>
                         <md-button data-ng-click="toggleSplitPanel($event, 'transaction-report')"
                                    class="g-settings-option-btn">
-                            <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type !== 'transaction-report'"
-                                        class="z-menu-icon"
-                                        style="visibility: hidden;"></ng-md-icon>
-                            <ng-md-icon icon="done"
-                                        data-ng-show="currentAdditions.type === 'transaction-report'"
-                                        class="z-menu-icon"></ng-md-icon>
+
+                            <span class="material-icons" data-ng-show="currentAdditions.type === 'transaction-report'">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'transaction-report'" style="visibility: hidden;">done</span>
+
                             <span>Open Transaction Report view panel</span>
+
                         </md-button>
                     </md-menu-item>
                 </md-menu-content>
@@ -116,13 +105,10 @@
                 <md-menu-content width="4">
                     <md-menu-item>
                         <md-button data-ng-click="toggleMatrix($event)" class="g-settings-option-btn">
-                            <ng-md-icon icon="done"
-                                        data-ng-show="view != 'matrix'"
-                                        class="z-menu-icon"
-                                        style="visibility: hidden;"></ng-md-icon>
-                            <ng-md-icon icon="done"
-                                        data-ng-show="view == 'matrix'"
-                                        class="z-menu-icon"></ng-md-icon>
+
+                            <span class="material-icons" data-ng-show="viewContext === 'matrix'">done</span>
+                            <span class="material-icons" data-ng-show="viewContext !== 'matrix'" style="visibility: hidden;">done</span>
+
                             <span>Open Matrix</span>
                         </md-button>
                     </md-menu-item>
