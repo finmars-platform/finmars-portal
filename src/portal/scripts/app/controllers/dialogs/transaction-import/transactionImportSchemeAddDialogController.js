@@ -198,7 +198,7 @@
             vm.scheme.inputs = [];
             vm.scheme.rules = [];
             vm.scheme.rule_expr = 'a + b';
-            vm.scheme.scheme_name = '';
+            vm.scheme.user_code = '';
         };
 
         vm.addProviderField = function () {
@@ -456,7 +456,7 @@
 
                 transactionImportSchemeService.create(vm.scheme).then(function (data) {
 
-                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.scheme_name + ' was successfully created');
+                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.user_code + ' was successfully created');
 
                     vm.processing = false;
 
