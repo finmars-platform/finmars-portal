@@ -92,7 +92,7 @@
         if (model === 'pricedownloadscheme') {
             return {
                 'prop': 'payment_size_detail',
-                'code': 'scheme_name'
+                'code': 'user_code'
             }
         }
         if (model === 'pricingpolicy') {
@@ -367,7 +367,7 @@
                     },
                     {
                         'key': 'price_download_scheme',
-                        'code_type': 'scheme_name',
+                        'code_type': 'user_code',
                         'entity': 'price-download-scheme'
                     },
                     {

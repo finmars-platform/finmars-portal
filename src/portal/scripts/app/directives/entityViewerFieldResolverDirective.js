@@ -254,7 +254,7 @@
                     return items.map(function (item) {
                         return {
                             ...item,
-                            name: item.scheme_name
+                            name: item.user_code
                         }
                     })
                 }
@@ -333,7 +333,7 @@
                                 scope.type = res.type;
                                 scope.fields = res.data;
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'scheme_name'));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
 
                                 scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
@@ -351,7 +351,7 @@
                                 scope.type = res.type;
                                 scope.fields = res.data;
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'scheme_name'));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
 
                                 scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
@@ -395,13 +395,13 @@
                                 scope.fields = item_object;
                                 var items = scope.fields.slice(0);
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'scheme_name'));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
 
 						} else {
 							scope.fields.push(item_object);
 							var items = scope.fields.slice(0);
 							scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
-							scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'scheme_name'));
+							scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
 						}
 
 					}

@@ -15,8 +15,8 @@
 
         vm.getName = function (item) {
 
-            if (item.scheme_name) {
-                return item.scheme_name
+            if (item.user_code) {
+                return item.user_code
             }
 
             return item.name;
