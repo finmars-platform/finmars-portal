@@ -240,7 +240,7 @@
 
                             csvImportSchemeService.getListLight({
                                 filters: {
-                                    scheme_name: item.target
+                                    user_code: item.target
                                 }
                             }).then(function (data) {
 
@@ -300,7 +300,7 @@
 
                             transactionImportSchemeService.getListLight({
                                 filters: {
-                                    scheme_name: item.target
+                                    user_code: item.target
                                 }
                             }).then(function (data) {
 
@@ -357,7 +357,7 @@
 
                             complexImportSchemeService.getList({
                                 filters: {
-                                    scheme_name: item.target
+                                    user_code: item.target
                                 }
                             }).then(function (data) {
 
@@ -434,7 +434,7 @@
 
                             instrumentDownloadSchemeService.getList({
                                 filters: {
-                                    scheme_name: item.target
+                                    user_code: item.target
                                 }
                             }).then(function (data) {
 

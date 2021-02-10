@@ -214,13 +214,13 @@
 
     };
 
-    var getSchemeBySchemeName = function (scheme_name, entity) {
+    var getSchemeBySchemeName = function (user_code, entity) {
 
         return new Promise(function (resolve, reject) {
 
             entityResolverService.getList(entity, {
                 filters: {
-                    "scheme_name": scheme_name
+                    "user_code": user_code
                 }
             }).then(function (data) {
 
@@ -230,7 +230,7 @@
 
                     data.results.forEach(function (item) {
 
-                        if (item.scheme_name === scheme_name) {
+                        if (item.user_code === user_code) {
 
                             result = item
                         }
@@ -241,7 +241,7 @@
 
                 } else {
 
-                    if (scheme_name !== '-') {
+                    if (user_code !== '-') {
 
                         resolve(getSchemeBySchemeName('-', entity))
 
