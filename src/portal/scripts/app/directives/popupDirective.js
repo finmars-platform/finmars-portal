@@ -201,6 +201,17 @@
 						closePopupListenerIndex = scope.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, removePopUp);
 
 					}
+
+					if (scope.closeOnClickOutside) {
+						popupBackdropElem.addEventListener("click", removePopUp);
+					}
+
+					if (scope.closeOnMouseLeave) {
+
+						elem[0].addEventListener('mouseleave', onElementMouseLeave);
+						popupBackdropElem.addEventListener('mouseenter', removePopUp);
+
+					}
 				};
 
 				let removeListeners = function () {
@@ -210,6 +221,17 @@
 					if (scope.popupEventService && closePopupListenerIndex >= 0) {
 
 						scope.popupEventService.removeEventListener(popupEvents.CLOSE_POPUP, closePopupListenerIndex);
+
+					}
+
+					if (scope.closeOnClickOutside) {
+						popupBackdropElem.removeEventListener("click", removePopUp);
+					}
+
+					if (scope.closeOnMouseLeave) {
+
+						elem[0].removeEventListener('mouseleave', onElementMouseLeave);
+						popupBackdropElem.removeEventListener('mouseenter', removePopUp);
 
 					}
 
@@ -358,7 +380,7 @@
 
 					}
 
-					if (scope.closeOnClickOutside) {
+/*					if (scope.closeOnClickOutside) {
 						popupBackdropElem.addEventListener("click", removePopUp);
 					}
 
@@ -367,7 +389,7 @@
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
 						popupBackdropElem.addEventListener('mouseenter', removePopUp);
 
-					}
+					}*/
 
 					if (scope.popupEventService) {
 
