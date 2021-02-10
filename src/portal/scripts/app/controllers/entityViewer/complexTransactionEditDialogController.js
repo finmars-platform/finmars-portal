@@ -1271,9 +1271,11 @@
                                         // TODO refactor here
                                         // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
 
-                                        res.uniqueness_reaction = 2;
+                                        result.uniqueness_reaction = 2;
 
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                        vm.processing = true;
+
+                                        transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
                                             vm.processing = false;
 
@@ -1290,9 +1292,11 @@
                                         // TODO refactor here
                                         //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
 
-                                        res.uniqueness_reaction = 3;
+                                        result.uniqueness_reaction = 3;
 
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                        vm.processing = true;
+
+                                        transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
                                             vm.processing = false;
 
