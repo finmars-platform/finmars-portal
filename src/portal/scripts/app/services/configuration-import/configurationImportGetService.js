@@ -107,7 +107,7 @@
 
     };
 
-    var getEntityBySystemCode = function (system_code, entity, cacheContainer) {
+    var getEntityBySystemCode = function (user_code, entity, cacheContainer) {
 
         if (!cacheContainer) {
             cacheContainer = {}; // no cache then
@@ -119,25 +119,25 @@
                 cacheContainer[entity] = {};
             }
 
-            if (cacheContainer[entity][system_code]) {
+            if (cacheContainer[entity][user_code]) {
 
-                resolve(cacheContainer[entity][system_code]);
+                resolve(cacheContainer[entity][user_code]);
 
             } else {
 
                 // console.log('entity', entity);
-                // console.log('system_code', system_code);
+                // console.log('user_code', user_code);
 
                 try {
 
                     entityResolverService.getList(entity, {
                         filters: {
-                            "system_code": system_code
+                            "user_code": user_code
                         }
                     }).then(function (data) {
 
                         if (data.length) {
-                            cacheContainer[entity][system_code] = data[0];
+                            cacheContainer[entity][user_code] = data[0];
                             resolve(data[0])
 
                         } else {

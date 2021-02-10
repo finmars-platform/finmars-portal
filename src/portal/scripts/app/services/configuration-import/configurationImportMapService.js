@@ -80,13 +80,13 @@
         if (model === 'dailypricingmodel') {
             return {
                 'prop': 'daily_pricing_model',
-                'code': 'system_code'
+                'code': 'user_code'
             }
         }
         if (model === 'paymentsizedetail') {
             return {
                 'prop': 'payment_size_detail',
-                'code': 'system_code'
+                'code': 'user_code'
             }
         }
         if (model === 'pricedownloadscheme') {
@@ -104,25 +104,25 @@
         if (model === 'periodicity') {
             return {
                 'prop': 'periodicity',
-                'code': 'system_code'
+                'code': 'user_code'
             }
         }
         if (model === 'accrualcalculationmodel') {
             return {
                 'prop': 'accrual_calculation_model',
-                'code': 'system_code'
+                'code': 'user_code'
             }
         }
         if (model === 'eventclass') {
             return {
                 'prop': 'event_class',
-                'code': 'system_code'
+                'code': 'user_code'
             }
         }
         if (model === 'notificationclass') {
             return {
                 'prop': 'notification_class',
-                'code': 'system_code'
+                'code': 'user_code'
             }
         }
     };
@@ -167,7 +167,7 @@
 
                             }
 
-                            if (prop_data.code === 'system_code') {
+                            if (prop_data.code === 'user_code') {
 
                                 configurationImportGetService.getEntityBySystemCode(user_code, entity, cacheContainer).then(function (data) {
 
@@ -302,7 +302,7 @@
 
                 }
 
-                if (code_type === 'system_code') {
+                if (code_type === 'user_code') {
 
                     configurationImportGetService.getEntityBySystemCode(code, entity, cacheContainer).then(function (data) {
 
@@ -352,7 +352,7 @@
                     },
                     {
                         'key': 'daily_pricing_model',
-                        'code_type': 'system_code',
+                        'code_type': 'user_code',
                         'entity': 'daily-pricing-model'
                     },
                     {
@@ -362,7 +362,7 @@
                     },
                     {
                         'key': 'payment_size_detail',
-                        'code_type': 'system_code',
+                        'code_type': 'user_code',
                         'entity': 'payment-size-detail'
                     },
                     {
@@ -463,7 +463,7 @@
                     },
                     {
                         'key': 'transaction_class',
-                        'code_type': 'system_code',
+                        'code_type': 'user_code',
                         'entity': 'transaction-class'
                     },
                     {
@@ -496,12 +496,12 @@
                     },
                     {
                         'key': 'periodicity',
-                        'code_type': 'system_code',
+                        'code_type': 'user_code',
                         'entity': 'periodicity'
                     },
                     {
                         'key': 'accrual_calculation_model',
-                        'code_type': 'system_code',
+                        'code_type': 'user_code',
                         'entity': 'accrual-calculation-model'
                     }],
                 'instrument_event_schedule': [
@@ -512,17 +512,17 @@
                     },
                     {
                         'key': 'periodicity',
-                        'code_type': 'system_code',
+                        'code_type': 'user_code',
                         'entity': 'periodicity'
                     },
                     {
                         'key': 'notification_class',
-                        'code_type': 'system_code',
+                        'code_type': 'user_code',
                         'entity': 'notification-class'
                     },
                     {
                         'key': 'event_class',
-                        'code_type': 'system_code',
+                        'code_type': 'user_code',
                         'entity': 'event-class'
                     }]
             };
@@ -646,9 +646,9 @@
 
                     promises.push(new Promise(function (resolveRelation, reject) {
 
-                        var system_code = layout.data.reportOptions.cost_method_object.system_code;
+                        var user_code = layout.data.reportOptions.cost_method_object.user_code;
 
-                        configurationImportGetService.getEntityBySystemCode(system_code, 'cost-method', cacheContainer).then(function (data) {
+                        configurationImportGetService.getEntityBySystemCode(user_code, 'cost-method', cacheContainer).then(function (data) {
 
                             layout.data.reportOptions.cost_method = data.id;
                             layout.data.reportOptions.cost_method_object = data;
