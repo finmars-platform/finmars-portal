@@ -99,11 +99,11 @@
 
             }
 
-            if (item.hasOwnProperty('___daily_pricing_model__system_code')) {
+            if (item.hasOwnProperty('___daily_pricing_model__user_code')) {
 
                 options['item'] = item;
-                options['code'] = item['___daily_pricing_model__system_code'];
-                options['code_type'] = 'system_code';
+                options['code'] = item['___daily_pricing_model__user_code'];
+                options['code_type'] = 'user_code';
                 options['entity'] = 'daily-pricing-model';
                 options['item_key'] = 'daily_pricing_model';
 

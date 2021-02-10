@@ -91,7 +91,7 @@
                 "name": "Pricing Condition",
                 "value_content_type": "instruments.pricingcondition",
                 "value_entity": "pricing-condition",
-                "code": "system_code",
+                "code": "user_code",
                 "value_type": "field"
             },
             {
@@ -99,7 +99,7 @@
                 "name": "Payment size detail",
                 "value_content_type": "instruments.paymentsizedetail",
                 "value_entity": "payment-size-detail",
-                "code": "system_code",
+                "code": "user_code",
                 "value_type": "field"
             },
             {
