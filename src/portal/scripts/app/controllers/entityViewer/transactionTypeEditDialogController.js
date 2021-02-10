@@ -1824,7 +1824,7 @@
 
             var nameProperty = 'name';
             if (fieldName === 'price_download_scheme') {
-                nameProperty = 'scheme_name';
+                nameProperty = 'user_code';
             }
 
             var defaultValueKey = '';
@@ -1893,7 +1893,7 @@
 
                     var defaultPropertyName = 'name';
                     if (fieldName === 'price_download_scheme') {
-                        defaultPropertyName = 'scheme_name';
+                        defaultPropertyName = 'user_code';
                     }
 
                     vm.relationItems[relationType].forEach(function (relation) {

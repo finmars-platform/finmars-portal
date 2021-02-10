@@ -100,9 +100,9 @@
                 }
             }
 
-            if (item.___scheme_name) {
+            if (item.___user_code) {
                 options.filters = {
-                    'scheme_name': item.___scheme_name
+                    'user_code': item.___user_code
                 }
             }
 
@@ -125,7 +125,7 @@
 
                 }
 
-                if (item.___scheme_name) {
+                if (item.___user_code) {
 
                     if (data.results.length) {
 
@@ -133,7 +133,7 @@
 
                     } else {
 
-                        console.warn('Scheme name ' + item.___scheme_name + ' is not exist');
+                        console.warn('Scheme name ' + item.___user_code + ' is not exist');
 
                     }
 
