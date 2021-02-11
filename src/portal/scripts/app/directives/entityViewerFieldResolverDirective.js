@@ -168,8 +168,8 @@
                 };
 
                 scope.getName = function () {
-                    if (scope.item.options && scope.item.options.fieldName) {
-                        return scope.item.options.fieldName;
+                    if (scope.item.frontOptions && scope.item.frontOptions.fieldName) {
+                        return scope.item.frontOptions.fieldName;
 
                     } else if (scope.item.hasOwnProperty('verbose_name')) {
                         return scope.item.verbose_name;
@@ -226,13 +226,17 @@
                 scope.bindListFields = function (field) {
 
                     if (scope.item.options && scope.item.options.fieldsList) {
-                        var resultCaption = '';
+
+                    	var resultCaption = '';
+
                         scope.item.options.fieldsList.forEach(function (item, index) {
-                            if (index + 1 === scope.item.options.fieldsList.length) {
+
+                        	if (index + 1 === scope.item.options.fieldsList.length) {
                                 resultCaption = resultCaption + field[item];
                             } else {
                                 resultCaption = resultCaption + field[item] + ' / ';
                             }
+
                         });
 
                         return resultCaption;

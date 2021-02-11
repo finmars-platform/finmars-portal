@@ -3,7 +3,8 @@
  */
 (function () {
 
-    var uiService = require('../../services/uiService');
+    const uiService = require('../../services/uiService');
+	const toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -229,80 +230,124 @@
 
             var promises = [];
 
-            var getTransactionTypeFields = function () {
+            // var getTransactionTypeFields = function () {
+			const getTTypeProm = new Promise((resolve, reject) => {
 
-                return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+            	uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
-                    data.results.forEach(function (field) {
+					data.results.forEach(function (field) {
 
-                        vm.transactionTypeTextFields.forEach(function (textField) {
+						vm.transactionTypeTextFields.forEach(function (textField) {
 
-                            if (textField.key === field.key) {
-                                textField.name = field.name;
-                                textField.id = field.id;
-                            }
+							if (textField.key === field.key) {
+								textField.name = field.name;
+								textField.id = field.id;
+							}
 
-                        });
+						});
 
-                        vm.transactionTypeNumberFields.forEach(function (numberField) {
+						vm.transactionTypeNumberFields.forEach(function (numberField) {
 
-                            if (numberField.key === field.key) {
-                                numberField.name = field.name;
-                                numberField.id = field.id;
-                            }
+							if (numberField.key === field.key) {
+								numberField.name = field.name;
+								numberField.id = field.id;
+							}
 
-                        });
+						});
 
-                        vm.transactionTypeDateFields.forEach(function (dateField) {
+						vm.transactionTypeDateFields.forEach(function (dateField) {
 
-                            if (dateField.key === field.key) {
-                                dateField.name = field.name;
-                                dateField.id = field.id;
-                            }
+							if (dateField.key === field.key) {
+								dateField.name = field.name;
+								dateField.id = field.id;
+							}
 
-                        })
+						})
 
-                    });
+					});
 
                     console.log('here?123123', vm.textFields);
+					resolve();
 
-                });
-            };
+                }).catch(error => reject(error));
 
-            promises.push(getTransactionTypeFields());
+			});
+            // };
 
-            var getInstrumentFields = function () {
+            promises.push(getTTypeProm);
 
-                return uiService.getInstrumentFieldList().then(function (data) {
+            // var getInstrumentFields = function () {
 
-                    data.results.forEach(function (field) {
+            const getInstrumentProm = new Promise ((resolve, reject) => {
 
-                        vm.instrumentTextFields.forEach(function (textField) {
+				uiService.getInstrumentFieldList().then(function (data) {
 
-                            if (textField.key === field.key) {
-                                textField.name = field.name;
-                                textField.id = field.id;
-                            }
+					data.results.forEach(function (field) {
 
-                        });
+						vm.instrumentTextFields.forEach(function (textField) {
 
-                    });
+							if (textField.key === field.key) {
+								textField.name = field.name;
+								textField.id = field.id;
+							}
 
-                });
-            };
+						});
 
-            promises.push(getInstrumentFields());
+					});
 
-            Promise.all(promises).then(function () {
-                vm.readyStatus.content = true;
-                $scope.$apply();
-            });
+					resolve();
+
+				}).catch(error => reject(error));
+
+			});
+
+            // };
+
+            promises.push(getInstrumentProm);
+
+            return new Promise(resolve => {
+
+            	Promise.allSettled(promises).then(function () {
+
+            		vm.readyStatus.content = true;
+					$scope.$apply();
+
+					resolve();
+
+				});
+
+			});
 
         };
 
-        vm.createOrUpdateTransactionTypeFields = function (item) {
+        const updateOrCreateField = (item, updateFn, saveFn) => {
 
-            return new Promise(function (resolve, reject) {
+        	return new Promise(async (resolve, reject) => {
+
+        		let promise;
+
+				if (item.id) { // update field if it is already exist
+					promise = updateFn(item.id, item);
+
+				} else { // or create new one
+					promise = saveFn(item);
+				}
+
+				try {
+					await promise;
+					resolve(null);
+
+				} catch (error) {
+					reject(error);
+				}
+
+			});
+
+		};
+
+        vm.createOrUpdateTransactionTypeFields = item => {
+
+            /* return new Promise(async (resolve, reject) => {
 
                 if (item.id) {
                     uiService.updateTransactionField(item.id, item).then(function (data) {
@@ -314,47 +359,139 @@
                     })
                 }
 
-            })
+            }) */
+			return updateOrCreateField(item, uiService.updateTransactionField, uiService.createTransactionField);
 
         };
 
-        vm.createOrUpdateInstrumentFields = function (item) {
+        vm.createOrUpdateInstrumentFields = item => {
 
-            return new Promise(function (resolve, reject) {
+                /* if (item.id) {
 
-                if (item.id) {
-                    uiService.updateInstrumentField(item.id, item).then(function (data) {
+                	instrumentPromise = uiService.updateInstrumentField(item.id, item).then(function (data) {
                         resolve(data)
                     })
+
                 } else {
-                    uiService.createInstrumentField(item).then(function (data) {
+					instrumentPromise = uiService.createInstrumentField(item).then(function (data) {
                         resolve(data)
                     })
-                }
-
-            })
+                } */
+			return updateOrCreateField(item, uiService.updateInstrumentField, uiService.createInstrumentField);
 
         };
 
-        vm.saveTransactionTypeFields = function () {
+        const afterAllFieldsSavePromisesSettled = function (fieldsSavePromisesList) {
 
-            var promises = [];
+        	return new Promise(resolve => {
 
-            vm.readyStatus.transactionTypeProcessing = true;
+        		// const fieldsSavePromisesList = await
+				Promise.allSettled(fieldsSavePromisesList).then(async (promisesList) => {
 
-            vm.transactionTypeTextFields.forEach(function (field) {
-                promises.push(vm.createOrUpdateTransactionTypeFields(field));
-            });
+        			const rejectedPromiseIndex = promisesList.findIndex(promise => promise.status === "rejected");
 
-            vm.transactionTypeNumberFields.forEach(function (field) {
-                promises.push(vm.createOrUpdateTransactionTypeFields(field));
-            });
+					if (rejectedPromiseIndex === -1) {
 
-            vm.transactionTypeDateFields.forEach(function (field) {
-                promises.push(vm.createOrUpdateTransactionTypeFields(field));
-            });
+						await vm.getData();
+						toastNotificationService.success('Changes have been saved');
 
-            Promise.all(promises).then(function (data) {
+					}
+
+					else {
+						toastNotificationService.error('Error occurred while trying to save fields');
+					}
+
+					resolve();
+
+				});
+
+			});
+
+		};
+
+        vm.saveTransactionTypeFields = async function () {
+
+        	if (!vm.readyStatus.transactionTypeProcessing) { // if there is no unresolved ttype fields promises
+
+        		const promises = [];
+
+				vm.readyStatus.transactionTypeProcessing = true;
+
+				vm.transactionTypeTextFields.forEach(function (field) {
+					promises.push(vm.createOrUpdateTransactionTypeFields(field));
+				});
+
+				vm.transactionTypeNumberFields.forEach(function (field) {
+					promises.push(vm.createOrUpdateTransactionTypeFields(field));
+				});
+
+				vm.transactionTypeDateFields.forEach(function (field) {
+					promises.push(vm.createOrUpdateTransactionTypeFields(field));
+				});
+
+				await afterAllFieldsSavePromisesSettled(promises);
+
+				/* Promise.all(promises).then(function (data) {
+
+					vm.getData();
+
+					$mdDialog.show({
+						controller: 'SuccessDialogController as vm',
+						templateUrl: 'views/dialogs/success-dialog-view.html',
+						locals: {
+							success: {
+								title: 'Success',
+								description: 'Changes have been saved'
+							}
+						},
+						autoWrap: true,
+						skipHide: true
+					});
+
+				}).catch(function (error) {
+
+					$mdDialog({
+						controller: 'WarningDialogController as vm',
+						templateUrl: 'views/dialogs/warning-dialog-view.html',
+						clickOutsideToClose: false,
+						locals: {
+							warning: {
+								title: 'Error',
+								description: 'Error occurred while trying to save fields'
+							}
+						}
+					});
+
+				}); */
+
+				vm.readyStatus.transactionTypeProcessing = false;
+				$scope.$apply();
+
+			}
+
+        };
+
+        vm.saveInstrumentFields = async function () {
+
+        	if (!vm.readyStatus.instrumentProcessing) { // if there is no unresolved instrument fields promises
+
+        		vm.readyStatus.instrumentProcessing = true;
+
+				const promises = [];
+
+				vm.instrumentTextFields.forEach(function (field) {
+					promises.push(vm.createOrUpdateInstrumentFields(field));
+				});
+
+				await afterAllFieldsSavePromisesSettled(promises);
+
+				vm.readyStatus.instrumentProcessing = false;
+
+				$scope.$apply();
+
+			}
+
+            /* Promise.all(promises).then(function (data) {
 
                 vm.getData();
 
@@ -371,52 +508,7 @@
                     skipHide: true
                 });
 
-            }).catch(function (error) {
-
-                $mdDialog({
-                    controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/dialogs/warning-dialog-view.html',
-                    clickOutsideToClose: false,
-                    locals: {
-                        warning: {
-                            title: 'Error',
-                            description: 'Error occurred while trying to save fields'
-                        }
-                    }
-                });
-
-            });
-
-            vm.readyStatus.transactionTypeProcessing = false;
-
-        };
-
-        vm.saveInstrumentFields = function () {
-
-            vm.readyStatus.instrumentProcessing = true;
-
-            var promises = [];
-
-            vm.instrumentTextFields.forEach(function (field) {
-                promises.push(vm.createOrUpdateInstrumentFields(field));
-            });
-
-            Promise.all(promises).then(function (data) {
-
-                vm.getData();
-
-                $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                    locals: {
-                        success: {
-                            title: 'Success',
-                            description: 'Changes have been saved'
-                        }
-                    },
-                    autoWrap: true,
-                    skipHide: true
-                });
+				vm.readyStatus.instrumentProcessing = false;
 
             }).catch(function (error) {
 
@@ -432,9 +524,9 @@
                     }
                 });
 
-            });
+				vm.readyStatus.instrumentProcessing = false;
 
-            vm.readyStatus.instrumentProcessing = false;
+            }); */
 
         };
 
