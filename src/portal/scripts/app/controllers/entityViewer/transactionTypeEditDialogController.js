@@ -783,12 +783,14 @@
 
                 var entityToSave = vm.updateEntityBeforeSave(vm.entity);
 
-                /*var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-                var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
+                /* var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
+                var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
 
                 var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(entityToSave.actions);
+				var inputsErrors = ttypeEditorSlHelper.validateInputs(entityToSave.inputs);
+				actionsErrors = actionsErrors.concat(inputsErrors);
+
                 var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(entityToSave);
-                // var inputsErrors = checkInputsForEmptyFields(entityToSave.inputs);
 
                 if (actionsErrors.length || entityErrors.length) {
 
@@ -852,6 +854,7 @@
             var removeDeletedInputsPromise = removeInputFromEditLayout();
 
             return Promise.all([saveTTypePromise, removeDeletedInputsPromise]);
+
         };
 
         vm.saveAndExit = function () {

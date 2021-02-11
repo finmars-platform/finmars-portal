@@ -9,6 +9,8 @@
 
 	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
+	const metaHelper = require('../../../helpers/meta.helper');
+
 	'use strict';
 
 	module.exports = function (viewModel, $scope, $mdDialog, $bigDrawer) {
@@ -187,41 +189,49 @@
 			});
 		};
 
-		const getInstrumentUserFields = function () {
+		const checkReadyStatus = () => {
 
-			uiService.getInstrumentFieldList().then(function (data) {
+			let readyStatus = true;
 
-				data.results.forEach(function (userField) {
+			Object.keys(viewModel.readyStatus).forEach(key => readyStatus = readyStatus && viewModel.readyStatus[key]);
 
-					viewModel.tabs.forEach(function (tab) {
+			return readyStatus;
 
-						tab.layout.fields.forEach(function (field) {
+		};
 
-							if (field.attribute && field.attribute.key) {
+		const applyInstrumentUserFieldsAliases = function () {
 
-								if (field.attribute.key === userField.key) {
+			return new Promise((resolve, reject) => {
 
+				uiService.getInstrumentFieldList().then(function (data) {
+
+					data.results.forEach(function (userField) {
+
+						viewModel.tabs.forEach(function (tab) {
+
+							tab.layout.fields.forEach(function (field) {
+
+								if (field.attribute && field.attribute.key && field.attribute.key === userField.key) {
 
 									if (!field.options) {
 										field.options = {};
 									}
 
 									field.options.fieldName = userField.name;
+
 								}
 
-							}
+							})
 
 						})
 
-					})
+					});
 
-				});
+					resolve();
 
-				viewModel.readyStatus.userFields = true;
+				}).catch(() => resolve());
 
-				$scope.$apply();
-
-			})
+			});
 
 		};
 
@@ -374,11 +384,16 @@
 				viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
 			}
 
-			getAttributeTypes().then(function () {
+			getAttributeTypes().then(async function () {
 
 				entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
 				viewModel.getEntityPricingSchemes();
+
+				if (viewModel.entityType === 'instrument') {
+					await applyInstrumentUserFieldsAliases();
+				}
+
 				mapAttributesAndFixFieldsLayout();
 
 				if (editorType === 'addition') {
@@ -389,13 +404,6 @@
 				} else {
 					viewModel.readyStatus.layout = true;
 					viewModel.readyStatus.attributeTypes = true;
-				}
-
-				if (viewModel.entityType === 'instrument') {
-					getInstrumentUserFields();
-
-				} else {
-					viewModel.readyStatus.userFields = true;
 				}
 
 				$scope.$apply();
@@ -491,6 +499,7 @@
 			onPopupSaveCallback: onPopupSaveCallback,
 			onFixedAreaPopupCancel: onFixedAreaPopupCancel,
 
+			checkReadyStatus: checkReadyStatus,
 			getFormLayout: getFormLayout,
 			onEditorStart: onEditorStart,
 
