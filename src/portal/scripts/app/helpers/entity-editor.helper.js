@@ -1172,7 +1172,9 @@
                 else if (field.attribute_class === 'decorationAttr') {
 
 					for (l = 0; l < layoutAttrs.length; l = l + 1) {
+
 						if (field.name === layoutAttrs[l].name) {
+
 							var layoutAttr = {...{}, ...layoutAttrs[l]}; // removing mutation because the same object may be used for another decoration
 
 							layoutAttr.options = field.options;
@@ -1180,7 +1182,9 @@
 
 							attrFound = true;
 							break;
+
 						}
+
 					}
 
                 }
@@ -1188,13 +1192,17 @@
                 else {
 
 					for (e = 0; e < entityAttrs.length; e = e + 1) {
+
 						if (field.name === entityAttrs[e].name) {
+
 							entityAttrs[e].options = field.options;
 							fieldResult = entityAttrs[e];
 
 							attrFound = true;
 							break;
+
 						}
+
 					}
 
 				}

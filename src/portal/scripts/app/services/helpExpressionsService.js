@@ -489,7 +489,8 @@
         var propertiesWords = getPropertiesWords(expressionsList);
         var inputWords = getInputWords(data);
 
-        var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False']
+        var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False'];
+        var contextVariablesWords = functionsItemsService.contextVariablesWords;
 
         var processing = true;
         var currentIndex = 0;
@@ -581,13 +582,14 @@
 
                 } else if (token.type === 'input') {
 
-                    if (inputWords.indexOf(token.value) !== -1) {
+                    if (inputWords.includes(token.value)) {
 
                         result = result + '<span class="eb-highlight-input">' + token.value + '</span>';
 
                     } else {
 
-                        if (reservedWords.indexOf(token.value) === -1) {
+                        if (!reservedWords.includes(token.value) &&
+							!contextVariablesWords.includes(token.value)) {
 
                             result = result + '<span class="eb-highlight-error">' + token.value + '</span>';
                             status = 'inputs-error';

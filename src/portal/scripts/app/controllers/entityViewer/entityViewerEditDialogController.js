@@ -40,21 +40,12 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    var SHOW_BY_DEFAULT_OPTIONS = [
-        {id: 'name', name: 'Name'},
-        {id: 'public_name', name: 'Public Name'},
-        {id: 'short_name', name: 'Short Name'},
-        {id: 'user_code', name: 'User Code'},
-    ];
-
     module.exports = function entityViewerEditDialogController(
     	$scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data
 	) {
 
         var vm = this;
 		var evEditorSharedLogicHelper = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
-
-        var evEditorSharedLogicHelper = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.processing = false;
 
@@ -80,7 +71,7 @@
             vm.hasEnabledStatus = false;
         }
 
-        vm.readyStatus = {attributeTypes: false, permissions: false, entity: false, layout: false, userFields: false};
+        vm.readyStatus = {attributeTypes: false, permissions: false, entity: false, layout: false};
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -119,11 +110,17 @@
             vm.typeFieldLabel = 'Instrument type';
         }
 
-        if (vm.entityType === 'instrument-type') {
+        else if (vm.entityType === 'instrument-type') {
             vm.typeFieldName = 'instrument_class';
             vm.typeFieldLabel = 'Instrument class';
         }
-        vm.showByDefaultOptions = SHOW_BY_DEFAULT_OPTIONS;
+
+        vm.showByDefaultOptions = [
+			{id: 'name', name: 'Name'},
+			{id: 'public_name', name: 'Public Name'},
+			{id: 'short_name', name: 'Short Name'},
+			{id: 'user_code', name: 'User Code'},
+		];
 
         if (vm.entityType === 'currency') {
             vm.showByDefaultOptions = vm.showByDefaultOptions.filter((item) => item.id !== 'public_name')
@@ -814,12 +811,13 @@
             return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attributeTypes = data.results;
             });
-        }; */
+        };
 
         vm.checkReadyStatus = function () {
+            // return vm.readyStatus.attributeTypes && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.userFields;
+        }; */
 
-            return vm.readyStatus.attributeTypes && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.userFields;
-        };
+		vm.checkReadyStatus = evEditorSharedLogicHelper.checkReadyStatus;
 
         vm.bindFlex = function (tab, field) {
             /*var totalColspans = 0;

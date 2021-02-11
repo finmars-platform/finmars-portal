@@ -54,11 +54,10 @@
         var vm = this;
 		var evEditorSharedLogicHelper = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
-		var evEditorSharedLogicHelper = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog);
-
         vm.processing = false;
 
         vm.readyStatus = {content: false, entity: true, permissions: true};
+
         vm.entityType = entityType;
 
         vm.entity = {$_isValid: true};
@@ -936,11 +935,13 @@
             return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attributeTypes = data.results;
             });
-        }; */
+        };
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
-        };
+        }; */
+
+		vm.checkReadyStatus = evEditorSharedLogicHelper.checkReadyStatus;
 
         vm.bindFlex = function (tab, field) {
             /*var totalColspans = 0;
