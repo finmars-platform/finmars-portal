@@ -24,6 +24,7 @@
     module.exports = function entityDataConstructorDialogController($scope, data, $stateParams, $state, $mdDialog) {
 
         var vm = this;
+
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
         vm.readyStatus = {constructor: false};
         vm.uiIsDefault = false;
@@ -41,6 +42,8 @@
         vm.entityType = data.entityType;
 
         vm.instanceId = undefined;
+        vm.layoutId = null;
+
         if (data.hasOwnProperty('instanceId')) {
             vm.instanceId = data.instanceId;
         }
@@ -170,7 +173,7 @@
                             vm.ui = data.book_transaction_layout;
                         } else {
                             vm.uiIsDefault = true;
-                            vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
+                            // vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
                         }
 
                         setDataConstructorLayout();
@@ -182,20 +185,40 @@
 
                 } else {
 
-                    uiService.getEditLayout(vm.entityType).then(function (data) {
+                    console.log('vm.getLayout vm.layoutId ', vm.layoutId)
 
-                        if (data.results.length) {
-                            vm.ui = data.results[0];
-                        } else {
-                            vm.uiIsDefault = true;
-                            vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
-                        }
+                    if (vm.layoutId){
 
-                        setDataConstructorLayout();
+                        uiService.getEditLayout(vm.layoutId).then(function (data) {
 
-                        resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+                            vm.ui = data;
 
-                    });
+                            setDataConstructorLayout();
+
+                            resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+
+                        });
+
+                    } else {
+
+                        uiService.getDefaultEditLayout(vm.entityType).then(function (data) {
+
+                            if (data.results.length) {
+                                vm.ui = data.results[0];
+                            } else {
+                                vm.uiIsDefault = true;
+                                vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
+                            }
+
+                            setDataConstructorLayout();
+
+                            resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+
+                        });
+
+                    }
+
+
 
                 }
 
@@ -1561,6 +1584,10 @@
         vm.init = function () {
 
             window.addEventListener('resize', vm.setTabsHolderHeight);
+
+            if (data.layoutId) {
+                vm.layoutId = data.layoutId;
+            }
 
             vm.getLayout().then(function () {
 

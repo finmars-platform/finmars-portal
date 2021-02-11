@@ -64,21 +64,6 @@
 
     };
 
-    let getEditLayout = function (entity) {
-        return uiRepository.getEditLayout(entity);
-    };
-
-    let createEditLayout = function (entity, ui) {
-
-        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-
-        return uiRepository.createEditLayout(ui);
-    };
-
-    let updateEditLayout = function (id, ui) {
-        return uiRepository.updateEditLayout(id, ui);
-    };
-
     let getListLayout = function (entityType, options) {
 
         // get content_type by entityType when getting layout by user_code
@@ -280,9 +265,75 @@
         return uiRepository.getActiveListLayout(entity);
     };*/
 
+    // Input Form Layouts
+
+    let getListEditLayout = function (entityType, options) {
+
+        // get content_type by entityType when getting layout by user_code
+        if (options && options.filters && options.filters.user_code && entityType) {
+            options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+        }
+
+        if (options && options.filters &&
+            options.filters.content_type && options.filters.user_code) { // if getting one layout by user_code
+
+            return new Promise (function (resolve, reject) {
+
+                uiRepository.getListEditLayout(entityType, options).then(function (listLayoutData) {
+
+                    resolve(listLayoutData);
+
+                }).catch(function (error) {
+                    reject(error);
+                });
+
+
+            });
+
+        }
+
+        return uiRepository.getListEditLayout(entityType, options);
+
+    };
+
     let getDefaultEditLayout = function (entityType) {
         return uiRepository.getDefaultEditLayout(entityType);
     };
+
+    let getEditLayout = function (id) {
+        return uiRepository.getEditLayout(id);
+    };
+
+    let createEditLayout = function (entity, ui) {
+
+        ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+
+        return uiRepository.createEditLayout(ui);
+    };
+
+    let updateEditLayout = function (id, ui) {
+        return uiRepository.updateEditLayout(id, ui);
+    };
+
+    let deleteEditLayoutByKey = function (id) {
+
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.deleteEditLayoutByKey(id).then(function (data) {
+
+                resolve(data);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        });
+
+    };
+
+
+
+    // Configuration Layouts
 
     let getConfigurationList = function () {
         return uiRepository.getConfigurationList();
@@ -441,10 +492,7 @@
         getListLayoutTemplate: getListLayoutTemplate,
         getDefaultListLayout: getDefaultListLayout,
         // getActiveListLayout: getActiveListLayout,
-        getDefaultEditLayout: getDefaultEditLayout,
-        getEditLayout: getEditLayout,
-        createEditLayout: createEditLayout,
-        updateEditLayout: updateEditLayout,
+
         getListLayout: getListLayout,
         getListLayoutLight: getListLayoutLight,
         // getListLayoutDefault: getListLayoutDefault,
@@ -453,6 +501,16 @@
         updateListLayout: updateListLayout,
 
         deleteListLayoutByKey: deleteListLayoutByKey,
+
+        // Input Form Layouts
+
+        getListEditLayout: getListEditLayout,
+        getDefaultEditLayout: getDefaultEditLayout,
+        getEditLayout: getEditLayout,
+        createEditLayout: createEditLayout,
+        updateEditLayout: updateEditLayout,
+
+        deleteEditLayoutByKey: deleteEditLayoutByKey,
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

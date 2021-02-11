@@ -598,6 +598,11 @@
                 templateUrl: 'views/pages/layouts-settings-view.html',
                 controller: 'LayoutsSettingsController as vm'
             })
+            .state('app.settings.input-form-layouts', {
+                url: '/input-form-layouts',
+                templateUrl: 'views/pages/input-form-layouts-settings-view.html',
+                controller: 'InputFormLayoutsSettingsController as vm'
+            })
             .state('app.settings.notifications', {
                 url: '/notifications',
                 templateUrl: 'views/settings/profile-settings-view.html',
