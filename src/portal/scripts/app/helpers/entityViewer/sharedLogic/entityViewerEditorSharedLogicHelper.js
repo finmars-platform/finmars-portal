@@ -304,7 +304,7 @@
 			} else {
 
 				try {
-					editLayout = await uiService.getEditLayout(viewModel.entityType);
+					editLayout = await uiService.getDefaultEditLayout(viewModel.entityType);
 
 				} catch (error) {
 					gotEditLayout = false;
