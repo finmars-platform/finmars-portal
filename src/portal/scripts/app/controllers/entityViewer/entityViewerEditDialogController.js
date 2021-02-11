@@ -635,7 +635,7 @@
 
             console.log('copy entity', entity);
 
-            if (windowType === 'big_drawer') {
+            if (windowType === 'big-drawer') {
 
                 const responseObj = {res: 'agree', data: {action: 'copy', entity: entity}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
