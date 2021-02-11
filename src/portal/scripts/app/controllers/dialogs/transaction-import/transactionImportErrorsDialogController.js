@@ -191,7 +191,7 @@
             var file = new Blob([text], {type: 'text/plain'});
 
             link.href = URL.createObjectURL(file);
-            link.download = vm.scheme.scheme_name + ' error file.csv';
+            link.download = vm.scheme.user_code + ' error file.csv';
 
 
         };

@@ -81,9 +81,9 @@
                         </md-select-header>
                         <div class="select-options-holder">
                             <md-option
-                                    data-ng-repeat="field in vm.priceDownloadSchemeFields | orderBy:'-'+field.scheme_name | filter:{scheme_name: vm.searchTermScheme} as results track by field.id "
+                                    data-ng-repeat="field in vm.priceDownloadSchemeFields | orderBy:'-'+field.user_code | filter:{user_code: vm.searchTermScheme} as results track by field.id "
                                     ng-value="field.id">
-                                {{field.scheme_name}}
+                                {{field.user_code}}
                             </md-option>
                         </div>
                     </md-select>

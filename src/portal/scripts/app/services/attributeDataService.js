@@ -661,7 +661,7 @@
 
                     } else {
 
-                        if (attribute.value_type === 'field' && attribute.code === 'system_code') {
+                        if (attribute.value_type === 'field' && attribute.code === 'user_code') {
 
                             resultAttr = Object.assign({}, attribute);
 

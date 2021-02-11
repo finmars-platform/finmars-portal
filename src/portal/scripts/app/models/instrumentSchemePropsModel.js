@@ -17,7 +17,7 @@
                 name: 'Factor schedule method',
                 "value_content_type": "instruments.instrumentfactorschedule",
                 "value_entity": "factor_schedule_method",
-                "code": "system_code",
+                "code": "user_code",
                 type: 'field'
             },
             {
@@ -25,7 +25,7 @@
                 name: 'Accrual calculation schedule method',
                 "value_content_type": "instruments.accrualcalculationschedule",
                 "value_entity": "accrual_calculation_schedule_method",
-                "code": "system_code",
+                "code": "user_code",
                 type: 'field'
             },
             {
@@ -88,7 +88,7 @@
                 "name": "Payment size detail",
                 "value_content_type": "instruments.paymentsizedetail",
                 "value_entity": "payment_size_detail",
-                "code": "system_code",
+                "code": "user_code",
                 "value_type": 'field'
             },
             {
@@ -96,7 +96,7 @@
                 "name": "Daily pricing model",
                 "value_content_type": "instruments.dailypricingmodel",
                 "value_entity": "daily_pricing_model",
-                "code": "system_code",
+                "code": "user_code",
                 "value_type": 'field'
             },
             {
