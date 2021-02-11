@@ -293,7 +293,9 @@
 
 					actionFieldLocation.message = stringStart + " " + dInputsNames + " is used in the Expression."
 
-				} else {
+				}
+
+				else {
 
 					switch (validationResult.status) {
 						case 'error':
