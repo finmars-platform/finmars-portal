@@ -1161,8 +1161,8 @@
                         }
                     }
 
-                    if (item.system_code) {
-                        if (item.system_code === obj_from_input.system_code) {
+                    if (item.user_code) {
+                        if (item.user_code === obj_from_input.user_code) {
                             exist = true;
                         }
                     }
@@ -1827,7 +1827,7 @@
 
             var nameProperty = 'name';
             if (fieldName === 'price_download_scheme') {
-                nameProperty = 'scheme_name';
+                nameProperty = 'user_code';
             }
 
             var defaultValueKey = '';
@@ -1896,7 +1896,7 @@
 
                     var defaultPropertyName = 'name';
                     if (fieldName === 'price_download_scheme') {
-                        defaultPropertyName = 'scheme_name';
+                        defaultPropertyName = 'user_code';
                     }
 
                     vm.relationItems[relationType].forEach(function (relation) {

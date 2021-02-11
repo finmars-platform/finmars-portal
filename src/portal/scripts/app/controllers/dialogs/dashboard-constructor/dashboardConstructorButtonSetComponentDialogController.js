@@ -496,8 +496,8 @@
                 vm.targets['import_data_from_file'] = data.results.map(function (item) {
 
                     return {
-                        value: item.scheme_name,
-                        name: item.scheme_name
+                        value: item.user_code,
+                        name: item.user_code
                     }
 
                 });
@@ -520,8 +520,8 @@
                 vm.targets['import_transactions_from_file'] = data.results.map(function (item) {
 
                     return {
-                        value: item.scheme_name,
-                        name: item.scheme_name
+                        value: item.user_code,
+                        name: item.user_code
                     }
 
                 });
@@ -544,8 +544,8 @@
                 vm.targets['complex_import_from_file'] = data.results.map(function (item) {
 
                     return {
-                        value: item.scheme_name,
-                        name: item.scheme_name
+                        value: item.user_code,
+                        name: item.user_code
                     }
 
                 });
@@ -591,8 +591,8 @@
                 vm.targets['download_instrument'] = data.results.map(function (item) {
 
                     return {
-                        value: item.scheme_name,
-                        name: item.scheme_name
+                        value: item.user_code,
+                        name: item.user_code
                     }
 
                 });

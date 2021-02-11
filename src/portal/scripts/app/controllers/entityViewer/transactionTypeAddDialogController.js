@@ -1575,7 +1575,7 @@
 
             var nameProperty = 'name';
             if (fieldName === 'price_download_scheme') {
-                nameProperty = 'scheme_name';
+                nameProperty = 'user_code';
             }
 
             var defaultValueKey = '';

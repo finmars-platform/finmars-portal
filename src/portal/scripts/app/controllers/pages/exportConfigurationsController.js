@@ -49,7 +49,7 @@
                                     return false
                                 }
 
-                                if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                                if (child.hasOwnProperty('user_code') && child.user_code === '-') {
                                     return false
                                 }
 
@@ -327,9 +327,9 @@
 
                 result.cron_expr = item.cron_expr;
 
-            } else if (item.hasOwnProperty('scheme_name')) {
+            } else if (item.hasOwnProperty('user_code')) {
 
-                result.scheme_name = item.scheme_name
+                result.user_code = item.user_code
 
             } else if (item.hasOwnProperty('user_code')) {
 
@@ -753,16 +753,16 @@
             if (item.hasOwnProperty('user_code')) {
                 var result = item.user_code;
 
-                if (item.hasOwnProperty('scheme_name')) { // integrations.instrumentdownloadscheme
-                    result = item.scheme_name;
+                if (item.hasOwnProperty('user_code')) { // integrations.instrumentdownloadscheme
+                    result = item.user_code;
                 }
 
                 return result;
             }
 
             // integrations.pricedownloadscheme, integrations.complextransactionimportscheme,
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
+            if (item.hasOwnProperty('user_code')) {
+                return item.user_code;
             }
 
             if (item.hasOwnProperty('name')) {
@@ -1048,7 +1048,7 @@
                         return false
                     }
 
-                    if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                    if (child.hasOwnProperty('user_code') && child.user_code === '-') {
                         return false
                     }
 
