@@ -376,6 +376,36 @@
             })
         };
 
+        vm.createLayout = function ($event, entityType) {
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    data: {
+                        entityType: entityType,
+                        isCreateNew: true
+
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    // TODO refresh list
+                    // getLayoutsByEntity(layout.content_type).then(function () {
+                    //     $scope.$apply();
+                    // });
+
+
+                }
+
+            });
+
+        };
+
         vm.openLayout = function ($event, layout) {
 
             var entityType =  metaContentTypesService.findEntityByContentType(layout.content_type)
