@@ -467,7 +467,7 @@
 
                                 var options = {
                                     filters: {
-                                        scheme_name: item.scheme_name
+                                        user_code: item.user_code
                                     }
                                 };
 
@@ -479,7 +479,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
@@ -558,7 +558,7 @@
 
                                 var options = {
                                     filters: {
-                                        scheme_name: item.scheme_name
+                                        user_code: item.user_code
                                     }
                                 };
 
@@ -570,7 +570,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
@@ -603,7 +603,7 @@
 
                                 var options = {
                                     filters: {
-                                        scheme_name: item.scheme_name
+                                        user_code: item.user_code
                                     }
                                 };
 
@@ -615,7 +615,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
@@ -662,7 +662,7 @@
 
                                 var options = {
                                     filters: {
-                                        scheme_name: item.scheme_name
+                                        user_code: item.user_code
                                     }
                                 };
 
@@ -674,7 +674,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
@@ -709,7 +709,7 @@
 
                                 var options = {
                                     filters: {
-                                        scheme_name: item.scheme_name
+                                        user_code: item.user_code
                                     }
                                 };
 
@@ -721,7 +721,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem;
                                             }
 
@@ -1376,8 +1376,8 @@
 
                 var name = '';
 
-                if (item.hasOwnProperty('scheme_name')) {
-                    name = item.scheme_name
+                if (item.hasOwnProperty('user_code')) {
+                    name = item.user_code
                 }
 
                 if (item.hasOwnProperty('user_code')) {
@@ -2201,7 +2201,7 @@
 
                                 complexImportSchemeService.getList({
                                     filters: {
-                                        scheme_name: item.scheme_name,
+                                        user_code: item.user_code,
                                         content_type: item.content_type
                                     }
                                 }).then(function (data) {
@@ -2212,7 +2212,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem
                                             }
 
@@ -2221,14 +2221,14 @@
                                         if (result) {
 
                                             if (settings.mode === 'overwrite') {
-                                                console.warn('Complex Import scheme already exists: scheme_name ' + item.scheme_name);
+                                                console.warn('Complex Import scheme already exists: user_code ' + item.user_code);
                                             } else {
 
                                                 errors.push({
                                                     content_type: 'complex_import.compleximportscheme',
                                                     item: item,
                                                     error: {
-                                                        message: 'Complex Import scheme already exists: scheme_name ' + item.scheme_name
+                                                        message: 'Complex Import scheme already exists: user_code ' + item.user_code
                                                     },
                                                     mode: 'skip'
                                                 });
@@ -2258,7 +2258,7 @@
 
                                 csvImportSchemeService.getList({
                                     filters: {
-                                        scheme_name: item.scheme_name,
+                                        user_code: item.user_code,
                                         content_type: item.content_type
                                     }
                                 }).then(function (data) {
@@ -2269,7 +2269,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem
                                             }
 
@@ -2278,14 +2278,14 @@
                                         if (result) {
 
                                             if (settings.mode === 'overwrite') {
-                                                console.warn('Simple Entity Import scheme already exists: name ' + item.scheme_name);
+                                                console.warn('Simple Entity Import scheme already exists: name ' + item.user_code);
                                             } else {
 
                                                 errors.push({
                                                     content_type: 'csv_import.csvimportscheme',
                                                     item: item,
                                                     error: {
-                                                        message: 'Simple Entity Import scheme already exists: name ' + item.scheme_name
+                                                        message: 'Simple Entity Import scheme already exists: name ' + item.user_code
                                                     },
                                                     mode: 'skip'
                                                 });
@@ -2315,7 +2315,7 @@
 
                                 instrumentDownloadSchemeService.getList({
                                     filters: {
-                                        scheme_name: item.scheme_name
+                                        user_code: item.user_code
                                     }
                                 }).then(function (data) {
 
@@ -2325,7 +2325,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem
                                             }
 
@@ -2334,14 +2334,14 @@
                                         if (result) {
 
                                             if (settings.mode === 'overwrite') {
-                                                console.warn('Instrument download scheme already exists: scheme name ' + item.scheme_name);
+                                                console.warn('Instrument download scheme already exists: scheme name ' + item.user_code);
                                             } else {
 
                                                 errors.push({
                                                     content_type: 'integrations.instrumentdownloadscheme',
                                                     item: item,
                                                     error: {
-                                                        message: 'Instrument download scheme already exists: scheme name ' + item.scheme_name
+                                                        message: 'Instrument download scheme already exists: scheme name ' + item.user_code
                                                     },
                                                     mode: 'skip'
                                                 });
@@ -2371,7 +2371,7 @@
 
                                 priceDownloadSchemeService.getList({
                                     filters: {
-                                        scheme_name: item.scheme_name
+                                        user_code: item.user_code
                                     }
                                 }).then(function (data) {
 
@@ -2381,7 +2381,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem
                                             }
 
@@ -2390,14 +2390,14 @@
                                         if (result) {
 
                                             if (settings.mode === 'overwrite') {
-                                                console.warn('Price download scheme already exists: scheme name ' + item.scheme_name);
+                                                console.warn('Price download scheme already exists: scheme name ' + item.user_code);
                                             } else {
 
                                                 errors.push({
                                                     content_type: 'integrations.pricedownloadscheme',
                                                     item: item,
                                                     error: {
-                                                        message: 'Price download scheme already exists: scheme name ' + item.scheme_name
+                                                        message: 'Price download scheme already exists: scheme name ' + item.user_code
                                                     },
                                                     mode: 'skip'
                                                 });
@@ -2428,7 +2428,7 @@
 
                                 transactionImportSchemeService.getList({
                                     filters: {
-                                        scheme_name: item.scheme_name
+                                        user_code: item.user_code
                                     }
                                 }).then(function (data) {
 
@@ -2438,7 +2438,7 @@
 
                                         data.results.forEach(function (resultItem) {
 
-                                            if (resultItem.scheme_name === item.scheme_name) {
+                                            if (resultItem.user_code === item.user_code) {
                                                 result = resultItem
                                             }
 
@@ -2447,14 +2447,14 @@
                                         if (result) {
 
                                             if (settings.mode === 'overwrite') {
-                                                console.warn('Transaction import scheme already exists: scheme name ' + item.scheme_name);
+                                                console.warn('Transaction import scheme already exists: scheme name ' + item.user_code);
                                             } else {
 
                                                 errors.push({
                                                     content_type: 'integrations.complextransactionimportscheme',
                                                     item: item,
                                                     error: {
-                                                        message: 'Transaction import scheme already exists: scheme name ' + item.scheme_name
+                                                        message: 'Transaction import scheme already exists: scheme name ' + item.user_code
                                                     },
                                                     mode: 'skip'
                                                 });
@@ -2793,8 +2793,8 @@
 
                 var name = '';
 
-                if (item.hasOwnProperty('scheme_name')) {
-                    name = item.scheme_name
+                if (item.hasOwnProperty('user_code')) {
+                    name = item.user_code
                 }
 
                 if (item.hasOwnProperty('user_code')) {

@@ -38,7 +38,7 @@
                 <md-select style="width: 200px"
                            data-ng-model="vm.config.instrument_download_scheme">
                     <md-option data-ng-repeat="item in vm.instrumentSchemes" ng-value="item.id">
-                        {{item.scheme_name}}
+                        {{item.user_code}}
                     </md-option>
                 </md-select>-->
 
@@ -59,9 +59,9 @@
                     <div class="select-options-holder">
 
                         <md-option
-                                data-ng-repeat="item in vm.instrumentSchemes | filter: {scheme_name: searchTerm}"
+                                data-ng-repeat="item in vm.instrumentSchemes | filter: {user_code: searchTerm}"
                                 ng-value="item.id"
-                                ng-bind="item.scheme_name">
+                                ng-bind="item.user_code">
                         </md-option>
 
                     </div>
@@ -347,7 +347,7 @@
                                 <!--<label for="">Price download scheme</label>
                                 <md-select data-ng-model="vm.config.instrument.price_download_scheme">
                                     <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">
-                                        {{item.scheme_name}}
+                                        {{item.user_code}}
                                     </md-option>
                                 </md-select>-->
 
@@ -367,9 +367,9 @@
                                     <div class="select-options-holder">
 
                                         <md-option
-                                                data-ng-repeat="item in vm.priceDownloadSchemes | filter: {scheme_name: searchTerm}"
+                                                data-ng-repeat="item in vm.priceDownloadSchemes | filter: {user_code: searchTerm}"
                                                 ng-value="item.id"
-                                                ng-bind="item.scheme_name">
+                                                ng-bind="item.user_code">
                                         </md-option>
 
                                     </div>

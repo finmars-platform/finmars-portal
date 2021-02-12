@@ -360,7 +360,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     locals: {
@@ -384,7 +384,7 @@
 
                 csvImportSchemeService.create(vm.scheme).then(function (data) {
 
-                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.scheme_name + ' was successfully created');
+                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully created');
 
                     vm.processing = false;
 

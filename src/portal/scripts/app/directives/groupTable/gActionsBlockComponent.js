@@ -33,7 +33,7 @@
     var exportExcelService = require('../../services/exportExcelService');
 
 
-    module.exports = function ($mdDialog, $state) {
+    module.exports = function ($mdDialog, $state, $bigDrawer) {
         return {
             restrict: 'AE',
             scope: {
@@ -53,6 +53,7 @@
                 //scope.isLayoutDefault = false;
 
                 scope.hasCreatePermission = false;
+                scope.isBaseTransaction = $state.current.name === 'app.data.transaction'; // Victor 2021.01.06 #72 remove ADD TRANSACTION button
 
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
@@ -372,9 +373,9 @@
                         case 'app.data.instrument-type':
                             return "INSTRUMENT TYPES";
                             break;
-                        case 'app.data.pricing-policy':
+                        /* case 'app.data.pricing-policy':
                             return "PRICING POLICY";
-                            break;
+                            break; */
                         case 'app.data.transaction-type':
                             return "TRANSACTION TYPE";
                             break;
@@ -396,34 +397,35 @@
                     }
                 };
 
-                scope.addEntity = function (ev) {
+				scope.addEntity = function (ev) {
 
-                    if (scope.entityType === 'transaction-type') {
+					var postAddEntityFn = function (res) {
+						if (res && res.res === 'agree') {
+							scope.insertObjectAfterCreateHandler(res.data);
+						}
+					};
 
-                        $mdDialog.show({
-                            controller: 'TransactionTypeAddDialogController as vm',
-                            templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: ev,
-                            locals: {
-                                entityType: scope.entityType,
-                                entity: {}
-                            }
-                        }).then(function (res) {
+					switch (scope.entityType) {
 
-                            if (res && res.res === 'agree') {
+						case 'transaction-type':
 
-                                scope.insertObjectAfterCreateHandler(res.data);
+							$mdDialog.show({
+								controller: 'TransactionTypeAddDialogController as vm',
+								templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
+								parent: angular.element(document.body),
+								targetEvent: ev,
+								locals: {
+									entityType: scope.entityType,
+									entity: {}
+								}
 
-                            }
+							}).then(postAddEntityFn);
 
-                        })
+							break;
 
-                    } else {
+						case 'complex-transaction':
 
-                        if (scope.entityType === 'complex-transaction') {
-
-                            $mdDialog.show({
+							/* $mdDialog.show({
                                 controller: 'ComplexTransactionAddDialogController as vm',
                                 templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
                                 parent: angular.element(document.body),
@@ -439,34 +441,65 @@
                                     scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
                                 }
 
-                            })
+                            }) */
 
+							$bigDrawer.show({
+								controller: 'ComplexTransactionAddDialogController as vm',
+								templateUrl: 'views/entity-viewer/complex-transaction-add-drawer-view.html',
+								locals: {
+									entityType: scope.entityType,
+									entity: {},
+									data: {
+										openedIn: 'big-drawer'
+									}
+								}
 
-                        } else {
+							}).then(function (res) {
 
-                            $mdDialog.show({
-                                controller: 'EntityViewerAddDialogController as vm',
-                                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: ev,
-                                locals: {
-                                    entityType: scope.entityType,
-                                    entity: {},
-                                    data: {}
-                                }
-                            }).then(function (res) {
+								if (res && res.res === 'agree') {
+									scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
+								}
 
-                                if (res && res.res === 'agree') {
-                                    scope.insertObjectAfterCreateHandler(res.data);
-                                }
+							});
 
-                            })
+							break;
 
-                        }
+						default:
 
-                    }
+							/* $mdDialog.show({
+								controller: 'EntityViewerAddDialogController as vm',
+								templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+								parent: angular.element(document.body),
+								targetEvent: ev,
+								locals: {
+									entityType: scope.entityType,
+									entity: {},
+									data: {
+										openedIn: 'modal-dialog'
+									}
+								}
 
-                };
+							}).then(postAddEntityFn); */
+							const drawerWidth = evHelperService.getBigDrawerWidthPercent(1);
+
+							$bigDrawer.show({
+								controller: 'EntityViewerAddDialogController as vm',
+								templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
+                                addResizeButton: true,
+								drawerWidth: drawerWidth,
+								locals: {
+									entityType: scope.entityType,
+									entity: {},
+									data: {
+										openedIn: 'big-drawer'
+									}
+								}
+
+							}).then(postAddEntityFn);
+
+					}
+
+				};
 
                 scope.applyFilters = function () {
 
@@ -757,7 +790,7 @@
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
-                            templateUrl: 'views/warning-dialog-view.html',
+                            templateUrl: 'views/dialogs/warning-dialog-view.html',
                             parent: angular.element(document.body),
                             targetEvent: $event,
                             clickOutsideToClose: false,
@@ -1552,7 +1585,8 @@
                             options: {
                                 complexSaveAsLayoutDialog: {
                                     entityType: scope.entityType
-                                }
+                                },
+								layoutName: listLayout.name
                             }
                         },
                         clickOutsideToClose: false

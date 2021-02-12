@@ -16,8 +16,16 @@
                 <md-card flex="50" class="inm-card-special">
                     <md-card-content>
                         <md-input-container class="md-block">
-                            <label for="">Scheme name</label>
-                            <input type="text" data-ng-model="vm.schemeName">
+                            <label for="">User code</label>
+                            <input type="text" data-ng-model="vm.scheme.user_code">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label for="">Name</label>
+                            <input type="text" data-ng-model="vm.scheme.name">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label for="">Short name</label>
+                            <input type="text" data-ng-model="vm.scheme.short_name">
                         </md-input-container>
                     </md-card-content>
                 </md-card>

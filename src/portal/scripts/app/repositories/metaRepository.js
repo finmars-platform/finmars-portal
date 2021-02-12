@@ -154,6 +154,9 @@
             "value": 110,
             "display_name": "Selector"
         },{
+            "value": 120,
+            "display_name": "Button"
+        },{
             "value": "decoration",
             "display_name": "Decoration"
         }, {
@@ -235,6 +238,10 @@
                     {
                         label: 'Pricing',
                         templateUrl: 'views/tabs/instrument-type/pricing-view.html'
+                    },
+                    {
+                        label: 'Layout Settings',
+                        templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }
                 ];
             case 'complex-transaction':
@@ -264,6 +271,8 @@
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
                     }
                 ];
+            default:
+                return [];
         }
     };
 

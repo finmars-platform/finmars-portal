@@ -186,6 +186,45 @@
 
         };
 
+        vm.isAccordionOverlapped = function (index, tab) {
+
+            var overlappedIndexes = [];
+
+            tab.accordions.forEach(function (accordionItem){
+
+                for (var i = accordionItem.from; i <= accordionItem.to; i = i + 1) {
+                    overlappedIndexes.push(i);
+                }
+
+            })
+
+            if (overlappedIndexes.indexOf(index) !== -1) {
+                return true
+            }
+
+            return false
+
+
+        }
+
+        vm.isNextSlotAnAccordion  = function (item, tab) {
+
+            var result = false;
+
+            tab.accordions.forEach((function(accordionItem){
+
+                if (accordionItem.from === item.to + 1) {
+                    result = true;
+                }
+
+            }))
+
+            return result
+
+
+        }
+
+
         vm.increaseAccordion = function ($event, item) {
             item.to = item.to + 1;
             vm.updateCanCreateRowStatus();

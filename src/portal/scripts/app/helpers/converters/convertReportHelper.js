@@ -207,7 +207,7 @@
                 if (useShortNameAttrs.indexOf(column.key) === -1) {
 
                     if (column.key === "price_download_scheme") {
-                        cellText = flatListItem["price_download_scheme_object"].scheme_name;
+                        cellText = flatListItem["price_download_scheme_object"].user_code;
                     } else {
                         cellText = attrObj.name;
                     }

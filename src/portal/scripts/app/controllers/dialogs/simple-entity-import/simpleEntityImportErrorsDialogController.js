@@ -117,7 +117,7 @@
             var file = new Blob([text], {type: 'text/plain'});
 
             link.href = URL.createObjectURL(file);
-            link.download = vm.scheme.scheme_name + ' error file.csv';
+            link.download = vm.scheme.user_code + ' error file.csv';
 
 
         };
@@ -134,7 +134,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,
@@ -172,7 +172,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,

@@ -783,12 +783,14 @@
 
                 var entityToSave = vm.updateEntityBeforeSave(vm.entity);
 
-                /*var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-                var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
+                /* var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
+                var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
 
                 var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(entityToSave.actions);
+				var inputsErrors = ttypeEditorSlHelper.validateInputs(entityToSave.inputs);
+				actionsErrors = actionsErrors.concat(inputsErrors);
+
                 var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(entityToSave);
-                // var inputsErrors = checkInputsForEmptyFields(entityToSave.inputs);
 
                 if (actionsErrors.length || entityErrors.length) {
 
@@ -819,7 +821,6 @@
                         console.log('data', data);
                         //originalEntity = JSON.parse(angular.toJson(vm.entity));
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
-
 
                         vm.processing = false;
                         $scope.$apply();
@@ -853,6 +854,7 @@
             var removeDeletedInputsPromise = removeInputFromEditLayout();
 
             return Promise.all([saveTTypePromise, removeDeletedInputsPromise]);
+
         };
 
         vm.saveAndExit = function () {
@@ -958,7 +960,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     clickOutsideToClose: false,
                     multiple: true,
@@ -1159,8 +1161,8 @@
                         }
                     }
 
-                    if (item.system_code) {
-                        if (item.system_code === obj_from_input.system_code) {
+                    if (item.user_code) {
+                        if (item.user_code === obj_from_input.user_code) {
                             exist = true;
                         }
                     }
@@ -1426,7 +1428,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
@@ -1591,7 +1593,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,
@@ -1616,7 +1618,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: $event,
                     clickOutsideToClose: false,
@@ -1825,7 +1827,7 @@
 
             var nameProperty = 'name';
             if (fieldName === 'price_download_scheme') {
-                nameProperty = 'scheme_name';
+                nameProperty = 'user_code';
             }
 
             var defaultValueKey = '';
@@ -1894,7 +1896,7 @@
 
                     var defaultPropertyName = 'name';
                     if (fieldName === 'price_download_scheme') {
-                        defaultPropertyName = 'scheme_name';
+                        defaultPropertyName = 'user_code';
                     }
 
                     vm.relationItems[relationType].forEach(function (relation) {
@@ -1956,7 +1958,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,

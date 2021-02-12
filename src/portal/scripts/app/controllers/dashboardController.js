@@ -28,15 +28,6 @@
 
         vm.processing = false;
 
-        vm.toggleAccordion = function ($event, accordion) {
-
-            accordion.folded = !accordion.folded;
-
-            setTimeout(function () {
-                vm.dashboardEventService.dispatchEvent(dashboardEvents.RESIZE);
-            }, 100); // need for resize query .folded rows
-        }
-
         vm.generateProjection = function (layout) {
 
             var result = [];
@@ -482,9 +473,10 @@
             var reportSettings = componentData.settings.linked_components.report_settings;
 
             var dependencies = Object.values(reportSettings).filter(function (id) { // prevent loop
-                var isComponentExist = vm.dashboardDataService.getComponentById(id);
+                const isComponentExist = vm.dashboardDataService.getComponentById(id); // is component exist
+                const isComponentUsedInDashboard = !!statusesObject[id]; // is component used in dashboard
 
-                return isComponentExist && !waitingComponents.includes(id);
+                return isComponentExist && isComponentUsedInDashboard && !waitingComponents.includes(id);
             });
 
             return dependencies.every(function (id) {
