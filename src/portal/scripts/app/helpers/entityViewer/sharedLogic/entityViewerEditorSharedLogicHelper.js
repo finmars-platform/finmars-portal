@@ -289,6 +289,68 @@
 
 		};
 
+		const resolveEditLayout = async function (viewModel){
+
+			if (viewModel.entityType === 'instrument') {
+
+				if (viewModel.entity.instrument_type_object && viewModel.entity.instrument_type_object.instrument_form_layouts) {
+
+					return new Promise(function (resolve, reject){
+
+					    var layouts = viewModel.entity.instrument_type_object.instrument_form_layouts.split(',')
+
+						console.log('Resolving Edit Layout. Layouts', layouts)
+
+					    uiService.getListEditLayout(viewModel.entityType).then(function (data){
+
+					        var result;
+					        var lastMatchedIndex;
+
+					        data.results.forEach(function (item){
+
+					            if (layouts.indexOf(item.user_code) !== -1) {
+
+					                if (!lastMatchedIndex && lastMatchedIndex !== 0) {
+					                    lastMatchedIndex = layouts.indexOf(item.user_code)
+										result = item
+					                }
+
+					                if (layouts.indexOf(item.user_code) < lastMatchedIndex) {
+                                        lastMatchedIndex = layouts.indexOf(item.user_code)
+                                        result = item
+                                    }
+
+                                }
+
+                            })
+
+							console.log('result', result);
+
+					        if (result) {
+					            resolve({ // Array?
+									results: [
+										result
+									]
+								})
+                            } else {
+					            resolve(uiService.getDefaultEditLayout(viewModel.entityType))
+                            }
+
+                        })
+
+                    })
+
+				} else {
+					return uiService.getDefaultEditLayout(viewModel.entityType);
+				}
+
+
+			} else {
+				return uiService.getDefaultEditLayout(viewModel.entityType);
+			}
+
+		}
+
 		/**
 		 *
 		 * @param editorType: string - indicates whether function called from entityViewerEditDialogController.js or entityViewerAddDialogController.js
@@ -304,7 +366,7 @@
 			} else {
 
 				try {
-					editLayout = await uiService.getDefaultEditLayout(viewModel.entityType);
+					editLayout = await resolveEditLayout(viewModel);
 
 				} catch (error) {
 					gotEditLayout = false;
