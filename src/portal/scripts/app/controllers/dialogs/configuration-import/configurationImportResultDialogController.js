@@ -86,8 +86,8 @@
 
                 result = result + ': ';
 
-                if (item.item.scheme_name) {
-                    result = result + item.item.scheme_name
+                if (item.item.user_code) {
+                    result = result + item.item.user_code
                 } else {
 
                     if (item.item.short_name) {

@@ -67,7 +67,7 @@
                 <div class="m-t-16">
 
                     <div><label for="">Scheme type</label></div>
-                    <md-select data-ng-model="vm.item.scheme_type" data-ng-change="vm.item.scheme_name = ''">
+                    <md-select data-ng-model="vm.item.scheme_type" data-ng-change="vm.item.user_code = ''">
                         <md-option value="transaction_import">
                             Transaction Import
                         </md-option>
@@ -82,9 +82,9 @@
                 <div class="m-t-16" data-ng-if="vm.item.scheme_type == 'transaction_import'">
 
                     <div><label for="">Scheme name</label></div>
-                    <md-select data-ng-model="vm.item.scheme_name">
-                        <md-option data-ng-repeat="scheme in vm.transactionImportSchemes" ng-value="scheme.scheme_name">
-                            {{scheme.scheme_name}}
+                    <md-select data-ng-model="vm.item.user_code">
+                        <md-option data-ng-repeat="scheme in vm.transactionImportSchemes" ng-value="scheme.user_code">
+                            {{scheme.user_code}}
                         </md-option>
                     </md-select>
 
@@ -93,9 +93,9 @@
                 <div class="m-t-16" data-ng-if="vm.item.scheme_type == 'simple_import'">
 
                     <div><label for="">Scheme name</label></div>
-                    <md-select data-ng-model="vm.item.scheme_name">
-                        <md-option data-ng-repeat="scheme in vm.simpleImportSchemes" ng-value="scheme.scheme_name">
-                            {{scheme.scheme_name}}
+                    <md-select data-ng-model="vm.item.user_code">
+                        <md-option data-ng-repeat="scheme in vm.simpleImportSchemes" ng-value="scheme.user_code">
+                            {{scheme.user_code}}
                         </md-option>
                     </md-select>
 

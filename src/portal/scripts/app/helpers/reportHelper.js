@@ -343,7 +343,7 @@
 
             } else {
 
-                if (attribute.value_type === 'field' && attribute.code === 'system_code' && source[attribute.key] && source[attribute.key + '_object']) {
+                if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key] && source[attribute.key + '_object']) {
 
                     result[resultKey + '.name'] = source[attribute.key + '_object'].name
 

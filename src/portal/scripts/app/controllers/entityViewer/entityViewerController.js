@@ -528,7 +528,7 @@
 
 					default:
 
-						var editLayout = await uiService.getEditLayout(entitytype);
+						var editLayout = await uiService.getDefaultEditLayout(entitytype);
 						console.log('editLayout', editLayout, entitytype)
 						var bigDrawerWidthPercent;
 						var fixedAreaColumns;

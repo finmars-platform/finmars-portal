@@ -14,7 +14,7 @@
 
                 <div class="overflow-hidden">
 
-                    <div data-ng-repeat="field in vm.transactionTypeTextFields" class="float-left m-b-8"
+                    <div data-ng-repeat="field in vm.transactionTypeTextFields track by field.id" class="float-left m-b-8"
                          style="width: 310px">
                         <b>{{field.key}}</b>
                         <md-input-container style="height: 32px">
@@ -71,7 +71,9 @@
 
         <div layout="row" class="m-t-16" style="margin-bottom: 60px">
 
-            <md-button class="md-raised md-primary" data-ng-click="vm.saveTransactionTypeFields()">Apply</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click="vm.saveTransactionTypeFields()"
+                       ng-disabled="vm.readyStatus.transactionTypeProcessing">Apply</md-button>
 
             <div data-ng-if="vm.readyStatus.transactionTypeProcessing" class="m-l-16 m-t-8">
                 <md-progress-circular md-mode="indeterminate"
@@ -92,7 +94,7 @@
 
                 <div class="overflow-hidden">
 
-                    <div data-ng-repeat="field in vm.instrumentTextFields" class="float-left m-b-8" style="width: 310px">
+                    <div data-ng-repeat="field in vm.instrumentTextFields track by field.id" class="float-left m-b-8" style="width: 310px">
                         <b>{{field.key}}</b>
                         <md-input-container style="height: 32px">
                             <input type="text" data-ng-model="field.name" value-title>
@@ -107,7 +109,9 @@
 
         <div layout="row" class="m-t-16">
 
-            <md-button class="md-raised md-primary" data-ng-click="vm.saveInstrumentFields()">Apply</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click="vm.saveInstrumentFields()"
+                       ng-disabled="vm.readyStatus.instrumentProcessing">Apply</md-button>
 
             <div data-ng-if="vm.readyStatus.instrumentProcessing" class="m-l-16 m-t-8">
                 <md-progress-circular md-mode="indeterminate"
