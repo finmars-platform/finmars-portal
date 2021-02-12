@@ -1911,6 +1911,14 @@
 
         // Instrument Type Layout Settings tab end
 
+        vm.instrumentTypeChange = function($event){
+
+            console.log('instrumentTypeChange', vm.entity)
+
+            evEditorSharedLogicHelper.getFormLayout('edition');
+
+        }
+
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 
             $mdDialog.show({
@@ -2036,6 +2044,7 @@
         };
 
         vm.onFieldChange = function (fieldKey) {
+
             if (fieldKey) {
                 var attributes = {
                     entityAttrs: vm.entityAttrs,
