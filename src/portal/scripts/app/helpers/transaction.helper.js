@@ -96,16 +96,16 @@
 
 	};
 
-	var getTransactionUserInputsNotPlacedInTheForm = function (userInputs, ttype) {
-		const formFieldsNames = userInputs.map(input => input.name);
-		return ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
-	};
-
-	var fillMissingFieldsByDefaultValues = function (entity, userInputs, ttype) {
+	var fillMissingFieldsByDefaultValues = async function (entity, userInputs, ttype) {
+		var getTransactionUserInputsNotPlacedInTheForm = function (userInputs, ttype) {
+			const formFieldsNames = userInputs.map(input => input.name);
+			return ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
+		};
 
 		const userInputsNotPlacedInTheForm = getTransactionUserInputsNotPlacedInTheForm(userInputs, ttype);
+		console.log('#64 userInputsNotPlacedInTheForm', userInputsNotPlacedInTheForm)
 
-		return userInputsNotPlacedInTheForm
+		const missingFieldsPromises =  userInputsNotPlacedInTheForm
 			.filter(input => input.value !== null)
 			.map(input => {
 				if (input.value_type === 20) { // Expression
@@ -116,6 +116,9 @@
 				entity[input.name] = input.value;
 				return;
 			});
+
+		console.log('#64 missingFieldsPromises', missingFieldsPromises)
+		await Promise.allSettled(missingFieldsPromises);
 
 	};
 
