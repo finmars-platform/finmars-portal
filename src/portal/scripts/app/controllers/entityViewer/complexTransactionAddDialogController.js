@@ -1004,7 +1004,7 @@
 
         vm.getPortfolios = function () {
 
-            portfolioService.getList().then(function (data) {
+            portfolioService.getListLight().then(function (data) {
                 vm.portfolios = data.results;
                 $scope.$apply();
             });
@@ -1013,7 +1013,7 @@
 
         vm.getInstrumentTypes = function () {
 
-            instrumentTypeService.getList().then(function (data) {
+            instrumentTypeService.getListLight().then(function (data) {
                 vm.instrumentTypes = data.results;
                 $scope.$apply();
             });
