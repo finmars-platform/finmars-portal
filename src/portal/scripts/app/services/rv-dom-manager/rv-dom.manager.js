@@ -1198,10 +1198,10 @@
                 item.id = getContextMenuTtypeId(ttypes, item);
 
                 if (item.id) {
-                    ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
+                    ttype_specific_attr = ' devDropdownActionDataId="' + item.id + '"'
                 } else {
                     additional_text = ' (Not Found)';
-                    is_disabled = 'disabled-btn';
+                    is_disabled = 'disabled-context-menu';
                 }
 
             }
@@ -1232,16 +1232,13 @@
 
             } else {
 
-                result = result + '<div class="ev-dropdown-option ' + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
+                result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
                     ' data-ev-dropdown-action="' + item.action + '"' +
 
                     ttype_specific_attr +
 
                     ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' +
-
-
-                    '<span class="'+is_disabled+'">' +item.name + additional_text+ '</span>'
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text
 
                 if (item.items && item.items.length) {
 
