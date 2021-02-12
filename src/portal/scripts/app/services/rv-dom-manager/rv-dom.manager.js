@@ -1232,13 +1232,16 @@
 
             } else {
 
-                result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
+                result = result + '<div class="ev-dropdown-option ' + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
                     ' data-ev-dropdown-action="' + item.action + '"' +
 
                     ttype_specific_attr +
 
                     ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' +
+
+
+                    '<span class="'+is_disabled+'">' +item.name + additional_text+ '</span>'
 
                 if (item.items && item.items.length) {
 
