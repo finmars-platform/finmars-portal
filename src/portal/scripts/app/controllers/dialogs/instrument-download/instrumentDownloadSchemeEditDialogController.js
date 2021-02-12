@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
-
     var metaService = require('../../../services/metaService');
     var dataProvidersService = require('../../../services/import/dataProvidersService');
     var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
@@ -14,8 +12,6 @@
     var attributeTypeService = require('../../../services/attributeTypeService');
 
     module.exports = function ($scope, $mdDialog, schemeId, importSchemesMethodsService) {
-
-        logService.controller('InstrumentDownloadSchemeEditDialogController', 'initialized');
 
         var vm = this;
         vm.scheme = {};
@@ -56,7 +52,7 @@
             'accrual_calculation_schedule_method',
             'provider',
             'url',
-            'scheme_name',
+            'user_code',
             'id',
             'attributes',
             'inputs'];
@@ -95,7 +91,7 @@
 
         vm.mapFields = [
             {
-                key: 'name',
+                key: 'instrument_name',
                 caption: 'Name',
                 required: true,
                 hasBackground: true,
@@ -103,7 +99,7 @@
                 complexExpressionEntity: false
             },
             {
-                key: 'user_code',
+                key: 'instrument_user_code',
                 caption: 'User code',
                 required: true,
                 hasBackground: true,
@@ -119,14 +115,14 @@
                 complexExpressionEntity: 'instrument_type'
             },
             {
-                key: 'short_name',
+                key: 'instrument_short_name',
                 caption: 'Short name',
                 required: true,
                 expression: '',
                 complexExpressionEntity: false
             },
             {
-                key: 'public_name',
+                key: 'instrument_public_name',
                 caption: 'Public name',
                 required: true,
                 expression: '',
@@ -256,7 +252,7 @@
                 complexExpressionEntity: false
             },
             {
-                key: 'notes',
+                key: 'instrument_notes',
                 caption: 'Notes',
                 required: false,
                 expression: '',
@@ -279,7 +275,7 @@
 
         var fillArraysWithScheme = function () {
 
-            vm.schemeName = vm.scheme['scheme_name'];
+            vm.schemeName = vm.scheme['user_code'];
             vm.schemeProvider = vm.scheme['provider'];
             vm.factorScheduleMethod = vm.scheme['factor_schedule_method'];
             vm.accrualCalculation = vm.scheme['accrual_calculation_schedule_method'];
@@ -632,7 +628,9 @@
         vm.agree = function ($event) {
 
             vm.schemeUpdated = {};
-            vm.schemeUpdated['scheme_name'] = vm.schemeName;
+            vm.schemeUpdated['user_code'] = vm.scheme.user_code;
+            vm.schemeUpdated['name'] = vm.scheme.name;
+            vm.schemeUpdated['short_name'] = vm.scheme.short_name;
             vm.schemeUpdated['provider'] = vm.schemeProvider;
             vm.schemeUpdated['factor_schedule_method'] = vm.factorScheduleMethod;
             vm.schemeUpdated['accrual_calculation_schedule_method'] = vm.accrualCalculation;

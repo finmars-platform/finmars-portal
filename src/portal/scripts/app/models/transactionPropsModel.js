@@ -22,7 +22,7 @@
                 "name": "Transaction class",
                 "value_content_type": "transactions.transactionclass",
                 "value_entity": "transaction_class",
-                "code": "system_code",
+                "code": "user_code",
                 "value_type": "field"
             },
             {

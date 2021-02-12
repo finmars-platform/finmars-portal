@@ -116,14 +116,20 @@
                         }
 
                         if (item.key.indexOf("user_text_") !== -1) {
-                            vm.userTextFields.push(item);
+
+                        	vm.userTextFields.push(item);
                             return false;
+
                         } else if (item.key.indexOf("user_number_") !== -1) {
-                            vm.userNumberFields.push(item);
+
+                        	vm.userNumberFields.push(item);
                             return false;
+
                         } else if (item.key.indexOf("user_date_") !== -1) {
-                            vm.userDateFields.push(item);
+
+                        	vm.userDateFields.push(item);
                             return false;
+
                         }
 
                     }

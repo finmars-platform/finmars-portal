@@ -168,9 +168,13 @@
                             scope.error = 'Invalid expression';
                             break;
 
-                        case 'inputs-error':
+                        case 'functions-error':
                             scope.error = 'Not all variables are identified expression';
                             break;
+
+						case 'inputs-error':
+							scope.error = 'Not all variables are identified inputs';
+							break;
 
                         case 'bracket-error':
                             scope.error = 'Mismatch in the opening and closing braces';
