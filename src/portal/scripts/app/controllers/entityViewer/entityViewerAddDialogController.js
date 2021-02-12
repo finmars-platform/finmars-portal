@@ -1539,6 +1539,74 @@
 
         };
 
+        // Instrument Type Layout Settings tab start
+
+        vm.instrumentTypeLayouts = [];
+
+        vm.instrumentTypeMoveLayoutUp = function($event, item) {
+
+            var index = vm.instrumentTypeLayouts.indexOf(item)
+
+            vm.instrumentTypeLayouts.splice(index, 1); // remove old one
+
+            console.log('old index', index)
+
+            var newIndex = index - 1
+
+            if (newIndex < 0) {
+                newIndex = 0;
+            }
+
+            vm.instrumentTypeLayouts.splice(newIndex, 0, item);
+
+            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
+
+        }
+
+        vm.instrumentTypeMoveLayoutDown = function ($event, item) {
+
+            var index = vm.instrumentTypeLayouts.indexOf(item)
+
+            vm.instrumentTypeLayouts.splice(index, 1); // remove old one
+
+            var newIndex = index + 1
+
+            vm.instrumentTypeLayouts.splice(newIndex, 0, item);
+
+            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
+
+        }
+
+        vm.instrumentTypeDeleteLayout = function ($event, item) {
+
+            var index = vm.instrumentTypeLayouts.indexOf(item)
+
+            vm.instrumentTypeLayouts.splice(index, 1);
+
+            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
+
+        }
+
+        vm.instrumentTypeMoveAddLayout = function($event) {
+
+            vm.instrumentTypeLayouts.unshift(vm.instrumentTypeNewLayoutUserCode)
+
+            vm.instrumentTypeNewLayoutUserCode = '';
+
+            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
+
+        }
+
+        // Instrument Type Layout Settings tab end
+
+        vm.instrumentTypeChange = function($event){
+
+            console.log('instrumentTypeChange', vm.entity)
+
+            evEditorSharedLogicHelper.getFormLayout('edition');
+
+        }
+
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 
             $mdDialog.show({
