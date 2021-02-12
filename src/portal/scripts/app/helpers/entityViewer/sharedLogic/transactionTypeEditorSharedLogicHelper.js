@@ -13,7 +13,7 @@
     'use strict';
     module.exports = function (viewModel, $scope, $mdDialog) {
 
-        var gridTableHelperService = new GridTableHelperService();
+        const gridTableHelperService = new GridTableHelperService();
 
         var valueTypes = [
             {
@@ -42,11 +42,11 @@
             },
         ];
 
-        var getValueTypes = function() {
+        const getValueTypes = function() {
             return valueTypes;
         }
 
-        var contextProperties = {
+        const contextProperties = {
             'instruments.instrument': [
                 {
                     id: 'instrument',
@@ -105,11 +105,11 @@
             ]
         }
 
-        var getContextProperties = function () {
+        const getContextProperties = function () {
             return contextProperties;
         };
 
-        var updateInputFunctions = function () {
+        const updateInputFunctions = function () {
 
             viewModel.expressionData.groups[0] = {
                 "name": "<b>Inputs</b>",
@@ -137,7 +137,7 @@
 
         };
 
-        var resolveRelation = function (contentType) {
+        const resolveRelation = function (contentType) {
 
             var entityKey;
 
@@ -164,7 +164,7 @@
 
         };
 
-        var getReferenceTables = function () {
+        const getReferenceTables = function () {
 
             return referenceTableService.getList().then(function (data) {
 
@@ -176,7 +176,7 @@
 
         };
 
-        var getInputTemplates = function () {
+        const getInputTemplates = function () {
 
             viewModel.readyStatus.input_templates = false;
 
@@ -192,7 +192,7 @@
 
         };
 
-        var removeInputFromActions = function (deletedInputName) {
+        const removeInputFromActions = function (deletedInputName) {
 
             viewModel.inputsToDelete.push(deletedInputName);
 
@@ -233,8 +233,8 @@
 
         };
 
-        // TRANSACTION VALIDATION
-		var hasInputInExprs = function (inputs, expr, namesOnly) {
+		//<editor-fold desc="TRANSACTION VALIDATION">
+		const hasInputInExprs = function (inputs, expr, namesOnly) {
 
 			var inputsList = [];
 			/* var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
@@ -265,7 +265,7 @@
 
 		};
 
-        var checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, location) {
+        const checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, location) {
 
 			var actionFieldLocation = {
 				action_notes: location,
@@ -323,7 +323,7 @@
 
         };
 
-        var checkActionsForEmptyFields = function (actions) {
+        const checkActionsForEmptyFields = function (actions) {
 
             var result = [];
 
@@ -446,7 +446,7 @@
             return result;
         };
 
-        var validateUserFields = function (entity, inputsToDelete, result) {
+        const validateUserFields = function (entity, inputsToDelete, result) {
 
             var entityKeys = Object.keys(entity);
 
@@ -457,10 +457,14 @@
                     entityKey.indexOf('user_date_') === 0) &&
 					entity[entityKey]) {
 
-                    var fieldWithInvalidExpr = checkFieldExpr(inputsToDelete,
-                                                              entity[entityKey],
-                                                              entityKey,
-                                                              'FIELDS');
+                	const userFieldName = viewModel.transactionUserFields[entityKey];
+
+                    var fieldWithInvalidExpr = checkFieldExpr(
+                    	inputsToDelete,
+						entity[entityKey],
+						userFieldName,
+						'FIELDS'
+					);
 
                     if (fieldWithInvalidExpr) {
                         result.push(fieldWithInvalidExpr);
@@ -471,7 +475,7 @@
             });
         };
 
-        var checkEntityForEmptyFields = function (entity) {
+        const checkEntityForEmptyFields = function (entity) {
 
             var result = [];
 
@@ -526,7 +530,7 @@
 
         };
 
-        var validateInputs = function (inputs) {
+        const validateInputs = function (inputs) {
 
         	var errors = [];
 
@@ -579,11 +583,10 @@
         	return errors;
 
 		};
-        // < TRANSACTION VALIDATION >
+		//</editor-fold>
 
-
-        // INPUTS GRID TABLE
-        var onInputsGridTableRowAddition = function () {
+		//<editor-fold desc="INPUTS GRID TABLE">
+		const onInputsGridTableRowAddition = function () {
 
             var newRow = viewModel.inputsGridTableData.body[0];
 
@@ -634,7 +637,7 @@
 
         };
 
-        var onInputsGridTableCellChange = function (rowKey) {
+		const onInputsGridTableCellChange = function (rowKey) {
 
             // updating whole row because 'value_type' change causes other cells to change
             var gtRow = viewModel.inputsGridTableDataService.getRowByKey(rowKey);
@@ -686,11 +689,11 @@
 
         }
 
-        var relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
+		const relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
             return viewModel.loadRelation(resolveRelation(contentType), true);
         }
 
-        var onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
+		const onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
 
             var changedCell = gtDataService.getCell(rowData.order, colData.order);
 
@@ -715,7 +718,7 @@
 
         };
 
-        var changeCellsBasedOnValueType = function (row) {
+		const changeCellsBasedOnValueType = function (row) {
 
             var valueType = gridTableHelperService.getCellFromRowByKey(row, 'value_type'),
                 contentType = gridTableHelperService.getCellFromRowByKey(row, 'content_type'),
@@ -788,7 +791,7 @@
 
         };
 
-        var getInputsForLinking = function () {
+		const getInputsForLinking = function () {
 
             viewModel.inputsForMultiselector = viewModel.entity.inputs.map(function (input) {
 
@@ -802,7 +805,7 @@
 
         };
 
-        var updateLinkedInputsOptionsInsideGridTable = function () {
+		const updateLinkedInputsOptionsInsideGridTable = function () {
 
             var linkedInputsNames = viewModel.inputsGridTableDataService.getCellByKey('templateRow', 'linked_inputs_names');
             linkedInputsNames.settings.selectorOptions = viewModel.inputsForMultiselector
@@ -817,7 +820,7 @@
 
         };
 
-        var deleteInputsRows = function (gtDataService, gtEventService) {
+		const deleteInputsRows = function (gtDataService, gtEventService) {
 
             var selectedRows = gtDataService.getSelectedRows();
 
@@ -878,7 +881,7 @@
 
         };
 
-        var addInputRow = function (gtDataService, gtEventService) {
+		const addInputRow = function (gtDataService, gtEventService) {
 
             $mdDialog.show({
                 controller: 'TransactionTypeAddInputDialogController as vm',
@@ -945,7 +948,7 @@
 
         };
 
-        var initGridTableEvents = function () {
+		const initGridTableEvents = function () {
 
             viewModel.inputsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
                 onInputsGridTableCellChange(argumentsObj.row.key);
@@ -1135,7 +1138,7 @@
             }
         }
 
-        var createDataForInputsTableGrid = function () {
+		const createDataForInputsTableGrid = function () {
 
             var rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
@@ -1234,9 +1237,39 @@
             viewModel.inputsGridTableDataService.setTableData(viewModel.inputsGridTableData);
 
         }
-        // < INPUTS GRID TABLE >
+		//</editor-fold>
 
-        var initAfterMainDataLoaded = function () {
+		const getTransactionUserFields = function () {
+
+			return new Promise(async (resolve) => {
+
+				/* return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+
+					data.results.forEach(function (field) {
+
+						viewModel.transactionUserFields[field.key] = field.name;
+
+					})
+
+				})*/
+
+				uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+
+					data.results.forEach(function (field) {
+
+						viewModel.transactionUserFields[field.key] = field.name;
+
+					})
+
+					resolve();
+
+				}).catch(error => resolve());
+
+			});
+
+		};
+
+        const initAfterMainDataLoaded = function () {
 
             getInputsForLinking();
 
@@ -1264,6 +1297,7 @@
             initGridTableEvents: initGridTableEvents,
             createDataForInputsTableGrid: createDataForInputsTableGrid,
 
+			getTransactionUserFields: getTransactionUserFields,
             initAfterMainDataLoaded: initAfterMainDataLoaded
         }
 

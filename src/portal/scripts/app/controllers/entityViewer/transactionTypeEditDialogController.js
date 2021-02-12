@@ -288,19 +288,7 @@
 
         vm.transactionUserFields = {};
 
-        vm.getTransactionUserFields = function () {
-
-            return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
-
-                data.results.forEach(function (field) {
-
-                    vm.transactionUserFields[field.key] = field.name;
-
-                })
-
-            })
-
-        };
+        vm.getTransactionUserFields = ttypeEditorSlHelper.getTransactionUserFields;
 
         vm.getItem = function () {
 
