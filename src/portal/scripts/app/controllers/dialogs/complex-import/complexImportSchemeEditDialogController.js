@@ -121,7 +121,7 @@
 
             complexImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
 
-                toastNotificationService.success("Complex Import Scheme " + vm.scheme.scheme_name + ' was successfully saved');
+                toastNotificationService.success("Complex Import Scheme " + vm.scheme.user_code + ' was successfully saved');
 
                 vm.processing = false;
 
@@ -152,7 +152,7 @@
             var scheme = JSON.parse(JSON.stringify(vm.scheme));
 
             delete scheme.id;
-            scheme["scheme_name"] = scheme["scheme_name"] + '_copy';
+            scheme["user_code"] = scheme["user_code"] + '_copy';
 
             $mdDialog.show({
                 controller: 'ComplexImportSchemeCreateDialogController as vm',

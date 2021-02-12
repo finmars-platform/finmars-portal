@@ -783,12 +783,14 @@
 
                 var entityToSave = vm.updateEntityBeforeSave(vm.entity);
 
-                /*var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-                var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
+                /* var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
+                var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
 
                 var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(entityToSave.actions);
+				var inputsErrors = ttypeEditorSlHelper.validateInputs(entityToSave.inputs);
+				actionsErrors = actionsErrors.concat(inputsErrors);
+
                 var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(entityToSave);
-                // var inputsErrors = checkInputsForEmptyFields(entityToSave.inputs);
 
                 if (actionsErrors.length || entityErrors.length) {
 
@@ -852,6 +854,7 @@
             var removeDeletedInputsPromise = removeInputFromEditLayout();
 
             return Promise.all([saveTTypePromise, removeDeletedInputsPromise]);
+
         };
 
         vm.saveAndExit = function () {
@@ -1158,8 +1161,8 @@
                         }
                     }
 
-                    if (item.system_code) {
-                        if (item.system_code === obj_from_input.system_code) {
+                    if (item.user_code) {
+                        if (item.user_code === obj_from_input.user_code) {
                             exist = true;
                         }
                     }
@@ -1824,7 +1827,7 @@
 
             var nameProperty = 'name';
             if (fieldName === 'price_download_scheme') {
-                nameProperty = 'scheme_name';
+                nameProperty = 'user_code';
             }
 
             var defaultValueKey = '';
@@ -1893,7 +1896,7 @@
 
                     var defaultPropertyName = 'name';
                     if (fieldName === 'price_download_scheme') {
-                        defaultPropertyName = 'scheme_name';
+                        defaultPropertyName = 'user_code';
                     }
 
                     vm.relationItems[relationType].forEach(function (relation) {

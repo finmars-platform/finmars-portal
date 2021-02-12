@@ -34,7 +34,7 @@
                             return false
                         }
 
-                        if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                        if (child.hasOwnProperty('user_code') && child.user_code === '-') {
                             return false
                         }
 
@@ -117,8 +117,8 @@
                 return metaContentTypesService.getEntityNameByContentType(item.content_type)
             }
 
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
+            if (item.hasOwnProperty('user_code')) {
+                return item.user_code;
             }
 
             if (item.hasOwnProperty('last_run_at')) { // import.pricingautomatedschedule
