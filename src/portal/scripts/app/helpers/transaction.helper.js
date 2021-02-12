@@ -104,7 +104,7 @@
 		const missingFieldsPromises =  [];
 
 		userInputsNotPlacedInTheForm
-			.filter(input => !!input.value) // take inputs if they have default value
+			.filter(input => !entity[input.name] && !!input.value) // take inputs if property is empty and input have default value
 			.forEach(input => {
 
 				if (input.value_type === 20) { // Expression
