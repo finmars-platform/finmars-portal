@@ -1198,7 +1198,7 @@
                 item.id = getContextMenuTtypeId(ttypes, item);
 
                 if (item.id) {
-                    ttype_specific_attr = ' devDropdownActionDataId="' + item.id + '"'
+                    ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
                 } else {
                     additional_text = ' (Not Found)';
                     is_disabled = 'disabled-context-menu';
@@ -1238,7 +1238,7 @@
                     ttype_specific_attr +
 
                     ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
 
                 if (item.items && item.items.length) {
 
