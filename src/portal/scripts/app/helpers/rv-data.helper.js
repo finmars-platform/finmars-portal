@@ -764,7 +764,7 @@
             data = getNewDataInstance(evDataService)
         }
 
-        data = filterByRowColor(data, evDataService);
+        //data = filterByRowColor(data, evDataService);
 
         var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
@@ -785,6 +785,7 @@
         // console.log('getFlatStructure.list', list);
 
         list = removeItemsFromFoldedGroups(list, evDataService);
+        console.log('#64 list', list)
 
         return list;
 
