@@ -9,6 +9,8 @@
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
     var dataProcedureService = require('../../../services/procedures/dataProcedureService');
 
+    const schedulesHelper = require('../../../helpers/schedules.helper');
+
     module.exports = function scheduleEditDialogController($scope, $mdDialog, data) {
 
         var vm = this;
@@ -18,7 +20,9 @@
         vm.readyStatus = {schedule: false, pricingProcedures: false};
 
         vm.days = [];
-        vm.schedule = {};
+        vm.schedule = {
+            procedures: []
+        };
 
         vm.cron = {
             periodicity: 1
@@ -204,8 +208,6 @@
 
             vm.schedule.procedures.splice($index, 1);
 
-            console.log('vm.schedule.procedures', vm.schedule.procedures);
-
             vm.orderProcedures();
 
         };
@@ -226,12 +228,26 @@
 
             vm.schedule.procedures = vm.schedule.procedures.map(function (item, index) {
 
-                item.order = index + 1;
+                item.order = index;
 
                 return item
             })
 
         };
+
+        vm.dragIconGrabbed = false;
+        vm.dragAndDropInited = false;
+
+        const turnOffDragging = function () {
+            vm.dragIconGrabbed = false;
+        };
+
+        vm.turnOnDragging = function () {
+            vm.dragIconGrabbed = true;
+            document.body.addEventListener('mouseup', turnOffDragging, {once: true});
+        };
+
+        vm.dragAndDrop = schedulesHelper.createDragAndDropObject($scope, vm);
 
         vm.init = function () {
 
@@ -242,7 +258,6 @@
         };
 
         vm.init();
-
 
     }
 
