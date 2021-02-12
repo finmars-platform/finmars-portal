@@ -215,7 +215,7 @@
                 $scope.$apply();
 
                 if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
+                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
                 }
 
             }).catch(function (reason) {

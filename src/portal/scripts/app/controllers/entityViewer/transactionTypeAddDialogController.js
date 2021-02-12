@@ -753,6 +753,9 @@
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
 
                 var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(vm.entity.actions);
+				var inputsErrors = ttypeEditorSlHelper.validateInputs(vm.entity.inputs);
+				actionsErrors = actionsErrors.concat(inputsErrors);
+
                 var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(vm.entity);
 
                 console.log('vm.entity before save', vm.entity);
@@ -1176,7 +1179,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,
@@ -1337,7 +1340,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,
@@ -1362,7 +1365,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: $event,
                     clickOutsideToClose: false,
@@ -1572,7 +1575,7 @@
 
             var nameProperty = 'name';
             if (fieldName === 'price_download_scheme') {
-                nameProperty = 'scheme_name';
+                nameProperty = 'user_code';
             }
 
             var defaultValueKey = '';
@@ -1675,7 +1678,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: true,

@@ -67,6 +67,9 @@
                 case 'Decoration':
                     item['caption_name'] = 'Decoration';
                     break;
+                case 'Button':
+                    item['caption_name'] = 'Button';
+                    break;
                 default:
                     item['caption_name'] = item['display_name'];
                     break;
@@ -144,7 +147,6 @@
             case "complex-transaction":
             case "strategies":
                 return true;
-                break;
             default:
                 return false;
         }
@@ -232,9 +234,9 @@
             case 'app.data.instrument-type':
                 result = "Instrument types";
                 break;
-            case 'app.data.pricing-policy':
+            /* case 'app.data.pricing-policy':
                 result = "Pricing policy";
-                break;
+                break; */
             case 'app.data.transaction-type':
                 result = "Transaction type";
                 break;
@@ -411,9 +413,9 @@
                 case 'app.data.transaction-type':
                     name = 'SETTINGS > DATA TYPES > TRANSACTION TYPES';
                     break;
-                case 'app.data.pricing-policy':
+                /* case 'app.data.pricing-policy':
                     name = 'SETTINGS > DATA TYPES > PRICING TYPES';
-                    break;
+                    break; */
                 case 'app.settings.entities-custom-attributes':
                     name = 'SETTINGS > DATA TYPES > USER ATTRIBUTES';
                     break;

@@ -18,6 +18,10 @@
 
         var gridTableHelperService = new GridTableHelperService();
 
+        vm.readyStatus = {
+        	actionsGridTable: false
+		};
+
         vm.event = data.event;
         vm.eventClasses = data.eventClasses;
         vm.notificationClasses = data.notificationClasses;
@@ -205,8 +209,6 @@
                     Object.assign(headerData.styles['grid-table-cell'], {'text-align': 'center'})
                 }
 
-
-
                 return headerData;
 
             });
@@ -214,13 +216,14 @@
 
             // assemble body rows
             vm.event.actions.forEach(function (action, actionIndex) {
-                rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
+
+            	rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
                 rowObj.key = action.id || action.frontOptions.gtKey;
                 rowObj.order = actionIndex;
 
                 var transactionType = gridTableHelperService.getCellFromRowByKey(rowObj, 'transaction_type');
                 transactionType.settings.value = action.transaction_type;
-                transactionType.settings.selectorOptions = vm.transactionTypes;
+                transactionType.settings.selectorOptions = vm.transactionTypes || [];
 
                 var text = gridTableHelperService.getCellFromRowByKey(rowObj, 'text');
                 text.settings.value = action.text;
@@ -236,6 +239,7 @@
                 buttonPosition.settings.selectorOptions = getRangeOfNumbers(vm.event.actions.length);
 
                 vm.eventActionsGridTableData.body.push(rowObj);
+
             });
             // < assemble body rows >
         };
@@ -257,14 +261,15 @@
 
         vm.agree = function () {
             var hashTableOfButtonPositions = {};
-            var buttonPositionWithSameValue = false;
+            var buttonPositionNotValid = false;
 
             for (var i = 0; i < vm.event.actions.length; i++) {
-                var prop = vm.event.actions[i].button_position;
 
-                if (hashTableOfButtonPositions.hasOwnProperty(prop)) {
+            	var prop = vm.event.actions[i].button_position;
 
-                    buttonPositionWithSameValue = true;
+                if ((!prop && prop !== 0) || hashTableOfButtonPositions.hasOwnProperty(prop)) {
+
+					buttonPositionNotValid = true;
                     break;
 
                 } else {
@@ -275,11 +280,11 @@
 
             }
 
-            if (buttonPositionWithSameValue) {
+            if (buttonPositionNotValid) {
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     //targetEvent: $event,
                     clickOutsideToClose: false,
@@ -304,6 +309,42 @@
 
         };
 
+        const getTransactionTypes = function () {
+
+        	let ttypeList = [];
+
+        	let options = {
+				pageSize: 1000,
+				page: 1
+			}
+
+			const loadAllPages = (resolve, reject) => {
+
+        		transactionTypeService.getListLight(options).then(function (data) {
+
+					ttypeList = ttypeList.concat(data.results);
+
+					if (data.next) {
+
+						options.page = options.page + 1;
+						loadAllPages(resolve, reject);
+
+					} else {
+						resolve(ttypeList);
+					}
+
+				}).catch(error => reject(error));
+
+			};
+
+			return new Promise((resolve, reject) => {
+
+				loadAllPages(resolve, reject);
+
+			});
+
+		}
+
         vm.init = function () {
 
             vm.eventActionsGridTableDataService = new GridTableDataService();
@@ -311,17 +352,21 @@
 
             initGridTableEvents();
 
-            transactionTypeService.getListLight().then(function (data) {
+            // transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
+			getTransactionTypes().then(data => {
 
-                vm.transactionTypes = data.results;
+            	// vm.transactionTypes = data.results;
+				vm.transactionTypes = data;
 
-                formatDataForActionsGridTable();
+				formatDataForActionsGridTable();
 
-                $scope.$apply();
+				vm.eventActionsGridTableDataService.setTableData(vm.eventActionsGridTableData);
 
-            })
+				vm.readyStatus.actionsGridTable = true
 
-            vm.eventActionsGridTableDataService.setTableData(vm.eventActionsGridTableData);
+				$scope.$apply();
+
+			});
 
         };
 

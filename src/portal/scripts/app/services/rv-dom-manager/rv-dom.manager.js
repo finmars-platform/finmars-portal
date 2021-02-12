@@ -6,6 +6,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+	var metaHelper = require('../../helpers/meta.helper');
 
     var priceHistoryService = require('../../services/priceHistoryService'); // TODO this is temp service here
 
@@ -114,27 +115,36 @@
         var clickData = {};
         var rowElem = event.target.closest('.g-row');
 
-        clickData.isShiftPressed = event.shiftKey;
-        clickData.isCtrlPressed = event.ctrlKey;
+        clickData.isShiftPressed = event.shiftKey
+        clickData.isCtrlPressed = event.ctrlKey
+		clickData.target = event.target
 
         if (rowElem) {
 
-            clickData.___type = rowElem.dataset.type;
-            clickData.___id = rowElem.dataset.objectId;
-            clickData.___parentId = rowElem.dataset.parentGroupHashId;
+			if (clickData.target.classList.contains('openLinkInNewTab')) {
+
+				clickData.___type = 'hyperlink'
+
+			} else {
+
+				clickData.___type = rowElem.dataset.type;
+				clickData.___id = rowElem.dataset.objectId;
+				clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 
-            if (event.target.classList.contains('ev-fold-button')) {
-                clickData.isFoldButtonPressed = true;
-            }
+				if (event.target.classList.contains('ev-fold-button')) {
+					clickData.isFoldButtonPressed = true
+				}
 
-            if (rowElem.dataset.subtotalType) {
-                clickData.___subtotal_type = rowElem.dataset.subtotalType;
-            }
+				if (rowElem.dataset.subtotalType) {
+					clickData.___subtotal_type = rowElem.dataset.subtotalType
+				}
 
-            if (rowElem.dataset.subtotalSubtype) {
-                clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-            }
+				if (rowElem.dataset.subtotalSubtype) {
+					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype
+				}
+
+			}
 
         }
 
@@ -748,15 +758,23 @@
 
             var clickData = getClickData(event);
 
-            if (event.detail === 2) { // double click handler
+            if (clickData.___type === 'hyperlink') {
+
+            	metaHelper.openLinkInNewTab(event);
+
+			}
+
+            else if (event.detail === 2) { // double click handler
 
                 var cellElem;
 
                 // TODO make recursive get parent of g-cell
                 if (event.target.classList.contains('g-cell')) {
-                    cellElem = event.target
+                    cellElem = event.target;
+
                 } else if (event.target.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement;
+
                 } else if (event.target.parentElement.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement.parentElement;
                 }
@@ -1214,13 +1232,16 @@
 
             } else {
 
-                result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
+                result = result + '<div class="ev-dropdown-option ' + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
                     ' data-ev-dropdown-action="' + item.action + '"' +
 
                     ttype_specific_attr +
 
                     ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' + item.name + additional_text;
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">' +
+
+
+                    '<span class="'+is_disabled+'">' +item.name + additional_text+ '</span>'
 
                 if (item.items && item.items.length) {
 

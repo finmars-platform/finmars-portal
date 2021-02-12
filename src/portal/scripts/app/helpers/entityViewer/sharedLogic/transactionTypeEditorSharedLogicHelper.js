@@ -4,10 +4,11 @@
 
     let metaHelper = require('../../meta.helper');
 
-    var uiService = require('../../../services/uiService');
+    let uiService = require('../../../services/uiService');
     let gridTableEvents = require('../../../services/gridTableEvents');
 
     let GridTableHelperService = require('../../gridTableHelperService');
+    let helpExpressionsService = require('../../../services/helpExpressionsService');
 
     'use strict';
     module.exports = function (viewModel, $scope, $mdDialog) {
@@ -34,7 +35,11 @@
             {
                 "name": "Selector",
                 "id": 110
-            }
+            },
+            {
+                "name": "Button",
+                "id": 120
+            },
         ];
 
         var getValueTypes = function() {
@@ -229,30 +234,92 @@
         };
 
         // TRANSACTION VALIDATION
-        var checkFieldExprForDeletedInput = function (inputsToDelete, actionFieldValue, actionItemKey, actionNotes) {
+		var hasInputInExprs = function (inputs, expr, namesOnly) {
 
-            for (var a = 0; a < inputsToDelete.length; a++) {
+			var inputsList = [];
+			/* var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
+					var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])'; */
+			for (var i = 0; i < inputs.length; i++) {
 
-                var dInputName = inputsToDelete[a];
+				var inputName = inputs[i];
 
-                var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
-                var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])';
+				if (!namesOnly) {
+					inputName = inputs[i].name;
+				}
 
-                var dInputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
+				var inputRegExp = new RegExp('(?:^|[^A-Za-z_.])' + inputName + '(?![A-Za-z1-9_])', 'g');
 
-                if (actionFieldValue.match(dInputRegExpObj)) {
+				if (expr.match(inputRegExp)) {
 
-                    var actionFieldLocation = {
-                        action_notes: actionNotes,
-                        key: actionItemKey, // for actions errors
-                        name: actionItemKey, // for entity errors
-                        message: "The deleted input is used in the Expression."
-                    };
+					inputsList.push(inputs[i]);
 
-                    return actionFieldLocation;
+				}
 
-                }
-            }
+			}
+
+			if (inputsList.length) {
+				return inputsList;
+			}
+
+			return false;
+
+		};
+
+        var checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, location) {
+
+			var actionFieldLocation = {
+				action_notes: location,
+				key: itemKey, // for actions errors
+				name: itemKey // for entity errors
+			};
+
+			var validationResult = helpExpressionsService.validateExpressionOnFrontend(
+				{expression: fieldValue},
+				viewModel.expressionData
+			);
+
+			if (validationResult.status) {
+
+				var dInputsNames = hasInputInExprs(inputsToDelete, fieldValue, true);
+
+				if (dInputsNames) {
+
+					var dInputsNames = dInputsNames.join(", ");
+					var stringStart = "The deleted input";
+
+					if (dInputsNames.length > 1) {
+						stringStart += "s";
+					}
+
+					actionFieldLocation.message = stringStart + " " + dInputsNames + " is used in the Expression."
+
+				}
+
+				else {
+
+					switch (validationResult.status) {
+						case 'error':
+							actionFieldLocation.message = 'Invalid expression. ' + validationResult.result;
+							break;
+
+						case 'functions-error':
+							actionFieldLocation.message = 'Not all variables are identified expression. ' + validationResult.result;
+							break;
+
+						case 'inputs-error':
+							actionFieldLocation.message = 'Not all variables are identified inputs. ' + validationResult.result;
+							break;
+
+						case 'bracket-error':
+							actionFieldLocation.message = 'Mismatch in the opening and closing braces. ' + validationResult.result;
+							break;
+					}
+
+				}
+
+				return actionFieldLocation;
+
+			}
 
         };
 
@@ -279,17 +346,18 @@
 
                         actionItemKeys.forEach(function (actionItemKey) {
 
+							var fieldWithInvalidExpr;
+
                             if (actionItemKey === 'notes') {
 
                                 if (actionItem[actionItemKey]) {
-                                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(viewModel.inputsToDelete,
-                                                                                             actionItem[actionItemKey],
-                                                                                             actionItemKey,
-                                                                                             action.action_notes);
+                                    fieldWithInvalidExpr = checkFieldExpr(
+                                    	viewModel.inputsToDelete,
+										actionItem[actionItemKey],
+										actionItemKey,
+										action.action_notes
+									);
 
-                                    if (fieldWithInvalidExpr) {
-                                        result.push(fieldWithInvalidExpr);
-                                    }
                                 }
 
                             } else {
@@ -342,20 +410,20 @@
 
                                     } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // deleted inputs use
 
-                                        var fieldWithInvalidExpr = checkFieldExprForDeletedInput(viewModel.inputsToDelete,
-                                                                                                 actionItem[actionItemKey],
-                                                                                                 actionItemKey,
-                                                                                                 action.action_notes);
-
-                                        if (fieldWithInvalidExpr) {
-                                            result.push(fieldWithInvalidExpr);
-                                        }
+                                        fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
+                                                                                             actionItem[actionItemKey],
+                                                                                             actionItemKey,
+                                                                                             action.action_notes);
 
                                     }
 
                                 }
 
                             }
+
+							if (fieldWithInvalidExpr) {
+								result.push(fieldWithInvalidExpr);
+							}
 
                         })
 
@@ -384,14 +452,15 @@
 
             entityKeys.forEach(function (entityKey) {
 
-                if (entityKey.indexOf('user_text_') === 0 ||
+                if ((entityKey.indexOf('user_text_') === 0 ||
                     entityKey.indexOf('user_number_') === 0 ||
-                    entityKey.indexOf('user_date_') === 0) {
+                    entityKey.indexOf('user_date_') === 0) &&
+					entity[entityKey]) {
 
-                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(inputsToDelete,
-                                                                             entity[entityKey],
-                                                                             entityKey,
-                                                                             'FIELDS');
+                    var fieldWithInvalidExpr = checkFieldExpr(inputsToDelete,
+                                                              entity[entityKey],
+                                                              entityKey,
+                                                              'FIELDS');
 
                     if (fieldWithInvalidExpr) {
                         result.push(fieldWithInvalidExpr);
@@ -456,6 +525,60 @@
             return result;
 
         };
+
+        var validateInputs = function (inputs) {
+
+        	var errors = [];
+
+        	inputs.forEach(function (input) {
+
+				var location;
+
+        		if (input.value_type !== 100 && input.value) { // Default value
+
+					var defaultExprError;
+
+					var inputsList = hasInputInExprs(viewModel.entity.inputs, input.value);
+
+					if (inputsList.length) {
+
+						defaultExprError = {
+							action_notes: 'INPUTS: ' + input.name,
+							key: 'Default value',
+							name: 'Default value'
+						}
+
+						defaultExprError.message = "Using Inputs in expression for the default value is forbidden. Please use the formula which you are using in the Input (to which you are referring) instead."
+
+					} else {
+
+						location = 'INPUTS: ' + input.name;
+						defaultExprError = checkFieldExpr(viewModel.inputsToDelete, input.value, 'Default value', location);
+
+					}
+
+					if (defaultExprError) {
+						errors.push(defaultExprError);
+					}
+
+				}
+
+				if (input.value_expr) {
+
+					location = 'INPUTS: ' + input.name;
+					var inputExprError = checkFieldExpr(viewModel.inputsToDelete, input.value_expr, 'Input expr', location);
+
+					if (inputExprError) {
+						errors.push(inputExprError);
+					}
+
+				}
+
+			});
+
+        	return errors;
+
+		};
         // < TRANSACTION VALIDATION >
 
 
@@ -611,7 +734,7 @@
                     if (defaultValue.cellType === 'selector') {
 
                         defaultValue.cellType = 'expression'
-                        defaultValue.settings = {value: ''}
+                        defaultValue.settings = {value: '', exprData: viewModel.expressionData}
 
                     }
 
@@ -652,7 +775,7 @@
                     if (defaultValue.cellType === 'selector') {
 
                         defaultValue.cellType = 'expression'
-                        defaultValue.settings = {value: ''}
+                        defaultValue.settings = {value: '', exprData: viewModel.expressionData}
 
                     }
 
@@ -700,7 +823,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 preserveScope: true,
                 autoWrap: true,
@@ -804,6 +927,12 @@
                     defaultValue.settings.value = res.data.value;
                     inputCalcExpression.settings.value = res.data.value_expr;
                     linkedInputs.settings.value = res.data.linked_inputs_names;
+
+                    if (valueType.settings.value === 120) { // Button
+
+                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+
+                    }
 
                     changeCellsBasedOnValueType(newRow);
                     viewModel.inputsGridTableData.body.unshift(newRow);
@@ -950,6 +1079,7 @@
                         cellType: 'expression',
                         settings: {
                             value: '',
+							exprData: null,
                             closeOnMouseOut: false
                         },
                         styles: {
@@ -1057,11 +1187,13 @@
                 rowObj.columns[5].settings.value = input.context_property
                 // default_value
                 rowObj.columns[6].settings.value = input.value
+				rowObj.columns[6].settings.exprData = viewModel.expressionData
 
-                changeCellsBasedOnValueType(rowObj);
+				changeCellsBasedOnValueType(rowObj);
 
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
+				rowObj.columns[7].settings.exprData = viewModel.expressionData;
                 // linked_inputs_names
 				rowObj.columns[8].settings.value = []
 
@@ -1083,6 +1215,12 @@
 						return linkedInput;
 
 					});
+
+					if (input.value_type === 120) { // Button
+
+                        rowObj.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+
+                    }
 
 				}
 
@@ -1121,6 +1259,7 @@
             resolveRelation: resolveRelation,
             checkActionsForEmptyFields: checkActionsForEmptyFields,
             checkEntityForEmptyFields: checkEntityForEmptyFields,
+			validateInputs: validateInputs,
 
             initGridTableEvents: initGridTableEvents,
             createDataForInputsTableGrid: createDataForInputsTableGrid,

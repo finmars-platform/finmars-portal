@@ -96,10 +96,14 @@
 
         </div>
 
+        <div ng-if="vm.readyStatus.actionsGridTable">
+            <grid-table data-gt-data-service="vm.eventActionsGridTableDataService"
+                        data-gt-event-service="vm.eventActionsGridTableEventService"></grid-table>
+        </div>
 
-        <grid-table data-gt-data-service="vm.eventActionsGridTableDataService"
-                    data-gt-event-service="vm.eventActionsGridTableEventService">
-        </grid-table>
+        <div ng-if="!vm.readyStatus.actionsGridTable" class="flex-row flex-c-center width-100" style="height: 100px;">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
 
 <!--        <grid-table data-gt-data-service="vm.schedulesGridTableDataService"-->
 <!--                    data-gt-event-service="vm.schedulesGridTableEventService"></grid-table>-->

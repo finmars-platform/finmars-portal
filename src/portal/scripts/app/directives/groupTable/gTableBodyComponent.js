@@ -110,7 +110,8 @@
                     rvDomManager.calculateScroll(elements, scope.evDataService);
 
                     window.requestAnimationFrame(function (){
-                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService)
+                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+						cellContentOverflow();
                     });
 
                 }
@@ -235,7 +236,6 @@
                 function updateTableContent() {
                     if (isReport) {
                         renderReportViewer();
-                        cellContentOverflow();
                     } else {
                         renderEntityViewer();
                     }
@@ -532,7 +532,9 @@
 
                         }
 
-                    }, 500);
+						scope.$apply();
+
+					}, 500);
 
                     toggleBookmarksBtn.addEventListener('click', function () {
 
@@ -557,16 +559,16 @@
 
                 init();
 
-                // $(window).on('resize', function () { // TODO what?
-                //
-                //     if (isReport) {
-                //         rvDomManager.calculateScroll(elements, scope.evDataService);
-                //     } else {
-                //         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                //         evDomManager.calculateVirtualStep(elements, scope.evDataService);
-                //     }
-                //
-                // });
+                /* $(window).on('resize', function () { // TODO what?
+
+                    if (isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                        evDomManager.calculateVirtualStep(elements, scope.evDataService);
+                    }
+
+                }); */
 
                 scope.$on('$destroy', function () {
                     window.removeEventListener('resize', onWindowResize);
