@@ -97,27 +97,28 @@
 	};
 
 	var fillMissingFieldsByDefaultValues = async function (entity, userInputs, ttype) {
-		var getTransactionUserInputsNotPlacedInTheForm = function (userInputs, ttype) {
-			const formFieldsNames = userInputs.map(input => input.name);
-			return ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
-		};
 
-		const userInputsNotPlacedInTheForm = getTransactionUserInputsNotPlacedInTheForm(userInputs, ttype);
-		console.log('#64 userInputsNotPlacedInTheForm', userInputsNotPlacedInTheForm)
+		const formFieldsNames = userInputs.map(input => input.name);
+		const userInputsNotPlacedInTheForm = ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
 
-		const missingFieldsPromises =  userInputsNotPlacedInTheForm
-			.filter(input => input.value !== null)
-			.map(input => {
+		const missingFieldsPromises =  [];
+
+		userInputsNotPlacedInTheForm
+			.filter(input => !!input.value) // take inputs if they have default value
+			.forEach(input => {
+
 				if (input.value_type === 20) { // Expression
-					return expressionService.getResultOfExpression({'expression': input.value})
-						.then(data => entity[input.name] = data.result)
+
+					const expressionPromise = expressionService.getResultOfExpression({'expression': input.value})
+						.then(data => entity[input.name] = data.result) // set property after expression resolved
+
+					missingFieldsPromises.push(expressionPromise);
+
 				}
 
-				entity[input.name] = input.value;
-				return;
+				entity[input.name] = input.value; // set property as default value
 			});
 
-		console.log('#64 missingFieldsPromises', missingFieldsPromises)
 		await Promise.allSettled(missingFieldsPromises);
 
 	};

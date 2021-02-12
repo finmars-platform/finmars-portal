@@ -1141,10 +1141,7 @@
                 vm.processing = true;
 
 				// Victor 2020.12.01 #64
-				transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType).then(res => {
-				    console.log('#64 fillMissingFieldsByDefaultValues', res);
-                });
-				// await Promise.allSettled(missingFieldsPromises);
+				await transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
 				// <Victor 2020.12.01 #64>
 
             	new Promise(function (resolve, reject) {
