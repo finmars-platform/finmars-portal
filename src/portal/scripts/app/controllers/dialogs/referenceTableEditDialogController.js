@@ -111,7 +111,7 @@
                     var rowToInsert = vm.referenceTable.rows[draggedRowOrder];
                     vm.referenceTable.rows.splice(draggedRowOrder, 1);
 
-                    if (siblingRowOrder) {
+                    if (siblingRowOrder !== null) {
 
                         for (var i = 0; i < vm.referenceTable.rows.length; i++) {
                             if (vm.referenceTable.rows[i].order === siblingRowOrder) {
@@ -129,6 +129,8 @@
                     for (var i = 0; i < vm.referenceTable.rows.length; i++) {
                         vm.referenceTable.rows[i].order = i;
                     }
+
+                    $scope.$apply();
 
                 });
 
