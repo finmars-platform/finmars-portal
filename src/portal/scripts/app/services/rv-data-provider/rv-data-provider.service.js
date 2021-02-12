@@ -136,7 +136,9 @@
 
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
-        delete reportOptions.items;
+
+		//<editor-fold desc="Delete report options items">
+		delete reportOptions.items;
         delete reportOptions.custom_fields;
         delete reportOptions.custom_fields_object;
         delete reportOptions.item_complex_transactions;
@@ -152,6 +154,7 @@
         delete reportOptions.item_currency_fx_rates;
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts;
+		//</editor-fold>
 
         reportOptions.task_id = null;
 
@@ -166,6 +169,7 @@
         requestData(entityViewerDataService, entityViewerEventService).then(function (data) {
 
             var reportOptions = entityViewerDataService.getReportOptions();
+            var entityType = entityViewerDataService.getEntityType();
 
             reportOptions = Object.assign({}, reportOptions);
 
@@ -175,7 +179,7 @@
 
             if (reportOptions.items && reportOptions.items.length) {
 
-                reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
+                reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
                 reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
 
