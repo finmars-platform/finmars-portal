@@ -469,6 +469,9 @@
                 case 'app.processes':
                     name = 'SETTINGS > ACTIVE PROCESSES';
                     break;
+                case 'app.schedules':
+                    name = 'SETTINGS > PRICING > SCHEDULES';
+                    break;
             }
         }
 
