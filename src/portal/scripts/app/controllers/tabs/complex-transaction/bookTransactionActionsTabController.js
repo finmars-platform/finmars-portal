@@ -137,7 +137,7 @@
                     vm.transactionActions.notes.push(action.instrument.notes);
 
                     if (action.instrument.price_download_scheme_object !== null) {
-                        vm.transactionActions.price_download_scheme.push(action.instrument.price_download_scheme_object.scheme_name);
+                        vm.transactionActions.price_download_scheme.push(action.instrument.price_download_scheme_object.user_code);
                     } else {
                         if (action.instrument.price_download_scheme_input !== null) {
                             vm.transactionActions.price_download_scheme.push(action.instrument.price_download_scheme_input);

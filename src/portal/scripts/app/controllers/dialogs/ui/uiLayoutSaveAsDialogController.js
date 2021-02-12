@@ -3,46 +3,42 @@
  */
 (function () {
 
-  'use strict';
+	'use strict';
 
-  var logService = require('../../../../../../core/services/logService');
+	var uiService = require('../../../services/uiService');
 
-  var uiService = require('../../../services/uiService');
+	module.exports = function ($scope, $mdDialog, options) {
 
-  module.exports = function ($scope, $mdDialog, options) {
+		var vm = this;
 
-    logService.controller('UiLayoutSaveAsDialogController', 'initialized');
+		vm.complexSaveAsLayoutDialog = false;
+		vm.userCodeIsTouched = false;
+		vm.userCodeError = false;
 
-    var vm = this;
+		var layoutsUserCodes = ["New Layout"];
 
-    vm.complexSaveAsLayoutDialog = false;
-    vm.userCodeIsTouched = false;
-    vm.userCodeError = false;
+		if (options) {
 
-    var layoutsUserCodes = ["New Layout"];
+		  if (options.complexSaveAsLayoutDialog) {
 
-    if (options) {
+			vm.complexSaveAsLayoutDialog = true;
+			vm.entityType = options.complexSaveAsLayoutDialog.entityType;
 
-      if (options.complexSaveAsLayoutDialog) {
+			uiService.getListLayout(vm.entityType).then(function (data) {
 
-        vm.complexSaveAsLayoutDialog = true;
-        vm.entityType = options.complexSaveAsLayoutDialog.entityType;
+			  var layouts = data.results;
 
-        uiService.getListLayout(vm.entityType).then(function (data) {
+			  layouts.map(function (layout) {
+				layoutsUserCodes.push(layout.user_code);
+			  });
 
-          var layouts = data.results;
+			});
 
-          layouts.map(function (layout) {
-            layoutsUserCodes.push(layout.user_code);
-          });
+		  }
 
-        });
+		  if (options.layoutName) {
 
-      }
-
-      if (options.layoutName) {
-
-        vm.layoutName = options.layoutName;
+			vm.layoutName = options.layoutName;
 
       } else {
 
@@ -50,11 +46,11 @@
 
       }
 
-      if (options.layoutUserCode) {
-        vm.layoutUserCode = options.layoutUserCode;
-      }
+		  if (options.layoutUserCode) {
+			vm.layoutUserCode = options.layoutUserCode;
+		  }
 
-    }
+		}
 
     vm.cancel = function () {
       $mdDialog.hide({ status: 'disagree' });
