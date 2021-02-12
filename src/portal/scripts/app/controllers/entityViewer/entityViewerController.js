@@ -643,7 +643,7 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
 
-                    evDataProviderService.sortObjects(vm.entityViewerDataService, vm.entityViewerEventService);
+                    evDataProviderService.sortObjects(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
 
                 });
 
