@@ -173,6 +173,9 @@
                             vm.ui = data.book_transaction_layout;
                         } else {
                             vm.uiIsDefault = true;
+                            vm.ui = {
+                                data: {}
+                            }
                             // vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
                         }
 
@@ -187,7 +190,7 @@
 
                     console.log('vm.getLayout vm.layoutId ', vm.layoutId)
 
-                    if (vm.layoutId){
+                    if (vm.layoutId) {
 
                         uiService.getEditLayout(vm.layoutId).then(function (data) {
 
@@ -201,23 +204,40 @@
 
                     } else {
 
-                        uiService.getDefaultEditLayout(vm.entityType).then(function (data) {
+                        if (vm.isCreateNew) {
 
-                            if (data.results.length) {
-                                vm.ui = data.results[0];
-                            } else {
-                                vm.uiIsDefault = true;
-                                vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
+                            vm.uiIsDefault = true;
+                            vm.ui = {
+                                data: {}
                             }
 
                             setDataConstructorLayout();
 
                             resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
 
-                        });
+                        } else {
+
+
+                            uiService.getDefaultEditLayout(vm.entityType).then(function (data) {
+
+                                if (data.results.length) {
+                                    vm.ui = data.results[0];
+                                } else {
+                                    vm.uiIsDefault = true;
+                                    vm.ui = {
+                                        data: {}
+                                    }
+                                }
+
+                                setDataConstructorLayout();
+
+                                resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+
+                            });
+
+                        }
 
                     }
-
 
 
                 }
@@ -1033,7 +1053,7 @@
                                 'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
                                 'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
                                 'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
-                                'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6','user_number_7',
+                                'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
                                 'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
                                 'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
                                 'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
@@ -1378,7 +1398,7 @@
                 });
 
                 drake.on('drag', function () {
-					scrollHelper.enableDnDWheelScroll();
+                    scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('out', function (elem, container, source) {
@@ -1431,7 +1451,7 @@
 
                 drake.on('dragend', function (el) {
 
-					scrollHelper.disableDnDWheelScroll();
+                    scrollHelper.disableDnDWheelScroll();
 
                     $scope.$apply();
                     drake.remove();
@@ -1589,6 +1609,10 @@
                 vm.layoutId = data.layoutId;
             }
 
+            if (data.isCreateNew) {
+                vm.isCreateNew = data.isCreateNew
+            }
+
             vm.getLayout().then(function () {
 
                 var palettesPromise = new Promise(function (res, rej) {
@@ -1625,6 +1649,7 @@
                 });
 
             });
+
 
         };
 
