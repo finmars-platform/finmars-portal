@@ -97,7 +97,11 @@
 
         };
 
-        return models[contentType];
+        if (models[contentType]) {
+            return models[contentType]
+        }
+
+        return [];
     };
 
 

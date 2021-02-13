@@ -1,0 +1,71 @@
+<div>
+
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>
+                Priority
+            </th>
+
+            <th>
+                Primary Forms User codes
+            </th>
+
+            <th>
+                &nbsp;
+            </th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        <tr data-ng-repeat="item in vm.instrumentTypeLayouts track by $index">
+
+            <td>
+                {{$index + 1}}
+            </td>
+
+            <td>
+                {{item}}
+            </td>
+
+            <td>
+                <md-button class="md-raised md-primary" data-ng-class="{'disabled-btn': $index - 1 < 0}" data-ng-click="vm.instrumentTypeMoveLayoutUp($event, item)">
+                    Up
+                </md-button>
+                <md-button class="md-raised md-primary" data-ng-class="{'disabled-btn': $index + 1 >= vm.instrumentTypeLayouts.length}" data-ng-click="vm.instrumentTypeMoveLayoutDown($event, item)">
+                    Down
+                </md-button>
+                <md-button class="md-raised md-primary" data-ng-click="vm.instrumentTypeDeleteLayout($event, item)">
+                    Delete
+                </md-button>
+            </td>
+
+
+        </tr>
+
+        </tbody>
+
+
+    </table>
+
+    <div layout="row" class="p-t-16">
+
+        <md-input-container>
+            <label>Form User Code</label>
+            <input type="text" data-ng-model="vm.instrumentTypeNewLayoutUserCode">
+        </md-input-container>
+
+        <md-button class="md-raised md-primary" data-ng-click="vm.instrumentTypeMoveAddLayout($event)" data-ng-class="{'disabled-btn': !vm.instrumentTypeNewLayoutUserCode}">
+            Add
+        </md-button>
+    </div>
+
+
+</div>

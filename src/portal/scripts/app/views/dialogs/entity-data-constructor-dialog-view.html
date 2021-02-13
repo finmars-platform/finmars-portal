@@ -97,6 +97,34 @@
                         <!-- CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR -->
 
                         <div>
+
+
+
+                        </div>
+
+                        <div class="p-t-16" layout="row">
+
+                            <md-input-container class="md-block">
+                                <label>User Code</label>
+                                <input aria-label="scheme user code" type="text" data-ng-model="vm.ui.user_code">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Name</label>
+                                <input aria-label="scheme name" type="text" data-ng-model="vm.ui.name">
+                            </md-input-container>
+
+                            <div>
+                                <md-checkbox data-ng-model="vm.ui.is_default"
+                                             aria-label="checkbox">
+                                    Is default
+                                </md-checkbox>
+                            </div>
+
+
+                        </div>
+
+                        <div>
                             <md-button class="md-raised"
                                        data-ng-click="vm.openTabsEditor($event)"
                                        data-ng-disabled="!vm.tabs || vm.tabs.length < 2">Change order of tabs</md-button>
@@ -211,7 +239,7 @@
 
             <div ng-if="!vm.readyStatus.constructor">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-                    <md-progress-circular md-mode="indeterminate" md-diameter="120"></md-progress-circular>
+                    <progress-circular diameter="100"></progress-circular>
                 </div>
             </div>
         </div>

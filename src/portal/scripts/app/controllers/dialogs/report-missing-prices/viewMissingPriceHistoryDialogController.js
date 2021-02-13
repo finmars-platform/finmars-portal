@@ -27,7 +27,7 @@
                 item.instrument_object.pricing_policies.forEach(function (policy) {
 
                     if (policy.pricing_policy === vm.reportOptions.pricing_policy) {
-                        item.pricing_scheme_name = policy.pricing_scheme_object.name;
+                        item.pricing_user_code = policy.pricing_scheme_object.name;
                         item.pricing_scheme = policy.pricing_scheme;
                     }
 

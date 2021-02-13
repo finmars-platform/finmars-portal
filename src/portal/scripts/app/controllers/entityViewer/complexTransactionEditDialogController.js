@@ -616,24 +616,18 @@
 
         vm.recalculate = function (paramsObj) {
 
-			clearTimeout(recalculateTimeoutID);
-
             var inputs = paramsObj.inputs;
 			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
 
-				recalculateTimeoutID = setTimeout(() => {
+				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
-            		var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+				book.id = vm.entityId;
+				book.complex_transaction = vm.entity;
 
-					book.id = vm.entityId;
-					book.complex_transaction = vm.entity;
-
-					var recalcProm = complexTransactionService.recalculateComplexTransaction(book.id, book);
-					sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
-
-				}, 1200);
+				var recalcProm = complexTransactionService.recalculateComplexTransaction(book.id, book);
+				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
 
             }
 
@@ -1277,9 +1271,11 @@
                                         // TODO refactor here
                                         // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
 
-                                        res.uniqueness_reaction = 2;
+                                        result.uniqueness_reaction = 2;
 
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                        vm.processing = true;
+
+                                        transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
                                             vm.processing = false;
 
@@ -1296,9 +1292,11 @@
                                         // TODO refactor here
                                         //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
 
-                                        res.uniqueness_reaction = 3;
+                                        result.uniqueness_reaction = 3;
 
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                        vm.processing = true;
+
+                                        transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
                                             vm.processing = false;
 

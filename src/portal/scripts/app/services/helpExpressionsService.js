@@ -120,10 +120,16 @@
 
         return expressionsList
             .filter(function (item) {
-                return item.func.indexOf('(') !== -1;
+                return item.func.includes('(') || (item.validation_data && item.validation_data.type === "function");
             })
             .map(function (item) {
-                return item.func.split('(')[0]
+
+            	if (item.validation_data) {
+					return item.validation_data.key_words[0];
+				}
+
+                return item.func.split('(')[0];
+
             });
 
     }
@@ -186,7 +192,7 @@
 
             data.functions.forEach(function (funcGroup) {
 
-                funcGroup.map(function (item) {
+                funcGroup.forEach(function (item) {
 
                     if (item.func.indexOf('[') !== -1) {
 
@@ -250,16 +256,18 @@
 
         var result = false;
         var count = 0;
+        var functionName = '';
 
         for (i = currentIndex; i < expression.length; i = i + 1) {
 
             if (expression[i].match(new RegExp(/^[a-zA-Z0-9_]*$/))) {
 
+				functionName += expression[i];
                 count = count + 1;
 
             } else {
 
-                if (expression[i] === '(') {
+                if (functionName && expression[i] === '(') {
                     result = true
                 }
 
@@ -282,8 +290,19 @@
         for (; index < expression.length; index = index + 1) {
 
             if (/^\d+$/.test(expression[index])) {
-                token.value = token.value + expression[index]
-            } else {
+
+            	token.value = token.value + expression[index]
+
+            } else if ( // check for dot in float number
+            	expression[index] === '.' &&
+				/^\d+$/.test(expression[index + 1]) &&
+				token.type === 'number'
+			) {
+
+            	token.type = 'float_number'
+            	token.value = token.value + expression[index]
+
+			} else {
                 break;
             }
 
@@ -292,6 +311,30 @@
         return token;
 
     }
+
+    var eatFloatNumber = function (expression, index) {
+
+    	var token = {
+			value: '',
+			type: 'float_number'
+		};
+
+
+    	index++; // skipping '.'
+
+		for (; index < expression.length; index = index + 1) {
+
+			if (/^\d+$/.test(expression[index])) {
+				token.value = token.value + expression[index]
+			} else {
+				break;
+			}
+
+		}
+
+		return token;
+
+	}
 
     var eatInput = function (expression, index) {
 
@@ -446,12 +489,14 @@
 
         var result = '';
         var status;
+        var faultyParts = [];
 
         var functionWords = getFunctionWords(expressionsList);
         var propertiesWords = getPropertiesWords(expressionsList);
         var inputWords = getInputWords(data);
 
-        var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False']
+        var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False', 'format']; // TODO remove 'format' if allowed to make validation of function arguments
+        var contextVariablesWords = functionsItemsService.contextVariablesWords;
 
         var processing = true;
         var currentIndex = 0;
@@ -488,15 +533,21 @@
                 token = eatFunction(expression, currentIndex);
                 currentIndex = currentIndex + token.value.length + 1; // for bracket
             } else if (expression[currentIndex] === '.') {
-                token = eatProperty(expression, currentIndex);
-                currentIndex = currentIndex + token.value.length + 1; // for dot
+				token = eatProperty(expression, currentIndex);
+				currentIndex = currentIndex + token.value.length + 1; // for dot
             } else if (expression[currentIndex] === ')') {
                 token = {
                     type: 'close_bracket',
                     value: ')'
                 };
                 currentIndex = currentIndex + token.value.length;
-            } else if (expression[currentIndex] === ']') {
+            } else if (expression[currentIndex] === '(') {
+				token = {
+					type: 'open_bracket',
+					value: '('
+				};
+				currentIndex = currentIndex + token.value.length;
+			} else if (expression[currentIndex] === ']') {
                 token = {
                     type: 'close_square_bracket',
                     value: ']'
@@ -516,7 +567,6 @@
                 currentIndex = currentIndex + token.value.length;
             }
 
-
             if (token) {
 
                 if (token.type === 'property') {
@@ -532,21 +582,24 @@
 
                         result = result + '.' + '<span class="eb-highlight-error">' + token.value + '</span>';
                         status = 'error';
+						faultyParts.push(token.value);
 
                     }
 
                 } else if (token.type === 'input') {
 
-                    if (inputWords.indexOf(token.value) !== -1) {
+                    if (inputWords.includes(token.value)) {
 
                         result = result + '<span class="eb-highlight-input">' + token.value + '</span>';
 
                     } else {
 
-                        if (reservedWords.indexOf(token.value) === -1) {
+                        if (!reservedWords.includes(token.value) &&
+							!contextVariablesWords.includes(token.value)) {
 
                             result = result + '<span class="eb-highlight-error">' + token.value + '</span>';
                             status = 'inputs-error';
+							faultyParts.push(token.value);
 
                         } else {
                             result = result + token.value
@@ -561,9 +614,11 @@
                         result = result + '<span class="eb-highlight-func">' + token.value + '</span>' + '(';
 
                     } else {
-                        result = result + '<span class="eb-highlight-error">' + token.value + '</span>' + '(';
 
-                        status = 'inputs-error';
+                    	result = result + '<span class="eb-highlight-error">' + token.value + '</span>' + '(';
+                        status = 'functions-error';
+						faultyParts.push(token.value);
+
                     }
 
                 } else {
@@ -601,6 +656,8 @@
             result = insert(result, parenthesisStatus.errorIndex, '<span class="eb-error-bracket">')
 
             status = 'bracket-error';
+			var faultyPart = expression.substr(squareBracketsStatus.errorIndex, 1);
+			faultyParts.push(faultyPart);
 
         } else {
 
@@ -610,6 +667,8 @@
                 result = insert(result, squareBracketsStatus.errorIndex, '<span class="eb-error-bracket">')
 
                 status = 'bracket-error';
+                var faultyPart = expression.substr(squareBracketsStatus.errorIndex, 1);
+				faultyParts.push(faultyPart);
 
             }
         }
@@ -625,6 +684,10 @@
             status: status,
             result: result
         }
+
+        if (faultyParts.length) {
+			resultObj.faultyPart = faultyParts.pop();
+		}
 
         return resultObj;
 
@@ -658,13 +721,23 @@
         });
 
     }
+
+    var validateExpressionOnFrontend = function (exprItem, data) {
+
+    	var expressionsList = getFunctionsItems();
+		expressionsList = filterExpressions(expressionsList, data);
+
+		return getHtmlExpression(exprItem.expression, data, expressionsList);
+
+	}
     
     module.exports = {
         getFunctionsItems: getFunctionsItems,
         getFunctionsGroups: getFunctionsGroups,
 
         filterExpressions: filterExpressions,
-        validateExpression: validateExpression
+        validateExpression: validateExpression,
+		validateExpressionOnFrontend: validateExpressionOnFrontend
     }
 
 }());

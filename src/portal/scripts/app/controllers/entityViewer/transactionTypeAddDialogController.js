@@ -753,6 +753,9 @@
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
 
                 var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(vm.entity.actions);
+				var inputsErrors = ttypeEditorSlHelper.validateInputs(vm.entity.inputs);
+				actionsErrors = actionsErrors.concat(inputsErrors);
+
                 var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(vm.entity);
 
                 console.log('vm.entity before save', vm.entity);
@@ -1572,7 +1575,7 @@
 
             var nameProperty = 'name';
             if (fieldName === 'price_download_scheme') {
-                nameProperty = 'scheme_name';
+                nameProperty = 'user_code';
             }
 
             var defaultValueKey = '';
