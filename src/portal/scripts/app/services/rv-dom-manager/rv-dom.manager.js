@@ -1279,7 +1279,7 @@
                     ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
                 } else {
                     additional_text = ' (Not Found)';
-                    is_disabled = 'disabled-btn';
+                    is_disabled = 'disabled-context-menu';
                 }
 
             }

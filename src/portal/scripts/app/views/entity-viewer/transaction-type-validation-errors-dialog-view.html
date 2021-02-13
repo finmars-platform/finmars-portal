@@ -17,7 +17,7 @@
                     <table>
                         <thead>
                         <tr>
-                            <th>Location (Tab or Action Name)</th>
+                            <th>Location (Tab, Input or Action Name)</th>
                             <th>Field name</th>
                             <th>Message</th>
                         </tr>
@@ -32,8 +32,8 @@
                                 {{item.name}}
                             </td>
                             <td>
-                                <span data-ng-if="!item.message">Value must be not null.</span>
-                                <span data-ng-if="item.message" data-ng-bind="item.message"></span>
+                                <span ng-if="!item.message">Value must be not null.</span>
+                                <div ng-if="item.message" ng-bind-html="item.message"></div>
                             </td>
                         </tr>
 
@@ -46,7 +46,7 @@
                             </td>
                             <td>
                                 <span data-ng-if="!item.message">Value must be not null.</span>
-                                <span data-ng-if="item.message" data-ng-bind="item.message"></span>
+                                <div ng-if="item.message" ng-bind-html="item.message"></div>
                             </td>
                         </tr>
 

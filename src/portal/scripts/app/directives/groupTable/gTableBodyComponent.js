@@ -586,9 +586,10 @@
 
                         }
 
+                        // scope.$apply();
 						scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
-                    }, 500);
+					}, 500);
 
                     toggleBookmarksBtn.addEventListener('click', function () {
 
@@ -613,16 +614,16 @@
 
                 init();
 
-                // $(window).on('resize', function () { // TODO what?
-                //
-                //     if (isReport) {
-                //         rvDomManager.calculateScroll(elements, scope.evDataService);
-                //     } else {
-                //         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                //         evDomManager.calculateVirtualStep(elements, scope.evDataService);
-                //     }
-                //
-                // });
+                /* $(window).on('resize', function () { // TODO what?
+
+                    if (isReport) {
+                        rvDomManager.calculateScroll(elements, scope.evDataService);
+                    } else {
+                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
+                        evDomManager.calculateVirtualStep(elements, scope.evDataService);
+                    }
+
+                }); */
 
                 scope.$on('$destroy', function () {
                     window.removeEventListener('resize', onWindowResize);

@@ -238,6 +238,10 @@
                     {
                         label: 'Pricing',
                         templateUrl: 'views/tabs/instrument-type/pricing-view.html'
+                    },
+                    {
+                        label: 'Layout Settings',
+                        templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }
                 ];
             case 'complex-transaction':

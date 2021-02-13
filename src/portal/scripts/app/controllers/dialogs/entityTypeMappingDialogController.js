@@ -97,8 +97,8 @@
 
         vm.bindEntityName = function (item) {
 
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
+            if (item.hasOwnProperty('user_code')) {
+                return item.user_code;
             }
 
             if (item.hasOwnProperty('user_code')) {

@@ -87,11 +87,11 @@
                 content_type: 'currencies.currency'
             };
 
-            if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
+            if (item.hasOwnProperty('___price_download_scheme__user_code')) {
 
                 options['item'] = item;
-                options['code'] = item['___price_download_scheme__scheme_name'];
-                options['code_type'] = 'scheme_name';
+                options['code'] = item['___price_download_scheme__user_code'];
+                options['code_type'] = 'user_code';
                 options['entity'] = 'price-download-scheme';
                 options['item_key'] = 'price_download_scheme';
 
@@ -99,11 +99,11 @@
 
             }
 
-            if (item.hasOwnProperty('___daily_pricing_model__system_code')) {
+            if (item.hasOwnProperty('___daily_pricing_model__user_code')) {
 
                 options['item'] = item;
-                options['code'] = item['___daily_pricing_model__system_code'];
-                options['code_type'] = 'system_code';
+                options['code'] = item['___daily_pricing_model__user_code'];
+                options['code_type'] = 'user_code';
                 options['entity'] = 'daily-pricing-model';
                 options['item_key'] = 'daily_pricing_model';
 
@@ -185,11 +185,11 @@
                 content_type: 'integrations.instrumentdownloadscheme'
             };
 
-            if (item.hasOwnProperty('___price_download_scheme__scheme_name')) {
+            if (item.hasOwnProperty('___price_download_scheme__user_code')) {
 
                 options['item'] = item;
-                options['code'] = item['___price_download_scheme__scheme_name'];
-                options['code_type'] = 'scheme_name';
+                options['code'] = item['___price_download_scheme__user_code'];
+                options['code_type'] = 'user_code';
                 options['entity'] = 'price-download-scheme';
                 options['item_key'] = 'price_download_scheme';
 
@@ -224,11 +224,11 @@
 
                 if (actionItem.csv_import_scheme) {
 
-                    if (actionItem.csv_import_scheme.hasOwnProperty('___csv_import_scheme__scheme_name')) {
+                    if (actionItem.csv_import_scheme.hasOwnProperty('___csv_import_scheme__user_code')) {
 
                         options['item'] = actionItem.csv_import_scheme;
-                        options['code'] = actionItem.csv_import_scheme['___csv_import_scheme__scheme_name'];
-                        options['code_type'] = 'scheme_name';
+                        options['code'] = actionItem.csv_import_scheme['___csv_import_scheme__user_code'];
+                        options['code_type'] = 'user_code';
                         options['entity'] = 'csv-import-scheme';
                         options['item_key'] = 'csv_import_scheme';
 
@@ -240,11 +240,11 @@
 
                 if (actionItem.complex_transaction_import_scheme) {
 
-                    if (actionItem.complex_transaction_import_scheme.hasOwnProperty('___complex_transaction_import_scheme__scheme_name')) {
+                    if (actionItem.complex_transaction_import_scheme.hasOwnProperty('___complex_transaction_import_scheme__user_code')) {
 
                         options['item'] = actionItem.complex_transaction_import_scheme;
-                        options['code'] = actionItem.complex_transaction_import_scheme['___complex_transaction_import_scheme__scheme_name'];
-                        options['code_type'] = 'scheme_name';
+                        options['code'] = actionItem.complex_transaction_import_scheme['___complex_transaction_import_scheme__user_code'];
+                        options['code_type'] = 'user_code';
                         options['entity'] = 'complex-transaction-import-scheme';
                         options['item_key'] = 'complex_transaction_import_scheme';
 

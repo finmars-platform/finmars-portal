@@ -33,7 +33,7 @@
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 	var EntityViewerEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/entityViewerEditorSharedLogicHelper');
 
-    var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
+	var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
@@ -57,11 +57,12 @@
         vm.processing = false;
 
         vm.readyStatus = {content: false, entity: true, permissions: true};
+
         vm.entityType = entityType;
 
         vm.entity = {$_isValid: true};
-        vm.dataConstructorLayout = {};
-        vm.dcLayoutHasBeenFixed = false;
+		vm.dataConstructorLayout = {};
+		vm.dcLayoutHasBeenFixed = false;
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
@@ -432,12 +433,12 @@
                 layoutAttrs: vm.layoutAttrs
             };
 
-            var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, dataConstructorLayout, true);
+            var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, vm.dataConstructorLayout, true);
 
             vm.attributesLayout = attributesLayoutData.attributesLayout;
 
             if (vm.fixedArea && vm.fixedArea.isActive) {
-                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.fixedArea, attributes, dataConstructorLayout, true);
+                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.fixedArea, attributes, vm.dataConstructorLayout, true);
 
                 vm.fixedAreaAttributesLayout = fixedAreaAttributesLayoutData.attributesLayout;
             }
@@ -934,11 +935,13 @@
             return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attributeTypes = data.results;
             });
-        }; */
+        };
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
-        };
+        }; */
+
+		vm.checkReadyStatus = evEditorSharedLogicHelper.checkReadyStatus;
 
         vm.bindFlex = function (tab, field) {
             /*var totalColspans = 0;
@@ -1193,7 +1196,7 @@
                     console.log('resultEntity', resultEntity);
 
                     if (dcLayoutHasBeenFixed) {
-                        uiService.updateEditLayout(dataConstructorLayout.id, dataConstructorLayout);
+                        uiService.updateEditLayout(vm.dataConstructorLayout.id, vm.dataConstructorLayout);
                     }
 
                     entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
@@ -1536,6 +1539,74 @@
 
         };
 
+        // Instrument Type Layout Settings tab start
+
+        vm.instrumentTypeLayouts = [];
+
+        vm.instrumentTypeMoveLayoutUp = function($event, item) {
+
+            var index = vm.instrumentTypeLayouts.indexOf(item)
+
+            vm.instrumentTypeLayouts.splice(index, 1); // remove old one
+
+            console.log('old index', index)
+
+            var newIndex = index - 1
+
+            if (newIndex < 0) {
+                newIndex = 0;
+            }
+
+            vm.instrumentTypeLayouts.splice(newIndex, 0, item);
+
+            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
+
+        }
+
+        vm.instrumentTypeMoveLayoutDown = function ($event, item) {
+
+            var index = vm.instrumentTypeLayouts.indexOf(item)
+
+            vm.instrumentTypeLayouts.splice(index, 1); // remove old one
+
+            var newIndex = index + 1
+
+            vm.instrumentTypeLayouts.splice(newIndex, 0, item);
+
+            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
+
+        }
+
+        vm.instrumentTypeDeleteLayout = function ($event, item) {
+
+            var index = vm.instrumentTypeLayouts.indexOf(item)
+
+            vm.instrumentTypeLayouts.splice(index, 1);
+
+            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
+
+        }
+
+        vm.instrumentTypeMoveAddLayout = function($event) {
+
+            vm.instrumentTypeLayouts.unshift(vm.instrumentTypeNewLayoutUserCode)
+
+            vm.instrumentTypeNewLayoutUserCode = '';
+
+            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
+
+        }
+
+        // Instrument Type Layout Settings tab end
+
+        vm.instrumentTypeChange = function($event){
+
+            console.log('instrumentTypeChange', vm.entity)
+
+            evEditorSharedLogicHelper.getFormLayout('edition');
+
+        }
+
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 
             $mdDialog.show({
@@ -1568,7 +1639,7 @@
 
         vm.init = function () {
 
-        	/*setTimeout(function () {
+            /*setTimeout(function () {
 
 				if (vm.openedIn === 'big-drawer') {
 

@@ -128,7 +128,7 @@
 
                     } else if (column.key === 'price_download_scheme') {
 
-                        return obj[column.key + '_object'].scheme_name;
+                        return obj[column.key + '_object'].user_code;
 
                     }
 

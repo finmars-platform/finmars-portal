@@ -602,6 +602,7 @@ app.controller('ReferenceTableExportDialogController', ['$scope', '$mdDialog', '
 
 app.controller('FormsDataConstructor', ['$scope', '$mdDialog', require('./app/controllers/pages/formsDataConstructorController')]);
 app.controller('LayoutsSettingsController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/layoutsSettingsController')]);
+app.controller('InputFormLayoutsSettingsController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/inputFormLayoutsSettingsController')]);
 
 /*
 TO DELETE: commented 2020-11-04
