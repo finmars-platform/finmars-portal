@@ -1341,8 +1341,7 @@
                     vm.processing = true;
 
 					// Victor 2020.12.01 #64
-					const missingFieldsPromises = transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
-					await Promise.allSettled(missingFieldsPromises);
+                    await transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
 					// <Victor 2020.12.01 #64>
 
                     result.store = true;
