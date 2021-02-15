@@ -199,6 +199,9 @@
 
         var attribute_type_map = {};
         var entityType = entityViewerDataService.getEntityType()
+
+        console.log('entityType', entityType);
+
         var attrs = attributeDataService.getDynamicAttributesByEntityType(entityType);
 
         attrs.forEach(function (item) {
@@ -479,7 +482,7 @@
 
                         console.log('data', data);
 
-                        // console.log('error request requestParameters', requestParameters);
+                        console.log('error getFilteredList request requestParameters', requestParameters);
 
                         requestParameters.loadAll = false;
 
@@ -681,7 +684,7 @@
 
     };
 
-    var sortObjects = function (entityViewerDataService, entityViewerEventService) {
+    var sortObjects = function (entityViewerDataService, entityViewerEventService, attributeDataService) {
 
         var level = entityViewerDataService.getGroups().length;
 
@@ -743,7 +746,7 @@
 
         requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
 
-            promises.push(getObjects(requestParameters, entityViewerDataService, entityViewerEventService))
+            promises.push(getObjects(requestParameters, entityViewerDataService, entityViewerEventService, attributeDataService))
 
         });
 
