@@ -120,10 +120,16 @@
 
         return expressionsList
             .filter(function (item) {
-                return item.func.indexOf('(') !== -1;
+                return item.func.includes('(') || (item.validation_data && item.validation_data.type === "function");
             })
             .map(function (item) {
-                return item.func.split('(')[0]
+
+            	if (item.validation_data) {
+					return item.validation_data.key_words[0];
+				}
+
+                return item.func.split('(')[0];
+
             });
 
     }
@@ -489,7 +495,7 @@
         var propertiesWords = getPropertiesWords(expressionsList);
         var inputWords = getInputWords(data);
 
-        var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False'];
+        var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False', 'format']; // TODO remove 'format' if allowed to make validation of function arguments
         var contextVariablesWords = functionsItemsService.contextVariablesWords;
 
         var processing = true;
