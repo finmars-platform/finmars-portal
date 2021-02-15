@@ -1157,6 +1157,12 @@
 
                     	vm.entity = {...vm.entity, ...responseData};
 						vm.entity.$_isValid = true;
+						// Victor 2021.02.15 Save button on ADD Entity
+/*
+						debugger;
+
+                        const responseObj = {res: 'agree', data: {action: 'edit', entity: vm.entity}};
+                        return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);*/
 
 					}
 

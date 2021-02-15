@@ -662,56 +662,53 @@
 
     }
 
-    const filterByRowColor = function (data, evDataService) {
-/*        const rowTypeFilters = evDataService.getRowTypeFilters();
+    const filterByRowColor = function (list, evDataService) {
+        const rowTypeFilters = evDataService.getRowTypeFilters();
         const color = rowTypeFilters.markedRowFilters;
 
         if (color === 'none') { //  color filter disabled
-            return data;
+            return list;
         }
 
         const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService);
-
         const undeletedKeys = [];
 
-        Object.keys(data).forEach(key => {
+        list.forEach(item => {
 
-            const isRoot = data[key].___group_name === 'root'
+            if (item.___group_name === 'root') { // root subtotal is present always
 
-            if (!isRoot) { // root row mast present always
+                undeletedKeys.push(item.___id)
 
-                const logicGroup = data[key].results.slice();
-                const subtotal = logicGroup.shift(); // first element on logic group is subtotal
-
-                const coloredRows = logicGroup.filter(item => markedRowsAndSubtotals.includes(item.id));
-                const isSubtotalColored = markedRowsAndSubtotals.includes(subtotal.___id);
-                console.log('#69')
-
-                if (isSubtotalColored || coloredRows.length >0) {
-                    const parents = evRvCommonHelper.getParents(subtotal.___parentId, evDataService)
-
-                    console.log('#69 parents', parents)
-
-                    undeletedKeys.push(key)
-                    undeletedKeys.push(...parents.map(parent => parent.___id))
-                    data[key].results = [subtotal, ... coloredRows];
-                }
-            } else {
-                undeletedKeys.push(key)
             }
+
+            const rowColored = markedRowsAndSubtotals.includes(item.id || item.___id);
+
+            if (rowColored) {
+
+                const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
+                undeletedKeys.push(item.___id);
+                undeletedKeys.push(...parents.map(parent => parent.___id));
+
+            }
+
+        })
+
+        return list.filter(item => {
+
+            const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && undeletedKeys.includes(item.___parentId);
+            const isRowColored = undeletedKeys.includes(item.___id);
+
+            if (isSubtotalContainsMarkedRows) {
+
+                item.results = item.results.filter(row => undeletedKeys.includes(row.id));
+
+            }
+
+            return isRowColored || isSubtotalContainsMarkedRows;
 
         });
 
-        console.log('#69 undeletedKeys', undeletedKeys)
-
-        Object.keys(data).forEach(key => {
-            if (!undeletedKeys.includes(key)) {
-                delete data[key]
-            }
-        })*/
-
-        return data;
-    }
+    };
 
     var getFlatStructure = function (evDataService) {
 
@@ -764,8 +761,6 @@
             data = getNewDataInstance(evDataService)
         }
 
-        //data = filterByRowColor(data, evDataService);
-
         var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
@@ -785,7 +780,8 @@
         // console.log('getFlatStructure.list', list);
 
         list = removeItemsFromFoldedGroups(list, evDataService);
-        console.log('#64 list', list)
+
+        list = filterByRowColor(list, evDataService);
 
         return list;
 
