@@ -1372,8 +1372,8 @@
                     instrumentPricingCurrencyChanged = true;
 
                     vm.entity.accrued_currency = vm.entity.pricing_currency;
-                    vm.entity.exposure_currency_1 = vm.entity.pricing_currency;
-                    vm.entity.exposure_currency_2 = vm.entity.pricing_currency;
+                    vm.entity.co_directional_exposure_currency = vm.entity.pricing_currency;
+                    vm.entity.counter_directional_exposure_currency = vm.entity.pricing_currency;
 
                 }
 
