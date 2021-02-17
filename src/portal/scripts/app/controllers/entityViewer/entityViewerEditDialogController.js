@@ -40,6 +40,9 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+    const GridTableDataService = require('../../services/gridTableDataService');
+    const GridTableEventService = require('../../services/gridTableEventService');
+
     module.exports = function entityViewerEditDialogController(
         $scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data
     ) {
@@ -2089,6 +2092,11 @@
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
+            // Victor 2021.02.16 #78 Instrument type modifications on accruals tab
+            vm.accrualsGridTableDataService = new GridTableDataService();
+            vm.accrualsGridTableEventService = new GridTableEventService();
+            // <Victor 2021.02.16 #78 Instrument type modifications on accruals tab>
+
             var tooltipsOptions = {
                 pageSize: 1000,
                 filters: {
@@ -2149,12 +2157,20 @@
             getEntityAttrs();
             vm.getCurrencies();
 
-            vm.getItem().then(function () {
+            vm.getItem().then(async function () {
 
                 if (vm.entityType === 'instrument-type') {
                     if (vm.entity.instrument_form_layouts) {
                         vm.instrumentTypeLayouts = vm.entity.instrument_form_layouts.split(',')
                     }
+
+                    const accrualsGridTableData = evEditorSharedLogicHelper.getAccrualsGridTableData();
+                    console.log('#78 accrualsGridTableData', accrualsGridTableData)
+                    vm.accrualsGridTableDataService.setTableData(accrualsGridTableData);
+
+                    vm.dailyPricingModelFields = await evEditorSharedLogicHelper.getDailyPricingModelFields();
+                    vm.currencyFields = await evEditorSharedLogicHelper.getCurrencyFields();
+
                 }
 
                 getEntityStatus();

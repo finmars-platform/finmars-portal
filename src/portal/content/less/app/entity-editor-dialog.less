@@ -209,3 +209,41 @@
   }
 }
 
+.instrument-type-accruals-tab-view {
+  border-top: 1px solid #ddd;
+
+  .accrual-autogenerate {
+    font-weight: 600;
+
+    md-checkbox {
+      margin: 0 0 0 8px;
+    }
+    label {
+      cursor: pointer;
+    }
+  }
+}
+
+.accrual-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  md-checkbox {
+    margin: 0 20px 0 0;
+  }
+  &.header {
+    h4 {
+      text-align: center;
+      margin: 0;
+
+      &:first-child {
+        width: 30%;
+      }
+      &:last-child {
+        width: 70%;
+      }
+    }
+
+  }
+}
