@@ -95,8 +95,14 @@
                         ></text-input>
                     </div>
 
-                    <grid-table data-gt-data-service="vm.accrualsGridTableDataService"
-                                data-gt-event-service="vm.accrualsGridTableEventService"></grid-table>
+                    <div ng-if="vm.accrualsReadyStatus">
+                        <grid-table data-gt-data-service="vm.accrualsGridTableDataService"
+                                    data-gt-event-service="vm.accrualsGridTableEventService"></grid-table>
+                    </div>
+
+                    <div ng-if="!vm.accrualsReadyStatus" class="flex-row flex-c-center width-100" style="height: 100px;">
+                        <progress-circular diameter="100"></progress-circular>
+                    </div>
 
                 </v-pane-content>
 

@@ -43,6 +43,9 @@
     const GridTableDataService = require('../../services/gridTableDataService');
     const GridTableEventService = require('../../services/gridTableEventService');
 
+    const instrumentPeriodicityService = require('../../services/instrumentPeriodicityService');
+    const accrualCalculationModelService = require('../../services/accrualCalculationModelService');
+
     module.exports = function entityViewerEditDialogController(
         $scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data
     ) {
@@ -75,6 +78,7 @@
         }
 
         vm.readyStatus = {attributeTypes: false, permissions: false, entity: false, layout: false};
+        vm.accrualsReadyStatus = false;
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -2164,13 +2168,26 @@
                         vm.instrumentTypeLayouts = vm.entity.instrument_form_layouts.split(',')
                     }
 
-                    const accrualsGridTableData = evEditorSharedLogicHelper.getAccrualsGridTableData();
-                    console.log('#78 accrualsGridTableData', accrualsGridTableData)
-                    vm.accrualsGridTableDataService.setTableData(accrualsGridTableData);
+                    evEditorSharedLogicHelper.getDailyPricingModelFields().then(data => {
+                        vm.dailyPricingModelFields = data;
+                    });
+                    evEditorSharedLogicHelper.getCurrencyFields().then(data => {
+                        vm.currencyFields = data;
+                    });
 
-                    vm.dailyPricingModelFields = await evEditorSharedLogicHelper.getDailyPricingModelFields();
-                    vm.currencyFields = await evEditorSharedLogicHelper.getCurrencyFields();
+                    const periodicityItemsPromise = instrumentPeriodicityService.getList().then(data => {
+                        vm.periodicityItems = data;
+                    });
+                    const accrualModelsPromise = accrualCalculationModelService.getList().then(data => {
+                        vm.accrualModels = data;
+                    });
 
+                    await Promise.all([accrualModelsPromise, periodicityItemsPromise]);
+
+                    vm.accrualsGridTableData = evEditorSharedLogicHelper.getAccrualsGridTableData();
+                    vm.accrualsGridTableDataService.setTableData(vm.accrualsGridTableData);
+
+                    vm.accrualsReadyStatus = true;
                 }
 
                 getEntityStatus();
