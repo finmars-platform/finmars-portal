@@ -66,11 +66,16 @@
             return vm.readyStatus.notificationClasses && vm.readyStatus.eventClasses && vm.readyStatus.eventSchedulesReady;
         };
 
-        var onEventsTableRowClick = function (rowData, gtDataService, gtEventService) {
+        var onEventTableCellChange = function (data, gtDataService, gtEventService) {
 
-            var event = vm.entity.events[rowData.order];
+            var tableData = gtDataService.getTableData()
+            var gtRow = gtDataService.getRowByKey(data.row.key);
 
-            console.log('onEventsTableRowClick', event)
+            gtRow.columns.forEach(function (gtColumn) {
+
+                vm.entity.events[tableData.index].data.items[data.row.order][gtColumn.key] = gtColumn.settings.value;
+
+            })
 
         };
 
@@ -171,9 +176,6 @@
                             }
                         },
                     ],
-                    methods: {
-                        onClick: onEventsTableRowClick
-                    },
                 },
                 components: {
                     topPanel: {
@@ -301,6 +303,8 @@
             var event = {
                 eventsGridTableDataService: new GridTableDataService(),
                 eventsGridTableEventService: new GridTableEventService(),
+                order: vm.entity.events.length,
+                autogenerate: true,
                 data: {
                     form_message: "",
                     items: [
@@ -361,8 +365,13 @@
                 }
             }
 
+            event.eventsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+                onEventTableCellChange(argumentsObj, event.eventsGridTableDataService, event.eventsGridTableEventService);
+            });
 
             var eventsGridTableData = getEventsGridTableData(event);
+
+            eventsGridTableData.index = vm.entity.events.length
 
             event.eventsGridTableDataService.setTableData(eventsGridTableData);
 
@@ -386,14 +395,20 @@
 
             Promise.all([getNotificationClasses, getEventClasses, getInstrumentPeriodicityItems]).then(function () {
 
-                vm.entity.events.forEach(function (item) {
+                vm.entity.events.forEach(function (item, index) {
 
                     if (item.data) {
 
                         item.eventsGridTableDataService = new GridTableDataService();
                         item.eventsGridTableEventService = new GridTableEventService();
 
+                        item.eventsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+                            onEventTableCellChange(argumentsObj, item.eventsGridTableDataService, item.eventsGridTableEventService);
+                        });
+
                         var eventsGridTableData = getEventsGridTableData(item)
+
+                        eventsGridTableData.index = index
 
                         item.eventsGridTableDataService.setTableData(eventsGridTableData);
 
