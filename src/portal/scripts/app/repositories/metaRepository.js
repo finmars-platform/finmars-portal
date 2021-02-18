@@ -240,6 +240,10 @@
                         templateUrl: 'views/tabs/instrument-type/pricing-view.html'
                     },
                     {
+                        label: 'Accruals',
+                        templateUrl: 'views/tabs/instrument-type/accruals-view.html'
+                    },
+                    {
                         label: 'Layout Settings',
                         templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }

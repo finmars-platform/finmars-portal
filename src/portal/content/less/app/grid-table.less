@@ -89,6 +89,9 @@
   &:not(.grid-table-header-row):focus {
     background-color: rgba(0, 0, 0, 0.04);
   }
+  &.inactive {
+    padding-left: 0;
+  }
 }
 
 .grid-table-row-checkbox {
@@ -130,6 +133,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: flex-start;
   }
 
   .gt-header-cell-content {
