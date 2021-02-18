@@ -18,8 +18,13 @@
                 scope.allRowsAreActive = false;
 
                 scope.gridTableData = scope.gtDataService.getTableData();
-                scope.sortByCol = false
-                scope.sortRowsReverse = false
+                scope.sortByCol = false;
+                scope.sortRowsReverse = false;
+
+                scope.topPanelInactive = scope.gridTableData
+                    && scope.gridTableData.components
+                    && scope.gridTableData.components.topPanel
+                    && scope.gridTableData.components.topPanel.inactive;
 
                 scope.setSortByCol = function (colOrder) {
 

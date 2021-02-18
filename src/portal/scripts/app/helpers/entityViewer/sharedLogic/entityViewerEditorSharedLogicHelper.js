@@ -564,13 +564,14 @@
         };
 
         const getAccrualsGridTableData = function () {
+
             const rows = [
                 {key: 'notes', name: 'Notes', toShow: true, defaultValueType: 'text', options: false},
                 {key: 'first_accrual_date', name: 'First accrual date', toShow: true, defaultValueType: 'date', options: false},
                 {key: 'first_payment_date', name: 'First payment date', toShow: true,  defaultValueType: 'date', options: false},
                 {key: 'accrual_size', name: 'Accrual size', toShow: true, defaultValueType: 'number', options: false},
-                {key: 'periodicity', name: 'Periodicity', toShow: true, defaultValueType: 'selector', options: true},
-                {key: 'accrual_model', name: 'Accrual model', toShow: true, defaultValueType: 'selector', options: true},
+                {key: 'periodicity', name: 'Periodicity', toShow: true, defaultValueType: 'selector', selectorOptions: viewModel.periodicityItems, options: true},
+                {key: 'accrual_model', name: 'Accrual model', toShow: true, defaultValueType: 'selector', selectorOptions: viewModel.accrualModels, options: true},
                 {key: 'periodic_n', name: 'Periodic N', toShow: true, defaultValueType: 'number', options: false},
             ];
 
@@ -708,9 +709,10 @@
                 },
                 components: {
                     topPanel: {
-                        filters: false,
+                        inactive: true,
+/*                        filters: false,
                         columns: false,
-                        search: false
+                        search: false*/
                     }
                 }
             };
@@ -755,7 +757,7 @@
                 rowObj.columns[2].cellType = row.defaultValueType;
 
                 if (row.defaultValueType === 'selector') {
-                    rowObj.columns[2].settings.selectorOptions = [{id: 1, name: '111'}, {id: 2, name: '222'}];
+                    rowObj.columns[2].settings.selectorOptions = row.selectorOptions;
                 }
 
                 if (row.options) {
@@ -765,7 +767,7 @@
                         ['semi-annual_to_show'], ['semi-annual_override_name'],
                         ['quarterly-annual_to_show'], ['quarterly-annual_override_name'],
                         ['monthly-annual_to_show'], ['monthly-annual_override_name'],
-                    ],
+                    ];
 
                     rowObj.columns[4].settings = metaHelper.recursiveDeepCopy(optionCellSettings, false);
                     rowObj.columns[4].settings.value = [
