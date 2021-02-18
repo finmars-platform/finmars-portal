@@ -40,6 +40,12 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+    const GridTableDataService = require('../../services/gridTableDataService');
+    const GridTableEventService = require('../../services/gridTableEventService');
+
+    const instrumentPeriodicityService = require('../../services/instrumentPeriodicityService');
+    const accrualCalculationModelService = require('../../services/accrualCalculationModelService');
+
     module.exports = function entityViewerEditDialogController(
         $scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data
     ) {
@@ -72,6 +78,7 @@
         }
 
         vm.readyStatus = {attributeTypes: false, permissions: false, entity: false, layout: false};
+        vm.accrualsReadyStatus = false;
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -2101,6 +2108,11 @@
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
+            // Victor 2021.02.16 #78 Instrument type modifications on accruals tab
+            vm.accrualsGridTableDataService = new GridTableDataService();
+            vm.accrualsGridTableEventService = new GridTableEventService();
+            // <Victor 2021.02.16 #78 Instrument type modifications on accruals tab>
+
             var tooltipsOptions = {
                 pageSize: 1000,
                 filters: {
@@ -2161,12 +2173,33 @@
             getEntityAttrs();
             vm.getCurrencies();
 
-            vm.getItem().then(function () {
+            vm.getItem().then(async function () {
 
                 if (vm.entityType === 'instrument-type') {
                     if (vm.entity.instrument_form_layouts) {
                         vm.instrumentTypeLayouts = vm.entity.instrument_form_layouts.split(',')
                     }
+
+                    evEditorSharedLogicHelper.getDailyPricingModelFields().then(data => {
+                        vm.dailyPricingModelFields = data;
+                    });
+                    evEditorSharedLogicHelper.getCurrencyFields().then(data => {
+                        vm.currencyFields = data;
+                    });
+
+                    const periodicityItemsPromise = instrumentPeriodicityService.getList().then(data => {
+                        vm.periodicityItems = data;
+                    });
+                    const accrualModelsPromise = accrualCalculationModelService.getList().then(data => {
+                        vm.accrualModels = data;
+                    });
+
+                    await Promise.all([accrualModelsPromise, periodicityItemsPromise]);
+
+                    vm.accrualsGridTableData = evEditorSharedLogicHelper.getAccrualsGridTableData();
+                    vm.accrualsGridTableDataService.setTableData(vm.accrualsGridTableData);
+
+                    vm.accrualsReadyStatus = true;
                 }
 
                 getEntityStatus();

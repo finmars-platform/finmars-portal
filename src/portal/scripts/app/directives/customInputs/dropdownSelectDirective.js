@@ -341,13 +341,17 @@
 
                 var init = function () {
 
-                    for (var i = 0; i < scope.menuOptions.length; i++) {
-                        if (scope.menuOptions[i].id === scope.model) {
+                    if (scope.menuOptions) {
 
-                            scope.itemName = scope.menuOptions[i].name;
-                            scope.inputText = scope.menuOptions[i].name;
+                        for (var i = 0; i < scope.menuOptions.length; i++) {
+                            if (scope.menuOptions[i].id === scope.model) {
 
-                            break;
+                                scope.itemName = scope.menuOptions[i].name;
+                                scope.inputText = scope.menuOptions[i].name;
+
+                                break;
+
+                            }
 
                         }
 
