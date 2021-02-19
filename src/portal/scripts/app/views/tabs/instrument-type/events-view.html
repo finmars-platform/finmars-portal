@@ -1,7 +1,7 @@
 <div data-ng-controller="InstrumentTypeEventSchedulesTabController as vm">
 
     <div class="instrument-type-accruals-tab-view" data-ng-if="vm.readyStatus.gridTable">
-        <v-accordion class="vAccordion--default" multiple >
+        <v-accordion class="vAccordion--default" multiple>
 
             <v-pane data-ng-repeat="item in vm.entity.events track by $index" expanded="item.isPaneExpanded">
                 <v-pane-header class="transaction-type-action-pane">
@@ -60,15 +60,35 @@
                 </v-pane-header>
 
                 <v-pane-content class="transaction-type-actions-fields" style="padding: 10px;">
-                    <div  style="width: 300px">
+
+                    <div style="width: 300px">
                         <text-input label="Message on the form"
                                     placeholder-text="Message on the form"
                                     model="item.data.form_message"
                         ></text-input>
                     </div>
 
+                    <div layout="row">
+
+                        <dropdown-select class="p-r-8" label="Event class"
+                                         model="item.event_class"
+                                         placeholder-text="Event class"
+                                         menu-options="vm.eventClasses"
+                                         small-options="{tooltipText: 'Event class'}"
+                                         style="width: 50%">
+                        </dropdown-select>
+
+                    </div>
+
                     <grid-table data-gt-data-service="item.eventsGridTableDataService"
                                 data-gt-event-service="item.eventsGridTableEventService"></grid-table>
+
+                    <div>
+                        Actions
+                    </div>
+
+                    <grid-table data-gt-data-service="item.eventActionsGridTableDataService"
+                                data-gt-event-service="item.eventActionsGridTableEventService"></grid-table>
 
                 </v-pane-content>
 
