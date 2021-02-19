@@ -216,7 +216,9 @@
 
                 rowObj.columns[0].settings.value = row.name;
                 rowObj.columns[1].settings.value = row.to_show;
-                rowObj.columns[2].cellType = row.defaultValueType;
+                rowObj.columns[2].settings.value = row.default_value;
+                rowObj.columns[3].settings.value = row.override_name;
+                rowObj.columns[4].settings.value = row.tooltip;
 
                 if (row.defaultValueType === 'selector') {
                     rowObj.columns[2].settings.selectorOptions = row.selectorOptions;
