@@ -1228,6 +1228,7 @@
                 viewModel.inputsGridTableData.body.push(rowObj)
 
             });
+            console.log('#78 viewModel.inputsGridTableData.body', viewModel.inputsGridTableData.body)
             // < assemble body rows >
             viewModel.inputsGridTableDataService.setTableData(viewModel.inputsGridTableData);
 
