@@ -14,7 +14,7 @@
     var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService');
 
     var GridTableDataService = require('../../../services/gridTableDataService');
-    var GridTableEventService = require('../../../services/gridTableEventService');
+    var EventService = require('../../../services/eventService');
     var gridTableEvents = require('../../../services/gridTableEvents');
 
     module.exports = function accrualCalculationSchedulesController($scope, $mdDialog, gridTableHelperService) {
@@ -382,9 +382,9 @@
                                     main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-accrual-schedules-periodicity-view.html'\"></div>"
                                 },
                                 fieldsData: [
-                                    {selectorOptions: vm.periodicityItems},
+                                    {selectorOptions: vm.accrualModels},
 									null,
-                                    {selectorOptions: vm.accrualModels}
+                                    {selectorOptions: vm.periodicityItems}
                                 ]
                             }
                         },
@@ -452,8 +452,8 @@
             tmplRowPeriodicityPopup.fieldsData[0].selectorOptions = vm.accrualModels;
             tmplRowPeriodicityPopup.fieldsData[2].selectorOptions = vm.periodicityItems;
 
-            // assemble header columns
-            var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);
+			//<editor-fold desc="Assemble header columns">
+			var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);
 
             vm.schedulesGridTableData.header.columns = rowObj.columns.map(function (column) {
 
@@ -474,7 +474,7 @@
                 return headerData;
 
             });
-            // < assemble header columns >
+			//</editor-fold>
 
             // assemble body rows
 			vm.entity.accrual_calculation_schedules.forEach(function (schedule, scheduleIndex) {
@@ -551,7 +551,7 @@
 			}
 
             vm.schedulesGridTableDataService = new GridTableDataService();
-            vm.schedulesGridTableEventService = new GridTableEventService();
+            vm.schedulesGridTableEventService = new EventService();
 
             initGridTableEvents();
 

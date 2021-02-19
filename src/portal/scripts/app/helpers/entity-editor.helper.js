@@ -213,7 +213,9 @@
 
                 return {type: 'tab', name: 'Events', validatorText: 'tab: EVENTS'};
 
-            } else {
+            }
+
+            else {
 
                 var i, a;
                 for (i = 0; i < tabs.length; i++) {
@@ -230,21 +232,21 @@
 
                                 if (socket.attribute.name === attrKey) {
                                     var locationMessage = 'tab: ' + tab.name.toUpperCase();
-                                    return {type: 'tab', name: tab.name, validatorText: locationMessage};
+                                    return { type: 'tab', name: tab.name, validatorText: locationMessage };
                                 }
 
                             } else if (socket.attribute.hasOwnProperty('key')) {
 
                                 if (socket.attribute.key === attrKey) {
                                     var locationMessage = 'tab: ' + tab.name.toUpperCase();
-                                    return {type: 'tab', name: tab.name, validatorText: locationMessage};
+                                    return { type: 'tab', name: tab.name, validatorText: locationMessage };
                                 }
 
                             } else if (socket.attribute.hasOwnProperty('user_code')) {
 
                                 if (socket.attribute.user_code === attrKey) {
                                     var locationMessage = 'tab: ' + tab.name.toUpperCase();
-                                    return {type: 'tab', name: tab.name, validatorText: locationMessage};
+                                    return { type: 'tab', name: tab.name, validatorText: locationMessage };
                                 }
 
                             }
@@ -1119,130 +1121,140 @@
             var entityAttrs = attributes.entityAttrs;
             var layoutAttrs = attributes.layoutAttrs;
 
-            if (field && field.type === 'field') {
+            if (field) {
 
-                var attrFound = false;
+            	if (field.type === 'field') {
 
-                if (field.attribute_class === 'attr') {
+					var attrFound = false;
 
-                    for (i = 0; i < dynamicAttrs.length; i = i + 1) {
+					if (field.attribute_class === 'attr') {
 
-                        if (field.key) {
+						for (i = 0; i < dynamicAttrs.length; i = i + 1) {
 
-                            if (field.key === dynamicAttrs[i].user_code) {
+							if (field.key) {
 
-                                dynamicAttrs[i].options = field.options;
-                                //fieldResult = dynamicAttrs[i];
-                                tabResult[field.row][field.column] = dynamicAttrs[i];
-                                attrFound = true;
-                                break;
+								if (field.key === dynamicAttrs[i].user_code) {
 
-                            }
+									dynamicAttrs[i].options = field.options;
+									//fieldResult = dynamicAttrs[i];
+									tabResult[field.row][field.column] = dynamicAttrs[i];
+									attrFound = true;
+									break;
 
-                        } else {
+								}
 
-                            if (field.attribute.user_code) {
+							} else {
 
-                                if (field.attribute.user_code === dynamicAttrs[i].user_code) {
+								if (field.attribute.user_code) {
 
-                                    dynamicAttrs[i].options = field.options;
-                                    fieldResult = dynamicAttrs[i];
-                                    attrFound = true;
-                                    break;
+									if (field.attribute.user_code === dynamicAttrs[i].user_code) {
 
-                                }
+										dynamicAttrs[i].options = field.options;
+										fieldResult = dynamicAttrs[i];
+										attrFound = true;
+										break;
 
-                            }
+									}
 
-                        }
+								}
 
-                    }
+							}
 
-                    if (!attrFound) {
-                        var fieldPath = {
-                            tabIndex: tabIndex,
-                            fieldIndex: fieldIndex
-                        };
+						}
 
-                        fieldsToEmptyList.push(fieldPath);
-                    }
+						if (!attrFound) {
+							var fieldPath = {
+								tabIndex: tabIndex,
+								fieldIndex: fieldIndex
+							};
 
-                }
+							fieldsToEmptyList.push(fieldPath);
+						}
 
-                else if (field.attribute_class === 'decorationAttr') {
+					}
 
-					for (l = 0; l < layoutAttrs.length; l = l + 1) {
+					else if (field.attribute_class === 'decorationAttr') {
 
-						if (field.name === layoutAttrs[l].name) {
+						for (l = 0; l < layoutAttrs.length; l = l + 1) {
 
-							var layoutAttr = {...{}, ...layoutAttrs[l]}; // removing mutation because the same object may be used for another decoration
+							if (field.name === layoutAttrs[l].name) {
 
-							layoutAttr.options = field.options;
-							fieldResult = layoutAttr;
+								var layoutAttr = {...{}, ...layoutAttrs[l]}; // removing mutation because the same object may be used for another decoration
 
-							attrFound = true;
-							break;
+								layoutAttr.options = field.options;
+								fieldResult = layoutAttr;
+
+								attrFound = true;
+								break;
+
+							}
 
 						}
 
 					}
 
-                }
+					else {
 
-                else {
+						for (e = 0; e < entityAttrs.length; e = e + 1) {
 
-					for (e = 0; e < entityAttrs.length; e = e + 1) {
+							if (field.name === entityAttrs[e].name) {
 
-						if (field.name === entityAttrs[e].name) {
+								entityAttrs[e].options = field.options;
+								fieldResult = entityAttrs[e];
 
-							entityAttrs[e].options = field.options;
-							fieldResult = entityAttrs[e];
+								attrFound = true;
+								break;
 
-							attrFound = true;
-							break;
+							}
 
 						}
 
+					}
+
+					if (forComplexTransaction) {
+
+						var userInputs = attributes.userInputs;
+
+						if (field.attribute_class === 'userInput') {
+
+							for (u = 0; u < userInputs.length; u = u + 1) {
+
+								if (field.name === userInputs[u].name) {
+									userInputs[u].options = field.options;
+
+									fieldResult = userInputs[u];
+
+									attrFound = true;
+									break;
+								}
+							}
+
+							if (!attrFound) {
+								var fieldPath = {
+									tabIndex: tabIndex,
+									fieldIndex: fieldIndex
+								};
+
+								fieldsToEmptyList.push(fieldPath);
+							}
+
+						}
+
+						fieldResult.editable = field.editable;
+
+					}
+
+					if (field.backgroundColor) {
+						fieldResult.backgroundColor = field.backgroundColor;
 					}
 
 				}
 
-                if (forComplexTransaction) {
+				else if (field.type === 'table') {
 
-                    var userInputs = attributes.userInputs;
+					fieldResult = field.attribute;
 
-                    if (field.attribute_class === 'userInput') {
-
-                        for (u = 0; u < userInputs.length; u = u + 1) {
-
-                            if (field.name === userInputs[u].name) {
-                                userInputs[u].options = field.options;
-
-                                fieldResult = userInputs[u];
-
-                                attrFound = true;
-                                break;
-                            }
-                        }
-
-                        if (!attrFound) {
-                            var fieldPath = {
-                                tabIndex: tabIndex,
-                                fieldIndex: fieldIndex
-                            };
-
-                            fieldsToEmptyList.push(fieldPath);
-                        }
-
-                    }
-
-                    fieldResult.editable = field.editable;
-
-                }
-
-                if (field.backgroundColor) {
-                    fieldResult.backgroundColor = field.backgroundColor;
-                }
+				}
 
             }
 
