@@ -157,7 +157,9 @@
 
                     var columnWidth = 121;
 
-                    scope.rowControlsHolderElem.style.left = ((scope.columnsTotal * columnWidth)) + 'px'
+                    console.log('scope.cellWidth',scope.cellWidth);
+
+                    scope.rowControlsHolderElem.style.left = (scope.columnsTotal * scope.cellWidth) + 'px'
 
                 };
 
@@ -185,6 +187,7 @@
                     scope.resizeLayoutWidth();
                     scope.resizeGridCells();
                     scope.resizeRowControls();
+                    scope.updateRowControlsHolderPosition();
 
                 };
 
