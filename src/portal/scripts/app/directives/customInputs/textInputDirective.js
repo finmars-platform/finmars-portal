@@ -279,6 +279,10 @@
 						inputContainer.classList.remove("custom-input-hovered");
 					});
 
+					fullTextElem.addEventListener('keydown', (event) => { // otherwise the v-accordion intercepts pressing and clears the space
+						event.stopPropagation();
+					});
+
 					if (scope.renderHyperlinks) {
 
 						inputElem.addEventListener("click", function (event) {
