@@ -11,12 +11,11 @@
     var GridTableEventService = require('../../services/gridTableEventService');
 
     var metaHelper = require('../../helpers/meta.helper');
-    var GridTableHelperService = require('../../helpers/gridTableHelperService');
+    // var gridTableHelperService = require('../../helpers/gridTableHelperService');
 
-    module.exports = function singleInstrumentAddEventToTableDialogController($scope, $mdDialog, data) {
-        var vm = this;
+    module.exports = function singleInstrumentAddEventToTableDialogController($scope, $mdDialog, gridTableHelperService, data) {
 
-        var gridTableHelperService = new GridTableHelperService();
+    	var vm = this;
 
         vm.readyStatus = {
         	actionsGridTable: false

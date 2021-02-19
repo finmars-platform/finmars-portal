@@ -1,0 +1,31 @@
+<md-dialog aria-label="data constructor"
+           class="entity-data-constructor-dialog dialog-actions-bottom draggable-dialog"
+           drag-dialog>
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+            <h2>Instrument accruals table settings</h2>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="p-16">
+
+        <text-input label="Area Label Text"></text-input>
+
+        <grid-table gt-data-service="vm.gridTableDataService"
+                    gt-event-service="vm.gridTableEventService"></grid-table>
+
+    </md-dialog-content>
+
+    <md-dialog-actions class="flex-row fc-space-between fi-center">
+        <md-button ng-click="vm.cancel()" class="md-raised">
+            Cancel
+        </md-button>
+
+        <md-button ng-click="vm.save()" class="md-raised">
+            Save
+        </md-button>
+    </md-dialog-actions>
+
+</md-dialog>

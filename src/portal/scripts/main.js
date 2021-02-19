@@ -197,6 +197,7 @@ app.controller('NotFoundPageController', ['$scope', require('./app/controllers/n
 app.controller('EntityDataConstructorDialogController', ['$scope', 'data', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dialogs/entityDataConstructorDialogController')]);
 app.controller('EntityViewerFormsPreviewDialogController', ['$scope', '$mdDialog', 'inputFormTabs', 'data', require('./app/controllers/dialogs/entityViewerFormsPreviewDialogController')]);
 app.controller('ComplexTransactionFormsPreviewDialogController', ['$scope', '$mdDialog', 'inputFormTabs', 'data', require('./app/controllers/dialogs/complexTransactionFormsPreviewDialogController')]);
+app.controller('EvFormInstrumentAccrualsSettingsDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'data', require('./app/controllers/dialogs/evFormInstrumentAccrualsSettingsDialogController')]);
 app.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 app.controller('UseFromAboveDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/useFromAboveDialogController')]);
 app.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
@@ -385,7 +386,7 @@ app.controller('BookUniquenessWarningDialogController', ['$scope', '$mdDialog', 
 // Instrument form - tabs
 
 app.controller('AccrualCalculationSchedulesController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
-app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
+app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 
@@ -520,7 +521,7 @@ app.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownM
 
 app.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
 app.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
-app.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
+// app.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 
 app.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
@@ -567,7 +568,7 @@ app.controller('PricingSchemePageController', ['$scope', '$mdDialog', require('.
 app.controller('RunPricingInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingInstrumentDialogController')]);
 app.controller('RunPricingCurrencyDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingCurrencyDialogController')]);
 app.controller('SingleInstrumentGenerateEventDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/singleInstrumentGenerateEventDialogController')]);
-app.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
+app.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
 
 
 app.controller('CurrencyPricingSchemeAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/currencyPricingSchemeAddDialogController')]);
