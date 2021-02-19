@@ -390,6 +390,10 @@ app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', 'gridTable
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 
+// Instrument type form - tabs
+
+app.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
+
 // Currency form - tabs
 
 app.controller('PricingTabController', ['$scope', require('./app/controllers/tabs/currency/pricingTabController')]);
