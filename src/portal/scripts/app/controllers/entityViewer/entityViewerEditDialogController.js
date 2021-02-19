@@ -2091,6 +2091,18 @@
 
         vm.init = function () {
 
+            if (vm.entityType === 'instrument-type') {
+
+                uiService.getListEditLayout('instrument').then(function (data) {
+
+                    vm.instrumentFormLayouts = data.results;
+
+                    $scope.$apply()
+
+                })
+
+            }
+
             setTimeout(function () {
                 vm.dialogElemToResize = evEditorSharedLogicHelper.onEditorStart();
             }, 100);
