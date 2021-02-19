@@ -155,13 +155,17 @@
 
 			const cachedLayouts = getCacheProp(cachedLayoutsList);
 
-			Object.keys(cachedLayouts).forEach(layoutId => {
+			if (cachedLayouts && typeof cachedLayouts === 'object') {
 
-				if (cachedLayouts[layoutId].content_type === layout.content_type) {
-					cachedLayouts[layoutId].is_default = false;
-				}
+				Object.keys(cachedLayouts).forEach(layoutId => {
 
-			});
+					if (cachedLayouts[layoutId].content_type === layout.content_type) {
+						cachedLayouts[layoutId].is_default = false;
+					}
+
+				});
+
+			}
 
 			let cache = cacheData(cachedLayoutsList, cachedLayouts);
 
