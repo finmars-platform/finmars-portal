@@ -265,34 +265,24 @@
                     rowObj.columns[2].settings.selectorOptions = row.selectorOptions;
                 }
 
-                // if (row.options) {
-                //     rowObj.columns[5].cellType = 'custom_popup';
-                //     rowObj.columns[5].cellType.objPaths = [
-                //         ['annual_to_show'], ['annual_override_name'],
-                //         ['semi-annual_to_show'], ['semi-annual_override_name'],
-                //         ['quarterly-annual_to_show'], ['quarterly-annual_override_name'],
-                //         ['monthly-annual_to_show'], ['monthly-annual_override_name'],
-                //     ];
-                //
-                //     rowObj.columns[5].settings = metaHelper.recursiveDeepCopy(optionCellSettings, false);
-                //     rowObj.columns[5].settings.value = [
-                //         true, 'Annual ON',
-                //         true, 'Semi-annual ON',
-                //         true, 'Quarterly ON',
-                //         true, 'Monthly ON',
-                //     ]
-                // }
 
                 return rowObj
 
             })
 
+
             return eventsGridTableData;
+
         };
 
         var getEventsActionGridTableData = function (item){
 
+
+            console.log('getEventsActionGridTableData.item', item)
+
             const rows = item.data.actions;
+
+            console.log('getEventsActionGridTableData.rows', rows)
 
             const eventsGridTableData = {
                 header: {
@@ -311,7 +301,7 @@
                             cellType: 'selector',
                             settings: {
                                 value: null,
-                                selectorOptions: [],
+                                selectorOptions: vm.transactionTypes,
                             },
                             styles: {
                                 'grid-table-cell': {'width': '260px'}
@@ -364,7 +354,7 @@
                             cellType: 'selector',
                             settings: {
                                 value: null,
-                                selectorOptions: [],
+                                selectorOptions: getRangeOfNumbers(item.data.actions.length),
                             },
                             styles: {
                                 'grid-table-cell': {'width': '130px'}
@@ -404,33 +394,11 @@
                 rowObj.order = index;
                 rowObj.key = row.key;
 
-                rowObj.columns[0].settings.value = row.name;
-                rowObj.columns[1].settings.value = row.to_show;
-                rowObj.columns[2].settings.value = row.default_value;
-                rowObj.columns[3].settings.value = row.override_name;
-                rowObj.columns[4].settings.value = row.tooltip;
-
-                if (row.defaultValueType === 'selector') {
-                    rowObj.columns[2].settings.selectorOptions = row.selectorOptions;
-                }
-
-                // if (row.options) {
-                //     rowObj.columns[5].cellType = 'custom_popup';
-                //     rowObj.columns[5].cellType.objPaths = [
-                //         ['annual_to_show'], ['annual_override_name'],
-                //         ['semi-annual_to_show'], ['semi-annual_override_name'],
-                //         ['quarterly-annual_to_show'], ['quarterly-annual_override_name'],
-                //         ['monthly-annual_to_show'], ['monthly-annual_override_name'],
-                //     ];
-                //
-                //     rowObj.columns[5].settings = metaHelper.recursiveDeepCopy(optionCellSettings, false);
-                //     rowObj.columns[5].settings.value = [
-                //         true, 'Annual ON',
-                //         true, 'Semi-annual ON',
-                //         true, 'Quarterly ON',
-                //         true, 'Monthly ON',
-                //     ]
-                // }
+                rowObj.columns[0].settings.value = row.transaction_type;
+                rowObj.columns[1].settings.value = row.text;
+                rowObj.columns[2].settings.value = row.is_sent_to_pending;
+                rowObj.columns[3].settings.value = row.is_book_automatic;
+                rowObj.columns[4].settings.value = row.button_position;
 
                 return rowObj
 
@@ -497,10 +465,13 @@
             var event = {
                 eventsGridTableDataService: new GridTableDataService(),
                 eventsGridTableEventService: new GridTableEventService(),
+                eventActionsGridTableDataService: new GridTableDataService(),
+                eventActionsGridTableEventService: new GridTableEventService(),
                 order: vm.entity.events.length,
                 autogenerate: true,
                 data: {
                     form_message: "",
+                    event_class: null,
                     items: [
                         {key: 'name', name: 'Title', to_show: true, defaultValueType: 'text', options: false},
                         {
@@ -554,7 +525,8 @@
                             defaultValueType: 'number',
                             options: false
                         },
-                    ]
+                    ],
+                    actions: []
 
                 }
             }
@@ -568,6 +540,26 @@
             eventsGridTableData.index = vm.entity.events.length
 
             event.eventsGridTableDataService.setTableData(eventsGridTableData);
+
+            var eventsActionGridTableData = getEventsActionGridTableData(event)
+            event.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
+
+            event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function (){
+
+                onActionsTableAddRow(event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService)
+            });
+
+            event.eventActionsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (data){
+
+                onActionsTableCellValueChanged(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService)
+
+            });
+
+            event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (data){
+
+                onActionsTableDeleteRows(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService)
+
+            });
 
             vm.entity.events.push(event)
 
@@ -596,6 +588,8 @@
 
         var onActionsTableAddRow = function (item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
 
+            console.log('item', item);
+
             var gridTableData = eventActionsGridTableDataService.getTableData()
 
             var newRow = gridTableData.body[0];
@@ -610,16 +604,16 @@
                 frontOptions: {gtKey: newRow.key}
             };
 
-            item.actions.unshift(newAction);
+            item.data.actions.unshift(newAction);
 
             var transactionType = gridTableHelperService.getCellFromRowByKey(newRow, 'transaction_type');
             transactionType.settings.selectorOptions = vm.transactionTypes;
 
             var buttonPosition = gridTableHelperService.getCellFromRowByKey(newRow, 'button_position');
-            buttonPosition.settings.selectorOptions = getRangeOfNumbers(item.actions.length);
+            buttonPosition.settings.selectorOptions = getRangeOfNumbers(item.data.actions.length);
 
             // Update rows in actions grid table
-            item.actions.forEach(function (action, actionIndex) {
+            item.data.actions.forEach(function (action, actionIndex) {
                 gridTableData.body[actionIndex].order = actionIndex;
             });
 
@@ -629,14 +623,14 @@
 
             var gridTableData = eventActionsGridTableDataService.getTableData()
 
-            item.actions = item.actions.filter(function (action) {
+            item.data.actions = item.data.actions.filter(function (action) {
 
                 var actionId = action.id || action.frontOptions.gtKey;
                 return data.deletedRowsKeys.indexOf(actionId) === -1;
             });
 
             // Update rows in actions grid table
-            item.actions.forEach(function (action, actionIndex) {
+            item.data.actions.forEach(function (action, actionIndex) {
                 gridTableData.body[actionIndex].order = actionIndex;
             });
 
@@ -648,7 +642,7 @@
                 colOrder = data.column.order;
 
             gridTableHelperService.onGridTableCellChange(
-                item.actions,
+                item.data.actions,
                 eventActionsGridTableDataService,
                 rowOrder, colOrder
             );
@@ -657,7 +651,9 @@
 
         vm.init = function () {
 
-            getTransactionTypes().then(function (){ // TODO refactor this
+            getTransactionTypes().then(function (data){ // TODO refactor this
+
+                vm.transactionTypes = data;
 
                 Promise.all([getNotificationClasses, getEventClasses, getInstrumentPeriodicityItems]).then(function () {
 
@@ -679,6 +675,10 @@
 
                         item.eventActionsGridTableDataService = new GridTableDataService();
                         item.eventActionsGridTableEventService = new GridTableEventService();
+
+                        if(!item.data.actions) {
+                            item.data.actions = []
+                        }
 
                         var eventsActionGridTableData = getEventsActionGridTableData(item)
                         item.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
