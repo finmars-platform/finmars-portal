@@ -14,7 +14,7 @@
 
     var metaHelper = require('../../../helpers/meta.helper');
     var md5Helper = require('../../../helpers/md5.helper');
-    var GridTableHelperService = require('../../../helpers/gridTableHelperService');
+    // var GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
     var eventObj = {
         "name": '',
@@ -31,7 +31,7 @@
         "event_class": null
     };
 
-    module.exports = function eventSchedulesTabController($scope, $mdDialog) {
+    module.exports = function eventSchedulesTabController($scope, $mdDialog, gridTableHelperService) {
 
         var vm = this;
 
@@ -303,7 +303,7 @@
         };
 
         // Event schedules grid Table
-        var gridTableHelperService = new GridTableHelperService();
+        // var gridTableHelperService = new GridTableHelperService();
 
         var newRowsKeys = [];
 

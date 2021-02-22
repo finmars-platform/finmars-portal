@@ -137,41 +137,56 @@
 
     };
 
-    var getValueTypes = function () {
-        return [{
-            "value": 20,
-            "display_name": "Number"
-        }, {
-            "value": 10,
-            "display_name": "String"
-        }, {
-            "value": 40,
-            "display_name": "Date"
-        }, {
-            "value": 30,
-            "display_name": "Classifier"
-        }, {
-            "value": 110,
-            "display_name": "Selector"
-        },{
-            "value": 120,
-            "display_name": "Button"
-        },{
-            "value": "decoration",
-            "display_name": "Decoration"
-        }, {
-            "value": "field",
-            "display_name": "Field"
-        }, {
-            "value": "mc_field",
-            "display_name": "Multiple choice field"
-        }, {
-            "value": "boolean",
-            "display_name": "Boolean"
-        }, {
-            "value": "float",
-            "display_name": "Float"
-        }
+    var getEntityViewerFormComponentsValueTypes = function () {
+        return [
+        	{
+				"value": 20,
+				"display_name": "Number"
+        	},
+			{
+				"value": 10,
+				"display_name": "String"
+        	},
+			{
+				"value": 40,
+				"display_name": "Date"
+        	},
+			{
+				"value": 30,
+				"display_name": "Classifier"
+        	},
+			{
+				"value": 110,
+				"display_name": "Selector"
+        	},
+			{
+				"value": 120,
+				"display_name": "Button"
+        	},
+			{
+				"value": "decoration",
+				"display_name": "Decoration"
+        	},
+			{
+				"value": "field",
+				"display_name": "Field"
+        	},
+			{
+				"value": "mc_field",
+				"display_name": "Multiple choice field"
+        	},
+			{
+				"value": "boolean",
+				"display_name": "Boolean"
+        	},
+			{
+				"value": "float",
+				"display_name": "Float"
+        	},
+			{
+				"value": "table",
+				"display_name": "Table"
+			}
         ];
     };
 
@@ -322,7 +337,7 @@
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
         getRequiredEntityAttrs: getRequiredEntityAttrs,
-        getValueTypes: getValueTypes,
+		getEntityViewerFormComponentsValueTypes: getEntityViewerFormComponentsValueTypes,
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
         getEntitiesWithoutDynAttrsList: getEntitiesWithoutDynAttrsList,
         getEntityTabs: getEntityTabs,

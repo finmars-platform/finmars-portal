@@ -89,9 +89,7 @@
   &:not(.grid-table-header-row):focus {
     background-color: rgba(0, 0, 0, 0.04);
   }
-  &.inactive {
-    padding-left: 0;
-  }
+
 }
 
 .grid-table-row-checkbox {
@@ -133,7 +131,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
   }
 
   .gt-header-cell-content {
@@ -381,6 +378,7 @@
   flex-direction: row;
   justify-content: flex-end;
   bottom: 0;
+  box-sizing: border-box;
 
   button.md-button:not([disabled]) {
     min-height: 36px;
@@ -416,9 +414,29 @@
 
 .popup-footer {
   border-top: 1px solid rgba(0,0,0,0.12);
-
 }
 
 .fixed-area-popup-content .custom-input-container {
   padding: 0;
+}
+
+.ev-instr-accruals-settings-popup {
+  padding-right: 0;
+
+  .popup-area-main {
+    max-height: 210px;
+    overflow: auto;
+
+    .instr-sel-opts-to-show-checkbox-wrap {
+      height: 40px;
+
+      md-checkbox {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .popup-area-footer {
+    padding-right: 16px;
+  }
 }

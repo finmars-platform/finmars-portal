@@ -1,0 +1,19 @@
+<div class="flex-row">
+
+    <div class="flex-column">
+        <h4>To show</h4>
+        <div ng-repeat="option in popupModel.value"
+             class="flex-column fc-center m-r-8"
+             style="height: 40px; margin-bottom: 13px;">
+            <md-checkbox ng-model="option.to_show" class="m-b-0">{{option.name}}</md-checkbox>
+        </div>
+    </div>
+
+    <div class="flex-column p-r-16">
+        <h4>Override Name</h4>
+        <div ng-repeat="option in popupModel.value">
+            <text-input model="option.override_name"></text-input>
+        </div>
+    </div>
+
+</div>

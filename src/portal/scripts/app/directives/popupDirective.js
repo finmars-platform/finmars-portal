@@ -71,7 +71,11 @@
 
 				if (scope.popupClasses) {
 
-					const classes = scope.popupClasses.split(' ');
+					let classes = scope.popupClasses;
+
+					if (typeof scope.popupClasses === 'string') {
+						classes = scope.popupClasses.split(' ');
+					}
 
 					popUpElem.classList.add(...classes);
 

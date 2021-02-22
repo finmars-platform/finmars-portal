@@ -29,7 +29,7 @@
 
 				var attrs = scope.$parent.vm.attrs || [];
 				var userInputs = scope.$parent.vm.userInputs || [];
-				var choices = metaService.getValueTypes() || [];
+				var choices = metaService.getEntityViewerFormComponentsValueTypes();
 				var entityAttrs = metaService.getEntityAttrs(scope.entityType) || [];
 
 				var palettesList = [];
@@ -261,11 +261,9 @@
 
 					// ----------------------- Background Color -----------------
 
-          if (scope.options.backgroundColor) {
-            styleValue =
-              styleValue +
-              "background-color: " + scope.options.backgroundColor + ";";
-          }
+					if (scope.options.backgroundColor) {
+						styleValue = styleValue + "background-color: " + scope.options.backgroundColor + ";";
+					}
 
 					return styleValue;
 				};

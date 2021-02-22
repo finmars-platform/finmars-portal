@@ -14,7 +14,7 @@
     var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService');
 
     var GridTableDataService = require('../../../services/gridTableDataService');
-    var GridTableEventService = require('../../../services/gridTableEventService');
+    var EventService = require('../../../services/eventService');
     var gridTableEvents = require('../../../services/gridTableEvents');
 
     module.exports = function accrualCalculationSchedulesController($scope, $mdDialog, gridTableHelperService) {
@@ -381,10 +381,10 @@
                                 contentHtml: {
                                     main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-accrual-schedules-periodicity-view.html'\"></div>"
                                 },
-                                fieldsData: [
-                                    {selectorOptions: vm.periodicityItems},
+                                popupData: [
+                                    {selectorOptions: vm.accrualModels},
 									null,
-                                    {selectorOptions: vm.accrualModels}
+                                    {selectorOptions: vm.periodicityItems}
                                 ]
                             }
                         },
@@ -449,11 +449,11 @@
 
             // Needed to update data after downloading it from server
             var tmplRowPeriodicityPopup = vm.schedulesGridTableData.templateRow.columns[3].settings.popupSettings;
-            tmplRowPeriodicityPopup.fieldsData[0].selectorOptions = vm.accrualModels;
-            tmplRowPeriodicityPopup.fieldsData[2].selectorOptions = vm.periodicityItems;
+            tmplRowPeriodicityPopup.popupData[0].selectorOptions = vm.accrualModels;
+            tmplRowPeriodicityPopup.popupData[2].selectorOptions = vm.periodicityItems;
 
-            // assemble header columns
-            var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);
+			//<editor-fold desc="Assemble header columns">
+			var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);
 
             vm.schedulesGridTableData.header.columns = rowObj.columns.map(function (column) {
 
@@ -474,7 +474,7 @@
                 return headerData;
 
             });
-            // < assemble header columns >
+			//</editor-fold>
 
             // assemble body rows
 			vm.entity.accrual_calculation_schedules.forEach(function (schedule, scheduleIndex) {
@@ -551,7 +551,7 @@
 			}
 
             vm.schedulesGridTableDataService = new GridTableDataService();
-            vm.schedulesGridTableEventService = new GridTableEventService();
+            vm.schedulesGridTableEventService = new EventService();
 
             initGridTableEvents();
 

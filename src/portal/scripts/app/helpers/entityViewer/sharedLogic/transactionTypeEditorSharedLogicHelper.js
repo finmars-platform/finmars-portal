@@ -1,19 +1,19 @@
 (function () {
 
-    let referenceTableService = require('../../../services/referenceTablesService');
+    const referenceTableService = require('../../../services/referenceTablesService');
 
-    let metaHelper = require('../../meta.helper');
+	const metaHelper = require('../../meta.helper');
 
-    let uiService = require('../../../services/uiService');
-    let gridTableEvents = require('../../../services/gridTableEvents');
+	const uiService = require('../../../services/uiService');
+	const gridTableEvents = require('../../../services/gridTableEvents');
 
-    let GridTableHelperService = require('../../gridTableHelperService');
-    let helpExpressionsService = require('../../../services/helpExpressionsService');
+	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
+	const helpExpressionsService = require('../../../services/helpExpressionsService');
 
     'use strict';
     module.exports = function (viewModel, $scope, $mdDialog) {
 
-        var gridTableHelperService = new GridTableHelperService();
+    	const gridTableHelperService = new GridTableHelperService();
 
         var valueTypes = [
             {
