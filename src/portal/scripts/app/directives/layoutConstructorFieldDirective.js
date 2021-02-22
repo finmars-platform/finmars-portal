@@ -288,7 +288,7 @@
 						colspan = scope.tab.layout.columns;
 					}
 
-					console.log("testing saveField column", column);
+
 					var i;
 					for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
 
@@ -532,11 +532,11 @@
                             })
                         })
                     }); */
-					console.log("testing scope.entityAttrs1", JSON.parse(JSON.stringify(scope.entityAttrs)));
+
 					scope.entityAttrs.forEach(function (entityAttr) {
 						entityAttr.disabled = isAttrDisabled(entityAttr, 'key');
 					});
-					console.log("testing scope.entityAttrs2", scope.entityAttrs);
+
                     /* scope.userInputs.forEach(function (userInput) {
                         userInput.disabled = false;
                         tabs.forEach(function (tab) {
