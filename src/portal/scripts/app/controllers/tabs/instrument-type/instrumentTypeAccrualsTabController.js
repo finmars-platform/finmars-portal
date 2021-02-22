@@ -348,6 +348,26 @@
             });
         };
 
+        vm.moveDown = function (item, $index, $event) {
+
+            $event.stopPropagation();
+
+            var swap = JSON.parse(JSON.stringify(item));
+            vm.entity.accruals[$index] = vm.entity.accruals[$index + 1];
+            vm.entity.accruals[$index + 1] = swap;
+
+        };
+
+        vm.moveUp = function (item, $index, $event) {
+
+            $event.stopPropagation();
+
+            var swap = JSON.parse(JSON.stringify(item));
+            vm.entity.accruals[$index] = vm.entity.accruals[$index - 1];
+            vm.entity.accruals[$index - 1] = swap;
+
+        };
+
         const periodicityItemsPromise = instrumentPeriodicityService.getList().then(data => {
             vm.periodicityItems = data;
         });
