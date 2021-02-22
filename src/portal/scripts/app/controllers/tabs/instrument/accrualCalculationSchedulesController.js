@@ -381,7 +381,7 @@
                                 contentHtml: {
                                     main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-accrual-schedules-periodicity-view.html'\"></div>"
                                 },
-                                fieldsData: [
+                                popupData: [
                                     {selectorOptions: vm.accrualModels},
 									null,
                                     {selectorOptions: vm.periodicityItems}
@@ -449,8 +449,8 @@
 
             // Needed to update data after downloading it from server
             var tmplRowPeriodicityPopup = vm.schedulesGridTableData.templateRow.columns[3].settings.popupSettings;
-            tmplRowPeriodicityPopup.fieldsData[0].selectorOptions = vm.accrualModels;
-            tmplRowPeriodicityPopup.fieldsData[2].selectorOptions = vm.periodicityItems;
+            tmplRowPeriodicityPopup.popupData[0].selectorOptions = vm.accrualModels;
+            tmplRowPeriodicityPopup.popupData[2].selectorOptions = vm.periodicityItems;
 
 			//<editor-fold desc="Assemble header columns">
 			var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);

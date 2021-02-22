@@ -1,15 +1,14 @@
 <div class="grid-table">
     <!-- Top panel with filters will be here -->
 
-    <div data-ng-if="!topPanelInactive">
+    <div data-ng-if="gridTableData.components.topPanel">
         <grid-table-top-panel data-gt-data-service="gtDataService"
                               data-gt-event-service="gtEventService"></grid-table-top-panel>
     </div>
 
-    <div class="grid-table-row grid-table-header-row"
-         data-ng-class="{'inactive': topPanelInactive}">
+    <div class="grid-table-row grid-table-header-row">
 
-        <div data-ng-if="!topPanelInactive" class="grid-table-row-checkbox">
+        <div ng-if="gridTableData.components.topPanel" class="grid-table-row-checkbox">
             <md-checkbox data-ng-checked="allRowsAreActive"
                          data-ng-click="toggleAllRows()"></md-checkbox>
         </div>
@@ -32,10 +31,9 @@
 
     <div data-ng-repeat="row in gridTableData.body | orderBy:sortRowsByCol:sortRowsReverse track by row.key"
          ng-click="onRowClick($event, row)"
-         class="grid-table-row"
-         data-ng-class="{'inactive': topPanelInactive}">
+         class="grid-table-row">
 
-        <div data-ng-if="!topPanelInactive" class="grid-table-row-checkbox">
+        <div ng-if="gridTableData.components.topPanel" class="grid-table-row-checkbox">
             <md-checkbox ng-checked="row.isActive"
                          ng-click="toggleRowSelection(row)"></md-checkbox>
         </div>

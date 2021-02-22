@@ -1043,7 +1043,7 @@
 
                     var entityAttrs = metaService.getEntityAttrs(vm.entityType);
                     var doNotShowAttrs = [];
-					console.log("testing entityAttrs", vm.entityType, entityAttrs);
+
                     switch (vm.entityType) {
 
                         case 'complex-transaction':
@@ -1218,7 +1218,7 @@
                 }
 
             });
-			console.log("testing fieldsTree", vm.fieldsTree);
+
         };
 
         vm.createFixedAreaFieldsTree = function () {
@@ -1609,7 +1609,7 @@
             vm.items = vm.items.concat(vm.entityAttrs);
             vm.items = vm.items.concat(vm.userInputs);
             vm.items = vm.items.concat(vm.layoutAttrs);
-			console.log("testing vm.items", vm.items);
+
             vm.items = vm.items.filter(function (item) {
 
                 var result = true;
