@@ -5,31 +5,6 @@
 
     module.exports = function () {
 
-        /* var onGridTableCellChange = function (originalItems, gridTableDataService) {
-
-            originalItems.forEach(function (oItem, oIndex) {
-
-                var row = gridTableDataService.getRow(oIndex);
-
-                row.columns.forEach(function (column) {
-
-                    if (column.objPath) {
-                        metaHelper.setObjectNestedPropVal(oItem, column.objPath, column.settings.value);
-
-                    } else {
-
-                        column.objPaths.forEach(function (objPath, index) {
-                            metaHelper.setObjectNestedPropVal(oItem, objPath, column.settings.value[index]);
-                        });
-
-                    }
-
-                });
-
-            });
-
-        }; */
-
         var onGridTableCellChange = function (originalItems, gtDataService, rowOrder, colOrder) {
 
             var column = gtDataService.getCell(rowOrder, colOrder);
@@ -64,6 +39,7 @@
             onGridTableCellChange: onGridTableCellChange,
             getCellFromRowByKey: getCellFromRowByKey
         }
+
     }
 
 }());

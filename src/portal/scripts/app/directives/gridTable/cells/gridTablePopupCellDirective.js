@@ -22,7 +22,7 @@
             '</div>',
             link: function (scope, elem, attrs) {
 
-                scope.popupData = {};
+                scope.popupModel = {};
                 scope.popupSettings = null;
 
                 var cellMethods = scope.column.methods;
@@ -49,7 +49,7 @@
 
                             popupMain = "<text-input label='{{column.columnName}}' " +
                                                     "placeholder-text='{{column.columnName}}' " +
-                                                    "model='popupData.value' " +
+                                                    "model='popupModel.value' " +
                                                     "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
                                         "</text-input>"
 
@@ -57,7 +57,7 @@
 
                         case 'number':
                             popupMain = "<number-input label='{{column.columnName}}' " +
-                                                      "model='popupData.value' " +
+                                                      "model='popupModel.value' " +
                                                       "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
                                         "</number-input>"
                             break;
@@ -80,8 +80,21 @@
 
                 var createPopup = function (posX, posY) {
 
+                	let popupClasses = ["popup-area"];
+
+                	if (scope.popupSettings && scope.popupSettings.classes) {
+
+                		if (typeof scope.popupSettings.classes === "string") {
+							popupClasses = popupClasses.concat(scope.popupSettings.classes.split(' '));
+
+						} else {
+							popupClasses = popupClasses.concat(scope.popupSettings.classes);
+						}
+
+					}
+
                     popUpElem = document.createElement("div");
-                    popUpElem.classList.add("popup-area");
+                    popUpElem.classList.add(...popupClasses);
 
                     popUpElem.innerHTML = popupContent
 
@@ -118,12 +131,18 @@
 
                     var popupValue = null;
 
-                    if (scope.popupData.value) {
-                        popupValue = scope.popupData.value
+                    if (scope.popupModel.value) {
+
+						popupValue = scope.popupModel.value;
+
+                    	if (typeof scope.popupModel.value === 'object') {
+							popupValue = JSON.parse(JSON.stringify(scope.popupModel.value));
+                    	}
+
                     }
 
-                    scope.column.settings.cellText = popupValue
-                    scope.column.settings.value = popupValue
+                    scope.column.settings.cellText = popupValue;
+                    scope.column.settings.value = popupValue;
 
                     if (cellMethods && cellMethods.onChange) {
 
@@ -170,10 +189,10 @@
                     if (scope.column.settings.value &&
                         typeof scope.column.settings.value === 'object') {
 
-                        scope.popupData.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+                        scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value))
 
                     } else {
-                        scope.popupData.value = scope.column.settings.value
+                        scope.popupModel.value = scope.column.settings.value
                     }
 
                 };
@@ -217,7 +236,7 @@
                 var init = function () {
 
                     if (!scope.column.settings.hasOwnProperty('cellText')) {
-                        scope.column.settings.cellText = scope.column.settings.value
+                        scope.column.settings.cellText = scope.column.settings.value;
                     }
 
                     if (scope.onLoadEnd) {
@@ -236,11 +255,15 @@
                     switch (scope.column.cellType) {
                         case 'custom_popup':
 
-                            scope.popupSettings = scope.column.settings.popupSettings
+                            scope.popupSettings = scope.column.settings.popupSettings;
 
                             if (scope.popupSettings.contentHtml.hasOwnProperty('footer')) {
-                                popupFooter = scope.popupSettings.contentHtml.footer
+                                popupFooter = scope.popupSettings.contentHtml.footer;
                             }
+
+							if (scope.popupSettings.popupData) {
+								scope.popupData = scope.popupSettings.popupData;
+							}
 
                         case 'text':
                         case 'number':
@@ -257,10 +280,10 @@
                                     if (scope.column.settings.value &&
                                         typeof scope.column.settings.value === 'object') {
 
-                                        scope.popupData.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+                                        scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value))
 
                                     } else {
-                                        scope.popupData.value = scope.column.settings.value
+                                        scope.popupModel.value = scope.column.settings.value
                                     }
 
                                 }

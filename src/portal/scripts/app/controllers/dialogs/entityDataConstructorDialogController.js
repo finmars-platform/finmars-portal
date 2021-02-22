@@ -44,6 +44,8 @@
         vm.instanceId = undefined;
         vm.layoutId = null;
 
+        var fullRowUserInputsList = ['customizable_accruals_table'];
+
         if (data.hasOwnProperty('instanceId')) {
             vm.instanceId = data.instanceId;
         }
@@ -694,8 +696,6 @@
 
             } else {
 
-                console.log('vm.fieldsTree[tab.tabOrder]', vm.fieldsTree[tab.tabOrder], row)
-
                 // TODO this line get throw
                 // Error: [$interpolate:interr] Can't interpolate: {{vm.bindFlex(tab, row, column)}}
                 // vm.fieldsTree[tab.tabOrder] have not property [row]
@@ -1040,6 +1040,7 @@
                 attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
 
                     vm.attrs = data.results;
+
                     var entityAttrs = metaService.getEntityAttrs(vm.entityType);
                     var doNotShowAttrs = [];
 
@@ -1060,7 +1061,7 @@
 
                             break;
 
-                        case 'instrument':
+                        /* case 'instrument':
 
                             doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
                                 'accrued_multiplier', 'default_accrued',
@@ -1069,21 +1070,36 @@
                                 'price_download_scheme', 'reference_for_pricing',
                                 'maturity_date', 'maturity_price'];
 
-                            break;
+                            break; */
 
                         default:
-                            vm.entityAttrs = entityAttrs;
 
+                        	vm.entityAttrs = entityAttrs;
+
+                            break;
                     }
 
                     var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
                     doNotShowAttrs = doNotShowAttrs.concat(keysOfFixedFieldsAttrs);
 
-                    if (doNotShowAttrs.length > 0) {
-                        vm.entityAttrs = entityAttrs.filter(function (entity) {
-                            return doNotShowAttrs.indexOf(entity.key) === -1;
-                        });
+                    if (doNotShowAttrs.length) {
+                        vm.entityAttrs = entityAttrs.filter(entity => !doNotShowAttrs.includes(entity.key));
                     }
+
+					if (vm.entityType === 'instrument') {
+
+						var customizableAccrualsTable = {
+							name: 'Accruals table',
+							key: 'customizable_accruals_table',
+							value_type: 'table',
+							frontOptions: {
+								occupiesWholeRow: true
+							}
+						};
+
+						vm.entityAttrs.push(customizableAccrualsTable);
+
+					}
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -1096,8 +1112,9 @@
                             inputs.forEach(function (input) {
 
                                 var input_value_type = input.value_type;
+
                                 if (input.value_type === 100) {
-                                    input_value_type = 'field'
+                                    input_value_type = 'field';
                                 }
 
                                 var contentType;
@@ -1123,19 +1140,23 @@
                                     }
 
                                 } else {
-
                                     contentType = input.name.split(' ').join('_').toLowerCase();
-
                                 }
 
-                                vm.userInputs.push({
-                                    key: contentType,
-                                    name: input.name,
-                                    reference_table: input.reference_table,
-                                    verbose_name: input.verbose_name,
-                                    content_type: input.content_type,
-                                    value_type: input_value_type
-                                });
+                                var userInputObj = {
+									key: contentType,
+									name: input.name,
+									reference_table: input.reference_table,
+									verbose_name: input.verbose_name,
+									content_type: input.content_type,
+									value_type: input_value_type,
+									frontOptions: {
+										attribute_class: 'userInput',
+										occupiesWholeRow: fullRowUserInputsList.includes(contentType)
+									}
+								}
+
+                                vm.userInputs.push(userInputObj);
 
                             });
 
@@ -1147,13 +1168,11 @@
 
                             resolve();
 
-                        }).catch(function () {
+                        }).catch(() => reject('error on getting complex transaction'));
 
-                            reject('error on getting complex transaction');
+                    }
 
-                        });
-
-                    } else {
+                    else {
 
                         emptySocketsWithoutAttrFromLayout();
 
@@ -1165,9 +1184,7 @@
 
                     }
 
-                }).catch(function () {
-                    reject('error on getting dynamic attributes');
-                });
+                }).catch(() => reject('error on getting dynamic attributes'));
 
             });
 
@@ -1182,6 +1199,7 @@
             tabs.forEach(function (tab) {
 
                 vm.fieldsTree[tab.tabOrder] = {};
+
                 var f;
                 for (f = 0; f < tab.layout.fields.length; f++) {
 
@@ -1245,7 +1263,40 @@
 
         };
 
-        var onDropFromSocket = function (elem, targetTab, targetRow, targetColumn, targetColspan) {
+        vm.getAttributeClass = function (item) {
+
+			if (item.attribute.frontOptions &&
+				item.attribute.frontOptions.attribute_class) {
+
+				var attributeClass = item.attribute.frontOptions.attribute_class;
+				return attributeClass;
+
+			// } else if (attrsKeys.includes(item.attribute.key)) {
+			} else if (vm.attrs.findIndex(dAttr => dAttr.user_code === item.attribute.user_code) > -1) {
+
+				return 'attr';
+
+			} else if (vm.entityAttrs.findIndex(eAttr => eAttr.key === item.attribute.key) > -1) {
+
+				return 'entityAttr';
+
+			} else if (vm.layoutAttrs.findIndex(lAttr => lAttr.key === item.attribute.key) > -1) {
+
+				return 'decorationAttr';
+
+			}
+
+		};
+
+        var occupyWholeRow = function (field, columnsNumber) {
+
+        	field.colspan = columnsNumber;
+        	field.occupiesWholeRow = true;
+			field.type = 'table';
+
+		};
+
+        var onDropFromSocket = function (elem, targetTab, targetRow, targetColumn, targetColspan, occupiesWholeRow) {
 
             var draggedFromTabOrder = elem.dataset.tabOrder;
             var draggedFromRow = parseInt(elem.dataset.row, 10);
@@ -1259,7 +1310,8 @@
 
             var a;
             for (a = 0; a < targetTab.layout.fields.length; a++) {
-                var field = targetTab.layout.fields[a];
+
+            	var field = targetTab.layout.fields[a];
 
                 if (field.column === targetColumn && field.row === targetRow) {
 
@@ -1276,12 +1328,16 @@
                     targetTab.layout.fields[a].column = targetColumn;
                     targetTab.layout.fields[a].row = targetRow;
 
+					if (occupiesWholeRow) {
+						occupyWholeRow(field, targetTab.layout.columns);
+					}
+
                     break;
                 }
             }
 
-            // make socket we dragged from empty
-            var i;
+			//<editor-fold desc="Make socket we dragged from empty">
+			var i;
             for (i = 0; i < draggedFromTab.layout.fields.length; i++) {
                 var field = draggedFromTab.layout.fields[i];
 
@@ -1300,53 +1356,104 @@
                     break;
                 }
             }
-            // < make socket we dragged from empty >
+			//</editor-fold>
 
         };
 
-        var onDropFromAttributesList = function (elem, targetTab, targetRow, targetColumn) {
+        var onFullRowAttributeDrop = function (elem, targetTab, targetRow) {
+
+        	if (vm.isRowEmpty(targetTab.tabOrder, targetRow, targetTab.layout.columns)) {
+
+
+
+			}
+
+        	else {
+
+				var a;
+				for (a = 0; a < targetTab.layout.fields.length; a++) {
+
+					var field = targetTab.layout.fields[a];
+
+					if (field.column === 1 && field.row === targetRow) {
+
+						var itemIndex = parseInt(elem.dataset.index, 10);
+
+						field.attribute = vm.items[itemIndex];
+						field.editable = vm.items[itemIndex].editable;
+						field.name = field.attribute.name;
+						field.attribute_class = 'userInput';
+						field.type = 'field';
+						field.colspan = 1;
+
+					}
+
+				}
+
+			}
+
+		};
+
+        var onDropFromAttributesList = function (elem, targetTab, targetRow, targetColumn, occupiesWholeRow) {
 
             var a;
             for (a = 0; a < targetTab.layout.fields.length; a++) {
-                var field = targetTab.layout.fields[a];
+
+            	var field = targetTab.layout.fields[a];
 
                 if (field.column === targetColumn && field.row === targetRow) { // dragging from attributes list
 
-                    var entityAttrsKeys = [];
-                    vm.entityAttrs.forEach(function (entityAttr) {
-                        entityAttrsKeys.push(entityAttr.key);
-                    });
-
-                    var layoutAttrsKeys = [];
-                    vm.layoutAttrs.forEach(function (layoutAttr) {
-                        layoutAttrsKeys.push(layoutAttr.key);
-                    });
-
                     var itemIndex = parseInt(elem.dataset.index, 10);
+					var attr = JSON.parse(JSON.stringify(vm.items[itemIndex]));
+					delete attr.frontOptions;
 
-                    field.attribute = vm.items[itemIndex];
-                    field.editable = vm.items[itemIndex].editable;
+                    field.attribute = attr;
+                    field.editable = attr.editable;
                     field.name = field.attribute.name;
-                    field.attribute_class = 'userInput';
                     field.type = 'field';
                     field.colspan = 1;
 
-                    if (field.attribute.hasOwnProperty('id')) {
+					/*var entityAttrsKeys = vm.entityAttrs.map(entityAttr => entityAttr.key);
+					var attrsKeys = vm.attrs.map(attr => attr.key);
+					var layoutAttrsKeys = vm.layoutAttrs.map(layoutAttr => layoutAttr.key);*/
+
+					/* if (vm.items[itemIndex].frontOptions &&
+						vm.items[itemIndex].frontOptions.attribute_class === 'userInput') {
+
+						field.attribute_class = 'userInput';
+
+					}
+
+                    else if (field.attribute.hasOwnProperty('id') || // old dynamic attributes didn't have key
+						attrsKeys.includes(field.attribute.key)) {
 
                         field.attribute_class = 'attr';
                         field.id = field.attribute.id;
 
-                    } else if (entityAttrsKeys.indexOf(field.attribute.key) !== -1) {
+                    }
 
+                    else if (entityAttrsKeys.includes(field.attribute.key)) {
                         field.attribute_class = 'entityAttr';
+                    }
 
-                    } else if (layoutAttrsKeys.indexOf(field.attribute.key) !== -1) {
+                    else if (layoutAttrsKeys.includes(field.attribute.key)) {
                         field.attribute_class = 'decorationAttr';
+                    } */
+
+					field.attribute_class = vm.getAttributeClass(field);
+
+					if (field.attribute_class === 'attr') {
+						field.id = field.attribute.id;
+					}
+
+                    if (occupiesWholeRow) {
+                    	occupyWholeRow(field, targetTab.layout.columns);
                     }
 
                     break;
 
                 }
+
             }
 
         };
@@ -1364,18 +1471,10 @@
                 this.dragula = dragula(items,
                     {
                         moves: function (el) {
-                            if (el.classList.contains('ec-attr-empty-btn')) {
-                                return false;
-                            }
-
-                            return true;
+                            return !el.classList.contains('ec-attr-empty-btn');
                         },
                         accepts: function (el, target, source, sibling) {
-                            if (target.classList.contains('ec-attr-empty')) {
-                                return true;
-                            }
-
-                            return false;
+                            return target.classList.contains('ec-attr-empty');
                         },
                         copy: function (el, source) {
                             return !el.classList.contains('ec-attr-occupied');
@@ -1415,35 +1514,57 @@
                         var targetRow = parseInt(target.dataset.row, 10);
                         var targetColumn = parseInt(target.dataset.col, 10);
                         var targetColspan = parseInt(target.dataset.colspan, 10);
+						var occupiesWholeRow = elem.dataset.occupiesWholeRow === 'true';
 
-                        if (targetTabOrder === 'fixedArea') {
-                            var targetTab = vm.fixedArea;
-                        } else {
-                            var targetTab = vm.tabs[targetTabOrder];
-                        }
+						if (occupiesWholeRow) { targetColumn = 1; }
 
-                        if (elem.classList.contains('ec-attr-occupied')) {
+						var targetTab = (targetTabOrder === 'fixedArea') ? vm.fixedArea : vm.tabs[targetTabOrder];
 
-                            onDropFromSocket(elem, targetTab, targetRow, targetColumn, targetColspan);
+						if (occupiesWholeRow && !vm.isRowEmpty(targetTab.tabOrder, targetRow, targetTab.layout.columns)) {
 
-                        } else {
+							$mdDialog.show({
+								controller: 'WarningDialogController as vm',
+								templateUrl: 'views/dialogs/warning-dialog-view.html',
+								parent: angular.element(document.body),
+								clickOutsideToClose: false,
+								locals: {
+									warning: {
+										title: 'Warning',
+										description: "Row should be empty to contain this attribute."
+									}
+								},
+								multiple: true
+							})
 
-                            onDropFromAttributesList(elem, targetTab, targetRow, targetColumn);
+						}
 
-                        }
+						else {
 
-                        if (targetRow === targetTab.layout.rows) {
-                            addRows(targetTab);
-                        }
+							if (elem.classList.contains('ec-attr-occupied')) {
+								onDropFromSocket(elem, targetTab, targetRow, targetColumn, targetColspan, occupiesWholeRow);
+							}
 
-                        vm.createFieldsTree();
-                        if (vm.fixedArea.isActive) {
-                            vm.createFixedAreaFieldsTree();
-                        }
+							else {
+								onDropFromAttributesList(elem, targetTab, targetRow, targetColumn, occupiesWholeRow);
+							}
 
-                        vm.syncItems();
+							if (targetRow === targetTab.layout.rows) {
+								addRows(targetTab);
+							}
 
-                        $scope.$apply();
+							vm.createFieldsTree();
+
+							if (vm.fixedArea.isActive) {
+								vm.createFixedAreaFieldsTree();
+							}
+
+							vm.syncItems();
+
+							$scope.$apply();
+
+						}
+
+						drake.cancel();
 
                     }
 
@@ -1565,6 +1686,10 @@
             }
 
         };
+
+		vm.doesAttrOccupiesWholeRow = function (attr) {
+			return (attr.frontOptions && attr.frontOptions.occupiesWholeRow) ? 'true' : 'false';
+		};
 
         vm.openFormPreview = function ($event) {
 
