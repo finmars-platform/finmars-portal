@@ -119,68 +119,14 @@
                             }
                         },
                         {
-                            key: 'options',
-                            // objPath: ['name'],
-                            columnName: 'Options',
-                            order: 4,
-                            cellType: 'text',
-                            settings: {
-                                value: null,
-                                closeOnMouseOut: false,
-                                isDisabled: true
-                            },
+                            key: 'options_settings',
+                            columnName: '',
+                            order:4,
+                            cellType: 'empty',
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '65px'}
                             }
-                        },
-                        /*                        {
-                                                    key: 'options',
-                                                    objPaths: [['accrual_calculation_model'], ['periodicity_n'], ['periodicity']],
-                                                    columnName: 'Options',
-                                                    order: 4,
-                                                    cellType: 'custom_popup',
-                                                    settings: {
-                                                        value: [
-                                                            null, // for accrual_calculation_model
-                                                            null, // for periodicity_n
-                                                            null // for periodicity
-                                                        ],
-                                                        cellText: '',
-                                                        closeOnMouseOut: false,
-                                                        popupSettings: {
-                                                            contentHtml: {
-                                                                main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-accrual-schedules-periodicity-view.html'\"></div>"
-                                                            },
-                        /!*                                    fieldsData: [
-                                                                {selectorOptions: vm.periodicityItems},
-                                                                null,
-                                                                {selectorOptions: vm.accrualModels}
-                                                            ]*!/
-                                                        }
-                                                    },
-                                                    methods: {
-                        /!*                                onChange: function (rowData, colData, gtDataService, gtEventService) {
-
-                                                            var periodicityCell = gtDataService.getCellByKey(rowData.order, 'periodicity');
-
-                                                            periodicityCell.settings.cellText = '';
-
-                                                            if (periodicityCell.settings.value[2]) {
-
-                                                                const selectedPeriodicity = vm.periodicityItems.find(item => {
-                                                                    return item.id === periodicityCell.settings.value[2];
-                                                                });
-                                                                periodicityCell.settings.cellText = selectedPeriodicity.name
-
-                                                            }
-
-                                                        }*!/
-                                                    },
-                                                    styles: {
-                                                        'grid-table-cell': {'width': '115px'}
-                                                    }
-                                                },*/
-
+                        }
                     ],
                 },
                 components: {
@@ -193,16 +139,27 @@
                 }
             };
 
-            const optionCellSettings = {
-                value: [],
-                cellText: 'Options...',
-                closeOnMouseOut: false,
-                popupSettings: {
-                    contentHtml: {
-                        main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-type-accruals-options-view.html'\"></div>"
+            var optionsColumn = {
+                key: 'options_settings',
+                objPath: ['options'],
+                columnName: '',
+                order: 4,
+                cellType: 'custom_popup',
+                settings: {
+                    value: null,
+                        closeOnMouseOut: false,
+                        cellText: '...',
+                        popupSettings: {
+                            contentHtml: {
+                                main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
+                            },
+                            classes: "ev-instr-accruals-settings-popup"
+                        }
                     },
-                }
-            };
+                    styles: {
+                        'grid-table-cell': {'width': '65px'}
+                    }
+                };
 
             const rowObj = metaHelper.recursiveDeepCopy(accrualsGridTableData.templateRow, true);
             accrualsGridTableData.header.columns = rowObj.columns.map(column => {
@@ -233,31 +190,10 @@
 
                 if (row.options) {
 
-                    const cell = rowObj.columns[4];
+                    const optionsCell = metaHelper.recursiveDeepCopy(optionsColumn, false);
 
-                    cell.cellType = 'custom_popup';
-                    cell.objPaths = [
-                        ['annual_to_show'], ['annual_override_name'],
-                        ['semi-annual_to_show'], ['semi-annual_override_name'],
-                        ['quarterly-annual_to_show'], ['quarterly-annual_override_name'],
-                        ['monthly-annual_to_show'], ['monthly-annual_override_name'],
-                    ];
-
-                    cell.settings = metaHelper.recursiveDeepCopy(optionCellSettings, false);
-                    cell.settings.value = [
-                        true, 'Annual ON',
-                        true, 'Semi-annual ON',
-                        true, 'Quarterly ON',
-                        true, 'Monthly ON',
-                    ];
-
-                    cell.methods ={
-                        onChange: function (rowData, colData, gtDataService, gtEventService) {
-                            const cell = gtDataService.getCellByKey(rowData.order, colData.key);
-                            cell.settings.cellText = 'Options changed';
-                            // Victor 2021.02.18 TODO here i will collect model for options of accrual model and periodicity
-                        }
-                    }
+                    rowObj.columns[4] = optionsCell;
+                    rowObj.columns[4].settings.value = row.options;
 
                 }
 
@@ -270,9 +206,21 @@
 
         vm.createInstrumentTypeAccrual = function () {
 
+            const mapOptions = function (item) {
+                return {
+                    user_code: item.user_code,
+                    name: item.name,
+                    to_show: true,
+                    override_name: "",
+                };
+            };
+
             if(!vm.entity.accruals) {
                 vm.entity.accruals = [];
             }
+
+            var periodicitySelectorOptions = vm.periodicityItems.map(mapOptions);
+            var accrualModelsSelectorOptions = vm.accrualModels.map(mapOptions)
 
             var accrual = {
                 accrualsGridTableDataService: new GridTableDataService(),
@@ -286,8 +234,8 @@
                         {key: 'accrual_start_date', name: 'First accrual date', toShow: true, defaultValueType: 'date', options: false},
                         {key: 'first_payment_date', name: 'First payment date', toShow: true,  defaultValueType: 'date', options: false},
                         {key: 'accrual_size', name: 'Accrual size', toShow: true, defaultValueType: 'number', options: false},
-                        {key: 'periodicity', name: 'Periodicity', toShow: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options: true},
-                        {key: 'accrual_calculation_model', name: 'Accrual model', toShow: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options: true},
+                        {key: 'periodicity', name: 'Periodicity', toShow: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options: periodicitySelectorOptions},
+                        {key: 'accrual_calculation_model', name: 'Accrual model', toShow: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options: accrualModelsSelectorOptions},
                         {key: 'periodicity_n', name: 'Periodic N', toShow: true, defaultValueType: 'number', options: false},
                     ]
                 }
