@@ -125,12 +125,14 @@
 
                 var editLayout = await uiService.getEditLayout(vm.entityType);
                 var bigDrawerWidthPercent;
-                var fixedAreaColumns;
+                var fixedAreaColumns = 6;
 
                 if (editLayout.results.length) {
 
                     var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
-                    fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                    if (vm.entityType !== 'instrument-type') {
+                        fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                    }
 
                     bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
 
@@ -531,12 +533,15 @@
 						var editLayout = await uiService.getDefaultEditLayout(entitytype);
 						console.log('editLayout', editLayout, entitytype)
 						var bigDrawerWidthPercent;
-						var fixedAreaColumns;
+						var fixedAreaColumns = 6;
 
 						if (editLayout.results.length) {
 
 							var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
-							fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+
+                            if (entitytype !== 'instrument-type') {
+                                fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                            }
 
 							bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
 
