@@ -1,15 +1,12 @@
-<md-dialog aria-label="transaction type edit"
-           class="entity-editor-dialog draggable-dialog dialog-actions-bottom ttypeEditorElemToDrag"
-           drag-dialog
-           style="height: 100%">
-    <md-toolbar>
-        <div data-ng-if="vm.checkReadyStatus()"
-             class="md-toolbar-tools"
-             data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
-            <is-draggable-sign></is-draggable-sign>
+<div class="big-drawer-content universal-editor">
+    <div class="big-drawer-header">
 
-            <h2 data-ng-if="vm.hasEditPermission">Edit Transaction type</h2>
-            <h2 data-ng-if="!vm.hasEditPermission">View Transaction type</h2>
+        <div data-ng-if="vm.checkReadyStatus()"
+             data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
+
+            <h2 data-ng-if="vm.hasEditPermission"  class="big-drawer-header-h">Edit Transaction type</h2>
+            <h2 data-ng-if="!vm.hasEditPermission"  class="big-drawer-header-h">View Transaction type</h2>
+
             <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">
                 <ng-md-icon icon="lock" size="24">
                         <md-tooltip md-direction="bottom">You don't have permission to edit this form</md-tooltip>
@@ -24,10 +21,12 @@
             </div>
 
         </div>
-    </md-toolbar>
-    <md-dialog-content style="height: 100%">
 
-        <div style="min-width: 1450px">
+    </div>
+
+    <div class="big-drawer-main">
+
+<!--        <div style="min-width: 1450px">-->
             <div data-ng-if="vm.checkReadyStatus()">
 
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
@@ -219,53 +218,92 @@
                     <progress-circular diameter="100"></progress-circular>
                 </div>
             </div>
-        </div>
+<!--        </div>-->
 
-    </md-dialog-content>
+    </div>
 
-    <md-dialog-actions layout="row" layout-align="space-between center">
+    <div class="big-drawer-footer big-drawer-actions flex-row fc-space-between">
+
         <div layout="row">
-            <md-button ng-click="vm.editLayout($event)"
-                       class="md-raised md-primary"
-                       ng-disabled="!vm.checkReadyStatus() || vm.processing">
-                Edit transaction form
-            </md-button>
-
-            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
-                Manage attributes
-            </md-button>
-
-            <md-button
-                    ng-click="vm.delete($event)" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}"
-                    class="md-raised md-warn">
-                Delete
+            <md-button class="link-button" ng-click="vm.cancel()">
+                <span>Cancel</span>
             </md-button>
         </div>
 
         <div style="margin-right: 10px;">
-            <md-button class="md-raised m-r-24" ng-click="vm.copy()"
-                       ng-disabled="!vm.checkReadyStatus()" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
-                Make a copy
-            </md-button>
-            <md-button class="md-raised" ng-click="vm.cancel()">
-                Cancel
-            </md-button>
-            <md-button class="md-raised m-r-24"
-                       ng-click="vm.save()"
-                       ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}"
-                       style="margin-left:20px;">
+            <md-menu md-position-mode="target-right target">
+
+                <md-button class="outline-button" ng-click="$mdOpenMenu($event)">
+                    <div class="flex-row flex-c-center">
+                        <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>
+                    </div>
+                </md-button>
+
+                <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
+
+                    <md-menu-item>
+                        <md-button ng-click="vm.copy('big_drawer')"
+                                   data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Duplicate</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-divider></md-menu-divider>
+
+                    <md-menu-item>
+                        <md-button ng-click="vm.editLayout($event)">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="edit" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Edit Form</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button ng-click="vm.manageAttrs($event)">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="list" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Manage Attributes</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-divider></md-menu-divider>
+
+                    <md-menu-item data-ng-if="vm.entityType != 'transaction'">
+                        <md-button ng-click="vm.delete($event)"
+                                   data-ng-class="{'disabled-btn': !vm.hasEditPermission || vm.processing}">
+                            <div class="flex-row flex-i-center color-delete">
+                                <ng-md-icon icon="delete" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Delete</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                </md-menu-content>
+            </md-menu>
+
+            <md-button class="outline-button"
+                       ng-disabled="vm.processing || !vm.hasEditPermission"
+                       ng-click="vm.save()">
                 Save
             </md-button>
-            <md-button class="md-raised"
+
+            <md-button ng-disabled="vm.processing || !vm.hasEditPermission"
                        ng-click="vm.saveAndExit()"
-                       ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
+                       class="m-r-24 primary-button">
                 Save and Exit
             </md-button>
+
         </div>
 
-        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
-                               data-elem-to-resize="vm.dialogElemToResize"
-                               data-on-resize-callback="vm.rearrangeMdDialogActions()"
-                               class="dialog-window-resizer_type1"></dialog-window-resizer>
-    </md-dialog-actions>
-</md-dialog>
+    </div>
+
+</div>

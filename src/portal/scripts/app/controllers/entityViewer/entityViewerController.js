@@ -218,8 +218,25 @@
 				switch (entitytype) {
 
 					case 'transaction-type':
+                        var fixedAreaColumns = 6;
+                        var bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
 
-						$mdDialog.show({
+                        $bigDrawer.show({
+                            controller: 'TransactionTypeEditDialogController as vm',
+                            templateUrl: 'views/entity-viewer/transaction-type-edit-drawer-view.html',
+                            addResizeButton: false,
+                            drawerWidth: bigDrawerWidthPercent,
+                            locals: {
+                                entityType: entitytype,
+                                entityId: activeObject.id,
+                                data: {
+                                    openedIn: 'big-drawer',
+                                }
+                            }
+
+                        })
+
+/*						$mdDialog.show({
 							controller: 'TransactionTypeEditDialogController as vm',
 							templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
 							parent: angular.element(document.body),
@@ -230,7 +247,8 @@
 								entityId: activeObject.id,
 								openedIn: 'dialog'
 							}
-						}).then(function (res) {
+						})
+                            .then(function (res) {
 
 							vm.entityViewerDataService.setActiveObjectAction(null);
 							vm.entityViewerDataService.setActiveObjectActionData(null);
@@ -287,7 +305,7 @@
 								}
 
 							}
-						});
+						});*/
 
 						break;
 
