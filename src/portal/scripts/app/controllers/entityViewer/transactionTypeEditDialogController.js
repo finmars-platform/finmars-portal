@@ -10,7 +10,7 @@
     var usersGroupService = require('../../services/usersGroupService');
     var usersService = require('../../services/usersService');
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
 
     var gridHelperService = require('../../services/gridHelperService');

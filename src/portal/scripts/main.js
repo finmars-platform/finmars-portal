@@ -123,6 +123,7 @@ app.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$control
 app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
 app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
 app.service('evRvDomManagerService', ['$mdDialog', require('./app/services/evRvDomManagerService')]);
+app.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
 
 // Dashboard
 
@@ -194,7 +195,11 @@ app.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', requ
 app.controller('HomeController', ['$scope', '$state', '$mdDialog', require('./app/controllers/homeController')]);
 app.controller('SetupController', ['$scope', '$state', require('./app/controllers/setupController')]);
 app.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
-app.controller('EntityDataConstructorDialogController', ['$scope', 'data', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dialogs/entityDataConstructorDialogController')]);
+app.controller(
+	'EntityDataConstructorDialogController',
+	['$scope', '$stateParams', '$state', '$mdDialog', 'entityDataConstructorService', 'data',
+	require('./app/controllers/dialogs/entityDataConstructorDialogController')]
+);
 app.controller('EntityViewerFormsPreviewDialogController', ['$scope', '$mdDialog', 'inputFormTabs', 'data', require('./app/controllers/dialogs/entityViewerFormsPreviewDialogController')]);
 app.controller('ComplexTransactionFormsPreviewDialogController', ['$scope', '$mdDialog', 'inputFormTabs', 'data', require('./app/controllers/dialogs/complexTransactionFormsPreviewDialogController')]);
 app.controller('EvFormInstrumentAccrualsSettingsDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'data', require('./app/controllers/dialogs/evFormInstrumentAccrualsSettingsDialogController')]);
@@ -524,7 +529,7 @@ app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
 app.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownMenuDirective')]);
 
 app.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
-app.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
+app.directive('layoutConstructorField', ['$mdDialog', 'entityDataConstructorService', require('./app/directives/layoutConstructorFieldDirective')]);
 // app.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 

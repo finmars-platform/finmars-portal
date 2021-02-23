@@ -16,9 +16,7 @@
 
 		const vm = this;
 
-		vm.readyStatus = false;
-
-		const rowNames = {
+		/* const rowNames = {
 			notes: 'Notes',
 			accrual_start_date: 'Accrual start date',
 			first_payment_date: 'First payment date',
@@ -31,10 +29,6 @@
 			rows_deletion: '"Delete" Button'
 		};
 
-		/* let accrualModelsOpts = [];
-		 let periodicityItemsOpts = [];
-		let unformattedData = []; */
-
 		const defaultSettings = [
 			{key: "notes", to_show: true, override_name: ""},
 			{key: "accrual_start_date", to_show: true, override_name: ""},
@@ -46,7 +40,7 @@
 			{key: "build_accruals_btn", to_show: true},
 			{key: "rows_addition", to_show: true},
 			{key: "rows_deletion", to_show: true}
-		];
+		]; */
 
 		vm.gridTableData = {
 			header: {
@@ -125,8 +119,18 @@
 				topPanel: false
 			}
 		};
+		vm.label = "";
 
-		const formatDataForGridTable = function () {
+		let tableData = {};
+		if (data.tableData) {
+			tableData = JSON.parse(JSON.stringify(data.tableData));
+		}
+
+		if (data.label) {
+			vm.label = data.label;
+		}
+
+		const formatDataForGridTable = function (rowsList) {
 
 			var rowObj = metaHelper.recursiveDeepCopy(vm.gridTableData.templateRow, true);
 
@@ -146,22 +150,18 @@
 			});
 			//</editor-fold>
 
-			defaultSettings.forEach((settings, settingsIndex) => {
+			rowsList.forEach((rowData, rowIndex) => {
 
 				rowObj = metaHelper.recursiveDeepCopy(vm.gridTableData.templateRow, true);
 
-				rowObj.key = settings.key;
-				rowObj.order = settingsIndex;
+				rowObj.key = rowData.key;
+				rowObj.order = rowIndex;
 
 				rowObj.columns.forEach(column => {
 
 					const colProp = column.objPath[0];
 
-					if (column.key === 'name') {
-						column.settings.value = rowNames[settings.key];
-					}
-
-					else if (settings.hasOwnProperty(colProp)) {
+					if (rowData.hasOwnProperty(colProp)) {
 
 						/* if (column.key === 'options_settings') {
 
@@ -170,7 +170,7 @@
 						} else {
 							column.settings.value = settings[colProp];
 						} */
-						column.settings.value = settings[colProp];
+						column.settings.value = rowData[colProp];
 
 					}
 
@@ -193,7 +193,10 @@
 		};
 
 		vm.save = function () {
-			$mdDialog.hide({status: 'agree'});
+			$mdDialog.hide({
+				status: 'agree',
+				data: {label: vm.label, tableData: tableData}
+			});
 		};
 
 		const init = async function () {
@@ -201,9 +204,7 @@
 			vm.gridTableDataService = new GridTableDataService();
 			vm.gridTableEventService = new EventService();
 
-			// unformattedData = defaultSettings;
-
-			if (!data) { // get fixed default data for new entity data component
+			/* if (!data) { // get fixed default data for new entity data component
 
 				const mapOptions = function (item) {
 					return {
@@ -214,13 +215,13 @@
 					};
 				};
 
-				/* accrualCalculationModelService.getList().then(accrualModelsData => {
+				/!* accrualCalculationModelService.getList().then(accrualModelsData => {
 					defaultOpts.accrualModels = accrualModelsData.map(mapOptions);
 				});
 
 				instrumentPeriodicityService.getList().then(function (periodicityData) {
 					defaultOpts.periodicity = periodicityData.map(mapOptions);
-				}); */
+				}); *!/
 				const defaultCalculationModelIndex = defaultSettings.findIndex(settings => settings.key === 'accrual_calculation_model');
 				const defaultPeriodicityIndex = defaultSettings.findIndex(settings => settings.key === 'periodicity');
 
@@ -238,17 +239,24 @@
 
 				} catch (error) {}
 
-			}
+			} */
 
-			formatDataForGridTable();
+			formatDataForGridTable(tableData);
 			vm.gridTableDataService.setTableData(vm.gridTableData);
 
-			/* vm.gridTableEventService.addEventListener(gtEvents.CELL_VALUE_CHANGED, (argObj) => {
-				console.log("testing cell value changed", vm.gridTableData);
-			}); */
+			vm.gridTableEventService.addEventListener(gtEvents.CELL_VALUE_CHANGED, argObj => {
 
-			vm.readyStatus = true;
-			$scope.$apply();
+				const changedCell = vm.gridTableDataService.getCell(argObj.row.order, argObj.column.order);
+				const dataKey = changedCell.objPath[0];
+
+				if (changedCell.settings.value && typeof changedCell.settings.value === 'object') {
+					tableData[argObj.row.order][dataKey] = JSON.parse(angular.toJson(changedCell.settings.value));
+
+				} else {
+					tableData[argObj.row.order][dataKey] = changedCell.settings.value;
+				}
+
+			});
 
 		};
 

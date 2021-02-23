@@ -6,9 +6,9 @@
     'use strict';
 
     var metaService = require('../services/metaService');
-    var layoutService = require('../services/layoutService');
+    var layoutService = require('../services/entity-data-constructor/layoutService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, entityDataConstructorService) {
         return {
             restrict: 'E',
             scope: {
@@ -263,16 +263,28 @@
 
 				};
 
-                var toggleTableEditMode = function ($event) {
+                var openEditModeInDialog = function ($event) {
 
-                	 $mdDialog.show({
+                	$mdDialog.show({
 						controller: 'EvFormInstrumentAccrualsSettingsDialogController as vm',
 						templateUrl: 'views/dialogs/ev-form-instrument-accruals-settings-dialog-view.html',
 						targetEvent: $event,
 						multiple: true,
 						locals: {
-							data: null
+							data: {label: scope.item.options.label, tableData: scope.item.options.tableData}
 						}
+
+                	}).then(res => {
+
+                		if (res.status === 'agree') {
+
+                			scope.item.options.label = res.data.label;
+							scope.item.options.tableData = res.data.tableData;
+
+							scope.saveField();
+
+						}
+
 					});
 
 				};
@@ -287,7 +299,6 @@
 						column = 1; // move attribute to the start of row
 						colspan = scope.tab.layout.columns;
 					}
-
 
 					var i;
 					for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
@@ -315,25 +326,37 @@
 							scope.tab.layout.fields[i].attribute_class = entityDataConstructorVm.getAttributeClass(scope.item);
 
 							if (scope.item.options) {
-								scope.tab.layout.fields[i].options = scope.item.options;
+								scope.tab.layout.fields[i].options = JSON.parse(JSON.stringify(scope.item.options));
 							}
 
 							var attributeData = JSON.parse(JSON.stringify(scope.item.attribute));
 							delete attributeData.frontOptions;
 
 							scope.tab.layout.fields[i].name = scope.item.attribute.name;
-							scope.tab.layout.fields[i].type = 'field';
+							scope.tab.layout.fields[i].type = scope.item.type;
 							scope.tab.layout.fields[i].colspan = colspan;
 							scope.tab.layout.fields[i].attribute = attributeData;
 							scope.tab.layout.fields[i].occupiesWholeRow = scope.item.occupiesWholeRow;
 
 							scope.tab.layout.fields[i].editable = scope.item.editable !== false;
 
+							scope.tab.layout.fields[i].backgroundColor = null;
+
 							if (scope.fieldUsesBackgroundColor) {
 								scope.tab.layout.fields[i].backgroundColor = scope.backgroundColor.color;
-							} else {
-								scope.tab.layout.fields[i].backgroundColor = null;
 							}
+
+							/* if (scope.item.hasOwnProperty("settings")) {
+
+								var settings = scope.item.settings;
+
+								if (settings && typeof settings === 'object') {
+									settings = JSON.parse(angular.toJson(settings));
+								}
+
+								scope.tab.layout.fields[i].settings = settings;
+
+							} */
 
 							if (scope.tab.layout.fields[i].row === scope.tab.layout.rows) {
 								addRow();
@@ -472,7 +495,7 @@
                             }
                         }
                     }
-
+					delete scope.tab.layout.fields[i].settings;
                     scope.fieldUsesBackgroundColor = false;
                     //scope.fieldBackgroundColor = '#000000';
                     scope.backgroundColor.color = {};
@@ -514,7 +537,7 @@
 
 						return false;
 
-					}
+					};
 
 					scope.attrs.forEach(function (attr) {
 						attr.disabled = isAttrDisabled(attr, 'user_code');
@@ -560,6 +583,16 @@
 
                 	scope.item.type = (scope.item.attribute.value_type === 'table') ? 'table' : 'field';
 					scope.item.occupiesWholeRow = false;
+
+					if (scope.item.type === 'table') {
+
+						var defaultSettings = entityDataConstructorVm.getTableDefaultSettings(scope.item.attribute.key);
+
+						if (defaultSettings) {
+							scope.item.options = {...scope.item.options.options, ...defaultSettings};
+						}
+
+					}
 
 					if (scope.item.attribute.frontOptions && scope.item.attribute.frontOptions.occupiesWholeRow) {
 						scope.item.occupiesWholeRow = true;
@@ -782,7 +815,7 @@
                     	findItem();
 
 						if (scope.item.type === 'table') {
-							scope.toggleEditMode = toggleTableEditMode;
+							scope.toggleEditMode = openEditModeInDialog;
 
 						} else {
 							scope.toggleEditMode = toggleGeneralEditMode;

@@ -11,18 +11,10 @@
 
     <md-dialog-content class="p-16" style="width: 735px;">
 
-        <text-input label="Area Label Text"></text-input>
+        <text-input label="Area Label Text" model="vm.label"></text-input>
 
-        <div ng-if="vm.readyStatus">
-            <grid-table gt-data-service="vm.gridTableDataService"
-                        gt-event-service="vm.gridTableEventService"></grid-table>
-        </div>
-
-        <div ng-if="!vm.readyStatus">
-            <div layout="row" layout-sm="column" layout-align="space-around">
-                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-            </div>
-        </div>
+        <grid-table gt-data-service="vm.gridTableDataService"
+                    gt-event-service="vm.gridTableEventService"></grid-table>
 
     </md-dialog-content>
 
