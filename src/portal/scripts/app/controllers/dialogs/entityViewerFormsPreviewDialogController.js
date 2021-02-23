@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
 
     var gridHelperService = require('../../services/gridHelperService');

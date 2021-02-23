@@ -7,13 +7,12 @@
 	var evEditorEvents = require("../services/ev-editor/entityViewerEditorEvents");
 
 	var metaService = require("../services/metaService");
-	var layoutService = require("../services/layoutService");
+	var layoutService = require("../services/entity-data-constructor/layoutService");
 	var attributeTypeService = require("../services/attributeTypeService");
 
 	module.exports = function () {
 		return {
 			restrict: "E",
-			templateUrl: "views/directives/bind-field-control-view.html",
 			scope: {
 				item: "=",
 				entity: "=",
@@ -23,6 +22,7 @@
 				entityChange: "&?",
 				onFieldBlur: "&?", // for now implemented only for textInputDirective
 			},
+			templateUrl: "views/directives/bind-field-control-view.html",
 			link: function (scope, elem, attr) {
 
 				scope.readyStatus = { classifier: false, content: true };

@@ -14,14 +14,15 @@
 
     var gridHelperService = require('../../services/gridHelperService');
     var ScrollHelper = require('../../helpers/scrollHelper');
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var colorPalettesService = require('../../services/colorPalettesService');
+	var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    var scrollHelper = new ScrollHelper();
+	var scrollHelper = new ScrollHelper();
 
-    module.exports = function entityDataConstructorDialogController($scope, data, $stateParams, $state, $mdDialog) {
+    module.exports = function entityDataConstructorDialogController($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
 
         var vm = this;
 
@@ -44,7 +45,7 @@
         vm.instanceId = undefined;
         vm.layoutId = null;
 
-        var fullRowUserInputsList = ['customizable_accruals_table'];
+        var fullRowUserInputsList = entityDataConstructorService.fullRowUserInputsList;
 
         if (data.hasOwnProperty('instanceId')) {
             vm.instanceId = data.instanceId;
@@ -620,45 +621,75 @@
 
                 vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
 
-                if (vm.uiIsDefault) {
-                    if (vm.instanceId) {
-                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data) {
-                            console.log('layout saved1');
+				/* if (vm.uiIsDefault) {
+					if (vm.instanceId) {
+						transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data) {
+							console.log('layout saved1');
 
-                            $scope.$apply();
+							$scope.$apply();
 
-                            $mdDialog.hide({status: 'agree'});
-                        });
-                    } else {
-                        uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
-                            console.log('layout saved2');
+							$mdDialog.hide({status: 'agree'});
+						});
+					} else {
+						uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
+							console.log('layout saved2');
 
-                            $scope.$apply();
+							$scope.$apply();
 
-                            $mdDialog.hide({status: 'agree'});
-                        });
-                    }
-                } else {
-                    if (vm.instanceId) {
-                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data) {
-                            console.log('layout saved3');
+							$mdDialog.hide({status: 'agree'});
+						});
+					}
+				} else {
+					if (vm.instanceId) {
+						transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data) {
+							console.log('layout saved3');
 
-                            $scope.$apply();
+							$scope.$apply();
 
-                            $mdDialog.hide({status: 'agree'});
-                        });
-                    } else {
-                        uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
-                            console.log('layout saved4');
+							$mdDialog.hide({status: 'agree'});
+						});
+					} else {
+						uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
+							console.log('layout saved4');
 
-                            $scope.$apply();
+							$scope.$apply();
 
-                            $mdDialog.hide({status: 'agree'});
-                        });
-                    }
-                }
+							$mdDialog.hide({status: 'agree'});
+						});
+					}
+				} */
 
-            } else {
+				var onSavingEnd = function () {
+					$scope.$apply();
+					$mdDialog.hide({status: 'agree'});
+				};
+
+                if (vm.entityType === "complex-transaction") {
+
+                	if (vm.instanceId || vm.instanceId === 0) {
+                		transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(onSavingEnd);
+					}
+
+                	else {
+						toastNotificationService.error("Id of transaction type not found");
+					}
+
+				}
+
+                else {
+
+					if (vm.uiIsDefault) {
+						uiService.createEditLayout(vm.entityType, vm.ui).then(onSavingEnd);
+
+					} else {
+						uiService.updateEditLayout(vm.ui.id, vm.ui).then(onSavingEnd);
+					}
+
+				}
+
+            }
+
+            else {
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
@@ -1035,115 +1066,146 @@
 
         vm.getItems = function () {
 
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
 
-                attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
+            	var promises = [];
 
-                    vm.attrs = data.results;
+            	var attrsProm = new Promise((res, rej) => {
 
-                    var entityAttrs = metaService.getEntityAttrs(vm.entityType);
-                    var doNotShowAttrs = [];
+                	attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
 
-                    switch (vm.entityType) {
+						vm.attrs = data.results;
+						/* if (vm.instanceId && vm.entityType === 'complex-transaction') {
 
-                        case 'complex-transaction':
-                        case 'transaction-type':
+							entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
 
-                            doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
-                                'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
-                                'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
-                                'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
-                                'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
-                                'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
-                                'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
-                                'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
-                                'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
+								var inputs = data.inputs;
 
-                            break;
+								inputs.forEach(function (input) {
 
-                        /* case 'instrument':
+									var input_value_type = input.value_type;
 
-                            doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
-                                'accrued_multiplier', 'default_accrued',
-                                'pricing_currency', 'price_multiplier',
-                                'default_price', 'daily_pricing_model',
-                                'price_download_scheme', 'reference_for_pricing',
-                                'maturity_date', 'maturity_price'];
+									if (input.value_type === 100) {
+										input_value_type = 'field';
+									}
 
-                            break; */
+									var contentType;
 
-                        default:
+									if (input.content_type && input.content_type !== undefined) {
 
-                        	vm.entityAttrs = entityAttrs;
+										contentType = input.content_type.split('.')[1];
 
-                            break;
-                    }
+										if (contentType === 'eventclass') {
+											contentType = 'event_class';
+										}
 
-                    var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
-                    doNotShowAttrs = doNotShowAttrs.concat(keysOfFixedFieldsAttrs);
+										if (contentType === 'notificationclass') {
+											contentType = 'notification_class';
+										}
 
-                    if (doNotShowAttrs.length) {
-                        vm.entityAttrs = entityAttrs.filter(entity => !doNotShowAttrs.includes(entity.key));
-                    }
+										if (contentType === 'accrualcalculationmodel') {
+											contentType = 'accrual_calculation_model';
+										}
 
-					if (vm.entityType === 'instrument') {
+										if (contentType === 'pricingpolicy') {
+											contentType = 'pricing_policy';
+										}
 
-						var customizableAccrualsTable = {
-							name: 'Accruals table',
-							key: 'customizable_accruals_table',
-							value_type: 'table',
-							frontOptions: {
-								occupiesWholeRow: true
-							}
-						};
+									} else {
+										contentType = input.name.split(' ').join('_').toLowerCase();
+									}
 
-						vm.entityAttrs.push(customizableAccrualsTable);
+									var userInputObj = {
+										key: contentType,
+										name: input.name,
+										reference_table: input.reference_table,
+										verbose_name: input.verbose_name,
+										content_type: input.content_type,
+										value_type: input_value_type,
+										frontOptions: {
+											attribute_class: 'userInput',
+											occupiesWholeRow: fullRowUserInputsList.includes(contentType)
+										}
+									}
 
-					}
+									vm.userInputs.push(userInputObj);
 
-                    vm.layoutAttrs = layoutService.getLayoutAttrs();
+								});
 
-                    if (vm.instanceId && vm.entityType === 'complex-transaction') {
+								emptySocketsWithoutAttrFromLayout();
 
-                        entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
+								vm.syncItems();
 
-                            var inputs = data.inputs;
+								vm.readyStatus.constructor = true;
 
-                            inputs.forEach(function (input) {
+								resolve();
 
-                                var input_value_type = input.value_type;
+							}).catch(() => reject('error on getting complex transaction'));
 
-                                if (input.value_type === 100) {
-                                    input_value_type = 'field';
-                                }
+						}
 
-                                var contentType;
+						else {
 
-                                if (input.content_type && input.content_type !== undefined) {
+							emptySocketsWithoutAttrFromLayout();
 
-                                    contentType = input.content_type.split('.')[1];
+							vm.syncItems();
 
-                                    if (contentType === 'eventclass') {
-                                        contentType = 'event_class';
-                                    }
+							vm.readyStatus.constructor = true;
 
-                                    if (contentType === 'notificationclass') {
-                                        contentType = 'notification_class';
-                                    }
+							resolve();
 
-                                    if (contentType === 'accrualcalculationmodel') {
-                                        contentType = 'accrual_calculation_model';
-                                    }
+						} */
+						res();
 
-                                    if (contentType === 'pricingpolicy') {
-                                        contentType = 'pricing_policy';
-                                    }
+                	}).catch(error => rej('error on getting dynamic attributes'));
 
-                                } else {
-                                    contentType = input.name.split(' ').join('_').toLowerCase();
-                                }
+				});
 
-                                var userInputObj = {
+				promises.push(attrsProm);
+
+            	if (vm.instanceId && vm.entityType === 'complex-transaction') {
+
+					var transactionInputsProm = new Promise((res, rej) => {
+
+						entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
+
+							var inputs = data.inputs;
+
+							inputs.forEach(function (input) {
+
+								var input_value_type = input.value_type;
+
+								if (input.value_type === 100) {
+									input_value_type = 'field';
+								}
+
+								var contentType;
+
+								if (input.content_type && input.content_type !== undefined) {
+
+									contentType = input.content_type.split('.')[1];
+
+									if (contentType === 'eventclass') {
+										contentType = 'event_class';
+									}
+
+									if (contentType === 'notificationclass') {
+										contentType = 'notification_class';
+									}
+
+									if (contentType === 'accrualcalculationmodel') {
+										contentType = 'accrual_calculation_model';
+									}
+
+									if (contentType === 'pricingpolicy') {
+										contentType = 'pricing_policy';
+									}
+
+								} else {
+									contentType = input.name.split(' ').join('_').toLowerCase();
+								}
+
+								var userInputObj = {
 									key: contentType,
 									name: input.name,
 									reference_table: input.reference_table,
@@ -1156,35 +1218,97 @@
 									}
 								}
 
-                                vm.userInputs.push(userInputObj);
+								vm.userInputs.push(userInputObj);
 
-                            });
+							});
 
-                            emptySocketsWithoutAttrFromLayout();
+							res();
 
-                            vm.syncItems();
+						}).catch(() => rej('error on getting complex transaction'));
 
-                            vm.readyStatus.constructor = true;
+					});
 
-                            resolve();
+					promises.push(transactionInputsProm);
 
-                        }).catch(() => reject('error on getting complex transaction'));
+				}
 
-                    }
+				//<editor-fold desc="Get entity attrs">
+				var entityAttrs = metaService.getEntityAttrs(vm.entityType);
+				var doNotShowAttrs = [];
 
-                    else {
+				switch (vm.entityType) {
 
-                        emptySocketsWithoutAttrFromLayout();
+					case 'complex-transaction':
+					case 'transaction-type':
 
-                        vm.syncItems();
+						doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
+							'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
+							'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
+							'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
+							'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
+							'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
+							'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
+							'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
+							'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
 
-                        vm.readyStatus.constructor = true;
+						break;
 
-                        resolve();
+					/* case 'instrument':
 
-                    }
+						doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
+							'accrued_multiplier', 'default_accrued',
+							'pricing_currency', 'price_multiplier',
+							'default_price', 'daily_pricing_model',
+							'price_download_scheme', 'reference_for_pricing',
+							'maturity_date', 'maturity_price'];
 
-                }).catch(() => reject('error on getting dynamic attributes'));
+						break; */
+
+					default:
+						vm.entityAttrs = entityAttrs;
+						break;
+				}
+
+				var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+				doNotShowAttrs = doNotShowAttrs.concat(keysOfFixedFieldsAttrs);
+
+				if (doNotShowAttrs.length) {
+					vm.entityAttrs = entityAttrs.filter(entity => !doNotShowAttrs.includes(entity.key));
+				}
+
+				if (vm.entityType === 'instrument') {
+
+					var customizableAccrualsTable = {
+						name: 'Accruals table',
+						key: 'customizable_accruals_table',
+						value_type: 'table',
+						frontOptions: {
+							occupiesWholeRow: true
+						}
+					};
+
+					vm.entityAttrs.push(customizableAccrualsTable);
+
+					const tableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
+
+					promises.push(tableDataProm);
+
+				}
+				//</editor-fold>
+
+				vm.layoutAttrs = layoutService.getLayoutAttrs();
+
+                Promise.all(promises).then(() => {
+
+                	emptySocketsWithoutAttrFromLayout();
+
+					vm.syncItems();
+
+					vm.readyStatus.constructor = true;
+
+					resolve();
+
+				}).catch(error => reject(error));
 
             });
 
@@ -1288,6 +1412,16 @@
 
 		};
 
+        vm.getTableDefaultSettings = function (attrKey) {
+
+        	const entityTablesData = entityDataConstructorService.dataOfAttributes[vm.entityType];
+
+			if (entityTablesData && entityTablesData.hasOwnProperty(attrKey)) {
+				return entityTablesData[attrKey];
+			}
+
+		}
+
         var occupyWholeRow = function (field, columnsNumber) {
 
         	field.colspan = columnsNumber;
@@ -1360,40 +1494,6 @@
 
         };
 
-        var onFullRowAttributeDrop = function (elem, targetTab, targetRow) {
-
-        	if (vm.isRowEmpty(targetTab.tabOrder, targetRow, targetTab.layout.columns)) {
-
-
-
-			}
-
-        	else {
-
-				var a;
-				for (a = 0; a < targetTab.layout.fields.length; a++) {
-
-					var field = targetTab.layout.fields[a];
-
-					if (field.column === 1 && field.row === targetRow) {
-
-						var itemIndex = parseInt(elem.dataset.index, 10);
-
-						field.attribute = vm.items[itemIndex];
-						field.editable = vm.items[itemIndex].editable;
-						field.name = field.attribute.name;
-						field.attribute_class = 'userInput';
-						field.type = 'field';
-						field.colspan = 1;
-
-					}
-
-				}
-
-			}
-
-		};
-
         var onDropFromAttributesList = function (elem, targetTab, targetRow, targetColumn, occupiesWholeRow) {
 
             var a;
@@ -1444,6 +1544,16 @@
 
 					if (field.attribute_class === 'attr') {
 						field.id = field.attribute.id;
+					}
+
+					if (attr.value_type === 'table') {
+
+						var defaultSettings = vm.getTableDefaultSettings(attr.key);
+
+						if (defaultSettings) {
+							field.options = {...field.options, ...defaultSettings};
+						}
+
 					}
 
                     if (occupiesWholeRow) {
@@ -1746,9 +1856,7 @@
                         vm.palettesList = paletteData.results;
                         res();
 
-                    }).catch(function (error) {
-                        rej(error);
-                    });
+                    }).catch(error => rej(error));
 
                 })
 
@@ -1774,7 +1882,6 @@
                 });
 
             });
-
 
         };
 
