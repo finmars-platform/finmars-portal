@@ -35,9 +35,9 @@
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
-    // var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $state, entityType, entityId)
+    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data)
     {
 
         var vm = this;
@@ -87,6 +87,9 @@
         vm.referenceTables = [];
         vm.inputsForMultiselector = [];
 
+        // Victor 2021.02.23 #79 big drawer for ttype
+        vm.openedIn = data.openedIn;
+        // <Victor 2021.02.23 #79 big drawer for ttype>
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -210,7 +213,10 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            // Victor 2021.02.23 #79 big drawer for ttype
+            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+            //$mdDialog.hide({status: 'disagree'});
+            // <Victor 2021.02.23 #79 big drawer for ttype>
         };
 
         vm.manageAttrs = function (ev) {
@@ -234,7 +240,7 @@
             });
         };
 
-        vm.copy = function ($event) {
+        vm.copy = function (windowType) {
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
@@ -243,18 +249,26 @@
 
             console.log('copy entity', entity);
 
+            if (windowType === 'big_drawer') {
+
+                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity}};
+                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+            }
+
             $mdDialog.show({
                 controller: 'TransactionTypeAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: $event,
+                // targetEvent: $event,
                 locals: {
                     entityType: vm.entityType,
                     entity: entity
                 }
             });
 
-            $mdDialog.hide();
+            // $mdDialog.hide();
+            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
 
         };
 
@@ -860,7 +874,9 @@
         vm.saveAndExit = function () {
 
             vm.save().then(function (data) {
-                $mdDialog.hide({res: 'agree', data: data});
+                // $mdDialog.hide({res: 'agree', data: data});
+                let responseObj = {res: 'agree', data: data};
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
         };
@@ -1358,7 +1374,9 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+                    // $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+                    let responseObj = {res: 'agree', data: {action: 'delete'}};
+                    metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
                 }
 
             })

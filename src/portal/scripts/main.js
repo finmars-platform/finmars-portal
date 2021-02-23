@@ -365,7 +365,7 @@ app.controller(
 app.controller(
     'TransactionTypeEditDialogController',
     [
-        '$scope', '$mdDialog', '$state', 'entityType', 'entityId',
+        '$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data',
         require('./app/controllers/entityViewer/transactionTypeEditDialogController')
     ]
 );
