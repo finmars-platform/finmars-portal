@@ -397,7 +397,7 @@
                     }
                 };
 
-				scope.addEntity = function (ev) {
+				scope.addEntity = async function (ev) {
 
 					var postAddEntityFn = function (res) {
 						if (res && res.res === 'agree') {
@@ -480,13 +480,19 @@
 								}
 
 							}).then(postAddEntityFn); */
-							const drawerWidth = evHelperService.getBigDrawerWidthPercent(1);
+
+                            var fixedAreaColumns = 6;
+                            if (scope.entityType !== 'instrument-type') {
+                                fixedAreaColumns = 1;
+                            }
+
+                            var bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
 
 							$bigDrawer.show({
 								controller: 'EntityViewerAddDialogController as vm',
 								templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
                                 addResizeButton: true,
-								drawerWidth: drawerWidth,
+								drawerWidth: bigDrawerWidthPercent,
 								locals: {
 									entityType: scope.entityType,
 									entity: {},

@@ -425,7 +425,10 @@
                     viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
                 }
 
-                const columns = entityViewerHelperService.getEditLayoutMaxColumns(viewModel.tabs);
+                console.log('#78 viewModel.entityType', viewModel.entityType)
+
+                // Instrument-type always open in max big drawer window
+                const columns = viewModel.entityType === 'instrument-type'? 6 : entityViewerHelperService.getEditLayoutMaxColumns(viewModel.tabs);
 
                 if (viewModel.fixedAreaPopup.tabColumns !== columns) {
 
