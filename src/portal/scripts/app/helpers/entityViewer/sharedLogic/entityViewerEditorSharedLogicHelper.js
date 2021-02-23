@@ -425,7 +425,10 @@
                     viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
                 }
 
-                const columns = entityViewerHelperService.getEditLayoutMaxColumns(viewModel.tabs);
+                console.log('#78 viewModel.entityType', viewModel.entityType)
+
+                // Instrument-type always open in max big drawer window
+                const columns = viewModel.entityType === 'instrument-type'? 6 : entityViewerHelperService.getEditLayoutMaxColumns(viewModel.tabs);
 
                 if (viewModel.fixedAreaPopup.tabColumns !== columns) {
 
@@ -761,21 +764,33 @@
                 }
 
                 if (row.options) {
-                    rowObj.columns[4].cellType = 'custom_popup';
-                    rowObj.columns[4].cellType.objPaths = [
+
+                    const cell = rowObj.columns[4];
+
+                    cell.cellType = 'custom_popup';
+                    cell.cellType.objPaths = [
                         ['annual_to_show'], ['annual_override_name'],
                         ['semi-annual_to_show'], ['semi-annual_override_name'],
                         ['quarterly-annual_to_show'], ['quarterly-annual_override_name'],
                         ['monthly-annual_to_show'], ['monthly-annual_override_name'],
                     ];
 
-                    rowObj.columns[4].settings = metaHelper.recursiveDeepCopy(optionCellSettings, false);
-                    rowObj.columns[4].settings.value = [
+                    cell.settings = metaHelper.recursiveDeepCopy(optionCellSettings, false);
+                    cell.settings.value = [
                         true, 'Annual ON',
                         true, 'Semi-annual ON',
                         true, 'Quarterly ON',
                         true, 'Monthly ON',
-                    ]
+                    ];
+
+                    cell.methods ={
+                        onChange: function (rowData, colData, gtDataService, gtEventService) {
+                            const cell = gtDataService.getCellByKey(rowData.order, colData.key);
+                            cell.settings.cellText = 'Options changed';
+                            // Victor 2021.02.18 TODO here i will collect model for options of accrual model and periodicity
+                        }
+                    }
+
                 }
 
                 return rowObj

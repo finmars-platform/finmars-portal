@@ -19,7 +19,8 @@
 				isDisabled: "=",
 				renderHyperlinks: "=",
 				onChangeCallback: "&?",
-				onBlurCallback: "&?"
+				onBlurCallback: "&?",
+				onFocus: "=" // I can't bind as "&?" because onFocus need event argument
 			},
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {
@@ -325,6 +326,12 @@
 
 					fullTextElem.addEventListener("blur", function () {
 
+						if (typeof scope.onFocus === "function") {
+
+							fullTextElem.removeEventListener("focus", scope.onFocus);
+
+						}
+
 						inputContainer.classList.remove("custom-input-full-text-focused");
 
 						if (scope.onBlurCallback) {
@@ -337,6 +344,12 @@
 						}
 
 					});
+
+					if (typeof scope.onFocus === "function") {
+
+						fullTextElem.addEventListener("focus", scope.onFocus);
+
+					}
 
 				};
 
