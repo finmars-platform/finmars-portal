@@ -85,7 +85,7 @@
                                 value: null
                             },
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '85px'}
                             }
 
                         },
@@ -130,12 +130,7 @@
                     ],
                 },
                 components: {
-                    topPanel: {
-                        inactive: true,
-                        /*                        filters: false,
-                                                columns: false,
-                                                search: false*/
-                    }
+                    topPanel: false
                 }
             };
 
