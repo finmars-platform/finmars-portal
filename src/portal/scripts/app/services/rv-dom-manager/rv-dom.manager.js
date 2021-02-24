@@ -5,6 +5,7 @@
     var utilsHelper = require('../../helpers/utils.helper');
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 	var metaHelper = require('../../helpers/meta.helper');
 
@@ -199,9 +200,14 @@
 
             groups[group.___level - 1].report_settings.is_level_folded = null;
 
+            var groupSettings = rvDataHelper.getOrCreateGroupSettings(evDataService, group);
+
             if (group.___is_open) {
 
                 group.___is_open = false;
+
+                groupSettings.is_open = group.___is_open
+                rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
 
                 evDataService.setData(group);
 
@@ -212,6 +218,9 @@
             } else {
 
                 group.___is_open = true;
+
+                groupSettings.is_open = group.___is_open
+                rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
 
                 evDataService.setData(group);
 

@@ -8,6 +8,7 @@
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
     var entityViewerDataResolver = require('../entityViewerDataResolver');
     var stringHelper = require('../../helpers/stringHelper');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
     var reportHelper = require('../../helpers/reportHelper');
@@ -323,6 +324,14 @@
                         obj.___id = event.___id;
                         obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
+                        var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+
+                        console.log('groupSettings', groupSettings);
+
+                        if (groupSettings.hasOwnProperty('is_open')) {
+                            obj.___is_open = groupSettings.is_open;
+                        }
+
                     }
 
                 }
@@ -432,12 +441,26 @@
                             obj.___group_name = event.groupName ? event.groupName : '-';
                             obj.___group_identifier = event.groupId ? event.groupId : '-';
                             obj.___is_open = true;
+
+
+
+
                             // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                             obj.___parentId = event.parentGroupId;
                             obj.___type = 'group';
                             obj.___id = event.___id;
                             obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+
+
+                            var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+
+                            console.log('groupSettings', groupSettings);
+
+                            if (groupSettings.hasOwnProperty('is_open')) {
+                                obj.___is_open = groupSettings.is_open;
+                            }
+
 
                         }
                     }
@@ -470,6 +493,9 @@
                         }
 
                         item.___id = evRvCommonHelper.getId(item);
+
+
+
 
                         return item
                     });
