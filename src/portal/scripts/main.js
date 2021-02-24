@@ -358,7 +358,7 @@ app.controller('CurrencyHistoryErrorEditDialogController', ['$scope', '$mdDialog
 app.controller(
     'TransactionTypeAddDialogController',
     [
-        '$scope', '$mdDialog', '$state', 'entityType', 'entity',
+        '$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entity', 'data',
         require('./app/controllers/entityViewer/transactionTypeAddDialogController')
     ]
 );

@@ -28,6 +28,8 @@
 
     var uiService = require('../../services/uiService');
 
+    var metaHelper = require('../../helpers/meta.helper');
+
     var GridTableDataService = require('../../services/gridTableDataService');
     var GridTableEventService = require('../../services/gridTableEventService');
 
@@ -36,7 +38,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $state, entityType, entity) {
+    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data) {
 
         var vm = this;
 
@@ -88,6 +90,8 @@
         vm.inputsToDelete = [];
         vm.referenceTables = [];
         vm.inputsForMultiselector = [];
+
+        vm.openedIn = data.openedIn;
 
         var ecosystemDefaultData = {};
 
@@ -208,7 +212,8 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            // $mdDialog.hide({status: 'disagree'});
+            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         /*vm.editLayout = function (ev) {
