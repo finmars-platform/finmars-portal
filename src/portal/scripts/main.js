@@ -399,6 +399,7 @@ app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/c
 
 app.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
 app.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
+app.controller('InstrumentTypeSettingsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeSettingsTabController')]);
 
 // Currency form - tabs
 

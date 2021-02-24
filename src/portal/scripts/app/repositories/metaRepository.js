@@ -263,6 +263,10 @@
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
                     },
                     {
+                        label: 'Settings',
+                        templateUrl: 'views/tabs/instrument-type/settings-view.html'
+                    },
+                    {
                         label: 'Layout Settings',
                         templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }
