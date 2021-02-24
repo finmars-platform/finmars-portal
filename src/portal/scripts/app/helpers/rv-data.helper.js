@@ -247,14 +247,17 @@
 
     };
 
-    var getGroupsIdsToFold = function (list) {
+    var getGroupsIdsToFold = function (list, evDataService) {
 
         var result = [];
 
         list.forEach(function (item) {
 
-            if (item.___type === 'group' && item.___parentId !== null && item.___is_open === false) {
-                result.push(item.___id)
+            if (item.___type === 'group' && item.___parentId !== null) {
+
+                if (item.___is_open === false) {
+                    result.push(item.___id)
+                }
             }
 
         });
@@ -420,7 +423,9 @@
 
         var result = list.concat();
 
-        var groupsIdsToFold = getGroupsIdsToFold(list);
+        var groupsIdsToFold = getGroupsIdsToFold(list, evDataService);
+
+        console.log('groupsIdsToFold', groupsIdsToFold);
 
         result = result.filter(function (item) {
 
@@ -450,7 +455,7 @@
 
     };
 
-    var isPrimitive = function(value){
+    var isPrimitive = function (value) {
 
         var propertyType = typeof value;
 
@@ -713,7 +718,104 @@
     };
 
 
+    var getOrCreateGroupSettings = function (evDataService, group) {
+
+        var member = evDataService.getCurrentMember()
+        var layout = evDataService.getListLayout();
+        var contentType = evDataService.getContentType();
+
+        var member_id = member.id
+
+        var parents = evRvCommonHelper.getParents(group.___parentId, evDataService);
+
+        parents.pop() // skip root group
+
+        console.log('parents', parents);
+
+        var reportData
+        var rawReportData = localStorage.getItem('report_data')
+
+        if (rawReportData) {
+            reportData = JSON.parse(rawReportData)
+        } else {
+            reportData = {}
+        }
+
+        if (!reportData[member_id]) {
+            reportData[member_id] = {}
+        }
+
+        if (!reportData[member_id][contentType]) {
+            reportData[member_id][contentType] = {}
+        }
+
+        if (!reportData[member_id][contentType][layout.user_code]) {
+            reportData[member_id][contentType][layout.user_code] = {
+                groups: {}
+            }
+        }
+
+        var full_path = parents.map(function (item) {
+            return item.___group_name
+        })
+
+        full_path.push(group.___group_name);
+
+        full_path = full_path.join('___'); // TODO check if safe enough
+
+        console.log('full_path', full_path);
+
+        var groupSettings;
+
+        if (reportData[member_id][contentType][layout.user_code]['groups'][full_path]) {
+            groupSettings = reportData[member_id][contentType][layout.user_code]['groups'][full_path];
+        }
+
+        if (!groupSettings) {
+
+            groupSettings = {
+                full_path: full_path
+            }
+
+            reportData[member_id][contentType][layout.user_code]['groups'][full_path] = groupSettings
+
+            localStorage.setItem('report_data', JSON.stringify(reportData))
+
+        }
+
+        return groupSettings
+
+    }
+
+    var setGroupSettings = function (evDataService, group, groupSettings) {
+
+        var member = evDataService.getCurrentMember()
+        var layout = evDataService.getListLayout();
+        var contentType = evDataService.getContentType();
+
+        var member_id = member.id
+
+        var reportData
+        var rawReportData = localStorage.getItem('report_data')
+
+        if (rawReportData) {
+            reportData = JSON.parse(rawReportData)
+        } else {
+            reportData = {}
+        }
+
+        console.log('setGroupSettings', groupSettings);
+
+        reportData[member_id][contentType][layout.user_code]['groups'][groupSettings.full_path] = groupSettings
+
+        localStorage.setItem('report_data', JSON.stringify(reportData))
+
+
+    }
+
     module.exports = {
+        getOrCreateGroupSettings: getOrCreateGroupSettings,
+        setGroupSettings: setGroupSettings,
         syncLevelFold: syncLevelFold,
         getFlatStructure: getFlatStructure,
         getFlatListFieldUniqueValues: getFlatListFieldUniqueValues,
