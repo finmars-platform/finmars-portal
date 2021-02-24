@@ -87,9 +87,7 @@
         vm.referenceTables = [];
         vm.inputsForMultiselector = [];
 
-        // Victor 2021.02.23 #79 big drawer for ttype
         vm.openedIn = data.openedIn;
-        // <Victor 2021.02.23 #79 big drawer for ttype>
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -213,10 +211,8 @@
         };
 
         vm.cancel = function () {
-            // Victor 2021.02.23 #79 big drawer for ttype
             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
             //$mdDialog.hide({status: 'disagree'});
-            // <Victor 2021.02.23 #79 big drawer for ttype>
         };
 
         vm.manageAttrs = function (ev) {
