@@ -409,7 +409,7 @@
 
 						case 'transaction-type':
 
-							$mdDialog.show({
+/*							$mdDialog.show({
 								controller: 'TransactionTypeAddDialogController as vm',
 								templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
 								parent: angular.element(document.body),
@@ -419,7 +419,21 @@
 									entity: {}
 								}
 
-							}).then(postAddEntityFn);
+							}).then(postAddEntityFn);*/
+
+                            $bigDrawer.show({
+                                controller: 'TransactionTypeAddDialogController as vm',
+                                templateUrl: 'views/entity-viewer/transaction-type-add-drawer-view.html',
+                                addResizeButton: false,
+                                locals: {
+                                    entityType: scope.entityType,
+                                    entity: {},
+                                    data: {
+                                        openedIn: 'big-drawer'
+                                    }
+                                }
+
+                            }).then(postAddEntityFn);
 
 							break;
 
@@ -480,13 +494,11 @@
 								}
 
 							}).then(postAddEntityFn); */
-							const drawerWidth = evHelperService.getBigDrawerWidthPercent(1);
 
 							$bigDrawer.show({
 								controller: 'EntityViewerAddDialogController as vm',
 								templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
                                 addResizeButton: true,
-								drawerWidth: drawerWidth,
 								locals: {
 									entityType: scope.entityType,
 									entity: {},
