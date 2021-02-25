@@ -332,6 +332,10 @@
                             obj.___is_open = groupSettings.is_open;
                         }
 
+                        if (!parentGroup.___is_open) {
+                            obj.___is_open = false;
+                        }
+
                     }
 
                 }
@@ -459,6 +463,10 @@
 
                             if (groupSettings.hasOwnProperty('is_open')) {
                                 obj.___is_open = groupSettings.is_open;
+                            }
+
+                            if (!parentGroup.___is_open) {
+                                obj.___is_open = false;
                             }
 
 
