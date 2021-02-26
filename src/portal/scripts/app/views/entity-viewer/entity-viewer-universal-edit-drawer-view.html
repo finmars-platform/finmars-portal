@@ -37,6 +37,10 @@
                 <span data-ng-if="vm.entityType !== 'transaction'">Cancel</span>
                 <span data-ng-if="vm.entityType === 'transaction'">Close</span>
             </md-button>
+
+            <md-button class="link-button" data-ng-if="vm.entity.is_deleted" ng-click="vm.restoreDeleted()">
+                <span>Restore</span>
+            </md-button>
         </div>
 
         <div style="margin-right: 10px;">
