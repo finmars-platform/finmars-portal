@@ -540,7 +540,7 @@
         var bigDrawerWidthPercent = getBigDrawerWidthPercent(fixedAreaColumns);
 
         $bigDrawer.show({
-            controller: 'EntityViewerAddDialogController as viewModel',
+            controller: 'EntityViewerAddDialogController as vm',
             templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
             addResizeButton: true,
             drawerWidth: bigDrawerWidthPercent,
