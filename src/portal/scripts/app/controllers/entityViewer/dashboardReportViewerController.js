@@ -9,6 +9,7 @@
         var localStorageService = require('../../../../../core/services/localStorageService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
+        var usersService = require('../../services/usersService');
         var objectComparison = require('../../helpers/objectsComparisonHelper');
 
         var priceHistoryService = require('../../services/priceHistoryService');
@@ -331,7 +332,7 @@
 
             // < Functions for context menu >
 
-            vm.updateGrandTotalComponent = function(){
+            vm.updateGrandTotalComponent = function () {
 
                 // vm.grandTotalError = false;
 
@@ -419,18 +420,18 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-					   setTimeout(function () {
-						  vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-					  }, 50);
+                    setTimeout(function () {
+                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+                    }, 50);
 
-					  vm.entityViewerDataService.setDataLoadStatus(false);
+                    vm.entityViewerDataService.setDataLoadStatus(false);
 
-					  if (!fillInModeEnabled) {
+                    if (!fillInModeEnabled) {
 
-					  	  vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.PROCESSING);
-					  	  vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.PROCESSING);
+                        vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-					  }
+                    }
 
                 });
 
@@ -443,7 +444,7 @@
                         vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                     }
 
-					vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
 
                 });
 
@@ -571,7 +572,7 @@
 
                         currencies.forEach(function (item) {
 
-                            if(item.id === activeObject[currencyKey]) {
+                            if (item.id === activeObject[currencyKey]) {
 
                                 currencyObj.id = item.id;
                                 currencyObj.name = item.name;
@@ -967,13 +968,13 @@
                         reportOptions[property] = [componentOutput.data.value]
 
                     } else if (['report_currency', 'pricing_policy'].includes(property) &&
-                               Array.isArray((componentOutput.data.value)) &&
-                               componentOutput.data.value.length) {
+                        Array.isArray((componentOutput.data.value)) &&
+                        componentOutput.data.value.length) {
 
                         reportOptions[property] = componentOutput.data.value[0]
 
                     } else if (componentOutput.data.value !== null ||
-                               componentOutput.data.value !== undefined) {
+                        componentOutput.data.value !== undefined) {
 
                         reportOptions[property] = componentOutput.data.value
 
@@ -1089,72 +1090,72 @@
 
                 if (componentOutput && componentOutput.data) {
 
-                	var linkedFilterIndex;
-					var linkedFilter = filters.find(function (item, index) {
+                    var linkedFilterIndex;
+                    var linkedFilter = filters.find(function (item, index) {
 
-						if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
+                        if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
 
-							linkedFilterIndex = index;
-							return item;
+                            linkedFilterIndex = index;
+                            return item;
 
-						}
+                        }
 
-					});
+                    });
 
                     if (linkedFilter) {
 
                         linkedFilter.options.filter_values = [componentOutput.data.value];
 
-						if ((linkedFilter.value_type === 100 || linkedFilter.value_type === 'field') &&
-							Array.isArray(componentOutput.data.value)) {
+                        if ((linkedFilter.value_type === 100 || linkedFilter.value_type === 'field') &&
+                            Array.isArray(componentOutput.data.value)) {
 
-							linkedFilter.options.filter_values = componentOutput.data.value;
+                            linkedFilter.options.filter_values = componentOutput.data.value;
 
-						}
+                        }
 
                         filters[linkedFilterIndex] = linkedFilter;
 
                     } else {
 
-						linkedFilter = {
-							type: 'filter_link',
-							component_id: filter_link.component_id,
-							key: filter_link.key,
-							name: filter_link.key,
-							value_type: filter_link.value_type,
-							options: {
-								enabled: true,
-								exclude_empty_cells: true,
-								filter_values: [componentOutput.data.value]
-							}
-						};
+                        linkedFilter = {
+                            type: 'filter_link',
+                            component_id: filter_link.component_id,
+                            key: filter_link.key,
+                            name: filter_link.key,
+                            value_type: filter_link.value_type,
+                            options: {
+                                enabled: true,
+                                exclude_empty_cells: true,
+                                filter_values: [componentOutput.data.value]
+                            }
+                        };
 
-						switch (filter_link.value_type) {
+                        switch (filter_link.value_type) {
 
-							case 10:
-							case 30:
-								linkedFilter.options.filter_type = 'contains';
-								break;
+                            case 10:
+                            case 30:
+                                linkedFilter.options.filter_type = 'contains';
+                                break;
 
-							case 20:
-							case 40:
-								linkedFilter.options.filter_type = 'equal';
-								break;
+                            case 20:
+                            case 40:
+                                linkedFilter.options.filter_type = 'equal';
+                                break;
 
-							case 100:
-							case 'field':
+                            case 100:
+                            case 'field':
 
-								// even if component is single selector, multiselector filter will work
-								// console.log('componentOutput.value', componentOutput.data.value)
-								linkedFilter.value_type = 'field';
-								linkedFilter.options.filter_type = 'multiselector';
+                                // even if component is single selector, multiselector filter will work
+                                // console.log('componentOutput.value', componentOutput.data.value)
+                                linkedFilter.value_type = 'field';
+                                linkedFilter.options.filter_type = 'multiselector';
 
-								if (Array.isArray(componentOutput.data.value)) {
-									linkedFilter.options.filter_values = componentOutput.data.value;
-								}
+                                if (Array.isArray(componentOutput.data.value)) {
+                                    linkedFilter.options.filter_values = componentOutput.data.value;
+                                }
 
-								break;
-						}
+                                break;
+                        }
 
                         filters.push(linkedFilter);
 
@@ -1313,11 +1314,11 @@
 
             var updateActiveObjectUsingDashboardData = function () {
 
-                 if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
+                if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
 
                     // Now only last changed active object stored in component output
 
-					// check which one of components (that this component is listening) changed
+                    // check which one of components (that this component is listening) changed
                     if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
 
                         var lastActiveCompChanged = false;
@@ -1329,11 +1330,11 @@
                             var componentOutput = vm.dashboardDataService.getComponentOutput(componentId);
 
                             // if (componentOutput && componentOutput.changedLast) {
-							if (componentOutput && componentOutput.changedLast) {
+                            if (componentOutput && componentOutput.changedLast) {
 
                                 var compOutputData = componentOutput.data;
 
-								// check if active objects holds new data
+                                // check if active objects holds new data
                                 if (lastActiveComponentId !== componentId) {
 
                                     lastActiveComponentId = componentId;
@@ -1357,12 +1358,12 @@
 
                                 if (compOutputData !== undefined && compOutputData !== null) {
 
-                                	vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
+                                    vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
 
                                 } else {
                                     delete vm.linkedActiveObjects[lastActiveComponentId];
                                 }
-								// < check if active objects holds new data >
+                                // < check if active objects holds new data >
                                 break;
 
                             }
@@ -1379,11 +1380,11 @@
 
                     }
 
-					 /* var componentId = vm.componentData.settings.linked_components.active_object;
+                    /* var componentId = vm.componentData.settings.linked_components.active_object;
 
-					 vm.handleDashboardActiveObject(componentId); */
+                    vm.handleDashboardActiveObject(componentId); */
 
-                 }
+                }
 
             }
 
@@ -1408,7 +1409,7 @@
                                 if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
                                     !Array.isArray(componentOutput.data.value)) {
 
-                                	if (componentOutput.data.value) {
+                                    if (componentOutput.data.value) {
                                         reportOptions[property] = [componentOutput.data.value];
 
                                     } else {
@@ -1418,12 +1419,12 @@
                                     }
 
                                 } else if (
-                                	['report_currency', 'pricing_policy'].includes(property) &&
-									Array.isArray((componentOutput.data.value))
-								) {
-									if (vm.componentData.name === "BALANCE_TYPES") {
-										console.log("rv matrix report_currency", property, componentOutput.data.value[0]);
-									}
+                                    ['report_currency', 'pricing_policy'].includes(property) &&
+                                    Array.isArray((componentOutput.data.value))
+                                ) {
+                                    if (vm.componentData.name === "BALANCE_TYPES") {
+                                        console.log("rv matrix report_currency", property, componentOutput.data.value[0]);
+                                    }
                                     reportOptions[property] = componentOutput.data.value[0];
 
                                 } else {
@@ -1441,17 +1442,17 @@
                     })
 
                     console.log('updateReportSettingsUsingDashboardData', reportOptions);
-					if (vm.componentData.name === "BALANCE_TYPES") {
-						console.log("rv matrix vm.componentData", reportOptions, reportOptionsChanged);
-					}
+                    if (vm.componentData.name === "BALANCE_TYPES") {
+                        console.log("rv matrix vm.componentData", reportOptions, reportOptionsChanged);
+                    }
                     if (reportOptionsChanged) {
-						if (vm.componentData.name === "BALANCE_TYPES") {
-							console.log("rv matrix reportOptionsChanged");
-						}
+                        if (vm.componentData.name === "BALANCE_TYPES") {
+                            console.log("rv matrix reportOptionsChanged");
+                        }
                         vm.entityViewerDataService.setReportOptions(reportOptions);
-						vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
-						vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
+                        vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
 
                         vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                     }
@@ -1475,7 +1476,7 @@
                         } else {
                             vm.dashboardDataService.setComponentOutput(compKey, null);
                         } */
-						vm.dashboardDataService.setComponentOutput(compKey, null);
+                        vm.dashboardDataService.setComponentOutput(compKey, null);
 
                     }
 
@@ -1568,6 +1569,17 @@
 
             }; */
 
+            vm.getCurrentMember = function () {
+
+                return usersService.getMyCurrentMember().then(function (data) {
+
+                    vm.currentMember = data;
+
+                    $scope.$apply();
+
+                });
+            };
+
             vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 
                 // vm.oldEventExchanges()
@@ -1620,17 +1632,17 @@
 
                 vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
 
-                	// add linked to filter from dashboard component
-					if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
+                    // add linked to filter from dashboard component
+                    if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
-						vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
+                        vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
 
-							vm.handleDashboardFilterLink(filter_link);
+                            vm.handleDashboardFilterLink(filter_link);
 
-						});
+                        });
 
-					}
-					// < add linked to filter from dashboard component >
+                    }
+                    // < add linked to filter from dashboard component >
 
                     if (vm.componentData.settings.auto_refresh) {
                         updateReportSettingsUsingDashboardData();
@@ -1667,12 +1679,12 @@
 
                     if (currentLayoutConfig.hasOwnProperty('id')) {
 
-                    	uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (layoutData) {
+                        uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (layoutData) {
 
-                    		var listLayout = vm.entityViewerDataService.getListLayout();
+                            var listLayout = vm.entityViewerDataService.getListLayout();
 
-                    		listLayout.modified = layoutData.modified
-							currentLayoutConfig.modified = layoutData.modified
+                            listLayout.modified = layoutData.modified
+                            currentLayoutConfig.modified = layoutData.modified
                             vm.entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
 
                         });
@@ -1834,7 +1846,6 @@
                 }
 
 
-
             };
 
             let getLayoutById = function (layoutId) {
@@ -1887,6 +1898,7 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setVirtualScrollStep(500);
+                vm.entityViewerDataService.setCurrentMember(vm.currentMember);
 
                 /* if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
@@ -1939,13 +1951,13 @@
                                         var listLayout = vm.entityViewerDataService.getListLayout();
                                         var layoutColumns = listLayout.data.columns;
 
-                                        layoutColumns.forEach(function(layoutColumn) {
+                                        layoutColumns.forEach(function (layoutColumn) {
 
-                                            var column = columns.find(function(itemColumn){
+                                            var column = columns.find(function (itemColumn) {
                                                 return itemColumn.key === layoutColumn.key
                                             })
 
-                                            if(column && !column.layout_name) {
+                                            if (column && !column.layout_name) {
                                                 column.layout_name = layoutColumn.layout_name
                                             }
 
@@ -2045,7 +2057,10 @@
                     getViewInsideFilledInComponent();
 
                 } else {
-                    vm.getView();
+
+                    vm.getCurrentMember().then(function () {
+                        vm.getView();
+                    })
                 }
 
             };

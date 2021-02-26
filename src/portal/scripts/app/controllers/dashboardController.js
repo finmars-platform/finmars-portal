@@ -14,6 +14,8 @@
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
     var metaHelper = require('../helpers/meta.helper');
 
+    var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
     module.exports = function ($scope, $stateParams, $mdDialog) {
 
         var vm = this;
@@ -278,25 +280,36 @@
 
                 vm.layout = data;
 
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    locals: {
-                        info: {
-                            title: 'Success',
-                            description: "Dashboard Layout is Saved"
-                        }
-                    }
-                });
+                toastNotificationService.success("Dashboard Layout is Saved")
 
                 $scope.$apply();
 
             });
 
         };
+
+        vm.makeCopyDashboardLayout = function ($event) {
+
+            var layout = JSON.parse(JSON.stringify(vm.layout))
+
+            layout.name = layout.name + '_copy';
+            layout.user_code = layout.user_code + '_copy';
+
+            layout.is_default = false;
+            layout.origin_for_global_layout = null;
+            layout.sourced_from_global_layout = null;
+
+            uiService.createDashboardLayout(layout).then(function (data) {
+
+                vm.layout = data;
+
+                toastNotificationService.success("Dashboard Layout is Duplicated")
+
+                $scope.$apply();
+
+            });
+
+        }
 
         vm.exportDashboardLayout = function ($event) {
 

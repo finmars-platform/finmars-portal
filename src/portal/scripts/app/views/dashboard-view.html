@@ -106,8 +106,13 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn">
+                                <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn" data-ng-class="{'disabled-btn': vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout}">
                                     <span>Save Dashboard Layout</span>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="vm.makeCopyDashboardLayout($event)" class="g-settings-option-btn">
+                                    <span>Duplicate Layout</span>
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
