@@ -600,6 +600,61 @@
             // $mdDialog.hide({status: 'disagree'});
         };
 
+        vm.restoreDeleted = function(){
+
+            console.log("Restore deleted here")
+
+            vm.processing = true;
+
+            entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
+
+                var name = result.name.split('(del) ')[1]
+                var short_name = result.short_name.split('(del) ')[1]
+
+                var current_user_code = result.user_code
+
+                result.name = name;
+                result.short_name = short_name;
+                result.user_code = result.deleted_user_code;
+
+                result.is_active = true;
+                result.is_enabled = true;
+                result.is_deleted = false;
+
+                var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
+
+                entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                    toastNotificationService.success(entityTypeVerbose + " " + result.name + ' was successfully restored');
+
+                    vm.processing = false;
+
+                    $scope.$apply();
+
+                    vm.init()
+
+                }).catch(function (){
+
+                    result.user_code = current_user_code;
+
+                    entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
+
+                        toastNotificationService.success(entityTypeVerbose + " " + result.name + ' was successfully restored. Old user code is already in use.');
+
+                        vm.processing = false;
+
+                        $scope.$apply();
+
+                        vm.init()
+
+                    })
+
+                })
+
+            });
+
+        };
+
         vm.manageAttrs = function (ev) {
 
             /*var entityType = {entityType: vm.entityType};

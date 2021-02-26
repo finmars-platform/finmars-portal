@@ -82,6 +82,10 @@
                 <span data-ng-if="vm.entityType === 'transaction'">Close</span>
             </md-button>
 
+            <md-button class="link-button" data-ng-if="vm.entity.is_deleted" ng-click="vm.restoreDeleted()">
+                <span>Restore</span>
+            </md-button>
+
             <!-- <md-button data-ng-if="vm.entityType != 'price-history' && vm.entityType != 'currency-history' && vm.entityType !== 'transaction'"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.save($event, true)"
