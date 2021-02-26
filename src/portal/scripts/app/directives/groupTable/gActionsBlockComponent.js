@@ -256,75 +256,6 @@
                     }
                 };
 
-                scope.insertObjectAfterCreateHandler = function (resultItem) {
-
-                    var groups = scope.evDataService.getDataAsList();
-                    var requestParameters = scope.evDataService.getAllRequestParameters();
-                    var requestParametersKeys = Object.keys(requestParameters);
-
-                    var matchedRequestParameter;
-
-                    for (var i = 0; i < requestParametersKeys.length; i = i + 1) {
-
-                        var key = requestParametersKeys[i];
-
-                        var match = true;
-
-                        var filter_types = requestParameters[key].body.groups_types.map(function (item) {
-                            return item.key
-                        });
-
-                        var filter_values = requestParameters[key].body.groups_values;
-
-                        if (filter_values.length) {
-                            filter_values.forEach(function (value, index) {
-
-                                if (resultItem[filter_types[index]] !== value) {
-                                    match = false
-                                }
-
-
-                            })
-                        } else {
-
-                            if (filter_types.length) {
-                                match = false;
-                            }
-                        }
-
-                        if (match) {
-                            matchedRequestParameter = requestParameters[key];
-                            break;
-                        }
-
-                    }
-
-                    if (matchedRequestParameter) {
-
-                        groups.forEach(function (group) {
-
-                            if (group.___id === matchedRequestParameter.id) {
-
-                                var exampleItem = group.results[0]; // copying of ___type, ___parentId and etc fields
-
-                                var result = Object.assign({}, exampleItem, resultItem);
-
-                                result.___id = evRvCommonHelper.getId(result);
-                                var beforeControlRowIndex = group.results.length - 1;
-
-                                group.results.splice(beforeControlRowIndex, 0, result);
-
-                            }
-
-
-                        })
-
-                    }
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                };
-
                 scope.getEntityNameByState = function () {
 
                     switch ($state.current.name) {
@@ -399,12 +330,6 @@
 
 				scope.addEntity = function (ev) {
 
-					var postAddEntityFn = function (res) {
-						if (res && res.res === 'agree') {
-							scope.insertObjectAfterCreateHandler(res.data);
-						}
-					};
-
 					switch (scope.entityType) {
 
 						case 'transaction-type':
@@ -433,7 +358,7 @@
                                     }
                                 }
 
-                            }).then(postAddEntityFn);
+                            }).then(res => evHelperService.postAddEntityFn(scope, $bigDrawer, res));
 
 							break;
 
@@ -468,13 +393,7 @@
 									}
 								}
 
-							}).then(function (res) {
-
-								if (res && res.res === 'agree') {
-									scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
-								}
-
-							});
+							}).then(res => evHelperService.postAddEntityFn(scope, $bigDrawer, res));
 
 							break;
 
@@ -507,7 +426,7 @@
 									}
 								}
 
-							}).then(postAddEntityFn);
+							}).then(res => evHelperService.postAddEntityFn(scope, $bigDrawer, res));
 
 					}
 

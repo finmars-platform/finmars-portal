@@ -52,6 +52,7 @@
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
 
         var vm = this;
+        console.log('#79 vm', vm)
         var evEditorSharedLogicHelper = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
@@ -761,6 +762,7 @@
         };
 
         vm.entityTypeSlug = function () {
+            console.log('entityTypeSlug', vm.entityType.split('-').join(' ').capitalizeFirstLetter())
             return vm.entityType.split('-').join(' ').capitalizeFirstLetter();
         };
 
@@ -941,7 +943,12 @@
             return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
         }; */
 
-        vm.checkReadyStatus = evEditorSharedLogicHelper.checkReadyStatus;
+        vm.checkReadyStatus = function () {
+
+            return evEditorSharedLogicHelper.checkReadyStatus();
+
+        }
+
 
         vm.bindFlex = function (tab, field) {
             /*var totalColspans = 0;
@@ -1155,8 +1162,19 @@
 
                     } else {
 
+
                         vm.entity = {...vm.entity, ...responseData};
                         vm.entity.$_isValid = true;
+
+                        const responseObj = {
+                            res: 'agree',
+                            data: {
+                                action: 'edit',
+                                entityType: vm.entityType,
+                                entity: vm.entity
+                            }
+                        };
+                        metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     }
 
