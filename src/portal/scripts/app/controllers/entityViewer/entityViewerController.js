@@ -75,7 +75,7 @@
             //
             // });
 
-            var updateTableAfterEntitiesDeletion = function (deletedEntitiesIds) {
+            /*var updateTableAfterEntitiesDeletion = function (deletedEntitiesIds) {
 
                 var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
                 var objects = vm.entityViewerDataService.getObjects();
@@ -113,7 +113,7 @@
 
                 vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-            };
+            };*/
 
             var initTransitionHooks = function () {
 
@@ -121,7 +121,7 @@
 
             };
 
-            const duplicateEntity = async function (entity) {
+/*            const duplicateEntity = async function (entity) {
 
                 var editLayout = await uiService.getEditLayout(vm.entityType);
                 var bigDrawerWidthPercent;
@@ -152,9 +152,9 @@
 
                 }).then(res => {});
 
-            };
+            };*/
 
-            let postEditionActions = function (res, activeObject) {
+/*            let postEditionActions = function (res, activeObject) {
 
             	vm.entityViewerDataService.setActiveObjectAction(null);
 				vm.entityViewerDataService.setActiveObjectActionData(null);
@@ -163,7 +163,7 @@
 
 					if (res.data.action === 'delete') {
 
-						updateTableAfterEntitiesDeletion([activeObject.id]);
+                        evHelperService.updateTableAfterEntitiesDeletion(vm, [activeObject.id]);
 
 					} else if (res.data.action === 'copy') {
 
@@ -171,30 +171,13 @@
 
                     } else {
 
-						var objects = vm.entityViewerDataService.getObjects();
+					    evHelperService.updateEntityInsideTable(vm);
 
-						objects.forEach(function (obj) {
-
-							if (res.data.id === obj.id) {
-
-								Object.keys(res.data).forEach(function (key) {
-
-									obj[key] = res.data[key]
-
-								});
-
-								vm.entityViewerDataService.setObject(obj);
-
-							}
-
-						});
-
-						vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 					}
 
 				}
 
-			};
+			};*/
 
             var editEntity = async function (entitytype, activeObject) {
 
@@ -259,7 +242,7 @@
                                     });
 
                                     vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                                    updateTableAfterEntitiesDeletion([activeObject.id]);
+                                    evHelperService.updateTableAfterEntitiesDeletion(vm, [activeObject.id]);
 
                                 } else {
 
@@ -465,7 +448,7 @@
 
 								if (res.data.action === 'delete') {
 
-									updateTableAfterEntitiesDeletion([activeObject.id]);
+                                    evHelperService.updateTableAfterEntitiesDeletion(vm, [activeObject.id]);
 
 								} else {
 
@@ -600,104 +583,7 @@
 
 					default:
 
-						var editLayout = await uiService.getDefaultEditLayout(entitytype);
-						var bigDrawerWidthPercent;
-						var fixedAreaColumns;
-
-						if (editLayout.results.length) {
-
-							var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
-							fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
-
-							bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
-
-						}
-						/* $mdDialog.show({
-							controller: 'EntityViewerEditDialogController as vm',
-							templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-							parent: angular.element(document.body),
-							targetEvent: activeObject.event,
-							//clickOutsideToClose: false,
-							locals: {
-								entityType: entitytype,
-								entityId: activeObject.id,
-								data: {}
-							}
-						}).then(function (res) {
-
-							vm.entityViewerDataService.setActiveObjectAction(null);
-							vm.entityViewerDataService.setActiveObjectActionData(null);
-
-							if (res && res.res === 'agree') {
-
-								if (res.data.action === 'delete') {
-
-									var objects = vm.entityViewerDataService.getObjects();
-
-									objects.forEach(function (obj) {
-
-										if (activeObject.id === obj.id) {
-
-											var parent = vm.entityViewerDataService.getData(obj.___parentId);
-
-											parent.results = parent.results.filter(function (resultItem) {
-												return resultItem.id !== activeObject.id
-											});
-
-											vm.entityViewerDataService.setData(parent)
-
-										}
-
-									});
-
-									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-								} else {
-
-									var objects = vm.entityViewerDataService.getObjects();
-
-									objects.forEach(function (obj) {
-
-										if (res.data.id === obj.id) {
-
-											Object.keys(res.data).forEach(function (key) {
-
-												obj[key] = res.data[key]
-
-											});
-
-											vm.entityViewerDataService.setObject(obj);
-
-										}
-
-									});
-
-									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-								}
-
-							}
-
-						}); */
-						$bigDrawer.show({
-							controller: 'EntityViewerEditDialogController as vm',
-							templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
-							addResizeButton: true,
-							drawerWidth: bigDrawerWidthPercent,
-							locals: {
-								entityType: entitytype,
-								entityId: activeObject.id,
-								data: {
-									openedIn: 'big-drawer',
-									editLayout: editLayout
-								}
-							}
-
-						}).then(function (res) {
-
-                            postEditionActions(res, activeObject);
-
-						});
-
+					    await evHelperService.openEntityViewerEditDrawer(vm, $bigDrawer, entitytype, activeObject.id);
 						break;
 
 				}
@@ -888,7 +774,7 @@
 
                                     if (res.status === 'agree') {
 
-                                        updateTableAfterEntitiesDeletion(res.data.ids);
+                                        evHelperService.updateTableAfterEntitiesDeletion(vm, res.data.ids);
 
                                     }
                                 });
@@ -977,6 +863,9 @@
             };
 
             vm.setLayout = function (layoutData) {
+                console.log('#79 setLayout', layoutData)
+
+                vm.layoutId = layoutData.id
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
                 vm.setFiltersValuesFromQueryParameters();
@@ -1168,7 +1057,7 @@
                     // vm.getLayoutByUserCode(layoutUserCode);
                     evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
-                } else if ($stateParams.layoutUserCode) {
+                } else if ($stateParams.layoutUsesrCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
                     // vm.getLayoutByUserCode(layoutUserCode);
