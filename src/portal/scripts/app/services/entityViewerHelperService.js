@@ -364,7 +364,7 @@
      * @param {number} columns
      * @returns {string}
      */
-    var getBigDrawerWidthPercent = function (columns) {
+    var getBigDrawerWidth = function (columns) {
 
     	let viewportWidth = window.innerWidth;
 
@@ -446,10 +446,52 @@
 
     };
 
+    var getBigDrawerOptions = async function (viewModel) {
+
+        var fixedAreaColumns = 6;
+        var editLayout;
+
+        if (viewModel.entityType !== 'transaction-type') { // ttype always have max big drawer width
+
+            if (viewModel.entityType === 'complex-transaction') {
+
+                // complex transaction contain layout
+                var layoutId = viewModel.transaction_type_object && viewModel.transaction_type_object.book_transaction_layout.id;
+                editLayout = await uiService.getEditLayout(layoutId);
+
+            } else {
+                editLayout = await uiService.getDefaultEditLayout(viewModel.entityType);
+            }
+
+            if (editLayout.results.length) {
+
+                var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
+                fixedAreaColumns = getEditLayoutMaxColumns(tabs);
+
+            }
+
+        }
+
+
+
+        var bigDrawerWidth = getBigDrawerWidth(fixedAreaColumns);
+
+        return {
+            isResizeButton: fixedAreaColumns < 6,
+            width: bigDrawerWidth,
+            editLayout: editLayout
+        }
+
+    }
+
     var insertObjectAfterCreateHandler = function (viewModel, resultItem) {
 
-        var groups = viewModel.evDataService.getDataAsList();
-        var requestParameters = viewModel.evDataService.getAllRequestParameters();
+        // Services names is different in some controllers
+        const entityViewerDataService = viewModel.entityViewerDataService || viewModel.evDataService;
+        const entityViewerEventService = viewModel.entityViewerEventService || viewModel.evEventService;
+
+        var groups = entityViewerDataService.getDataAsList();
+        var requestParameters = entityViewerDataService.getAllRequestParameters();
         var requestParametersKeys = Object.keys(requestParameters);
 
         var matchedRequestParameter;
@@ -511,45 +553,25 @@
 
         }
 
-        viewModel.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
     var duplicateEntity = async function (viewModel, $bigDrawer, entity) {
 
-        var editLayout;
-        if (viewModel.entityType === 'complex-transaction') {
-
-            // complex transaction contain layout
-            var layoutId = viewModel.transaction_type_object && viewModel.transaction_type_object.book_transaction_layout.id;
-            editLayout = await uiService.getEditLayout(layoutId);
-
-        } else {
-            editLayout = await uiService.getDefaultEditLayout(viewModel.entityType);
-        }
-
-        var fixedAreaColumns = 6;
-
-        if (editLayout.results.length) {
-
-            var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
-            fixedAreaColumns = getEditLayoutMaxColumns(tabs);
-
-        }
-
-        var bigDrawerWidthPercent = getBigDrawerWidthPercent(fixedAreaColumns);
+        var bigDrawerOptions = await getBigDrawerOptions(viewModel);
 
         $bigDrawer.show({
             controller: 'EntityViewerAddDialogController as vm',
             templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
-            addResizeButton: true,
-            drawerWidth: bigDrawerWidthPercent,
+            addResizeButton: bigDrawerOptions.isResizeButton,
+            drawerWidth: bigDrawerOptions.width,
             locals: {
                 entityType: viewModel.entityType,
                 entity: entity,
                 data: {
                     openedIn: 'big-drawer',
-                    editLayout: editLayout
+                    editLayout: bigDrawerOptions.editLayout
                 }
             }
 
@@ -587,18 +609,9 @@
     };
 
     var openEntityViewerEditDrawer = async function (viewModel, $bigDrawer, entitytype, entityId) {
-        var editLayout = await uiService.getDefaultEditLayout(entitytype);
-        var bigDrawerWidthPercent;
-        var fixedAreaColumns;
 
-        if (editLayout.results.length) {
+        var bigDrawerOptions = await getBigDrawerOptions(viewModel);
 
-            var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
-            fixedAreaColumns = getEditLayoutMaxColumns(tabs);
-
-            bigDrawerWidthPercent = getBigDrawerWidthPercent(fixedAreaColumns);
-
-        }
         /* $mdDialog.show({
             controller: 'EntityViewerEditDialogController as vm',
             templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
@@ -668,14 +681,14 @@
         $bigDrawer.show({
             controller: 'EntityViewerEditDialogController as vm',
             templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
-            addResizeButton: true,
-            drawerWidth: bigDrawerWidthPercent,
+            addResizeButton: bigDrawerOptions.isResizeButton,
+            drawerWidth: bigDrawerOptions.width,
             locals: {
                 entityType: entitytype,
                 entityId: entityId,
                 data: {
                     openedIn: 'big-drawer',
-                    editLayout: editLayout
+                    editLayout: bigDrawerOptions.editLayout
                 }
             }
 
@@ -785,12 +798,13 @@
 
         getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
-        getBigDrawerWidthPercent: getBigDrawerWidthPercent,
+        getBigDrawerWidth: getBigDrawerWidth,
 
         updateTableAfterEntitiesDeletion: updateTableAfterEntitiesDeletion,
         openEntityViewerEditDrawer:openEntityViewerEditDrawer,
 
-        postAddEntityFn: postAddEntityFn
+        postAddEntityFn: postAddEntityFn,
+        getBigDrawerOptions: getBigDrawerOptions
 
     }
 
