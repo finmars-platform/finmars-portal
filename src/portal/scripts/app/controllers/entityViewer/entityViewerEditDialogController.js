@@ -723,8 +723,8 @@
 					vm.fixedAreaPopup.tabColumns = columns;
 					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
 
-					const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-					$bigDrawer.setWidth(bigDrawerWidthPercent);
+					const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
+					$bigDrawer.setWidth(bigDrawerWidth);
 
 					if (vm.fixedAreaPopup.tabColumns !== 6) {
 						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');

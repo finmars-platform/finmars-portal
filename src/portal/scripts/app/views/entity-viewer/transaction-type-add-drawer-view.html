@@ -262,14 +262,14 @@
 
             <md-button class="outline-button"
                        ng-disabled="vm.processing || !vm.entity.type"
-                       ng-click="vm.save()">
-                Save
+                       ng-click="vm.saveAndExit('edit')">
+                Create
             </md-button>
 
             <md-button ng-disabled="vm.processing || !vm.entity.type"
                        ng-click="vm.saveAndExit()"
                        class="m-r-24 primary-button">
-                Save and Exit
+                Create and Exit
             </md-button>
 
         </div>

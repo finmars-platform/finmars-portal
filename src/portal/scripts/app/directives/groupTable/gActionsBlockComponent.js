@@ -328,7 +328,7 @@
                     }
                 };
 
-				scope.addEntity = function (ev) {
+				scope.addEntity = async function (ev) {
 
 					switch (scope.entityType) {
 
@@ -358,7 +358,9 @@
                                     }
                                 }
 
-                            }).then(res => evHelperService.postAddEntityFn(scope, $bigDrawer, res));
+                            }).then(res => {
+                                evHelperService.postAddEntityFn(scope, $bigDrawer, res)
+                            });
 
 							break;
 
@@ -414,10 +416,12 @@
 
 							}).then(postAddEntityFn); */
 
+                            var bigDrawerOptions = await evHelperService.getBigDrawerOptions(scope);
+
 							$bigDrawer.show({
 								controller: 'EntityViewerAddDialogController as vm',
 								templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
-                                addResizeButton: true,
+                                addResizeButton: bigDrawerOptions.isResizeButton,
 								locals: {
 									entityType: scope.entityType,
 									entity: {},

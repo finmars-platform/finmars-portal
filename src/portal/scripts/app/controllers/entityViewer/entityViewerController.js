@@ -124,7 +124,7 @@
 /*            const duplicateEntity = async function (entity) {
 
                 var editLayout = await uiService.getEditLayout(vm.entityType);
-                var bigDrawerWidthPercent;
+                var bigDrawerWidth;
                 var fixedAreaColumns;
 
                 if (editLayout.results.length) {
@@ -132,7 +132,7 @@
                     var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
                     fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
 
-                    bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
+                    bigDrawerWidth = evHelperService.getBigDrawerWidth(fixedAreaColumns);
 
                 }
 
@@ -140,7 +140,7 @@
                     controller: 'EntityViewerAddDialogController as vm',
                     templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
                     addResizeButton: true,
-                    drawerWidth: bigDrawerWidthPercent,
+                    drawerWidth: bigDrawerWidth,
                     locals: {
                         entityType: vm.entityType,
                         entity: entity,

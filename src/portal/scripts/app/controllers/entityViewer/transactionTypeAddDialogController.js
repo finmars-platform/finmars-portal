@@ -790,7 +790,9 @@
 
                     vm.processing = true;
 
-                    transactionTypeService.create(vm.entity).then(function (data) {
+                    transactionTypeService.create(vm.entity).then(function (responseData) {
+
+                        console.log('#79 transactionTypeService.create', responseData)
 
                         toastNotificationService.success("Transaction Type " + " " + vm.entity.name + ' was successfully created');
 
@@ -813,17 +815,15 @@
 
                             $scope.$apply();
 
-
-                            resolve();
+                            resolve(resolve(responseData));
 
                         } else {
-
-                            createDefaultEditLayout(data).then(function () {
+                            createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 
                                 $scope.$apply();
 
-                                resolve();
+                                resolve(responseData);
                             });
                         }
 
@@ -854,12 +854,29 @@
 
         };
 
-        vm.saveAndExit = function ($event) {
+        vm.saveAndExit = function (action) {
 
-            vm.save().then(function (data) {
+            vm.save().then(function (responseData) {
 
-                $mdDialog.hide({res: 'agree', data: data});
+                let responseObj = {status: 'disagree'};
 
+                if (action === 'edit') {
+
+                    vm.entity = {...vm.entity, ...responseData};
+                    vm.entity.$_isValid = true;
+
+                    responseObj = {
+                        res: 'agree',
+                        data: {
+                            action: 'edit',
+                            entityType: vm.entityType,
+                            entity: vm.entity
+                        }
+                    };
+                }
+
+                //$mdDialog.hide({res: 'agree', data: data});
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
         };
