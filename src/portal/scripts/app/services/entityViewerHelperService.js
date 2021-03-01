@@ -553,14 +553,18 @@
                 }
             }
 
-        }).then(res => {});
+        }).then(res => postAddEntityFn(viewModel, $bigDrawer, res));
 
     };
 
     var postEditionActions = function (viewModel, $bigDrawer, res, activeObject) {
 
-        viewModel.entityViewerDataService.setActiveObjectAction(null);
-        viewModel.entityViewerDataService.setActiveObjectActionData(null);
+        // Services names is different in some controllers
+        const entityViewerDataService = viewModel.entityViewerDataService || viewModel.evDataService;
+        const entityViewerEventService = viewModel.entityViewerEventService || viewModel.evEventService;
+
+        entityViewerDataService.setActiveObjectAction(null);
+        entityViewerDataService.setActiveObjectActionData(null);
 
         if (res && res.res === 'agree') {
 
@@ -683,6 +687,7 @@
     }
 
     var postAddEntityFn = function (viewModel, $bigDrawer, res) {
+
         if (res && res.res === 'agree') {
 
             insertObjectAfterCreateHandler(viewModel, res.data);
@@ -699,14 +704,18 @@
 
     var updateTableAfterEntitiesDeletion = function (viewModel, deletedEntitiesIds) {
 
-        var evOptions = viewModel.entityViewerDataService.getEntityViewerOptions();
-        var objects = viewModel.entityViewerDataService.getObjects();
+        // Services names is different in some controllers
+        const entityViewerDataService = viewModel.entityViewerDataService || viewModel.evDataService;
+        const entityViewerEventService = viewModel.entityViewerEventService || viewModel.evEventService;
+
+        var evOptions = entityViewerDataService.getEntityViewerOptions();
+        var objects = entityViewerDataService.getObjects();
 
         objects.forEach(function (obj) {
 
             if (deletedEntitiesIds.includes(obj.id)) {
 
-                var parent = viewModel.entityViewerDataService.getData(obj.___parentId)
+                var parent = entityViewerDataService.getData(obj.___parentId)
 
                 // if deleted entities shown, mark them
                 if (evOptions.entity_filters && evOptions.entity_filters.includes('deleted')) {
@@ -727,19 +736,23 @@
 
                 }
 
-                viewModel.entityViewerDataService.setData(parent);
+                entityViewerDataService.setData(parent);
 
             }
 
         });
 
-        viewModel.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
     var updateEntityInsideTable = function (viewModel) {
 
-        var objects = viewModel.entityViewerDataService.getObjects();
+        // Services names is different in some controllers
+        const entityViewerDataService = viewModel.entityViewerDataService || viewModel.evDataService;
+        const entityViewerEventService = viewModel.entityViewerEventService || viewModel.evEventService;
+
+        var objects = entityViewerDataService.getObjects();
 
         objects.forEach(function (obj) {
 
@@ -751,13 +764,13 @@
 
                 });
 
-                viewModel.entityViewerDataService.setObject(obj);
+                entityViewerDataService.setObject(obj);
 
             }
 
         });
 
-        viewModel.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
     };
 
     module.exports = {
