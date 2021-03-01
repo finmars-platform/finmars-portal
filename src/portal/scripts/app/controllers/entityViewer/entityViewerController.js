@@ -863,7 +863,6 @@
             };
 
             vm.setLayout = function (layoutData) {
-                console.log('#79 setLayout', layoutData)
 
                 vm.layoutId = layoutData.id
 

@@ -52,7 +52,6 @@
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
 
         var vm = this;
-        console.log('#79 vm', vm)
         var evEditorSharedLogicHelper = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
@@ -762,7 +761,6 @@
         };
 
         vm.entityTypeSlug = function () {
-            console.log('entityTypeSlug', vm.entityType.split('-').join(' ').capitalizeFirstLetter())
             return vm.entityType.split('-').join(' ').capitalizeFirstLetter();
         };
 
