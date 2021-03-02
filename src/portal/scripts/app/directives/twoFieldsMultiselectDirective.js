@@ -453,6 +453,8 @@
 
 							getAvailableOptions();
 
+							scope.onChangeCallback();
+
 						};
 
 						scope.selectOption = function (option) {
@@ -478,6 +480,8 @@
 								directivesEvents.CHIPS_LIST_CHANGED,
 								{chipsList: scope.chipsList, updateScope: true}
 							);
+
+							scope.onChangeCallback();
 
 						};
 
