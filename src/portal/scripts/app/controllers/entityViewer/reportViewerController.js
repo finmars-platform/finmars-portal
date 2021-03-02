@@ -10,6 +10,7 @@
         var evEvents = require('../../services/entityViewerEvents');
         var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
+        var usersService = require('../../services/usersService');
 
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
@@ -254,7 +255,7 @@
                 var dialogController = 'EntityViewerEditDialogController as vm';
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
 
-				locals.openedIn = 'modal'
+                locals.openedIn = 'modal'
 
                 if (locals.entityType && locals.entityType === 'complex-transaction') {
                     dialogController = 'ComplexTransactionEditDialogController as vm';
@@ -390,7 +391,7 @@
 
                         currencies.forEach(function (item) {
 
-                            if(item.id === activeObject[currencyKey]) {
+                            if (item.id === activeObject[currencyKey]) {
                                 currencyObj.id = item.id;
                                 currencyObj.name = item.name;
                                 currencyObj.short_name = item.short_name;
@@ -930,73 +931,73 @@
 
             vm.setLayout = function (layout) {
 
-            	return new Promise(async function (resolve, reject) {
+                return new Promise(async function (resolve, reject) {
 
-            		vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
-					vm.setFiltersValuesFromQueryParameters();
+                    vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+                    vm.setFiltersValuesFromQueryParameters();
 
-					// var reportOptions = vm.entityViewerDataService.getReportOptions();
-					var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+                    // var reportOptions = vm.entityViewerDataService.getReportOptions();
+                    var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
-					/* var finishSetLayout = function () {
+                    /* var finishSetLayout = function () {
 
-						// REPORT REQUEST STARTS HERE
-						rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                        // REPORT REQUEST STARTS HERE
+                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
-						var additions = vm.entityViewerDataService.getAdditions();
-						var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+                        var additions = vm.entityViewerDataService.getAdditions();
+                        var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
 
-						if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
-							vm.entityViewerDataService.setSplitPanelStatus(true);
-						}
+                        if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+                            vm.entityViewerDataService.setSplitPanelStatus(true);
+                        }
 
-						vm.readyStatus.layout = true;
+                        vm.readyStatus.layout = true;
 
-						$scope.$apply();
+                        $scope.$apply();
 
-					} */
+                    } */
 
-					var additions = vm.entityViewerDataService.getAdditions();
-					var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+                    var additions = vm.entityViewerDataService.getAdditions();
+                    var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
 
-					if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
-						vm.entityViewerDataService.setSplitPanelStatus(true);
-					}
+                    if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+                        vm.entityViewerDataService.setSplitPanelStatus(true);
+                    }
 
-					// Check if there is need to solve report datepicker expression
-					if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
+                    // Check if there is need to solve report datepicker expression
+                    if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-						/* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
-						var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
+                        /* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
+                        var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
 
-						var dateExprsProms = [];
+                        var dateExprsProms = [];
 
-						if (firstDateExpr) {
-							calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
-						}
+                        if (firstDateExpr) {
+                            calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
+                        }
 
-						if (secondDateExpr) {
-							calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
-						}
+                        if (secondDateExpr) {
+                            calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
+                        }
 
-						Promise.all(dateExprsProms).then(function () {
-							onSetLayoutEnd();
+                        Promise.all(dateExprsProms).then(function () {
+                            onSetLayoutEnd();
 
-						}).catch(function () {
-							onSetLayoutEnd();
-						}); */
-						await rvSharedLogicHelper.calculateReportDatesExprs();
-						rvSharedLogicHelper.onSetLayoutEnd();
+                        }).catch(function () {
+                            onSetLayoutEnd();
+                        }); */
+                        await rvSharedLogicHelper.calculateReportDatesExprs();
+                        rvSharedLogicHelper.onSetLayoutEnd();
 
-						resolve();
+                        resolve();
 
-					} else {
-						rvSharedLogicHelper.onSetLayoutEnd();
-					}
+                    } else {
+                        rvSharedLogicHelper.onSetLayoutEnd();
+                    }
 
-					resolve();
+                    resolve();
 
-				});
+                });
 
             };
 
@@ -1014,8 +1015,10 @@
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
+                vm.entityViewerDataService.setCurrentMember(vm.currentMember);
                 vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 vm.entityViewerDataService.setRowHeight(36);
@@ -1048,22 +1051,22 @@
                     });
 
                     // vm.getLayoutByUserCode(layoutUserCode);
-					setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+                    setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
                     // vm.getLayoutByUserCode(layoutUserCode);
-					setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+                    setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else {
                     // vm.getDefaultLayout();
-					setLayoutProm = evHelperService.getDefaultLayout(vm);
+                    setLayoutProm = evHelperService.getDefaultLayout(vm);
                 }
 
                 Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
-					$scope.$apply();
-				});
+                    $scope.$apply();
+                });
 
             };
 
@@ -1079,12 +1082,28 @@
                     removeTransitionWatcher();
                 });
 
-                vm.getView();
+                vm.getCurrentMember().then(function () {
+
+                    vm.getView();
+
+                })
 
 
             };
 
-            vm.init();
+
+
+            vm.getCurrentMember = function () {
+
+                return usersService.getMyCurrentMember().then(function (data) {
+
+                    vm.currentMember = data;
+
+                    $scope.$apply();
+
+                });
+            };
+
 
             var checkLayoutForChanges = function () { // called on attempt to change or reload page
 
@@ -1166,33 +1185,33 @@
                                                     layoutCurrentConfig.name = res.data.layoutName;
                                                 }
 
-												/* When saving is_default: true layout on backend, others become is_default: false
-												uiService.getDefaultListLayout(vm.entityType).then(function (data) {
+                                                /* When saving is_default: true layout on backend, others become is_default: false
+                                                uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
-													layoutCurrentConfig.is_default = true;
+                                                    layoutCurrentConfig.is_default = true;
 
-													if (data.count > 0 && data.results) {
-														var activeLayout = data.results[0];
-														activeLayout.is_default = false;
+                                                    if (data.count > 0 && data.results) {
+                                                        var activeLayout = data.results[0];
+                                                        activeLayout.is_default = false;
 
-														uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+                                                        uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
 
-															uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-																saveLayoutRes(true);
-															});
+                                                            uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                                saveLayoutRes(true);
+                                                            });
 
-														});
+                                                        });
 
-													} else {
-														uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-															saveLayoutRes(true);
-														});
-													}
+                                                    } else {
+                                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                            saveLayoutRes(true);
+                                                        });
+                                                    }
 
-												});*/
-												uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-													saveLayoutRes(true);
-												});
+                                                });*/
+                                                uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                    saveLayoutRes(true);
+                                                });
 
                                             }
 
@@ -1277,6 +1296,8 @@
                 removeTransitionWatcher();
 
             }
+
+            vm.init();
         }
 
     }()
