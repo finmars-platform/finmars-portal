@@ -1128,10 +1128,12 @@
             },
             components: {
                 topPanel: {
+					addButton: true,
                     filters: false,
                     columns: false,
                     search: false
-                }
+                },
+				rowCheckboxes: true
             }
         }
 
@@ -1139,8 +1141,8 @@
 
             var rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
-            // assemble header columns
-            var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
+			//<editor-fold desc="Assemble header columns">
+			var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
 
             viewModel.inputsGridTableData.header.columns = rowObj.columns.map(function (column) {
 
@@ -1155,15 +1157,16 @@
                 }
 
             });
-            // < assemble header columns >
+			//</editor-fold>
 
             // assemble body rows
             viewModel.entity.inputs.forEach(function (input, index) {
 
                 rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
-                rowObj.order = index
-                rowObj.key = input.name
+                rowObj.order = index;
+                rowObj.key = input.name;
+				rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
 
                 // name
                 rowObj.columns[0].settings.value = input.name

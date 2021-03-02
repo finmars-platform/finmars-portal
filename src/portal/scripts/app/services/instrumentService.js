@@ -3,43 +3,119 @@
  */
 (function () {
 
-    var instrumentRepository = require('../repositories/instrumentRepository');
+	const gridTableEvents = require('./gridTableEvents');
+	const GridTableHelperService = require('../helpers/gridTableHelperService');
+	const gridTableHelperService = new GridTableHelperService();
 
-    var getList = function (options) {
+	const evEditorEvents = require('./ev-editor/entityViewerEditorEvents');
+
+	const instrumentRepository = require('../repositories/instrumentRepository');
+
+	const getList = function (options) {
         return instrumentRepository.getList(options);
     };
 
-    var getListLight = function (options) {
+	const getListLight = function (options) {
         return instrumentRepository.getListLight(options);
     };
 
-    var getByKey = function (id) {
+	const getByKey = function (id) {
         return instrumentRepository.getByKey(id);
     };
 
-    var create = function(instrument) {
+	const create = function(instrument) {
         return instrumentRepository.create(instrument);
     };
 
-    var update = function(id, instrument) {
+	const update = function(id, instrument) {
         return instrumentRepository.update(id, instrument);
     };
 
-    var patch = function (id, data) {
+	const patch = function (id, data) {
         return instrumentRepository.patch(id, data);
     };
 
-    var deleteByKey = function (id) {
+	const deleteByKey = function (id) {
         return instrumentRepository.deleteByKey(id);
     };
 
-    var updateBulk = function(instruments) {
+	const updateBulk = function(instruments) {
         return instrumentRepository.updateBulk(instruments);
     };
 
-    var deleteBulk = function(data){
+	const deleteBulk = function(data){
         return instrumentRepository.deleteBulk(data);
     };
+
+	const initAccrualsScheduleGridTableEvents = function (
+		gridTableDataService, gridTableEventService, entity, evEditorEventService, tableChangeObj
+	) {
+
+		const tableChangeArgObj = {
+			key: 'accrual_calculation_schedules'
+		}
+
+		gridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
+
+			const gridTableData = gridTableDataService.getTableData();
+
+			const newRow = gridTableData.body[0];
+			const newSchedule = {
+				"accrual_start_date": '',
+				"first_payment_date": '',
+				"accrual_size": '',
+				"accrual_calculation_model": '',
+				"periodicity": '',
+				"periodicity_n": '',
+				"notes": '',
+				frontOptions: {newRow: true, gtKey: newRow.key}
+			};
+
+			entity.accrual_calculation_schedules.unshift(newSchedule);
+
+			// Update rows in schedules grid table
+			entity.accrual_calculation_schedules.forEach((schedule, scheduleIndex) => {
+				gridTableData.body[scheduleIndex].order = scheduleIndex;
+			});
+
+			tableChangeObj.value = true;
+			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, tableChangeArgObj);
+
+		});
+
+		gridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argObj) {
+
+			var rowOrder = argObj.row.order,
+				colOrder = argObj.column.order;
+
+			gridTableHelperService.onGridTableCellChange(
+				entity.accrual_calculation_schedules,
+				gridTableDataService,
+				rowOrder, colOrder
+			);
+
+			tableChangeObj.value = true;
+			const cellValChangeArgObj = tableChangeArgObj;
+
+			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, cellValChangeArgObj);
+
+		});
+
+		gridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (argObj) {
+
+			entity.accrual_calculation_schedules = entity.accrual_calculation_schedules.filter(schedule => {
+
+				var scheduleId = schedule.id || schedule.frontOptions.gtKey;
+				return !argObj.deletedRowsKeys.includes(scheduleId);
+
+			});
+
+			tableChangeObj.value = true;
+			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, tableChangeArgObj);
+
+		});
+
+	};
 
     module.exports = {
         getList: getList,
@@ -51,7 +127,9 @@
         deleteByKey: deleteByKey,
 
         updateBulk: updateBulk,
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+		initAccrualsScheduleGridTableEvents: initAccrualsScheduleGridTableEvents
     }
 
 

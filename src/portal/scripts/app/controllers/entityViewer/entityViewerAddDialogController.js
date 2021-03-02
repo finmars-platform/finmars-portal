@@ -18,7 +18,6 @@
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
-    // var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
     var EventService = require('../../services/eventService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
@@ -262,7 +261,7 @@
 
                 var fieldResult = {};
 
-                if (field && field.type === 'field') {
+                if (field && field.type !== 'empty') {
 
                     if (field.attribute_class === 'attr') {
 
@@ -731,7 +730,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                if (vm.entityType === 'instrument') {
+                if (vm.entityType === 'instrument' && vm.entity.instrument_type) {
 
                     console.log('vm.entity', vm.entity);
 
@@ -942,55 +941,8 @@
         }; */
 
         vm.checkReadyStatus = evEditorSharedLogicHelper.checkReadyStatus;
-
-        vm.bindFlex = function (tab, field) {
-            /*var totalColspans = 0;
-            var i;
-            for (i = 0; i < tab.layout.fields.length; i = i + 1) {
-                if (tab.layout.fields[i].row === row) {
-                    totalColspans = totalColspans + tab.layout.fields[i].colspan;
-                }
-            }*/
-            var flexUnit = 100 / tab.layout.columns;
-            return Math.floor(field.colspan * flexUnit);
-
-        };
-
-        vm.checkFieldRender = function (tab, row, field) {
-
-            if (field.row === row) {
-                if (field.type === 'field') {
-                    return true;
-                } else {
-
-                    var spannedCols = [];
-                    var itemsInRow = tab.layout.fields.filter(function (item) {
-                        return item.row === row
-                    });
-
-                    itemsInRow.forEach(function (item) {
-
-                        if (item.type === 'field' && item.colspan > 1) {
-                            var columnsToSpan = item.column + item.colspan - 1;
-
-                            for (var i = item.column; i <= columnsToSpan; i = i + 1) {
-                                spannedCols.push(i);
-                            }
-
-                        }
-
-                    });
-
-                    if (spannedCols.indexOf(field.column) !== -1) {
-                        return false
-                    }
-
-                    return true;
-                }
-            }
-            return false;
-
-        };
+        vm.bindFlex = evEditorSharedLogicHelper.bindFlex;
+        vm.checkFieldRender = evEditorSharedLogicHelper.checkFieldRender;
 
         vm.checkViewState = function (tab) {
 

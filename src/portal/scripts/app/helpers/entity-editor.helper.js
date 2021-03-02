@@ -226,7 +226,7 @@
 
                         var socket = tab.layout.fields[a];
 
-                        if (socket.type === 'field') {
+                        if (socket.type !== 'empty') {
 
                             if (socket.attribute_class === 'userInput') {
 
@@ -819,10 +819,12 @@
 
             if (userInput.frontOptions && userInput.frontOptions.usedInExpr) {
 
-                if ((typeof fieldValue === 'number' && isNaN(fieldValue)) ||
+                if (
+                	(typeof fieldValue === 'number' && isNaN(fieldValue)) ||
                     fieldValue === undefined ||
                     fieldValue === null ||
-                    fieldValue === '') {
+                    fieldValue === ''
+				) {
 
                     var errorObj = {
                         key: userInput.name,
@@ -1123,7 +1125,7 @@
 
             if (field) {
 
-            	if (field.type === 'field') {
+            	if (field.type !== 'empty') {
 
 					var attrFound = false;
 
@@ -1247,12 +1249,6 @@
 					if (field.backgroundColor) {
 						fieldResult.backgroundColor = field.backgroundColor;
 					}
-
-				}
-
-				else if (field.type === 'table') {
-
-					fieldResult = field.attribute;
 
 				}
 

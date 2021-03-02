@@ -1,7 +1,8 @@
 <div class="grid-table-top-panel">
     <div data-ng-show="!mode" class="flex-row fc-space-between width-100">
         <div>
-            <md-button data-ng-click="addRow()"
+            <md-button ng-if="topPanelComponents.addButton !== false"
+                       data-ng-click="addRow()"
                        class="grid-table-add-row-btn">
                 <span class="material-icons">add</span>
             </md-button>

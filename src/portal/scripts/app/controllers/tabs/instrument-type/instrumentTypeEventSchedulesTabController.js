@@ -253,6 +253,7 @@
                 const rowObj = metaHelper.recursiveDeepCopy(eventsGridTableData.templateRow, true);
 
                 rowObj.order = index;
+				rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
                 rowObj.key = row.key;
 
                 rowObj.columns[0].settings.value = row.name;
@@ -601,7 +602,7 @@
                 "is_sent_to_pending": false,
                 "is_book_automatic": false,
                 "button_position": '',
-                frontOptions: {gtKey: newRow.key}
+                frontOptions: {newRow: true, gtKey: newRow.key}
             };
 
             item.data.actions.unshift(newAction);
