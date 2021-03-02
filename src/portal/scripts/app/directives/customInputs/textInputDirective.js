@@ -94,34 +94,44 @@
 
 				};
 
+				var onChangeIndex;
+
 				scope.onInputChange = function (modelVal) {
 
 					if (modelVal !== undefined) { // needed for textarea.customInputFullText
 						scope.model = modelVal
 					}
 
-					scope.error = "";
-					stylePreset = "";
-					scope.valueIsValid = false;
+					clearTimeout(onChangeIndex);
 
-					if (scope.model) {
-						scope.valueIsValid = true;
+					onChangeIndex = setTimeout(() => {
 
-					} else {
+						scope.error = "";
+						stylePreset = "";
+						scope.valueIsValid = false;
 
-						if (scope.smallOptions && scope.smallOptions.notNull) {
-							scope.error = "Field should not be null";
+						if (scope.model) {
+							scope.valueIsValid = true;
+
+						} else {
+
+							if (scope.smallOptions && scope.smallOptions.notNull) {
+								scope.error = "Field should not be null";
+							}
+
 						}
 
-					}
+						/* if (scope.onChangeCallback) {
+							 setTimeout(function () {
+								scope.onChangeCallback();
+							}, 0);
+						} */
+						scope.$apply();
 
-					if (scope.onChangeCallback) {
+						if (scope.onChangeCallback) scope.onChangeCallback();
 
-						setTimeout(function () {
-							scope.onChangeCallback();
-						}, 0);
+					}, 500);
 
-					}
 				};
 
 				var applyCustomStyles = function () {

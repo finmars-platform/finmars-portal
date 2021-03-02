@@ -76,30 +76,41 @@
                     return classes;
                 };
 
+				var onChangeIndex;
+
                 scope.onInputChange = function () {
 
-                    scope.error = '';
-                    stylePreset = '';
-                    scope.valueIsValid = false;
+					clearTimeout(onChangeIndex);
 
-                    if (scope.model) {
-                        scope.valueIsValid = true;
+					onChangeIndex = setTimeout(function () {
 
-                    } else {
+						stylePreset = '';
+						scope.valueIsValid = false;
 
-                        if (scope.smallOptions && scope.smallOptions.notNull) {
-                            scope.error = 'Field should not be null';
-                        }
+						if (scope.model) {
+							scope.valueIsValid = true;
 
-                    }
+						} else {
 
-                    if (scope.onChangeCallback) {
+							if (scope.smallOptions && scope.smallOptions.notNull) {
+								scope.error = 'Field should not be null';
+							}
+
+						}
+
+						scope.$apply();
+
+						if (scope.onChangeCallback) scope.onChangeCallback();
+
+					}, 500);
+
+                    /* if (scope.onChangeCallback) {
                         setTimeout(function () {
                             scope.onChangeCallback();
                         }, 0);
-                    }
+                    } */
 
-                }
+                };
 
                 /*var applyCustomStyles = function () {
 

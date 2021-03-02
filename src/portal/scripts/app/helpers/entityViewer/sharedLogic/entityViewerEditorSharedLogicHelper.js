@@ -154,8 +154,20 @@
 
         const mapAttributesToLayoutFields = function () {
 
+        	const entityAttrs = JSON.parse(JSON.stringify(viewModel.entityAttrs));
+
+        	if (viewModel.entityType === 'instrument') {
+
+        		entityAttrs.push({
+					name: 'Accruals table',
+					key: 'accrual_calculation_schedules',
+					value_type: 'table',
+				});
+
+			}
+
             let attributes = {
-                entityAttrs: viewModel.entityAttrs,
+                entityAttrs: entityAttrs,
                 dynamicAttrs: viewModel.attributeTypes,
                 layoutAttrs: viewModel.layoutAttrs
             };
@@ -200,6 +212,55 @@
             return readyStatus;
 
         };
+
+        const bindFlex = (tab, field) => {
+
+        	if (field.occupiesWholeRow) {
+        		return 100;
+			}
+
+			var flexUnit = 100 / tab.layout.columns;
+			return Math.floor(field.colspan * flexUnit);
+
+		};
+
+		const checkFieldRender = function (tab, row, field) {
+
+			if (field.row === row) {
+
+				if (field.type !== 'empty') {
+					return true;
+				} else {
+
+					var spannedCols = [];
+					var itemsInRow = tab.layout.fields.filter(function (item) {
+						return item.row === row
+					});
+
+					itemsInRow.forEach(function (item) {
+
+						if (item.type !== 'empty' && item.colspan > 1) {
+							var columnsToSpan = item.column + item.colspan - 1;
+
+							for (var i = item.column; i <= columnsToSpan; i = i + 1) {
+								spannedCols.push(i);
+							}
+
+						}
+
+					});
+
+					if (spannedCols.indexOf(field.column) !== -1) {
+						return false
+					}
+
+					return true;
+				}
+			}
+
+			return false;
+
+		};
 
         const applyInstrumentUserFieldsAliases = function () {
 
@@ -831,6 +892,8 @@
             onFixedAreaPopupCancel: onFixedAreaPopupCancel,
 
             checkReadyStatus: checkReadyStatus,
+			bindFlex: bindFlex,
+			checkFieldRender: checkFieldRender,
             getFormLayout: getFormLayout,
             onEditorStart: onEditorStart,
 

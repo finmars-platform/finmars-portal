@@ -490,10 +490,12 @@
             },
             components: {
                 topPanel: {
+					addButton: true,
                     filters: false,
                     columns: false,
                     search: false
-                }
+                },
+				rowCheckboxes: true
             }
 
         }
@@ -524,7 +526,9 @@
             vm.entity.event_schedules.forEach(function (event, eventIndex) {
 
             	rowObj = metaHelper.recursiveDeepCopy(vm.eventsGridTableData.templateRow, true);
-                rowObj.key = event.id;
+
+            	rowObj.key = event.id;
+				rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
                 rowObj.order = eventIndex;
 
                 var name = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');

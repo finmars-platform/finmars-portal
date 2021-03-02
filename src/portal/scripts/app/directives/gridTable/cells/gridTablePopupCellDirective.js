@@ -22,12 +22,9 @@
             '</div>',
             link: function (scope, elem, attrs) {
 
-                scope.popupModel = {};
-                scope.popupSettings = null;
-
-                var cellMethods = scope.column.methods;
+                var cellMethods;
                 var bodyElem = document.querySelector("body");
-                var cellTextContainer = elem[0].querySelector('.gt-cell-text-container');
+                var cellTextContainer;
 
                 var popupBackdropElem = document.createElement("div");
                 popupBackdropElem.classList.add("popup-area-backdrop");
@@ -37,10 +34,10 @@
                 var popupFooter = "<div class='popup-area-footer'>" +
                         "<md-button class='m-l-0' data-ng-click='cancelPopupArea()'>Cancel</md-button>" +
                         "<md-button class='m-r-0' data-ng-click='acceptPopupChanges()'>Agree</md-button>" +
-                    "</div>"
+                    "</div>";
 
-                // Popup methods
-                var getPopupHtmlContent = function () {
+				//<editor-fold desc="Popup methods">
+				var getPopupHtmlContent = function () {
 
                     var popupMain;
 
@@ -112,9 +109,9 @@
                     setPopupPosition(posX, posY);
 
                     document.addEventListener('keyup', function (event) {
-                        if (event.key === "Escape") {
-                            closePopupArea();
-                        }
+
+                    	if (event.key === "Escape") closePopupArea();
+
                     }, {once: true});
 
                     if (scope.column.settings.closeOnMouseOut) {
@@ -189,10 +186,10 @@
                     if (scope.column.settings.value &&
                         typeof scope.column.settings.value === 'object') {
 
-                        scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+                        scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value));
 
                     } else {
-                        scope.popupModel.value = scope.column.settings.value
+                        scope.popupModel.value = scope.column.settings.value;
                     }
 
                 };
@@ -230,10 +227,107 @@
                     }
 
                 }
+				//</editor-fold>
 
-                // < Popup methods >
+				//<editor-fold desc="Cell click functions">
+				function onTextCellContainerClick (e) {
+
+					var posX = e.pageX;
+					var posY = e.pageY;
+
+					if (scope.column.settings.value) {
+
+						if (scope.column.settings.value &&
+							typeof scope.column.settings.value === 'object') {
+
+							scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+
+						} else {
+							scope.popupModel.value = scope.column.settings.value
+						}
+
+					}
+
+					createPopup(posX, posY);
+
+				}
+
+				function onDateCellContainerClick () {
+					pickmeup(cellTextContainer).show();
+				}
+
+				function onDateChange (e) {
+
+					scope.column.settings.value = e.detail.formatted_date;
+					scope.column.settings.cellText = e.detail.formatted_date;
+					scope.$apply();
+
+					var changedCellData = {
+						row: {
+							key: scope.row.key,
+							order: scope.row.order
+						},
+						column: {
+							key: scope.column.key,
+							order: scope.column.order
+						}
+					};
+
+					scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
+
+				}
+
+				function onExpressionCellClick (e) {
+
+					$mdDialog.show({
+						controller: 'ExpressionEditorDialogController as vm',
+						templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+						parent: angular.element(document.body),
+						targetEvent: e,
+						preserveScope: true,
+						multiple: true,
+						autoWrap: true,
+						skipHide: true,
+						locals: {
+							item: {expression: scope.column.settings.value},
+							data: scope.column.settings.exprData
+						}
+
+					})
+					.then(function (res) {
+
+						if (res.status === 'agree') {
+
+							scope.column.settings.cellText = res.data.item.expression;
+							scope.column.settings.value = res.data.item.expression;
+
+							var changedCellData = {
+								row: {
+									key: scope.row.key,
+									order: scope.row.order
+								},
+								column: {
+									key: scope.column.key,
+									order: scope.column.order
+								}
+							};
+
+							scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
+
+						}
+
+					});
+
+				}
+				//</editor-fold>
 
                 var init = function () {
+
+					scope.popupModel = {};
+					scope.popupSettings = null;
+
+					cellMethods = scope.column.methods;
+					cellTextContainer = elem[0].querySelector('.gt-cell-text-container');
 
                     if (!scope.column.settings.hasOwnProperty('cellText')) {
                         scope.column.settings.cellText = scope.column.settings.value;
@@ -247,155 +341,95 @@
                         scope.cellValue = scope.column.settings.value;
                     }*/
 
-                    // Victor 12.10.2020
-                    if (scope.column.settings.isDisabled) { // not add handlers if column is disabled
-                        return;
-                    }
+                    if (!scope.column.settings.isDisabled) { // not add handlers if column is disabled
 
-                    switch (scope.column.cellType) {
-                        case 'custom_popup':
+						switch (scope.column.cellType) {
 
-                            scope.popupSettings = scope.column.settings.popupSettings;
+							case 'custom_popup':
 
-                            if (scope.popupSettings.contentHtml.hasOwnProperty('footer')) {
-                                popupFooter = scope.popupSettings.contentHtml.footer;
-                            }
+								scope.popupSettings = scope.column.settings.popupSettings;
 
-							if (scope.popupSettings.popupData) {
-								scope.popupData = scope.popupSettings.popupData;
-							}
+								if (scope.popupSettings.contentHtml.hasOwnProperty('footer')) {
+									popupFooter = scope.popupSettings.contentHtml.footer;
+								}
 
-                        case 'text':
-                        case 'number':
+								if (scope.popupSettings.popupData) {
+									scope.popupData = scope.popupSettings.popupData;
+								}
 
-                            getPopupHtmlContent();
+							case 'text':
+							case 'number':
 
-                            cellTextContainer.addEventListener('click', function (e) {
+								getPopupHtmlContent();
 
-                                var posX = e.pageX;
-                                var posY = e.pageY;
+								// Using named function to prevent duplicate listeners on repeated init() call
+								cellTextContainer.addEventListener('click', onTextCellContainerClick, false);
 
-                                if (scope.column.settings.value) {
+								break;
 
-                                    if (scope.column.settings.value &&
-                                        typeof scope.column.settings.value === 'object') {
+							case 'date':
+								// Using named function to prevent duplicate listeners on repeated init() call
+								cellTextContainer.addEventListener('click', onDateCellContainerClick);
 
-                                        scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+								var dataVal = scope.column.settings.value;
 
-                                    } else {
-                                        scope.popupModel.value = scope.column.settings.value
-                                    }
+								if (dataVal) {
 
-                                }
+									pickmeup(cellTextContainer, {
+										date: new Date(dataVal),
+										current: new Date(dataVal),
+										position: 'right',
+										hide_on_select: true,
+										format: 'Y-m-d'
+									});
 
-                                createPopup(posX, posY);
+								}
 
-                            })
+								else {
 
-                            break;
+									pickmeup(cellTextContainer, {
+										position: 'right',
+										hide_on_select: true,
+										format: 'Y-m-d'
+									});
 
-                        case 'date':
+								}
 
-                            cellTextContainer.addEventListener('click', function (e) {
-                                pickmeup(cellTextContainer).show();
-                            })
+								cellTextContainer.addEventListener('pickmeup-change', onDateChange);
 
-                            var dataVal = scope.column.settings.value;
+								break;
 
-                            if (dataVal) {
+							case 'expression':
 
-                                pickmeup(cellTextContainer, {
-                                    date: new Date(dataVal),
-                                    current: new Date(dataVal),
-                                    position: 'right',
-                                    hide_on_select: true,
-                                    format: 'Y-m-d'
-                                });
+								cellTextContainer.addEventListener('click', onExpressionCellClick);
 
-                            } else {
+								break;
 
-                                pickmeup(cellTextContainer, {
-                                    position: 'right',
-                                    hide_on_select: true,
-                                    format: 'Y-m-d'
-                                });
-
-                            }
-
-                            cellTextContainer.addEventListener('pickmeup-change', function (event) {
-
-                                scope.column.settings.value = event.detail.formatted_date;
-                                scope.column.settings.cellText = event.detail.formatted_date;
-                                scope.$apply();
-
-                                var changedCellData = {
-                                    row: {
-                                        key: scope.row.key,
-                                        order: scope.row.order
-                                    },
-                                    column: {
-                                        key: scope.column.key,
-                                        order: scope.column.order
-                                    }
-                                };
-
-                                scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
-
-                            });
-
-                            break;
-
-                        case 'expression':
-
-                            cellTextContainer.addEventListener('click', function (e) {
-
-                                $mdDialog.show({
-                                    controller: 'ExpressionEditorDialogController as vm',
-                                    templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                                    parent: angular.element(document.body),
-                                    targetEvent: e,
-                                    preserveScope: true,
-                                    multiple: true,
-                                    autoWrap: true,
-                                    skipHide: true,
-                                    locals: {
-                                        item: {expression: scope.column.settings.value},
-                                        data: scope.column.settings.exprData
-                                    }
-
-                                }).then(function (res) {
-
-                                    if (res.status === 'agree') {
-
-                                        scope.column.settings.cellText = res.data.item.expression;
-                                        scope.column.settings.value = res.data.item.expression;
-
-                                        var changedCellData = {
-                                            row: {
-                                                key: scope.row.key,
-                                                order: scope.row.order
-                                            },
-                                            column: {
-                                                key: scope.column.key,
-                                                order: scope.column.order
-                                            }
-                                        };
-
-                                        scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
-
-                                    }
-
-                                });
-
-                            })
-
-                        break;
+						}
 
                     }
 
                 };
 
                 init();
+
+				scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+
+					var row = scope.gtDataService.getRow(scope.row.order);
+					if (row) var cell = row.columns.find(col => col.order === scope.column.order);
+
+					if (row && cell) {
+
+						scope.row = row;
+						scope.column = cell;
+
+						init();
+
+					}
+					/*
+					If cellText calculated by cellMethods.onChange. Calculate cellText outside grid table.
+					 */
+				});
 
             }
         }

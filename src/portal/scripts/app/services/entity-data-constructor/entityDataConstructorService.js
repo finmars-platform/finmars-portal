@@ -4,13 +4,14 @@
 	const instrumentPeriodicityService = require('../instrumentPeriodicityService');
 
 	'use strict';
+
 	module.exports = function () {
 
-		const fullRowUserInputsList = ['customizable_accruals_table'];
+		const fullRowUserInputsList = ['accrual_calculation_schedules'];
 
 		const dataOfAttributes = {
 			'instrument': {
-				'customizable_accruals_table': {
+				'accrual_calculation_schedules': {
 					'label': '',
 					'tableData': [
 						{
@@ -79,7 +80,7 @@
 
 		const loadOptionsForAccrualsTable = async function () {
 
-			const accrualsTable = dataOfAttributes.instrument.customizable_accruals_table.tableData;
+			const accrualsTable = dataOfAttributes.instrument.accrual_calculation_schedules.tableData;
 
 			const calcModelIndex = accrualsTable.findIndex(row => row.key === 'accrual_calculation_model');
 			const periodicityIndex = accrualsTable.findIndex(row => row.key === 'periodicity');
@@ -87,6 +88,7 @@
 			const mapOptions = function (item) {
 				return {
 					user_code: item.user_code,
+					id: item.id,
 					name: item.name,
 					to_show: true,
 					override_name: "",
