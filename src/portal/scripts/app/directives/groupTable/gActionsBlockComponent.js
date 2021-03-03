@@ -330,38 +330,22 @@
 
 				scope.addEntity = async function (ev) {
 
+				    const entity = {};
+
+                    let editLayout;
 					switch (scope.entityType) {
 
 						case 'transaction-type':
 
-/*							$mdDialog.show({
-								controller: 'TransactionTypeAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-								parent: angular.element(document.body),
-								targetEvent: ev,
-								locals: {
-									entityType: scope.entityType,
-									entity: {}
-								}
-
-							}).then(postAddEntityFn);*/
-
-                            $bigDrawer.show({
-                                controller: 'TransactionTypeAddDialogController as vm',
-                                templateUrl: 'views/entity-viewer/transaction-type-add-drawer-view.html',
-                                addResizeButton: false,
-                                locals: {
-                                    entityType: scope.entityType,
-                                    entity: {},
-                                    data: {
-                                        openedIn: 'big-drawer'
-                                    }
-                                }
-
-                            }).then(res => {
-                                evHelperService.postAddEntityFn(scope, $bigDrawer, res)
-                            });
-
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openTTypeAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
 							break;
 
 						case 'complex-transaction':
@@ -395,42 +379,22 @@
 									}
 								}
 
-							}).then(res => evHelperService.postAddEntityFn(scope, $bigDrawer, res));
+							}).then(res => evHelperService.postAdditionActions(scope, $bigDrawer, res));
 
 							break;
 
 						default:
 
-							/* $mdDialog.show({
-								controller: 'EntityViewerAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-								parent: angular.element(document.body),
-								targetEvent: ev,
-								locals: {
-									entityType: scope.entityType,
-									entity: {},
-									data: {
-										openedIn: 'modal-dialog'
-									}
-								}
-
-							}).then(postAddEntityFn); */
-
-                            var bigDrawerOptions = await evHelperService.getBigDrawerOptions(scope);
-
-							$bigDrawer.show({
-								controller: 'EntityViewerAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
-                                addResizeButton: bigDrawerOptions.isResizeButton,
-								locals: {
-									entityType: scope.entityType,
-									entity: {},
-									data: {
-										openedIn: 'big-drawer'
-									}
-								}
-
-							}).then(res => evHelperService.postAddEntityFn(scope, $bigDrawer, res));
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openEntityViewerAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
+                            break;
 
 					}
 
