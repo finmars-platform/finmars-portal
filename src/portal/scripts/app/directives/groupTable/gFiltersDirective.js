@@ -49,7 +49,7 @@
 				scope.popupPosY = { value: null }
 				scope.fpBackClasses = "z-index-48"
 				scope.fpClasses = "z-index-49"
-				console.log("testing filters", JSON.parse(JSON.stringify(scope.filters)));
+
 				scope.showUseFromAboveFilters = true;
 
 				scope.readyStatus = {
