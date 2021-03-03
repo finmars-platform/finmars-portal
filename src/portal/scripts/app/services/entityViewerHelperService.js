@@ -673,21 +673,19 @@
 
 							}).then(postAddEntityFn);*/
 
-        var bigDrawerOptions = getBigDrawerOptions(layout);
-
-        console.log('#79 bigDrawerOptions', bigDrawerOptions)
+        var bigDrawerWidth = getBigDrawerWidth(6);
 
         $bigDrawer.show({
             controller: 'TransactionTypeAddDialogController as vm',
             templateUrl: 'views/entity-viewer/transaction-type-add-drawer-view.html',
-            addResizeButton: true,
-            drawerWidth: bigDrawerOptions.width,
+            addResizeButton: false, // ttype always have max width without resize button
+            drawerWidth: bigDrawerWidth,
             locals: {
                 entityType: entityType,
                 entity: entity,
                 data: {
                     openedIn: 'big-drawer',
-                    editLayout: bigDrawerOptions.editLayout
+                    editLayout: layout
                 }
             }
 
@@ -709,7 +707,7 @@
         entityId
     ) {
 
-        var bigDrawerOptions = getBigDrawerOptions(layout);
+        var bigDrawerWidth = getBigDrawerWidth(6);
 
 /*						$mdDialog.show({
 							controller: 'TransactionTypeEditDialogController as vm',
@@ -784,14 +782,14 @@
         $bigDrawer.show({
             controller: 'TransactionTypeEditDialogController as vm',
             templateUrl: 'views/entity-viewer/transaction-type-edit-drawer-view.html',
-            addResizeButton: true,
-            drawerWidth: bigDrawerOptions.width,
+            addResizeButton: false, // ttype always have max width without resize button
+            drawerWidth: bigDrawerWidth,
             locals: {
                 entityType: entitytype,
                 entityId: entityId,
                 data: {
                     openedIn: 'big-drawer',
-                    editLayout: bigDrawerOptions.editLayout
+                    editLayout: layout
                 }
             }
 
