@@ -734,6 +734,8 @@
 
 					});
 
+                    updateFilterAreaHeight()
+
 				};
 
                 scope.onFilterChipClick = function (chipsData, event) {
@@ -916,6 +918,16 @@
 					formatFiltersForChips();
 
 					scope.readyStatus.filters = true;
+
+
+                    // TDDO Refactor this
+                    // 1 add on "resize" event listener for filter area height change
+                    // 2 calculate before render e.g width 1000px -> we got 2 rows - height 140px
+                    //                              width 500px -> we got 3 row - heiht 210px
+					setTimeout(function () {
+                        updateFilterAreaHeight(); // important here
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                    }, 1000);
 
 					initEventListeners();
 
