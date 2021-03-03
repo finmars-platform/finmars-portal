@@ -23,7 +23,6 @@
                 function findColumnById(columnId) {
 
                     var columns = scope.evDataService.getColumns();
-
                     var result;
 
                     columns.forEach(function (item) {
@@ -78,9 +77,9 @@
                         evContent = $(elem).parents('.g-table-section')[0].querySelector('.ev-content');
                     }
 
-                    var columnNumber = index + 2; // wtf?
+                    var columnNumber = index + 1;
 
-                    var cells = evContent.querySelectorAll('.g-cell-wrap:nth-child(' + columnNumber + ')');
+                    var cells = evContent.querySelectorAll(".g-cell-wrap[data-column='" + columnNumber + "']");
 
                     for (var i = 0; i < cells.length; i = i + 1) {
 
@@ -99,9 +98,10 @@
                 }
 
                 function resizeScrollableArea() {
-                    var viewContext = scope.evDataService.getViewContext();
 
+                	var viewContext = scope.evDataService.getViewContext();
                     var columns = scope.evDataService.getColumns();
+
                     var i;
                     var areaWidth = 0;
                     var columnMargins = 16;
@@ -146,12 +146,26 @@
                 function initColumnSliderListener() {
 
                     $(elem).bind('mousedown', function (e) {
-                        e.preventDefault();
+
+                    	e.preventDefault();
                         e.stopPropagation();
 
                         scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_START);
 
-                        var gColumnElem = $(this).parents('md-card.g-cell.g-column');
+                        const isNewDesign = this.parentElement.classList.contains('g-table-header-cell-wrapper');
+
+                        var gColumnElem;
+
+                        if (isNewDesign) {
+
+                            gColumnElem = $(this).parents('.g-table-header-cell-wrapper'); // Victor 2020.12.16 New report viewer design
+
+                        } else {
+
+                            gColumnElem = $(this).parents('md-card.g-cell.g-column');
+
+                        }
+
                         var column = findColumnById(gColumnElem[0].dataset.columnId);
                         var columnIndex = findColumnIndexById(gColumnElem[0].dataset.columnId);
 

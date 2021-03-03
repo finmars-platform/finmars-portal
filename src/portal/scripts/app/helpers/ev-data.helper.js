@@ -143,7 +143,6 @@
     var getObject = function (objectId, parentGroupHashId, evDataService) {
 
         var parent = evDataService.getData(parentGroupHashId);
-
         var result = null;
 
         if (parent) {
@@ -172,11 +171,11 @@
 
         }
 
-        if (groupType.hasOwnProperty('id')) {
+        /* if (groupType.hasOwnProperty('id')) {
 
             pattern = [groupType.name, stringHelper.toHash(groupType.id)].join('');
 
-        }
+        } */
 
         return stringHelper.toHash(pattern)
 
@@ -192,11 +191,11 @@
 
         }
 
-        if (column.hasOwnProperty('id')) {
+        /* if (column.hasOwnProperty('id')) {
 
             pattern = [column.name, stringHelper.toHash(column.id)].join('');
 
-        }
+        } */
 
         return stringHelper.toHash(pattern)
 
@@ -795,10 +794,10 @@
     };
 
     var calculateMenuPosition = function (popup, menuPosition) {
-		console.log("ev submenu menuPosition", menuPosition);
+
         var bodyWidth = document.body.clientWidth;
         var bodyHeight = document.body.clientHeight;
-		console.log("ev submenu bodyHeight", bodyHeight);
+
         var menuOptionsContainer = popup.querySelector('.ev-dropdown-container');
         var submenuItem = menuOptionsContainer.querySelector('.ev-dropdown-submenu');
 
@@ -828,7 +827,26 @@
 
         //popup.style.cssText = menuPosition;
 
-    }
+    };
+
+    var calculateStaticMenuPosition = function (popup, menuElem, popupHeight) {
+
+        var menuElemRect = menuElem.getBoundingClientRect();
+        // "-24" to create more space between mouse and popup borders
+		var popupTop = menuElemRect.top - 24;
+        popup.style.left = (menuElemRect.left - 24) + "px"
+
+		var bodyHeight = document.body.clientHeight;
+
+        if (bodyHeight < popupTop + popupHeight) {
+
+            popup.style.bottom = 0;
+
+        } else {
+			popup.style.top = popupTop + 'px'
+		}
+
+    };
 
     var preparePopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
 
@@ -850,22 +868,85 @@
 
         var obj = getObject(objectId, parentGroupHashId, evDataService);
 
-        obj.___is_activated = true;
+        if (obj) {
 
-        if (isReport) {
-            obj.___is_last_selected = true;
-        }
+        	obj.___is_activated = true;
 
-        evDataService.setObject(obj);
+			if (isReport) {
+				obj.___is_last_selected = true;
+			}
+
+			evDataService.setObject(obj);
+
+		}
 
         popup.id = 'dropdown-' + objectId;
-        popup.classList.add('ev-dropdown');
+        popup.classList.add('ev-dropdown', 'fade-in', 'evDropdown');
 
         popup.style.position = 'absolute';
 
         return popup;
 
-    }
+    };
+
+    var preparePopupMenuType2 = function (objectId, classesList) {
+
+    	var popup = document.createElement('div');
+
+		popup.id = 'dropdown-' + objectId;
+
+		classesList = classesList || [];
+		classesList = classesList.concat(["fade-in", "evDropdown"]);
+
+		popup.classList.add(...classesList);
+
+		popup.style.position = 'absolute';
+
+		return popup;
+
+	};
+
+    var separateNotGroupingColumns = function (columns, groups) {
+
+        const notGroupingColumns = [];
+
+        columns.forEach(column => {
+
+            const isGroupingColumn = groups.find(group => {
+
+                return group.key === column.key;
+
+            });
+
+            if (!isGroupingColumn) {
+
+                notGroupingColumns.push(column);
+
+            }
+
+        });
+
+        return notGroupingColumns;
+    };
+
+    var importGroupsStylesFromColumns = function (groups, columns) {
+
+        let columnStyles = {};
+
+        columns.forEach(column => {
+
+            columnStyles[column.key] = column.style
+
+        });
+
+        groups.forEach(group => {
+
+            group.style = columnStyles[group.key]
+
+        });
+
+
+    };
 
     module.exports = {
 
@@ -898,7 +979,9 @@
 
         calculatePageFromOffset: calculatePageFromOffset,
         preparePopupMenu: preparePopupMenu,
+		preparePopupMenuType2: preparePopupMenuType2,
         calculateMenuPosition: calculateMenuPosition,
+		calculateStaticMenuPosition: calculateStaticMenuPosition,
 
         setDefaultGroups: setDefaultGroups,
         setDefaultObjects: setDefaultObjects,
@@ -911,6 +994,8 @@
         getGroupsTypesToLevel: getGroupsTypesToLevel,
         getGroupsValuesByItem: getGroupsValuesByItem,
 
+        separateNotGroupingColumns: separateNotGroupingColumns,
+        importGroupsStylesFromColumns: importGroupsStylesFromColumns
     }
 
 

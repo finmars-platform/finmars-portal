@@ -1021,6 +1021,8 @@
                 vm.entityViewerDataService.setCurrentMember(vm.currentMember);
                 vm.entityViewerDataService.setVirtualScrollStep(500);
 
+                vm.entityViewerDataService.setRowHeight(36);
+
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
                 vm.setEventListeners();

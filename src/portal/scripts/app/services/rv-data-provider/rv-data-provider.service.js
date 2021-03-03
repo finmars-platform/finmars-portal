@@ -84,7 +84,7 @@
 
                     var filterValues = filterItem.options.filter_values;
 
-                    if (filterType === 'from_to') {
+                    if (filterType === 'from_to' || filterType === 'out_of_range') {
 
                         if ((filterValues.min_value || filterValues.min_value === 0) &&
                             (filterValues.max_value || filterValues.max_value === 0)) {

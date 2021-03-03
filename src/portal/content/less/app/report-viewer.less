@@ -1,3 +1,6 @@
+@gRowSelectionWidth: 50px;
+@gRowSettingsWidth: 59px;
+
 .report-viewer-holder {
 
   .no-data-block {
@@ -18,6 +21,26 @@
     overflow: hidden;
 
     height: 23px;
+  }
+
+  .g-content-wrap {
+
+    &.g-groups-columns-dnd {
+
+      .g-table-header-cell-wrapper {
+
+        .g-table-header-drop {
+          display: block;
+        }
+
+      }
+
+    }
+
+  }
+
+  .g-filters-holder {
+    float: none;
   }
 
   .g-wrapper .g-group-holder {
@@ -70,14 +93,6 @@
 
   .level-5 {
     padding-left: 110px;
-  }
-
-  .ev-dropdown {
-    display: block;
-    background: #fff;
-    width: 320px;
-    border: 1px solid #DCDCDC;
-    z-index: 3;
   }
 
   /*.ev-dropdown-option {
@@ -174,6 +189,29 @@
         }
       }
     }
+
+    .g-grand-total-first-cell {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      position: absolute;
+      height: 100%;
+      top: 0;
+      left: 0;
+      font-size: 13px;
+      padding-left: 15px;
+    }
+
+    .g-subtotals-settings-menu {
+      position: relative;
+      top: 1px;
+      cursor: pointer;
+
+      .material-icons {
+        font-size: 18px;
+      }
+    }
+
   }
 
   .placeholder-row {
@@ -238,6 +276,7 @@
   }
 
   .ev-progressbar-holder {
+    display: none;
     height: 4px;
     background: #4C334D;
   }
@@ -355,7 +394,8 @@
   }
 
   .g-cell {
-    border-bottom: 1px solid #363636;
+    border-bottom: 1px solid;
+    border-color: @gCellBroderColor;
     /*height: 11px;
     padding: 4px 15px 8px;*/
     //padding: 3px 15px;
@@ -367,14 +407,6 @@
 
   .g-cell:last-child {
     margin-right: 0;
-  }
-
-  .g-cell.border-bottom-transparent {
-    border-bottom: 1px solid transparent;
-  }
-
-  .g-cell.border-right-transparent {
-    border-right: 1px solid transparent;
   }
 
   .g-cell-content-wrap {
@@ -404,11 +436,11 @@
 
 
   .report-viewer-holder .g-wrapper .g-row-selection {
-    border-bottom: 1px solid #363636;
+    border-bottom: 1px solid @gCellBroderColor;
   }
 
   .g-cell:last-child {
-    border-right: 1px solid #363636;
+    border-right: 1px solid @gCellBroderColor;
   }
 
 }
@@ -431,22 +463,170 @@
   background: rgba(152, 251, 152, 0.6);
 }
 
-.g-wrapper .g-row.g-row-marked-red {
+.g-wrapper .g-row.g-row-marked-red:not(.selected) {
   background: #e69999;
 }
 
-.g-wrapper .g-row.g-row-marked-green {
+.g-wrapper .g-row.g-row-marked-yellow:not(.selected) {
+  background: #fefea4;
+}
+
+.g-wrapper .g-row.g-row-marked-green:not(.selected) {
   background: #99c099;
 }
 
+
+// Report Material Design Interface Start
+
 .report-viewer-holder {
+
   .g-wrapper {
+
     .g-row {
       position: absolute;
     }
 
+    .g-row-settings:not(.closed) {
+      padding-right: 6px;
+      width: @gRowSettingsWidth;
+    }
+
     .ev-content {
       position: relative;
+
+      .g-row {
+        height: 36px;
+      }
+
+      .g-cell {
+        height: 36px;
+        font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        color: #666666;
+        line-height: 36px;
+        padding: 0 15px;
+      }
+
+      .g-row-selection {
+        height: @gRowHeight;
+        width: @gRowSelectionWidth;
+        border-bottom: @gCellBorder;
+        border-right: @gCellBorder;
+        box-sizing: border-box;
+      }
+
+      .g-row-selection-button {
+
+        width: 17px;
+        height: 17px;
+        min-width: 17px;
+        font-size: 15px;
+        line-height: 13px;
+        border: 2px solid #747474;
+        border-radius: 3px;
+        box-sizing: border-box;
+        background: rgba(0,0,0,.01960784);
+        margin: 8px auto 0;
+        cursor: pointer;
+
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+
+      }
+
+      .ev-fold-button {
+        width: 17px;
+        height: 17px;
+        min-width: 17px;
+        font-size: 15px;
+        line-height: 13px;
+        border: 2px solid #747474;
+        border-radius: 3px;
+        margin-top: 9px;
+        margin-right: 8px;
+        box-sizing: border-box;
+        background: rgba(0,0,0,.01960784);
+      }
+
+    }
+
+    .report-bg-level-1 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-bg-level-2 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-bg-level-3 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-bg-level-4 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-bg-level-5 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-grand-total-bg {
+      background: #fff;
+
+      font-family: 'Roboto-Bold', 'Roboto Bold', 'Roboto', sans-serif;
+      font-weight: 700;
+      font-style: normal;
+      text-align: left;
+
+      font-size: 13px;
+      color: #666666;
+
+    }
+
+  }
+
+  .g-cell { // have to be here for table font size change to work
+    font-size: 13px;
+  }
+
+}
+
+// Inside dashboard START
+
+.dashboard-component:not(.dashboard-component-filled-in) {
+
+  .g-filter-settings-big-left-btn {
+    display: none;
+  }
+
+  .g-filter-left-part {
+    flex-basis: 52px;
+  }
+
+  .icon-buttons {
+    display: none;
+  }
+
+}
+
+// Inside dashboard END
+
+// Must be at the bottom
+.report-viewer-holder {
+  .g-wrapper {
+    .g-row {
+
+      .border-right-transparent {
+        border-right: transparent;
+      }
+
+      .border-bottom-transparent {
+        border-bottom: transparent;
+      }
+
     }
   }
 }

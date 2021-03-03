@@ -40,11 +40,22 @@
                     return item
                 });
 
+
                 var groupTypes = entityViewerDataService.getGroups();
 
                 items = filterService.filterTableRows(items, regularFilters);
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
+
+
+                // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js and filter flatList
+/*                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+
+                if (rowTypeFilters) {
+
+                    items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
+
+                }*/
 
                 // console.log('groups filters length', items.length);
 
@@ -60,7 +71,6 @@
                 result.count = 0;
                 result.results = [];
             }
-
 
             resolve(result);
 

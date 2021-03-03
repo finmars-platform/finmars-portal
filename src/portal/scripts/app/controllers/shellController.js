@@ -665,9 +665,11 @@
                     if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
 
                         if (ev.dataTransfer.items[0].kind === 'file') {
-                            if (!shellViewDnDDiv.contains(dragBackdropElem)) {
+
+                        	if (!shellViewDnDDiv.contains(dragBackdropElem)) {
                                 shellViewDnDDiv.appendChild(dragBackdropElem);
                             }
+
                         }
 
                     }
@@ -686,9 +688,10 @@
                 ev.preventDefault();
             }, false);
 
-            window.addEventListener('drop', function (ev) {
+			dragBackdropElem.addEventListener('drop', function (ev) {
 
                 ev.preventDefault();
+                ev.stopPropagation();
 
                 if (vm.currentGlobalState === 'profile' || vm.currentGlobalState === 'portal') {
 
@@ -726,7 +729,7 @@
 
                     }
 
-                    shellViewDnDDiv.removeChild(dragBackdropElem);
+					shellViewDnDDiv.removeChild(dragBackdropElem);
 
                 }
 
@@ -956,6 +959,7 @@
         };
 
         vm.init();
+
     }
 
 }());

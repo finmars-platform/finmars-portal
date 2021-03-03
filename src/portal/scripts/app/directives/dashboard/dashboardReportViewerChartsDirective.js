@@ -156,6 +156,8 @@
 
                 scope.initEventListeners = function () {
 
+					dashboardHelper.initEventListeners(scope);
+
                     if (!scope.fillInModeData) {
 
                         scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
@@ -207,19 +209,6 @@
                         });
 
                     }
-
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
-
-                        scope.readyStatus.disabled = true;
-
-                    });
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
-
-                        scope.readyStatus.disabled = false;
-
-                    });
 
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET, function () {
 
