@@ -978,7 +978,6 @@
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height
         }
-
         /* if (components.groupingArea) {
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
         } */
@@ -989,7 +988,6 @@
         console.log('calculateScroll.viewportTop', viewportTop);
         console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);
-
         rvScrollManager.setViewportHeight(viewportHeight);
 
         if (viewportWidth) {

@@ -46,12 +46,10 @@
         }
 
         function enableDnDWheelScroll () {
-			console.log("testing enableDnDWheelScroll fired");
 			document.addEventListener('wheel', DnDWheelScroll, {passive: false});
 		}
 
 		function disableDnDWheelScroll () {
-			console.log("testing disableDnDWheelScroll fired");
 			document.removeEventListener('wheel', DnDWheelScroll);
 		}
 
