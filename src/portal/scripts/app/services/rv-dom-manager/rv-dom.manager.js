@@ -984,7 +984,10 @@
         } */
 
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
-        // console.log('calculateScroll.viewportHeight', viewportHeight);
+
+        console.log('calculateScroll.contentWrapElemHeight', contentWrapElemHeight);
+        console.log('calculateScroll.viewportTop', viewportTop);
+        console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);
 
         rvScrollManager.setViewportHeight(viewportHeight);
