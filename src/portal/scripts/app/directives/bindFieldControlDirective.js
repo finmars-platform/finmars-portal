@@ -30,13 +30,14 @@
 
 				vm.readyStatus = { classifier: false, content: true };
 
+				vm.entityType = $scope.entityType;
 				vm.evEditorDataService = $scope.evEditorDataService;
 				vm.evEditorEventService = $scope.evEditorEventService;
 
 				var attrs = $scope.$parent.vm.attrs || [];
 				var userInputs = $scope.$parent.vm.userInputs || [];
 				var choices = metaService.getEntityViewerFormComponentsValueTypes();
-				var entityAttrs = metaService.getEntityAttrs($scope.entityType) || [];
+				var entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
 				var palettesList = [];
 
@@ -52,7 +53,7 @@
 				//$scope.numericInputValue = {};
 
 				$scope.isEditableField = function () {
-					if ($scope.entityType === "complex-transaction" && $scope.item) {
+					if (vm.entityType === "complex-transaction" && $scope.item) {
 						if ($scope.item.can_recalculate || $scope.item.editable === false) {
 							return false;
 						}
@@ -75,7 +76,7 @@
 				};
 
 				$scope.hideIscanceledCheckbox = function (checkboxName) {
-					if ($scope.entityType === "transaction") {
+					if (vm.entityType === "transaction") {
 						if (checkboxName === "Is canceled") {
 							return false;
 						}
@@ -203,7 +204,7 @@
 
 				function getNode() {
 					return attributeTypeService
-						.getByKey($scope.entityType, $scope.item.id)
+						.getByKey(vm.entityType, $scope.item.id)
 						.then(function (data) {
 							classifierTree = data;
 							classifierTree.classifiers.forEach(findNodeInChildren);
@@ -446,7 +447,7 @@
 					} else if ($scope.item.key) {
 
 						var requiredAttrs = metaService.getRequiredEntityAttrs(
-							$scope.entityType
+							vm.entityType
 						);
 
 						if (requiredAttrs.indexOf($scope.item.key) > -1) {
@@ -710,15 +711,15 @@
 					if (vm.fieldKey === "tags") {
 
 						$scope.options = {
-							entityType: $scope.entityType,
+							entityType: vm.entityType,
 						};
 
 					} else {
 
-						if (metaService.getEntitiesWithSimpleFields().includes($scope.entityType)) {
+						if (metaService.getEntitiesWithSimpleFields().includes(vm.entityType)) {
 
 							$scope.options = {
-								entityType: $scope.entityType,
+								entityType: vm.entityType,
 								key: vm.fieldKey,
 							};
 
@@ -759,20 +760,20 @@
 
 					/* if ($scope.fieldType && $scope.fieldType.value === 20) {
 
-				$scope.numericInputValue.numberVal = null;
-				setTimeout(function () {
-					numberInputContainerElem = elem[0].querySelector('.bfNumberInputContainer');
-					numberInputElem = elem[0].querySelector('.bfNumberInput');
-				}, 500);
+						$scope.numericInputValue.numberVal = null;
+						setTimeout(function () {
+							numberInputContainerElem = elem[0].querySelector('.bfNumberInputContainer');
+							numberInputElem = elem[0].querySelector('.bfNumberInput');
+						}, 500);
 
-				if ($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0) {
+						if ($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0) {
 
-					var itemNumberValue = JSON.parse(JSON.stringify($scope.entity[vm.fieldKey]));
-					$scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
+							var itemNumberValue = JSON.parse(JSON.stringify($scope.entity[vm.fieldKey]));
+							$scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
 
-				}
+						}
 
-			} */
+					} */
 				};
 
 				$scope.itemChange = function () {
