@@ -79,8 +79,19 @@
 
     };
 
+    const saveRowTypeFiltersToLocalStorage = function (entityViewerDataService) {
+
+        const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+
+        if (rowTypeFilters) {
+            localStorage.setItem("row_type_filters", JSON.stringify(rowTypeFilters))
+        }
+
+    };
 
     let saveLayoutList = function (entityViewerDataService, isReport) {
+
+        saveRowTypeFiltersToLocalStorage(entityViewerDataService);
 
     	var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(isReport);
 

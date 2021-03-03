@@ -239,7 +239,6 @@
                         this.dragula = dragula(items,
                             {
                                 accepts: function (el, target, source, nextSibling) {
-
                                     if (target.classList.contains('g-modal-draggable-card')) {
                                         return false;
                                     }
@@ -281,7 +280,7 @@
 
                         drake.on('shadow', function (elem, container, source) {
 
-                            if (container.classList.contains("vcSelectedGroups")) {
+                            if (container.classList.contains("vcSelectedGroups") || container.classList.contains("vcSelectedFilters")) {
 
                                 if (containerWithShadow) {
                                     containerWithShadow.classList.remove('remove-card-space');
@@ -449,7 +448,7 @@
 
 											if (insertAttr) {
 
-												if (nextSibling) {
+												if (nextSibling && draggedTo !== 'filters') { // the user can only spill filters at the end of the list
 
 													for (var a = 0; a < GCFItems.length; a++) {
 
@@ -694,14 +693,27 @@
 
                     selectedDragulaInit: function () {
 
+                        const groupsContainer = document.querySelector('.vcSelectedGroups');
+                        const columnsContainer = document.querySelector('.vcSelectedColumns');
+                        const filtersContainer = document.querySelector('.vcSelectedFilters')
+
+
                         var items = [
-                            document.querySelector('.vcSelectedGroups'),
-                            document.querySelector('.vcSelectedColumns'),
-                            document.querySelector('.vcSelectedFilters')
+                            groupsContainer,
+                            columnsContainer,
+                            filtersContainer
                         ];
 
                         this.dragula = dragula(items, {
-                            revertOnSpill: true
+                            revertOnSpill: true,
+                            accepts: function (el, target, source, nextSibling) {
+
+                                if (source === filtersContainer && target === filtersContainer) {
+                                    return false;
+                                }
+
+                                return true;
+                            },
                         });
                     },
 

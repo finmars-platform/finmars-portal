@@ -58,8 +58,9 @@
 
                 <div class="dashboard-tabs-control-panel">
 
-                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                               data-ng-click="vm.clearActiveTabUfaFilters()">
+                    <md-button class="dashboard-control-button"
+                               data-ng-click="vm.clearActiveTabUfaFilters()"
+                               ng-disabled="vm.processing">
                         <ng-md-icon icon="leak_remove"
                                     size="20"
                                     style="fill: #777777">
@@ -69,8 +70,9 @@
                         </ng-md-icon>
                     </md-button>
 
-                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                               data-ng-click="vm.refreshActiveTab()">
+                    <md-button class="dashboard-control-button"
+                               data-ng-click="vm.refreshActiveTab()"
+                               ng-disabled="vm.processing">
                         <ng-md-icon icon="refresh"
                                     size="20"
                                     style="fill: #777777">
@@ -78,8 +80,9 @@
                         </ng-md-icon>
                     </md-button>
 
-                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                               data-ng-click="vm.refreshAll()">
+                    <md-button class="dashboard-control-button"
+                               data-ng-click="vm.refreshAll()"
+                               ng-disabled="vm.processing">
                         <ng-md-icon icon="loop"
                                     size="20"
                                     style="fill: #777777">

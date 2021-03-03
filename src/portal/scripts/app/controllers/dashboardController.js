@@ -329,6 +329,30 @@
             vm.dashboardEventService.dispatchEvent(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS);
         };
 
+        var componentsFinishedLoading = function () {
+
+			var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+			var componentsIds = Object.keys(statusesObject);
+
+			var processing = false;
+
+			for (var i = 0; i < componentsIds.length; i++) {
+
+				if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
+					statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
+
+					processing = true;
+					break;
+
+				}
+
+			}
+
+			return processing;
+
+		};
+
+
         vm.refreshActiveTab = function () {
 
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ACTIVE_TAB);
@@ -341,25 +365,8 @@
 
             } else {
 
-                vm.processing = true;
-
                 setTimeout(function () { // enable refresh buttons if no components uses active object
-
-                    var componentsIds = Object.keys(statusesObject);
-                    vm.processing = false;
-
-                    for (var i = 0; i < componentsIds.length; i++) {
-
-                        if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
-                            statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
-
-                            vm.processing = true;
-                            break;
-
-                        }
-
-                    }
-
+					vm.processing = componentsFinishedLoading();
                 }, 100);
 
             }
@@ -377,25 +384,8 @@
 
             } else {
 
-                vm.processing = true;
-
                 setTimeout(function () { // enable refresh buttons if no components uses active object
-
-                    var componentsIds = Object.keys(statusesObject);
-                    vm.processing = false;
-
-                    for (var i = 0; i < componentsIds.length; i++) {
-
-                        if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
-                            statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
-
-                            vm.processing = true;
-                            break;
-
-                        }
-
-                    }
-
+					vm.processing = componentsFinishedLoading();
                 }, 100);
 
             }
@@ -426,22 +416,21 @@
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+                /* var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
                 var processed = false;
 
                 Object.keys(statusesObject).forEach(function (componentId) {
 
-                    /*if (statusesObject[componentId] === dashboardComponentStatuses.PROCESSING) {
-                        processed = true;
-                    }*/
                     if (statusesObject[componentId] !== dashboardComponentStatuses.ACTIVE &&
                         statusesObject[componentId] !== dashboardComponentStatuses.ERROR) {
 
                         processed = true;
                     }
 
-                });
+                }); */
+
+				var processed = componentsFinishedLoading();
 
                 if (processed) {
 
@@ -541,9 +530,7 @@
 
                             if (areAllDependenciesCompleted(key, statusesObject, waitingComponents)) {
 
-                                waitingComponents = waitingComponents.filter(function (id) {
-                                    return id !== key;
-                                })
+                                waitingComponents = waitingComponents.filter((id) => id !== key);
 
                                 vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
                                 vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
