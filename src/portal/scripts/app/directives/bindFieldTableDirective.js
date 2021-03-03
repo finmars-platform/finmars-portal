@@ -3,6 +3,8 @@
 	const metaHelper = require('../helpers/meta.helper');
 
 	const instrumentService = require('../services/instrumentService');
+	const accrualCalculationModelService = require('../services/accrualCalculationModelService');
+	const instrumentPeriodicityService = require('../services/instrumentPeriodicityService');
 
 	const GridTableDataService = require('../services/gridTableDataService');
 	const EventService = require('../services/eventService');
@@ -20,6 +22,8 @@
 			},
 			templateUrl: "views/directives/bind-field-table-view.html",
 			link: function (scope, elem, attr, bfcVm) {
+
+				scope.readyStatus = false;
 
 				const instrumentAccrualsColumns = {
 					'notes' :{
@@ -100,27 +104,28 @@
 				let columnsNumber = 0;
 
 				let thisTableChanged = {value: false}
+				let entitySpecificData;
 
 				const assembleColumns = function () {
 
 					const tableData = scope.item.options.tableData;
 					let shownColIndex = 0;
 
-					tableData.forEach(col => {
+					tableData.forEach(column => {
 
-						var columnData = instrumentAccrualsColumns[col.key];
+						var columnData = instrumentAccrualsColumns[column.key];
 
-						if (col.to_show && columnData) {
+						if (column.to_show && columnData) {
 
-							columnData.columnName = col.override_name ? col.override_name : col.name;
+							columnData.columnName = column.override_name ? column.override_name : column.name;
 							columnData.order = shownColIndex;
 							shownColIndex = shownColIndex + 1;
 
-							if (col.options) {
+							if (column.options) {
 
 								columnData.settings.selectorOptions = [];
 
-								col.options.forEach(option => {
+								column.options.forEach(option => {
 
 									if (option.to_show) {
 
@@ -155,18 +160,18 @@
 
 						const averageWidth = (100 / columnsNumber).toFixed(1);
 
-						gridTableData.templateRow.columns.forEach((col, colIndex) => {
+						gridTableData.templateRow.columns.forEach((column, colIndex) => {
 
 							const colStyles = {
 								'grid-table-cell-elem': {
 									'min-width': minWidth + 'px',
-									width: averageWidth + '%',
+									'width': averageWidth + '%',
 									'max-width': maxWidth + 'px'
 								}
 							};
 
 							gridTableData.header.columns[colIndex].styles = colStyles;
-							col.styles = colStyles;
+							column.styles = colStyles;
 
 						});
 
@@ -202,7 +207,30 @@
 						rowObj.order = rowIndex;
 
 						rowObj.columns.forEach(column => {
+
 							column.settings.value = metaHelper.getObjectNestedPropVal(rowData, column.objPath);
+
+							const columnSelector = entitySpecificData.selectorOptions.hasOwnProperty(column.key);
+
+							if (columnSelector) {
+
+								const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
+
+								if (optionIndex < 0) { // if selected option hidden, add it until another selected
+
+									const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
+										return option.id === column.settings.value;
+									});
+
+									column.settings.selectorOptions.push({
+										id: optionData.id,
+										name: optionData.name
+									});
+
+								}
+
+							}
+
 						});
 
 						gridTableData.body.push(rowObj);
@@ -218,14 +246,61 @@
 					element.style['min-width'] = minWidth * columnsNumber + 'px';
 				};
 
-				const init = function () {
+				const init = async function () {
+
+					let asyncOperation = false;
 
 					scope.gridTableDataService = new GridTableDataService();
 					scope.gridTableEventService = new EventService();
 
+					if (bfcVm.entityType === 'instrument') {
+
+						entitySpecificData = {
+							selectorOptions: {
+								accrual_calculation_model: [],
+								periodicity: []
+							}
+						}
+
+						const promises = [];
+
+						const calcModelProm = new Promise((res, rej) => {
+
+							accrualCalculationModelService.getList().then(data => {
+
+								entitySpecificData.selectorOptions.accrual_calculation_model = data;
+								res();
+
+							}).catch(error => rej(error));
+
+						});
+
+						promises.push(calcModelProm);
+
+						const periodicityProm = new Promise((res, rej) => {
+
+							instrumentPeriodicityService.getList().then(data => {
+
+								entitySpecificData.selectorOptions.periodicity = data;
+								res();
+
+							}).catch(error => rej(error));
+
+						});
+
+						promises.push(periodicityProm);
+
+						await Promise.allSettled(promises);
+						asyncOperation = true;
+
+					}
+
 					assembleColumns();
 					setTableMinWidth();
 					convertDataIntoGridTable();
+
+					scope.readyStatus = true;
+					if (asyncOperation) scope.$apply();
 
 					instrumentService.initAccrualsScheduleGridTableEvents(
 						scope.gridTableDataService, scope.gridTableEventService, scope.entity, bfcVm.evEditorEventService, thisTableChanged

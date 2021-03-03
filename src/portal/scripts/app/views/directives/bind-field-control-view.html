@@ -42,7 +42,7 @@
                                    data-options="options"
                                    ev-editor-data-service="evEditorDataService"
                                    ev-editor-event-service="evEditorEventService"
-                                   data-entity-type="entityType"
+                                   data-entity-type="vm.entityType"
                                    data-item-change="itemChange()">
                 </ev-field-resolver>
             </div>
@@ -56,7 +56,7 @@
                                    data-options="options"
                                    ev-editor-data-service="evEditorDataService"
                                    ev-editor-event-service="evEditorEventService"
-                                   data-entity-type="entityType"
+                                   data-entity-type="vm.entityType"
                                    data-item-change="itemChange()">
                 </ev-field-resolver>
             </div>
@@ -98,7 +98,7 @@
                           data-classifier-value="entity[vm.fieldKey]"
                           data-ng-change="changeClassifier()"
                           md-container-class="h-classifier-select"
-                          data-entity-type="entityType"
+                          data-entity-type="vm.entityType"
                           style="{{inputBackgroundColor()}}"
                         >
                           <md-option ng-value="node.id" selected="selected">
@@ -112,7 +112,7 @@
                                    model="entity[vm.fieldKey]"
                                    classifier-attr="item"
                                    classifier-value="entity[vm.fieldKey]"
-                                   entity-type="entityType"
+                                   entity-type="vm.entityType"
                 ></classifier-select>
 
             </div>
@@ -146,7 +146,7 @@
             <ev-selector-resolver item="item"
                                   entity="entity"
                                   options="options"
-                                  entity-type="entityType"
+                                  entity-type="vm.entityType"
                                   item-change="itemChange()">
             </ev-selector-resolver>
         </div>
