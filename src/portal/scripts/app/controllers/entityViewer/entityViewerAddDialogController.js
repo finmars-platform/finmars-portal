@@ -799,6 +799,8 @@
                     // vm.readyStatus.entity = false;
                     vm.readyStatus.content = false;
 
+                    formLayoutFromAbove = null; // forcing getFormLayout() to download layout from server
+
                     vm.init();
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
