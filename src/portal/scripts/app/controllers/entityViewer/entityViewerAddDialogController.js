@@ -1687,7 +1687,8 @@
 
             setTimeout(function () {
                 vm.dialogElemToResize = evEditorSharedLogicHelper.onEditorStart();
-            }, 100);
+                evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
+            }, 0);
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EventService();
@@ -1711,7 +1712,7 @@
 
             getEntityAttrs();
             // vm.getFormLayout();
-            evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
+            // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
             vm.getCurrencies();
 
             if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {

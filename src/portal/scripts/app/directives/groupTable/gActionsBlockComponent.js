@@ -32,6 +32,8 @@
 
     var exportExcelService = require('../../services/exportExcelService');
 
+    var transactionTypeService = require('../../services/transactionTypeService');
+
 
     module.exports = function ($mdDialog, $state, $bigDrawer) {
         return {
@@ -368,7 +370,7 @@
 
                             }) */
 
-							$bigDrawer.show({
+/*							$bigDrawer.show({
 								controller: 'ComplexTransactionAddDialogController as vm',
 								templateUrl: 'views/entity-viewer/complex-transaction-add-drawer-view.html',
 								locals: {
@@ -379,7 +381,18 @@
 									}
 								}
 
-							}).then(res => evHelperService.postAdditionActions(scope, $bigDrawer, res));
+							}).then(res => evHelperService.postAdditionActions(scope, $bigDrawer, res));*/
+
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+
+                            evHelperService.openComplexTransactionAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
 
 							break;
 
