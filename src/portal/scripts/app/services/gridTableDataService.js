@@ -42,6 +42,10 @@
             } else {
                 return data.tableData.body[rowOrder];
             } */
+			if (rowOrder === 'header') {
+				console.trace();
+				throw("Can't get data from header row");
+			}
 
             return data.tableData.body[rowOrder];
 
@@ -79,6 +83,11 @@
                 });
 
             } else {
+
+            	if (rows.order === 'header') {
+					throw("'Header row deletion is prohibited'");
+				}
+
                 data.tableData.body.splice(rows.order, 1);
             }
 
@@ -98,6 +107,10 @@
 
         function getCell (rowOrder, cellOrder) {
 
+			if (rowOrder === 'header') {
+				throw("'Can't get data from header row'");
+			}
+
             if (rowOrder === 'templateRow') {
                 return data.tableData.templateRow.columns[cellOrder];
 
@@ -110,6 +123,10 @@
         }
 
         function getCellByKey (rowOrder, colKey) {
+
+			if (rowOrder === 'header') {
+				throw("'Can't get data from header row'");
+			}
 
             if (rowOrder === 'templateRow') {
                 var row = data.tableData.templateRow;

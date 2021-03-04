@@ -16,8 +16,8 @@
             link: function (scope, elem, attrs) {
 
                 scope.allRowsAreActive = false;
+				scope.gridTableData = scope.gtDataService.getTableData();
 
-                scope.gridTableData = scope.gtDataService.getTableData();
                 scope.sortByCol = false;
                 scope.sortRowsReverse = false;
 
@@ -109,7 +109,6 @@
 
                     row.methods.onClick(rowData, scope.gtDataService, scope.gtEventService);
                 }
-
 
                 scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
 

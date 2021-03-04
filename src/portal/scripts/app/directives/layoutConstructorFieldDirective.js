@@ -368,6 +368,7 @@
 
 					}
 
+					// After moving whole row attribute to first column, empty socket where it was originally dropped
 					if (scope.item.occupiesWholeRow && scope.item.column !== 1) {
 
 						scope.item = {
@@ -396,7 +397,7 @@
 
                         for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                             if (scope.tab.layout.fields[i].row == r) {
-                                if (scope.tab.layout.fields[i].type === 'field') {
+                                if (scope.tab.layout.fields[i].type !== 'empty') {
                                     columnsIsEmpty = false;
                                     break rowsLoop;
                                 }
@@ -464,11 +465,26 @@
                 /*scope.changeModel = function (item) {
                     scope.item.attribute = item;
                 };*/
+				var resetSocketData = function (field) {
+
+					field.id = null;
+					field.key = null;
+					field.attribute = null;
+					field.attribute_class = null;
+					field.disabled = false;
+					field.colspan = 1;
+					field.name = '';
+					field.type = 'empty';
+
+					delete field.backgroundColor;
+					delete field.occupiesWholeRow;
+					delete field.options;
+
+				};
 
                 scope.deleteField = function () {
 
-                    var i;
-                    scope.item.id = null;
+					/* scope.item.id = null;
                     scope.item.key = null;
                     scope.item.attribute = null;
                     scope.item.attribute_class = null;
@@ -476,11 +492,15 @@
                     scope.item.options = null;
                     scope.item.editable = null;
                     scope.item.colspan = 1;
+					delete scope.item.occupiesWholeRow; */
+					resetSocketData(scope.item);
 
+					/* var i;
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                         if (scope.tab.layout.fields[i].row === scope.item.row) {
                             if (scope.tab.layout.fields[i].column === scope.item.column) {
-                                scope.tab.layout.fields[i].id = null;
+
+                            	/!* scope.tab.layout.fields[i].id = null;
                                 scope.tab.layout.fields[i].key = null;
                                 scope.tab.layout.fields[i].attribute = null;
                                 scope.tab.layout.fields[i].attribute_class = null;
@@ -490,12 +510,22 @@
                                 scope.tab.layout.fields[i].name = '';
                                 scope.tab.layout.fields[i].backgroundColor = null;
                                 scope.tab.layout.fields[i].type = 'empty';
+                                delete scope.tab.layout.fields[i].occupiesWholeRow; *!/
+
+								resetSocketData(scope.tab.layout.fields[i]);
                                 findEmptyRows();
+
                                 break;
+
                             }
                         }
-                    }
-					delete scope.tab.layout.fields[i].settings;
+                    } */
+					var itemFieldIndex = scope.tab.layout.fields.findIndex(field => {
+						return field.row === scope.item.row && field.column === scope.item.column;
+					});
+
+					resetSocketData(scope.tab.layout.fields[itemFieldIndex]);
+
                     scope.fieldUsesBackgroundColor = false;
                     //scope.fieldBackgroundColor = '#000000';
                     scope.backgroundColor.color = {};
@@ -510,7 +540,7 @@
                         attr.disabled = false;
                         tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
-                                if (item.type === 'field') {
+                                if (item.type !== 'empty') {
                                     if (attr.user_code === item.attribute.user_code) {
                                         attr.disabled = true;
                                     }
@@ -547,7 +577,7 @@
                         entityAttr.disabled = false;
                         tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
-                                if (item.type === 'field') {
+                                if (item.type !== 'empty') {
                                     if (entityAttr.key === item.attribute.key) {
                                         entityAttr.disabled = true;
                                     }
@@ -564,7 +594,7 @@
                         userInput.disabled = false;
                         tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
-                                if (item.type === 'field') {
+                                if (item.type !== 'empty') {
                                     if (userInput.key === item.attribute.key) {
                                         userInput.disabled = true;
                                     }

@@ -103,6 +103,11 @@
             $scope.$apply();
         });
 
+        vm.selectorOptionsMap = {
+            'notification_class': vm.notificationClasses,
+            'periodicity': vm.periodicityItems
+        }
+
         vm.checkReadyStatus = function () {
             return vm.readyStatus.notificationClasses && vm.readyStatus.eventClasses && vm.readyStatus.eventSchedulesReady;
         };
@@ -112,11 +117,13 @@
             var tableData = gtDataService.getTableData()
             var gtRow = gtDataService.getRowByKey(data.row.key);
 
-            gtRow.columns.forEach(function (gtColumn) {
+            var cell = gtDataService.getCellByKey(data.row.order, data.column.key)
+            var path = cell.objPath[0]
+            
+            console.log('onEventTableCellChange.tableData', tableData);
 
-                vm.entity.events[tableData.index].data.items[data.row.order][gtColumn.key] = gtColumn.settings.value;
+            vm.entity.events[tableData.index].data.items[data.row.order][path] = cell.settings.value;
 
-            })
 
         };
 
@@ -136,6 +143,7 @@
                     columns: [
                         {
                             key: 'name',
+                            objPath: ['name'],
                             columnName: 'Name',
                             order: 0,
                             cellType: 'text',
@@ -150,6 +158,7 @@
                         },
                         {
                             key: 'to_show',
+                            objPath: ['to_show'],
                             columnName: 'To Show',
                             order: 1,
                             cellType: 'checkbox',
@@ -163,6 +172,7 @@
                         },
                         {
                             key: 'default_value',
+                            objPath: ['default_value'],
                             columnName: 'Default Value',
                             order: 2,
                             cellType: 'selector',
@@ -176,6 +186,7 @@
                         },
                         {
                             key: 'override_name',
+                            objPath: ['override_name'],
                             columnName: 'Override Name',
                             order: 3,
                             cellType: 'text',
@@ -190,6 +201,7 @@
                         },
                         {
                             key: 'tooltip',
+                            objPath: ['tooltip'],
                             columnName: 'Tooltip',
                             order: 4,
                             cellType: 'text',
@@ -203,36 +215,41 @@
                             }
                         },
                         {
-                            key: 'options',
+                            key: 'options_settings',
                             columnName: 'Options',
                             order: 5,
-                            cellType: 'text',
-                            settings: {
-                                value: null,
-                                closeOnMouseOut: false,
-                                isDisabled: true
-                            },
+                            cellType: 'empty',
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '65px'}
                             }
                         },
                     ],
                 },
                 components: {
-                    topPanel: {
-                        inactive: true,
-                    }
+                    topPanel: false,
+                    rowCheckboxes: false
                 }
             };
 
-            const optionCellSettings = {
-                value: [],
-                cellText: 'Options...',
-                closeOnMouseOut: false,
-                popupSettings: {
-                    contentHtml: {
-                        main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-type-accruals-options-view.html'\"></div>"
+            var optionsColumn = {
+                key: 'options_settings',
+                objPath: ['options'],
+                columnName: '',
+                order: 5,
+                cellType: 'custom_popup',
+                settings: {
+                    value: null,
+                    closeOnMouseOut: false,
+                    cellText: '...',
+                    popupSettings: {
+                        contentHtml: {
+                            main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
+                        },
+                        classes: "ev-instr-events-settings-popup"
                     }
+                },
+                styles: {
+                    'grid-table-cell': {'width': '65px'}
                 }
             };
 
@@ -253,6 +270,7 @@
                 const rowObj = metaHelper.recursiveDeepCopy(eventsGridTableData.templateRow, true);
 
                 rowObj.order = index;
+				rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
                 rowObj.key = row.key;
 
                 rowObj.columns[0].settings.value = row.name;
@@ -262,7 +280,18 @@
                 rowObj.columns[4].settings.value = row.tooltip;
 
                 if (row.defaultValueType === 'selector') {
-                    rowObj.columns[2].settings.selectorOptions = row.selectorOptions;
+                    rowObj.columns[2].settings.selectorOptions = vm.selectorOptionsMap[rowObj.columns[2].key];
+                }
+
+                console.log('getEventsGridTableData,row', row);
+
+                if (row.options) {
+
+                    const optionsCell = metaHelper.recursiveDeepCopy(optionsColumn, false);
+
+                    rowObj.columns[5] = optionsCell;
+                    rowObj.columns[5].settings.value = row.options;
+
                 }
 
 
@@ -462,6 +491,18 @@
                 vm.entity.events = []
             }
 
+            const mapOptions = function (item) {
+                return {
+                    user_code: item.user_code,
+                    name: item.name,
+                    to_show: true,
+                    override_name: "",
+                };
+            };
+
+            var periodicitySelectorOptions = vm.periodicityItems.map(mapOptions);
+            var notificationClassesSelectorOptions = vm.notificationClasses.map(mapOptions)
+
             var event = {
                 eventsGridTableDataService: new GridTableDataService(),
                 eventsGridTableEventService: new GridTableEventService(),
@@ -486,8 +527,7 @@
                             name: 'Notification Class',
                             to_show: true,
                             defaultValueType: 'selector',
-                            selectorOptions: [],
-                            options: true
+                            options: notificationClassesSelectorOptions
                         },
                         {
                             key: 'notify_in_n_days',
@@ -515,8 +555,7 @@
                             name: 'Periodicity',
                             to_show: true,
                             defaultValueType: 'selector',
-                            selectorOptions: vm.periodicityItems,
-                            options: true
+                            options: periodicitySelectorOptions
                         },
                         {
                             key: 'periodic_n',
@@ -561,6 +600,7 @@
 
             });
 
+
             vm.entity.events.push(event)
 
         };
@@ -601,7 +641,7 @@
                 "is_sent_to_pending": false,
                 "is_book_automatic": false,
                 "button_position": '',
-                frontOptions: {gtKey: newRow.key}
+                frontOptions: {newRow: true, gtKey: newRow.key}
             };
 
             item.data.actions.unshift(newAction);

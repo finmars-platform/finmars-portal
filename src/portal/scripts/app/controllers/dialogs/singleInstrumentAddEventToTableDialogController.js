@@ -49,7 +49,7 @@
                 "is_sent_to_pending": false,
                 "is_book_automatic": false,
                 "button_position": '',
-                frontOptions: {gtKey: newRow.key}
+                frontOptions: {newRow: true, gtKey: newRow.key}
             };
 
             vm.event.actions.unshift(newAction);
@@ -179,10 +179,12 @@
 
             components: {
                 topPanel: {
+					addButton: true,
                     filters: false,
                     columns: false,
                     search: false
-                }
+                },
+				rowCheckboxes: true
             }
 
         };
@@ -218,6 +220,7 @@
 
             	rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
                 rowObj.key = action.id || action.frontOptions.gtKey;
+				rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
                 rowObj.order = actionIndex;
 
                 var transactionType = gridTableHelperService.getCellFromRowByKey(rowObj, 'transaction_type');

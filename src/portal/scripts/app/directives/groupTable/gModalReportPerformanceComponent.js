@@ -56,13 +56,13 @@
 
                         for (x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
                             ;
-                            if (vm.tabs[i].layout.fields[x].type === 'field') {
+                            if (vm.tabs[i].layout.fields[x].type !== 'empty') {
                                 if (vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
                                     vm.tabs[i].attrs.push({
                                         id: vm.tabs[i].layout.fields[x].id
                                     })
                                 } else {
-                                    if (vm.tabs[i].layout.fields[x].type === 'field') {
+                                    if (vm.tabs[i].layout.fields[x].type !== 'empty') {
                                         if (vm.tabs[i].layout.fields[x].name != 'Labeled Line' && vm.tabs[i].layout.fields[x].name != 'Line') {
                                             vm.tabs[i].attrs.push({
                                                 name: vm.tabs[i].layout.fields[x].name

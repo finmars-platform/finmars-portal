@@ -120,10 +120,12 @@
 
         };
 
-        // weirdo stuff
-        // we took edit layout by instance id instead of entity content_type
-        // but it can be taken from different entity
-        // e.g. transaction -> transaction-type.book_transaction_layout
+        /*
+        weirdo stuff
+        we took edit layout by instance id instead of entity content_type
+        but it can be taken from different entity
+        e.g. transaction -> transaction-type.book_transaction_layout
+        */
 
         var setDataConstructorLayout = function () {
 
@@ -395,17 +397,17 @@
 
             if (columns < tab.layout.columns) {
 
-                var losedColumns = [];
+                var willBeLostColumns = [];
                 var i;
                 for (i = columns; i < tab.layout.columns; i = i + 1) {
-                    losedColumns.push(i + 1);
+					willBeLostColumns.push(i + 1);
                 }
 
                 var description;
-                if (losedColumns.length > 1) {
-                    description = 'If you switch to less number of columns you lose data of ' + losedColumns.join(', ') + ' columns'
+                if (willBeLostColumns.length > 1) {
+                    description = 'If you switch to less number of columns you lose data of ' + willBeLostColumns.join(', ') + ' columns'
                 } else {
-                    description = 'If you switch to less number of columns you lose data of ' + losedColumns.join(', ') + ' column'
+                    description = 'If you switch to less number of columns you lose data of ' + willBeLostColumns.join(', ') + ' column'
                 }
 
                 $mdDialog.show({
@@ -428,7 +430,7 @@
 
                     if (res.status === 'agree') {
 
-                        var i, r, c;
+                        /* var i, r, c;
                         for (i = 0; i < tab.layout.fields.length; i = i + 1) {
                             for (r = 0; r < tab.layout.rows; r = r + 1) {
                                 for (c = columns; c < tab.layout.columns; c = c + 1) {
@@ -437,7 +439,17 @@
                                     }
                                 }
                             }
-                        }
+                        } */
+
+						tab.layout.fields = tab.layout.fields.filter(field => {
+
+							if (field.colspan > columns || field.occupiesWholeRow) {
+								field.colspan = columns;
+							}
+
+							return field.column <= columns;
+
+						});
 
                         tab.layout.columns = columns;
 
@@ -453,7 +465,9 @@
 
                 });
 
-            } else {
+            }
+
+            else {
 
                 var r, c;
 
@@ -710,6 +724,7 @@
         };
 
         vm.bindFlex = function (tab, row, column) {
+
             var totalColspans = 0;
             var i;
             var field;
@@ -725,7 +740,9 @@
 
                 var flexUnit = 100 / vm.fixedArea.layout.columns;
 
-            } else {
+            }
+
+            else {
 
                 // TODO this line get throw
                 // Error: [$interpolate:interr] Can't interpolate: {{vm.bindFlex(tab, row, column)}}
@@ -741,9 +758,14 @@
 
             }
 
-
             if (field) {
+
+            	if (field.occupiesWholeRow) {
+            		return 100;
+				}
+
                 return Math.floor(field.colspan * flexUnit);
+
             }
 
             return Math.floor(flexUnit);
@@ -973,7 +995,7 @@
             var i, u;
             tab.layout.fields.forEach(function (field, fieldIndex) {
 
-                if (field && field.type === 'field') {
+                if (field && field.type !== 'empty') {
 
                     var attrFound = false;
 
@@ -1280,7 +1302,7 @@
 
 					var customizableAccrualsTable = {
 						name: 'Accruals table',
-						key: 'customizable_accruals_table',
+						key: 'accrual_calculation_schedules',
 						value_type: 'table',
 						frontOptions: {
 							occupiesWholeRow: true
@@ -1745,7 +1767,7 @@
                     for (i = 0; i < vm.fixedArea.layout.fields.length; i++) {
                         var field = vm.fixedArea.layout.fields[i];
 
-                        if (field.type === 'field' && field.name === item.name) {
+                        if (field.type !== 'empty' && field.name === item.name) {
                             result = false;
                             break;
                         }

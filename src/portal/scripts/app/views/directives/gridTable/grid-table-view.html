@@ -8,32 +8,33 @@
 
     <div class="grid-table-row grid-table-header-row">
 
-        <div ng-if="gridTableData.components.topPanel" class="grid-table-row-checkbox">
+        <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
             <md-checkbox data-ng-checked="allRowsAreActive"
                          data-ng-click="toggleAllRows()"></md-checkbox>
         </div>
 
-        <div data-ng-repeat="cell in gridTableData.header.columns track by cell.key">
+        <!--<div data-ng-repeat="cell in gridTableData.header.columns track by cell.key">
 
             <grid-table-cell data-row="gridTableData.header"
                              data-column="cell"
                              data-gt-data-service="gtDataService"
                              data-gt-event-service="gtEventService"></grid-table-cell>
-            <!--<div class="gt-cell-text-container">
-                <div class="gt-cell-text">
-                    <span data-ng-bind="cell.columnName"
-                          data-ng-click="setSortByCol($index)"></span>
-                </div>
-            </div>-->
 
-        </div>
+        </div>-->
+        <grid-table-cell data-ng-repeat="cell in gridTableData.header.columns track by cell.key"
+                         data-row="gridTableData.header"
+                         data-column="cell"
+                         data-gt-data-service="gtDataService"
+                         data-gt-event-service="gtEventService"
+                         class="grid-table-cell-elem"></grid-table-cell>
+
     </div>
 
     <div data-ng-repeat="row in gridTableData.body | orderBy:sortRowsByCol:sortRowsReverse track by row.key"
          ng-click="onRowClick($event, row)"
          class="grid-table-row">
 
-        <div ng-if="gridTableData.components.topPanel" class="grid-table-row-checkbox">
+        <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
             <md-checkbox ng-checked="row.isActive"
                          ng-click="toggleRowSelection(row)"></md-checkbox>
         </div>
@@ -60,12 +61,19 @@
             </md-menu>
         </div>-->
 
-        <div data-ng-repeat="cell in row.columns track by cell.key">
+        <!--<div data-ng-repeat="cell in row.columns track by cell.key">
             <grid-table-cell data-row="row"
                              data-column="cell"
                              data-gt-data-service="gtDataService"
                              data-gt-event-service="gtEventService"></grid-table-cell>
-        </div>
+        </div>-->
+
+        <grid-table-cell data-ng-repeat="cell in row.columns track by cell.key"
+                         data-row="row"
+                         data-column="cell"
+                         data-gt-data-service="gtDataService"
+                         data-gt-event-service="gtEventService"
+                         class="grid-table-cell-elem"></grid-table-cell>
 
     </div>
 
