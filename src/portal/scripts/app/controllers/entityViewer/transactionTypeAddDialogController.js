@@ -792,8 +792,6 @@
 
                     transactionTypeService.create(vm.entity).then(function (responseData) {
 
-                        console.log('#79 transactionTypeService.create', responseData)
-
                         toastNotificationService.success("Transaction Type " + " " + vm.entity.name + ' was successfully created');
 
                         if (vm.entity.inputs) {

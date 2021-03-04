@@ -24,6 +24,8 @@
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
         var middlewareService = require('../../services/middlewareService');
 
+        var transactionTypeService = require('../../services/transactionTypeService');
+
 
         module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer) {
 
@@ -213,87 +215,23 @@
 
 					case 'complex-transaction':
 
-						/* $mdDialog.show({
-							controller: 'ComplexTransactionEditDialogController as vm',
-							templateUrl: 'views/entity-viewer/complex-transaction-edit-dialog-view.html',
-							parent: angular.element(document.body),
-							targetEvent: activeObject.event,
-							//clickOutsideToClose: false,
-							locals: {
-								entityType: entitytype,
-								entityId: activeObject.id,
-								data: {}
-							}
-						}).then(function (res) {
+                        const ttypeId = activeObject.transaction_type_object.id;
+                        editLayout = await transactionTypeService.getByKey(ttypeId).then(res => {
 
-							vm.entityViewerDataService.setActiveObjectAction(null);
-							vm.entityViewerDataService.setActiveObjectActionData(null);
+                            return {results: [res.book_transaction_layout]};
 
-							if (res && res.res === 'agree') {
+                        });
 
-								if (res.data.action === 'delete') {
+                        evHelperService.openComplexTransactionEditDrawer(
+                            vm.entityViewerDataService,
+                            vm.entityViewerEventService,
+                            editLayout,
+                            $bigDrawer,
+                            entitytype,
+                            activeObject.id
+                        );
 
-									var objects = vm.entityViewerDataService.getObjects();
-
-									objects.forEach(function (obj) {
-
-										if (activeObject.id === obj.id) {
-
-											var parent = vm.entityViewerDataService.getData(obj.___parentId);
-
-											parent.results = parent.results.filter(function (resultItem) {
-												return resultItem.id !== activeObject.id
-											});
-
-											vm.entityViewerDataService.setData(parent)
-
-										}
-
-									});
-
-									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-								} else {
-
-									var objects = vm.entityViewerDataService.getObjects();
-
-									objects.forEach(function (obj) {
-
-										if (res.data.complex_transaction.id === obj.id) {
-
-											Object.keys(res.data.complex_transaction).forEach(function (key) {
-
-												obj[key] = res.data.complex_transaction[key]
-
-											});
-
-											vm.entityViewerDataService.setObject(obj);
-
-										}
-
-									});
-
-									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-								}
-
-							} else if (res && res.status === 'disagree' && res.data.updateRowIcon) {
-
-								var tIsLocked = res.data.updateRowIcon.is_locked;
-								var tIsCanceled = res.data.updateRowIcon.is_canceled;
-								var activeObject = vm.entityViewerDataService.getActiveObject();
-								var transactionObj = vm.entityViewerDataService.getObject(activeObject.___id, activeObject.___parentId);
-
-								transactionObj.is_locked = tIsLocked;
-								transactionObj.is_canceled = tIsCanceled;
-								vm.entityViewerDataService.setObject(transactionObj);
-
-								vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
-							}
-
-						});*/
-
-						$bigDrawer.show({
+/*						$bigDrawer.show({
 							controller: 'ComplexTransactionEditDialogController as vm',
 							templateUrl: 'views/entity-viewer/complex-transaction-edit-drawer-view.html',
 							locals: {
@@ -354,7 +292,7 @@
 								vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
 							}
 
-						});
+						});*/
 
 						break;
 
