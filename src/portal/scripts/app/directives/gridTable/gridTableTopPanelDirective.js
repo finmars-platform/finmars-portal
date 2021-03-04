@@ -23,16 +23,16 @@
                 scope.topPanelComponents = scope.gridTableData.components.topPanel || {};
 
                 // var gridTableSettings = scope.gridTableData.settings || {};
-                var newRowsKeys = [];
                 var tableMethods = scope.gridTableData.tableMethods || {};
 
                 var assembleNewRow = function () {
 
+                	var newRowsList = scope.gridTableData.body.filter(row => row.newRow);
                     var newRow = metaHelper.recursiveDeepCopy(scope.gridTableData.templateRow, true);
-                    var newRowKey = md5Helper.md5('newGridTableRow', newRowsKeys.length);
+                    var newRowKey = md5Helper.md5('newGridTableRow', newRowsList.length);
 
-                    newRowsKeys.push(newRowKey);
                     newRow.key = newRowKey;
+					newRow.newRow = true;
 
                     /* var lowestOrder = 0;
                     scope.gridTableData.body.forEach(function (bRow) {
@@ -78,9 +78,7 @@
 
                     scope.activeRows = [];
 
-                    scope.activeRows = scope.gridTableData.body.filter(function (row) {
-                        return row.isActive;
-                    });
+                    scope.activeRows = scope.gridTableData.body.filter(row => row.isActive);
 
                     if (scope.activeRows.length) {
                         scope.mode = 'rows_deletion';
@@ -90,6 +88,29 @@
                     }
 
                 });
+
+				/*var initEventListeners = function () {
+
+					scope.gtEventService.addEventListener(gtEvents.ROW_SELECTION_TOGGLED, function () {
+
+						scope.activeRows = [];
+
+						scope.activeRows = scope.gridTableData.body.filter(row => row.isActive);
+
+						if (scope.activeRows.length) {
+							scope.mode = 'rows_deletion';
+
+						} else {
+							scope.mode = false;
+						}
+
+					});
+
+					scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+
+					});
+
+				};*/
 
                 var init = function () {
 

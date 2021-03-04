@@ -161,6 +161,19 @@
 
 				};
 
+				scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+
+					formatDataForChips();
+
+					scope.chipsListEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
+
+					scope.chipsListEventService.dispatchEvent(
+						directivesEvents.CHIPS_LIST_CHANGED,
+						{chipsList: scope.chipsList, updateScope: false}
+					);
+
+				});
+
 				init();
 
 			}

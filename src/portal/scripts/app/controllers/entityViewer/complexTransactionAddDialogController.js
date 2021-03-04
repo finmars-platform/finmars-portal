@@ -14,7 +14,7 @@
     var gridHelperService = require('../../services/gridHelperService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
+    var EntityViewerEditorEventService = require('../../services/eventService');
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
@@ -477,7 +477,7 @@
         vm.checkFieldRender = function (tab, row, field) {
 
             if (field.row === row) {
-                if (field.type === 'field') {
+                if (field.type !== 'empty') {
                     return true;
                 } else {
 
@@ -489,7 +489,7 @@
 
                     itemsInRow.forEach(function (item) {
 
-                        if (item.type === 'field' && item.colspan > 1) {
+                        if (item.type !== 'empty' && item.colspan > 1) {
                             var columnsToSpan = item.column + item.colspan - 1;
 
                             for (var i = item.column; i <= columnsToSpan; i = i + 1) {

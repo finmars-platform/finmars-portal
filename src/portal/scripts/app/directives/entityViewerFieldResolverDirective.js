@@ -184,6 +184,7 @@
                     var result = '';
 
                     var id = scope.entity[scope.fieldKey];
+
                     if (id) {
 
                         var i;
@@ -300,7 +301,7 @@
                 };
 
                 //scope.getModelKey = scope.$parent.getModelKey;
-                scope.fieldKey = scope.$parent.fieldKey;
+                scope.fieldKey = scope.$parent.vm.fieldKey;
 
                 if (scope.item.value_entity) {
                     scope.crudEntityType = scope.item.value_entity;

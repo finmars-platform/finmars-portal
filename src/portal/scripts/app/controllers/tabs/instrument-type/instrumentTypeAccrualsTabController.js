@@ -220,7 +220,7 @@
             var accrual = {
                 accrualsGridTableDataService: new GridTableDataService(),
                 accrualsGridTableEventService: new GridTableEventService(),
-                order: vm.entity.length,
+                order: vm.entity.accruals.length,
                 autogenerate: true,
                 data: {
                     form_message: "",
