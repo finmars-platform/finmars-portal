@@ -81,6 +81,7 @@
         ];
 
         var portfolioAttrsComp = ['portfolio.name', 'portfolio.short_name', 'portfolio.notes', 'portfolio.user_code', 'portfolio.public_name'];
+        var currencyAttrsComp = ['currency.name', 'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.public_name'];
 
         var instrumentAttrsComp = [
             'instrument.name', 'instrument.short_name', 'instrument.user_code', 'instrument.public_name', 'instrument.instrument_type.name',
@@ -124,6 +125,7 @@
             vm.balancePerformanceAttrsFiltered = [];
             vm.instrumentAttrsFiltered = [];
             vm.linkedInstrumentAttrsFiltered = [];
+            vm.currencyAttrsFiltered = [];
             vm.accountAttrsFiltered = [];
             vm.portfolioAttrsFiltered = [];
             vm.strategy1attrsFiltered = [];
@@ -142,6 +144,8 @@
             vm.instrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
 
             vm.linkedInstrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+
+            vm.currencyAttrs = attributeDataService.getAllAttributesAsFlatList('currencies.currency', 'currency', 'Currency', {maxDepth: 1});
 
             vm.accountAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
 
@@ -209,6 +213,7 @@
 
             vm.portfolioDynamicAttrs = attributeDataService.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
             vm.accountDynamicAttrs = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account', 'Account');
+            vm.currencyDynamicAttrs = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'currencies.currency', 'currency', 'Currency');
             vm.instrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
             vm.allocationDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             vm.linkedInstrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
@@ -226,6 +231,9 @@
 
             vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
             vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
 
             vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
             vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
@@ -245,6 +253,7 @@
             //filterAttrsToShow('accountAttrs', accountAttrsToRemove);
             composeAttrsInsideTab('accountAttrs', accountAttrsComp);
             composeAttrsInsideTab('portfolioAttrs', portfolioAttrsComp);
+            composeAttrsInsideTab('currencyAttrs', currencyAttrsComp);
             filterAttrsToShow('strategy1attrs', strategy1AttrsToRemove);
             filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
             filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);
@@ -289,6 +298,9 @@
             vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
             vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
 
+            vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
+
             vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
             vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
 
@@ -331,6 +343,9 @@
 
             syncTypeAttrs(vm.linkedInstrumentAttrs);
             syncTypeAttrs(vm.linkedInstrumentDynamicAttrs);
+
+            syncTypeAttrs(vm.currencyAttrs);
+            syncTypeAttrs(vm.currencyDynamicAttrs);
 
             syncTypeAttrs(vm.accountAttrs);
             syncTypeAttrs(vm.accountDynamicAttrs);
@@ -517,6 +532,8 @@
                 'linkedInstrumentDynamicAttrs',
                 'accountAttrs',
                 'accountDynamicAttrs',
+                'currencyAttrs',
+                'currencyDynamicAttrs',
                 'portfolioAttrs',
                 'portfolioDynamicAttrs',
                 'strategy1attrs',

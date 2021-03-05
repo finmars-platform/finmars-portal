@@ -515,9 +515,72 @@
 
     };
 
+    var extendAttributes = function (items, attributeExtensions) {
+
+        if (attributeExtensions) {
+
+                items = items.map(function (item){
+
+                    attributeExtensions.forEach(function (extension) {
+
+                        var contentType
+                        var base;
+                        var oppositeBase;
+
+                        if (item.item_type === 1) { // instrument extension
+
+                            contentType = 'instruments.instrument';
+                            base = 'instrument';
+                            oppositeBase = 'currency';
+
+                            if (extension.content_type_from === contentType) {
+
+                                item[oppositeBase + '.' + extension.key_to] = item[base + '.' + extension.key_from]
+
+                                if (extension.value_to && !item[oppositeBase + '.' + extension.key_to]) {
+                                    item[oppositeBase + '.' + extension.key_to] = extension.value_to
+                                }
+
+                            }
+
+                        }
+
+
+                        if (item.item_type === 2) { // currency extension
+
+                            contentType = 'currencies.currency';
+                            base = 'currency';
+                            oppositeBase = 'instrument'
+
+                            if (extension.content_type_from === contentType) {
+
+                                item[oppositeBase + '.' + extension.key_to] = item[base + '.' + extension.key_from]
+
+                                if (extension.value_to && !item[oppositeBase + '.' + extension.key_to]) {
+                                    item[oppositeBase + '.' + extension.key_to] = extension.value_to
+                                }
+
+                            }
+
+                        }
+
+
+                    });
+
+                    return item
+
+            })
+
+        }
+
+        return items
+
+    }
+
     module.exports = {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
+        extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents
     }
 

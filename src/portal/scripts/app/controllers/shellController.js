@@ -917,9 +917,11 @@
 
                     console.log("User status: Authenticated");
 
-                    setTimeout(function () {
-                        vm.initShell();
-                    }, 100);
+                    // setTimeout(function () {
+                        // vm.initShell();
+                        window.location.hash  = '#!/profile';
+                        window.location.reload();
+                    // }, 100);
 
                 }
 

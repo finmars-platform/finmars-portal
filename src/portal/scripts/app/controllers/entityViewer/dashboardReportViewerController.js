@@ -1901,7 +1901,10 @@
                 var downloadAttrsPromise = rvSharedLogicHelper.downloadAttributes();
                 vm.setEventListeners();
 
+                console.log('$scope.$parent.vm.contentType', $scope.$parent.vm.contentType)
+
                 vm.entityViewerDataService.setEntityType(vm.entityType);
+                vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 				vm.entityViewerDataService.setRowHeight(36);
 				vm.entityViewerDataService.setVirtualScrollStep(500);
@@ -2018,7 +2021,23 @@
 
                 });
 
-                Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
+                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+
+                    uiService.getCrossEntityAttributeExtensionList({
+                        filters: {
+                            context_content_type: $scope.$parent.vm.contentType
+                        }
+                    }).then(function (data){
+
+                        console.log('getCrossEntityAttributeExtensionList.data', data);
+
+                        vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+
+                    })
+
+                })
+
+                Promise.all([downloadAttrsPromise, setLayoutPromise, crossEntityAttributeExtensionProm]).then(function () {
 
                     vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
                     vm.dashboardComponentDataService.setEntityViewerEventService(vm.entityViewerEventService);
