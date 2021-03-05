@@ -723,6 +723,76 @@
             })
     };
 
+    // Cross Entity Attribute Extension
+
+    var getCrossEntityAttributeExtensionList = function (options) {
+
+        console.log('options', options);
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/cross-entity-attribute-extension/', options),
+            getRequestParams)
+    };
+
+    var getCrossEntityAttributeExtension = function (id) {
+        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createCrossEntityAttributeExtension = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateCrossEntityAttributeExtension = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteCrossEntityAttributeExtension = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -798,7 +868,14 @@
 
         getEntityTooltipList: getEntityTooltipList,
         createEntityTooltip: createEntityTooltip,
-        updateEntityTooltip: updateEntityTooltip
+        updateEntityTooltip: updateEntityTooltip,
+
+
+        getCrossEntityAttributeExtensionList: getCrossEntityAttributeExtensionList,
+        getCrossEntityAttributeExtension: getCrossEntityAttributeExtension,
+        createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
+        updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
+        deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
 
 
 
