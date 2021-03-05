@@ -1366,6 +1366,14 @@
             return data.markedSubtotals;
         }
 
+        function setCrossEntityAttributeExtensions(items) {
+            data.crossEntityAttributeExtensions = items;
+        }
+
+        function getCrossEntityAttributeExtensions() {
+            return data.crossEntityAttributeExtensions;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1586,6 +1594,9 @@
 
             setMarkedSubtotals: setMarkedSubtotals,
             getMarkedSubtotals: getMarkedSubtotals,
+
+            setCrossEntityAttributeExtensions: setCrossEntityAttributeExtensions,
+            getCrossEntityAttributeExtensions: getCrossEntityAttributeExtensions,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

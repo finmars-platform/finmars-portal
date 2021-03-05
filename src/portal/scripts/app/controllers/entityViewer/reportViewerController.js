@@ -1025,6 +1025,22 @@
 
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
+                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+
+                    uiService.getCrossEntityAttributeExtensionList({
+                        filters: {
+                            context_content_type: $scope.$parent.vm.contentType
+                        }
+                    }).then(function (data){
+
+                        console.log('getCrossEntityAttributeExtensionList.data', data);
+
+                        vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+
+                    })
+
+                })
+
                 vm.setEventListeners();
 
                 var layoutUserCode;
@@ -1064,7 +1080,7 @@
                     setLayoutProm = evHelperService.getDefaultLayout(vm);
                 }
 
-                Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
+                Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function () {
                     $scope.$apply();
                 });
 
