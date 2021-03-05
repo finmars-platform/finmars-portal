@@ -486,6 +486,42 @@
         return uiRepository.updateEntityTooltip(id, data);
     };
 
+    // Cross Entity Attribute Extension
+
+    let getCrossEntityAttributeExtensionList = function (options) {
+
+        return uiRepository.getCrossEntityAttributeExtensionList( options);
+    };
+
+    let getCrossEntityAttributeExtension = function (id) {
+        return uiRepository.getCrossEntityAttributeExtension(id);
+    };
+
+    let createCrossEntityAttributeExtension = function (item) {
+
+        return uiRepository.createCrossEntityAttributeExtension(item);
+    };
+
+    let updateCrossEntityAttributeExtension = function (id, item) {
+        return uiRepository.updateCrossEntityAttributeExtension(id, item);
+    };
+
+    let deleteCrossEntityAttributeExtension = function (id) {
+
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.deleteCrossEntityAttributeExtension(id).then(function (data) {
+
+                resolve(data);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        });
+
+    };
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -555,7 +591,13 @@
 
         getEntityTooltipList: getEntityTooltipList,
         createEntityTooltip: createEntityTooltip,
-        updateEntityTooltip: updateEntityTooltip
+        updateEntityTooltip: updateEntityTooltip,
+
+        getCrossEntityAttributeExtensionList: getCrossEntityAttributeExtensionList,
+        getCrossEntityAttributeExtension: getCrossEntityAttributeExtension,
+        createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
+        updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
+        deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
 
 
     }

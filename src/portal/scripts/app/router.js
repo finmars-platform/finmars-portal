@@ -653,6 +653,12 @@
                 templateUrl: 'views/pages/entity-tooltip-page-view.html',
                 controller: 'EntityTooltipPageController as vm'
             })
+
+            .state('app.settings.cross-entity-attribute-extensions', {
+                url: '/cross-entity-attribute-extension',
+                templateUrl: 'views/pages/cross-entity-attribute-extension-page-view.html',
+                controller: 'CrossEntityAttributeExtensionPageController as vm'
+            })
             .state('app.settings.color-palettes', {
                 url: '/palettes',
                 templateUrl: 'views/colorPicker/color-palettes-settings-view.html',
