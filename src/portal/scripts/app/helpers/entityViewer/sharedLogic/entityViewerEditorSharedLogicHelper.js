@@ -726,7 +726,7 @@
                             objPaths: [['accrual_calculation_model'], ['periodicity_n'], ['periodicity']],
                             columnName: 'Options',
                             order: 4,
-                            cellType: 'custom_popup',
+                            cellType: 'customPopup',
                             settings: {
                                 value: [
                                     null, // for accrual_calculation_model
@@ -828,7 +828,7 @@
 
                     const cell = rowObj.columns[4];
 
-                    cell.cellType = 'custom_popup';
+                    cell.cellType = 'customPopup';
                     cell.cellType.objPaths = [
                         ['annual_to_show'], ['annual_override_name'],
                         ['semi-annual_to_show'], ['semi-annual_override_name'],

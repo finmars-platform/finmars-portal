@@ -19,7 +19,7 @@
                 // scope.cellValue = '';
 
                 var cellMethods;
-                var cellsWithPopup = ['text', 'number', 'date', 'expression', 'custom_popup'];
+                var cellsWithPopup = ['text', 'number', 'date', 'expression', 'customPopup', 'multitypeField'];
                 var sortingSettingsChangedIndex;
 
                 scope.onCellValueChange = function () {

@@ -2,8 +2,8 @@
 
 	"use strict";
 
-	let stringHelper = require('../../helpers/stringHelper');
-	let metaHelper = require('../../helpers/meta.helper');
+	const stringHelper = require('../../helpers/stringHelper');
+	const metaHelper = require('../../helpers/meta.helper');
 
 	module.exports = function ($mdDialog) {
 		return {

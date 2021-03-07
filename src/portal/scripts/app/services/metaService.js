@@ -529,6 +529,43 @@
 
     };
 
+	/**
+	 *
+	 * @param dataRequest {function} - asynchronous method that returns array of items
+	 * @param argumentsList {array} - array of arguments for dataRequest method. Must contain argument with options {pageSize: 1000, page: 1}
+	 * @returns {Promise<unknown>}
+	 */
+    var loadDataFromAllPages = function (dataRequest, argumentsList) {
+
+		var dataList = [];
+
+		var loadAllPages = (resolve, reject) => {
+
+			dataRequest(...argumentsList).then(function (data) {
+
+				dataList = dataList.concat(data.results);
+
+				if (data.next) {
+
+					options.page = options.page + 1;
+					loadAllPages(resolve, reject);
+
+				} else {
+					resolve(dataList);
+				}
+
+			}).catch(error => reject(error));
+
+		};
+
+		return new Promise((resolve, reject) => {
+
+			loadAllPages(resolve, reject);
+
+		});
+
+	};
+
     module.exports = {
         isReport: isReport,
         getMenu: getMenu,
@@ -550,7 +587,9 @@
         getCurrentLocation: getCurrentLocation,
         getHeaderTitleForCurrentLocation: getHeaderTitleForCurrentLocation,
         getContentGroups: getContentGroups,
-        getEntityViewerFixedFieldsAttributes: getEntityViewerFixedFieldsAttributes
+        getEntityViewerFixedFieldsAttributes: getEntityViewerFixedFieldsAttributes,
+
+		loadDataFromAllPages: loadDataFromAllPages
     }
 
 }());

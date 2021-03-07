@@ -874,7 +874,8 @@
             vm.entity.object_permissions = [];
 
             if (vm.groups) {
-                vm.groups.forEach(function (group) {
+
+            	vm.groups.forEach(function (group) {
 
                     if (group.objectPermissions && group.objectPermissions.manage === true) {
                         vm.entity.object_permissions.push({
@@ -901,6 +902,7 @@
                     }
 
                 });
+
             }
 
         };
@@ -1126,7 +1128,7 @@
 
                 console.log(`#78 SAVE AND EXIT ${vm.entityType} `, result)
 
-                entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
+                /* entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
 
                     vm.processing = false;
 
@@ -1159,7 +1161,7 @@
                     vm.processing = false;
                     vm.handleErrors(data);
 
-                });
+                }); */
 
             }
 
@@ -2121,16 +2123,19 @@
             vm.getItem().then(async function () {
 
                 if (vm.entityType === 'instrument-type') {
-                    if (vm.entity.instrument_form_layouts) {
+
+                	if (vm.entity.instrument_form_layouts) {
                         vm.instrumentTypeLayouts = vm.entity.instrument_form_layouts.split(',')
                     }
 
                     evEditorSharedLogicHelper.getDailyPricingModelFields().then(data => {
                         vm.dailyPricingModelFields = data;
                     });
+
                     evEditorSharedLogicHelper.getCurrencyFields().then(data => {
                         vm.currencyFields = data;
                     });
+
                 }
 
                 getEntityStatus();
