@@ -739,6 +739,7 @@ app.directive('dateInput', [require('./app/directives/customInputs/dateInputDire
 app.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
 app.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
 app.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
+app.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
 
 // Inputs End
 
