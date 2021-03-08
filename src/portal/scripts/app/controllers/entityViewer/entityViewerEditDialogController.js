@@ -1107,6 +1107,30 @@
                 vm.attributeTypes,
                 []);
 
+            if (entityType === 'instrument-type') {
+
+                console.log('#78 vm.entity', vm.entity)
+
+                vm.entity.accruals.forEach(accrual => {
+
+                    if (accrual.name.trim() === '') {
+
+                        errors.push({
+                            fieldName: `#${accrual.order + 1}`,
+                            message: 'Empty name',
+                            locationData : {type: 'tab', name: 'Accruals', validatorText: 'Tab accruals'}
+
+                        })
+
+                    }
+
+                });
+
+
+            }
+
+
+
             if (errors.length) {
 
                 tabsWithErrors = {};

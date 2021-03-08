@@ -42,7 +42,14 @@
 
             gtRow.columns.forEach(function (gtColumn) {
 
-                vm.entity.accruals[tableData.index].data.items[data.row.order][gtColumn.key] = gtColumn.settings.value;
+                if (gtColumn.settings) {
+                    vm.entity.accruals[tableData.index].data.items[data.row.order][gtColumn.key] = gtColumn.settings.value;
+                }
+
+                if (gtColumn.key === 'options_settings' && gtColumn.cellType !== 'empty') {
+                    console.log('#78 options ', gtColumn.settings.value)
+
+                }
 
             })
 
@@ -136,7 +143,7 @@
 
             var optionsColumn = {
                 key: 'options_settings',
-                objPath: ['options'],
+                // objPath: ['options_settings'],
                 columnName: '',
                 order: 4,
                 cellType: 'custom_popup',
@@ -170,27 +177,35 @@
             });
 
             accrualsGridTableData.body = rows.map((row, index) => {
+
                 const rowObj = metaHelper.recursiveDeepCopy(accrualsGridTableData.templateRow, true);
 
                 rowObj.order = index;
                 rowObj.key = row.key;
 
                 rowObj.columns[0].settings.value = row.name;
-                rowObj.columns[1].settings.value = row.toShow;
+                rowObj.columns[1].settings.value = row.to_show;
                 rowObj.columns[2].cellType = row.defaultValueType;
+                rowObj.columns[2].settings.value = row.default_value;
+
 
                 if (row.defaultValueType === 'selector') {
                     rowObj.columns[2].settings.selectorOptions = row.selectorOptions;
                 }
 
-                if (row.options) {
+                rowObj.columns[3].settings.value = row.override_name;
+
+                if (row.options_settings) {
 
                     const optionsCell = metaHelper.recursiveDeepCopy(optionsColumn, false);
 
                     rowObj.columns[4] = optionsCell;
-                    rowObj.columns[4].settings.value = row.options;
+                    rowObj.columns[4].settings.value = row.options_settings;
 
                 }
+
+                console.log('#78 row', row)
+                console.log('#78 rowObj', rowObj)
 
                 return rowObj
 
@@ -220,18 +235,19 @@
             var accrual = {
                 accrualsGridTableDataService: new GridTableDataService(),
                 accrualsGridTableEventService: new GridTableEventService(),
+                name: '',
                 order: vm.entity.accruals.length,
                 autogenerate: true,
                 data: {
                     form_message: "",
                     items: [
-                        {key: 'notes', name: 'Notes', toShow: true, defaultValueType: 'text', options: false},
-                        {key: 'accrual_start_date', name: 'First accrual date', toShow: true, defaultValueType: 'date', options: false},
-                        {key: 'first_payment_date', name: 'First payment date', toShow: true,  defaultValueType: 'date', options: false},
-                        {key: 'accrual_size', name: 'Accrual size', toShow: true, defaultValueType: 'number', options: false},
-                        {key: 'periodicity', name: 'Periodicity', toShow: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options: periodicitySelectorOptions},
-                        {key: 'accrual_calculation_model', name: 'Accrual model', toShow: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options: accrualModelsSelectorOptions},
-                        {key: 'periodicity_n', name: 'Periodic N', toShow: true, defaultValueType: 'number', options: false},
+                        {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text', options_settings: false},
+                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'date', options_settings: false},
+                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'date', options_settings: false},
+                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'number', options_settings: false},
+                        {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options_settings: periodicitySelectorOptions},
+                        {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options_settings: accrualModelsSelectorOptions},
+                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'number', options_settings: false},
                     ]
                 }
             };
@@ -253,7 +269,7 @@
 
             $event.stopPropagation();
 
-            var isTextInputElement = $event.target.closest('.ttype-action-notes-input');
+            var isTextInputElement = $event.target.closest('.instrument-type-accrual-name-input');
 
             if (!isTextInputElement) {
                 pane.toggle();
@@ -333,7 +349,7 @@
                             onAccrualTableCellChange(argumentsObj, item.accrualsGridTableDataService, item.accrualsGridTableEventService);
                         });
 
-                        var accrualsGridTableData = getAccrualsGridTableData(item)
+                        var accrualsGridTableData = getAccrualsGridTableData(item);
 
                         accrualsGridTableData.index = index;
 
