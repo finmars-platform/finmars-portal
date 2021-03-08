@@ -35,18 +35,18 @@
     <div class="instrument-type-accruals-tab-view" ng-if="vm.readyStatus.gridTable">
         <v-accordion class="vAccordion--default" multiple >
 
-            <v-pane data-ng-repeat="item in vm.entity.accruals track by $index" expanded="item.isPaneExpanded">
+            <v-pane data-ng-repeat="item in vm.entity.accruals | orderBy: 'order' track by item.order" expanded="item.isPaneExpanded">
                 <v-pane-header class="transaction-type-action-pane">
                     <div layout="row"
                          layout-align="space-between center" data-ng-click="vm.toggleItem($pane, item, $event)">
                         <div layout="row"
-                             class="ttype-action-info-container"
+                             class="instrument-type-accrual-info-container"
                              layout-align="start center">
 
                             <span class="text-weight-bold"># {{$index + 1}}</span>
 
                             <span ng-if="item.isPaneExpanded">
-                                <text-input class="ttype-action-notes-input" label="Name of accrual"
+                                <text-input class="instrument-type-accrual-name-input"
                                             model="item.name"
                                             placeholder="Name of accrual"
                                             on-focus="vm.onNameFocus">
@@ -60,7 +60,7 @@
                                            placeholder="name">
                                 </md-input-container>-->
                             </span>
-                            <span class="text-weight-bold" ng-if="!item.isPaneExpanded"
+                            <span class="instrument-type-accrual-name text-weight-bold" ng-if="!item.isPaneExpanded"
                                   ng-bind="item.name"></span>
 
                         </div>
