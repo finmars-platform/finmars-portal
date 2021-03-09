@@ -1,6 +1,6 @@
 (function () {
 
-    var gtEvents = require('../../services/gridTableEvents');
+    const gtEvents = require('../../services/gridTableEvents');
 
     'use strict';
 
@@ -47,6 +47,8 @@
 
                     }
 
+                    return row.order;
+
                 }
 
                 scope.toggleAllRows = function () {
@@ -77,6 +79,28 @@
                     scope.gtEventService.dispatchEvent(gtEvents.ROW_SELECTION_TOGGLED);
 
                 }
+
+                scope.changeRowOrder = function (rowOrder, changeDirection) {
+
+                	let anotherRowOrder = rowOrder - 1;
+
+                	if (changeDirection === 'down') anotherRowOrder = rowOrder + 1;
+
+                	const anotherRow = scope.gtDataService.getRow(anotherRowOrder);
+
+                	if (anotherRow) {
+
+                		const row = scope.gtDataService.getRow(rowOrder);
+
+						scope.gridTableData.body[rowOrder] = JSON.parse(angular.toJson(anotherRow));
+						scope.gridTableData.body[rowOrder].order = rowOrder;
+
+						scope.gridTableData.body[anotherRowOrder] = JSON.parse(angular.toJson(row));
+						scope.gridTableData.body[anotherRowOrder].order = anotherRowOrder;
+
+					}
+
+				};
 
                 /*scope.acceptNewRow = function (rowKey) {
 

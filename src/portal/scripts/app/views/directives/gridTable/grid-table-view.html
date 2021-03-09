@@ -8,9 +8,13 @@
 
     <div class="grid-table-row grid-table-header-row">
 
-        <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
-            <md-checkbox data-ng-checked="allRowsAreActive"
-                         data-ng-click="toggleAllRows()"></md-checkbox>
+        <div class="grid-table-row-actions-wrap">
+            <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
+                <md-checkbox ng-checked="row.isActive"
+                             ng-click="toggleRowSelection(row)"></md-checkbox>
+            </div>
+
+            <div ng-if="gridTableData.components.dragAndDropElement" class="grid-table-row-dnd-elem"></div>
         </div>
 
         <!--<div data-ng-repeat="cell in gridTableData.header.columns track by cell.key">
@@ -21,22 +25,31 @@
                              data-gt-event-service="gtEventService"></grid-table-cell>
 
         </div>-->
-        <grid-table-cell data-ng-repeat="cell in gridTableData.header.columns track by cell.key"
-                         data-row="gridTableData.header"
-                         data-column="cell"
-                         data-gt-data-service="gtDataService"
-                         data-gt-event-service="gtEventService"
-                         class="grid-table-cell-elem"></grid-table-cell>
+        <div class="grid-table-cells-container flex-row width-100 height-100">
+            <grid-table-cell data-ng-repeat="cell in gridTableData.header.columns track by cell.key"
+                             data-row="gridTableData.header"
+                             data-column="cell"
+                             data-gt-data-service="gtDataService"
+                             data-gt-event-service="gtEventService"
+                             class="grid-table-cell-elem"></grid-table-cell>
+        </div>
 
     </div>
-
+    <!--    <div data-ng-repeat="row in gridTableData.body | orderBy: 'order' track by $index"-->
     <div data-ng-repeat="row in gridTableData.body | orderBy:sortRowsByCol:sortRowsReverse track by row.key"
          ng-click="onRowClick($event, row)"
          class="grid-table-row">
 
-        <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
-            <md-checkbox ng-checked="row.isActive"
-                         ng-click="toggleRowSelection(row)"></md-checkbox>
+        <div class="grid-table-row-actions-wrap">
+            <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox flex-column fc-center fi-center">
+                <md-checkbox ng-checked="row.isActive"
+                             ng-click="toggleRowSelection(row)"></md-checkbox>
+            </div>
+
+            <div ng-if="gridTableData.components.dragAndDropElement" class="grid-table-row-dnd-elem flex-column fc-center">
+                <button ng-click="changeRowOrder(row.order, 'up')"><span class="material-icons">expand_less</span></button>
+                <button ng-click="changeRowOrder(row.order, 'down')"><span class="material-icons">expand_more</span></button>
+            </div>
         </div>
 
         <!--<div ng-if="row.isNewRow" class="grid-table-new-row-actions">
@@ -67,13 +80,14 @@
                              data-gt-data-service="gtDataService"
                              data-gt-event-service="gtEventService"></grid-table-cell>
         </div>-->
-
-        <grid-table-cell data-ng-repeat="cell in row.columns track by cell.key"
-                         data-row="row"
-                         data-column="cell"
-                         data-gt-data-service="gtDataService"
-                         data-gt-event-service="gtEventService"
-                         class="grid-table-cell-elem"></grid-table-cell>
+        <div class="flex-row width-100 height-100">
+            <grid-table-cell data-ng-repeat="cell in row.columns track by cell.key"
+                             data-row="row"
+                             data-column="cell"
+                             data-gt-data-service="gtDataService"
+                             data-gt-event-service="gtEventService"
+                             class="grid-table-cell-elem"></grid-table-cell>
+        </div>
 
     </div>
 

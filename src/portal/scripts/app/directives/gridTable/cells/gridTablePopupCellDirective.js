@@ -455,8 +455,9 @@
 
 				scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
 
-					var row = scope.gtDataService.getRow(scope.row.order);
-					if (row) var cell = row.columns.find(col => col.order === scope.column.order);
+					var row = scope.gtDataService.getRowByKey(scope.row.key);
+
+					if (row) var cell = row.columns.find(col => col.key === scope.column.key);
 
 					if (row && cell) {
 

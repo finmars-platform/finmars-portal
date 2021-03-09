@@ -388,15 +388,13 @@
         };
 
         var getEventsActionGridTableData = function (item){
-
-
             console.log('getEventsActionGridTableData.item', item)
 
             const rows = item.data.actions;
 
             console.log('getEventsActionGridTableData.rows', rows)
 
-            const eventsGridTableData = {
+            const eventActionsGridTableData = {
                 header: {
                     order: 'header',
                     columns: []
@@ -413,7 +411,8 @@
                             cellType: 'selector',
                             settings: {
                                 value: null,
-                                selectorOptions: vm.transactionTypes,
+                                // selectorOptions: vm.transactionTypes,
+								selectorOptions: [],
                             },
                             styles: {
                                 'grid-table-cell': {'width': '260px'}
@@ -482,13 +481,14 @@
                         filters: false,
                         columns: false,
                         search: false
-                    }
+                    },
+					dragAndDropElement: true
                 }
 
             };
 
-            const rowObj = metaHelper.recursiveDeepCopy(eventsGridTableData.templateRow, true);
-            eventsGridTableData.header.columns = rowObj.columns.map(column => {
+            const rowObj = metaHelper.recursiveDeepCopy(eventActionsGridTableData.templateRow, true);
+			eventActionsGridTableData.header.columns = rowObj.columns.map(column => {
 
                 return {
                     key: column.key,
@@ -500,8 +500,8 @@
                 };
             })
 
-            eventsGridTableData.body = rows.map((row, index) => {
-                const rowObj = metaHelper.recursiveDeepCopy(eventsGridTableData.templateRow, true);
+			eventActionsGridTableData.body = rows.map((row, index) => {
+                const rowObj = metaHelper.recursiveDeepCopy(eventActionsGridTableData.templateRow, true);
 
                 rowObj.order = index;
                 rowObj.key = row.key;
@@ -516,7 +516,7 @@
 
             })
 
-            return eventsGridTableData;
+            return eventActionsGridTableData;
 
         }
 
@@ -730,7 +730,7 @@
             item.data.actions.unshift(newAction);
 
             var transactionType = gridTableHelperService.getCellFromRowByKey(newRow, 'transaction_type');
-            transactionType.settings.selectorOptions = vm.transactionTypes;
+            transactionType.settings.selectorOptions = vm.transactionTypes.slice(0, 19);
 
             var buttonPosition = gridTableHelperService.getCellFromRowByKey(newRow, 'button_position');
             buttonPosition.settings.selectorOptions = getRangeOfNumbers(item.data.actions.length);
