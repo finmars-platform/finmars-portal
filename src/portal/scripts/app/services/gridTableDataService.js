@@ -29,7 +29,7 @@
 
         function getRow (rowOrder) {
 
-             /* if (typeof rowOrder === 'string') {
+        	/* if (typeof rowOrder === 'string') {
 
                  for (var i = 0; i < data.tableData.body.length; i++) {
 
@@ -116,7 +116,6 @@
 
             } else {
                 return data.tableData.body[rowOrder].columns[cellOrder];
-
             }
             // return data.tableData.body[rowOrder].columns[cellOrder];
 

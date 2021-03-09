@@ -80,7 +80,8 @@
   flex-direction: row;
   height: 48px;
   padding-right: 16px;
-  padding-left: 36px;
+  // padding-left: 36px;
+  padding-left: 5px;
   border-top: 1px solid @borderPale;
   box-sizing: border-box;
   outline: none;
@@ -92,14 +93,49 @@
 
 }
 
+.grid-table-row-actions-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  height: 100%;
+}
+
 .grid-table-row-checkbox {
-  position: absolute;
+  /*position: absolute;
   top: 14px;
   left: 15px;
-  z-index: 2;
+  z-index: 2;*/
+  width: 40px;
+  height: 100%;
 
   md-checkbox {
+    width: 20px;
     margin-bottom: 0;
+  }
+}
+
+.grid-table-row-dnd-elem {
+  width: 24px;
+  height: 100%;
+
+  button {
+    height: 22px;
+    width: 24px;
+    padding: 0;
+    background-color: initial;
+    border: none;
+
+    &:hover {
+      opacity: .5;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .material-icons {
+    font-size: 22px;
   }
 }
 
@@ -290,15 +326,11 @@
       margin: 0;
       width: 20px;
 
-      .md-icon {
-        border-radius: 100%;
-      }
-
-      &.md-checked.gt-cell-checkbox-readonly[disabled] {
+      /* &.md-checked.gt-cell-checkbox-readonly[disabled] {
         .md-icon {
           background-color: @orange;
         }
-      }
+      } */
 
     }
   }

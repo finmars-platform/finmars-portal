@@ -1128,7 +1128,7 @@
 
                 console.log(`#78 SAVE AND EXIT ${vm.entityType} `, result)
 
-                /* entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
+                entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
 
                     vm.processing = false;
 
@@ -1161,7 +1161,7 @@
                     vm.processing = false;
                     vm.handleErrors(data);
 
-                }); */
+                });
 
             }
 
@@ -1283,10 +1283,10 @@
 
                                 item.permission = item.permission.split('_')[0] + '_account';
 
-                                return item
+                                return item;
 
                             })
-                        }
+                        };
 
                     });
 
