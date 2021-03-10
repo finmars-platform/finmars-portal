@@ -11,6 +11,9 @@
 
     var metaService = require('../../services/metaService');
     var evHelperService = require('../../services/entityViewerHelperService');
+    var uiService = require('../../services/uiService');
+
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -98,6 +101,8 @@
                         addColumnEntityToGrouping: scope.addColumnEntityToGrouping,
                         checkForFilteringBySameAttr: scope.checkForFilteringBySameAttr,
                         addFiltersWithColAttr: scope.addFiltersWithColAttr,
+                        manualSort: scope.manualSort,
+                        editManualSorting: scope.editManualSorting,
                         activateColumnNumberRenderingPreset: scope.activateColumnNumberRenderingPreset,
                         openColumnNumbersRenderingSettings: scope.openColumnNumbersRenderingSettings,
                         selectSubtotalType: scope.selectSubtotalType,
@@ -851,6 +856,108 @@
 
                     return true;
                 };
+
+                scope.manualSort = function ($event, column) {
+
+                    console.log('scope.manualSort.column', column)
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    uiService.getColumnSortDataList({
+                        filters: {
+                            user_code: column.manual_sort_layout_user_code
+                        }
+                    }).then(function (data){
+
+                        if(data.results.length) {
+
+                            var layout = data.results[0];
+
+                            scope.evDataService.setColumnSortData(column.key, layout.data)
+
+                            var sort;
+
+                            if (column.options && column.options.sort) {
+                                sort = "MANUAL_" + column.options.sort
+                            }
+
+                            if (!sort) {
+                                sort = "MANUAL_ASC";
+                            }
+
+                            var i;
+                            for (i = 0; i < scope.columns.length; i = i + 1) {
+                                if (!scope.columns[i].options) {
+                                    scope.columns[i].options = {};
+                                }
+                                scope.columns[i].options.sort = null;
+                            }
+
+                            column.options.sort = sort;
+
+                            console.log('sortHandler.column', column);
+
+                            var columns = scope.evDataService.getColumns();
+
+                            columns.forEach(function (item) {
+
+                                if (column.key === item.key) {
+                                    item = column;
+                                }
+
+                            });
+
+                            scope.evDataService.setActiveColumnSort(column);
+
+                            scope.evDataService.setColumns(columns);
+
+                            scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                            console.log('#69 sortHandler notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
+
+                            scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
+
+                        } else {
+
+                            toastNotificationService.error("Manual Sort is not configured");
+
+                            column.manual_sort_layout_user_code = null;
+
+                        }
+
+                    })
+
+                }
+
+                scope.editManualSorting = function ($event, column) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    console.log('editManualSorting', column);
+
+                    $mdDialog.show({
+                        controller: 'ManualSortingLayoutManagerDialogController as vm',
+                        templateUrl: 'views/dialogs/manual-sorting-layout-manager-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                column: column
+                            },
+                            entityViewerDataService: scope.evDataService
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+
+                        }
+
+                    });
+
+                }
 
                 scope.addFiltersWithColAttr = function (column) {
 

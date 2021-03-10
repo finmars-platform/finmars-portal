@@ -792,6 +792,75 @@
         })
     };
 
+    // Column Sort Data
+
+    var getColumnSortDataList = function (options) {
+
+        console.log('options', options);
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/column-sort-data/', options),
+            getRequestParams)
+    };
+
+    var getColumnSortData = function (id) {
+        return xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createColumnSortData = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/column-sort-data/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateColumnSortData = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteColumnSortData = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
 
     module.exports = {
 
@@ -870,12 +939,17 @@
         createEntityTooltip: createEntityTooltip,
         updateEntityTooltip: updateEntityTooltip,
 
-
         getCrossEntityAttributeExtensionList: getCrossEntityAttributeExtensionList,
         getCrossEntityAttributeExtension: getCrossEntityAttributeExtension,
         createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
         updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
         deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
+
+        getColumnSortDataList: getColumnSortDataList,
+        getColumnSortData: getColumnSortData,
+        createColumnSortData: createColumnSortData,
+        updateColumnSortData: updateColumnSortData,
+        deleteColumnSortData: deleteColumnSortData,
 
 
 
