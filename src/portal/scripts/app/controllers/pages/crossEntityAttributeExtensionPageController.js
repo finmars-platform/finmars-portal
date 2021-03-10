@@ -19,55 +19,125 @@
             attributeTypes: false
         };
 
-        vm.currencyAttributes = metaService.getEntityAttrs('currency')
-        vm.instrumentAttributes = metaService.getEntityAttrs('instrument')
+        vm.currencyAttributes = [
+            {
+                key: "name",
+                name: "Name",
+                value_type: 10,
+                is_hidden: true,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'name'
+            },
+            {
+                key: "short_name",
+                name: "Short Name",
+                value_type: 10,
+                is_hidden: true,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'short_name'
+            },
+            {
+                key: "user_code",
+                name: "User code",
+                value_type: 10,
+                is_hidden: true,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'user_code'
+            }
+        ]
+        vm.instrumentAttributes = [
+            {
+                key: "name",
+                name: "Name",
+                value_type: 10,
+                is_hidden: true,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'name'
+            },
+            {
+                key: "short_name",
+                name: "Short Name",
+                value_type: 10,
+                is_hidden: true,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'short_name'
+
+            },
+            {
+                key: "user_code",
+                name: "User code",
+                value_type: 10,
+                is_hidden: true,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'user_code'
+            },
+            {
+                key: "public_name",
+                name: "Public name",
+                value_type: 10,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'name'
+            },
+            {
+                key: "user_text_1",
+                name: "User text 1",
+                value_type: 10,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'short_name'
+            },
+            {
+                key: "user_text_2",
+                name: "User text 2",
+                value_type: 10,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'short_name'
+            },
+            {
+                key: "user_text_3",
+                name: "User text 3",
+                value_type: 10,
+                extension_type: 'ATTRIBUTE',
+                key_to: 'short_name'
+            },
+
+            {
+                key: "instrument_type.name",
+                name: "Instrument type. Name",
+                value_type: 10,
+                extension_type: 'NULL',
+                options_for_key_to: 'dynamic_attributes',
+            },
+
+            {
+                key: "instrument_type.short_name",
+                name: "Instrument type. Short name",
+                value_type: 10,
+                extension_type: 'NULL',
+                options_for_key_to: 'dynamic_attributes',
+            },
+            {
+                key: "instrument_type.user_code",
+                name: "Instrument type. User code",
+                value_type: 10,
+                extension_type: 'NULL',
+                options_for_key_to: 'dynamic_attributes'
+            }
+        ]
 
         vm.currencyAttributeTypes = [];
         vm.instrumentAttributeTypes = [];
 
-        vm.tabs = [
-            {
-                name: "Balance",
-                content_type: 'reports.balancereport',
-                instrument_system_attributes: [],
-                instrument_dynamic_attributes: [],
-                currency_system_attributes: [],
-                currency_dynamic_attributes: [],
-            },
-            {
-                name: "PL",
-                content_type: 'reports.plreport',
-                instrument_system_attributes: [],
-                instrument_dynamic_attributes: [],
-                currency_system_attributes: [],
-                currency_dynamic_attributes: [],
-            },
-
-        ];
-
+        vm.instrument_system_attributes = [];
+        vm.instrument_dynamic_attributes = [];
+        vm.currency_system_attributes = [];
+        vm.currency_dynamic_attributes = [];
 
         vm.getData = function () {
 
-            vm.tabs = [
-                {
-                    name: "Balance",
-                    content_type: 'reports.balancereport',
-                    instrument_system_attributes: [],
-                    instrument_dynamic_attributes: [],
-                    currency_system_attributes: [],
-                    currency_dynamic_attributes: [],
-                },
-                {
-                    name: "PL",
-                    content_type: 'reports.plreport',
-                    instrument_system_attributes: [],
-                    instrument_dynamic_attributes: [],
-                    currency_system_attributes: [],
-                    currency_dynamic_attributes: [],
-                },
-
-            ];
-
+            vm.instrument_system_attributes = [];
+            vm.instrument_dynamic_attributes = [];
+            vm.currency_system_attributes = [];
+            vm.currency_dynamic_attributes = [];
 
             vm.readyStatus.content = false;
 
@@ -87,112 +157,113 @@
 
             console.log('createDataStructure.data', data);
 
-            console.log('createDataStructure.tabs', vm.tabs);
-
             console.log('createDataStructure.currencyAttributes', vm.currencyAttributes);
             console.log('createDataStructure.instrumentAttributes', vm.instrumentAttributes);
 
             console.log('createDataStructure.currencyAttributeTypes', vm.currencyAttributeTypes);
             console.log('createDataStructure.instrumentAttributeTypes', vm.instrumentAttributeTypes);
 
-            vm.tabs.forEach(function (tab) {
 
-                // Creating Instrument System Attribute
+            // Creating Instrument System Attribute
 
-                vm.instrumentAttributes.forEach(function (item) {
+            vm.instrumentAttributes.forEach(function (item) {
 
-                    tab.instrument_system_attributes.push({
+                vm.instrument_system_attributes.push({
 
-                        context_content_type: tab.content_type,
-                        content_type_from: "instruments.instrument",
-                        content_type_to: "currencies.currency",
-                        key_from: item.key,
-                        value_type: item.value_type,
-                        name: item.name,
-                        key_to: null,
-                        value_to: null
-
-                    })
-
-                })
-
-                // Creating Instrument Dynamic Attribute
-
-                vm.instrumentAttributeTypes.forEach(function (item) {
-
-
-                    tab.instrument_dynamic_attributes.push({
-
-                        context_content_type: tab.content_type,
-                        content_type_from: "instruments.instrument",
-                        content_type_to: "currencies.currency",
-                        key_from: item.key,
-                        value_type: item.value_type,
-                        name: item.name,
-                        key_to: null,
-                        value_to: null
-
-                    })
+                    context_content_type: 'reports.balancereport',
+                    content_type_from: "instruments.instrument",
+                    content_type_to: "currencies.currency",
+                    is_hidden: item.is_hidden,
+                    key_from: item.key,
+                    value_type: item.value_type,
+                    name: item.name,
+                    extension_type: item.extension_type,
+                    key_to: item.key_to,
+                    value_to: null,
+                    options_for_key_to: item.options_for_key_to
 
                 })
 
-                // Creating Currency System Attribute
+            })
 
-                vm.currencyAttributes.forEach(function (item) {
+            // Creating Instrument Dynamic Attribute
 
-                    tab.currency_system_attributes.push({
+            vm.instrumentAttributeTypes.forEach(function (item) {
 
-                        context_content_type: tab.content_type,
-                        content_type_from: "currencies.currency",
-                        content_type_to: "instruments.instrument",
-                        key_from: item.key,
-                        value_type: item.value_type,
-                        name: item.name,
-                        key_to: null,
-                        value_to: null
+                vm.instrument_dynamic_attributes.push({
 
-                    })
-
-                })
-
-                // Creating Currency Dynamic Attribute
-
-                vm.currencyAttributeTypes.forEach(function (item) {
-
-                    tab.currency_dynamic_attributes.push({
-
-                        context_content_type: tab.content_type,
-                        content_type_from: "currencies.currency",
-                        content_type_to: "instruments.instrument",
-                        key_from: item.key,
-                        value_type: item.value_type,
-                        name: item.name,
-                        key_to: null,
-                        value_to: null
-
-                    })
+                    context_content_type: 'reports.balancereport',
+                    content_type_from: "instruments.instrument",
+                    content_type_to: "currencies.currency",
+                    key_from: item.key,
+                    value_type: item.value_type,
+                    name: item.name,
+                    extension_type: 'NULL',
+                    key_to: null,
+                    value_to: null
 
                 })
 
+            })
+
+            // Creating Currency System Attribute
+
+            vm.currencyAttributes.forEach(function (item) {
+
+                vm.currency_system_attributes.push({
+
+                    context_content_type: 'reports.balancereport',
+                    content_type_from: "currencies.currency",
+                    content_type_to: "instruments.instrument",
+                    is_hidden: item.is_hidden,
+                    key_from: item.key,
+                    value_type: item.value_type,
+                    name: item.name,
+                    extension_type: item.extension_type,
+                    key_to: item.key_to,
+                    value_to: null
+
+                })
+
+            })
+
+            // Creating Currency Dynamic Attribute
+
+            vm.currencyAttributeTypes.forEach(function (item) {
+
+                vm.currency_dynamic_attributes.push({
+
+                    context_content_type: 'reports.balancereport',
+                    content_type_from: "currencies.currency",
+                    content_type_to: "instruments.instrument",
+                    key_from: item.key,
+                    value_type: item.value_type,
+                    name: item.name,
+                    extension_type: 'NULL',
+                    key_to: null,
+                    value_to: null
+
+                })
 
             })
 
 
-            function mapTabItem(tabItem) {
+            function mapItem(itemToMap) {
 
                 data.results.forEach(function (item) {
 
-                    if (tabItem.context_content_type === item.context_content_type) {
+                    if (itemToMap.context_content_type === item.context_content_type) {
 
-                        if (tabItem.content_type_from === item.content_type_from) {
+                        if (itemToMap.content_type_from === item.content_type_from) {
 
-                            if (tabItem.content_type_to === item.content_type_to) {
+                            if (itemToMap.content_type_to === item.content_type_to) {
 
-                                if (tabItem.key_from === item.key_from) {
+                                if (itemToMap.key_from === item.key_from) {
 
-                                    tabItem.id = item.id;
-                                    tabItem.key_to = item.key_to;
-                                    tabItem.value_to = item.value_to;
+                                    itemToMap.id = item.id;
+                                    itemToMap.key_to = item.key_to;
+                                    itemToMap.value_to = item.value_to;
+                                    itemToMap.extension_type = item.extension_type;
 
                                 }
 
@@ -208,19 +279,18 @@
 
             }
 
-            if (data.results) {
+            vm.instrument_system_attributes.forEach(mapItem)
+            vm.instrument_dynamic_attributes.forEach(mapItem)
 
-                vm.tabs.forEach(function (tab) {
+            vm.currency_system_attributes.forEach(mapItem)
+            vm.currency_dynamic_attributes.forEach(mapItem)
 
-                    tab.instrument_system_attributes.forEach(mapTabItem)
-                    tab.instrument_dynamic_attributes.forEach(mapTabItem)
 
-                    tab.currency_system_attributes.forEach(mapTabItem)
-                    tab.currency_dynamic_attributes.forEach(mapTabItem)
+            console.log('createDataStructure.currency_system_attributes', vm.currency_system_attributes);
+            console.log('createDataStructure.instrument_system_attributes', vm.instrument_system_attributes);
 
-                })
-
-            }
+            console.log('createDataStructure.currency_dynamic_attributes', vm.currency_dynamic_attributes);
+            console.log('createDataStructure.instrument_dynamic_attributes', vm.instrument_dynamic_attributes);
 
         }
 
@@ -311,9 +381,11 @@
 
         vm.save = function () {
 
+            vm.readyStatus.processing = true;
+
             var promises = [];
 
-            function handleTabItem(item) {
+            function handleItem(item) {
 
                 promises.push(new Promise(function (resolve, reject) {
 
@@ -333,30 +405,38 @@
 
                         }
 
+                    } else {
+                        resolve()
                     }
 
                 }))
 
             }
 
-            vm.tabs.forEach(function (tab) {
+            vm.instrument_system_attributes.forEach(handleItem);
+            vm.instrument_dynamic_attributes.forEach(handleItem);
 
-                tab.instrument_system_attributes.forEach(handleTabItem);
-                tab.instrument_dynamic_attributes.forEach(handleTabItem);
-
-                tab.currency_system_attributes.forEach(handleTabItem);
-                tab.currency_dynamic_attributes.forEach(handleTabItem);
-
-            });
+            vm.currency_system_attributes.forEach(handleItem);
+            vm.currency_dynamic_attributes.forEach(handleItem);
 
             Promise.all(promises).then(function (data) {
 
+                console.log('finished processing')
+                
                 vm.getData();
+
+                vm.readyStatus.processing = false;
+
+                $scope.$apply();
 
                 toastNotificationService.success('Success. Changes have been saved');
 
 
             }).catch(function (error) {
+                
+                vm.readyStatus.processing = false;
+                
+                $scope.$apply();
 
                 toastNotificationService.error('Error. Error occurred while trying to save tooltips');
 
@@ -365,7 +445,6 @@
         };
 
         vm.init = function () {
-
 
             vm.getAttributeTypes().then(function () {
 
