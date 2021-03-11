@@ -313,9 +313,7 @@
 
 				const convertDataIntoGridTable = function () {
 
-					if (!scope.entity[bfcVm.fieldKey]) {
-						scope.entity[bfcVm.fieldKey] = [];
-					}
+					if (!scope.entity[bfcVm.fieldKey]) scope.entity[bfcVm.fieldKey] = [];
 
 					gridTableData.body = [];
 
@@ -332,8 +330,9 @@
 							column.settings.value = metaHelper.getObjectNestedPropVal(rowData, column.objPath);
 
 							const columnSelector = entitySpecificData.selectorOptions.hasOwnProperty(column.key);
+							const optionSelectedInCustomizableSelector = (column.settings.value || column.settings.value === 0) && columnSelector;
 
-							if (columnSelector) {
+							if (optionSelectedInCustomizableSelector) {
 
 								const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
 

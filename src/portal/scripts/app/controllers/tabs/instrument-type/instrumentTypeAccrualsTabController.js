@@ -139,7 +139,7 @@
                 // objPath: ['options_settings'],
                 columnName: '',
                 order: 4,
-                cellType: 'custom_popup',
+                cellType: 'customPopup',
                 settings: {
                     value: null,
                         closeOnMouseOut: false,

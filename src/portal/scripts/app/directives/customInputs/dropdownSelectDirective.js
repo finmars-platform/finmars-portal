@@ -31,11 +31,11 @@
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                 }
 
-                // TIPS
-                // scope.smallOptions probable properties
-                    // tooltipText: custom tolltip text
-                    // indicatorBtnIcon: sets icon for indicator button
-                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
+                /* TIPS
+                scope.smallOptions probable properties
+                    tooltipText: custom tolltip text
+                    indicatorBtnIcon: sets icon for indicator button
+                    dialogParent: 'string' - querySelector content for element to insert mdDialog into */
 
                 if (scope.smallOptions) {
 
