@@ -162,10 +162,14 @@
 									return option.id === column.settings.value;
 								});
 
-								column.settings.selectorOptions.push({
-									id: optionData.id,
-									name: optionData.name
-								});
+								if (optionData) {
+
+									column.settings.selectorOptions.push({
+										id: optionData.id,
+										name: optionData.name
+									});
+
+								}
 
 							}
 

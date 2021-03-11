@@ -1146,8 +1146,6 @@
 
                 vm.processing = true;
 
-                console.log(`#78 SAVE AND EXIT ${vm.entityType} `, result)
-
                 entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
 
                     vm.processing = false;

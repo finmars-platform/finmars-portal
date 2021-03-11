@@ -18,8 +18,6 @@
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
 
-        console.log('#78 vm.entity', vm.entity);
-
         vm.readyStatus = {
             periodicityItems: false,
             accrualModels: false,
@@ -44,11 +42,6 @@
 
                 if (gtColumn.settings) {
                     vm.entity.accruals[tableData.index].data.items[data.row.order][gtColumn.key] = gtColumn.settings.value;
-                }
-
-                if (gtColumn.key === 'options_settings' && gtColumn.cellType !== 'empty') {
-                    console.log('#78 options ', gtColumn.settings.value)
-
                 }
 
             })
@@ -203,9 +196,6 @@
                     rowObj.columns[4].settings.value = row.options_settings;
 
                 }
-
-                console.log('#78 row', row)
-                console.log('#78 rowObj', rowObj)
 
                 return rowObj
 
