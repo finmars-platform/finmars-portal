@@ -1109,8 +1109,6 @@
 
             if (entityType === 'instrument-type') {
 
-                console.log('#78 vm.entity', vm.entity)
-
                 vm.entity.accruals.forEach(accrual => {
 
                     if (accrual.name.trim() === '') {
@@ -1891,8 +1889,6 @@
         // Instrument Type Layout Settings tab end
 
         vm.instrumentTypeChange = function($event){
-
-            console.log('instrumentTypeChange', vm.entity)
 
             evEditorSharedLogicHelper.getFormLayout('edition');
 

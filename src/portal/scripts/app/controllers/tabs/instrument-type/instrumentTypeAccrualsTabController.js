@@ -219,6 +219,7 @@
             const mapOptions = function (item) {
                 return {
                     user_code: item.user_code,
+                    id: item.id,
                     name: item.name,
                     to_show: true,
                     override_name: "",

@@ -115,8 +115,8 @@
                 var init = function () {
 
                     if (tableMethods.addRow) {
-                        scope.addRow = function () {
-                            tableMethods.addRow(scope.gtDataService, scope.gtEventService)
+                        scope.addRow = function ($event) {
+                            tableMethods.addRow(scope.gtDataService, scope.gtEventService, $event)
                         }
 
                     }
