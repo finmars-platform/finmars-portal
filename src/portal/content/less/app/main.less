@@ -2526,9 +2526,15 @@ button.md-button.toggle-calculator-block-btn {
   display: block;
 }
 
-md-checkbox.md-checked {
+md-checkbox.md-checked, md-checkbox.md-checked[disabled] {
   .md-icon {
     background-color: @orange;
+  }
+}
+
+md-checkbox[disabled] {
+  .md-icon {
+    border-radius: 100%;
   }
 }
 

@@ -37,36 +37,36 @@
                     "</div>";
 
 				//<editor-fold desc="Popup methods">
+				var poupHtmlContentByCellType = {
+					'text': "<text-input label='{{column.columnName}}' " +
+										"placeholder-text='{{column.columnName}}' " +
+										"model='popupModel.value' " +
+										"small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
+							"</text-input>",
+
+					'number': "<number-input label='{{column.columnName}}' " +
+											"model='popupModel.value' " +
+											"small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
+						      "</number-input>",
+
+					'multitypeField': "<multitype-field field-types-data='fieldTypesData'></multitype-field>"
+				};
+
 				var getPopupHtmlContent = function () {
 
                     var popupMain;
 
-                    switch (scope.column.cellType) {
-                        case 'text':
+                    if (poupHtmlContentByCellType.hasOwnProperty(scope.column.cellType)) {
+						popupMain = poupHtmlContentByCellType[scope.column.cellType];
+					}
 
-                            popupMain = "<text-input label='{{column.columnName}}' " +
-                                                    "placeholder-text='{{column.columnName}}' " +
-                                                    "model='popupModel.value' " +
-                                                    "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
-                                        "</text-input>"
+                    else if (scope.column.cellType === 'customPopup') {
 
-                            break;
+                    	if (scope.popupSettings.contentHtml.hasOwnProperty('main')) {
+							popupMain = scope.popupSettings.contentHtml.main;
+						}
 
-                        case 'number':
-                            popupMain = "<number-input label='{{column.columnName}}' " +
-                                                      "model='popupModel.value' " +
-                                                      "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
-                                        "</number-input>"
-                            break;
-
-                        case 'custom_popup':
-
-                            if (scope.popupSettings.contentHtml.hasOwnProperty('main')) {
-                                popupMain = scope.popupSettings.contentHtml.main
-                            }
-
-                            break;
-                    }
+					}
 
                     popupContent = "<div class='popup-area-container'>" +
                         "<div class='popup-area-main'>" + popupMain + "</div>" +
@@ -122,51 +122,76 @@
                         popupBackdropElem.addEventListener('click', closePopupArea, {once: true});
                     }
 
-                }
+                };
+
+                var assignPopupValueToCell = function () {
+
+					var popupValue = null;
+
+                	if (scope.column.cellType === 'multitypeField') {
+
+                		scope.column.settings.fieldTypesData = scope.fieldTypesData;
+
+						var activeTypeData = scope.column.settings.fieldTypesData.find(type => type.isActive);
+						popupValue = activeTypeData.model;
+
+						if (
+							(activeTypeData.fieldType === 'dropdownSelect' ||
+							activeTypeData.fieldType === 'entitySearch') &&
+							popupValue
+						) {
+
+							var selectedOption = activeTypeData.fieldData.menuOptions.find(option => option.id === popupValue);
+							scope.column.settings.cellText = selectedOption.name;
+
+						}
+
+						else {
+							scope.column.settings.cellText = popupValue;
+						}
+
+						if (Array.isArray(popupValue)) popupValue = JSON.parse(JSON.stringify(popupValue)); // for multiselector
+
+					}
+
+                	else {
+
+						if (scope.popupModel.value) {
+
+							popupValue = scope.popupModel.value;
+
+							if (typeof scope.popupModel.value === 'object') {
+								popupValue = JSON.parse(JSON.stringify(scope.popupModel.value));
+							}
+
+						}
+
+						scope.column.settings.cellText = popupValue;
+
+					}
+
+					scope.column.settings.value = popupValue;
+
+				}
 
                 scope.acceptPopupChanges = function () {
 
-                    var popupValue = null;
+					assignPopupValueToCell();
 
-                    if (scope.popupModel.value) {
-
-						popupValue = scope.popupModel.value;
-
-                    	if (typeof scope.popupModel.value === 'object') {
-							popupValue = JSON.parse(JSON.stringify(scope.popupModel.value));
-                    	}
-
-                    }
-
-                    scope.column.settings.cellText = popupValue;
-                    scope.column.settings.value = popupValue;
+					var changedCellData = {
+						row: {
+							key: scope.row.key,
+							order: scope.row.order
+						},
+						column: {
+							key: scope.column.key,
+							order: scope.column.order
+						}
+					};
 
                     if (cellMethods && cellMethods.onChange) {
-
-                        var rowData = {
-                            key: scope.row.key,
-                            order: scope.row.order
-                        };
-
-                        var colData = {
-                            key: scope.column.key,
-                            order: scope.column.order
-                        };
-
-                        cellMethods.onChange(rowData, colData, scope.gtDataService, scope.gtEventService);
-
+                        cellMethods.onChange(changedCellData.row, changedCellData.column, scope.gtDataService, scope.gtEventService);
                     }
-
-                    var changedCellData = {
-                        row: {
-                            key: scope.row.key,
-                            order: scope.row.order
-                        },
-                        column: {
-                            key: scope.column.key,
-                            order: scope.column.order
-                        }
-                    };
 
                     scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
 
@@ -183,14 +208,20 @@
 
                     closePopupArea();
 
-                    if (scope.column.settings.value &&
-                        typeof scope.column.settings.value === 'object') {
+                    if (scope.column.cellType === 'multitypeField') scope.fieldTypesData = null;
 
-                        scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value));
+                    else {
 
-                    } else {
-                        scope.popupModel.value = scope.column.settings.value;
-                    }
+                    	if (scope.column.settings.value &&
+							typeof scope.column.settings.value === 'object') {
+
+							scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value));
+
+						} else {
+							scope.popupModel.value = scope.column.settings.value;
+						}
+
+					}
 
                 };
 
@@ -235,15 +266,23 @@
 					var posX = e.pageX;
 					var posY = e.pageY;
 
-					if (scope.column.settings.value) {
+					if (scope.column.cellType === 'multitypeField') {
+						scope.fieldTypesData = JSON.parse(JSON.stringify(scope.column.settings.fieldTypesData));
+					}
 
-						if (scope.column.settings.value &&
-							typeof scope.column.settings.value === 'object') {
+					else {
 
-							scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+						if (scope.column.settings.value) {
 
-						} else {
-							scope.popupModel.value = scope.column.settings.value
+							if (scope.column.settings.value &&
+								typeof scope.column.settings.value === 'object') {
+
+								scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+
+							} else {
+								scope.popupModel.value = scope.column.settings.value
+							}
+
 						}
 
 					}
@@ -341,11 +380,11 @@
                         scope.cellValue = scope.column.settings.value;
                     }*/
 
-                    if (!scope.column.settings.isDisabled) { // not add handlers if column is disabled
+                    if (!scope.column.settings.isDisabled) { // add handlers if column is enabled
 
 						switch (scope.column.cellType) {
 
-							case 'custom_popup':
+							case 'customPopup':
 
 								scope.popupSettings = scope.column.settings.popupSettings;
 
@@ -359,6 +398,7 @@
 
 							case 'text':
 							case 'number':
+							case 'multitypeField':
 
 								getPopupHtmlContent();
 
@@ -415,8 +455,9 @@
 
 				scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
 
-					var row = scope.gtDataService.getRow(scope.row.order);
-					if (row) var cell = row.columns.find(col => col.order === scope.column.order);
+					var row = scope.gtDataService.getRowByKey(scope.row.key);
+
+					if (row) var cell = row.columns.find(col => col.key === scope.column.key);
 
 					if (row && cell) {
 

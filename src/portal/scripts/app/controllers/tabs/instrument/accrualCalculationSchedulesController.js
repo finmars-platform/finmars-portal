@@ -341,7 +341,7 @@
                         objPaths: [['accrual_calculation_model'], ['periodicity_n'], ['periodicity']],
                         columnName: 'Periodicity',
                         order: 3,
-                        cellType: 'custom_popup',
+                        cellType: 'customPopup',
                         settings: {
                             value: [
                                 null, // for accrual_calculation_model

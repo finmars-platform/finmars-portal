@@ -1,0 +1,58 @@
+<div class="custom-input-container multitype-field-container multitypeFieldContainer">
+
+    <div ng-if="activeType.label"
+         class="custom-input-top-row">
+        <span class="custom-input-textarea-span-pan">{{activeType.label}}</span>
+    </div>
+
+    <div class="custom-input-main-container customInputBackgroundColor">
+        <div class="custom-input-borders overflow-visible">
+            <div class="custom-input-content p-r-0">
+
+                <div class="multitype-field-inputs-wrap">
+
+                    <div ng-if="activeType.fieldType === 'textInput'">
+                        <text-input model="activeType.model"
+                                    small-options="activeType.fieldData.smallOptions"
+                                    on-change-callback="onChangeCallback()"></text-input>
+                    </div>
+
+                    <div ng-if="activeType.fieldType === 'numberInput'">
+                        <number-input model="activeType.model"
+                                      small-options="activeType.fieldData.smallOptions"
+                                      on-change-callback="onChangeCallback()"></number-input>
+                    </div>
+
+                    <div ng-if="activeType.fieldType === 'dateInput'">
+                        <date-input model="activeType.model"
+                                    small-options="activeType.fieldData.smallOptions"
+                                    on-change-callback="onChangeCallback()"></date-input>
+                    </div>
+
+                    <div ng-if="activeType.fieldType === 'dropdownSelect'">
+                        <dropdown-select model="activeType.model"
+                                         small-options="activeType.fieldData.smallOptions"
+                                         menu-options="activeType.fieldData.menuOptions"
+                                         on-change-callback="onChangeCallback()"></dropdown-select>
+                    </div>
+
+                </div>
+
+                <div class="custom-input-side-items flex-row customInputBackgroundColor">
+
+                    <div class="custom-input-custom-btns-holder"></div>
+                        <!--<div popup
+                             open-on="click"
+                             close-on-click-outside="true"
+                             popup-data="vm.fixedAreaPopup">
+                            <div ng-bind-html="activeType.sign"></div>
+                        </div>-->
+                    <div class="multitype-field-type-sign-wrap" ng-click="switchType()" ng-bind-html="activeType.sign"></div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -97,7 +97,7 @@
 						objPath: ['options'],
 						columnName: '',
 						order: 3,
-						cellType: 'custom_popup',
+						cellType: 'customPopup',
 						settings: {
 							value: null,
 							closeOnMouseOut: false,
