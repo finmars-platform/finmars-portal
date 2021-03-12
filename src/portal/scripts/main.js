@@ -681,6 +681,7 @@ app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitl
 app.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDirective.js')]);
 
 app.directive('gLayoutsManager', ['$mdDialog', '$state', require('./app/directives/groupTable/gLayoutsManagerComponent.js')]);
+app.directive('dashboardLayoutsManagerComponent', ['$mdDialog', '$state', require('./app/directives/dashboardLayoutsManagerComponent.js')]);
 
 app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', 'options', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
 app.controller('GEntityViewerSettingsDialogController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/controllers/dialogs/gEntityViewerSettingsDialogController')]);
