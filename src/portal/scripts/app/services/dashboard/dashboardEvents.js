@@ -28,7 +28,10 @@ module.exports = {
 
     'REPORT_VIEWER_DATA_SERVICE_SET': 'REPORT_VIEWER_DATA_SERVICE_SET',
 
-    'RESIZE': 'RESIZE'
+    'RESIZE': 'RESIZE',
+
+    'DASHBOARD_LAYOUT_CHANGE': 'DASHBOARD_LAYOUT_CHANGE'
+
 	//</editor-fold>
 
 };

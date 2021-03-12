@@ -28,6 +28,11 @@
         vm.dashboardDataService = null;
         vm.dashboardEventService = null;
 
+        vm.popupData = {
+            evDataService: vm.dashboardDataService,
+            evEventService: vm.dashboardEventService
+        }
+
         vm.processing = false;
 
         vm.generateProjection = function (layout) {
@@ -148,12 +153,19 @@
 
             uiService.getDashboardLayoutByKey(layoutId).then(function (data) {
 
+                vm.dashboardDataService = new DashboardDataService();
+                vm.dashboardEventService = new DashboardEventService();
+
+                vm.popupData = {
+                    evDataService: vm.dashboardDataService,
+                    evEventService: vm.dashboardEventService
+                }
+
                 vm.layout = data;
 
                 console.log('vm.layout', vm.layout);
+                console.log('vm.popupData', vm.popupData);
 
-                vm.dashboardDataService = new DashboardDataService();
-                vm.dashboardEventService = new DashboardEventService();
 
                 vm.initEventListeners();
 
@@ -248,6 +260,7 @@
 
         };
 
+        // Deprecated
         vm.openLayoutList = function ($event) {
 
             $mdDialog.show({
@@ -274,6 +287,7 @@
 
         };
 
+        // Deprecated
         vm.saveDashboardLayout = function ($event) {
 
             uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
@@ -288,6 +302,7 @@
 
         };
 
+        // Deprecated
         vm.makeCopyDashboardLayout = function ($event) {
 
             var layout = JSON.parse(JSON.stringify(vm.layout))
@@ -311,6 +326,7 @@
 
         }
 
+        // Deprecated
         vm.exportDashboardLayout = function ($event) {
 
             $mdDialog.show({
@@ -443,6 +459,14 @@
 
             })
 
+            vm.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_LAYOUT_CHANGE, function (){
+
+                var layoutToOpen = vm.dashboardDataService.getLayoutToOpen();
+
+                vm.getLayout(layoutToOpen.id);
+
+            })
+
         };
 
         var componentBuildingTimeTimeout = {};
@@ -562,6 +586,11 @@
 
             vm.dashboardDataService = new DashboardDataService();
             vm.dashboardEventService = new DashboardEventService();
+
+            vm.popupData = {
+                evDataService: vm.dashboardDataService,
+                evEventService: vm.dashboardEventService
+            }
 
             vm.openDashboardLayout();
             vm.initEventListeners();
