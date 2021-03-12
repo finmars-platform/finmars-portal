@@ -184,8 +184,8 @@
         };
 
         vm.entityTabsMenuTplt = evEditorSharedLogicHelper.entityTabsMenuTplt;
-        vm.entityTabsMenuPopupData = {viewModel: vm}
-        vm.entityTablePopupClasses = "border-radius-2"
+        vm.entityTabsMenuPopupData = {viewModel: vm};
+        vm.entityTablePopupClasses = "border-radius-2";
         vm.onPopupSaveCallback = evEditorSharedLogicHelper.onPopupSaveCallback;
         vm.onFixedAreaPopupCancel = evEditorSharedLogicHelper.onFixedAreaPopupCancel;
 
@@ -1128,7 +1128,7 @@
 
                 console.log(`#78 SAVE AND EXIT ${vm.entityType} `, result)
 
-                entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
+                /* entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
 
                     vm.processing = false;
 
@@ -1161,7 +1161,7 @@
                     vm.processing = false;
                     vm.handleErrors(data);
 
-                });
+                }); */
 
             }
 

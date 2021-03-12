@@ -42,12 +42,9 @@
 
                         } else {
                             return row.columns[scope.sortByCol].settings.value;
-
                         }
 
                     }
-
-                    return row.order;
 
                 }
 

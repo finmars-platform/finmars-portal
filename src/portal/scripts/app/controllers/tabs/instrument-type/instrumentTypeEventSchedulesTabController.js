@@ -5,21 +5,24 @@
 
     'use strict';
 
-    var metaService = require('../../../services/metaService');
-    var metaNotificationClassService = require('../../../services/metaNotificationClassService');
-    var metaEventClassService = require('../../../services/metaEventClassService');
-    var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
-    var GridTableDataService = require('../../../services/gridTableDataService');
-    var GridTableEventService = require('../../../services/gridTableEventService');
-    var transactionTypeService = require('../../../services/transactionTypeService');
-    var instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
-    var gridTableEvents = require('../../../services/gridTableEvents');
+    const metaService = require('../../../services/metaService');
+	const metaNotificationClassService = require('../../../services/metaNotificationClassService');
+	const metaEventClassService = require('../../../services/metaEventClassService');
+	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
+	const GridTableDataService = require('../../../services/gridTableDataService');
+	const EventService = require('../../../services/eventService');
+    // const GridTableEventService = require('../../../services/gridTableEventService');
+	const transactionTypeService = require('../../../services/transactionTypeService');
+	const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
-    var metaHelper = require('../../../helpers/meta.helper');
-    var md5Helper = require('../../../helpers/md5.helper');
-    var GridTableHelperService = require('../../../helpers/gridTableHelperService');
+	const gridTableEvents = require('../../../services/gridTableEvents');
+	const popupEvents = require('../../../services/events/popupEvents');
 
-    var eventObj = {
+	const metaHelper = require('../../../helpers/meta.helper');
+	const md5Helper = require('../../../helpers/md5.helper');
+	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
+
+	const eventObj = {
         "name": '',
         "description": "",
         "notification_class": '',
@@ -50,6 +53,12 @@
         };
 
         vm.transactionTypes = [];
+
+        vm.accordionActionsMenu =
+			'<div class="ev-editor-tabs-popup-content popup-menu">' +
+				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
+						   'ng-click="popupData.deletePane(popupData.item, popupData.itemIndex, $event, _$popup)">DELETE</md-button>' +
+			'</div>';
 
         const getTransactionTypes = function () {
 
@@ -102,7 +111,7 @@
 				    'fieldType': 'dateInput',
                     'isDefault': true,
                     'isActive': true,
-                    'sign': '<div class="multitype-field-type-letter">A</div>',
+                    'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
@@ -124,7 +133,7 @@
                     'fieldType': 'dateInput',
                     'isDefault': true,
                     'isActive': true,
-                    'sign': '<div class="multitype-field-type-letter">A</div>',
+                    'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
@@ -146,7 +155,7 @@
                     'fieldType': 'numberInput',
                     'isDefault': true,
                     'isActive': true,
-                    'sign': '<div class="multitype-field-type-letter">A</div>',
+                    'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
@@ -180,30 +189,26 @@
 
 		};
 
-        const onEventTableCellChange = function (data, gtDataService, gtEventService) {
+        const onEventTableCellChange = function (data, gtDataService, gtEventService, eventItemsType) {
 
             var tableData = gtDataService.getTableData();
-            var gtRow = gtDataService.getRowByKey(data.row.key);
+            // var gtRow = gtDataService.getRowByKey(data.row.key);
 
-            var cell = gtDataService.getCellByKey(data.row.order, data.column.key)
-            var path = cell.objPath[0]
+            var cell = gtDataService.getCellByKey(data.row.order, data.column.key);
+            var path = cell.objPath[0];
             
             console.log('onEventTableCellChange.tableData', tableData);
 
-            vm.entity.events[tableData.index].data.items[data.row.order][path] = cell.settings.value;
-
+			vm.entity.events[tableData.index].data[eventItemsType][data.row.order][path] = cell.settings.value;
 
         };
 
-        var getEventsGridTableData = function (item) {
+        var getEventsGridTableData = function (rows, eventItemType) {
 
-            const rows = item.data.items;
+            // const rows = item.data.items;
 
             const eventsGridTableData = {
-                header: {
-                    order: 'header',
-                    columns: []
-                },
+                header: false,
                 body: [],
                 templateRow: {
                     order: 'newRow',
@@ -214,27 +219,25 @@
                             objPath: ['name'],
                             columnName: 'Name',
                             order: 0,
-                            cellType: 'text',
+                            cellType: 'readonly_text',
                             settings: {
-                                value: null,
-                                closeOnMouseOut: false,
-                                isDisabled: true
+                                value: null
                             },
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '318px'}
                             }
                         },
                         {
                             key: 'to_show',
                             objPath: ['to_show'],
-                            columnName: 'To Show',
+                            columnName: 'Show',
                             order: 1,
                             cellType: 'checkbox',
                             settings: {
                                 value: null
                             },
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '68px'}
                             }
 
                         },
@@ -249,7 +252,7 @@
                                 selectorOptions: []
                             },
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '266px'}
                             }
                         },
                         {
@@ -264,7 +267,7 @@
                                 isDisabled: false
                             },
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '266px'}
                             }
                         },
                         {
@@ -279,16 +282,16 @@
                                 isDisabled: false
                             },
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '266px'}
                             }
                         },
                         {
                             key: 'options_settings',
-                            columnName: 'Options',
+                            columnName: '',
                             order: 5,
                             cellType: 'empty',
                             styles: {
-                                'grid-table-cell': {'width': '65px'}
+                                'grid-table-cell': {'width': '48px'}
                             }
                         },
                     ],
@@ -321,17 +324,33 @@
                 }
             };
 
-            const rowObj = metaHelper.recursiveDeepCopy(eventsGridTableData.templateRow, true);
-            eventsGridTableData.header.columns = rowObj.columns.map(column => {
-                return {
-                    key: column.key,
-                    columnName: column.columnName,
-                    order: column.order,
-                    styles: {
-                        'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
-                    }
-                };
-            })
+            if (eventItemType === 'items') {
+
+				eventsGridTableData.header = {
+					order: 'header',
+					columns: []
+				};
+
+				const rowObj = metaHelper.recursiveDeepCopy(eventsGridTableData.templateRow, true);
+
+				eventsGridTableData.header.columns = rowObj.columns.map(column => {
+
+					var headerCol = {
+						key: column.key,
+						columnName: column.columnName,
+						order: column.order,
+						styles: {
+							'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
+						}
+					};
+
+					if (column.key === 'to_show') headerCol.styles['text-align'] = 'center';
+
+					return headerCol;
+
+				});
+
+			}
 
             eventsGridTableData.body = rows.map((row, index) => {
 
@@ -344,6 +363,7 @@
                 rowObj.columns[0].settings.value = row.name;
                 rowObj.columns[1].settings.value = row.to_show;
 
+				rowObj.columns[2].cellType = row.defaultValueType;
                 rowObj.columns[2].settings.value = row.default_value;
 
                 if (row.defaultValueType === 'selector') {
@@ -353,7 +373,6 @@
                 else if (row.defaultValueType === 'multitypeField') {
 
                     rowObj.columns[2].cellType = 'multitypeField';
-
 					const multitypeFieldData = multitypeFieldsForRows[rowObj.key];
 
 					rowObj.columns[2].settings = {
@@ -388,11 +407,8 @@
         };
 
         var getEventsActionGridTableData = function (item){
-            console.log('getEventsActionGridTableData.item', item)
 
             const rows = item.data.actions;
-
-            console.log('getEventsActionGridTableData.rows', rows)
 
             const eventActionsGridTableData = {
                 header: {
@@ -473,7 +489,6 @@
                         },
 
                     ]
-
                 },
 
                 components: {
@@ -512,7 +527,7 @@
                 rowObj.columns[3].settings.value = row.is_book_automatic;
                 rowObj.columns[4].settings.value = row.button_position;
 
-                return rowObj
+                return rowObj;
 
             })
 
@@ -521,9 +536,10 @@
         }
 
 
-        vm.deletePane = function (item, $index, $event) {
+        vm.deletePane = function (item, $index, $event, _$popup) {
 
             $event.stopPropagation();
+
             var description = 'Are you sure to delete this action?';
 
             $mdDialog.show({
@@ -541,11 +557,16 @@
                         description: description
                     }
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    vm.entity.events.splice($index, 1);
-                }
+
+            }).then(res => {
+
+            	if (res.status === 'agree') vm.entity.events.splice($index, 1);
+
             });
+
+			// vm.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+			_$popup.cancel();
+
         };
 
         vm.moveDown = function (item, $index, $event) {
@@ -568,11 +589,58 @@
 
         };
 
+		const formatDataForEventGridTable = function (event, rows, eventIndex, gtDataService, gtEventService, eventItemType) {
+
+			var gridTableData = getEventsGridTableData(rows, eventItemType);
+
+			gridTableData.index = eventIndex; // vm.entity.events.length;
+
+			gtDataService.setTableData(gridTableData);
+
+			gtEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, argumentsObj => {
+				onEventTableCellChange(argumentsObj, gtDataService, gtEventService, eventItemType);
+			});
+
+		};
+
+		const formatDataForEventActionsGridTable = function (event) {
+
+			var eventsActionGridTableData = getEventsActionGridTableData(event);
+			event.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
+
+			event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
+				onActionsTableAddRow(event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService);
+			});
+
+			event.eventActionsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (data){
+				onActionsTableCellValueChanged(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService);
+			});
+
+			event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (data) {
+				onActionsTableDeleteRows(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService);
+			});
+
+		};
+
+		vm.toggleEventBlockableItems = function (item) {
+
+			const tableData = item.eventBlockableItemsGridTableDataService.getTableData();
+
+			tableData.body.forEach(row => {
+
+				row.columns.forEach(col => {
+					if (col.settings) col.settings.isDisabled = item.data.items_blocked;
+				});
+
+			});
+
+			item.eventBlockableItemsGridTableDataService.setTableData(tableData);
+
+		};
+
         vm.createInstrumentTypeEvent = function () {
 
-            if (!vm.entity.events) {
-                vm.entity.events = []
-            }
+            if (!vm.entity.events) vm.entity.events = [];
 
             const mapOptions = function (item) {
                 return {
@@ -587,17 +655,27 @@
             var notificationClassesSelectorOptions = vm.notificationClasses.map(mapOptions)
 
             var event = {
-                eventsGridTableDataService: new GridTableDataService(),
-                eventsGridTableEventService: new GridTableEventService(),
+                eventItemsGridTableDataService: new GridTableDataService(),
+                eventItemsGridTableEventService: new EventService(),
+
+				eventBlockableItemsGridTableDataService: new GridTableDataService(),
+				eventBlockableItemsGridTableEventService: new EventService(),
+
                 eventActionsGridTableDataService: new GridTableDataService(),
-                eventActionsGridTableEventService: new GridTableEventService(),
+                eventActionsGridTableEventService: new EventService(),
                 order: vm.entity.events.length,
                 autogenerate: true,
                 data: {
                     form_message: "",
                     event_class: null,
                     items: [
-                        {key: 'name', name: 'Title', to_show: true, defaultValueType: 'text', options: false},
+                        {
+                        	key: 'name',
+							name: 'Title',
+							to_show: true,
+							defaultValueType: 'text',
+							options: false
+						},
                         {
                             key: 'description',
                             name: 'Message text',
@@ -618,8 +696,10 @@
                             to_show: true,
                             defaultValueType: 'number',
                             options: false
-                        },
-                        {
+                        }
+                    ],
+					blockableItems: [
+						{
                             key: 'effective_date',
                             name: 'Effective Date',
                             to_show: true,
@@ -646,43 +726,58 @@
                             to_show: true,
                             defaultValueType: 'multitypeField',
                             options: false
-                        },
-                    ],
+                        }
+					],
+					items_blocked: false,
                     actions: []
-
                 }
-            }
+            };
 
-            event.eventsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
-                onEventTableCellChange(argumentsObj, event.eventsGridTableDataService, event.eventsGridTableEventService);
-            });
-
-            var eventsGridTableData = getEventsGridTableData(event);
-
-            eventsGridTableData.index = vm.entity.events.length
+            /* var eventsGridTableData = getEventsGridTableData(event);
+			console.log("testing eventsGridTableData", eventsGridTableData);
+            eventsGridTableData.index = vm.entity.events.length;
 
             event.eventsGridTableDataService.setTableData(eventsGridTableData);
 
-            var eventsActionGridTableData = getEventsActionGridTableData(event)
+			event.eventsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+				onEventTableCellChange(argumentsObj, event.eventsGridTableDataService, event.eventsGridTableEventService);
+			}); */
+			// for event ordinary rows
+			formatDataForEventGridTable(
+				event,
+				event.data.items,
+				vm.entity.events.length,
+				event.eventItemsGridTableDataService,
+				event.eventItemsGridTableEventService,
+				'items'
+			);
+
+			// for event blockable rows
+			formatDataForEventGridTable(
+				event,
+				event.data.blockableItems,
+				vm.entity.events.length,
+				event.eventBlockableItemsGridTableDataService,
+				event.eventBlockableItemsGridTableEventService,
+				'blockableItems'
+			);
+
+            /* var eventsActionGridTableData = getEventsActionGridTableData(event);
             event.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
 
-            event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function (){
-
-                onActionsTableAddRow(event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService)
+            event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
+                onActionsTableAddRow(event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService);
             });
 
             event.eventActionsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (data){
-
-                onActionsTableCellValueChanged(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService)
-
+                onActionsTableCellValueChanged(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService);
             });
 
-            event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (data){
+            event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (data) {
+                onActionsTableDeleteRows(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService);
+            }); */
 
-                onActionsTableDeleteRows(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService)
-
-            });
-
+			formatDataForEventActionsGridTable(event);
 
             vm.entity.events.push(event)
 
@@ -730,7 +825,7 @@
             item.data.actions.unshift(newAction);
 
             var transactionType = gridTableHelperService.getCellFromRowByKey(newRow, 'transaction_type');
-            transactionType.settings.selectorOptions = vm.transactionTypes.slice(0, 19);
+            transactionType.settings.selectorOptions = vm.transactionTypes;
 
             var buttonPosition = gridTableHelperService.getCellFromRowByKey(newRow, 'button_position');
             buttonPosition.settings.selectorOptions = getRangeOfNumbers(item.data.actions.length);
@@ -774,6 +869,7 @@
 
         vm.init = function () {
 
+        	vm.popupEventService = new EventService();
             // getTransactionTypes().then(function (data){ // TODO refactor this
 
                 // vm.transactionTypes = data;
@@ -809,44 +905,76 @@
 
 						if (item.data) {
 
-							item.eventsGridTableDataService = new GridTableDataService();
-							item.eventsGridTableEventService = new GridTableEventService();
+							//<editor-fold desc="Events grid table">
 
-							var eventsGridTableData = getEventsGridTableData(item)
+							// for event ordinary rows
+							item.eventItemsGridTableDataService = new GridTableDataService();
+							item.eventItemsGridTableEventService = new EventService();
+
+							formatDataForEventGridTable(
+								item,
+								item.data.items,
+								vm.entity.events.length,
+								item.eventItemsGridTableDataService,
+								item.eventItemsGridTableEventService,
+								'items'
+							);
+
+							// for event blockable rows
+							item.eventBlockableItemsGridTableDataService = new GridTableDataService();
+							item.eventBlockableItemsGridTableEventService = new EventService();
+
+							if (!item.data.blockableItems) item.data.blockableItems = [];
+
+							formatDataForEventGridTable(
+								item,
+								item.data.blockableItems,
+								vm.entity.events.length,
+								item.eventBlockableItemsGridTableDataService,
+								item.eventBlockableItemsGridTableEventService,
+								'blockableItems'
+							);
+
+							/* var eventsGridTableData = getEventsGridTableData(item)
 							eventsGridTableData.index = index
 
 							item.eventsGridTableDataService.setTableData(eventsGridTableData);
 
 							item.eventsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+
 								onEventTableCellChange(argumentsObj, item.eventsGridTableDataService, item.eventsGridTableEventService);
-							});
 
+							}); */
+							//</editor-fold>
+
+							//<editor-fold desc="Actions grid table">
 							item.eventActionsGridTableDataService = new GridTableDataService();
-							item.eventActionsGridTableEventService = new GridTableEventService();
+							item.eventActionsGridTableEventService = new EventService();
 
-							if(!item.data.actions) {
-								item.data.actions = []
-							}
+							if(!item.data.actions) item.data.actions = [];
 
-							var eventsActionGridTableData = getEventsActionGridTableData(item)
+							/* var eventsActionGridTableData = getEventsActionGridTableData(item)
 							item.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
 
-							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function (){
+							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
 
-								onActionsTableAddRow(item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService)
-							});
-
-							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (data){
-
-								onActionsTableCellValueChanged(data, item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService)
+								onActionsTableAddRow(item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService);
 
 							});
 
-							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (data){
+							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (data) {
 
-								onActionsTableDeleteRows(data, item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService)
+								onActionsTableCellValueChanged(data, item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService);
 
 							});
+
+							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (data) {
+
+								onActionsTableDeleteRows(data, item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService);
+
+							}); */
+							formatDataForEventActionsGridTable(item);
+							//</editor-fold>
 
 						}
 

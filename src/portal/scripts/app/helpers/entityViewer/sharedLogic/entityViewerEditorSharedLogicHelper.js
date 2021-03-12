@@ -198,7 +198,7 @@
         };
 
         const getAttributeTypes = function () {
-            return attributeTypeService.getList(viewModel.entityType, {pageSize: 1000}).then(function (data) {
+            return attributeTypeService.getList(viewModel.entityType, {pageSize: 1000}).then(data => {
                 viewModel.attributeTypes = data.results;
             });
         };
@@ -423,60 +423,82 @@
 
         }
 
+        const getDynamicTabs = async function (formLayoutFromAbove) {
+
+			let editLayout;
+			let gotEditLayout = true;
+
+			if (formLayoutFromAbove) {
+				editLayout = formLayoutFromAbove;
+
+			} else {
+
+				try {
+					editLayout = await resolveEditLayout(viewModel);
+
+				} catch (error) {
+					console.error('resolveEditLayout error', error);
+					gotEditLayout = false;
+				}
+
+			}
+
+			if (gotEditLayout &&
+				editLayout.results.length && editLayout.results[0].data) {
+
+				viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
+
+				if (Array.isArray(editLayout.results[0].data)) {
+
+					viewModel.tabs = editLayout.results[0].data
+
+				} else {
+
+					viewModel.tabs = editLayout.results[0].data.tabs
+					viewModel.fixedArea = editLayout.results[0].data.fixedArea
+
+				}
+
+			}
+
+			else {
+				viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
+				viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
+			}
+
+			if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
+
+				viewModel.tabs.forEach((tab, index) => tab.tabOrder = index);
+
+			}
+
+		};
+
+        const getFormDynamicTabs = function (editorType) {
+
+			getDynamicTabs();
+
+        	entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+
+			mapAttributesAndFixFieldsLayout();
+
+			if (editorType === 'addition') {
+
+				viewModel.readyStatus.content = true;
+
+			} else {
+				viewModel.readyStatus.layout = true;
+			}
+
+		}
+
         /**
          *
          * @param editorType: string - indicates whether function called from entityViewerEditDialogController.js or entityViewerAddDialogController.js
          */
         const getFormLayout = async function (editorType, formLayoutFromAbove) {
 
-            let editLayout;
-            let gotEditLayout = true;
-
-            if (formLayoutFromAbove) {
-                editLayout = formLayoutFromAbove;
-
-            } else {
-
-                try {
-                    editLayout = await resolveEditLayout(viewModel);
-
-                } catch (error) {
-
-                    сonsole.error('resolveEditLayout error', error)
-
-                    gotEditLayout = false;
-                }
-
-            }
-
-            if (gotEditLayout &&
-                editLayout.results.length && editLayout.results[0].data) {
-
-                viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
-
-                if (Array.isArray(editLayout.results[0].data)) {
-
-                    viewModel.tabs = editLayout.results[0].data
-
-                } else {
-
-                    viewModel.tabs = editLayout.results[0].data.tabs
-                    viewModel.fixedArea = editLayout.results[0].data.fixedArea
-
-                }
-
-            } else {
-
-                viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
-                viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
-
-            }
-
-            if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
-                viewModel.tabs.forEach(function (tab, index) {
-                    tab.tabOrder = index;
-                });
-            }
+			getDynamicTabs();
 
             if (viewModel.openedIn === 'big-drawer') {
 
