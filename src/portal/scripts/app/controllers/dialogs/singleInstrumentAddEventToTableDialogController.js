@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 29.04.2020.
+ * Created by vzubr on 01.10.2020.
  */
 (function () {
 
