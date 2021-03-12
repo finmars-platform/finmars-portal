@@ -522,6 +522,42 @@
 
     };
 
+    // Column Sort Data
+
+    let getColumnSortDataList = function (options) {
+
+        return uiRepository.getColumnSortDataList( options);
+    };
+
+    let getColumnSortData = function (id) {
+        return uiRepository.getColumnSortData(id);
+    };
+
+    let createColumnSortData = function (item) {
+
+        return uiRepository.createColumnSortData(item);
+    };
+
+    let updateColumnSortData = function (id, item) {
+        return uiRepository.updateColumnSortData(id, item);
+    };
+
+    let deleteColumnSortData = function (id) {
+
+        return new Promise(function (resolve, reject) {
+
+            uiRepository.deleteColumnSortData(id).then(function (data) {
+
+                resolve(data);
+
+            }).catch(function (error) {
+                reject(error);
+            });
+
+        });
+
+    };
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -598,6 +634,12 @@
         createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
         updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
         deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
+
+        getColumnSortDataList: getColumnSortDataList,
+        getColumnSortData: getColumnSortData,
+        createColumnSortData: createColumnSortData,
+        updateColumnSortData: updateColumnSortData,
+        deleteColumnSortData: deleteColumnSortData,
 
 
     }

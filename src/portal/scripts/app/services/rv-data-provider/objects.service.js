@@ -49,18 +49,37 @@
 
 
                 // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js and filter flatList
-/*                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+                /*                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
-                if (rowTypeFilters) {
+                                if (rowTypeFilters) {
 
-                    items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
+                                    items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
 
-                }*/
+                                }*/
 
                 // console.log('groups filters length', items.length);
 
-                if (options.ordering) {
-                    items = sortService.sortItems(items, options.ordering);
+                console.log('objectService.getList.options', options);
+
+                if (options.ordering_manual) {
+
+                    var key;
+
+                    if (options.ordering_manual[0] === '-') {
+                        key = options.ordering_manual.split('-')[1];
+                    } else {
+                        key =  options.ordering_manual;
+                    }
+
+                    var columnSortData = entityViewerDataService.getColumnSortData(key)
+
+                    items = sortService.sortItemsManual(items, options.ordering_manual, columnSortData);
+
+                } else {
+
+                    if (options.ordering) {
+                        items = sortService.sortItems(items, options.ordering);
+                    }
                 }
 
                 // console.log('sorted items, ', items);

@@ -1061,7 +1061,56 @@
                         }
 
                         await rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
-                        resolve();
+
+                        var activeColumnSortProm = new Promise(function (resolve, reject) {
+
+                            var activeColumnSort = vm.entityViewerDataService.getActiveColumnSort();
+
+                            console.log('activeColumnSortProm.activeColumnSort', activeColumnSort);
+
+                            if (activeColumnSort && activeColumnSort.manual_sort_layout_user_code) {
+
+                                uiService.getColumnSortDataList({
+                                    filters: {
+                                        user_code: activeColumnSort.manual_sort_layout_user_code
+                                    }
+                                }).then(function (data){
+
+                                    if(data.results.length) {
+
+                                        var layout = data.results[0];
+
+                                        console.log('activeColumnSortProm', layout);
+
+                                        vm.entityViewerDataService.setColumnSortData(activeColumnSort.key, layout.data)
+
+
+
+                                    } else {
+
+                                        toastNotificationService.error("Manual Sort is not configured");
+
+                                        activeColumnSort.manual_sort_layout_user_code = null;
+
+                                    }
+
+                                    resolve()
+
+                                })
+
+
+
+                            } else {
+                                resolve()
+                            }
+
+
+                        })
+
+
+                        Promise.all([activeColumnSortProm]).then(function (){
+                            resolve();
+                        })
 
                     } else {
                         resolve();
