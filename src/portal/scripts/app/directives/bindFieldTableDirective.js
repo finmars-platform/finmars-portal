@@ -1,6 +1,7 @@
 (function () {
 
 	const metaHelper = require('../helpers/meta.helper');
+	const md5Helper = require('../helpers/md5.helper');
 
 	const instrumentService = require('../services/instrumentService');
 	const accrualCalculationModelService = require('../services/accrualCalculationModelService');
@@ -9,6 +10,8 @@
 	const GridTableDataService = require('../services/gridTableDataService');
 	const EventService = require('../services/eventService');
 	const gtEvents = require('../services/gridTableEvents');
+	const popupEvents = require('../services/events/popupEvents');
+	const instrumentTypeService = require('../services/instrumentTypeService');
 
 	const evEditorEvents = require("../services/ev-editor/entityViewerEditorEvents");
 
@@ -24,6 +27,7 @@
 			link: function (scope, elem, attr, bfcVm) {
 
 				scope.readyStatus = false;
+				scope.entityType = bfcVm.entityType;
 
 				const instrumentAccrualsColumns = {
 					'notes' :{
@@ -98,6 +102,123 @@
 					body: [],
 					components: {}
 				};
+
+				// Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab
+				scope.accrualsShemes = [];
+
+				const getInstrumentTypeAccrualsById = async function (id) {
+					const instrumentType = await instrumentTypeService.getByKey(id);
+					return instrumentType.accruals;
+				};
+
+				const onAccrualsTableAddRow = async function (gtDataService, gtEventService, $event) {
+
+					scope.popupX.value = $event.pageX;
+					scope.popupY.value = $event.pageY;
+
+					scope.gridTableEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
+				};
+
+				const openAccrualEditDialog = async function (accrualScheme) {
+
+					return $mdDialog.show({
+						controller: 'SingleInstrumentAddAccrualToTableDialogController as vm',
+						templateUrl: 'views/dialogs/single-instrument-add-accrual-to-table-dialog-view.html',
+						parent: angular.element(document.body),
+						clickOutsideToClose: false,
+						multiple: true,
+						locals: {
+							data: {
+								accrualScheme: accrualScheme,
+							}
+
+						}
+					});
+
+				};
+
+				const newRowsKeys = []
+
+				const insertAccrualToTable = function (accrual) {
+
+					const newRowKey = md5Helper.md5('newGridTableRow', newRowsKeys.length);
+					newRowsKeys.push(newRowKey);
+
+					accrual.frontOptions = {gtKey: newRowKey};
+					const rowObj = metaHelper.recursiveDeepCopy(gridTableData.templateRow);
+					rowObj.key = newRowKey;
+
+					rowObj.columns.forEach(column => {
+
+						column.settings.value = metaHelper.getObjectNestedPropVal(accrual, column.objPath);
+
+						if (column.cellType === 'selector') {
+
+							const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
+
+							if (optionIndex < 0) { // if selected option hidden, add it until another selected
+
+								const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
+									return option.id === column.settings.value;
+								});
+
+								if (optionData) {
+
+									column.settings.selectorOptions.push({
+										id: optionData.id,
+										name: optionData.name
+									});
+
+								}
+
+							}
+
+
+						}
+
+					});
+
+					scope.entity[bfcVm.fieldKey].unshift(accrual);
+					gridTableData.body.unshift(rowObj);
+
+					// Update rows in grid table
+					scope.entity[bfcVm.fieldKey].forEach(function (item, itemIndex) {
+						gridTableData.body[itemIndex].order = itemIndex;
+					});
+
+
+				};
+
+				scope.popupX = {value: null};
+				scope.popupY = {value: null};
+				scope.popupData = {
+					items: [],
+					isBuildButton: scope.item.options.tableData.find(item => item.key === 'build_accruals_btn').to_show,
+					onItemClick: async (item) => {
+
+						scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+						const res = await openAccrualEditDialog(item);
+
+						if (res.status === 'agree') {
+
+							const accrual = res.data.accrual;
+							insertAccrualToTable(accrual);
+
+						}
+
+					}
+				};
+
+				scope.popupTemplate =
+					`<div class="accrual-add-row-popup-container">
+						<div data-ng-repeat="item in popupData.items"
+							class="accrual-add-row-popup-item" 
+							data-ng-click="popupData.onItemClick(item)">{{item.name}}</div>
+						<div data-ng-if="popupData.isBuildButton" class="accrual-add-row-popup-item build-accruals">Build accruals</div>
+					</div>`;
+				// custom-input-sel-menu-block
+				// <Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab>
 
 				const minWidth = 50;
 				const maxWidth = 400;
@@ -252,7 +373,16 @@
 					scope.gridTableDataService = new GridTableDataService();
 					scope.gridTableEventService = new EventService();
 
-					if (bfcVm.entityType === 'instrument') {
+					if (scope.entityType === 'instrument') {
+
+						// Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab
+						gridTableData.tableMethods = {
+							addRow: onAccrualsTableAddRow
+						}
+
+						scope.accrualsShemes = await getInstrumentTypeAccrualsById(scope.entity.instrument_type);
+						scope.popupData.items = scope.accrualsShemes;
+						// <Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab>
 
 						entitySpecificData = {
 							selectorOptions: {

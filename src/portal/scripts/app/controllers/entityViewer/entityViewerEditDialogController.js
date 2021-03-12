@@ -1109,6 +1109,28 @@
                 vm.attributeTypes,
                 []);
 
+            if (entityType === 'instrument-type') {
+
+                vm.entity.accruals.forEach(accrual => {
+
+                    if (accrual.name.trim() === '') {
+
+                        errors.push({
+                            fieldName: `#${accrual.order + 1}`,
+                            message: 'Empty name',
+                            locationData : {type: 'tab', name: 'Accruals', validatorText: 'Tab accruals'}
+
+                        })
+
+                    }
+
+                });
+
+
+            }
+
+
+
             if (errors.length) {
 
                 tabsWithErrors = {};
@@ -1126,9 +1148,7 @@
 
                 vm.processing = true;
 
-                console.log(`#78 SAVE AND EXIT ${vm.entityType} `, result)
-
-                /* entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
+                entityResolverService.update(vm.entityType, result.id, result).then(function (responseData) {
 
                     vm.processing = false;
 
@@ -1161,7 +1181,7 @@
                     vm.processing = false;
                     vm.handleErrors(data);
 
-                }); */
+                });
 
             }
 
@@ -1869,8 +1889,6 @@
         // Instrument Type Layout Settings tab end
 
         vm.instrumentTypeChange = function($event){
-
-            console.log('instrumentTypeChange', vm.entity)
 
             evEditorSharedLogicHelper.getFormLayout('edition');
 

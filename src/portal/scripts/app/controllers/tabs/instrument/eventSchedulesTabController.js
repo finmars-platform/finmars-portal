@@ -14,7 +14,6 @@
 
     var metaHelper = require('../../../helpers/meta.helper');
     var md5Helper = require('../../../helpers/md5.helper');
-    // var GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
     var eventObj = {
         "name": '',
