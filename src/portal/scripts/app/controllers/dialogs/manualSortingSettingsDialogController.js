@@ -11,7 +11,11 @@
         vm.column = null;
         vm.layout = null;
 
+        vm.selectAll = false;
+
         vm.readyStatus = {content: false};
+
+        vm.newValues = [];
 
         vm.agree = function ($event) {
 
@@ -38,6 +42,39 @@
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
+
+        vm.toggleSelectAll = function (){
+
+            vm.selectAll = !vm.selectAll;
+
+            vm.newValues = vm.newValues.map(function (item){
+
+                item.selected = vm.selectAll;
+
+                return item
+            })
+
+        }
+
+        vm.addSelected = function(){
+
+            vm.newValues.forEach(function (item){
+
+                if (item.selected) {
+                    vm.layout.data.items.push({
+                        order: vm.layout.data.items.length,
+                        value: item.value
+                    })
+
+                }
+
+            })
+
+            vm.newValues = vm.newValues.filter(function (item){
+                return !item.selected;
+            })
+
+        }
 
         vm.syncDataStructure = function(){
 
@@ -81,10 +118,12 @@
                     })
 
                     if (exist === false) {
-                        vm.layout.data.items.push({
-                            order: vm.layout.data.items.length,
+
+                        vm.newValues.push({
+                            order: vm.newValues.length,
                             value: value
                         })
+
                     }
 
 
@@ -104,6 +143,8 @@
                 })
 
             }
+
+            console.log('vm.syncDataStructure.newValues', vm.newValues);
 
         }
 
