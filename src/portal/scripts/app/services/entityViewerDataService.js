@@ -1374,6 +1374,24 @@
             return data.crossEntityAttributeExtensions;
         }
 
+        function setColumnSortData(key, item) {
+
+            if(!data.columnSortData) {
+                data.columnSortData = {}
+            }
+
+            data.columnSortData[key] = item;
+        }
+
+        function getColumnSortData(key) {
+
+            if (data.columnSortData && data.columnSortData.hasOwnProperty(key)) {
+                return data.columnSortData[key];
+            }
+
+            return null
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1597,6 +1615,9 @@
 
             setCrossEntityAttributeExtensions: setCrossEntityAttributeExtensions,
             getCrossEntityAttributeExtensions: getCrossEntityAttributeExtensions,
+
+            setColumnSortData: setColumnSortData,
+            getColumnSortData: getColumnSortData,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

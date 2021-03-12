@@ -824,8 +824,12 @@
 
                     if (activeColumnSort.options.sort === 'ASC') {
                         requestsParameters[key].body.ordering = activeColumnSort.key
-                    } else {
+                    } else if (activeColumnSort.options.sort === 'DESC') {
                         requestsParameters[key].body.ordering = '-' + activeColumnSort.key
+                    } else if (activeColumnSort.options.sort === 'MANUAL_ASC')  {
+                        requestsParameters[key].body.ordering_manual = activeColumnSort.key
+                    } else if (activeColumnSort.options.sort === 'MANUAL_DESC')  {
+                        requestsParameters[key].body.ordering_manual = '-' + activeColumnSort.key
                     }
 
                     entityViewerDataService.setRequestParameters(requestsParameters[key]);
