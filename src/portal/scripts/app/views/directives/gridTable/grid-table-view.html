@@ -6,7 +6,7 @@
                               data-gt-event-service="gtEventService"></grid-table-top-panel>
     </div>
 
-    <div class="grid-table-row grid-table-header-row">
+    <div ng-if="gridTableData.header" class="grid-table-row grid-table-header-row">
 
         <div class="grid-table-row-actions-wrap">
             <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
@@ -41,7 +41,7 @@
          class="grid-table-row">
 
         <div class="grid-table-row-actions-wrap">
-            <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox flex-column fc-center fi-center">
+            <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
                 <md-checkbox ng-checked="row.isActive"
                              ng-click="toggleRowSelection(row)"></md-checkbox>
             </div>
@@ -72,9 +72,9 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
-        </div>-->
+        </div>
 
-        <!--<div data-ng-repeat="cell in row.columns track by cell.key">
+        <div data-ng-repeat="cell in row.columns track by cell.key">
             <grid-table-cell data-row="row"
                              data-column="cell"
                              data-gt-data-service="gtDataService"

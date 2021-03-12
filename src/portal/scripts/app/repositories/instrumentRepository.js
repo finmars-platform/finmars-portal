@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService'); var xhrService = require('../../../../core/services/xhrService');
+    var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
     var baseUrlService = require('../services/baseUrlService');
 
@@ -13,12 +14,10 @@
 
     var getList = function (options) {
 
-        if (!options) {
-            options = {};
-        }
+        if (!options) options = {};
 
         return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'instruments/instrument/', options),
-            {
+			{
                 method: 'GET',
                 credentials: 'include',
                 headers: {

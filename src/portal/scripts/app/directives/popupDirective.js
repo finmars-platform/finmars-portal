@@ -331,6 +331,10 @@
 
 					} */
 
+					scope._$popup = {
+						cancel: scope.cancel
+					}
+
 					if (scope.openOn) {
 
 						let openEvent = scope.openOn === "right_click" ? "contextmenu" : "click";

@@ -367,13 +367,15 @@
                 tab.layout.rows = tab.layout.rows + 1;
 
                 for (c = 0; c < tab.layout.columns; c = c + 1) {
-                    field = {
+
+                	field = {
                         row: tab.layout.rows,
                         column: c + 1,
                         colspan: 1,
                         type: 'empty'
                     };
-                    tab.layout.fields.push(field);
+
+                	tab.layout.fields.push(field);
 
                 }
 
@@ -443,10 +445,7 @@
 
 						tab.layout.fields = tab.layout.fields.filter(field => {
 
-							if (field.colspan > columns || field.occupiesWholeRow) {
-								field.colspan = columns;
-							}
-
+							if (field.colspan > columns || field.occupiesWholeRow) field.colspan = columns;
 							return field.column <= columns;
 
 						});
@@ -481,6 +480,10 @@
                         })
                     }
                 }
+
+				tab.layout.fields.forEach(field => {
+					if (field.occupiesWholeRow) field.colspan = columns;
+				});
 
                 tab.layout.columns = columns;
 
