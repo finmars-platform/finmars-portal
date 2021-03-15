@@ -946,6 +946,10 @@
 
                     vm.isAuthenticated = true;
 
+                    if (!data.current_master_user_id) {
+                        $state.go('app.profile', {}, {})
+                    }
+
                     console.log("User status: Authenticated");
 
                     $scope.$apply();
