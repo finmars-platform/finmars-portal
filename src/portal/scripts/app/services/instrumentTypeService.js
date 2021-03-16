@@ -1,43 +1,43 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
+(function ($mdDialog) {
 
-    var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
+    const instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
 
-    var getList = function (options) {
+	const getList = function (options) {
         return instrumentTypeRepository.getList(options);
     };
 
-    var getListLight = function (options) {
+	const getListLight = function (options) {
         return instrumentTypeRepository.getListLight(options);
     };
 
-    var getByKey = function (id) {
+	const getByKey = function (id) {
         return instrumentTypeRepository.getByKey(id);
     };
 
-    var create = function(account) {
+	const create = function(account) {
         return instrumentTypeRepository.create(account);
     };
 
-    var update = function(id, account) {
+	const update = function(id, account) {
         return instrumentTypeRepository.update(id, account);
     };
 
-    var deleteByKey = function (id) {
+	const deleteByKey = function (id) {
         return instrumentTypeRepository.deleteByKey(id);
     };
 
-    var updateBulk = function (data) {
+	const updateBulk = function (data) {
         return instrumentTypeRepository.updateBulk(data)
     };
 
-    var deleteBulk = function(data){
+	const deleteBulk = function(data){
         return instrumentTypeRepository.deleteBulk(data)
     };
 
-    var updatePricing = function(id, data) {
+	const updatePricing = function(id, data) {
         return instrumentTypeRepository.updatePricing(id, data)
     };
 

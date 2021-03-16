@@ -91,10 +91,14 @@
         };*/
 
         vm.checkReadyStatus = function () {
+            /*
             if (vm.readyStatus.accrualModals == true && vm.readyStatus.periodicityItems == true) {
                 return true;
             }
             return false;
+            */
+
+			return vm.readyStatus.accrualModals === true && vm.readyStatus.periodicityItems === true;
         };
 
         vm.toggleQuery = function () {
@@ -285,9 +289,8 @@
 
         };
 
-        // Schedules grid table
-
-        vm.schedulesGridTableData = {
+		//<editor-fold desc="Schedules grid table">
+		vm.schedulesGridTableData = {
             header: {
                 order: 'header',
                 columns: []
@@ -494,7 +497,7 @@
 			assembleGridTableBody();
 
         }
-        // < Schedules grid table >
+		//</editor-fold>
 
 		/* var addAccrualCalcSchedule = function () {
 
