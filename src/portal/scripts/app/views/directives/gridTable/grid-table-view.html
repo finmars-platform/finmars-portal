@@ -47,8 +47,15 @@
             </div>
 
             <div ng-if="gridTableData.components.dragAndDropElement" class="grid-table-row-dnd-elem flex-column fc-center">
-                <button ng-click="changeRowOrder(row.order, 'up')"><span class="material-icons">expand_less</span></button>
-                <button ng-click="changeRowOrder(row.order, 'down')"><span class="material-icons">expand_more</span></button>
+                <button ng-click="changeRowOrder(row.order, 'up')"
+                        ng-disabled="row.order === 0">
+                    <span class="material-icons">expand_less</span>
+                </button>
+
+                <button ng-click="changeRowOrder(row.order, 'down')"
+                        ng-disabled="row.order + 1 === gridTableData.body.length">
+                    <span class="material-icons">expand_more</span>
+                </button>
             </div>
         </div>
 

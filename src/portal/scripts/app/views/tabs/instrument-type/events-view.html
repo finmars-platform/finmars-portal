@@ -3,18 +3,20 @@
     <div class="instrument-type-events-tab-view"
          data-ng-if="vm.readyStatus.gridTable">
 
-        <v-accordion class="instrument-type-accordion vAccordion-type1" multiple>
+        <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" multiple>
 
-            <v-pane data-ng-repeat="item in vm.entity.events track by $index" expanded="item.isPaneExpanded">
-                <v-pane-header>
+            <v-pane ng-repeat="item in vm.entity.events"
+                    expanded="item.isPaneExpanded">
+
+                <v-pane-header ng-class="{'m-b-0': !$pane.isExpanded()}">
                     <div class="accordion-header-content flex-row fc-space-between fi-center"
                          data-ng-click="vm.toggleItem($pane, item, $event)">
 
                         <div class="accordion-header-left">
 
-                            <span ng-hide="$pane.isExpanded()"
-                                  class="material-icons accordion-expansion-icon">expand_less</span>
                             <span ng-hide="!$pane.isExpanded()"
+                                  class="material-icons accordion-expansion-icon">expand_less</span>
+                            <span ng-hide="$pane.isExpanded()"
                                   class="material-icons accordion-expansion-icon">expand_more</span>
 
                             <span class="text-weight-bold m-r-8"># {{$index + 1}}</span>
@@ -37,18 +39,21 @@
 
                         <div class="accordion-header-right">
                             <md-checkbox ng-model="item.autogenerate"
-                                         id="accrual_autogenerate"
+                                         id="{{'event_autogenerate_' + $index}}"
                                          aria-lable="instrument type events autogenerate"
                                          ng-click="$event.stopPropagation();">Auto-generate</md-checkbox>
 
                             <div class="accordion-actions m-l-35">
+
                                 <button class="accordion-header-icon-btn icon-btn-basics"
-                                        ng-click="vm.moveUp(item, $index, $event)">
+                                        ng-click="vm.moveUp(item, $event)"
+                                        ng-disabled="item.order === 0">
                                     <span class="material-icons">arrow_upward</span>
                                 </button>
 
                                 <button class="accordion-header-icon-btn icon-btn-basics"
-                                        ng-click="vm.moveDown(item, $index, $event)">
+                                        ng-click="vm.moveDown(item, $event)"
+                                        ng-disabled="item.order + 1 === vm.entity.events.length">
                                     <span class="material-icons">arrow_downward</span>
                                 </button>
 
@@ -57,9 +62,8 @@
                                         popup
                                         popup-template="vm.accordionActionsMenu"
                                         popup-data="{
-                                        deletePane: vm.deletePane,
-                                        item: item,
-                                        itemIndex: $index
+                                            deletePane: vm.deletePane,
+                                            item: item
                                         }"
                                         popup-event-service="vm.popupEventService"
                                         position-relative-to="element"
@@ -126,8 +130,7 @@
                                     ng-class="{'disabled-grid-table': item.data.items_blocked}"></grid-table>
                     </div>
 
-
-                    <div class="instrument-type-accordion-grid-table grid-table-bordered-rows">
+                    <div class="instrument-type-accordion-grid-table grid-table-bordered-rows m-b-16">
                         <grid-table gt-data-service="item.eventActionsGridTableDataService"
                                     gt-event-service="item.eventActionsGridTableEventService"></grid-table>
                     </div>
@@ -138,14 +141,13 @@
 
         </v-accordion>
 
-        <div class="transaction-type-operations-block">
+        <div class="flex-row">
+            <md-button class="m-l-0 primary-button m-t-0"
+                       ng-click="vm.createInstrumentTypeEvent()">+ ADD</md-button>
 
-            <div layout="row" layout-align="end center">
-                <md-button class="md-raised" data-ng-click="vm.createInstrumentTypeEvent()">
-                    Create Event
-                </md-button>
-            </div>
+            <!-- <md-button class="outline-button m-t-0">APPEND FROM TEMPLATE</md-button>
 
+            <md-button class="outline-button m-t-0">SAVE AS TEMPLATE</md-button> -->
         </div>
 
     </div>

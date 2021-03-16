@@ -35,7 +35,6 @@
                     };
 
                     if (cellMethods.onChange) {
-
                         cellMethods.onChange(rowData, colData, scope.gtDataService, scope.gtEventService);
                     }
 
@@ -99,11 +98,23 @@
 
                 };
 
+                var setCellCustomClasses = function () {
+
+                	var cell = elem[0].querySelector('.grid-table-cell');
+                	var cellClasses = scope.column.classes;
+
+                	if (typeof cellClasses === 'string') {
+						cellClasses = cellClasses.split(' ');
+					}
+
+					cell.classList.add(...cellClasses);
+
+				};
+
                 scope.onChildrenLoadEnd = function () {
 
-                    if (scope.column.styles) {
-                        setCellCustomStyles();
-                    }
+                    if (scope.column.styles) setCellCustomStyles();
+                    if (scope.column.classes) setCellCustomClasses();
 
                     if (cellMethods.onInit) {
 

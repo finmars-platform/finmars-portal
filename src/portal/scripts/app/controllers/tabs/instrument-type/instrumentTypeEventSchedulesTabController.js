@@ -57,7 +57,7 @@
         vm.accordionActionsMenu =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
-						   'ng-click="popupData.deletePane(popupData.item, popupData.itemIndex, $event, _$popup)">DELETE</md-button>' +
+						   'ng-click="popupData.deletePane(popupData.item, $event, _$popup)">DELETE</md-button>' +
 			'</div>';
 
         const getTransactionTypes = function () {
@@ -112,6 +112,7 @@
                     'isDefault': true,
                     'isActive': true,
                     'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+					'value_type': 40,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
@@ -122,6 +123,7 @@
                     'isDefault': false,
                     'isActive': false,
                     'sign': '<div class="multitype-field-type-letter">L</div>',
+					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
@@ -134,6 +136,7 @@
                     'isDefault': true,
                     'isActive': true,
                     'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+					'value_type': 40,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
@@ -144,18 +147,20 @@
                     'isDefault': false,
                     'isActive': false,
                     'sign': '<div class="multitype-field-type-letter">L</div>',
+					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
                 }
             ],
-			'periodic_n': [
+			'periodicity_n': [
                 {
                     'model': null,
                     'fieldType': 'numberInput',
                     'isDefault': true,
                     'isActive': true,
                     'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
+					'value_type': 20,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
@@ -166,6 +171,7 @@
                     'isDefault': false,
                     'isActive': false,
                     'sign': '<div class="multitype-field-type-letter">L</div>',
+					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
 					}
@@ -177,15 +183,14 @@
             return vm.readyStatus.notificationClasses && vm.readyStatus.eventClasses && vm.readyStatus.eventSchedulesReady;
         };
 
-        const onDefaultValueMultitypeFieldChange = function (rowData, colData, gtDataService, gtEventService) {
+        const onDefaultValueMultitypeFieldChange = function (rowData, colData, gtDataService) {
 
 			const changedCell = gtDataService.getCell(rowData.order, colData.order);
 			const activeType = changedCell.settings.fieldTypesData.find(type => type.isActive);
 
 			const tableData = gtDataService.getTableData();
 
-			const defValType = (activeType.fieldType === 'dropdownSelect') ? 'dynamic_attribute' : 'text';
-			vm.entity.events[tableData.index].data.items[rowData.order].default_value_type = defValType;
+			vm.entity.events[tableData.index].data[tableData.eventItemsType][rowData.order].default_value_type = activeType.value_type;
 
 		};
 
@@ -203,7 +208,7 @@
 
         };
 
-        var getEventsGridTableData = function (rows, eventItemType) {
+        var getEventsGridTableData = function (rows, eventItemsType) {
 
             // const rows = item.data.items;
 
@@ -223,6 +228,7 @@
                             settings: {
                                 value: null
                             },
+							classes: 'grid-table-cell-right-border',
                             styles: {
                                 'grid-table-cell': {'width': '318px'}
                             }
@@ -316,7 +322,7 @@
                         contentHtml: {
                             main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
                         },
-                        classes: "ev-instr-events-settings-popup"
+                        classes: "ev-instr-accruals-settings-popup"
                     }
                 },
                 styles: {
@@ -324,7 +330,7 @@
                 }
             };
 
-            if (eventItemType === 'items') {
+            if (eventItemsType === 'items') {
 
 				eventsGridTableData.header = {
 					order: 'header',
@@ -335,14 +341,24 @@
 
 				eventsGridTableData.header.columns = rowObj.columns.map(column => {
 
-					var headerCol = {
+					const headerCol = {
 						key: column.key,
 						columnName: column.columnName,
 						order: column.order,
+						classes: column.classes,
 						styles: {
 							'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
 						}
 					};
+
+					if (column.classes) {
+
+						let columnClasses = column.classes;
+						if (Array.isArray(column.classes)) columnClasses = [...[], ...columnClasses];
+
+						headerCol.classes = columnClasses;
+
+					}
 
 					if (column.key === 'to_show') headerCol.styles['text-align'] = 'center';
 
@@ -431,7 +447,7 @@
 								selectorOptions: [],
                             },
                             styles: {
-                                'grid-table-cell': {'width': '260px'}
+                                'grid-table-cell': {'width': '400px'}
                             }
                         },
                         {
@@ -444,7 +460,7 @@
                                 value: null
                             },
                             styles: {
-                                'grid-table-cell': {'width': '220px'}
+                                'grid-table-cell': {'width': '506px'}
                             }
                         },
                         {
@@ -473,7 +489,7 @@
                                 'grid-table-cell': {'width': '130px'},
                             }
                         },
-                        {
+                        /* {
                             key: 'button_position',
                             objPath: ['button_position'],
                             columnName: 'Button position',
@@ -486,9 +502,11 @@
                             styles: {
                                 'grid-table-cell': {'width': '130px'}
                             }
-                        },
-
-                    ]
+                        }, */
+                    ],
+					methods: {
+                    	onOrderChange: onActionsOrderChange
+					}
                 },
 
                 components: {
@@ -497,7 +515,8 @@
                         columns: false,
                         search: false
                     },
-					dragAndDropElement: true
+					dragAndDropElement: true,
+					rowCheckboxes: true
                 }
 
             };
@@ -516,16 +535,17 @@
             })
 
 			eventActionsGridTableData.body = rows.map((row, index) => {
-                const rowObj = metaHelper.recursiveDeepCopy(eventActionsGridTableData.templateRow, true);
+
+				const rowObj = metaHelper.recursiveDeepCopy(eventActionsGridTableData.templateRow, true);
 
                 rowObj.order = index;
-                rowObj.key = row.key;
+                rowObj.key = row.id;
 
                 rowObj.columns[0].settings.value = row.transaction_type;
                 rowObj.columns[1].settings.value = row.text;
                 rowObj.columns[2].settings.value = row.is_sent_to_pending;
                 rowObj.columns[3].settings.value = row.is_book_automatic;
-                rowObj.columns[4].settings.value = row.button_position;
+                // rowObj.columns[4].settings.value = row.button_position;
 
                 return rowObj;
 
@@ -535,12 +555,11 @@
 
         }
 
-
-        vm.deletePane = function (item, $index, $event, _$popup) {
+        vm.deletePane = function (item, $event, _$popup) {
 
             $event.stopPropagation();
 
-            var description = 'Are you sure to delete this action?';
+			var description = 'Are you sure to delete this action?';
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -560,52 +579,75 @@
 
             }).then(res => {
 
-            	if (res.status === 'agree') vm.entity.events.splice($index, 1);
+            	if (res.status === 'agree') {
+
+            		vm.entity.events.splice(item.order, 1);
+            		vm.entity.events.forEach((eventItem, index) => eventItem.order = index);
+
+				}
 
             });
 
-			// vm.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 			_$popup.cancel();
 
         };
 
-        vm.moveDown = function (item, $index, $event) {
+        vm.moveDown = function (item, $event) {
 
             $event.stopPropagation();
 
-            var swap = JSON.parse(JSON.stringify(item));
-            vm.entity.events[$index] = vm.entity.events[$index + 1];
-            vm.entity.events[$index + 1] = swap;
+            if (vm.entity.events[item.order + 1]) {
+
+            	var swap = JSON.parse(JSON.stringify(item));
+
+				vm.entity.events[item.order] = vm.entity.events[item.order + 1];
+				vm.entity.events[item.order].order = item.order;
+
+				vm.entity.events[item.order + 1] = swap;
+				vm.entity.events[item.order + 1].order = item.order + 1;
+
+			}
 
         };
 
-        vm.moveUp = function (item, $index, $event) {
+        vm.moveUp = function (item, $event) {
 
             $event.stopPropagation();
 
-            var swap = JSON.parse(JSON.stringify(item));
-            vm.entity.events[$index] = vm.entity.events[$index - 1];
-            vm.entity.events[$index - 1] = swap;
+            if (vm.entity.events[item.order - 1]) {
+
+            	const swap = JSON.parse(JSON.stringify(item));
+
+				vm.entity.events[item.order] = vm.entity.events[item.order - 1];
+				vm.entity.events[item.order].order = item.order;
+
+				vm.entity.events[item.order - 1] = swap;
+				vm.entity.events[item.order - 1].order = item.order - 1;
+
+			}
 
         };
 
-		const formatDataForEventGridTable = function (event, rows, eventIndex, gtDataService, gtEventService, eventItemType) {
+		const formatDataForEventGridTable = function (event, rows, eventIndex, gtDataService, gtEventService, eventItemsType) {
 
-			var gridTableData = getEventsGridTableData(rows, eventItemType);
+			const gridTableData = getEventsGridTableData(rows, eventItemsType);
 
 			gridTableData.index = eventIndex; // vm.entity.events.length;
+			gridTableData.eventItemsType = eventItemsType;
 
 			gtDataService.setTableData(gridTableData);
 
 			gtEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, argumentsObj => {
-				onEventTableCellChange(argumentsObj, gtDataService, gtEventService, eventItemType);
+				onEventTableCellChange(argumentsObj, gtDataService, gtEventService, eventItemsType);
 			});
 
 		};
 
-		const formatDataForEventActionsGridTable = function (event) {
+		const formatDataForEventActionsGridTable = function (event, eventIndex) {
 
-			var eventsActionGridTableData = getEventsActionGridTableData(event);
+			const eventsActionGridTableData = getEventsActionGridTableData(event);
+			eventsActionGridTableData.index = eventIndex;
+
 			event.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
 
 			event.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
@@ -721,8 +763,8 @@
                             options: periodicitySelectorOptions
                         },
                         {
-                            key: 'periodic_n',
-                            name: 'Periodic N',
+                            key: 'periodicity_n',
+                            name: 'Periodicity N',
                             to_show: true,
                             defaultValueType: 'multitypeField',
                             options: false
@@ -734,7 +776,7 @@
             };
 
             /* var eventsGridTableData = getEventsGridTableData(event);
-			console.log("testing eventsGridTableData", eventsGridTableData);
+
             eventsGridTableData.index = vm.entity.events.length;
 
             event.eventsGridTableDataService.setTableData(eventsGridTableData);
@@ -777,7 +819,7 @@
                 onActionsTableDeleteRows(data, event, event.eventActionsGridTableDataService, event.eventActionsGridTableEventService);
             }); */
 
-			formatDataForEventActionsGridTable(event);
+			formatDataForEventActionsGridTable(event, vm.entity.events.length);
 
             vm.entity.events.push(event)
 
@@ -794,7 +836,7 @@
 
         };
 
-        var getRangeOfNumbers = function (number) {
+        /* var getRangeOfNumbers = function (number) {
             var buttonPositions = [{id: 1, name: 1}];
 
             for (var i = 2; i <= number; i++) {
@@ -802,9 +844,9 @@
             }
 
             return buttonPositions;
-        };
+        }; */
 
-        var onActionsTableAddRow = function (item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
+        const onActionsTableAddRow = function (item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
 
             console.log('item', item);
 
@@ -818,7 +860,7 @@
                 "text": '',
                 "is_sent_to_pending": false,
                 "is_book_automatic": false,
-                "button_position": '',
+                "button_position": 0,
                 frontOptions: {newRow: true, gtKey: newRow.key}
             };
 
@@ -827,17 +869,20 @@
             var transactionType = gridTableHelperService.getCellFromRowByKey(newRow, 'transaction_type');
             transactionType.settings.selectorOptions = vm.transactionTypes;
 
-            var buttonPosition = gridTableHelperService.getCellFromRowByKey(newRow, 'button_position');
-            buttonPosition.settings.selectorOptions = getRangeOfNumbers(item.data.actions.length);
+            /* var buttonPosition = gridTableHelperService.getCellFromRowByKey(newRow, 'button_position');
+            buttonPosition.settings.selectorOptions = getRangeOfNumbers(item.data.actions.length); */
 
             // Update rows in actions grid table
-            item.data.actions.forEach(function (action, actionIndex) {
+            item.data.actions.forEach((action, actionIndex) => {
+
+            	action.button_position = actionIndex;
                 gridTableData.body[actionIndex].order = actionIndex;
+
             });
 
         };
 
-        var onActionsTableDeleteRows = function (data, item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
+		const onActionsTableDeleteRows = function (data, item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
 
             var gridTableData = eventActionsGridTableDataService.getTableData()
 
@@ -854,7 +899,7 @@
 
         };
 
-        var onActionsTableCellValueChanged = function (data, item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
+		const onActionsTableCellValueChanged = function (data, item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
 
             var rowOrder = data.row.order,
                 colOrder = data.column.order;
@@ -866,6 +911,64 @@
             );
 
         }
+
+        const onActionsOrderChange = function (rowData, gtDataService, gtEventService) {
+
+			const tableData = gtDataService.getTableData();
+			const item = vm.entity.events[tableData.index];
+
+			const sortedActions = [];
+
+			tableData.body.forEach((row, rowIndex) => {
+
+				const action = item.data.actions.find(action => {
+
+					if (action.id || action.id === 0) return row.key === action.id;
+
+					return row.key === action.frontOptions.gtKey;
+
+				});
+
+				if (action) {
+
+					action.button_position = rowIndex;
+					sortedActions.push(action);
+
+				}
+
+			});
+
+			item.data.actions = sortedActions;
+
+		};
+
+        const getOptionsForMultitypeFields = function () {
+
+        	Object.keys(multitypeFieldsForRows).forEach(key => {
+
+				const fieldTypeObj = multitypeFieldsForRows[key];
+				const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect');
+				const selTypeIndex = fieldTypeObj.findIndex(type => type.fieldType === 'dropdownSelect');
+
+				const formattedAttrTypes = [];
+
+				instrumentAttrTypes.forEach(attrType => {
+
+					if (attrType.value_type === notSelType.value_type) {
+
+						formattedAttrTypes.push({id: attrType.user_code, name: attrType.short_name});
+
+					}
+
+				});
+
+				fieldTypeObj[selTypeIndex].fieldData = {
+					menuOptions: formattedAttrTypes || []
+				};
+
+			});
+
+		};
 
         vm.init = function () {
 
@@ -886,20 +989,7 @@
 					vm.transactionTypes = data[0];
 					instrumentAttrTypes = data[1] || [];
 
-					Object.keys(multitypeFieldsForRows).forEach(key => {
-
-						const fieldTypeObj = multitypeFieldsForRows[key];
-						const selTypeIndex = fieldTypeObj.findIndex(type => type.fieldType === 'dropdownSelect');
-
-						const formattedAttrTypes = instrumentAttrTypes.map(attrType => {
-							return {id: attrType.user_code, name: attrType.short_name};
-						});
-
-						fieldTypeObj[selTypeIndex].fieldData = {
-							menuOptions: formattedAttrTypes || []
-						};
-
-					});
+					getOptionsForMultitypeFields();
 
 					vm.entity.events.forEach(function (item, index) {
 

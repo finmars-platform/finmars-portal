@@ -25,6 +25,12 @@
             gritTable: false
         };
 
+		vm.accordionActionsMenu =
+			'<div class="ev-editor-tabs-popup-content popup-menu">' +
+				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
+						   'ng-click="popupData.deletePane(popupData.item, $event, _$popup)">DELETE</md-button>' +
+			'</div>';
+
         vm.onNameFocus = function (event) {
             var textAreaElement = event.target;
 
@@ -35,7 +41,7 @@
 
         var onAccrualTableCellChange = function (data, gtDataService, gtEventService) {
 
-            var tableData = gtDataService.getTableData()
+            var tableData = gtDataService.getTableData();
             var gtRow = gtDataService.getRowByKey(data.row.key);
 
             gtRow.columns.forEach(function (gtColumn) {
@@ -63,7 +69,7 @@
                     columns: [
                         {
                             key: 'name',
-                            // objPath: ['name'],
+                            objPath: ['name'],
                             columnName: 'Name',
                             order: 0,
                             cellType: 'text',
@@ -72,26 +78,28 @@
                                 closeOnMouseOut: false,
                                 isDisabled: true
                             },
+							classes: 'grid-table-cell-right-border',
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '318px'}
                             }
                         },
                         {
                             key: 'to_show',
-                            columnName: 'To Show',
+							objPath: ['to_show'],
+                            columnName: 'Show',
                             order: 1,
                             cellType: 'checkbox',
                             settings: {
                                 value: null
                             },
                             styles: {
-                                'grid-table-cell': {'width': '85px'}
+                                'grid-table-cell': {'width': '68px'}
                             }
 
                         },
                         {
                             key: 'default_value',
-                            // objPath: ['name'],
+							objPath: ['default_value'],
                             columnName: 'Default Value',
                             order: 2,
                             cellType: 'selector',
@@ -100,12 +108,12 @@
                                 selectorOptions: []
                             },
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '266px'}
                             }
                         },
                         {
                             key: 'override_name',
-                            // objPath: ['name'],
+							objPath: ['override_name'],
                             columnName: 'Override Name',
                             order: 3,
                             cellType: 'text',
@@ -115,16 +123,31 @@
                                 isDisabled: false
                             },
                             styles: {
-                                'grid-table-cell': {'width': '165px'}
+                                'grid-table-cell': {'width': '266px'}
                             }
                         },
+						{
+							key: 'tooltip',
+							objPath: ['tooltip'],
+							columnName: 'Tooltip',
+							order: 4,
+							cellType: 'text',
+							settings: {
+								value: null,
+								closeOnMouseOut: false,
+								isDisabled: false
+							},
+							styles: {
+								'grid-table-cell': {'width': '266px'}
+							}
+						},
                         {
                             key: 'options_settings',
                             columnName: '',
-                            order:4,
+                            order: 5,
                             cellType: 'empty',
                             styles: {
-                                'grid-table-cell': {'width': '65px'}
+                                'grid-table-cell': {'width': '48px'}
                             }
                         }
                     ],
@@ -136,30 +159,30 @@
 
             var optionsColumn = {
                 key: 'options_settings',
-                // objPath: ['options_settings'],
+                objPath: ['options'],
                 columnName: '',
                 order: 4,
                 cellType: 'customPopup',
                 settings: {
                     value: null,
-                        closeOnMouseOut: false,
-                        cellText: '...',
-                        popupSettings: {
-                            contentHtml: {
-                                main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
-                            },
-                            classes: "ev-instr-accruals-settings-popup"
-                        }
-                    },
-                    styles: {
-                        'grid-table-cell': {'width': '65px'}
-                    }
-                };
+					closeOnMouseOut: false,
+					cellText: '...',
+					popupSettings: {
+						contentHtml: {
+							main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
+						},
+						classes: "ev-instr-accruals-settings-popup"
+					}
+				},
+				styles: {
+					'grid-table-cell': {'width': '65px'}
+				}
+            };
 
             const rowObj = metaHelper.recursiveDeepCopy(accrualsGridTableData.templateRow, true);
             accrualsGridTableData.header.columns = rowObj.columns.map(column => {
 
-                return {
+				const headerCol = {
                     key: column.key,
                     columnName: column.columnName,
                     order: column.order,
@@ -167,6 +190,20 @@
                         'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
                     }
                 };
+
+                if (column.classes) {
+
+					let columnClasses = column.classes;
+					if (Array.isArray(column.classes)) columnClasses = [...[], ...columnClasses];
+
+					headerCol.classes = columnClasses;
+
+				}
+
+				if (column.key === 'to_show') headerCol.styles['text-align'] = 'center';
+
+				return headerCol;
+
             });
 
             accrualsGridTableData.body = rows.map((row, index) => {
@@ -187,13 +224,14 @@
                 }
 
                 rowObj.columns[3].settings.value = row.override_name;
+				rowObj.columns[4].settings.value = row.tooltip;
 
-                if (row.options_settings) {
+                if (row.options) {
 
                     const optionsCell = metaHelper.recursiveDeepCopy(optionsColumn, false);
 
-                    rowObj.columns[4] = optionsCell;
-                    rowObj.columns[4].settings.value = row.options_settings;
+                    rowObj.columns[5] = optionsCell;
+                    rowObj.columns[5].settings.value = row.options;
 
                 }
 
@@ -232,13 +270,13 @@
                 data: {
                     form_message: "",
                     items: [
-                        {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text', options_settings: false},
-                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'date', options_settings: false},
-                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'date', options_settings: false},
-                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'number', options_settings: false},
-                        {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options_settings: periodicitySelectorOptions},
-                        {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options_settings: accrualModelsSelectorOptions},
-                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'number', options_settings: false},
+                        {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text', options: false},
+                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'date', options: false},
+                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'date', options: false},
+                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'number', options: false},
+                        {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options: periodicitySelectorOptions},
+                        {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options: accrualModelsSelectorOptions},
+                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'number', options: false},
                     ]
                 }
             };
@@ -247,9 +285,9 @@
                 onAccrualTableCellChange(argumentsObj, accrual.accrualsGridTableDataService, accrual.accrualsGridTableEventService);
             });
 
-            var accrualGridTableData = getAccrualsGridTableData (accrual);
+            var accrualGridTableData = getAccrualsGridTableData(accrual);
 
-            accrualGridTableData.index = vm.entity.events.length;
+            accrualGridTableData.index = vm.entity.accruals.length;
             accrual.accrualsGridTableDataService.setTableData(accrualGridTableData);
 
             vm.entity.accruals.push(accrual);
@@ -271,9 +309,10 @@
 
         };
 
-        vm.deletePane = function (item, $index, $event) {
+        vm.deletePane = function (item, $event, _$popup) {
 
             $event.stopPropagation();
+
             var description = 'Are you sure to delete this accrual?';
 
             $mdDialog.show({
@@ -281,40 +320,61 @@
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
                 multiple: true,
-                skipHide: true,
                 locals: {
                     warning: {
                         title: 'Warning',
                         description: description
                     }
                 }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    vm.entity.accruals.splice($index, 1);
-                }
+            }).then(res => {
+
+				if (res.status === 'agree') {
+
+					vm.entity.accruals.splice(item.order, 1);
+					vm.entity.accruals.forEach((accrual, index) => accrual.order = index);
+
+				}
+
             });
-        };
 
-        vm.moveDown = function (item, $index, $event) {
-
-            $event.stopPropagation();
-
-            var swap = JSON.parse(JSON.stringify(item));
-            vm.entity.accruals[$index] = vm.entity.accruals[$index + 1];
-            vm.entity.accruals[$index + 1] = swap;
+			_$popup.cancel();
 
         };
 
-        vm.moveUp = function (item, $index, $event) {
+        vm.moveDown = function (item, $event) {
 
             $event.stopPropagation();
 
-            var swap = JSON.parse(JSON.stringify(item));
-            vm.entity.accruals[$index] = vm.entity.accruals[$index - 1];
-            vm.entity.accruals[$index - 1] = swap;
+			if (vm.entity.accruals[item.order + 1]) {
+
+				const swap = JSON.parse(JSON.stringify(item));
+
+				vm.entity.accruals[item.order] = vm.entity.accruals[item.order + 1];
+				vm.entity.accruals[item.order].order = item.order;
+
+				vm.entity.accruals[item.order + 1] = swap;
+				vm.entity.accruals[item.order + 1].order = item.order + 1;
+
+			}
+
+        };
+
+        vm.moveUp = function (item, $event) {
+
+            $event.stopPropagation();
+
+			if (vm.entity.accruals[item.order - 1]) {
+
+				const swap = JSON.parse(JSON.stringify(item));
+
+				vm.entity.accruals[item.order] = vm.entity.accruals[item.order - 1];
+				vm.entity.accruals[item.order].order = item.order;
+
+				vm.entity.accruals[item.order - 1] = swap;
+				vm.entity.accruals[item.order - 1].order = item.order - 1;
+
+			}
 
         };
 

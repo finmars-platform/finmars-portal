@@ -98,6 +98,8 @@
 
                 scope.selectOption = function (item) {
 
+					closeDropdownMenu();
+
                     if (item.id !== scope.model) {
 
                         stylePreset = '';
@@ -108,8 +110,6 @@
 
                         scope.itemName = item.name;
                         scope.inputText = item.name;
-
-                        closeDropdownMenu();
 
                         setTimeout(function () {
 
