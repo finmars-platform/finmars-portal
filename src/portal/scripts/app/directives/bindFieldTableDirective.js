@@ -130,8 +130,8 @@
 						locals: {
 							data: {
 								accrualScheme: accrualScheme,
+								entity: scope.entity
 							}
-
 						}
 					});
 

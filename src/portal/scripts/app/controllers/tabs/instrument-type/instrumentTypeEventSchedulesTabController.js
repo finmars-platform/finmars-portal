@@ -71,7 +71,7 @@
 
 			return metaService.loadDataFromAllPages(instrumentAttributeTypeService.getList, [options]);
 
-		}
+		};
 
         var getNotificationClasses = metaNotificationClassService.getList().then(function (data) {
             vm.notificationClasses = data;
