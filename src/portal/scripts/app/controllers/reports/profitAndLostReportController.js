@@ -14,6 +14,7 @@
         var vm = this;
 
         vm.entityType = 'pl-report';
+        vm.contentType = 'reports.plreport';
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};

@@ -458,7 +458,7 @@
                     <md-button ng-click="vm.goToDashboard($event)" class="md-raised">
                         Go to Dashboard
                     </md-button>
-                    <md-button ng-click="vm.saveLayout()" ng-class="{'disabled-btn': !vm.layout.name}"
+                    <md-button ng-click="vm.saveLayout()" ng-class="{'disabled-btn': !vm.layout.name || (vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout)}"
                                class="md-raised">
                         Save
                     </md-button>

@@ -14,6 +14,8 @@
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
     var metaHelper = require('../helpers/meta.helper');
 
+    var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
     module.exports = function ($scope, $stateParams, $mdDialog) {
 
         var vm = this;
@@ -25,6 +27,11 @@
 
         vm.dashboardDataService = null;
         vm.dashboardEventService = null;
+
+        vm.popupData = {
+            evDataService: vm.dashboardDataService,
+            evEventService: vm.dashboardEventService
+        }
 
         vm.processing = false;
 
@@ -146,12 +153,19 @@
 
             uiService.getDashboardLayoutByKey(layoutId).then(function (data) {
 
+                vm.dashboardDataService = new DashboardDataService();
+                vm.dashboardEventService = new DashboardEventService();
+
+                vm.popupData = {
+                    evDataService: vm.dashboardDataService,
+                    evEventService: vm.dashboardEventService
+                }
+
                 vm.layout = data;
 
                 console.log('vm.layout', vm.layout);
+                console.log('vm.popupData', vm.popupData);
 
-                vm.dashboardDataService = new DashboardDataService();
-                vm.dashboardEventService = new DashboardEventService();
 
                 vm.initEventListeners();
 
@@ -246,6 +260,7 @@
 
         };
 
+        // Deprecated
         vm.openLayoutList = function ($event) {
 
             $mdDialog.show({
@@ -272,25 +287,14 @@
 
         };
 
+        // Deprecated
         vm.saveDashboardLayout = function ($event) {
 
             uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
 
                 vm.layout = data;
 
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    locals: {
-                        info: {
-                            title: 'Success',
-                            description: "Dashboard Layout is Saved"
-                        }
-                    }
-                });
+                toastNotificationService.success("Dashboard Layout is Saved")
 
                 $scope.$apply();
 
@@ -298,6 +302,31 @@
 
         };
 
+        // Deprecated
+        vm.makeCopyDashboardLayout = function ($event) {
+
+            var layout = JSON.parse(JSON.stringify(vm.layout))
+
+            layout.name = layout.name + '_copy';
+            layout.user_code = layout.user_code + '_copy';
+
+            layout.is_default = false;
+            layout.origin_for_global_layout = null;
+            layout.sourced_from_global_layout = null;
+
+            uiService.createDashboardLayout(layout).then(function (data) {
+
+                vm.layout = data;
+
+                toastNotificationService.success("Dashboard Layout is Duplicated")
+
+                $scope.$apply();
+
+            });
+
+        }
+
+        // Deprecated
         vm.exportDashboardLayout = function ($event) {
 
             $mdDialog.show({
@@ -316,6 +345,30 @@
             vm.dashboardEventService.dispatchEvent(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS);
         };
 
+        var componentsFinishedLoading = function () {
+
+			var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+			var componentsIds = Object.keys(statusesObject);
+
+			var processing = false;
+
+			for (var i = 0; i < componentsIds.length; i++) {
+
+				if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
+					statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
+
+					processing = true;
+					break;
+
+				}
+
+			}
+
+			return processing;
+
+		};
+
+
         vm.refreshActiveTab = function () {
 
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ACTIVE_TAB);
@@ -328,25 +381,8 @@
 
             } else {
 
-                vm.processing = true;
-
                 setTimeout(function () { // enable refresh buttons if no components uses active object
-
-                    var componentsIds = Object.keys(statusesObject);
-                    vm.processing = false;
-
-                    for (var i = 0; i < componentsIds.length; i++) {
-
-                        if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
-                            statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
-
-                            vm.processing = true;
-                            break;
-
-                        }
-
-                    }
-
+					vm.processing = componentsFinishedLoading();
                 }, 100);
 
             }
@@ -364,25 +400,8 @@
 
             } else {
 
-                vm.processing = true;
-
                 setTimeout(function () { // enable refresh buttons if no components uses active object
-
-                    var componentsIds = Object.keys(statusesObject);
-                    vm.processing = false;
-
-                    for (var i = 0; i < componentsIds.length; i++) {
-
-                        if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
-                            statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
-
-                            vm.processing = true;
-                            break;
-
-                        }
-
-                    }
-
+					vm.processing = componentsFinishedLoading();
                 }, 100);
 
             }
@@ -413,22 +432,21 @@
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+                /* var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
 
                 var processed = false;
 
                 Object.keys(statusesObject).forEach(function (componentId) {
 
-                    /*if (statusesObject[componentId] === dashboardComponentStatuses.PROCESSING) {
-                        processed = true;
-                    }*/
                     if (statusesObject[componentId] !== dashboardComponentStatuses.ACTIVE &&
                         statusesObject[componentId] !== dashboardComponentStatuses.ERROR) {
 
                         processed = true;
                     }
 
-                });
+                }); */
+
+				var processed = componentsFinishedLoading();
 
                 if (processed) {
 
@@ -438,6 +456,14 @@
                     vm.processing = false;
                     $scope.$apply();
                 }
+
+            })
+
+            vm.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_LAYOUT_CHANGE, function (){
+
+                var layoutToOpen = vm.dashboardDataService.getLayoutToOpen();
+
+                vm.getLayout(layoutToOpen.id);
 
             })
 
@@ -473,9 +499,10 @@
             var reportSettings = componentData.settings.linked_components.report_settings;
 
             var dependencies = Object.values(reportSettings).filter(function (id) { // prevent loop
-                var isComponentExist = vm.dashboardDataService.getComponentById(id);
+                const isComponentExist = vm.dashboardDataService.getComponentById(id); // is component exist
+                const isComponentUsedInDashboard = !!statusesObject[id]; // is component used in dashboard
 
-                return isComponentExist && !waitingComponents.includes(id);
+                return isComponentExist && isComponentUsedInDashboard && !waitingComponents.includes(id);
             });
 
             return dependencies.every(function (id) {
@@ -527,9 +554,7 @@
 
                             if (areAllDependenciesCompleted(key, statusesObject, waitingComponents)) {
 
-                                waitingComponents = waitingComponents.filter(function (id) {
-                                    return id !== key;
-                                })
+                                waitingComponents = waitingComponents.filter((id) => id !== key);
 
                                 vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
                                 vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
@@ -561,6 +586,11 @@
 
             vm.dashboardDataService = new DashboardDataService();
             vm.dashboardEventService = new DashboardEventService();
+
+            vm.popupData = {
+                evDataService: vm.dashboardDataService,
+                evEventService: vm.dashboardEventService
+            }
 
             vm.openDashboardLayout();
             vm.initEventListeners();

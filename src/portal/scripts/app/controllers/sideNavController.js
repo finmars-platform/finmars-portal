@@ -276,7 +276,7 @@
             vm.interfaceAccess.forEach(function (item) {
 
                 if (item.value <= vm.member.interface_level) {
-                    vm.accessTable[item.system_code] = true;
+                    vm.accessTable[item.user_code] = true;
                 }
 
 

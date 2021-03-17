@@ -23,7 +23,8 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row" layout-align="space-between center">
-
+<!--        Victor 2021.02.11 make one footer for modal window and Big Drawer-->
+<!--
         <div>
             <md-button ng-click="vm.editLayout()" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
                 Edit Form
@@ -39,12 +40,16 @@
                 Cancel
             </md-button>
             <md-button class="md-raised" data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
-                ng-click="vm.save()" style="margin-right:20px;">
-                Add and Exit
+                ng-click="vm.save($event, true)" style="margin-right:20px;">
+                Add and Exit!
             </md-button>
         </div>
 
         <dialog-window-resizer data-ng-if="vm.dialogElemToResize" data-elem-to-resize="vm.dialogElemToResize"
-            class="dialog-window-resizer_type1"></dialog-window-resizer>
+            class="dialog-window-resizer_type1"></dialog-window-resizer>-->
+
+        <div class="dialog-footer flex-row fc-space-between"
+             data-ng-include="'views/entity-viewer/entity-viewer-universal-add-footer-view.html'"></div>
+
     </md-dialog-actions>
 </md-dialog>

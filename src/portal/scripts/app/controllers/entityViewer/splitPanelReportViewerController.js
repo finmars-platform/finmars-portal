@@ -858,6 +858,7 @@
                 vm.entityViewerDataService.setRootEntityViewer(false);
                 vm.entityViewerDataService.setUseFromAbove(true);
                 vm.entityViewerDataService.setViewContext('split_panel');
+                vm.entityViewerDataService.setRowHeight(36);
 
 
 				var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();

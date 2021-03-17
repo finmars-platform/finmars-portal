@@ -137,7 +137,7 @@
                                         valueFromTable = JSON.parse(JSON.stringify(relationFieldData.short_name));
 
                                     } else if (keyProperty === 'price_download_scheme') {
-                                        valueFromTable = JSON.parse(JSON.stringify(relationFieldData.scheme_name));
+                                        valueFromTable = JSON.parse(JSON.stringify(relationFieldData.user_code));
 
                                     }
 

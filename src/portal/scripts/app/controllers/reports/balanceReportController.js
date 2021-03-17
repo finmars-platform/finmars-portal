@@ -15,6 +15,7 @@
         var vm = this;
 
         vm.entityType = 'balance-report';
+        vm.contentType = 'reports.balancereport';
         vm.entityRaw = [];
 
         vm.isReport = true;

@@ -5,6 +5,9 @@
 
     'use strict';
 
+    var baseUrlService = require('../../../services/baseUrlService');
+    var baseUrl = baseUrlService.resolve();
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
@@ -24,6 +27,13 @@
         vm.scheme = data.validationResult.scheme_object;
         vm.config = data.config;
 
+        vm.getFileUrl = function(id) {
+
+            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+
+        };
+
+        // DEPRECATED
         vm.getUniqueColumns = function (validationResult) {
 
             var uniqueColumns = [];
@@ -46,6 +56,7 @@
 
         };
 
+        // DEPRECATED
         vm.generateColumnsForFile = function (validationResult) {
 
             var columns = ['Row number'];
@@ -68,6 +79,7 @@
 
         };
 
+        // DEPRECATED
         vm.generateColumnsDataForFile = function (validationResult, config, errorRow) {
 
             var result = [];
@@ -98,6 +110,7 @@
 
         };
 
+        // DEPRECATED
         vm.createCsvContentTransactionImport = function (validationResult, config) {
 
             var result = [];
@@ -168,6 +181,7 @@
 
         };
 
+        // DEPRECATED
         vm.setDownloadLink = function () {
 
             var link = document.querySelector('.download-error-link');
@@ -177,7 +191,7 @@
             var file = new Blob([text], {type: 'text/plain'});
 
             link.href = URL.createObjectURL(file);
-            link.download = vm.scheme.scheme_name + ' error file.csv';
+            link.download = vm.scheme.user_code + ' error file.csv';
 
 
         };
@@ -300,9 +314,9 @@
 
             console.log('vm.rowsSuccessCount', vm.rowsSuccessCount);
 
-            setTimeout(function () {
-                vm.setDownloadLink();
-            }, 100)
+            // setTimeout(function () {
+            //     vm.setDownloadLink();
+            // }, 100)
 
         };
 

@@ -23,6 +23,7 @@
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
+    var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 	var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
 	var transactionHelper = require('../../helpers/transaction.helper');
@@ -78,9 +79,11 @@
 		vm.errorFieldsList = [];
 		vm.inputsWithCalculations = null;
 
+		vm.openedIn = data.openedIn;
+
 		var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 
-        /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
+        /* var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
             var i, l, e, u;
 
@@ -266,8 +269,9 @@
             }
             // < Empty sockets that have no attribute that matches them >
 
-        };*/
-        vm.rearrangeMdDialogActions = function () {
+        }; */
+
+		vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
 
             if (dialogWindowWidth < 905) {
@@ -446,7 +450,8 @@
             }
 
             //$mdDialog.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
-            $bigDrawer.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
+			var responseObj = {status: 'disagree', data: {updateRowIcon: updateRowIcon}};
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
         };
 
@@ -490,7 +495,7 @@
             });
 
             //$mdDialog.hide({status: 'disagree'});
-            $bigDrawer.hide({status: 'disagree'});
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
 
         };
 
@@ -611,24 +616,18 @@
 
         vm.recalculate = function (paramsObj) {
 
-			clearTimeout(recalculateTimeoutID);
-
             var inputs = paramsObj.inputs;
 			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
 
-				recalculateTimeoutID = setTimeout(() => {
+				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
-            		var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+				book.id = vm.entityId;
+				book.complex_transaction = vm.entity;
 
-					book.id = vm.entityId;
-					book.complex_transaction = vm.entity;
-
-					var recalcProm = complexTransactionService.recalculateComplexTransaction(book.id, book);
-					sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
-
-				}, 1200);
+				var recalcProm = complexTransactionService.recalculateComplexTransaction(book.id, book);
+				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
 
             }
 
@@ -1052,7 +1051,10 @@
 
                 if (res.status === 'agree') {
                     //$mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-                    $bigDrawer.hide({res: 'agree', data: {action: 'delete'}});
+
+					var responseObj = {res: 'agree', data: {action: 'delete'}};
+					metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
                 }
 
             })
@@ -1198,7 +1200,7 @@
 
                 new Promise(function (resolve, reject) {
 
-                    return complexTransactionService.initRebookComplexTransaction(result.id).then(function (data) {
+                    complexTransactionService.initRebookComplexTransaction(result.id).then(function (data) {
 
                         var originValues = JSON.parse(JSON.stringify(result.values));
 
@@ -1236,7 +1238,8 @@
 
                             resolve(data);
 
-                        }).catch(function (data) {
+                        })
+						.catch(function (data) {
 
                             if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
@@ -1255,22 +1258,24 @@
                                     }
                                 }).then(function (response) {
 
-                                    if(response.reaction === 'cancel') {
+                                    /* if (response.reaction === 'cancel') {
                                         // do nothing
+                                    } */
+
+                                    if (response.reaction === 'skip') {
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: null});
                                     }
 
-                                    if(response.reaction === 'skip') {
-                                        $mdDialog.hide({res: 'agree', data: null});
-                                    }
-
-                                    if(response.reaction === 'book_without_unique_code') {
+                                    else if (response.reaction === 'book_without_unique_code') {
 
                                         // TODO refactor here
                                         // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
 
-                                        res.uniqueness_reaction = 2;
+                                        result.uniqueness_reaction = 2;
 
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                        vm.processing = true;
+
+                                        transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
                                             vm.processing = false;
 
@@ -1282,14 +1287,16 @@
 
                                     }
 
-                                    if(response.reaction === 'overwrite') {
+                                    else if(response.reaction === 'overwrite') {
 
                                         // TODO refactor here
                                         //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
 
-                                        res.uniqueness_reaction = 3;
+                                        result.uniqueness_reaction = 3;
 
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                        vm.processing = true;
+
+                                        transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
                                             vm.processing = false;
 
@@ -1305,7 +1312,9 @@
                                 })
 
 
-                            } else {
+                            }
+
+                            else {
 
                                 console.log('data', data);
 
@@ -1340,13 +1349,12 @@
 
                     } else {
                         //$mdDialog.hide({res: 'agree', data: data});
-                        $bigDrawer.hide({res: 'agree', data: data});
-                    }
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
+					}
 
                 }).catch(function (reason) {
 
                     vm.processing = false;
-
                     $scope.$apply();
 
                 })
@@ -1390,7 +1398,7 @@
 
                     new Promise(function (resolve, reject) {
 
-                        return complexTransactionService.initRebookPendingComplexTransaction(result.id).then(function (data) {
+                        complexTransactionService.initRebookPendingComplexTransaction(result.id).then(function (data) {
 
                             var originValues = JSON.parse(JSON.stringify(result.values));
 
@@ -1418,8 +1426,11 @@
                                 vm.processing = false;
 
                                 resolve(data);
+
                             });
+
                         });
+
                     }).then(function (data) {
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
@@ -1427,8 +1438,7 @@
                             vm.handleComplexTransactionErrors($event, data);
 
                         } else {
-                            //$mdDialog.hide({res: 'agree'});
-                            $bigDrawer.hide({res: 'agree'});
+							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree'});
                         }
 
                     }).catch(function (reason) {
@@ -1439,7 +1449,9 @@
 
                     })
 
-                } else {
+                }
+
+                else {
 
                     var warningDescription = '<p>Next fields should have positive number value to proceed:';
 
@@ -1506,9 +1518,12 @@
         };
 
         vm.init = function () {
-            /*setTimeout(function () {
+
+        	/*
+            setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
-            }, 100);*/
+            }, 100);
+            */
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
