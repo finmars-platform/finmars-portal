@@ -28,13 +28,6 @@
     <div data-ng-if="popupData.data.column.value_type == 10">
         <md-button data-ng-click="popupData.data.editManualSorting($event, popupData.data.column)"
                    class="popup-menu-item">
-            <span>Edit Manual Sorting</span>
-        </md-button>
-    </div>
-
-    <div data-ng-if="popupData.data.column.value_type == 10">
-        <md-button data-ng-click="popupData.data.manualSort($event, popupData.data.column)"
-                   class="popup-menu-item" data-ng-class="{'disabled-btn': !popupData.data.column.manual_sort_layout_user_code}">
             <span>Manual Sort</span>
         </md-button>
     </div>
