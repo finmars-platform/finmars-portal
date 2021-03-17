@@ -123,7 +123,7 @@
 
             const duplicateEntity = async function (entity) {
 
-                var editLayout = await uiService.getEditLayout(vm.entityType);
+                var editLayout = await uiService.getEditLayoutByKey(vm.entityType);
                 var bigDrawerWidthPercent;
                 var fixedAreaColumns = 6;
 
@@ -156,7 +156,7 @@
 
             };
 
-            let postEditionActions = function (res, activeObject) {
+            const postEditionActions = function (res, activeObject) {
 
             	vm.entityViewerDataService.setActiveObjectAction(null);
 				vm.entityViewerDataService.setActiveObjectActionData(null);
@@ -199,7 +199,7 @@
 			};
 
             var editEntity = async function (entitytype, activeObject) {
-
+				console.log("testing editEntity activeObject", activeObject);
 				/* var entitiesWithEditLayout = [
 					'instrument',
 					'portfolio',
@@ -530,8 +530,51 @@
 
 					default:
 
-						var editLayout = await uiService.getDefaultEditLayout(entitytype);
-						console.log('editLayout', editLayout, entitytype)
+						var editLayout;
+
+						/* if (entitytype === 'instrument') {
+
+							var getAvailableEditLayout = function (entityType, userCodesList) {
+
+								return new Promise(async (resolve, reject) => {
+
+									var userCode;
+
+									for (userCode of userCodesList) {
+
+										try {
+											var editLayoutData = await uiService.getEditLayoutByUserCode(entityType, userCode);
+
+										} catch (error) {
+											reject(error);
+										}
+
+										if (editLayoutData.results.length) resolve(editLayoutData);
+
+									}
+
+								});
+
+							};
+
+							var instrumentEditLayoutsUserCodes = activeObject.instrument_type_object.instrument_form_layouts;
+
+							if (!instrumentEditLayoutsUserCodes) {
+								editLayout = await uiService.getDefaultEditLayout(entitytype);
+
+							} else {
+
+								var instrEditLayoutsUserCodesList = instrumentEditLayoutsUserCodes.split(',');
+								editLayout = getAvailableEditLayout(entitytype, instrEditLayoutsUserCodesList);
+
+							}
+
+						} else {
+							editLayout = await uiService.getDefaultEditLayout(entitytype);
+						} */
+
+						editLayout = await uiService.getDefaultEditLayout(entitytype);
+
 						var bigDrawerWidthPercent;
 						var fixedAreaColumns = 6;
 
@@ -544,6 +587,26 @@
                             }
 
 							bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
+
+							$bigDrawer.show({
+								controller: 'EntityViewerEditDialogController as vm',
+								templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+								addResizeButton: true,
+								drawerWidth: bigDrawerWidthPercent,
+								locals: {
+									entityType: entitytype,
+									entityId: activeObject.id,
+									data: {
+										openedIn: 'big-drawer',
+										editLayout: editLayout
+									}
+								}
+
+							}).then((res) => {
+
+								postEditionActions(res, activeObject);
+
+							});
 
 						}
 						/* $mdDialog.show({
@@ -612,25 +675,6 @@
 							}
 
 						}); */
-						$bigDrawer.show({
-							controller: 'EntityViewerEditDialogController as vm',
-							templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
-							addResizeButton: true,
-							drawerWidth: bigDrawerWidthPercent,
-							locals: {
-								entityType: entitytype,
-								entityId: activeObject.id,
-								data: {
-									openedIn: 'big-drawer',
-									editLayout: editLayout
-								}
-							}
-
-						}).then(function (res) {
-
-                            postEditionActions(res, activeObject);
-
-						});
 
 						break;
 
@@ -1373,5 +1417,4 @@
             }
         }
 
-    }()
-);
+}());

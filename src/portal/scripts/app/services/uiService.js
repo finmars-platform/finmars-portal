@@ -300,9 +300,13 @@
         return uiRepository.getDefaultEditLayout(entityType);
     };
 
-    let getEditLayout = function (id) {
-        return uiRepository.getEditLayout(id);
+    let getEditLayoutByKey = function (id) {
+        return uiRepository.getEditLayoutByKey(id);
     };
+
+	let getEditLayoutByUserCode = function (entityType, userCode) {
+		return uiRepository.getEditLayoutByUserCode(entityType, userCode);
+	};
 
     let createEditLayout = function (entity, ui) {
 
@@ -506,7 +510,8 @@
 
         getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
-        getEditLayout: getEditLayout,
+        getEditLayoutByKey: getEditLayoutByKey,
+		getEditLayoutByUserCode: getEditLayoutByUserCode,
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
 
