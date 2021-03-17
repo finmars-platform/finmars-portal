@@ -44,11 +44,13 @@
         var orderedItems = {}
 
         var key;
+        var isReverse = false;
 
         if (property[0] === '-') {
             key = property.split('-')[1];
+            isReverse = true;
         } else {
-            key =  property;
+            key = property;
         }
 
         var item_value;
@@ -56,7 +58,7 @@
         var manual_sort_order;
         var matched;
 
-        for (var i = 0; i < items.length; i= i + 1) {
+        for (var i = 0; i < items.length; i = i + 1) {
 
             item_value = items[i][key]
 
@@ -83,11 +85,15 @@
 
         }
 
-        Object.keys(orderedItems).forEach(function (orderKey){
+        Object.keys(orderedItems).forEach(function (orderKey) {
             result.push(orderedItems[orderKey])
         })
 
         result.concat(missedItems);
+
+        if (isReverse) {
+            result = result.reverse();
+        }
 
         return result
 

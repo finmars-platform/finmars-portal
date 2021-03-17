@@ -61,19 +61,19 @@
 
                 console.log('objectService.getList.options', options);
 
-                if (options.ordering_manual) {
+                if (options.ordering_mode === 'manual') {
 
                     var key;
 
-                    if (options.ordering_manual[0] === '-') {
-                        key = options.ordering_manual.split('-')[1];
+                    if (options.ordering[0] === '-') {
+                        key = options.ordering.split('-')[1];
                     } else {
-                        key =  options.ordering_manual;
+                        key = options.ordering;
                     }
 
                     var columnSortData = entityViewerDataService.getColumnSortData(key)
 
-                    items = sortService.sortItemsManual(items, options.ordering_manual, columnSortData);
+                    items = sortService.sortItemsManual(items, options.ordering, columnSortData);
 
                 } else {
 
