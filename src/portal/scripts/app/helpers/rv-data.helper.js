@@ -1,5 +1,7 @@
 (function () {
 
+	var objectComparison
+
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
     var rvSubtotalHelper = require('./rv-subtotal.service');
@@ -645,75 +647,75 @@
 
     };
 
-    const getMarkedRowsAndSubtotals = function (color, evDataService) {
+	const getMarkedRowsAndSubtotals = function (color, evDataService) {
 
-        let markedReportRows = localStorage.getItem("marked_report_rows");
+		let markedReportRows = localStorage.getItem("marked_report_rows");
 
-        if (markedReportRows) {
-            markedReportRows = JSON.parse(markedReportRows);
-        } else {
-            markedReportRows = {};
-        }
+		if (markedReportRows) {
+			markedReportRows = JSON.parse(markedReportRows);
+		} else {
+			markedReportRows = {};
+		}
 
-        const markedSubtotals = evDataService.getMarkedSubtotals();
+		const markedSubtotals = evDataService.getMarkedSubtotals();
 
-        const markedRowsAndSubtotals = Object.keys(markedReportRows)
-            .filter(key => markedReportRows[key].color === color)
-            .concat(
-                Object.keys(markedSubtotals).filter(key => markedSubtotals[key] === color)
-            );
+		const markedRowsAndSubtotals = Object.keys(markedReportRows)
+			.filter(key => markedReportRows[key].color === color)
+			.concat(
+				Object.keys(markedSubtotals).filter(key => markedSubtotals[key] === color)
+			);
 
-        return markedRowsAndSubtotals;
+		return markedRowsAndSubtotals;
 
-    }
+	};
 
-    const filterByRowColor = function (list, evDataService) {
-        const rowTypeFilters = evDataService.getRowTypeFilters();
-        const color = rowTypeFilters.markedRowFilters;
+	const filterByRowColor = function (list, evDataService) {
+		const rowTypeFilters = evDataService.getRowTypeFilters();
+		const color = rowTypeFilters.markedRowFilters;
 
-        if (color === 'none') { //  color filter disabled
-            return list;
-        }
+		if (color === 'none') { //  color filter disabled
+			return list;
+		}
 
-        const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService);
-        const undeletedKeys = [];
+		const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService);
+		const undeletedKeys = [];
 
-        list.forEach(item => {
+		list.forEach(item => {
 
-            if (item.___group_name === 'root') { // root subtotal is present always
+			if (item.___group_name === 'root') { // root subtotal is present always
 
-                undeletedKeys.push(item.___id)
+				undeletedKeys.push(item.___id)
 
-            }
+			}
 
-            const rowColored = markedRowsAndSubtotals.includes(item.id || item.___id);
+			const rowColored = markedRowsAndSubtotals.includes(item.id || item.___id);
 
-            if (rowColored) {
+			if (rowColored) {
 
-                const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
-                undeletedKeys.push(item.___id);
-                undeletedKeys.push(...parents.map(parent => parent.___id));
+				const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
+				undeletedKeys.push(item.___id);
+				undeletedKeys.push(...parents.map(parent => parent.___id));
 
-            }
+			}
 
-        })
+		})
 
-        return list.filter(item => {
+		return list.filter(item => {
 
-            const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && undeletedKeys.includes(item.___parentId);
-            const isRowColored = undeletedKeys.includes(item.___id);
+			const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && undeletedKeys.includes(item.___parentId);
+			const isRowColored = undeletedKeys.includes(item.___id);
 
-            if (isSubtotalContainsMarkedRows) {
+			if (isSubtotalContainsMarkedRows) {
 
-                item.results = item.results.filter(row => undeletedKeys.includes(row.id));
+				item.results = item.results.filter(row => undeletedKeys.includes(row.id));
 
-            }
+			}
 
-            return isRowColored || isSubtotalContainsMarkedRows;
+			return isRowColored || isSubtotalContainsMarkedRows;
 
-        });
+		});
 
-    };
+	};
 
     var getFlatStructure = function (evDataService) {
 
@@ -765,6 +767,8 @@
         } else {
             data = getNewDataInstance(evDataService)
         }
+
+
 
         var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
