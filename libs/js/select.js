@@ -2161,7 +2161,7 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         }
       });
 
-      element.on('dragstart', function(event) {
+      element.on('drag', function(event) {
         element.addClass(draggingClassName);
 
         (event.dataTransfer || event.originalEvent.dataTransfer).setData('text', scope.$index.toString());

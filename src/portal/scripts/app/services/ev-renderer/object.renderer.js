@@ -128,7 +128,7 @@
 
                     } else if (column.key === 'price_download_scheme') {
 
-                        return obj[column.key + '_object'].scheme_name;
+                        return obj[column.key + '_object'].user_code;
 
                     }
 
@@ -326,9 +326,11 @@
 
         result = result + rowSelection;
 
-        columns.forEach(function (column) {
+        columns.forEach(function (column, columnIndex) {
 
-            var cellValue = getValue(obj, column);
+			var columnNumber = columnIndex + 1;
+
+			var cellValue = getValue(obj, column);
             var textAlign = getCellTextAlign(column);
             var gCellTitle = '';
 
@@ -337,7 +339,7 @@
                 cellValue = '<span class="g-cell-content">' + cellValue + '</span>';
             }
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '">' +
+            cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap" style="width: ' + column.style.width + '">' +
                 '<div class="g-cell' + textAlign + ' cell-status-' + column.status + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 cellValue +

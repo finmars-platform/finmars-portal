@@ -30,12 +30,36 @@
     <div class="g-content-wrap"
          data-ng-class="{'g-content-wrap-right': verticalAdditions.isOpen, 'g-root-content-wrap': isRootEntityViewer}">
 
+<!--        <div ng-if="isReport">
+            <g-top-part ev-data-service="evDataService"
+                        ev-event-service="evEventService"
+            ></g-top-part>
+        </div>-->
+
         <div class="g-workarea-wrap">
             <div class="g-workarea main-area"
                  data-ng-if="domElemsAreReady"
                  ng-class="{'column-group-areas-collapsed': groupingAndColumnAreaCollapsed}"
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
+
+                <div ng-if="isReport && components.topPart">
+                    <g-top-part ev-data-service="evDataService"
+                                ev-event-service="evEventService"
+                                attribute-data-service="attributeDataService"
+                                sp-exchange-service="spExchangeService">
+                    </g-top-part>
+                </div>
+
+                <div ng-if="isReport && components.filterArea">
+                    <g-filters ev-data-service="evDataService"
+                               ev-event-service="evEventService"
+                               attribute-data-service="attributeDataService"
+                               content-wrap-element="contentWrapElem"
+                               workarea-wrap-element="workareaWrapElem">
+                    </g-filters>
+                </div>
+
                 <div class="g-grouping-section"
                      data-ng-if="components.groupingArea && viewType !== 'matrix'">
                     <group-grouping ev-data-service="evDataService"
@@ -44,7 +68,7 @@
                                     content-wrap-element="contentWrapElem"></group-grouping>
                 </div>
 
-                <div class="g-table-section">
+                <div class="g-table-section" ng-if="readyToRenderTable">
                     <div>
                         <div class="g-table-wrap">
 
@@ -57,7 +81,7 @@
                                     ></group-columns>
                                 </div>
 
-                                <md-button data-ng-if="!isInsideDashboard && viewType !== 'matrix'"
+                                <md-button data-ng-if="!isReport && !isInsideDashboard && viewType !== 'matrix'"
                                            class="toggle-group-column-area-btn"
                                            ng-click="toggleGroupAndColumnArea()">
                                     <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"
@@ -72,7 +96,7 @@
                                               data-ng-class="{
                                                 'g-font-size-small': reportOptions.table_font_size === 'small',
                                                 'g-font-size-medium': reportOptions.table_font_size === 'medium',
-                                                'g-font-size-large': reportOptions.table_font_size === 'large',
+                                                'g-font-size-large': reportOptions.table_font_size === 'large'
                                               }"
                                               ev-data-service="evDataService"
                                               ev-event-service="evEventService"
@@ -97,10 +121,11 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
-        <div data-ng-if="isInsideDashboard && !components.sidebar" class="g-dashboard-filter-holder">
+         <div data-ng-if="isInsideDashboard && !components.filterArea" class="g-dashboard-filter-holder">
 
             <md-button class="toggle-dashboard-filter-btn"
                        ng-click="toggleDashboardFilter()">
@@ -123,10 +148,10 @@
             <div>
                 <div class="g-filter" id="filtersbag">
                     <g-sidebar-filter ev-data-service="evDataService"
-                                          ev-event-service="evEventService"
-                                          attribute-data-service="attributeDataService"
-                                          sp-exchange-service="spExchangeService"
-                                          content-wrap-element="contentWrapElem"></g-sidebar-filter>
+                                      ev-event-service="evEventService"
+                                      attribute-data-service="attributeDataService"
+                                      sp-exchange-service="spExchangeService"
+                                      content-wrap-element="contentWrapElem"></g-sidebar-filter>
                 </div>
             </div>
         </div>

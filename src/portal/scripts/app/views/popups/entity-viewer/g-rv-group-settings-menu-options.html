@@ -1,0 +1,35 @@
+<div>
+    <md-button md-prevent-menu-close="md-prevent-menu-close"
+               ng-click="popupData.data.reportSetSubtotalType(popupData.data.column, 'line')"
+               class="popup-menu-item">
+        <ng-md-icon icon="done"
+                    data-ng-show="popupData.data.column.report_settings.subtotal_type == 'line'"></ng-md-icon>
+        <ng-md-icon icon="done" style="visibility: hidden;"
+                    data-ng-show="popupData.data.column.report_settings.subtotal_type != 'line'"></ng-md-icon>
+        <span>Subtotal on Top</span>
+    </md-button>
+</div>
+
+<div>
+    <md-button md-prevent-menu-close="md-prevent-menu-close"
+               ng-click="popupData.data.reportSetSubtotalType(popupData.data.column, 'area')"
+               class="popup-menu-item">
+        <ng-md-icon icon="done"
+                    data-ng-show="popupData.data.column.report_settings.subtotal_type == 'area'"></ng-md-icon>
+        <ng-md-icon icon="done" style="visibility: hidden;"
+                    data-ng-show="popupData.data.column.report_settings.subtotal_type != 'area'"></ng-md-icon>
+        <span>Subtotal on Bottom</span>
+    </md-button>
+</div>
+
+<div>
+    <md-button md-prevent-menu-close="md-prevent-menu-close"
+               ng-click="popupData.data.reportSetSubtotalType(popupData.data.column, 'arealine')"
+               class="popup-menu-item">
+        <ng-md-icon icon="done"
+                    data-ng-show="popupData.data.column.report_settings.subtotal_type == 'arealine'"></ng-md-icon>
+        <ng-md-icon icon="done" style="visibility: hidden;"
+                    data-ng-show="popupData.data.column.report_settings.subtotal_type != 'arealine'"></ng-md-icon>
+        <span>Subtotal on Top and Bottom</span>
+    </md-button>
+</div>

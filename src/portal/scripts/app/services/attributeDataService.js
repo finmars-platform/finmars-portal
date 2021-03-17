@@ -90,6 +90,8 @@
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
 
+            var currencyAttrs = getAllAttributesAsFlatList('currencies.currency', 'currency', 'Currency', {maxDepth: 1});
+
             var accountAttrs = getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
 
             var portfolioAttrs = getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
@@ -119,6 +121,7 @@
 
             var portfolioDynamicAttrsFormatted = formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
             var accountDynamicAttrsFormatted = formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account', 'Account');
+            var currencyDynamicAttrsFormatted = formatAttributeTypes(accountDynamicAttrs, 'currencies.currency', 'currency', 'Currency');
             var instrumentDynamicAttrsFormatted = formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
             var allocationDynamicAttrsFormatted = formatAttributeTypes(allocationDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             var linkedInstrumentDynamicAttrsFormatted = formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
@@ -129,6 +132,7 @@
             result = result.concat(allocationAttrs);
             result = result.concat(instrumentAttrs);
             result = result.concat(linkedInstrumentAttrs);
+            result = result.concat(currencyAttrs);
             result = result.concat(accountAttrs);
             result = result.concat(portfolioAttrs);
             result = result.concat(strategy1attrs);
@@ -139,6 +143,7 @@
 
             result = result.concat(portfolioDynamicAttrsFormatted);
             result = result.concat(accountDynamicAttrsFormatted);
+            result = result.concat(currencyDynamicAttrsFormatted);
             result = result.concat(instrumentDynamicAttrsFormatted);
             result = result.concat(allocationDynamicAttrsFormatted);
             result = result.concat(linkedInstrumentDynamicAttrsFormatted);
@@ -661,7 +666,7 @@
 
                     } else {
 
-                        if (attribute.value_type === 'field' && attribute.code === 'system_code') {
+                        if (attribute.value_type === 'field' && attribute.code === 'user_code') {
 
                             resultAttr = Object.assign({}, attribute);
 

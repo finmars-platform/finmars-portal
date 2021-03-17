@@ -22,8 +22,16 @@
                     <md-card flex="100" class="inm-card-special">
                         <md-card-content layout="column">
                             <md-input-container class="md-block">
-                                <label>Scheme name</label>
-                                <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.scheme_name">
+                                <label>User Code</label>
+                                <input aria-label="scheme user code" type="text" data-ng-model="vm.scheme.user_code">
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label>Name</label>
+                                <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.name">
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label>Short name</label>
+                                <input aria-label="scheme short name" type="text" data-ng-model="vm.scheme.short_name">
                             </md-input-container>
                         </md-card-content>
                     </md-card>
@@ -101,9 +109,9 @@
                                                         <div class="select-options-holder">
 
                                                             <md-option
-                                                                    data-ng-repeat="item in vm.csvImportSchemes | filter: {scheme_name: searchTerm}"
+                                                                    data-ng-repeat="item in vm.csvImportSchemes | filter: {user_code: searchTerm}"
                                                                     ng-value="item.id"
-                                                                    ng-bind="item.scheme_name">
+                                                                    ng-bind="item.user_code">
                                                             </md-option>
 
                                                         </div>
@@ -211,9 +219,9 @@
                                                         <div class="select-options-holder">
 
                                                             <md-option
-                                                                    data-ng-repeat="item in vm.transactionImportSchemes | filter: {scheme_name: searchTerm}"
+                                                                    data-ng-repeat="item in vm.transactionImportSchemes | filter: {user_code: searchTerm}"
                                                                     ng-value="item.id"
-                                                                    ng-bind="item.scheme_name">
+                                                                    ng-bind="item.user_code">
                                                             </md-option>
 
                                                         </div>

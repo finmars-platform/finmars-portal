@@ -19,7 +19,7 @@
         vm.processing = false;
 
         vm.scheme = {
-            scheme_name: [],
+            user_code: [],
             actions: []
         };
 
@@ -104,7 +104,7 @@
 
             complexImportSchemeService.create(vm.scheme).then(function (data) {
 
-                toastNotificationService.success("Complex Import Scheme " + vm.scheme.scheme_name + ' was successfully created');
+                toastNotificationService.success("Complex Import Scheme " + vm.scheme.user_code + ' was successfully created');
 
                 vm.processing = false;
 

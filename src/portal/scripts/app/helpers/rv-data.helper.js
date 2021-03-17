@@ -1,5 +1,7 @@
 (function () {
 
+	var objectComparison
+
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
     var rvSubtotalHelper = require('./rv-subtotal.service');
@@ -75,11 +77,53 @@
 
     };
 
+    var insertSubtotalFns = {
+    	'line': function (subtotalObj, item) {
+
+    		subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+			subtotalObj.___subtotal_type = 'line';
+
+			item.results.unshift(subtotalObj);
+
+		},
+		'area': function (subtotalObj, item) {
+
+			subtotalObj.___subtotal_type = 'proxyline';
+			subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+			item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+
+			subtotalObj.___subtotal_type = 'area';
+			subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+			item.results.push(subtotalObj);
+
+		},
+		'arealine': function (subtotalObj, item) {
+
+    		subtotalObj.___subtotal_type = 'arealine';
+
+			subtotalObj.___subtotal_subtype = 'line';
+			subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+			item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+
+
+			subtotalObj.___subtotal_subtype = 'area';
+			subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+
+			item.results.push(subtotalObj);
+
+		}
+	}
+
     var insertSubtotalsToResults = function (data, evDataService) {
 
         var dataList = [];
         var groups = evDataService.getGroups();
-        var rootGroupOptions = evDataService.getRootGroupOptions();
+		/* var rootGroupOptions = evDataService.getRootGroupOptions();
+		var reportOptions = evDataService.getReportOptions();
+		var subtotalsOpts = reportOptions.subtotals_options; */
 
         Object.keys(data).forEach(function (key) {
             dataList.push(data[key])
@@ -87,11 +131,85 @@
 
         var subtotalObj;
 
-        dataList.forEach(function (item) {
+		// insert Grand total
+        if (dataList[0].results) {
+
+        	subtotalObj = Object.assign({}, dataList[0].subtotal, {
+				___group_name: dataList[0].___group_name,
+				___type: 'subtotal',
+				___parentId: dataList[0].___id,
+				___level: 0
+			});
+
+        	subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+			subtotalObj.___subtotal_type = 'line';
+
+			dataList[0].results.unshift(subtotalObj);
+
+		}
+		// < insert Grand total >
+
+        /* if (subtotalsOpts) {
+
+			// subtotals are on
+        	if (subtotalsOpts.type) {
+
+        		var insertSubtotal = insertSubtotalFns[subtotalsOpts.type];
+
+        		dataList.forEach(function (item) {
+
+        			if (item.results.length && item.___group_name !== "root" && item.___level <= groups.length) { // insert subtotals for groups but not for root group
+
+        				subtotalObj = Object.assign({}, item.subtotal, {
+							___group_name: item.___group_name,
+							___type: 'subtotal',
+							___parentId: item.___id,
+							___level: item.___level + 1
+						});
+
+						insertSubtotal(subtotalObj, item);
+
+					}
+
+				});
+
+			}
+			// < subtotals are on >
+
+		} */
+
+		dataList.forEach(function (item) {
+
+			if (item.results.length) {
+
+				groups.forEach(function (group, index) {
+
+					if (item.___level === index + 1 && item.___level <= groups.length &&
+						group.report_settings.subtotal_type) {
+
+						subtotalObj = Object.assign({}, item.subtotal, {
+							___group_name: item.___group_name,
+							___type: 'subtotal',
+							___parentId: item.___id,
+							___level: item.___level + 1
+						});
+
+						var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
+						insertSubtotal(subtotalObj, item);
+
+					}
+
+				});
+
+			}
+
+		});
+
+		/* dataList.forEach(function (item) {
 
             if (item.results.length) {
 
-                if (item.___level === 0 && rootGroupOptions.subtotal_type) {
+                 if (item.___level === 0 && rootGroupOptions.subtotal_type) { // Now Grand total always on top
 
                     subtotalObj = Object.assign({}, item.subtotal, {
                         ___group_name: item.___group_name,
@@ -124,9 +242,11 @@
                             break;
                     }
 
-                } else {
+                }
 
-                    groups.forEach(function (group, index) {
+				else {
+
+					groups.forEach(function (group, index) {
 
                         if (item.___level === index + 1 && item.___level <= groups.length) {
 
@@ -190,9 +310,7 @@
 
             }
 
-        });
-
-        // console.log('insertSubtotalsToResults.data', data);
+        }); */
 
         return data;
 
@@ -247,14 +365,17 @@
 
     };
 
-    var getGroupsIdsToFold = function (list) {
+    var getGroupsIdsToFold = function (list, evDataService) {
 
         var result = [];
 
         list.forEach(function (item) {
 
-            if (item.___type === 'group' && item.___parentId !== null && item.___is_open === false) {
-                result.push(item.___id)
+            if (item.___type === 'group' && item.___parentId !== null) {
+
+                if (item.___is_open === false) {
+                    result.push(item.___id)
+                }
             }
 
         });
@@ -420,7 +541,9 @@
 
         var result = list.concat();
 
-        var groupsIdsToFold = getGroupsIdsToFold(list);
+        var groupsIdsToFold = getGroupsIdsToFold(list, evDataService);
+
+        console.log('groupsIdsToFold', groupsIdsToFold);
 
         result = result.filter(function (item) {
 
@@ -450,7 +573,7 @@
 
     };
 
-    var isPrimitive = function(value){
+    var isPrimitive = function (value) {
 
         var propertyType = typeof value;
 
@@ -509,7 +632,6 @@
     var getNewDataInstance = function (evDataService) {
 
         var sourceData = evDataService.getData();
-        console.log('#52 sourceData', sourceData)
         var result = {};
 
         // console.log('sourceData', evDataService.getData());
@@ -525,72 +647,75 @@
 
     };
 
+	const getMarkedRowsAndSubtotals = function (color, evDataService) {
 
-    Object.compare = function (obj1, obj2) {
-        // Цикл через свойства объекта obj1
-        for (var p in obj1) {
-            //Проверка на то, что оба объекта существуют
-            if (obj1.hasOwnProperty(p) !== obj2.hasOwnProperty(p)) return false;
+		let markedReportRows = localStorage.getItem("marked_report_rows");
 
-            switch (typeof (obj1[p])) {
-                // Глубокое сравнение объектов по ключам и значения:
-                case 'object':
-                    if (!Object.compare(obj1[p], obj2[p])) return false;
-                    break;
-                // Сравнение данных типа function:
-                case 'function':
-                    if (typeof (obj2[p]) == 'undefined' || (p != 'compare' && obj1[p].toString() != obj2[p].toString())) return false;
-                    break;
-                // Сравнение значений:
-                default:
-                    if (obj1[p] != obj2[p]) {
-                        console.log(`#52 property ${p} Obj1: ${obj1[p]}  Obj2: ${obj2[p]}`)
-                        return false
-                    };
-            }
-        }
+		if (markedReportRows) {
+			markedReportRows = JSON.parse(markedReportRows);
+		} else {
+			markedReportRows = {};
+		}
 
-        // Проверка объекта obj2 на дополнительные свойства:
-        for (var p in obj2) {
-            if (typeof (obj1[p]) == 'undefined') return false;
-        }
-        return true;
-    }
+		const markedSubtotals = evDataService.getMarkedSubtotals();
 
-    const getDuplicateLines = (lines) => {
-        const res = lines.reduce((acc, row) => {
-            if (!row.id) {
-                return acc;
-            }
+		const markedRowsAndSubtotals = Object.keys(markedReportRows)
+			.filter(key => markedReportRows[key].color === color)
+			.concat(
+				Object.keys(markedSubtotals).filter(key => markedSubtotals[key] === color)
+			);
 
-            if (acc.hasOwnProperty(row.id)) {
-                acc[row.id].count++
-                console.log('#52 compare', row.id);
-                acc[row.id].isEqual = Object.compare(acc[row.id].row, row)
-            } else {
-                acc[row.id] = {
-                    count: 1,
-                    position_size: row.position_size,
-                    row: row
-                };
+		return markedRowsAndSubtotals;
 
+	};
 
-            }
-            return acc;
-        }, {});
+	const filterByRowColor = function (list, evDataService) {
+		const rowTypeFilters = evDataService.getRowTypeFilters();
+		const color = rowTypeFilters.markedRowFilters;
 
-        Object.keys(res).forEach(key => {
-            if (res[key].count < 2) {
-                delete res[key]
-                return
-            }
-            res[key].rows
+		if (color === 'none') { //  color filter disabled
+			return list;
+		}
 
-        });
+		const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService);
+		const undeletedKeys = [];
 
-        return res;
+		list.forEach(item => {
 
-    }
+			if (item.___group_name === 'root') { // root subtotal is present always
+
+				undeletedKeys.push(item.___id)
+
+			}
+
+			const rowColored = markedRowsAndSubtotals.includes(item.id || item.___id);
+
+			if (rowColored) {
+
+				const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
+				undeletedKeys.push(item.___id);
+				undeletedKeys.push(...parents.map(parent => parent.___id));
+
+			}
+
+		})
+
+		return list.filter(item => {
+
+			const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && undeletedKeys.includes(item.___parentId);
+			const isRowColored = undeletedKeys.includes(item.___id);
+
+			if (isSubtotalContainsMarkedRows) {
+
+				item.results = item.results.filter(row => undeletedKeys.includes(row.id));
+
+			}
+
+			return isRowColored || isSubtotalContainsMarkedRows;
+
+		});
+
+	};
 
     var getFlatStructure = function (evDataService) {
 
@@ -614,7 +739,6 @@
             console.time("Copying data");
 
             data = getNewDataInstance(evDataService);
-            console.log('#52 data', data);
 
             console.log('data', data);
 
@@ -642,8 +766,6 @@
 
         } else {
             data = getNewDataInstance(evDataService)
-            // data = JSON.parse(JSON.stringify(evDataService.getData()));
-            // console.log("d3 service data2", data);
         }
 
 
@@ -668,11 +790,7 @@
 
         list = removeItemsFromFoldedGroups(list, evDataService);
 
-        console.log('#52 getFlatStructire list', list)
-
-        const duplicateLines = getDuplicateLines(list);
-
-        console.log('#52 duplicateLines', duplicateLines)
+        list = filterByRowColor(list, evDataService);
 
         return list;
 
@@ -790,7 +908,104 @@
     };
 
 
+    var getOrCreateGroupSettings = function (evDataService, group) {
+
+        var member = evDataService.getCurrentMember()
+        var layout = evDataService.getListLayout();
+        var contentType = evDataService.getContentType();
+
+        var member_id = member.id
+
+        var parents = evRvCommonHelper.getParents(group.___parentId, evDataService);
+
+        parents.pop() // skip root group
+
+        console.log('parents', parents);
+
+        var reportData
+        var rawReportData = localStorage.getItem('report_data')
+
+        if (rawReportData) {
+            reportData = JSON.parse(rawReportData)
+        } else {
+            reportData = {}
+        }
+
+        if (!reportData[member_id]) {
+            reportData[member_id] = {}
+        }
+
+        if (!reportData[member_id][contentType]) {
+            reportData[member_id][contentType] = {}
+        }
+
+        if (!reportData[member_id][contentType][layout.user_code]) {
+            reportData[member_id][contentType][layout.user_code] = {
+                groups: {}
+            }
+        }
+
+        var full_path = parents.map(function (item) {
+            return item.___group_name
+        })
+
+        full_path.push(group.___group_name);
+
+        full_path = full_path.join('___'); // TODO check if safe enough
+
+        console.log('full_path', full_path);
+
+        var groupSettings;
+
+        if (reportData[member_id][contentType][layout.user_code]['groups'][full_path]) {
+            groupSettings = reportData[member_id][contentType][layout.user_code]['groups'][full_path];
+        }
+
+        if (!groupSettings) {
+
+            groupSettings = {
+                full_path: full_path
+            }
+
+            reportData[member_id][contentType][layout.user_code]['groups'][full_path] = groupSettings
+
+            localStorage.setItem('report_data', JSON.stringify(reportData))
+
+        }
+
+        return groupSettings
+
+    }
+
+    var setGroupSettings = function (evDataService, group, groupSettings) {
+
+        var member = evDataService.getCurrentMember()
+        var layout = evDataService.getListLayout();
+        var contentType = evDataService.getContentType();
+
+        var member_id = member.id
+
+        var reportData
+        var rawReportData = localStorage.getItem('report_data')
+
+        if (rawReportData) {
+            reportData = JSON.parse(rawReportData)
+        } else {
+            reportData = {}
+        }
+
+        console.log('setGroupSettings', groupSettings);
+
+        reportData[member_id][contentType][layout.user_code]['groups'][groupSettings.full_path] = groupSettings
+
+        localStorage.setItem('report_data', JSON.stringify(reportData))
+
+
+    }
+
     module.exports = {
+        getOrCreateGroupSettings: getOrCreateGroupSettings,
+        setGroupSettings: setGroupSettings,
         syncLevelFold: syncLevelFold,
         getFlatStructure: getFlatStructure,
         getFlatListFieldUniqueValues: getFlatListFieldUniqueValues,
