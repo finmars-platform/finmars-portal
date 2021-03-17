@@ -345,6 +345,7 @@ app.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$bigD
 app.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 app.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 app.controller('EntityViewerDeleteBulkDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/entityViewer/entityViewerDeleteBulkDialogController')]);
+app.controller('EntityViewerRestoreDeletedBulkDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', require('./app/controllers/entityViewer/entityViewerRestoreDeletedBulkDialogController')]);
 app.controller('EvAddEditValidationDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/evAddEditValidationDialogController')]);
 
 app.controller('EntityViewerPermissionEditorController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
@@ -438,6 +439,9 @@ app.controller('CustomFieldDialogController', ['$scope', '$mdDialog', 'attribute
 app.controller('CustomFieldController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/customFieldController')]);
 app.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldAddDialogController')]);
 app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldEditDialogController')]);
+
+app.controller('ManualSortingSettingsDialogController', ['$scope', '$mdDialog', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingSettingsDialogController')]);
+app.controller('ManualSortingLayoutManagerDialogController', ['$scope', '$mdDialog', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingLayoutManagerDialogController')]);
 
 // Reports Missing Prices
 
@@ -602,6 +606,7 @@ app.controller('ReferenceTableExportDialogController', ['$scope', '$mdDialog', '
 
 app.controller('FormsDataConstructor', ['$scope', '$mdDialog', require('./app/controllers/pages/formsDataConstructorController')]);
 app.controller('LayoutsSettingsController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/layoutsSettingsController')]);
+app.controller('InputFormLayoutsSettingsController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/inputFormLayoutsSettingsController')]);
 
 /*
 TO DELETE: commented 2020-11-04
@@ -610,6 +615,7 @@ app.controller('EntitiesCustomAttributesController', ['$scope', '$mdDialog', req
 app.controller('PriceDownloadSchemeController', ['$scope', require('./app/controllers/pages/priceDownloadSchemeController')]);
 app.controller('TemplateFieldsController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateFieldsController')]);
 app.controller('EntityTooltipPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/entityTooltipPageController')]);
+app.controller('CrossEntityAttributeExtensionPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/crossEntityAttributeExtensionPageController')]);
 app.controller('ImportConfigurationsController', ['$scope', '$mdDialog', require('./app/controllers/pages/importConfigurationsController')]);
 app.controller('ExportConfigurationsController', ['$scope', '$mdDialog', require('./app/controllers/pages/exportConfigurationsController')]);
 
@@ -640,6 +646,11 @@ app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/gr
 app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
 app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]);
+app.directive('rvFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvFilterDirective')]);
+app.directive('rvTextFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterPopupDirective')]);
+app.directive('rvNumberFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterPopupDirective')]);
+app.directive('rvDateFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterPopupDirective')]);
+
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 app.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evTextFilterDirective')]);
 app.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evNumberFilterDirective')]);
@@ -669,6 +680,9 @@ app.directive('gEvFilterSettingsButton', ['$mdDialog', require('./app/directives
 app.directive('contentTitle', ['$timeout', require('./app/directives/contentTitleDirective.js')]);
 app.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDirective.js')]);
 
+app.directive('gLayoutsManager', ['$mdDialog', '$state', require('./app/directives/groupTable/gLayoutsManagerComponent.js')]);
+app.directive('dashboardLayoutsManagerComponent', ['$mdDialog', '$state', require('./app/directives/dashboardLayoutsManagerComponent.js')]);
+
 app.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', 'options', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
 app.controller('GEntityViewerSettingsDialogController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/controllers/dialogs/gEntityViewerSettingsDialogController')]);
 app.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
@@ -682,6 +696,9 @@ app.controller('gModalReportTransactionController', ['$scope', '$mdDialog', 'ent
 app.controller('gModalReportPerformanceController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', require('./app/directives/groupTable/gModalReportPerformanceComponent')]);
 app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', require('./app/directives/groupTable/gModalReportCashFlowProjectionComponent')]);
 
+// New report viewer interface
+app.directive('gTopPart', ['$mdDialog', '$state', require('./app/directives/groupTable/gTopPartDirective')]);
+app.directive('gFilters', ['$mdDialog', require('./app/directives/groupTable/gFiltersDirective')]);
 
 // GROUP TABLE END
 

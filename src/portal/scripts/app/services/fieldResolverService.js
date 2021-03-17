@@ -420,7 +420,7 @@
                     });
                     break;
                 case 'instruments.instrument':
-                    instrumentRepository.getList({pageSize: 1000}).then(function (data) {
+                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'instruments.instrument', data: data.results});
                     });
                     break;
@@ -430,37 +430,37 @@
                     });
                     break;
                 case 'instruments.instrumenttype':
-                    instrumentTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'instruments.instrumenttype', data: data.results});
                     });
                     break;
                 case 'currencies.currency':
-                    currencyRepository.getList({pageSize: 1000}).then(function (data) {
+                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'currencies.currency', data: data.results});
                     });
                     break;
                 case 'portfolios.portfolio':
-                    portfolioRepository.getList({pageSize: 1000}).then(function (data) {
+                    portfolioRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'portfolios.portfolio', data: data.results});
                     });
                     break;
                 case 'counterparties.counterparty':
-                    counterpartyRepository.getList({pageSize: 1000}).then(function (data) {
+                    counterpartyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'counterparties.counterparty', data: data.results});
                     });
                     break;
                 case 'counterparties.responsible':
-                    responsibleRepository.getList({pageSize: 1000}).then(function (data) {
+                    responsibleRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'counterparties.responsible', data: data.results});
                     });
                     break;
                 case 'accounts.account':
-                    accountRepository.getList({pageSize: 1000}).then(function (data) {
+                    accountRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'accounts.account', data: data.results});
                     });
                     break;
                 case 'accounts.accounttype':
-                    accountTypeRepository.getList({pageSize: 1000}).then(function (data) {
+                    accountTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'accounts.accounttype', data: data.results});
                     });
                     break;
@@ -475,17 +475,17 @@
                     });
                     break;
                 case 'strategies.strategy1':
-                    strategyRepository.getList(1, {pageSize: 1000}).then(function (data) {
+                    strategyRepository.getListLight(1, {pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'strategies.strategy1', data: data.results});
                     });
                     break;
                 case 'strategies.strategy2':
-                    strategyRepository.getList(2, {pageSize: 1000}).then(function (data) {
+                    strategyRepository.getListLight(2, {pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'strategies.strategy2', data: data.results});
                     });
                     break;
                 case 'strategies.strategy3':
-                    strategyRepository.getList(3, {pageSize: 1000}).then(function (data) {
+                    strategyRepository.getListLight(3, {pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'strategies.strategy3', data: data.results});
                     });
                     break;

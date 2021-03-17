@@ -163,7 +163,7 @@
 			drawerWrap.classList.remove('big-drawer-opens');
 			drawerWrap.classList.add('big-drawer-closes');
 
-			window.addEventListener("resize", bigDrawerOnWindowResize);
+			//window.addEventListener("resize", bigDrawerOnWindowResize); // Victor 2021.02.03 Listener on hide?
 
             setTimeout(function () {
 
@@ -172,18 +172,18 @@
 
                 $(_this.rootElement).removeClass('overflow-hidden');
 
+                // reset variables on drawer close
+                resizeButton = null;
+                drawerWidth = null; viewportWidth = null; drawerWidth = null; drawerHeight = null;
+                drawerOptions = {};
+
+                window.removeEventListener("resize", bigDrawerOnWindowResize);
+
+                let resolve = _this.drawersPromise;
+
+                resolve(data);
+
             }, drawerWidthAnimationDuration);
-
-            // reset variables on drawer close
-			resizeButton = null;
-			drawerWidth = null; viewportWidth = null; drawerWidth = null; drawerHeight = null;
-			drawerOptions = {};
-
-			window.removeEventListener("resize", bigDrawerOnWindowResize);
-
-            let resolve = _this.drawersPromise;
-
-            resolve(data);
 
         }
 

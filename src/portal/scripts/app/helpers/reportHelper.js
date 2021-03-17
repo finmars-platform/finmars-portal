@@ -49,7 +49,7 @@
                 item.instrument_object = findEntityObject(report, 'item_instruments', item.instrument);
 
 
-                if(item.instrument_object.instrument_type) {
+                if (item.instrument_object.instrument_type) {
                     item.instrument_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.instrument_object.instrument_type);
                 }
 
@@ -57,20 +57,18 @@
                     item.instrument_object.pricing_currency_object = findEntityObject(report, 'item_currencies', item.instrument_object.pricing_currency);
                 }
 
-                if (item.instrument_object  .accrued_currency) {
+                if (item.instrument_object.accrued_currency) {
                     item.instrument_object.accrued_currency_object = findEntityObject(report, 'item_currencies', item.instrument_object.accrued_currency);
                 }
 
             }
 
 
-
-
             if (item.linked_instrument && report.item_instruments.length) {
 
                 item.linked_instrument_object = findEntityObject(report, 'item_instruments', item.linked_instrument);
 
-                if(item.linked_instrument_object.instrument_type) {
+                if (item.linked_instrument_object.instrument_type) {
                     item.linked_instrument_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.linked_instrument_object.instrument_type);
                 }
 
@@ -80,7 +78,7 @@
 
                 item.allocation_balance_object = findEntityObject(report, 'item_instruments', item.allocation_balance);
 
-                if(item.allocation_balance_object.instrument_type) {
+                if (item.allocation_balance_object.instrument_type) {
                     item.allocation_balance_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_balance_object.instrument_type);
                 }
 
@@ -90,7 +88,7 @@
 
                 item.allocation_object = findEntityObject(report, 'item_instruments', item.allocation);
 
-                if(item.allocation_object.instrument_type) {
+                if (item.allocation_object.instrument_type) {
                     item.allocation_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_object.instrument_type);
                 }
 
@@ -101,7 +99,7 @@
                 item.allocation_pl_object = findEntityObject(report, 'item_instruments', item.allocation_pl);
 
 
-                if(item.allocation_pl_object.instrument_type) {
+                if (item.allocation_pl_object.instrument_type) {
                     item.allocation_pl_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_pl_object.instrument_type);
                 }
 
@@ -173,19 +171,19 @@
                 console.log('Strategy injected')
 
             }
-            if (item.strategy2  && report.item_strategies2.length) {
+            if (item.strategy2 && report.item_strategies2.length) {
                 item.strategy2_object = findEntityObject(report, 'item_strategies2', item.strategy2);
             }
-            if (item.strategy3  && report.item_strategies3.length) {
+            if (item.strategy3 && report.item_strategies3.length) {
                 item.strategy3_object = findEntityObject(report, 'item_strategies3', item.strategy3);
             }
-            if (item.strategy1_cash  && report.item_strategies1.length) {
+            if (item.strategy1_cash && report.item_strategies1.length) {
                 item.strategy1_cash_object = findEntityObject(report, 'item_strategies1', item.strategy1_cash);
             }
-            if (item.strategy1_position  && report.item_strategies1.length) {
+            if (item.strategy1_position && report.item_strategies1.length) {
                 item.strategy1_position_object = findEntityObject(report, 'item_strategies1', item.strategy1_position);
             }
-            if (item.strategy2_cash  && report.item_strategies2.length) {
+            if (item.strategy2_cash && report.item_strategies2.length) {
                 item.strategy2_cash_object = findEntityObject(report, 'item_strategies2', item.strategy2_cash);
             }
             if (item.strategy2_position && report.item_strategies2.length) {
@@ -343,7 +341,7 @@
 
             } else {
 
-                if (attribute.value_type === 'field' && attribute.code === 'system_code' && source[attribute.key] && source[attribute.key + '_object']) {
+                if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key] && source[attribute.key + '_object']) {
 
                     result[resultKey + '.name'] = source[attribute.key + '_object'].name
 
@@ -515,9 +513,81 @@
 
     };
 
+    var extendAttributes = function (items, attributeExtensions) {
+
+        if (attributeExtensions) {
+
+            items = items.map(function (item) {
+
+                attributeExtensions.forEach(function (extension) {
+
+                    var contentType
+                    var oppositeContentType;
+                    var base;
+                    var oppositeBase;
+
+                    if (item.item_type === 1) { // instrument extension
+
+                        contentType = 'instruments.instrument';
+                        oppositeContentType = 'currencies.currency';
+                        base = 'instrument';
+                        oppositeBase = 'currency';
+
+                        if (extension.content_type_from === oppositeContentType) {
+
+                            if (extension.key_to) {
+                                item[oppositeBase + '.' + extension.key_from] = item[base + '.' + extension.key_to]
+                            } else {
+
+                                if (extension.value_to) {
+                                    item[oppositeBase + '.' + extension.key_from] = extension.value_to
+                                }
+                            }
+
+                        }
+
+                    }
+
+
+                    if (item.item_type === 2) { // currency extension
+
+                        contentType = 'currencies.currency';
+                        oppositeContentType = 'instruments.instrument';
+                        base = 'currency';
+                        oppositeBase = 'instrument'
+
+                        if (extension.content_type_from === oppositeContentType) {
+
+                            if (extension.key_to) {
+                                item[oppositeBase + '.' + extension.key_from] = item[base + '.' + extension.key_to]
+                            } else {
+
+                                if (extension.value_to) {
+                                    item[oppositeBase + '.' + extension.key_from] = extension.value_to
+                                }
+                            }
+
+                        }
+
+                    }
+
+
+                });
+
+                return item
+
+            })
+
+        }
+
+        return items
+
+    }
+
     module.exports = {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
+        extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents
     }
 

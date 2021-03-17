@@ -406,8 +406,6 @@
 
                     var newColumnList = [];
 
-                    console.log('columns', columns);
-
                     groups.forEach(function (group, index) {
 
                         var column = {

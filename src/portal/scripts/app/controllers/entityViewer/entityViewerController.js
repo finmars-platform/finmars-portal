@@ -121,6 +121,39 @@
 
             };
 
+            const duplicateEntity = async function (entity) {
+
+                var editLayout = await uiService.getEditLayout(vm.entityType);
+                var bigDrawerWidthPercent;
+                var fixedAreaColumns;
+
+                if (editLayout.results.length) {
+
+                    var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
+                    fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+
+                    bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
+
+                }
+
+                $bigDrawer.show({
+                    controller: 'EntityViewerAddDialogController as vm',
+                    templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
+                    addResizeButton: true,
+                    drawerWidth: bigDrawerWidthPercent,
+                    locals: {
+                        entityType: vm.entityType,
+                        entity: entity,
+                        data: {
+                            openedIn: 'big-drawer',
+                            editLayout: editLayout
+                        }
+                    }
+
+                }).then(res => {});
+
+            };
+
             let postEditionActions = function (res, activeObject) {
 
             	vm.entityViewerDataService.setActiveObjectAction(null);
@@ -132,7 +165,11 @@
 
 						updateTableAfterEntitiesDeletion([activeObject.id]);
 
-					} else {
+					} else if (res.data.action === 'copy') {
+
+					    duplicateEntity(res.data.entity);
+
+                    } else {
 
 						var objects = vm.entityViewerDataService.getObjects();
 
@@ -491,7 +528,7 @@
 
 					default:
 
-						var editLayout = await uiService.getEditLayout(entitytype);
+						var editLayout = await uiService.getDefaultEditLayout(entitytype);
 						console.log('editLayout', editLayout, entitytype)
 						var bigDrawerWidthPercent;
 						var fixedAreaColumns;
@@ -586,7 +623,7 @@
 
 						}).then(function (res) {
 
-							postEditionActions(res, activeObject);
+                            postEditionActions(res, activeObject);
 
 						});
 
@@ -600,13 +637,13 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                    evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                    evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
 
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
 
-                    evDataProviderService.sortObjects(vm.entityViewerDataService, vm.entityViewerEventService);
+                    evDataProviderService.sortObjects(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
 
                 });
 
@@ -787,6 +824,35 @@
 
                                 break;
 
+                            case 'restore_deleted':
+
+                                console.log('restore_deleted.activeObject', activeObject )
+                                console.log('restore_deleted.entitytype', entitytype )
+
+                                $mdDialog.show({
+                                    controller: 'EntityViewerRestoreDeletedBulkDialogController as vm',
+                                    templateUrl: 'views/entity-viewer/entity-viewer-entity-restore-deleted-bulk-dialog-view.html',
+                                    parent: angular.element(document.body),
+                                    targetEvent: activeObject.event,
+                                    //clickOutsideToClose: false,
+                                    locals: {
+                                        evDataService: vm.entityViewerDataService,
+                                        evEventService: vm.entityViewerEventService
+                                    }
+                                }).then(function (res) {
+
+                                    vm.entityViewerDataService.setActiveObjectAction(null);
+                                    vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                                    if (res.status === 'agree') {
+
+                                        updateTableAfterEntitiesDeletion(res.data.ids);
+
+                                    }
+                                });
+
+                                break;
+
 							case 'edit':
 							    editEntity(entitytype, activeObject);
 								break;
@@ -874,7 +940,7 @@
                 vm.setFiltersValuesFromQueryParameters();
                 vm.readyStatus.layout = true;
                 console.log('vm', vm);
-                evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
 
                 var additions = vm.entityViewerDataService.getAdditions();
                 var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
