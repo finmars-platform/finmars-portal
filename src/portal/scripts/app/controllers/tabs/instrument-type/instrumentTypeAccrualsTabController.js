@@ -4,14 +4,17 @@
 (function (){
     'use strict';
 
+    var metaService = require('../../../services/metaService');
     var GridTableDataService = require('../../../services/gridTableDataService');
     var GridTableEventService = require('../../../services/gridTableEventService');
     var gridTableEvents = require('../../../services/gridTableEvents');
 
     var metaHelper = require('../../../helpers/meta.helper');
 
-    const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
-    const accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
+    var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
+    var accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
+
+    var instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
     module.exports = function instrumentTypeAccrualsTabController ($scope, $mdDialog) {
 
@@ -33,18 +36,25 @@
             })
         };
 
+        const onDefaultValueMultitypeFieldChange = function (rowData, colData, gtDataService, gtEventService) {
+
+            const changedCell = gtDataService.getCell(rowData.order, colData.order);
+            const activeType = changedCell.settings.fieldTypesData.find(type => type.isActive);
+
+            const tableData = gtDataService.getTableData();
+
+            const defValType = (activeType.fieldType === 'dropdownSelect') ? 'dynamic_attribute' : 'text';
+            vm.entity.accruals[tableData.index].data.items[rowData.order].default_value_type = defValType;
+
+        };
+
         var onAccrualTableCellChange = function (data, gtDataService, gtEventService) {
 
             var tableData = gtDataService.getTableData()
-            var gtRow = gtDataService.getRowByKey(data.row.key);
+            var cell = gtDataService.getCellByKey(data.row.order, data.column.key)
+            var path = cell.objPath[0];
 
-            gtRow.columns.forEach(function (gtColumn) {
-
-                if (gtColumn.settings) {
-                    vm.entity.accruals[tableData.index].data.items[data.row.order][gtColumn.key] = gtColumn.settings.value;
-                }
-
-            })
+            vm.entity.accruals[tableData.index].data.items[data.row.order][path] = cell.settings.value;
 
         };
 
@@ -63,7 +73,7 @@
                     columns: [
                         {
                             key: 'name',
-                            // objPath: ['name'],
+                            objPath: ['name'],
                             columnName: 'Name',
                             order: 0,
                             cellType: 'text',
@@ -78,6 +88,7 @@
                         },
                         {
                             key: 'to_show',
+                            objPath: ['to_show'],
                             columnName: 'To Show',
                             order: 1,
                             cellType: 'checkbox',
@@ -91,7 +102,7 @@
                         },
                         {
                             key: 'default_value',
-                            // objPath: ['name'],
+                            objPath: ['default_value'],
                             columnName: 'Default Value',
                             order: 2,
                             cellType: 'selector',
@@ -105,7 +116,7 @@
                         },
                         {
                             key: 'override_name',
-                            // objPath: ['name'],
+                            objPath: ['override_name'],
                             columnName: 'Override Name',
                             order: 3,
                             cellType: 'text',
@@ -136,7 +147,7 @@
 
             var optionsColumn = {
                 key: 'options_settings',
-                // objPath: ['options_settings'],
+                objPath: ['options_settings'],
                 columnName: '',
                 order: 4,
                 cellType: 'customPopup',
@@ -186,6 +197,23 @@
                     rowObj.columns[2].settings.selectorOptions = row.selectorOptions;
                 }
 
+                else if (row.defaultValueType === 'multitypeField') {
+
+                    rowObj.columns[2].cellType = 'multitypeField';
+
+                    const multitypeFieldData = multitypeFieldsForRows[rowObj.key].fieldDataList;
+
+                    rowObj.columns[2].settings = {
+                        value: row.default_value,
+                        fieldTypesData: multitypeFieldData
+                    };
+
+                    rowObj.columns[2].methods = {
+                        onChange: onDefaultValueMultitypeFieldChange
+                    };
+
+                }
+
                 rowObj.columns[3].settings.value = row.override_name;
 
                 if (row.options_settings) {
@@ -233,12 +261,12 @@
                     form_message: "",
                     items: [
                         {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text', options_settings: false},
-                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'date', options_settings: false},
-                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'date', options_settings: false},
-                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'number', options_settings: false},
+                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'multitypeField', options_settings: false},
+                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'multitypeField', options_settings: false},
+                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'multitypeField', options_settings: false},
                         {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options_settings: periodicitySelectorOptions},
                         {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options_settings: accrualModelsSelectorOptions},
-                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'number', options_settings: false},
+                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'multitypeField', options_settings: false},
                     ]
                 }
             };
@@ -318,6 +346,111 @@
 
         };
 
+        let instrumentAttrTypes;
+
+        const multitypeFieldsForRows = {
+            'accrual_start_date': {
+                nativeType: 40, //date
+                fieldDataList: [
+                    {
+                        'model': "",
+                        'fieldType': 'dateInput',
+                        'isDefault': true,
+                        'isActive': true,
+                        'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    },
+                    {
+                        'model': null,
+                        'fieldType': 'dropdownSelect',
+                        'isDefault': false,
+                        'isActive': false,
+                        'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    }
+                ]
+            },
+            'first_payment_date': {
+                nativeType: 40, //date
+                fieldDataList: [
+                    {
+                        'model': "",
+                        'fieldType': 'dateInput',
+                        'isDefault': true,
+                        'isActive': true,
+                        'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    },
+                    {
+                        'model': null,
+                        'fieldType': 'dropdownSelect',
+                        'isDefault': false,
+                        'isActive': false,
+                        'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    }
+                ]
+            },
+            'accrual_size': {
+                nativeType: 20, //number
+                fieldDataList: [
+                    {
+                        'model': null,
+                        'fieldType': 'numberInput',
+                        'isDefault': true,
+                        'isActive': true,
+                        'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    },
+                    {
+                        'model': null,
+                        'fieldType': 'dropdownSelect',
+                        'isDefault': false,
+                        'isActive': false,
+                        'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    }
+                ]
+            },
+            'periodicity_n': {
+                nativeType: 20, //number
+                fieldDataList: [
+                    {
+                        'model': null,
+                        'fieldType': 'numberInput',
+                        'isDefault': true,
+                        'isActive': true,
+                        'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    },
+                    {
+                        'model': null,
+                        'fieldType': 'dropdownSelect',
+                        'isDefault': false,
+                        'isActive': false,
+                        'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    }
+                ]
+            }
+        }
+
         const periodicityItemsPromise = instrumentPeriodicityService.getList().then(data => {
             vm.periodicityItems = data;
         });
@@ -326,8 +459,44 @@
             vm.accrualModels = data;
         });
 
+        const getInstrumentAttrTypes = function () {
+
+            let options = {
+                pageSize: 1000,
+                page: 1
+            };
+
+            return metaService.loadDataFromAllPages(instrumentAttributeTypeService.getList, [options]);
+
+        };
+
         var init = function () {
-            Promise.all([periodicityItemsPromise, accrualModelsPromise]).then(() => {
+            const dataPromises = [
+                getInstrumentAttrTypes(),
+                periodicityItemsPromise,
+                accrualModelsPromise
+            ];
+
+            Promise.all(dataPromises).then((data) => {
+
+                instrumentAttrTypes = data[0] || [];
+
+                Object.keys(multitypeFieldsForRows).forEach(key => {
+
+                    const fieldTypeObj = multitypeFieldsForRows[key];
+                    const selTypeIndex = fieldTypeObj.fieldDataList.findIndex(type => type.fieldType === 'dropdownSelect');
+
+                    const formattedAttrTypes = instrumentAttrTypes
+                        .filter(attrType => attrType.value_type === fieldTypeObj.nativeType)
+                        .map(attrType => {
+                            return {id: attrType.user_code, name: attrType.short_name};
+                        });
+
+                    fieldTypeObj.fieldDataList[selTypeIndex].fieldData = {
+                        menuOptions: formattedAttrTypes || []
+                    };
+
+                });
 
                 vm.entity.accruals.forEach(function (item, index) {
 
