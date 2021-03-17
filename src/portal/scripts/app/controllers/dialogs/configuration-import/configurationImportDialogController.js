@@ -283,6 +283,8 @@
                     return 'Context Menu Layout';
                 case 'ui.bookmark':
                     return "Bookmarks";
+                case 'ui.columnsortdata':
+                    return 'Column Sort Data';
                 case 'reference_tables.referencetable':
                     return "Reference Tables";
                 case 'csv_import.csvimportscheme':
@@ -355,16 +357,16 @@
             if (item.hasOwnProperty('user_code')) {
                 var result = item.user_code;
 
-                if (item.hasOwnProperty('scheme_name')) { // integrations.instrumentdownloadscheme
-                    result = item.scheme_name;
+                if (item.hasOwnProperty('user_code')) { // integrations.instrumentdownloadscheme
+                    result = item.user_code;
                 }
 
                 return result;
             }
 
             // integrations.pricedownloadscheme, integrations.complextransactionimportscheme,
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
+            if (item.hasOwnProperty('user_code')) {
+                return item.user_code;
             }
 
             if (item.hasOwnProperty('name')) {
@@ -685,7 +687,7 @@
                         return false
                     }
 
-                    if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                    if (child.hasOwnProperty('user_code') && child.user_code === '-') {
                         return false
                     }
 
@@ -1037,9 +1039,9 @@
 
                             duplicateDataEntity.content.forEach(function (duplicateDataItem) {
 
-                                if (item.hasOwnProperty('scheme_name') && duplicateDataItem.hasOwnProperty('scheme_name')) {
+                                if (item.hasOwnProperty('user_code') && duplicateDataItem.hasOwnProperty('user_code')) {
 
-                                    if (item.scheme_name === duplicateDataItem.scheme_name) {
+                                    if (item.user_code === duplicateDataItem.user_code) {
                                         item.is_duplicate = duplicateDataItem.is_duplicate;
                                     }
 

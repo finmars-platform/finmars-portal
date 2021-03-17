@@ -5,6 +5,7 @@
     var utilsHelper = require('../../helpers/utils.helper');
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 	var metaHelper = require('../../helpers/meta.helper');
 
@@ -46,7 +47,7 @@
         var viewportElem = elements.viewportElem;
         var contentWrapElem = elements.contentWrapElem;
 
-        var columnBottomRow;
+        var columnBottomRows;
 
         var scrollYHandler = utilsHelper.throttle(function () {
 
@@ -93,11 +94,15 @@
 
         var scrollXHandler = function () {
 
-            if (!columnBottomRow) {
-                columnBottomRow = contentWrapElem.querySelector('.g-column-bottom-row');
+            if (!columnBottomRows) {
+                columnBottomRows = contentWrapElem.querySelectorAll('.g-column-bottom-row'); // Victor 2020.12.16 While old and new design work together
             }
 
-            columnBottomRow.style.left = -viewportElem.scrollLeft + 'px';
+            columnBottomRows.forEach(row => {
+
+                row.style.left = -viewportElem.scrollLeft + 'px';
+
+            })
 
         };
 
@@ -121,6 +126,8 @@
 
         if (rowElem) {
 
+			var targetElem = event.target;
+
 			if (clickData.target.classList.contains('openLinkInNewTab')) {
 
 				clickData.___type = 'hyperlink'
@@ -131,11 +138,6 @@
 				clickData.___id = rowElem.dataset.objectId;
 				clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
-
-				if (event.target.classList.contains('ev-fold-button')) {
-					clickData.isFoldButtonPressed = true
-				}
-
 				if (rowElem.dataset.subtotalType) {
 					clickData.___subtotal_type = rowElem.dataset.subtotalType
 				}
@@ -145,6 +147,32 @@
 				}
 
 			}
+
+			if (targetElem.classList.contains('ev-fold-button')) {
+
+				clickData.isFoldButtonPressed = true;
+
+				clickData.___parentId = targetElem.dataset.objectId;
+
+			} else {
+
+				var clickedActionBtn = targetElem.closest(".gTableActionBtn");
+
+				if (clickedActionBtn) {
+
+					clickData.actionElem = clickedActionBtn
+					clickData.actionType = clickedActionBtn.dataset.clickActionType
+
+				}
+
+			}
+
+            /* if (targetElem.parentElement.classList.contains("gRowColorPicker")) {
+
+                clickData.isRowColorPickerPressed = true
+                clickData.actionElem = targetElem.parentElement
+
+            } */
 
         }
 
@@ -185,7 +213,7 @@
 
     var handleFoldButtonClick = function (clickData, evDataService, evEventService) {
 
-        var group = evDataService.getData(clickData.___parentId);
+    	var group = evDataService.getData(clickData.___parentId);
 
         console.log('group', group);
 
@@ -199,9 +227,14 @@
 
             groups[group.___level - 1].report_settings.is_level_folded = null;
 
+            var groupSettings = rvDataHelper.getOrCreateGroupSettings(evDataService, group);
+
             if (group.___is_open) {
 
                 group.___is_open = false;
+
+                groupSettings.is_open = group.___is_open
+                rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
 
                 evDataService.setData(group);
 
@@ -212,6 +245,9 @@
             } else {
 
                 group.___is_open = true;
+
+                groupSettings.is_open = group.___is_open
+                rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
 
                 evDataService.setData(group);
 
@@ -522,8 +558,6 @@
 
     var handleObjectClick = function (clickData, evDataService, evEventService) {
 
-        // console.log('handleObjectClick.clickData', clickData);
-
         var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
 
         if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
@@ -769,27 +803,24 @@
                 var cellElem;
 
                 // TODO make recursive get parent of g-cell
-                if (event.target.classList.contains('g-cell')) {
-                    cellElem = event.target;
-
+                /* if (event.target.classList.contains('g-cell')) {
+                    cellElem = event.target
                 } else if (event.target.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement;
 
                 } else if (event.target.parentElement.parentElement.classList.contains('g-cell')) {
                     cellElem = event.target.parentElement.parentElement;
-                }
+                } */
+
+                cellElem = event.target.closest('.g-cell-wrap');
 
                 if (cellElem) {
 
                     var obj = Object.assign({}, evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService));
                     var columns = evDataService.getColumns();
-                    console.log('obj', obj);
-
                     var columnNumber = parseInt(cellElem.dataset.column, 10);
 
                     var column = columns[columnNumber - 1];
-
-                    console.log('clickData', clickData);
 
                     if (['instrument_principal_price', 'instrument_accrued_price'].indexOf(column.key) !== -1) {
 
@@ -799,13 +830,38 @@
 
                 }
 
-            } else if (event.detail === 1) {
+            }
+
+            else if (event.detail === 1) {
 
                 if (clickData.isFoldButtonPressed) {
-
                     handleFoldButtonClick(clickData, evDataService, evEventService);
+                }
 
-                } else {
+                else if (clickData.actionType) {
+
+					switch (clickData.actionType) {
+
+						case 'open_row_color_picker':
+
+							event.stopPropagation();
+							createRowColorPickerMenu(clickData, evDataService, evEventService);
+
+							break;
+
+						/* TO DELETE: 2021-01-17
+						case 'open_subtotal_position_options':
+
+							event.stopPropagation();
+							createSubtotalSettingsMenu(clickData, evDataService, evEventService);
+
+							break; */
+
+					}
+
+                }
+
+                else {
 
                     var selection = window.getSelection().toString();
 
@@ -824,7 +880,9 @@
                                 break;
                         }
 
-                    } else if (!selection.length) {
+                    }
+
+                    else if (!selection.length) {
 
                         switch (clickData.___type) {
 
@@ -856,7 +914,7 @@
 
     };
 
-    var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
+    /* var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
 
         var splitPanelIsActive = evDataService.isSplitPanelActive();
 
@@ -871,7 +929,7 @@
             contentWrapElement.style.height = "";
         }
 
-    };
+    }; */
 
     var calculateScroll = function (elements, evDataService) {
 
@@ -906,21 +964,30 @@
 
         // console.log('viewportWidth', viewportWidth);
 
-        viewportTop = interfaceLayout.progressBar.height;
+        // viewportTop = interfaceLayout.progressBar.height;
+		viewportTop = 0;
+
+        if (components.topPart) {
+			viewportTop = viewportTop + interfaceLayout.topPart.height
+		}
+
+        if (components.filterArea) {
+			viewportTop = viewportTop + interfaceLayout.filterArea.height
+		}
 
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height
         }
-
-        if (components.groupingArea) {
+        /* if (components.groupingArea) {
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
-        }
+        } */
 
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
-        // console.log('calculateScroll.viewportHeight', viewportHeight);
+        console.log('calculateScroll.contentWrapElemHeight', contentWrapElemHeight);
+        console.log('calculateScroll.viewportTop', viewportTop);
+        console.log('calculateScroll.viewportHeight', viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);
-
         rvScrollManager.setViewportHeight(viewportHeight);
 
         if (viewportWidth) {
@@ -1006,14 +1073,35 @@
     //
     // };
 
+	var popupsToClear = [];
 
     var clearDropdowns = function () {
 
-        var dropdowns = document.querySelectorAll('.ev-dropdown');
+        var dropdowns = document.querySelectorAll('.evDropdown');
 
-        for (var i = 0; i < dropdowns.length; i = i + 1) {
+		dropdowns.forEach(dropdown => {
+
+			if (!popupsToClear.includes(dropdown.id)) {
+
+				dropdown.classList.add("fade-out");
+
+				popupsToClear.push(dropdown.id);
+				var dropdownIndex = popupsToClear.length - 1;
+
+				setTimeout(function () {
+
+					dropdown.parentElement.removeChild(dropdown);
+					popupsToClear.splice(dropdownIndex, 1);
+
+				}, 200); // duration of animation
+
+			}
+
+		});
+
+		/* for (var i = 0; i < dropdowns.length; i = i + 1) {
             dropdowns[i].remove();
-        }
+        } */
 
     };
 
@@ -1201,7 +1289,7 @@
                     ttype_specific_attr = ' data-ev-dropdown-action-data-id="' + item.id + '"'
                 } else {
                     additional_text = ' (Not Found)';
-                    is_disabled = 'disabled-btn';
+                    is_disabled = 'disabled-context-menu';
                 }
 
             }
@@ -1286,6 +1374,48 @@
 
     };
 
+    var markRowByColor = function (objectId, parentGroupHashId, evDataService, evEventService, color) {
+
+		var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+        if (obj === null) { // row is subtotal
+
+            const markedSubtotals = evDataService.getMarkedSubtotals();
+
+            if (color === 'undo_mark_row') {
+                delete markedSubtotals[objectId]
+            } else {
+                markedSubtotals[objectId] = color;
+            }
+
+            evDataService.setMarkedSubtotals(markedSubtotals);
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            return;
+
+        }
+
+		var markedReportRows = localStorage.getItem("marked_report_rows");
+
+		if (markedReportRows) {
+			markedReportRows = JSON.parse(markedReportRows);
+		} else {
+			markedReportRows = {};
+		}
+
+		if (color === 'undo_mark_row') {
+			delete markedReportRows[obj.id]
+		} else {
+			markedReportRows[obj.id] = {
+				color: color
+			};
+		}
+
+		localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
+
+		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+	};
+
     var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
 
         function sendContextMenuActionToActiveObj(event) {
@@ -1306,8 +1436,8 @@
 
                 if (objectId && color && parentGroupHashId) {
 
-                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
+					markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+                    /* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
                     var markedReportRows = localStorage.getItem("marked_report_rows");
 
                     if (markedReportRows) {
@@ -1326,7 +1456,7 @@
 
                     localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
 
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
 
                 }
 
@@ -1370,38 +1500,23 @@
 
         clearDropdowns();
 
-        /*var dropdownWidth = 320;
-        var dropdownOptionHeight = 24;
-        var popup = document.createElement('div');
-
-        clearObjectActiveState(evDataService);
-
-        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-        obj.___is_activated = true;
-        obj.___is_last_selected = true;
-
-        evDataService.setObject(obj);
-
-        popup.id = 'dropdown-' + objectId;
-        popup.classList.add('ev-dropdown');
-
-        popup.style.cssText = menuPosition;
-        popup.style.position = 'absolute';*/
-
         var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, true);
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-        popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
+		if (obj) {
 
-        /*popup.style.cssText = menuPosition;*/
-        evDataHelper.calculateMenuPosition(popup, menuPosition);
+			popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
-        document.body.appendChild(popup);
+			evDataHelper.calculateMenuPosition(popup, menuPosition);
 
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+			document.body.appendChild(popup);
 
-        addEventListenerForContextMenu(popup, evDataService, evEventService);
+			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+			addEventListenerForContextMenu(popup, evDataService, evEventService);
+
+		}
+
 
     };
 
@@ -1447,163 +1562,6 @@
 
         var contextMenu = {};
         var ttypes = null;
-
-
-        /*transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
-
-            uiService.getContextMenuLayoutList().then(function (contextMenuData) {
-
-                //var contextMenu = {};
-
-                if (contextMenuData.results.length) {
-
-                    var contextMenuLayout = contextMenuData.results[0];
-                    contextMenu = contextMenuLayout.data.menu
-
-                } else {
-                    contextMenu = {
-                        root: {
-                            items: [
-                                {
-                                    name: 'Edit Instrument',
-                                    action: 'edit_instrument'
-                                },
-                                {
-                                    name: 'Edit Account',
-                                    action: 'edit_account'
-                                },
-                                {
-                                    name: 'Edit Portfolio',
-                                    action: 'edit_portfolio'
-                                },
-                                {
-                                    name: 'Edit Price',
-                                    action: 'edit_price'
-                                },
-                                {
-                                    name: 'Edit FX Rate',
-                                    action: 'edit_fx_rate'
-                                },
-                                {
-                                    name: 'Edit Pricing FX Rate',
-                                    action: 'edit_pricing_currency'
-                                },
-                                {
-                                    name: 'Edit Accrued FX Rate',
-                                    action: 'edit_accrued_currency'
-                                },
-                                {
-                                    name: 'Edit Currency',
-                                    action: 'edit_currency'
-                                },
-                                {
-                                    name: 'Open Book Manager',
-                                    action: 'book_transaction'
-                                }
-                            ]
-                        }
-                    };
-                }
-
-                //var ttypes = data.results;
-                ttypes = data.results;
-
-                elem.addEventListener('contextmenu', function (ev) {
-
-                    var objectId;
-                    var parentGroupHashId;
-
-                    if (event.target.offsetParent.classList.contains('ev-viewport')) {
-
-                        objectId = event.target.dataset.objectId;
-                        parentGroupHashId = event.target.dataset.parentGroupHashId;
-
-                    } else {
-
-                        if (event.target.offsetParent.classList.contains('g-row')) {
-
-                            objectId = event.target.offsetParent.dataset.objectId;
-                            parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
-
-                        }
-
-                    }
-
-                    console.log('initContextMenuEventDelegation.event', event);
-
-                    console.log('initContextMenuEventDelegation.objectId', objectId);
-
-                    if (objectId) {
-
-                        ev.preventDefault();
-                        ev.stopPropagation();
-
-                        var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
-
-                        createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
-
-                        return false;
-
-                    }
-
-                }, false);
-
-                window.addEventListener('contextmenu', function () {
-                    clearDropdowns();
-                });
-
-                /!*window.addEventListener('click', function (event) {
-
-                    if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
-
-                        var objectId = event.target.dataset.objectId;
-                        var parentGroupHashId = event.target.dataset.parentGroupHashId;
-                        var dropdownAction = event.target.dataset.evDropdownAction;
-
-                        var dropdownActionData = {};
-
-                        console.log('event.target.dataset', event.target.dataset);
-
-                        if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
-                            dropdownActionData.id = event.target.dataset.evDropdownActionDataId
-                        }
-
-                        if (objectId && dropdownAction && parentGroupHashId) {
-
-                            var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                            if (!obj) {
-                                obj = {}
-                            }
-
-                            obj.event = event;
-
-                            console.log('dropdownActionData', dropdownActionData);
-
-                            evDataService.setActiveObject(obj);
-                            evDataService.setActiveObjectAction(dropdownAction);
-                            evDataService.setActiveObjectActionData(dropdownActionData);
-
-                            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                            clearDropdowns();
-
-                        } else {
-
-                            if (!event.target.classList.contains('ev-dropdown-option')) {
-                                clearDropdowns();
-                            }
-
-                        }
-
-                    }
-
-
-                });*!/
-
-            });
-
-        });*/
 
         getAllTTypes().then(function (data) {
 
@@ -1762,6 +1720,123 @@
 
     };
 
+	var addEventListenersForPopupMenuOptions = function (popupMenuElem, optionClickCallback) {
+
+		var colorOpts = popupMenuElem.querySelectorAll('.gPopupMenuOption');
+
+		colorOpts.forEach(function (option) {
+			 option.addEventListener('click', optionClickCallback)
+		});
+
+		popupMenuElem.addEventListener('mouseleave', clearDropdowns);
+
+	};
+
+    var createRowColorPickerMenu = function (clickData, evDataService, evEventService) {
+
+		var menuElem = clickData.actionElem;
+		var popup = evDataHelper.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup']);
+
+        clearDropdowns();
+
+		evDataHelper.calculateStaticMenuPosition(popup, menuElem, 208);
+
+		//<editor-fold desc="Color picker content div">
+		popup.innerHTML = '<div class="ev-dropdown-content g-row-color-picker-content">' +
+                '<button class="g-row-color-picker-option gPopupMenuOption" data-color="undo_mark_row">' +
+					'<span class="material-icons">label_outline</span>' +
+				'</button>' +
+                '<button class="g-row-color-picker-option red gPopupMenuOption" data-color="red">' +
+					'<span class="material-icons">label_outline</span>' +
+				'</button>' +
+                '<button class="g-row-color-picker-option yellow gPopupMenuOption" data-color="yellow">' +
+					'<span class="material-icons">label_outline</span>' +
+				'</button>' +
+                '<button class="g-row-color-picker-option green gPopupMenuOption" data-color="green">' +
+					'<span class="material-icons">label_outline</span>' +
+				'</button>' +
+            '</div>'
+		//</editor-fold>
+
+        document.body.appendChild(popup);
+
+		var onOptionClick = function (event) {
+
+			var rowColor = event.currentTarget.dataset.color;
+			markRowByColor(clickData.___id, clickData.___parentId, evDataService, evEventService, rowColor);
+
+			clearDropdowns();
+
+		};
+
+		addEventListenersForPopupMenuOptions(popup, onOptionClick);
+
+	};
+
+	/* var createSubtotalSettingsMenu = function (clickData, evDataService, evEventService) {
+
+		var menuElem = clickData.actionElem;
+		var popup = evDataHelper.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup', 'ev-dropdown2']);
+		var reportOptions = evDataService.getReportOptions();
+
+		var getOptionCheckbox = function (subtotalsType) {
+
+			if (reportOptions.subtotals_options && subtotalsType === reportOptions.subtotals_options.type) {
+
+				return '<span class="material-icons g-menu-opt-check-icon">done</span>';
+
+			}
+
+			return '';
+
+		};
+
+		clearDropdowns();
+
+		evDataHelper.calculateStaticMenuPosition(popup, menuElem, 195);
+
+		//<editor-fold desc="Subtotals options popup content">
+		popup.innerHTML = '<div class="ev-dropdown-content">' +
+			'<button class="ev-dropdown-menu-option gPopupMenuOption" data-subtotals-type="line">' +
+				getOptionCheckbox('line') + 'Top' +
+			'</button>' +
+			'<button class="ev-dropdown-menu-option gPopupMenuOption" data-subtotals-type="area">' +
+				getOptionCheckbox('area') + 'Bottom' +
+			'</button>' +
+			'<button class="ev-dropdown-menu-option gPopupMenuOption" data-subtotals-type="arealine">' +
+				getOptionCheckbox('arealine') + 'Top and Bottom' +
+			'</button>' +
+		'</div>'
+		//</editor-fold>
+
+		document.body.appendChild(popup);
+
+		var onOptionClick = function (event) {
+
+			var subtotalsType = event.currentTarget.dataset.subtotalsType;
+			var reportOptions = evDataService.getReportOptions();
+			var subtotalsOpts = reportOptions.subtotals_options || {};
+
+			if (subtotalsOpts.type === subtotalsType) {
+				subtotalsOpts.type = false
+
+			} else {
+				subtotalsOpts.type = subtotalsType
+			}
+
+			reportOptions.subtotals_options = subtotalsOpts
+			evDataService.setReportOptions(reportOptions);
+
+			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+			evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+			clearDropdowns();
+
+		};
+
+		addEventListenersForPopupMenuOptions(popup, onOptionClick);
+
+	}; */
 
     module.exports = {
         initEventDelegation: initEventDelegation,

@@ -8,6 +8,7 @@
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
     var entityViewerDataResolver = require('../entityViewerDataResolver');
     var stringHelper = require('../../helpers/stringHelper');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
     var reportHelper = require('../../helpers/reportHelper');
@@ -83,7 +84,7 @@
 
                     var filterValues = filterItem.options.filter_values;
 
-                    if (filterType === 'from_to') {
+                    if (filterType === 'from_to' || filterType === 'out_of_range') {
 
                         if ((filterValues.min_value || filterValues.min_value === 0) &&
                             (filterValues.max_value || filterValues.max_value === 0)) {
@@ -175,8 +176,11 @@
 
             if (reportOptions.items && reportOptions.items.length) {
 
+                var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
+
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
+                reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
 
                 // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
@@ -323,6 +327,18 @@
                         obj.___id = event.___id;
                         obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
+                        var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+
+                        console.log('groupSettings', groupSettings);
+
+                        if (groupSettings.hasOwnProperty('is_open')) {
+                            obj.___is_open = groupSettings.is_open;
+                        }
+
+                        if (!parentGroup.___is_open) {
+                            obj.___is_open = false;
+                        }
+
                     }
 
                 }
@@ -432,12 +448,30 @@
                             obj.___group_name = event.groupName ? event.groupName : '-';
                             obj.___group_identifier = event.groupId ? event.groupId : '-';
                             obj.___is_open = true;
+
+
+
+
                             // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                             obj.___parentId = event.parentGroupId;
                             obj.___type = 'group';
                             obj.___id = event.___id;
                             obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+
+
+                            var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+
+                            console.log('groupSettings', groupSettings);
+
+                            if (groupSettings.hasOwnProperty('is_open')) {
+                                obj.___is_open = groupSettings.is_open;
+                            }
+
+                            if (!parentGroup.___is_open) {
+                                obj.___is_open = false;
+                            }
+
 
                         }
                     }
@@ -470,6 +504,9 @@
                         }
 
                         item.___id = evRvCommonHelper.getId(item);
+
+
+
 
                         return item
                     });
@@ -787,8 +824,12 @@
 
                     if (activeColumnSort.options.sort === 'ASC') {
                         requestsParameters[key].body.ordering = activeColumnSort.key
-                    } else {
+                    } else if (activeColumnSort.options.sort === 'DESC') {
                         requestsParameters[key].body.ordering = '-' + activeColumnSort.key
+                    } else if (activeColumnSort.options.sort === 'MANUAL_ASC')  {
+                        requestsParameters[key].body.ordering_manual = activeColumnSort.key
+                    } else if (activeColumnSort.options.sort === 'MANUAL_DESC')  {
+                        requestsParameters[key].body.ordering_manual = '-' + activeColumnSort.key
                     }
 
                     entityViewerDataService.setRequestParameters(requestsParameters[key]);
