@@ -9,6 +9,15 @@ h2 {
   font-weight: 400;
 }
 
+button {
+  background-color: transparent;
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
 md-content.md-default-theme {
   background-color: #eee;
 }
@@ -1646,6 +1655,11 @@ md-input-container.error {
   opacity: 0.5;
 }
 
+div.disabled-context-menu {
+  color: rgba(0,0,0,.4);
+}
+
+
 .instrument-load-btn {
   height: 28px;
   margin: 0;
@@ -2440,6 +2454,7 @@ button.md-button.toggle-calculator-block-btn {
 .small-button-icon {
   min-width: 0;
   min-height: 0;
+  line-height: 1;
 
   &:not([disabled]):hover {
     background-color: transparent;
@@ -2854,19 +2869,26 @@ md-dialog.two-rows-dialog-actions {
 }
 
 .big-drawer-content {
+  @header-height: 52px;
+
   height: 100%;
   display: flex;
   flex-direction: column;
 
   .big-drawer-header {
-    background-color: #4c334d;
+    //background-color: #4c334d;
+    background-color: rgb(51, 51, 51);
     //height: 78px;
-    flex: 0 0 78px;
+    flex: 0 0 @header-height;
 
     .big-drawer-header-h {
-      color: rgba(255, 255, 255, 0.87);
+      margin: 0;
       padding-left: 16px;
-      margin: 16px 0 0;
+
+      color: rgba(255, 255, 255, 0.87);
+
+      font-size: 16px;
+      line-height: @header-height;
     }
 
   }
@@ -2882,6 +2904,13 @@ md-dialog.two-rows-dialog-actions {
     background-color: white;
     border-top: 1px solid rgba(0,0,0,0.12);
   }
+}
+
+md-dialog-actions {
+  .dialog-footer {
+    width: 100%;
+  }
+
 }
 
 // < big drawer element >
@@ -2939,15 +2968,19 @@ md-checkbox.md-indeterminate .md-icon:after {
   }
 }
 
-.md-button.link-button {
+.md-button.align-button {
   background-color: #ffffff;
-  color: #f05a22;
-  font-weight: 700;
-  border-radius: 3px;
+  color: @g-top-part-color;
 
   &:hover {
-    background-color: #FDECE5
+    color: @primary-button-color;
   }
+
+  &.active {
+    color: @primary-button-color;
+    background-color: rgba(240, 90, 34, 0.1);
+  }
+
 }
 
 button.md-raised.md-warn.md-button {
@@ -2956,6 +2989,11 @@ button.md-raised.md-warn.md-button {
 
 .classifier-select-dialog-view {
   width: 500px;
+}
+
+@font-face { // prevents showing of text of icons before they are loaded
+  font-family: 'Material Icons';
+  font-display: block;
 }
 
 //<editor-fold desc="Chips multiselector">
@@ -3010,12 +3048,18 @@ button.md-raised.md-warn.md-button {
 
   }
 
-  .chip-list-text {
+  .chip-list-content {
     font-size: 14px;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
+}
+
+.add-chip-wrap {
+  .chip-div {
+    font-weight: bold;
+  }
 }
 
 .chip-div.expand-chip {
@@ -3024,8 +3068,10 @@ button.md-raised.md-warn.md-button {
 
 .chips-list-container.chips-deletion-enabled {
 
-  .chip-div {
-    padding-right: 28px;
+  .chip-wrap:not(.add-chip-wrap) {
+    .chip-div {
+      padding-right: 28px;
+    }
   }
 
   .chip-div.expand-chip { // make bigger for deletion button
@@ -3054,8 +3100,47 @@ button.md-raised.md-warn.md-button {
 }
 //</editor-fold>
 
+// < chips >
+
+//popup menu
 .popup-menu {
   padding: 8px 0;
+
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  overflow-y: auto;
+
+  .popup-menu-item {
+    text-align: left;
+    display: inline-block;
+    border-radius: 0;
+    font-size: 15px;
+    text-transform: none;
+    font-weight: 400;
+    height: 100%;
+
+    margin: auto 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    width: 100%;
+
+    color: @g-top-part-color;
+
+    ng-md-icon {
+      position: relative;
+      top: 6px;
+      margin-right: 10px;
+    }
+
+    .z-dropdown-icon {
+      position: absolute;
+      right: 0;
+      top: 7px;
+      opacity: .5;
+    }
+
+  }
 
   .popup-menu-option {
     width: 100%;
@@ -3065,10 +3150,127 @@ button.md-raised.md-warn.md-button {
     box-sizing: border-box;
   }
 
+  md-menu-divider {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 1px;
+    min-height: 1px;
+    max-height: 1px;
+    width: 100%;
+    background-color: rgba(0,0,0,0.12);
+  }
+
+
+}
+// <popup menu>
+@g-top-part-color: #747474;
+@primary-button-color: #f05a22;
+//@g-top-part-color: rgb(51, 51, 51);
+@layout-manager-item-height: 48px;
+
+// layouts manager
+.layouts-manager {
+
+  .popup-menu {
+    width: 370px;
+    max-height: 100%;
+    font-size: 14px;
+
+      .layout-menu-item {
+        display: flex;
+        align-items: center;
+
+        height: 48px;
+
+        color: @g-top-part-color;
+
+        cursor: pointer;
+
+        &.default-layout {
+          opacity: 0.5;
+        }
+
+        &.md-button {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          text-transform: none;
+        }
+
+        &:focus {
+          outline: none;
+        }
+
+        &:hover {
+          //background-color: red;
+          background-color: rgba(0, 0, 0, 0.0274509803921569)
+        }
+
+        .material-icons {
+          width: 72px;
+          height: 100%;
+
+          text-align: center;
+          line-height: @layout-manager-item-height;
+
+          flex-grow: 0;
+
+
+
+          &:focus {
+            outline: none;
+          }
+
+
+          &.default-icons {
+            color: white;
+
+            &.default-layout {
+              color: @g-top-part-color;
+            }
+
+            &:hover {
+              color: @g-top-part-color;
+            }
+          }
+        }
+
+        .layout-menu-text {
+          height: 100%;
+          flex-grow: 1;
+          line-height: @layout-manager-item-height;
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+      }
+  }
+
+  .layouts-container {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+
+
 }
 
+.popup-container.rounded-border {
+  border-radius: 4px;
+}
+// <layouts manager>
 
 .homepage-messages-container {
   max-height: 350px;
+  overflow: auto;
+}
+
+.instrument-form-layout-autocomplete {
+  position: absolute;
+  top: 35px;
+  width: 100%;
+  border: 1px solid #ddd;
+  max-height: 100px;
   overflow: auto;
 }

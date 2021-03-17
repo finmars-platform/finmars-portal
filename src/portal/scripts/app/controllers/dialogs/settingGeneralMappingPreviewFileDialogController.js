@@ -70,8 +70,8 @@
                 return metaContentTypesService.getEntityNameByContentType(item.content_type)
             }
 
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
+            if (item.hasOwnProperty('user_code')) {
+                return item.user_code;
             }
 
             if (item.hasOwnProperty('last_run_at')) { // import.pricingautomatedschedule
@@ -247,15 +247,15 @@
                     }
                 }
 
-                if (item.___system_code) {
+                if (item.___user_code) {
                     options.filters = {
-                        'system_code': item.___system_code
+                        'user_code': item.___user_code
                     }
                 }
 
-                if (item.___scheme_name) {
+                if (item.___user_code) {
                     options.filters = {
-                        'scheme_name': item.___scheme_name
+                        'user_code': item.___user_code
                     }
                 }
 
@@ -278,7 +278,7 @@
 
                     }
 
-                    if (item.___scheme_name) {
+                    if (item.___user_code) {
 
                         if (data.results.length) {
 
@@ -286,18 +286,18 @@
 
                         } else {
 
-                            console.warn('Scheme name ' + item.___scheme_name + ' is not exist');
+                            console.warn('Scheme name ' + item.___user_code + ' is not exist');
 
                         }
 
                     }
 
 
-                    if (item.___system_code) {
+                    if (item.___user_code) {
 
                         data.forEach(function (dataItem) {
 
-                            if (item.___system_code === dataItem.system_code) {
+                            if (item.___user_code === dataItem.user_code) {
                                 item.content_object = dataItem.id;
                             }
 
@@ -384,8 +384,8 @@
                                 code = resultItem.___user_code;
                             }
 
-                            if (resultItem.___system_code) {
-                                code = resultItem.___system_code;
+                            if (resultItem.___user_code) {
+                                code = resultItem.___user_code;
                             }
 
                             errors.push({
@@ -415,8 +415,8 @@
                         code = item.___user_code;
                     }
 
-                    if (item.___system_code) {
-                        code = item.___system_code;
+                    if (item.___user_code) {
+                        code = item.___user_code;
                     }
 
                     errors.push({

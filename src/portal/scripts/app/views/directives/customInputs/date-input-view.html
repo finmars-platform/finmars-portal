@@ -28,12 +28,13 @@
             <span class="material-icons">event</span>
           </button>
 
-          <input
-            type="text"
-            data-ng-model="dateValue"
-            placeholder="{{placeholderText}}"
-            ng-disabled="isDisabled"
-            class="custom-input date-input pick-me-up dateInputElem"/>
+          <input type="text"
+                 ng-model="dateValue"
+                 ng-model-options="{debounce: 800}"
+                 ng-change="onDateChange()"
+                 placeholder="{{placeholderText}}"
+                 ng-disabled="isDisabled"
+                 class="custom-input date-input pick-me-up dateInputElem" />
         </div>
 
 
