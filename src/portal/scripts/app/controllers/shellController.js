@@ -665,9 +665,11 @@
                     if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
 
                         if (ev.dataTransfer.items[0].kind === 'file') {
-                            if (!shellViewDnDDiv.contains(dragBackdropElem)) {
+
+                        	if (!shellViewDnDDiv.contains(dragBackdropElem)) {
                                 shellViewDnDDiv.appendChild(dragBackdropElem);
                             }
+
                         }
 
                     }
@@ -686,9 +688,10 @@
                 ev.preventDefault();
             }, false);
 
-            window.addEventListener('drop', function (ev) {
+			dragBackdropElem.addEventListener('drop', function (ev) {
 
                 ev.preventDefault();
+                ev.stopPropagation();
 
                 if (vm.currentGlobalState === 'profile' || vm.currentGlobalState === 'portal') {
 
@@ -726,7 +729,7 @@
 
                     }
 
-                    shellViewDnDDiv.removeChild(dragBackdropElem);
+					shellViewDnDDiv.removeChild(dragBackdropElem);
 
                 }
 
@@ -914,9 +917,11 @@
 
                     console.log("User status: Authenticated");
 
-                    setTimeout(function () {
-                        vm.initShell();
-                    }, 100);
+                    // setTimeout(function () {
+                        // vm.initShell();
+                        window.location.hash  = '#!/profile';
+                        window.location.reload();
+                    // }, 100);
 
                 }
 
@@ -941,6 +946,10 @@
 
                     vm.isAuthenticated = true;
 
+                    if (!data.current_master_user_id) {
+                        $state.go('app.profile', {}, {})
+                    }
+
                     console.log("User status: Authenticated");
 
                     $scope.$apply();
@@ -956,6 +965,7 @@
         };
 
         vm.init();
+
     }
 
 }());

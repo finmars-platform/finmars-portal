@@ -17,6 +17,10 @@
 
                 result = result + parseFloat(items[i][column.key]);
 
+            }  else {
+
+                result = '#Error';
+
             }
 
         }
@@ -39,11 +43,15 @@
 
                     result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["market_value"]);
 
+                } else {
+
+                    result = '#Error';
+
                 }
 
-            } else {
-
-                throw Error("market_value is not set");
+            } else if (items[i]["market_value"] !== 0) {
+                // throw Error("market_value is not set");
+                console.log("market_value is not set", items[i]);
             }
 
         }
@@ -66,14 +74,20 @@
 
                     result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["market_value_percent"]);
 
+                } else {
+
+                    result = '#Error';
+
                 }
 
-            } else {
-
-                throw Error("market_value_percent is not set")
+            } else if (items[i]["market_value_percent"] !== 0) {
+                // throw Error("market_value_percent is not set")
+                console.log("market_value_percent is not set", items[i]);
             }
 
         }
+
+        return result;
     }
 
     function weightedExposure(items, column) {
@@ -90,16 +104,20 @@
 
                     result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["exposure"]);
 
+                }  else {
+
+                    result = '#Error';
+
                 }
 
-            } else {
-
-                throw Error('exposure is not set')
+            } else if (items[i]["exposure"] !== 0) {
+                // throw Error('exposure is not set')
+                console.log('exposure is not set', items[i]);
             }
 
         }
 
-        return result
+        return result;
 
     }
 
@@ -117,11 +135,15 @@
 
                     result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["exposure_percent"]);
 
+                } else {
+
+                    result = '#Error';
+
                 }
 
-            } else {
-
-                throw Error("exposure_percent is not set");
+            } else if (items[i]["exposure_percent"] !== 0) {
+                // throw Error("exposure_percent is not set");
+                console.log("exposure_percent is not set", items[i]);
             }
 
         }
@@ -141,26 +163,35 @@
 
             if (items[i].hasOwnProperty("market_value") && !isNaN(parseFloat(items[i]["market_value"]))) {
                 total = total + parseFloat(items[i]["market_value"]);
-            } else {
-                throw Error("market_value is not set");
+
+            } else if (items[i]["market_value"] !== 0) {
+                // throw Error("market_value is not set");
+                console.log("market_value is not set", items[i]);
             }
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
+        if (total) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+            for (i = 0; i < items.length; i = i + 1) {
 
-                var average = parseFloat(items[i]["market_value"]) / total;
+                if (!isNaN(parseFloat(items[i][column.key]))) {
 
-                result = result + parseFloat(items[i][column.key]) * average;
+                    var average = parseFloat(items[i]["market_value"]) / total;
+
+                    result = result + parseFloat(items[i][column.key]) * average;
+
+                }
 
             }
+
+        } else {
+
+            result = '#Error';
 
         }
 
         return result;
-
     }
 
     function weightedAverageMarketValuePercent(items, column) {
@@ -174,22 +205,31 @@
 
             if (items[i]["market_value_percent"] && !isNaN(parseFloat(items[i]["market_value_percent"]))) {
                 total = total + parseFloat(items[i]["market_value_percent"]);
-            } else {
-                throw Error("market_value_percent is not set");
+
+            } else if (items[i]["market_value_percent"] !== 0) {
+                // throw Error("market_value_percent is not set");
+                console.log("market_value_percent is not set", items[i]);
             }
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
+        if (total) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+            for (i = 0; i < items.length; i = i + 1) {
 
-                var average = parseFloat(items[i]["market_value_percent"]) / total;
+                if (!isNaN(parseFloat(items[i][column.key]))) {
 
-                result = result + parseFloat(items[i][column.key]) * average;
+                    var average = parseFloat(items[i]["market_value_percent"]) / total;
+
+                    result = result + parseFloat(items[i][column.key]) * average;
+
+                }
 
             }
 
+        } else {
+
+            result = '#Error';
 
         }
 
@@ -208,23 +248,34 @@
 
             if (items[i].hasOwnProperty("exposure") && !isNaN(parseFloat(items[i]["exposure"]))) {
                 total = total + parseFloat(items[i]["exposure"]);
-            } else {
-                throw Error("exposure is not set");
+
+            } else if (items[i]["exposure"] !== 0) {
+                // throw Error("exposure is not set");
+                console.log("exposure is not set", items[i]);
             }
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
+        if (total) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+            for (i = 0; i < items.length; i = i + 1) {
 
-                var average = parseFloat(items[i]["exposure"]) / total;
+                if (!isNaN(parseFloat(items[i][column.key]))) {
 
-                result = result + parseFloat(items[i][column.key]) * average;
+                    var average = parseFloat(items[i]["exposure"]) / total;
+
+                    result = result + parseFloat(items[i][column.key]) * average;
+
+                }
 
             }
 
+        } else {
+
+            result = '#Error';
+
         }
+
 
         return result;
 
@@ -241,23 +292,34 @@
 
             if (items[i]["exposure_percent"] && !isNaN(parseFloat(items[i]["exposure_percent"]))) {
                 total = total + parseFloat(items[i]["exposure_percent"]);
-            } else {
-                throw Error("exposure_percent is not set");
+
+            } else if (items[i]["exposure_percent"] !== 0) {
+                // throw Error("exposure_percent is not set");
+                console.log("exposure_percent is not set", items[i]);
             }
 
         }
 
-        for (i = 0; i < items.length; i = i + 1) {
+        if (total) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+            for (i = 0; i < items.length; i = i + 1) {
 
-                var average = parseFloat(items[i]["exposure_percent"]) / total;
+                if (!isNaN(parseFloat(items[i][column.key]))) {
 
-                result = result + parseFloat(items[i][column.key]) * average;
+                    var average = parseFloat(items[i]["exposure_percent"]) / total;
+
+                    result = result + parseFloat(items[i][column.key]) * average;
+
+                }
 
             }
 
+        }  else {
+
+            result = '#Error';
+
         }
+
 
         return result;
 

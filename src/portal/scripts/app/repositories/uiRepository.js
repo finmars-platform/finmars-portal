@@ -39,50 +39,6 @@
             getRequestParams2)
     };
 
-    var getEditLayout = function (entity) {
-
-        var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-
-        return xhrService.fetch(baseUrl + 'ui/edit-layout/?content_type=' + contentType,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
-
-    var createEditLayout = function (ui) {
-
-        return xhrService.fetch(baseUrl + 'ui/edit-layout/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(ui)
-            })
-    };
-
-    var updateEditLayout = function (id, ui) {
-        return xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(ui)
-            })
-    };
-
     var getListLayout = function (entity, options) {
 
         /* if (entity == 'all') {
@@ -172,9 +128,9 @@
             getRequestParams2)
     }; */
 
-    var getDefaultListLayout = function (entity) {
+    var getDefaultListLayout = function (entityType) {
 
-        var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+        var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
         return xhrService.fetch(baseUrl + 'ui/list-layout/?is_default=2&content_type=' + contentType,
             getRequestParams2)
@@ -231,64 +187,6 @@
             getRequestParams2)
     };
 
-    var getDefaultEditLayout = function (entityType) {
-
-        console.log('entityType', entityType);
-
-        var fields;
-        var entitiesWithoutBaseAttrs = metaRestrictionsRepository.getEntitiesWithoutBaseAttrsList();
-
-        /* if (entitiesWithoutBaseAttrs.indexOf(entityType) !== -1) {
-            fields = []
-        } else {
-            fields = [
-                {
-                    "row": 1,
-                    "colspan": "1",
-                    "column": 1,
-                    "editMode": false,
-                    "id": null,
-                    "name": "Name",
-                    "disabled": false,
-                    "options": {
-                        "notNull": true
-                    },
-                    "attribute": {
-                        "value_type": 10,
-                        "name": "Name",
-                        "key": "name",
-                        "disabled": true
-                    },
-                    "type": "field",
-                    "key": null
-                }
-            ];
-        } */
-
-        console.log('fields', fields);
-
-        return [
-            {
-                data: {
-                    tabs: [],
-                    fixedArea: {
-                        isActive: false,
-                        layout: []
-                    }
-                }
-                    /*{
-                        "name": "General",
-                        "id": 1,
-                        "layout": {
-                            "fields": fields,
-                            "rows": 1,
-                            "columns": 1
-                        }
-                    }*/
-            }
-        ]
-    };
-
     var getListLayoutTemplate = function () {
         return [{
             "name": "default",
@@ -314,6 +212,106 @@
             }
         }]
     };
+
+    // Input Form Layout
+
+    var getListEditLayout = function (entity, options) {
+
+        console.log('getListEditLayout.entity', entity)
+
+        if (!options) {
+            options = {}
+        }
+
+        if (entity !== 'all') {
+
+            if (!options.filters) {
+                options.filters = {}
+            }
+
+            if (!options.filters.content_type) {
+                options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/edit-layout/', options),
+                getRequestParams);
+
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/edit-layout/', options),
+            getRequestParams);
+
+    };
+
+    var getDefaultEditLayout = function (entityType) {
+
+        var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+
+        return xhrService.fetch(baseUrl + 'ui/edit-layout/?is_default=2&content_type=' + contentType,
+            getRequestParams2)
+    };
+
+    var getEditLayout = function (id) {
+
+        return xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createEditLayout = function (ui) {
+
+        return xhrService.fetch(baseUrl + 'ui/edit-layout/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(ui)
+            })
+    };
+
+    var updateEditLayout = function (id, ui) {
+        return xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(ui)
+            })
+    };
+
+    var deleteEditLayoutByKey = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
+
+    // Configuration Layout
 
     var getConfigurationList = function () {
 
@@ -725,20 +723,155 @@
             })
     };
 
+    // Cross Entity Attribute Extension
+
+    var getCrossEntityAttributeExtensionList = function (options) {
+
+        console.log('options', options);
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/cross-entity-attribute-extension/', options),
+            getRequestParams)
+    };
+
+    var getCrossEntityAttributeExtension = function (id) {
+        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createCrossEntityAttributeExtension = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateCrossEntityAttributeExtension = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteCrossEntityAttributeExtension = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
+    // Column Sort Data
+
+    var getColumnSortDataList = function (options) {
+
+        console.log('options', options);
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/column-sort-data/', options),
+            getRequestParams)
+    };
+
+    var getColumnSortData = function (id) {
+        return xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createColumnSortData = function (data) {
+
+        return xhrService.fetch(baseUrl + 'ui/column-sort-data/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var updateColumnSortData = function (id, data) {
+        return xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
+    var deleteColumnSortData = function (id) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+                {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {
+                        'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                        Accept: 'application/json',
+                        'Content-type': 'application/json'
+                    }
+                }).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
+
+
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
 
-        getDefaultEditLayout: getDefaultEditLayout,
+
         getDefaultListLayout: getDefaultListLayout,
 
         // getActiveListLayout: getActiveListLayout,
 
         getListLayoutTemplate: getListLayoutTemplate,
-
-        getEditLayout: getEditLayout,
-        createEditLayout: createEditLayout,
-        updateEditLayout: updateEditLayout,
 
         getListLayout: getListLayout,
         getListLayoutLight: getListLayoutLight,
@@ -749,6 +882,17 @@
         deleteListLayoutByKey: deleteListLayoutByKey,
 
         pingListLayoutByKey: pingListLayoutByKey,
+
+        // Input Form Layout
+
+        getListEditLayout: getListEditLayout,
+        getDefaultEditLayout: getDefaultEditLayout,
+        getEditLayout: getEditLayout,
+        createEditLayout: createEditLayout,
+        updateEditLayout: updateEditLayout,
+        deleteEditLayoutByKey: deleteEditLayoutByKey,
+
+        // Configuration Layout
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,
@@ -793,7 +937,19 @@
 
         getEntityTooltipList: getEntityTooltipList,
         createEntityTooltip: createEntityTooltip,
-        updateEntityTooltip: updateEntityTooltip
+        updateEntityTooltip: updateEntityTooltip,
+
+        getCrossEntityAttributeExtensionList: getCrossEntityAttributeExtensionList,
+        getCrossEntityAttributeExtension: getCrossEntityAttributeExtension,
+        createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
+        updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
+        deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
+
+        getColumnSortDataList: getColumnSortDataList,
+        getColumnSortData: getColumnSortData,
+        createColumnSortData: createColumnSortData,
+        updateColumnSortData: updateColumnSortData,
+        deleteColumnSortData: deleteColumnSortData,
 
 
 

@@ -1,0 +1,91 @@
+<div class="popup-menu">
+
+    <div ng-if="popupData.data.column.groups"
+         ng-include="'views/popups/entity-viewer/g-rv-group-settings-menu-options.html'"></div>
+
+    <div>
+        <md-button ng-click="popupData.data.renameColumn(popupData.data.column, $mdMenu, $event)"
+                   class="popup-menu-item">
+            <span>Rename</span>
+        </md-button>
+    </div>
+
+    <div data-ng-if="!popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
+        <md-button data-ng-click="popupData.data.addColumnEntityToGrouping(popupData.data.column)"
+                   class="popup-menu-item">
+            <span>Add to grouping</span>
+        </md-button>
+    </div>
+
+    <div>
+        <md-button data-ng-disabled="!popupData.data.checkForFilteringBySameAttr(popupData.data.column.key)"
+                   data-ng-click="popupData.data.addFiltersWithColAttr(popupData.data.column)"
+                   class="popup-menu-item">
+            <span>Add to Filters</span>
+        </md-button>
+    </div>
+
+    <div data-ng-if="popupData.data.column.value_type == 10">
+        <md-button data-ng-click="popupData.data.editManualSorting($event, popupData.data.column)"
+                   class="popup-menu-item">
+            <span>Edit Manual Sorting</span>
+        </md-button>
+    </div>
+
+    <div data-ng-if="popupData.data.column.value_type == 10">
+        <md-button data-ng-click="popupData.data.manualSort($event, popupData.data.column)"
+                   class="popup-menu-item" data-ng-class="{'disabled-btn': !popupData.data.column.manual_sort_layout_user_code}">
+            <span>Manual Sort</span>
+        </md-button>
+    </div>
+
+    <div>
+        <md-button ng-click="popupData.data.resizeColumn(popupData.data.column, $mdMenu, $event)"
+                   class="popup-menu-item">
+            <span>Resize</span>
+        </md-button>
+    </div>
+
+    <md-menu-divider data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)"></md-menu-divider>
+
+    <div data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
+
+        <md-button class="md-icon-button align-button rounded"
+                   data-ng-class="{active: popupData.data.checkColTextAlign(popupData.data.column, 'left')}"
+                   ng-click="popupData.data.changeColumnTextAlign(popupData.data.column, 'left')">
+            <span class="material-icons">format_align_left</span>
+            <md-tooltip md-direction="top">Left alignment</md-tooltip>
+        </md-button>
+
+        <md-button class="md-icon-button align-button rounded"
+                   data-ng-class="{active: popupData.data.checkColTextAlign(popupData.data.column, 'center')}"
+                   ng-click="popupData.data.changeColumnTextAlign(popupData.data.column, 'center')">
+            <span class="material-icons">format_align_center</span>
+            <md-tooltip md-direction="top">Center alignment</md-tooltip>
+        </md-button>
+
+        <md-button class="md-icon-button align-button rounded"
+                   data-ng-class="{active: popupData.data.checkColTextAlign(popupData.data.column, 'right')}"
+                   ng-click="popupData.data.changeColumnTextAlign(popupData.data.column, 'right')">
+            <span class="material-icons">format_align_right</span>
+            <md-tooltip md-direction="top">Right alignment</md-tooltip>
+        </md-button>
+
+    </div>
+
+    <md-menu-divider data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)"></md-menu-divider>
+
+    <div data-ng-if="popupData.data.isReport && popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
+        <md-button data-ng-click="popupData.data.removeGroup(popupData.data.column.___column_id || popupData.data.column.___group_type_id)"
+                   class="popup-menu-item">
+            <span>Remove</span>
+        </md-button>
+    </div>
+
+    <div data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
+        <md-button ng-click="popupData.data.removeColumn(popupData.data.column)"
+                   class="popup-menu-item">
+            <span>Remove</span>
+        </md-button>
+    </div>
+</div>

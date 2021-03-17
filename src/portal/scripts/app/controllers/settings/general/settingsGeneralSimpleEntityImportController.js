@@ -72,7 +72,7 @@
                 locals: {
                     warning: {
                         title: 'Warning!',
-                        description: 'Are you sure to delete ' + item['scheme_name']
+                        description: 'Are you sure to delete ' + item['user_code']
                     }
                 },
                 preserveScope: true,

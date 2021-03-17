@@ -49,7 +49,7 @@
                 "value_type": "field",
                 "value_content_type": "instruments.instrumentclass",
                 "value_entity": "instrument-class",
-                "code": "system_code",
+                "code": "user_code",
                 "allow_null": false
             },
             {
