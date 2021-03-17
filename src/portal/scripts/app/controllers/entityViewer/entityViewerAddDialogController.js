@@ -55,7 +55,7 @@
 
         vm.processing = false;
 
-        vm.readyStatus = {content: false, entity: true, permissions: true};
+        vm.readyStatus = {permissions: false, entity: false, layout: false};
 
         vm.entityType = entityType;
 
@@ -795,8 +795,8 @@
 
                 if (res.status === "agree") {
 
-                    // vm.readyStatus.entity = false;
-                    vm.readyStatus.content = false;
+                    vm.readyStatus.entity = false;
+                    vm.readyStatus.layout = false;
 
                     vm.init();
 
@@ -841,7 +841,7 @@
 			} else {
 
 				try {
-					editLayout = await uiService.getEditLayout(vm.entityType);
+					editLayout = await uiService.getEditLayoutByKey(vm.entityType);
 
 				} catch (error) {
 					gotEditLayout = false;
@@ -918,7 +918,7 @@
 
 				mapAttributesAndFixFieldsLayout();
 
-				vm.readyStatus.content = true;
+				vm.readyStatus.layout = true;
 				vm.readyStatus.entity = true;
 				// vm.readyStatus.permissions = true;
 
@@ -937,7 +937,7 @@
         };
 
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions
+            return vm.readyStatus.layout && vm.readyStatus.entity && vm.readyStatus.permissions
         }; */
 
         vm.checkReadyStatus = evEditorSharedLogicHelper.checkReadyStatus;
@@ -1555,7 +1555,7 @@
 
             console.log('instrumentTypeChange', vm.entity)
 
-            evEditorSharedLogicHelper.getFormLayout('edition');
+            evEditorSharedLogicHelper.getFormLayout();
 
         }
 
@@ -1645,7 +1645,7 @@
 
             getEntityAttrs();
             // vm.getFormLayout();
-            evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
+            evEditorSharedLogicHelper.getFormLayout(formLayoutFromAbove);
             vm.getCurrencies();
 
             if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
@@ -1653,7 +1653,6 @@
             } else {
                 vm.loadPermissions();
             }
-
 
             entityViewerHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
 

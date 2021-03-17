@@ -71,7 +71,7 @@
             vm.hasEnabledStatus = false;
         }
 
-        vm.readyStatus = {attributeTypes: false, permissions: false, entity: false, layout: false};
+        vm.readyStatus = evEditorSharedLogicHelper.readyStatusObj;
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -265,7 +265,7 @@
 
         };
 
-        /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
+        /* var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
             var i, l, e;
 
@@ -417,9 +417,9 @@
                 dcLayoutHasBeenFixed = true;
             }
             // < Empty sockets that have no attribute that matches them >
-        };*/
+        };
 
-        /* var fixFieldsLayoutWithMissingSockets = function () {
+        var fixFieldsLayoutWithMissingSockets = function () {
 
             var socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(vm.tabs, dataConstructorLayout);
 
@@ -673,7 +673,7 @@
 			} else {
 
 				try {
-					editLayout = await uiService.getEditLayout(vm.entityType);
+					editLayout = await uiService.getEditLayoutByKey(vm.entityType);
 
 				} catch (error) {
 					gotEditLayout = false;
@@ -764,7 +764,7 @@
 
 			});
 
-        };*/
+        }; */
 
         vm.getItem = function () {
 
@@ -792,11 +792,10 @@
                     }
 
                     // vm.getFormLayout();
-                    evEditorSharedLogicHelper.getFormLayout('edition');
+                    evEditorSharedLogicHelper.getFormLayout(formLayoutFromAbove);
 
                     // Resolving promise to inform child about end of editor building
                     res();
-
 
                 });
 
@@ -1201,7 +1200,6 @@
 
                 if (res.status === "agree") {
 
-                    vm.readyStatus.attributeTypes = false;
                     vm.readyStatus.entity = false;
                     vm.readyStatus.layout = false;
 
@@ -1888,11 +1886,7 @@
 
         // Instrument Type Layout Settings tab end
 
-        vm.instrumentTypeChange = function($event){
-
-            evEditorSharedLogicHelper.getFormLayout('edition');
-
-        }
+        vm.instrumentTypeChange = evEditorSharedLogicHelper.typeSelectorChangeFns[vm.entityType];
 
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 

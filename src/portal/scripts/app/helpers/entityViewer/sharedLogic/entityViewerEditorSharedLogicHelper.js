@@ -1,5 +1,6 @@
 (function () {
 
+	const metaService = require('../../../services/metaService');
     const uiService = require('../../../services/uiService');
     const entityViewerHelperService = require('../../../services/entityViewerHelperService');
 
@@ -19,6 +20,8 @@
 
         let bigDrawerResizeButton;
 
+        const readyStatusObj = {permissions: false, entity: false, layout: false};
+
         const getFixedAreaPopup = function () {
             return {
                 fields: {
@@ -31,17 +34,20 @@
             };
         };
 
-        const entityTabsMenuTplt = '<div class="ev-editor-tabs-popup-content popup-menu">' +
-            '<md-button ng-repeat="tab in popupData.viewModel.entityTabs" class="entity-tabs-menu-option popup-menu-option" ng-class="popupData.viewModel.getTabBtnClasses(tab)" ng-click="popupData.viewModel.activeTab = tab">' +
-            '<span>{{tab.label}}</span>' +
-            '<div ng-if="popupData.viewModel.tabWithErrors(tab)" class="tab-option-error-icon">' +
-            '<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
-            '</div>' +
-            '</md-button>' +
-            '<md-button ng-if="popupData.viewModel.canManagePermissions" class="entity-tabs-menu-option popup-menu-option" ng-class="{\'active-tab-button\': popupData.viewModel.activeTab === \'permissions\'}" ng-click="popupData.viewModel.activeTab = \'permissions\'">' +
-            '<span>Permissions</span>' +
-            '</md-button>' +
+		//<editor-fold desc="entityTabsMenuTplt">
+		const entityTabsMenuTplt =
+			'<div class="ev-editor-tabs-popup-content popup-menu">' +
+				'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" class="entity-tabs-menu-option popup-menu-option" ng-class="popupData.viewModel.getTabBtnClasses(tab)" ng-click="popupData.viewModel.activeTab = tab">' +
+					'<span>{{tab.label}}</span>' +
+					'<div ng-if="popupData.viewModel.tabWithErrors(tab)" class="tab-option-error-icon">' +
+						'<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
+					'</div>' +
+				'</md-button>' +
+				'<md-button ng-if="popupData.viewModel.canManagePermissions" class="entity-tabs-menu-option popup-menu-option" ng-class="{\'active-tab-button\': popupData.viewModel.activeTab === \'permissions\'}" ng-click="popupData.viewModel.activeTab = \'permissions\'">' +
+					'<span>Permissions</span>' +
+				'</md-button>' +
             '</div>';
+		//</editor-fold>
 
         const getEditFormFieldsInFixedArea = function () {
 
@@ -65,7 +71,8 @@
         };
 
         const getAddFormFieldsInFixedArea = function () {
-            const fieldsInFixedArea = [];
+
+        	const fieldsInFixedArea = [];
 
             if (viewModel.fixedAreaPopup.tabColumns > 2) {
 
@@ -198,16 +205,33 @@
         };
 
         const getAttributeTypes = function () {
-            return attributeTypeService.getList(viewModel.entityType, {pageSize: 1000}).then(data => {
+
+        	return new Promise((res, rej) => {
+
+        		const options = {page: 1, pageSize: 1000};
+
+        		metaService.loadDataFromAllPages(attributeTypeService.getList, [viewModel.entityType, options]).then(attrTypeData => {
+
+        			viewModel.attributeTypes = attrTypeData;
+					res();
+
+				}).catch(error => rej(error));
+
+			});
+
+        	/* return attributeTypeService.getList(viewModel.entityType, {pageSize: 1000}).then(data => {
                 viewModel.attributeTypes = data.results;
-            });
+            }); */
+
         };
 
         const checkReadyStatus = () => {
 
             let readyStatus = true;
 
-            Object.keys(viewModel.readyStatus).forEach(key => readyStatus = readyStatus && viewModel.readyStatus[key]);
+            Object.keys(viewModel.readyStatus).forEach(key => { // checking that all properties of viewModel.readyStatus have value true
+            	readyStatus = readyStatus && viewModel.readyStatus[key];
+			});
 
             return readyStatus;
 
@@ -358,13 +382,13 @@
 
                 if (viewModel.entity.instrument_type) {
 
-                    return instrumentTypeService.getByKey(viewModel.entity.instrument_type).then(function (data) {
+                    /* return instrumentTypeService.getByKey(viewModel.entity.instrument_type).then(function (data) {
 
                         if (data.instrument_form_layouts) {
 
                             return new Promise(function (resolve, reject) {
 
-                                var layouts = data.instrument_form_layouts.split(',')
+                                var layouts = data.instrument_form_layouts.split(',');
 
                                 console.log('Resolving Edit Layout. Layouts', layouts)
 
@@ -405,12 +429,12 @@
 
                                 })
 
-                            })
+                            });
 
                         } else {
                             return uiService.getDefaultEditLayout(viewModel.entityType);
                         }
-                    })
+                    }) */
 
                 } else {
                     return uiService.getDefaultEditLayout(viewModel.entityType);
@@ -423,82 +447,84 @@
 
         }
 
-        const getDynamicTabs = async function (formLayoutFromAbove) {
+        const getUserTabs = formLayoutFromAbove => {
 
-			let editLayout;
-			let gotEditLayout = true;
+        	return new Promise(async resolve => {
 
-			if (formLayoutFromAbove) {
-				editLayout = formLayoutFromAbove;
+        		let editLayout;
+				let gotEditLayout = true;
 
-			} else {
-
-				try {
-					editLayout = await resolveEditLayout(viewModel);
-
-				} catch (error) {
-					console.error('resolveEditLayout error', error);
-					gotEditLayout = false;
-				}
-
-			}
-
-			if (gotEditLayout &&
-				editLayout.results.length && editLayout.results[0].data) {
-
-				viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
-
-				if (Array.isArray(editLayout.results[0].data)) {
-
-					viewModel.tabs = editLayout.results[0].data
+				if (formLayoutFromAbove) {
+					editLayout = formLayoutFromAbove;
 
 				} else {
 
-					viewModel.tabs = editLayout.results[0].data.tabs
-					viewModel.fixedArea = editLayout.results[0].data.fixedArea
+					try {
+						editLayout = await resolveEditLayout(viewModel);
+
+					} catch (error) {
+						console.error('resolveEditLayout error', error);
+						gotEditLayout = false;
+					}
 
 				}
 
-			}
+				if (gotEditLayout &&
+					editLayout.results.length && editLayout.results[0].data) {
 
-			else {
-				viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
-				viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
-			}
+					viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
 
-			if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
+					if (Array.isArray(editLayout.results[0].data)) {
 
-				viewModel.tabs.forEach((tab, index) => tab.tabOrder = index);
+						viewModel.tabs = editLayout.results[0].data
 
-			}
+					} else {
+
+						viewModel.tabs = editLayout.results[0].data.tabs
+						viewModel.fixedArea = editLayout.results[0].data.fixedArea
+
+					}
+
+				}
+
+				else {
+					viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
+					viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
+				}
+
+				if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
+
+					viewModel.tabs.forEach((tab, index) => tab.tabOrder = index);
+
+				}
+
+				resolve();
+
+			});
 
 		};
 
-        const getFormDynamicTabs = function (editorType) {
+        const getAndFormatUserTabs = async function () {
+			console.log("testing getAndFormatUserTabs", getAndFormatUserTabs);
+			viewModel.readyStatus.layout = false;
 
-			getDynamicTabs();
+			await getUserTabs();
+
+			if (viewModel.entityType === 'instrument') await applyInstrumentUserFieldsAliases();
 
         	entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
 			mapAttributesAndFixFieldsLayout();
 
-			if (editorType === 'addition') {
+			viewModel.readyStatus.layout = true;
 
-				viewModel.readyStatus.content = true;
+			$scope.$apply();
 
-			} else {
-				viewModel.readyStatus.layout = true;
-			}
+		};
 
-		}
+        const getFormLayout = async formLayoutFromAbove => {
 
-        /**
-         *
-         * @param editorType: string - indicates whether function called from entityViewerEditDialogController.js or entityViewerAddDialogController.js
-         */
-        const getFormLayout = async function (editorType, formLayoutFromAbove) {
-
-			getDynamicTabs();
+			await getUserTabs(formLayoutFromAbove);
 
             if (viewModel.openedIn === 'big-drawer') {
 
@@ -509,7 +535,9 @@
                 }
 
                 // Instrument-type always open in max big drawer window
-                const columns = viewModel.entityType === 'instrument-type'? 6 : entityViewerHelperService.getEditLayoutMaxColumns(viewModel.tabs);
+                let columns = entityViewerHelperService.getEditLayoutMaxColumns(viewModel.tabs);
+
+                if (viewModel.entityType === 'instrument-type') columns = 6;
 
                 if (viewModel.fixedAreaPopup.tabColumns !== columns) {
 
@@ -540,27 +568,22 @@
                 viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
             }
 
-            getAttributeTypes().then(async function () {
+            const promises = [getAttributeTypes()];
+
+			if (viewModel.entityType === 'instrument') {
+				promises.push(applyInstrumentUserFieldsAliases());
+			}
+
+			Promise.allSettled(promises).then(async function () {
 
                 entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
                 viewModel.getEntityPricingSchemes();
 
-                if (viewModel.entityType === 'instrument') {
-                    await applyInstrumentUserFieldsAliases();
-                }
-
                 mapAttributesAndFixFieldsLayout();
 
-                if (editorType === 'addition') {
-
-                    viewModel.readyStatus.content = true;
-                    viewModel.readyStatus.entity = true;
-
-                } else {
-                    viewModel.readyStatus.layout = true;
-                    viewModel.readyStatus.attributeTypes = true;
-                }
+				viewModel.readyStatus.layout = true;
+				viewModel.readyStatus.entity = true;
 
                 $scope.$apply();
 
@@ -903,13 +926,19 @@
             return currencyFields;
         }
 
+		const typeSelectorChangeFns = {
+			'instrument': getAndFormatUserTabs
+		};
+
         return {
+
+			readyStatusObj: readyStatusObj,
 
             getFixedAreaPopup: getFixedAreaPopup,
             entityTabsMenuTplt: entityTabsMenuTplt,
-
             onPopupSaveCallback: onPopupSaveCallback,
             onFixedAreaPopupCancel: onFixedAreaPopupCancel,
+			typeSelectorChangeFns: typeSelectorChangeFns,
 
             checkReadyStatus: checkReadyStatus,
 			bindFlex: bindFlex,
