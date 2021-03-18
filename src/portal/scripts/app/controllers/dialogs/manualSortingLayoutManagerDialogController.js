@@ -32,6 +32,7 @@
 
             uiService.getColumnSortDataList({
                 filters: {
+                    is_common: false,
                     column_key: vm.column.key
                 }
             }).then(function (data){
@@ -163,6 +164,16 @@
 
             });
 
+        }
+
+        vm.applyManualSortingLayout = function ($event, item) {
+
+            vm.column.manual_sort_layout_user_code = item.user_code
+
+        }
+
+        vm.clearManualSortingLayout = function ($event, item) {
+            vm.column.manual_sort_layout_user_code = null;
         }
 
         vm.init = function () {

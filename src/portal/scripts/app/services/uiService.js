@@ -65,7 +65,6 @@
     };
 
     let getListLayout = function (entityType, options) {
-        console.log('#69 getListLayout', entityType, options)
 
         // get content_type by entityType when getting layout by user_code
         if (options && options.filters && options.filters.user_code && entityType) {
