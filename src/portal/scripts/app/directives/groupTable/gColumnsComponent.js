@@ -12,6 +12,7 @@
     var metaService = require('../../services/metaService');
     var evHelperService = require('../../services/entityViewerHelperService');
     var uiService = require('../../services/uiService');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -1218,12 +1219,21 @@
                         groupsContent.forEach(function (groupItem) {
                             groupItem.___is_open = false;
 
+                            var groupSettings = rvDataHelper.getOrCreateGroupSettings(scope.evDataService, groupItem);
+                            groupSettings.is_open = false;
+                            rvDataHelper.setGroupSettings(scope.evDataService, groupItem, groupSettings);
+
                             var childrens = evDataHelper.getAllChildrenGroups(groupItem.___id, scope.evDataService);
+
                             childrens.forEach(function (children) {
 
                                 if (children.___type === 'group') {
 
                                     item = scope.evDataService.getData(children.___id);
+
+                                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(scope.evDataService, children);
+                                    groupSettings.is_open = false;
+                                    rvDataHelper.setGroupSettings(scope.evDataService, children, groupSettings);
 
                                     if (item) {
                                         item.___is_open = false;
@@ -1262,7 +1272,12 @@
                         scope.groups[$index].report_settings.is_level_folded = false;
 
                         groupsContent.forEach(function (groupItem) {
+
+                            var groupSettings = rvDataHelper.getOrCreateGroupSettings(scope.evDataService, groupItem);
+
                             groupItem.___is_open = true;
+                            groupSettings.is_open = true;
+                            rvDataHelper.setGroupSettings(scope.evDataService, groupItem, groupSettings);
                             scope.evDataService.setData(groupItem);
                         });
 

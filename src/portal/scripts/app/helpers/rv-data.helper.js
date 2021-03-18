@@ -964,7 +964,8 @@
         if (!groupSettings) {
 
             groupSettings = {
-                full_path: full_path
+                full_path: full_path,
+                is_open: true
             }
 
             reportData[member_id][contentType][layout.user_code]['groups'][full_path] = groupSettings
@@ -982,6 +983,14 @@
         var member = evDataService.getCurrentMember()
         var layout = evDataService.getListLayout();
         var contentType = evDataService.getContentType();
+
+        if (!member) {
+            throw new Error("Current Member is not set")
+        }
+
+        if (!contentType) {
+            throw new Error("Content type is not set")
+        }
 
         var member_id = member.id
 
