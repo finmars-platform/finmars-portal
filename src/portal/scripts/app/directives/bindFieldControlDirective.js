@@ -151,23 +151,23 @@
 				};
 
 				scope.setDateToday = function () {
-					scope.entity[scope.fieldKey] = moment(new Date()).format(
-						"YYYY-MM-DD"
-					);
+					scope.entity[scope.fieldKey] = moment(new Date())
+						.format("YYYY-MM-DD");
 				};
 
 				scope.setDatePlus = function () {
-					scope.entity[scope.fieldKey] = moment(
-						new Date(scope.entity[scope.fieldKey])
-					)
+
+					const date = scope.entity[scope.fieldKey] ? new Date(scope.entity[scope.fieldKey]) : new Date();
+
+					scope.entity[scope.fieldKey] = moment(date)
 						.add(1, "days")
 						.format("YYYY-MM-DD");
 				};
 
 				scope.setDateMinus = function () {
-					scope.entity[scope.fieldKey] = moment(
-						new Date(scope.entity[scope.fieldKey])
-					)
+
+					const date = scope.entity[scope.fieldKey] ? new Date(scope.entity[scope.fieldKey]) : new Date();
+					scope.entity[scope.fieldKey] = moment(date)
 						.subtract(1, "days")
 						.format("YYYY-MM-DD");
 				};

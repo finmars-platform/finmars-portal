@@ -16,12 +16,19 @@
 
                 <div data-ng-if="vm.columnLayouts.length">
 
-                    <div data-ng-repeat="item in vm.columnLayouts" data-ng-class="{'active': item.user_code == vm.column.manual_sort_layout_user_code}">
+                    <div data-ng-repeat="item in vm.columnLayouts" class="column-sorting-layout-manager-row"
+                         data-ng-class="{'active': item.user_code == vm.column.manual_sort_layout_user_code}">
 
                         {{item.user_code}}
 
-                        <md-button class="md-raised" data-ng-click="vm.editManualSortingLayout($event, item)">Edit</md-button>
-                        <md-button class="md-raised" data-ng-click="vm.deleteManualSortingLayout($event, item)">Delete</md-button>
+                        <md-button class="md-raised" data-ng-click="vm.editManualSortingLayout($event, item)">Edit
+                        </md-button>
+                        <md-button class="md-raised" data-ng-click="vm.deleteManualSortingLayout($event, item)">Delete
+                        </md-button>
+
+                        <md-button class="md-raised md-primary"
+                                   data-ng-click="vm.applyManualSortingLayout($event, item)">Apply
+                        </md-button>
 
                     </div>
 
@@ -41,12 +48,19 @@
 
                 <div data-ng-if="vm.commonLayouts.length">
 
-                    <div data-ng-repeat="item in vm.commonLayouts" data-ng-class="{'active': item.user_code == vm.column.manual_sort_layout_user_code}">
+                    <div data-ng-repeat="item in vm.commonLayouts" class="column-sorting-layout-manager-row"
+                         data-ng-class="{'active': item.user_code == vm.column.manual_sort_layout_user_code}">
 
                         {{item.user_code}}
 
-                        <md-button class="md-raised" data-ng-click="vm.editManualSortingLayout($event, item)">Edit</md-button>
-                        <md-button class="md-raised" data-ng-click="vm.deleteManualSortingLayout($event, item)">Delete</md-button>
+                        <md-button class="md-raised" data-ng-click="vm.editManualSortingLayout($event, item)">Edit
+                        </md-button>
+                        <md-button class="md-raised" data-ng-click="vm.deleteManualSortingLayout($event, item)">Delete
+                        </md-button>
+
+                        <md-button class="md-raised md-primary"
+                                   data-ng-click="vm.applyManualSortingLayout($event, item)">Apply
+                        </md-button>
 
                     </div>
 
@@ -63,14 +77,17 @@
 
             <div layout="row">
 
-                <md-button class="md-raised md-primary" data-ng-click="vm.createManualSortingLayout($event)">Create new</md-button>
+                <md-button class="md-raised md-primary" data-ng-click="vm.createManualSortingLayout($event)">Create
+                    new
+                </md-button>
 
             </div>
 
 
         </div>
 
-        <div data-ng-if="!vm.readyStatus.columnLayouts || !vm.readyStatus.commonLayouts" layout="row" layout-sm="column" layout-align="space-around">
+        <div data-ng-if="!vm.readyStatus.columnLayouts || !vm.readyStatus.commonLayouts" layout="row" layout-sm="column"
+             layout-align="space-around">
             <progress-circular diameter="100"></progress-circular>
         </div>
 
@@ -78,7 +95,16 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
 
-        <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
+        <div>
+
+            <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
+            <md-button class="md-raised" data-ng-click="vm.clearManualSortingLayout($event)">Clear</md-button>
+
+        </div>
+
+        <div>
+            <md-button class="md-raised" data-ng-click="vm.agree($event)" data-ng-class="{'disabled-btn': !vm.column.manual_sort_layout_user_code}">Sort</md-button>
+        </div>
 
     </md-dialog-actions>
 </md-dialog>
