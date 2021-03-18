@@ -855,6 +855,7 @@
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
                 vm.entityViewerDataService.setUseFromAbove(true);
                 vm.entityViewerDataService.setViewContext('split_panel');
@@ -867,6 +868,9 @@
 
                 var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
                 var additions = parentEntityViewerDataService.getAdditions();
+                var member = parentEntityViewerDataService.getCurrentMember();
+
+                vm.entityViewerDataService.setCurrentMember(member)
 
                 var spDefaultLayoutData = {
                     layoutId: additions.layoutData.layoutId,

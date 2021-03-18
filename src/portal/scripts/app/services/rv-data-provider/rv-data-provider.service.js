@@ -337,6 +337,9 @@
 
                         if (!parentGroup.___is_open) {
                             obj.___is_open = false;
+                            groupSettings.is_open = false
+                            rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
+
                         }
 
                     }
@@ -470,6 +473,8 @@
 
                             if (!parentGroup.___is_open) {
                                 obj.___is_open = false;
+                                groupSettings.is_open = false
+                                rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
                             }
 
 
