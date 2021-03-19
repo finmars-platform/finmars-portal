@@ -199,7 +199,7 @@
 			};
 
             var editEntity = async function (entitytype, activeObject) {
-				console.log("testing editEntity activeObject", activeObject);
+
 				/* var entitiesWithEditLayout = [
 					'instrument',
 					'portfolio',
@@ -532,48 +532,14 @@
 
 						var editLayout;
 
-						/* if (entitytype === 'instrument') {
-
-							var getAvailableEditLayout = function (entityType, userCodesList) {
-
-								return new Promise(async (resolve, reject) => {
-
-									var userCode;
-
-									for (userCode of userCodesList) {
-
-										try {
-											var editLayoutData = await uiService.getEditLayoutByUserCode(entityType, userCode);
-
-										} catch (error) {
-											reject(error);
-										}
-
-										if (editLayoutData.results.length) resolve(editLayoutData);
-
-									}
-
-								});
-
-							};
-
-							var instrumentEditLayoutsUserCodes = activeObject.instrument_type_object.instrument_form_layouts;
-
-							if (!instrumentEditLayoutsUserCodes) {
-								editLayout = await uiService.getDefaultEditLayout(entitytype);
-
-							} else {
-
-								var instrEditLayoutsUserCodesList = instrumentEditLayoutsUserCodes.split(',');
-								editLayout = getAvailableEditLayout(entitytype, instrEditLayoutsUserCodesList);
-
-							}
+						if (entitytype === 'instrument') {
+							editLayout = await instrumentService.getEditLayoutBasedOnUserCodes(activeObject.instrument_type_object.instrument_form_layouts);
 
 						} else {
 							editLayout = await uiService.getDefaultEditLayout(entitytype);
-						} */
+						}
 
-						editLayout = await uiService.getDefaultEditLayout(entitytype);
+						// editLayout = await uiService.getDefaultEditLayout(entitytype);
 
 						var bigDrawerWidthPercent;
 						var fixedAreaColumns = 6;
@@ -608,6 +574,8 @@
 
 							});
 
+						} else {
+							console.error("edit layout for edit entity viewer was not found");
 						}
 						/* $mdDialog.show({
 							controller: 'EntityViewerEditDialogController as vm',

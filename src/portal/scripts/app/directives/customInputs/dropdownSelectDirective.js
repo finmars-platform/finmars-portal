@@ -99,9 +99,9 @@
                 scope.selectOption = function (item) {
 
 					closeDropdownMenu();
-					console.log("testing selectOption", item, item.id, scope.model);
+
                     if (item.id !== scope.model) {
-						console.log("testing selectOption", item.id !== scope.model);
+
                         stylePreset = '';
                         scope.error = '';
 

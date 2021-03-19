@@ -77,15 +77,11 @@
 
         vm.formIsValid = true;
 
-        vm.dataConstructorData = {};
-
         vm.attributeTypes = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = [];
 
         vm.range = gridHelperService.range;
-
-        vm.dataConstructorData = {entityType: vm.entityType};
 
         vm.fixedFieldsAttributes = [];
         vm.attributesLayout = [];
@@ -188,10 +184,6 @@
         vm.entityTablePopupClasses = "border-radius-2";
         vm.onPopupSaveCallback = evEditorSharedLogicHelper.onPopupSaveCallback;
         vm.onFixedAreaPopupCancel = evEditorSharedLogicHelper.onFixedAreaPopupCancel;
-
-        vm.setTypeSelectorOptions = function (options) {
-            vm.typeSelectorOptions = options;
-        }
         // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
 
         //vm.currenciesSorted = [];
@@ -792,10 +784,25 @@
                     }
 
                     // vm.getFormLayout();
-                    evEditorSharedLogicHelper.getFormLayout(formLayoutFromAbove);
+                    evEditorSharedLogicHelper.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
-                    // Resolving promise to inform child about end of editor building
-                    res();
+						vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+
+                    	vm.tabs = formLayoutData.tabs;
+						vm.attributesLayout = formLayoutData.attributesLayout;
+
+						/* evEditorSharedLogicHelper.getFieldsForFixedAreaPopup().then(fieldsData => {
+
+							vm.fixedAreaPopup.fields = fieldsData;
+							vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+
+						}); */
+
+                    	// Resolving promise to inform child about end of editor building
+						res();
+
+					});
 
                 });
 
@@ -1129,7 +1136,6 @@
             }
 
 
-
             if (errors.length) {
 
                 tabsWithErrors = {};
@@ -1188,13 +1194,16 @@
 
         vm.editLayout = function (ev) {
 
+        	const dataConstructorData = {entityType: vm.entityType};
+        	if (vm.dataConstructorLayout) dataConstructorData.layoutId = vm.dataConstructorLayout.id;
+
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
                 targetEvent: ev,
                 multiple: true,
                 locals: {
-                    data: vm.dataConstructorData
+                    data: dataConstructorData
                 }
             }).then(function (res) {
 
@@ -1885,8 +1894,7 @@
         }
 
         // Instrument Type Layout Settings tab end
-
-        vm.instrumentTypeChange = evEditorSharedLogicHelper.typeSelectorChangeFns[vm.entityType];
+		vm.typeSelectorChange = null;
 
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 
@@ -2108,6 +2116,19 @@
                     }
                 ];
 
+                vm.typeSelectorChange = function () {
+
+					evEditorSharedLogicHelper.typeSelectorChangeFns[vm.entityType]().then(data => {
+
+						vm.tabs = data.tabs;
+						vm.attributesLayout = data.attributesLayout;
+
+						$scope.$apply();
+
+					});
+
+				};
+
             }
 
             else {
@@ -2152,14 +2173,13 @@
 
                 getEntityStatus();
 
-                evHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
+                /* evHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
 
                     vm.fixedAreaPopup.fields = fields;
                     vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fields));
 
-                });
-
-                console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
+                }); */
+				$scope.$apply();
 
             });
         };

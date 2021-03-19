@@ -42,15 +42,11 @@
 
         vm.entityType = data.entityType;
 
-        vm.instanceId = undefined;
-        vm.layoutId = null;
+        vm.instanceId = (data.hasOwnProperty('instanceId')) ? data.instanceId : null;
+        vm.layoutId = data.layoutId ? data.layoutId : null;
         vm.layoutUserCode = "";
 
         var fullRowUserInputsList = entityDataConstructorService.fullRowUserInputsList;
-
-        if (data.hasOwnProperty('instanceId')) {
-            vm.instanceId = data.instanceId;
-        }
 
         vm.fromEntityType = undefined;
         if (data.hasOwnProperty('fromEntityType')) {
@@ -682,11 +678,7 @@
                 else {
 
 					if (vm.formLayoutIsNew) {
-
-						var formLayout = JSON.parse(angular.toJson(vm.ui));
-						delete formLayout.id;
-
-						uiService.createEditLayout(vm.entityType, formLayout).then(onSavingEnd);
+						uiService.createEditLayout(vm.entityType, vm.ui).then(onSavingEnd);
 
 					} else {
 						uiService.updateEditLayout(vm.ui.id, vm.ui).then(onSavingEnd);
@@ -1854,10 +1846,6 @@
         vm.init = function () {
 
             window.addEventListener('resize', vm.setTabsHolderHeight);
-
-            if (data.layoutId) {
-                vm.layoutId = data.layoutId;
-            }
 
             if (data.isCreateNew) {
                 vm.isCreateNew = data.isCreateNew
