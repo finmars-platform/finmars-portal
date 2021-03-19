@@ -19,7 +19,7 @@
     </md-input-container>
 
     <md-input-container style="height: 56px;" data-ng-if="prefixType == 4">
-        <label>Type</label>
+        <label>Prefix</label>
         <md-select data-ng-model="selectedGroupPrefix" data-ng-change="updateUserCode()">
             <md-option  data-ng-repeat="item in groupPrefixes" ng-value="item.value">
                 {{item.value}}
