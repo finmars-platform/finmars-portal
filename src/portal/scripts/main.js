@@ -717,6 +717,7 @@ app.directive('ttypeActionsInputSelect', [require('./app/directives/ttypeActions
 app.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
 app.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/customInputs/entitySearchSelect')]);
 app.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
+app.directive('usercodeInput', ['$mdDialog', require('./app/directives/usercodeInputDirective')]);
 app.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
 app.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
 app.directive('tableAttributeSelector', ['$mdDialog', require('./app/directives/tableAttributeSelectorDirective')]);
