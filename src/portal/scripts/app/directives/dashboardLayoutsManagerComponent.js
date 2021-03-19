@@ -9,8 +9,11 @@
     const dashboardEvents = require('../services/dashboard/dashboardEvents');
 
     const uiService = require('../services/uiService');
+    const shareConfigurationFileService = require('../services/shareConfigurationFileService');
+    const backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
     const toastNotificationService = require('../../../../core/services/toastNotificationService');
+
 
     module.exports = function ($mdDialog, $state) {
         return {
@@ -24,6 +27,8 @@
             link: function (scope) {
 
                 scope.layout = scope.evDataService.getData()
+
+                scope.invites = [];
 
                 scope.processing = false;
 
@@ -166,11 +171,7 @@
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    let type = 'entity_viewer';
-
-                    if (scope.evDataService.getEntityType().indexOf('report') !== -1) {
-                        type = 'report_viewer';
-                    }
+                    var type = 'dashboard_viewer';
 
                     $mdDialog.show({
                         controller: 'UiShareLayoutDialogController as vm',
@@ -185,6 +186,54 @@
                                 type: type
                             }
                         }
+
+                    })
+
+                };
+
+                scope.importConfiguration = function (resolve) {
+
+                    backendConfigurationImportService.importConfigurationAsJson(scope.importConfig).then(function (data) {
+
+                        scope.importConfig = data;
+
+                        scope.$apply();
+
+                        if (scope.importConfig.task_status === 'SUCCESS') {
+
+                            resolve()
+
+                        } else {
+
+                            setTimeout(function () {
+                                scope.importConfiguration(resolve);
+                            }, 1000)
+
+                        }
+
+                    })
+
+                };
+
+                scope.pullUpdate = function ($event) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    shareConfigurationFileService.getByKey(scope.layout.sourced_from_global_layout).then(function (data) {
+
+                        var sharedFile = data;
+
+                        scope.importConfig = {data: sharedFile.data, mode: 'overwrite'};
+
+                        new Promise(function (resolve, reject) {
+
+                            scope.importConfiguration(resolve)
+
+                        }).then(function (data) {
+
+                            toastNotificationService.success("Layout '" + scope.layout.name + "' was updated");
+
+                        })
 
                     })
 
@@ -228,6 +277,57 @@
                         locals: {
                             data: {layout: scope.layout}
                         }
+                    })
+
+                };
+
+                scope.openInvites = function ($event) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    $mdDialog.show({
+                        controller: 'UiLayoutListInvitesDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-list-invites-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: false,
+                        locals: {
+                            options: {
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService
+                            }
+                        }
+                    })
+
+                }
+
+                scope.openLayoutList = function ($event) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    $mdDialog.show({
+                        controller: 'DashboardLayoutListDialogController as vm',
+                        templateUrl: 'views/dialogs/dashboard/dashboard-layout-list-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: false,
+                        locals: {
+                            data: {
+                                dashboardDataService: scope.evDataService,
+                                dashboardEventService: scope.evEventService
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.evDataService.setLayoutToOpen(res.data.layout);
+
+                            scope.evEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
+
+
+                        }
+
                     })
 
                 };
