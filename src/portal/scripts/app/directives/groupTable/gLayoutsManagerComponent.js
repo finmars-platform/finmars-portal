@@ -2,6 +2,7 @@
 
     'use strict';
 
+    const metaService = require('../../services/metaService');
     const middlewareService = require('../../services/middlewareService');
     const evEvents = require("../../services/entityViewerEvents");
     const evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
@@ -21,6 +22,10 @@
 
     const exportExcelService = require('../../services/exportExcelService');
 
+    const inviteToSharedConfigurationFileService = require('../../services/inviteToSharedConfigurationFileService');
+    const shareConfigurationFileService = require('../../services/shareConfigurationFileService');
+    const backendConfigurationImportService = require('../../services/backendConfigurationImportService');
+
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'E',
@@ -34,6 +39,8 @@
                 scope.layout = scope.evDataService.getListLayout()
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
+                scope.isReport = metaService.isReport(scope.entityType);
+
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 let splitPanelLayoutId = null;
 
@@ -43,6 +50,7 @@
                 }
 
                 scope.layouts = [];
+                scope.invites = [];
 
                 scope.deleteLayout = function (ev) {
 
@@ -169,6 +177,51 @@
 
                     }
 
+                };
+
+                scope.openLayoutList = function ($event) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    $mdDialog.show({
+                        controller: 'UiLayoutListDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: false,
+                        locals: {
+                            options: {
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService,
+                                entityType: scope.entityType
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            if (isRootEntityViewer) {
+
+                                if (res.data.layoutUserCode) {
+
+                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                    $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
+
+                                } else {
+                                    var errorText = 'Layout "' + res.data.layoutName + '" has no user code.';
+                                    toastNotificationService.error(errorText);
+                                }
+
+                            } else {
+                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+
+                                scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
+                                scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+                            }
+
+                        }
+
+                    })
                 };
 
                 function clearAdditions() {
@@ -698,72 +751,109 @@
 
                 };
 
-                scope.exportAsPdf = function ($event) {
+                scope.exportLayout = function ($event) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
-                        controller: 'ExportPdfDialogController as vm',
-                        templateUrl: 'views/dialogs/export-pdf-dialog-view.html',
+                        controller: 'ListLayoutExportDialogController as vm',
+                        templateUrl: 'views/dialogs/list-layout-export-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         locals: {
-                            evDataService: scope.evDataService,
-                            evEventService: scope.evEventService,
-                            data: {entityType: scope.entityType}
+                            data: {layout: scope.layout, isReport: scope.isReport}
                         }
                     })
 
-                };
+                }
 
-                scope.exportAsCSV = function () {
-
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-
-                    const flatList = scope.evDataService.getFlatList();
-                    const columns = scope.evDataService.getColumns();
-                    const groups = scope.evDataService.getGroups();
-
-                    const blobPart = convertReportHelper.convertFlatListToCSV(flatList, columns, scope.isReport, groups.length);
-                    downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
-                };
-
-                scope.exportAsExcel = function() {
+                scope.openInvites = function ($event) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    const data = {
-                        entityType: scope.entityType,
-                        contentSettings: {
-                            columns: scope.evDataService.getColumns(),
-                            groups: scope.evDataService.getGroups()
-                        },
-                        content: scope.evDataService.getFlatList()
-                    };
-
-                    exportExcelService.generatePdf(data).then(function (blob) {
-
-                        downloadFileHelper.downloadFile(blob, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
-
-                        $mdDialog.hide();
-
+                    $mdDialog.show({
+                        controller: 'UiLayoutListInvitesDialogController as vm',
+                        templateUrl: 'views/dialogs/ui/ui-layout-list-invites-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        preserveScope: false,
+                        locals: {
+                            options: {
+                                entityViewerDataService: scope.evDataService,
+                                entityViewerEventService: scope.evEventService,
+                                entityType: scope.entityType
+                            }
+                        }
                     })
 
-                };
+                }
 
-                scope.copyReport = function () {
-
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-                    reportCopyHelper.copy(scope.evDataService, scope.isReport);
-
-                };
-
-                scope.copySelectedToBuffer = function () {
-
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-                    reportCopyHelper.copy(scope.evDataService, scope.isReport, 'selected');
-
-                };
+                // scope.exportAsPdf = function ($event) {
+                //
+                //     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                //
+                //     $mdDialog.show({
+                //         controller: 'ExportPdfDialogController as vm',
+                //         templateUrl: 'views/dialogs/export-pdf-dialog-view.html',
+                //         parent: angular.element(document.body),
+                //         targetEvent: $event,
+                //         locals: {
+                //             evDataService: scope.evDataService,
+                //             evEventService: scope.evEventService,
+                //             data: {entityType: scope.entityType}
+                //         }
+                //     })
+                //
+                // };
+                //
+                // scope.exportAsCSV = function () {
+                //
+                //     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                //
+                //     const flatList = scope.evDataService.getFlatList();
+                //     const columns = scope.evDataService.getColumns();
+                //     const groups = scope.evDataService.getGroups();
+                //
+                //     const blobPart = convertReportHelper.convertFlatListToCSV(flatList, columns, scope.isReport, groups.length);
+                //     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
+                // };
+                //
+                // scope.exportAsExcel = function() {
+                //
+                //     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                //
+                //     const data = {
+                //         entityType: scope.entityType,
+                //         contentSettings: {
+                //             columns: scope.evDataService.getColumns(),
+                //             groups: scope.evDataService.getGroups()
+                //         },
+                //         content: scope.evDataService.getFlatList()
+                //     };
+                //
+                //     exportExcelService.generatePdf(data).then(function (blob) {
+                //
+                //         downloadFileHelper.downloadFile(blob, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
+                //
+                //         $mdDialog.hide();
+                //
+                //     })
+                //
+                // };
+                //
+                // scope.copyReport = function () {
+                //
+                //     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                //     reportCopyHelper.copy(scope.evDataService, scope.isReport);
+                //
+                // };
+                //
+                // scope.copySelectedToBuffer = function () {
+                //
+                //     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                //     reportCopyHelper.copy(scope.evDataService, scope.isReport, 'selected');
+                //
+                // };
 
                 scope.renameLayout = function ($event) {
 
@@ -862,6 +952,55 @@
 
                 };
 
+                scope.importConfiguration = function (resolve) {
+
+                    backendConfigurationImportService.importConfigurationAsJson(scope.importConfig).then(function (data) {
+
+                        scope.importConfig = data;
+
+                        scope.$apply();
+
+                        if (scope.importConfig.task_status === 'SUCCESS') {
+
+                            resolve()
+
+                        } else {
+
+                            setTimeout(function () {
+                                scope.importConfiguration(resolve);
+                            }, 1000)
+
+                        }
+
+                    })
+
+                };
+
+                scope.pullUpdate = function ($event) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    shareConfigurationFileService.getByKey(scope.layout.sourced_from_global_layout).then(function (data) {
+
+                        var sharedFile = data;
+
+                        scope.importConfig = {data: sharedFile.data, mode: 'overwrite'};
+
+                        new Promise(function (resolve, reject) {
+
+                            scope.importConfiguration(resolve)
+
+                        }).then(function (data) {
+
+                            toastNotificationService.success("Layout '" + scope.layout.name + "' was updated");
+
+                        })
+
+                    })
+
+                };
+
+
                 const getLayouts = async () => {
 
                     const {results} = await uiService.getListLayout(scope.entityType, {pageSize: 1000});
@@ -870,9 +1009,27 @@
 
                 };
 
+                const getInvites = function () {
+
+                    inviteToSharedConfigurationFileService.getListOfMyInvites({
+                        filters: {
+                            status: '0'
+                        }
+                    }).then(function (data) {
+
+                        scope.invites = data.results;
+
+                        scope.$apply();
+
+                    })
+
+                };
+
                 const init = async () => {
 
                     scope.layouts = await getLayouts();
+
+                    await getInvites();
 
                     scope.$apply();
 
