@@ -137,6 +137,8 @@
         vm.openedIn = data.openedIn;
         vm.originalFixedAreaPopupFields;
 
+		vm.typeSelectorChange = null;
+
         var formLayoutFromAbove = data.editLayout;
 
         /* var getShowByDefaultOptions = function (columns, entityType) {
@@ -195,11 +197,6 @@
         vm.entityTablePopupClasses = "border-radius-2"
         vm.onPopupSaveCallback = evEditorSharedLogicHelper.onPopupSaveCallback;
         vm.onFixedAreaPopupCancel = evEditorSharedLogicHelper.onFixedAreaPopupCancel;
-
-        vm.setTypeSelectorOptions = function (options) {
-            vm.typeSelectorOptions = options;
-            $scope.$apply();
-        }
         // < Victor 20020.11.20 #59: fields below needs for new design an fixed area popup >
 
         vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
@@ -788,7 +785,8 @@
                 multiple: true,
                 locals: {
                     data: {
-                        entityType: vm.entityType
+                        entityType: vm.entityType,
+						layoutId: vm.dataConstructorLayout.id
                     }
                 }
             }).then(function (res) {
@@ -1591,7 +1589,7 @@
 
         vm.init = function () {
 
-            /*setTimeout(function () {
+            /* setTimeout(function () {
 
 				if (vm.openedIn === 'big-drawer') {
 
@@ -1644,8 +1642,45 @@
             });
 
             getEntityAttrs();
+
             // vm.getFormLayout();
-            evEditorSharedLogicHelper.getFormLayout(formLayoutFromAbove);
+            evEditorSharedLogicHelper.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
+
+				vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+
+            	vm.tabs = formLayoutData.tabs;
+            	vm.attributesLayout = formLayoutData.attributesLayout;
+
+            	if (vm.entityType === 'instrument') {
+
+					vm.typeSelectorChange = function () {
+
+						evEditorSharedLogicHelper.typeSelectorChangeFns[vm.entityType]().then(data => {
+
+							vm.tabs = data.tabs;
+							vm.attributesLayout = data.attributesLayout;
+
+							$scope.$apply();
+
+						});
+
+					};
+
+				}
+
+            	/* evEditorSharedLogicHelper.getFieldsForFixedAreaPopup().then(fieldsData => {
+
+            		vm.fixedAreaPopup.fields = fieldsData;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+
+					$scope.$apply();
+
+				}); */
+				$scope.$apply();
+
+			});
+
             vm.getCurrencies();
 
             if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
@@ -1654,12 +1689,12 @@
                 vm.loadPermissions();
             }
 
-            entityViewerHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
+            /* evEditorSharedLogicHelper.getFieldsForFixedAreaPopup().then(function (fields) {
 
                 vm.fixedAreaPopup.fields = fields;
                 vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fields));
 
-            });
+            }); */
 
             /* if (vm.fixedAreaPopup.fields) {
 				originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));

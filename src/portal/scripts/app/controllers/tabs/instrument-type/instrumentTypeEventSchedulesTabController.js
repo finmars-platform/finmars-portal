@@ -104,6 +104,10 @@
             'periodicity': vm.periodicityItems
         }
 
+        const entityPropsFormultitypeFields = {
+
+		};
+
         const multitypeFieldsForRows = {
 			'effective_date': [
 				{

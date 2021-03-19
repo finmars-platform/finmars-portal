@@ -1,4 +1,4 @@
-<div data-ng-if="vm.checkReadyStatus()">
+<div ng-if="vm.readyStatus.permissions && vm.readyStatus.entity">
 
 <!--    <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-fields-container">
@@ -155,6 +155,7 @@
                                  placeholder-text="{{vm.typeFieldLabel}}"
                                  menu-options="vm.typeSelectorOptions"
                                  small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
+                                 on-change-callback="vm.typeSelectorChange()"
                                  class="ev-editor-field"></dropdown-select>
 
                 <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
@@ -352,7 +353,7 @@
         </md-tab>
     </md-tabs>-->
 
-    <div class="position-relative">
+    <div ng-if="vm.readyStatus.layout" class="position-relative">
 
         <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
