@@ -20,10 +20,14 @@
                 <div layout="row" layout-align="center center">
                     <md-card flex="100" class="inm-card-special">
                         <md-card-content layout="column">
-                            <md-input-container class="md-block">
+
+                            <usercode-input data-item="vm.scheme" data-ng-if="!vm.scheme.id"></usercode-input>
+
+                            <md-input-container class="md-block" data-ng-if="vm.scheme.id">
                                 <label for="">User code</label>
                                 <input type="text" data-ng-model="vm.scheme.user_code">
                             </md-input-container>
+
                             <md-input-container class="md-block">
                                 <label for="">Name</label>
                                 <input type="text" data-ng-model="vm.scheme.name">
