@@ -207,7 +207,8 @@
                 };
 
                 if (column.key === 'is_sent_to_pending' || column.key === 'is_book_automatic') {
-                    Object.assign(headerData.styles['grid-table-cell'], {'text-align': 'center'})
+                	// Object.assign(headerData.styles['grid-table-cell'], {'text-align': 'center'});
+					headerData.styles['grid-table-cell']['text-align'] = 'center';
                 }
 
                 return headerData;

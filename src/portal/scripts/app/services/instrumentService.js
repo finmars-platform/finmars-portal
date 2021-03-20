@@ -4,6 +4,9 @@
 (function () {
 
 	const gridTableEvents = require('./gridTableEvents');
+
+	const uiService = require('./uiService');
+
 	const GridTableHelperService = require('../helpers/gridTableHelperService');
 	const gridTableHelperService = new GridTableHelperService();
 
@@ -117,6 +120,51 @@
 
 	};
 
+	const getEditLayoutBasedOnUserCodes = function (userCodes) {
+
+		if (userCodes && userCodes.length) {
+
+			var userCodesList = (typeof userCodes === 'string') ? userCodes.split(',') : userCodes;
+
+			return new Promise(async (resolve, reject) => {
+
+				var userCode;
+
+				for (userCode of userCodesList) {
+
+					try {
+						var editLayoutData = await uiService.getEditLayoutByUserCode('instrument', userCode);
+
+					} catch (error) {
+						reject(error);
+						break;
+					}
+
+					if (editLayoutData.results.length) {
+						resolve(editLayoutData);
+						break;
+					}
+
+				}
+
+				uiService.getDefaultEditLayout('instrument').then(data => resolve(data)).catch(error => reject(error));
+
+			});
+
+		}
+
+		return uiService.getDefaultEditLayout('instrument');
+		/*return new Promise(res => {
+
+			uiService.getDefaultEditLayout('instrument').then(data => {
+				const defLayout = data.results.find(layout => layout.is_default);
+				res(defLayout);
+			});
+
+		});*/
+
+	};
+
     module.exports = {
         getList: getList,
         getListLight: getListLight,
@@ -129,7 +177,9 @@
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
 
-		initAccrualsScheduleGridTableEvents: initAccrualsScheduleGridTableEvents
+		initAccrualsScheduleGridTableEvents: initAccrualsScheduleGridTableEvents,
+
+		getEditLayoutBasedOnUserCodes: getEditLayoutBasedOnUserCodes
     }
 
 

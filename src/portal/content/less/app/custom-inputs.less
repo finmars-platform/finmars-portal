@@ -10,7 +10,7 @@
 }
 
 .custom-input-container {
-  margin-bottom: 13px;
+  // margin-bottom: 13px;
 
   .md-button {
     margin: 0;
@@ -469,6 +469,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  &:focus {
+    outline: none;
+    opacity: .7;
+  }
 }
 
 .multitype-field-type-letter {
@@ -483,6 +488,10 @@
   color: #fff;
   background-color: @gray;
   cursor: pointer;
+
+  &.type-with-constant {
+    background-color: @orange;
+  }
 
   &:hover {
     opacity: .5;

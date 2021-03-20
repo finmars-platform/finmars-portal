@@ -71,21 +71,17 @@
             vm.hasEnabledStatus = false;
         }
 
-        vm.readyStatus = {attributeTypes: false, permissions: false, entity: false, layout: false};
+        vm.readyStatus = evEditorSharedLogicHelper.readyStatusObj;
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
         vm.formIsValid = true;
-
-        vm.dataConstructorData = {};
 
         vm.attributeTypes = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = [];
 
         vm.range = gridHelperService.range;
-
-        vm.dataConstructorData = {entityType: vm.entityType};
 
         vm.fixedFieldsAttributes = [];
         vm.attributesLayout = [];
@@ -184,14 +180,10 @@
         };
 
         vm.entityTabsMenuTplt = evEditorSharedLogicHelper.entityTabsMenuTplt;
-        vm.entityTabsMenuPopupData = {viewModel: vm}
-        vm.entityTablePopupClasses = "border-radius-2"
+        vm.entityTabsMenuPopupData = {viewModel: vm};
+        vm.entityTablePopupClasses = "border-radius-2";
         vm.onPopupSaveCallback = evEditorSharedLogicHelper.onPopupSaveCallback;
         vm.onFixedAreaPopupCancel = evEditorSharedLogicHelper.onFixedAreaPopupCancel;
-
-        vm.setTypeSelectorOptions = function (options) {
-            vm.typeSelectorOptions = options;
-        }
         // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
 
         //vm.currenciesSorted = [];
@@ -265,7 +257,7 @@
 
         };
 
-        /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
+        /* var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
             var i, l, e;
 
@@ -417,9 +409,9 @@
                 dcLayoutHasBeenFixed = true;
             }
             // < Empty sockets that have no attribute that matches them >
-        };*/
+        };
 
-        /* var fixFieldsLayoutWithMissingSockets = function () {
+        var fixFieldsLayoutWithMissingSockets = function () {
 
             var socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(vm.tabs, dataConstructorLayout);
 
@@ -673,7 +665,7 @@
 			} else {
 
 				try {
-					editLayout = await uiService.getEditLayout(vm.entityType);
+					editLayout = await uiService.getEditLayoutByKey(vm.entityType);
 
 				} catch (error) {
 					gotEditLayout = false;
@@ -764,7 +756,7 @@
 
 			});
 
-        };*/
+        }; */
 
         vm.getItem = function () {
 
@@ -792,11 +784,25 @@
                     }
 
                     // vm.getFormLayout();
-                    evEditorSharedLogicHelper.getFormLayout('edition');
+                    evEditorSharedLogicHelper.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
-                    // Resolving promise to inform child about end of editor building
-                    res();
+						vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
+                    	vm.tabs = formLayoutData.tabs;
+						vm.attributesLayout = formLayoutData.attributesLayout;
+
+						/* evEditorSharedLogicHelper.getFieldsForFixedAreaPopup().then(fieldsData => {
+
+							vm.fixedAreaPopup.fields = fieldsData;
+							vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+
+						}); */
+
+                    	// Resolving promise to inform child about end of editor building
+						res();
+
+					});
 
                 });
 
@@ -1130,7 +1136,6 @@
             }
 
 
-
             if (errors.length) {
 
                 tabsWithErrors = {};
@@ -1189,19 +1194,21 @@
 
         vm.editLayout = function (ev) {
 
+        	const dataConstructorData = {entityType: vm.entityType};
+        	if (vm.dataConstructorLayout) dataConstructorData.layoutId = vm.dataConstructorLayout.id;
+
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
                 targetEvent: ev,
                 multiple: true,
                 locals: {
-                    data: vm.dataConstructorData
+                    data: dataConstructorData
                 }
             }).then(function (res) {
 
                 if (res.status === "agree") {
 
-                    vm.readyStatus.attributeTypes = false;
                     vm.readyStatus.entity = false;
                     vm.readyStatus.layout = false;
 
@@ -1887,12 +1894,7 @@
         }
 
         // Instrument Type Layout Settings tab end
-
-        vm.instrumentTypeChange = function($event){
-
-            evEditorSharedLogicHelper.getFormLayout('edition');
-
-        }
+		vm.typeSelectorChange = null;
 
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 
@@ -2114,6 +2116,19 @@
                     }
                 ];
 
+                vm.typeSelectorChange = function () {
+
+					evEditorSharedLogicHelper.typeSelectorChangeFns[vm.entityType]().then(data => {
+
+						vm.tabs = data.tabs;
+						vm.attributesLayout = data.attributesLayout;
+
+						$scope.$apply();
+
+					});
+
+				};
+
             }
 
             else {
@@ -2158,14 +2173,13 @@
 
                 getEntityStatus();
 
-                evHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
+                /* evHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
 
                     vm.fixedAreaPopup.fields = fields;
                     vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fields));
 
-                });
-
-                console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
+                }); */
+				$scope.$apply();
 
             });
         };
