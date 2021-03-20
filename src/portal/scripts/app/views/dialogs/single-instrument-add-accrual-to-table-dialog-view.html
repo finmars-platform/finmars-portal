@@ -65,11 +65,9 @@
         <div layout="row add-accrual-row"
              class="m-t-8">
 
-            <number-input label="{{vm.fieldsObject.periodicity_n.override_name || vm.fieldsObject.periodicity_n.name}}"
-                          model="vm.accrual.periodicity_n"
-                          small-options="{tooltipText: '{{vm.fieldsObject.periodicity_n.override_name || vm.fieldsObject.periodicity_n.name}}'}"
-                          style="width: 100%">
-            </number-input>
+            <div class="width-50 add-accrual-column">
+                <multitype-field field-types-data="vm.fieldsObject.periodicity_n.multitypeFieldData"></multitype-field>
+            </div>
 
         </div>
 

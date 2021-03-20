@@ -9,6 +9,8 @@
 
 	const GridTableDataService = require('../services/gridTableDataService');
 	const EventService = require('../services/eventService');
+	const gridTableEvents = require('../services/gridTableEvents');
+
 	const gtEvents = require('../services/gridTableEvents');
 	const popupEvents = require('../services/events/popupEvents');
 	const instrumentTypeService = require('../services/instrumentTypeService');
@@ -42,26 +44,28 @@
 					'accrual_start_date': {
 						key: 'accrual_start_date',
 						objPath: ['accrual_start_date'],
-						cellType: 'date',
+						cellType: 'multitypeField',
 						settings: {
-							value: null
+							value: null,
+							fieldTypesData: null,
 						}
 					},
 					'first_payment_date': {
 						key: 'first_payment_date',
 						objPath: ['first_payment_date'],
-						cellType: 'date',
+						cellType: 'multitypeField',
 						settings: {
-							value: null
+							value: null,
+							fieldTypesData: null,
 						}
 					},
 					'accrual_size': {
 						key: 'accrual_size',
 						objPath: ['accrual_size'],
-						cellType: 'number',
+						cellType: 'multitypeField',
 						settings: {
 							value: null,
-							closeOnMouseOut: false
+							fieldTypesData: null,
 						},
 					},
 					'accrual_calculation_model': {
@@ -83,9 +87,10 @@
 					'periodicity_n': {
 						key: 'periodicity_n',
 						objPath: ['periodicity_n'],
-						cellType: 'number',
+						cellType: 'multitypeField',
 						settings: {
-							value: null
+							value: null,
+							fieldTypesData: null,
 						}
 					}
 				};
@@ -106,6 +111,141 @@
 				// Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab
 				scope.accrualsShemes = [];
 
+				const multitypeFieldsForRows = {
+					'accrual_start_date': {
+						nativeType: 40, //date
+						fieldDataList: [
+							{
+								'model': "",
+								'fieldType': 'dateInput',
+								'isDefault': false,
+								'isActive': false,
+								'sign': '<div class="multitype-field-type-letter">A</div>',
+								'value_type': 40,
+								'fieldData': {
+									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+								}
+							},
+							{
+								'model': null,
+								'fieldType': 'dropdownSelect',
+								'isDefault': false,
+								'isActive': false,
+								'sign': '<div class="multitype-field-type-letter">L</div>',
+								'value_type': 70,
+								'fieldData': {
+									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+								}
+							}
+						]
+					},
+					'first_payment_date': {
+						nativeType: 40, //date
+						fieldDataList: [
+							{
+								'model': "",
+								'fieldType': 'dateInput',
+								'isDefault': false,
+								'isActive': false,
+								'sign': '<div class="multitype-field-type-letter">A</div>',
+								'value_type': 40,
+								'fieldData': {
+									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+								}
+							},
+							{
+								'model': null,
+								'fieldType': 'dropdownSelect',
+								'isDefault': false,
+								'isActive': false,
+								'sign': '<div class="multitype-field-type-letter">L</div>',
+								'value_type': 70,
+								'fieldData': {
+									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+								}
+							}
+						]
+					},
+					'accrual_size': {
+						nativeType: 20, //number
+						fieldDataList: [
+							{
+								'model': null,
+								'fieldType': 'numberInput',
+								'isDefault': false,
+								'isActive': false,
+								'sign': '<div class="multitype-field-type-letter">A</div>',
+								'value_type': 20,
+								'fieldData': {
+									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+								}
+							},
+							{
+								'model': null,
+								'fieldType': 'dropdownSelect',
+								'isDefault': false,
+								'isActive': false,
+								'sign': '<div class="multitype-field-type-letter">L</div>',
+								'value_type': 70,
+								'fieldData': {
+									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+								}
+							}
+						]
+					},
+					'periodicity_n': {
+						nativeType: 20, //number
+						fieldDataList: [
+							{
+								'model': null,
+								'fieldType': 'numberInput',
+								'isDefault': false,
+								'isActive': false,
+								'sign': '<div class="multitype-field-type-letter">A</div>',
+								'value_type': 20,
+								'fieldData': {
+									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+								}
+							},
+							{
+								'model': null,
+								'fieldType': 'dropdownSelect',
+								'isDefault': false,
+								'isActive': false,
+								'sign': '<div class="multitype-field-type-letter">L</div>',
+								'value_type': 70,
+								'fieldData': {
+									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+								}
+							}
+						]
+					}
+				}
+
+				const setSelectorItemsToMultiTypeFields = function (instrumentAttrTypes) {
+
+					Object.keys(multitypeFieldsForRows).forEach(key => {
+
+						const fieldTypeObj = multitypeFieldsForRows[key];
+
+						const selTypeIndex = fieldTypeObj.fieldDataList.findIndex(type => type.fieldType === 'dropdownSelect');
+
+						const formattedAttrTypes = instrumentAttrTypes
+							.filter(attrType => attrType.value_type === fieldTypeObj.nativeType)
+							.map(attrType => {
+								return {id: attrType.user_code, name: attrType.short_name};
+							});
+
+						fieldTypeObj.fieldDataList[selTypeIndex].fieldData = {
+							menuOptions: formattedAttrTypes || []
+						};
+
+						console.log('#78 setSelectorItemsToMultiTypeFields', key, formattedAttrTypes)
+
+					});
+
+				};
+
 				const getInstrumentTypeAccrualsById = async function (id) {
 					const instrumentType = await instrumentTypeService.getByKey(id);
 					return instrumentType.accruals;
@@ -117,6 +257,21 @@
 					scope.popupY.value = $event.pageY;
 
 					scope.gridTableEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
+				};
+
+				const onAccrualsTableChangeCell = function (rowOrder, colKey) {
+
+					const cell = scope.gridTableDataService.getCellByKey(rowOrder, colKey);
+
+					if (cell.cellType === 'multitypeField') {
+
+						const typeKey = `${colKey}_value_type`;
+						const activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+
+						scope.entity[bfcVm.fieldKey][rowOrder][typeKey] = activeType.value_type;
+
+					}
+
 				};
 
 				const openAccrualEditDialog = async function (accrualScheme) {
@@ -175,6 +330,37 @@
 
 
 						}
+						else if (column.cellType === 'multitypeField') {
+
+							// const multitypeFieldData = multitypeFieldsForRows[column.key].fieldDataList;
+							const multitypeFieldData = metaHelper.recursiveDeepCopy(multitypeFieldsForRows[column.key].fieldDataList, true);
+
+							const typeKey = `${column.key}_value_type`;
+							const valueType = accrual[typeKey];
+
+							let selectedIndex = 0;
+							if (valueType === 70) { // user attribute
+								selectedIndex = 1;
+
+								// in selector value is user attribute id. I need get name of selected option to write column.settings.value
+								const attribute = multitypeFieldData[selectedIndex].fieldData.menuOptions.find(attr => attr.id === column.settings.value);
+
+								if (attribute) {
+
+									column.settings.value = attribute.name;
+
+								}
+							}
+
+							multitypeFieldData[selectedIndex].isDefault = true;
+							multitypeFieldData[selectedIndex].isActive = true;
+
+							multitypeFieldData[selectedIndex].model =  accrual[column.key];
+
+							column.settings.fieldTypesData = multitypeFieldData;
+
+
+						}
 
 					});
 
@@ -217,7 +403,6 @@
 							data-ng-click="popupData.onItemClick(item)">{{item.name}}</div>
 						<div data-ng-if="popupData.isBuildButton" class="accrual-add-row-popup-item build-accruals">Build accruals</div>
 					</div>`;
-				// custom-input-sel-menu-block
 				// <Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab>
 
 				const minWidth = 50;
@@ -351,6 +536,34 @@
 
 							}
 
+							if (column.cellType === 'multitypeField') {
+
+								const multitypeFieldData = metaHelper.recursiveDeepCopy(multitypeFieldsForRows[column.key].fieldDataList, true);
+
+								const typeKey = `${column.key}_value_type`;
+								const valueType = rowData[typeKey];
+
+								let selectedIndex = 0;
+								if (valueType === 70) { // user attribute
+									selectedIndex = 1;
+
+									// in selector value is user attribute id. I need get name of selected option to write column.settings.value
+									const attribute = multitypeFieldData[selectedIndex].fieldData.menuOptions.find(attr => attr.id === column.settings.value);
+
+									if (attribute) {
+
+										column.settings.value = attribute.name;
+
+									}
+								}
+
+								multitypeFieldData[selectedIndex].isDefault = true;
+								multitypeFieldData[selectedIndex].isActive = true;
+								multitypeFieldData[selectedIndex].model =  rowData[column.key];
+
+								column.settings.fieldTypesData = multitypeFieldData;
+							}
+
 						});
 
 						gridTableData.body.push(rowObj);
@@ -373,6 +586,15 @@
 					scope.gridTableDataService = new GridTableDataService();
 					scope.gridTableEventService = new EventService();
 
+					scope.gridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+
+						if (scope.entityType === 'instrument') {
+							const rowOrder = argumentsObj.row.order;
+							const colKey = argumentsObj.column.key;
+							onAccrualsTableChangeCell(rowOrder, colKey)
+						}
+					})
+
 					if (scope.entityType === 'instrument') {
 
 						// Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab
@@ -382,6 +604,10 @@
 
 						scope.accrualsShemes = await getInstrumentTypeAccrualsById(scope.entity.instrument_type);
 						scope.popupData.items = scope.accrualsShemes;
+
+						const instrumentAttrTypes = scope.entity.attributes.map(attr => attr.attribute_type_object);
+						setSelectorItemsToMultiTypeFields(instrumentAttrTypes);
+
 						// <Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab>
 
 						entitySpecificData = {
