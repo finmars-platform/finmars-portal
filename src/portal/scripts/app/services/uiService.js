@@ -297,12 +297,54 @@
     };
 
     let getDefaultEditLayout = function (entityType) {
-        return uiRepository.getDefaultEditLayout(entityType);
+
+    	return new Promise((resolve, reject) => {
+
+    		uiRepository.getDefaultEditLayout(entityType).then(defaultLayoutData => {
+
+    			if (defaultLayoutData.results.length) {
+    				resolve(defaultLayoutData);
+
+    			} else {
+
+    				uiRepository.getListEditLayout(entityType).then(layoutsList => {
+
+    					const resolveObj = {results: []};
+
+    					if (layoutsList.results.length) {
+
+    						let defaultLayout = layoutsList.results.find(layout => layout.is_default);
+
+							if (!defaultLayout) {
+								defaultLayout = layoutsList.results[0];
+								defaultLayout.is_default = true;
+							}
+
+							resolveObj.results.push(defaultLayout);
+
+						}
+
+
+						resolve(resolveObj)
+
+					}).catch(error => reject(error));
+
+				}
+
+			}).catch(error => reject(error));
+
+		});
+
+		// return uiRepository.getDefaultEditLayout(entityType);
     };
 
-    let getEditLayout = function (id) {
-        return uiRepository.getEditLayout(id);
+    let getEditLayoutByKey = function (id) {
+        return uiRepository.getEditLayoutByKey(id);
     };
+
+	let getEditLayoutByUserCode = function (entityType, userCode) {
+		return uiRepository.getEditLayoutByUserCode(entityType, userCode);
+	};
 
     let createEditLayout = function (entity, ui) {
 
@@ -506,7 +548,8 @@
 
         getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
-        getEditLayout: getEditLayout,
+        getEditLayoutByKey: getEditLayoutByKey,
+		getEditLayoutByUserCode: getEditLayoutByUserCode,
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
 

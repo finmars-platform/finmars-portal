@@ -42,12 +42,9 @@
 
                         } else {
                             return row.columns[scope.sortByCol].settings.value;
-
                         }
 
                     }
-
-                    return row.order;
 
                 }
 
@@ -98,6 +95,17 @@
 						scope.gridTableData.body[anotherRowOrder] = JSON.parse(angular.toJson(row));
 						scope.gridTableData.body[anotherRowOrder].order = anotherRowOrder;
 
+						if (row.methods && row.methods.onOrderChange) {
+
+							var rowData = {
+								key: row.key,
+								order: row.order
+							};
+
+							row.methods.onOrderChange(rowData, scope.gtDataService, scope.gtEventService);
+
+						}
+
 					}
 
 				};
@@ -132,7 +140,7 @@
                     };
 
                     row.methods.onClick(rowData, scope.gtDataService, scope.gtEventService);
-                }
+                };
 
                 scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
 

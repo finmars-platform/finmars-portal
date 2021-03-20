@@ -123,7 +123,7 @@
 
             const duplicateEntity = async function (entity) {
 
-                var editLayout = await uiService.getEditLayout(vm.entityType);
+                var editLayout = await uiService.getEditLayoutByKey(vm.entityType);
                 var bigDrawerWidthPercent;
                 var fixedAreaColumns = 6;
 
@@ -156,7 +156,7 @@
 
             };
 
-            let postEditionActions = function (res, activeObject) {
+            const postEditionActions = function (res, activeObject) {
 
             	vm.entityViewerDataService.setActiveObjectAction(null);
 				vm.entityViewerDataService.setActiveObjectActionData(null);
@@ -530,8 +530,17 @@
 
 					default:
 
-						var editLayout = await uiService.getDefaultEditLayout(entitytype);
-						console.log('editLayout', editLayout, entitytype)
+						var editLayout;
+
+						if (entitytype === 'instrument') {
+							editLayout = await instrumentService.getEditLayoutBasedOnUserCodes(activeObject.instrument_type_object.instrument_form_layouts);
+
+						} else {
+							editLayout = await uiService.getDefaultEditLayout(entitytype);
+						}
+
+						// editLayout = await uiService.getDefaultEditLayout(entitytype);
+
 						var bigDrawerWidthPercent;
 						var fixedAreaColumns = 6;
 
@@ -545,6 +554,28 @@
 
 							bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
 
+							$bigDrawer.show({
+								controller: 'EntityViewerEditDialogController as vm',
+								templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+								addResizeButton: true,
+								drawerWidth: bigDrawerWidthPercent,
+								locals: {
+									entityType: entitytype,
+									entityId: activeObject.id,
+									data: {
+										openedIn: 'big-drawer',
+										editLayout: editLayout
+									}
+								}
+
+							}).then((res) => {
+
+								postEditionActions(res, activeObject);
+
+							});
+
+						} else {
+							console.error("edit layout for edit entity viewer was not found");
 						}
 						/* $mdDialog.show({
 							controller: 'EntityViewerEditDialogController as vm',
@@ -612,25 +643,6 @@
 							}
 
 						}); */
-						$bigDrawer.show({
-							controller: 'EntityViewerEditDialogController as vm',
-							templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
-							addResizeButton: true,
-							drawerWidth: bigDrawerWidthPercent,
-							locals: {
-								entityType: entitytype,
-								entityId: activeObject.id,
-								data: {
-									openedIn: 'big-drawer',
-									editLayout: editLayout
-								}
-							}
-
-						}).then(function (res) {
-
-                            postEditionActions(res, activeObject);
-
-						});
 
 						break;
 
@@ -1373,5 +1385,4 @@
             }
         }
 
-    }()
-);
+}());

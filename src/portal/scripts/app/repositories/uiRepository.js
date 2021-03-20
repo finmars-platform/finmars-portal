@@ -247,11 +247,10 @@
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
-        return xhrService.fetch(baseUrl + 'ui/edit-layout/?is_default=2&content_type=' + contentType,
-            getRequestParams2)
+        return xhrService.fetch(baseUrl + 'ui/edit-layout/?is_default=2&content_type=' + contentType, getRequestParams2);
     };
 
-    var getEditLayout = function (id) {
+    var getEditLayoutByKey = function (id) {
 
         return xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
             {
@@ -261,8 +260,17 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            })
+            });
     };
+
+    var getEditLayoutByUserCode = function (entityType, userCode) {
+
+    	var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+
+    	return xhrService.fetch(baseUrl + 'ui/edit-layout/?content_type=' + contentType + '&user_code=' + userCode,
+								getRequestParams2);
+
+	};
 
     var createEditLayout = function (ui) {
 
@@ -748,7 +756,8 @@
 
         getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
-        getEditLayout: getEditLayout,
+        getEditLayoutByKey: getEditLayoutByKey,
+		getEditLayoutByUserCode: getEditLayoutByUserCode,
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
         deleteEditLayoutByKey: deleteEditLayoutByKey,

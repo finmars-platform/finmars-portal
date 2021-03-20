@@ -2532,7 +2532,7 @@ md-checkbox.md-checked, md-checkbox.md-checked[disabled] {
   }
 }
 
-md-checkbox[disabled] {
+md-checkbox.readonly {
   .md-icon {
     border-radius: 100%;
   }
@@ -2969,6 +2969,11 @@ button.md-raised.md-warn.md-button {
   width: 500px;
 }
 
+.icon-btn-basics {
+  background-color: transparent;
+  border: none;
+}
+
 //<editor-fold desc="Chips multiselector">
 .chips-list-container {
   display: flex;
@@ -3091,4 +3096,55 @@ button.md-raised.md-warn.md-button {
   border: 1px solid #ddd;
   max-height: 100px;
   overflow: auto;
+}
+
+.vAccordion-type1 {
+
+  v-pane-header {
+    margin-bottom: 20px;
+    border-bottom: none;
+
+    .accordion-header-content {
+      height: 48px;
+      padding: 4px 0;
+
+      .accordion-header-left, .accordion-header-right {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        md-checkbox {
+          margin-bottom: 0;
+        }
+
+      }
+
+      .accordion-header-left {
+        position: relative;
+        padding-left: 24px;
+
+        .accordion-expansion-icon {
+          position: absolute;
+          left: 0;
+        }
+
+      }
+
+      .accordion-actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .accordion-name-text {
+        margin-left: 43px;
+      }
+
+    }
+  }
+
+  v-pane-content {
+    padding-left: 54px;
+  }
+
 }

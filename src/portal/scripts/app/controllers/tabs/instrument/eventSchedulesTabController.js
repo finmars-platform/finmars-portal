@@ -44,7 +44,7 @@
         vm.entityChange = $scope.$parent.vm.entityChange;
 
         // Victor 06.10.2020 Not used after switching to grid table
-        //var activeItemOriginal = null;
+        // var activeItemOriginal = null;
 
         vm.readyStatus = {notificationClasses: false, eventClasses: false, eventSchedulesReady: false};
 
@@ -249,8 +249,8 @@
                         instrument: vm.entity,
                         contextData: vm.contextData
                     }
-
                 }
+
             }).then(function (res) {
 
                 if (res.status === 'agree') {

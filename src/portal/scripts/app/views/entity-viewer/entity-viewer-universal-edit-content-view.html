@@ -2,9 +2,9 @@
 <!--Now I develop new design for: instruments, ... -->
 <!--When all entities will have new design, we can rename entity-viewer-universal-edit-content-view.html to entity-viewer-edit-content-view -->
 
-<div data-ng-if="vm.checkReadyStatus()">
+<div ng-if="vm.readyStatus.permissions && vm.readyStatus.entity">
 
-    <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
+    <div ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-area"
          data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">
 
@@ -53,8 +53,9 @@
                                  placeholder-text="{{vm.typeFieldLabel}}"
                                  menu-options="vm.typeSelectorOptions"
                                  small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
-                                 on-change-callback="vm.instrumentTypeChange($event)"
-                                 class="ev-editor-field"></dropdown-select>
+                                 on-change-callback="vm.typeSelectorChange()"
+                                 class="ev-editor-field">
+                </dropdown-select>
 
                 <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
                      class="ev-editor-field">
@@ -80,7 +81,7 @@
 
     </div>
 
-    <div class="position-relative">
+    <div ng-if="vm.readyStatus.layout" class="position-relative">
 
         <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
@@ -303,7 +304,7 @@
 </div>
 
 <div data-ng-if="!vm.checkReadyStatus()">
-    <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+    <div class="flex-row fc-space-around m-large">
         <progress-circular diameter="100"></progress-circular>
     </div>
 </div>

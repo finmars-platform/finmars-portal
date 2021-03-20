@@ -28,7 +28,7 @@
 
         vm.boxColumns = [1, 2, 3, 4, 5, 6];
         vm.readyStatus = {constructor: false};
-        vm.uiIsDefault = false;
+        vm.formLayoutIsNew = false;
 
         vm.attrs = [];
         vm.entityAttrs = [];
@@ -42,14 +42,11 @@
 
         vm.entityType = data.entityType;
 
-        vm.instanceId = undefined;
-        vm.layoutId = null;
+        vm.instanceId = (data.hasOwnProperty('instanceId')) ? data.instanceId : null;
+        vm.layoutId = data.layoutId ? data.layoutId : null;
+        vm.layoutUserCode = "";
 
         var fullRowUserInputsList = entityDataConstructorService.fullRowUserInputsList;
-
-        if (data.hasOwnProperty('instanceId')) {
-            vm.instanceId = data.instanceId;
-        }
 
         vm.fromEntityType = undefined;
         if (data.hasOwnProperty('fromEntityType')) {
@@ -168,111 +165,126 @@
 
         vm.getLayout = function () {
 
-            return new Promise(function (resolve) {
+            return new Promise((resolve, reject) => {
 
-                if (vm.instanceId) {
+				var resolveLayout = function () {
 
-                    transactionTypeService.getByKey(vm.instanceId).then(function (data) {
+					setDataConstructorLayout();
 
-                        if (data.book_transaction_layout) {
-                            vm.ui = data.book_transaction_layout;
-                        } else {
-                            vm.uiIsDefault = true;
-                            vm.ui = {
-                                data: {}
-                            }
-                            // vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
-                        }
+					vm.layoutUserCode = vm.ui.user_code;
 
-                        setDataConstructorLayout();
+					resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
 
-                        resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+				};
 
+				if (vm.isCreateNew) { // There is no layout yet, so create one
 
-                    });
+					vm.formLayoutIsNew = true;
+					vm.ui = {
+						data: {}
+					}
 
-                } else {
+					resolveLayout();
 
-                    console.log('vm.getLayout vm.layoutId ', vm.layoutId)
+				}
 
-                    if (vm.layoutId) {
+				// for complex transaction edit layout stored inside transaction type object
+				if (vm.entityType === "complex-transaction") {
 
-                        uiService.getEditLayout(vm.layoutId).then(function (data) {
+					if (vm.instanceId || vm.instanceId === 0) {
 
-                            vm.ui = data;
+						transactionTypeService.getByKey(vm.instanceId).then(data => {
 
-                            setDataConstructorLayout();
+							if (data.book_transaction_layout) {
+								vm.ui = data.book_transaction_layout;
+							} else {
 
-                            resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+								vm.formLayoutIsNew = true;
 
-                        });
+								vm.ui = {
+									data: {}
+								}
+								// vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
+							}
 
-                    } else {
+							resolveLayout();
 
-                        if (vm.isCreateNew) {
+						}).catch(error => reject(error));
 
-                            vm.uiIsDefault = true;
-                            vm.ui = {
-                                data: {}
-                            }
+					}
 
-                            setDataConstructorLayout();
+				}
 
-                            resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+				// For not complex-transaction entities
+				else {
 
-                        } else {
+					if (vm.layoutId || vm.layoutId === 0) {
 
+						uiService.getEditLayoutByKey(vm.layoutId).then(data => {
 
-                            uiService.getDefaultEditLayout(vm.entityType).then(function (data) {
+							vm.ui = data;
+							resolveLayout();
 
-                                if (data.results.length) {
-                                    vm.ui = data.results[0];
-                                } else {
-                                    vm.uiIsDefault = true;
-                                    vm.ui = {
-                                        data: {}
-                                    }
-                                }
+						}).catch(error => reject(error));
 
-                                setDataConstructorLayout();
+					}
 
-                                resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+					// if no edit layout id was specified, get default edit layout
+					else {
 
-                            });
+						uiService.getDefaultEditLayout(vm.entityType).then(data => {
 
-                        }
+							if (data.results.length) {
+								vm.ui = data.results[0];
+							}
 
-                    }
+							// There is no layout yet, so create one
+							else {
+								vm.formLayoutIsNew = true;
+								vm.ui = {
+									data: {}
+								}
+							}
 
+							resolveLayout();
 
-                }
+						}).catch(error => reject(error));
+
+					}
+
+				}
 
             });
 
         };
 
-        vm.toggleFixedArea = function () {
-            vm.fixedArea.isActive = !vm.fixedArea.isActive;
+        /* CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR
 
-            if (vm.fixedArea.isActive) {
-                addRows(vm.fixedArea);
+			vm.toggleFixedArea = function () {
+				vm.fixedArea.isActive = !vm.fixedArea.isActive;
 
-                vm.createFixedAreaFieldsTree();
-                vm.updateDrakeContainers();
+				if (vm.fixedArea.isActive) {
+					addRows(vm.fixedArea);
 
-            } else {
+					vm.createFixedAreaFieldsTree();
+					vm.updateDrakeContainers();
 
-                vm.fixedArea.layout = {
-                    rows: 0,
-                    columns: 1,
-                    fields: []
-                };
+				} else {
 
-                vm.updateDrakeContainers();
-                vm.syncItems();
+					vm.fixedArea.layout = {
+						rows: 0,
+						columns: 1,
+						fields: []
+					};
 
-            }
-        };
+					vm.updateDrakeContainers();
+					vm.syncItems();
+
+				}
+			};
+
+			< CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR >
+        */
 
         vm.openTabsEditor = function ($event) {
 
@@ -308,6 +320,11 @@
 
             });
         };
+
+        vm.onLayoutUserCodeChange = function () {
+			/*vm.formLayoutIsNew = false;
+        	if (vm.layoutUserCode !== vm.ui.user_code) vm.formLayoutIsNew = true;*/
+		};
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -367,13 +384,15 @@
                 tab.layout.rows = tab.layout.rows + 1;
 
                 for (c = 0; c < tab.layout.columns; c = c + 1) {
-                    field = {
+
+                	field = {
                         row: tab.layout.rows,
                         column: c + 1,
                         colspan: 1,
                         type: 'empty'
                     };
-                    tab.layout.fields.push(field);
+
+                	tab.layout.fields.push(field);
 
                 }
 
@@ -443,10 +462,7 @@
 
 						tab.layout.fields = tab.layout.fields.filter(field => {
 
-							if (field.colspan > columns || field.occupiesWholeRow) {
-								field.colspan = columns;
-							}
-
+							if (field.colspan > columns || field.occupiesWholeRow) field.colspan = columns;
 							return field.column <= columns;
 
 						});
@@ -481,6 +497,10 @@
                         })
                     }
                 }
+
+				tab.layout.fields.forEach(field => {
+					if (field.occupiesWholeRow) field.colspan = columns;
+				});
 
                 tab.layout.columns = columns;
 
@@ -620,9 +640,12 @@
                     removeLastRow(vm.tabs[i]);
                 }
 
-                if (vm.fixedArea.isActive) {
-                    removeLastRow(vm.fixedArea);
-                }
+                /* CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR
+					if (vm.fixedArea.isActive) {
+						removeLastRow(vm.fixedArea);
+					}
+				< CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR >
+                */
 
                 vm.ui.data = {
                     tabs: [],
@@ -634,44 +657,6 @@
                 }
 
                 vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
-
-				/* if (vm.uiIsDefault) {
-					if (vm.instanceId) {
-						transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data) {
-							console.log('layout saved1');
-
-							$scope.$apply();
-
-							$mdDialog.hide({status: 'agree'});
-						});
-					} else {
-						uiService.createEditLayout(vm.entityType, vm.ui).then(function () {
-							console.log('layout saved2');
-
-							$scope.$apply();
-
-							$mdDialog.hide({status: 'agree'});
-						});
-					}
-				} else {
-					if (vm.instanceId) {
-						transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data) {
-							console.log('layout saved3');
-
-							$scope.$apply();
-
-							$mdDialog.hide({status: 'agree'});
-						});
-					} else {
-						uiService.updateEditLayout(vm.ui.id, vm.ui).then(function () {
-							console.log('layout saved4');
-
-							$scope.$apply();
-
-							$mdDialog.hide({status: 'agree'});
-						});
-					}
-				} */
 
 				var onSavingEnd = function () {
 					$scope.$apply();
@@ -692,7 +677,7 @@
 
                 else {
 
-					if (vm.uiIsDefault) {
+					if (vm.formLayoutIsNew) {
 						uiService.createEditLayout(vm.entityType, vm.ui).then(onSavingEnd);
 
 					} else {
@@ -1861,10 +1846,6 @@
         vm.init = function () {
 
             window.addEventListener('resize', vm.setTabsHolderHeight);
-
-            if (data.layoutId) {
-                vm.layoutId = data.layoutId;
-            }
 
             if (data.isCreateNew) {
                 vm.isCreateNew = data.isCreateNew

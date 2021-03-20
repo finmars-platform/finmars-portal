@@ -150,7 +150,7 @@
 							scope.column.settings.cellText = popupValue;
 						}
 
-						if (Array.isArray(popupValue)) popupValue = JSON.parse(JSON.stringify(popupValue)); // for multiselector
+						if (Array.isArray(popupValue)) popupValue = JSON.parse(angular.toJson(popupValue)); // for multiselector
 
 					}
 
@@ -160,8 +160,8 @@
 
 							popupValue = scope.popupModel.value;
 
-							if (typeof scope.popupModel.value === 'object') {
-								popupValue = JSON.parse(JSON.stringify(scope.popupModel.value));
+							if (Array.isArray(scope.popupModel.value) || typeof scope.popupModel.value === 'object') {
+								popupValue = JSON.parse(angular.toJson(scope.popupModel.value));
 							}
 
 						}
