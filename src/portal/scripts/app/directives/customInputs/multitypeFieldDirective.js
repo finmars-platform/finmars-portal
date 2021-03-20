@@ -22,10 +22,13 @@
 					let nextTypeIndex = scope.activeType.index + 1;
 					if (nextTypeIndex === scope.fieldTypesData.length) nextTypeIndex = 0;
 
+					// previous activeType
 					scope.activeType.model = null;
 					scope.activeType.isActive = false;
 
+					// current activeType
 					scope.activeType = scope.fieldTypesData[nextTypeIndex];
+					scope.activeType.model = null;
 					scope.activeType.isActive = true;
 
 				};

@@ -467,8 +467,10 @@
 
             } else {
 
-                viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
-                viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
+                const res = await uiService.getDefaultEditLayout(viewModel.entityType);
+
+                viewModel.tabs = res[0].data.tabs;
+                viewModel.fixedArea = res[0].data.fixedArea;
 
             }
 

@@ -12,18 +12,16 @@
         vm.fields = data.accrualScheme.data.items;
         vm.entity = data.entity;
         vm.accrual = {};
-        // vm.readyStatus = false;
 
         const multitypeFieldsForRows = {
-            'accrual_start_date': {
-                nativeType: 40, //date
-                fieldDataList: [
+            'accrual_start_date': [
                     {
                         'model': null,
                         'fieldType': 'dateInput',
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'value_type': 40,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -34,21 +32,20 @@
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'value_type': 70,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
                     }
-                ]
-            },
-            'first_payment_date': {
-                nativeType: 40, //date
-                fieldDataList: [
+                ],
+            'first_payment_date': [
                     {
                         'model': null,
                         'fieldType': 'dateInput',
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'value_type': 40,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -59,21 +56,20 @@
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'value_type': 70,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
                     }
-                ]
-            },
-            'accrual_size': {
-                nativeType: 20, //number
-                fieldDataList: [
+                ],
+            'accrual_size': [
                     {
                         'model': null,
                         'fieldType': 'numberInput',
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'value_type': 20,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -84,21 +80,20 @@
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'value_type': 70,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
                     }
-                ]
-            },
-            'periodicity_n': {
-                nativeType: 20, //number
-                fieldDataList: [
+                ],
+            'periodicity_n': [
                     {
                         'model': null,
                         'fieldType': 'numberInput',
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'value_type': 20,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -109,12 +104,12 @@
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'value_type': 70,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
                     }
                 ]
-            }
         }
 
         vm.fieldsObject = {};
@@ -124,6 +119,20 @@
         };
 
         vm.agree = function () {
+
+            // vm.accrual not contains data from multi type fields.
+            // I need collect them from multitypeFieldsForRows
+            Object.keys(vm.accrual).forEach(key => {
+                if (multitypeFieldsForRows.hasOwnProperty(key)) {
+
+                    const activeType = multitypeFieldsForRows[key].find(field => field.isActive)
+                    const typeKey = `${key}_value_type`;
+
+                    vm.accrual[key] = activeType.model;
+                    vm.accrual[typeKey] = activeType.value_type;
+
+                }
+            })
 
             $mdDialog.hide({
                 status: 'agree', data: {
@@ -139,15 +148,16 @@
 
                 const fieldTypeObj = multitypeFieldsForRows[key];
 
-                const selTypeIndex = fieldTypeObj.fieldDataList.findIndex(type => type.fieldType === 'dropdownSelect');
+                const selTypeIndex = fieldTypeObj.findIndex(type => type.fieldType === 'dropdownSelect');
+                const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect');
 
                 const formattedAttrTypes = instrumentAttrTypes
-                    .filter(attrType => attrType.value_type === fieldTypeObj.nativeType)
+                    .filter(attrType => attrType.value_type === notSelType.value_type)
                     .map(attrType => {
                         return {id: attrType.user_code, name: attrType.short_name};
                     });
 
-                fieldTypeObj.fieldDataList[selTypeIndex].fieldData = {
+                fieldTypeObj[selTypeIndex].fieldData = {
                     menuOptions: formattedAttrTypes || []
                 };
 
@@ -172,23 +182,20 @@
         };
 
         const setActiveMultiTypeState = function (item) {
-            const multitypeFieldData = multitypeFieldsForRows[item.key].fieldDataList;
+            const multitypeFieldData = multitypeFieldsForRows[item.key];
 
             let selectedIndex = 0;
-            if (item.default_value_type === 'dynamic_attribute') {
+            if (item.default_value_type === 'dynamic_attribute') { // TODO old format
                 selectedIndex = 1;
             }
 
             multitypeFieldData[selectedIndex].isDefault = true;
             multitypeFieldData[selectedIndex].isActive = true;
 
-            multitypeFieldData[0].model =  vm.accrual[item.key];
-            multitypeFieldData[1].model =  vm.accrual[item.key];
+            multitypeFieldData[selectedIndex].model =  vm.accrual[item.key];
 
             vm.fieldsObject[item.key].multitypeFieldData = multitypeFieldData;
         };
-
-
 
         const init = function () {
 
@@ -206,16 +213,28 @@
 
                 }
 
-                if (item.default_value_type) { // multiType field
+                if (item.defaultValueType === 'multitypeField') { // multiType field
+
+                    const typeKey = `${item.key}_value_type`;
+
+                    if (item.default_value_type === 'text') {
+
+                        const fieldTypeObj = multitypeFieldsForRows[item.key];
+                        const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect');
+
+                        vm.accrual[typeKey] = notSelType.value_type;
+
+                    } else if (item.default_value_type === 'dynamic_attribute' ) {
+
+                        vm.accrual[typeKey] = 70; // user attribute
+
+                    }
 
                     setActiveMultiTypeState(item);
 
                 }
 
             });
-
-            // vm.readyStatus = true;
-
         }
 
         init();
