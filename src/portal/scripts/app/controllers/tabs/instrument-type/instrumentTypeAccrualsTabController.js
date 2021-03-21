@@ -29,6 +29,10 @@
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
 						   'ng-click="popupData.deletePane(popupData.item, $event, _$popup)">DELETE</md-button>' +
+			'</div>' +
+			'<div class="ev-editor-tabs-popup-content popup-menu">' +
+				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
+						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">MAKE COPY</md-button>' +
 			'</div>';
 
         vm.onNameFocus = function (event) {
@@ -265,7 +269,7 @@
                 accrualsGridTableDataService: new GridTableDataService(),
                 accrualsGridTableEventService: new GridTableEventService(),
                 name: '',
-                order: vm.entity.accruals.length,
+                index: vm.entity.accruals.length,
                 autogenerate: true,
                 data: {
                     form_message: "",
@@ -309,6 +313,42 @@
 
         };
 
+		vm.moveDown = function (item, $event) {
+
+			$event.stopPropagation();
+
+			if (vm.entity.accruals[item.index + 1]) {
+
+				const swap = item;
+
+				vm.entity.accruals[item.index] = vm.entity.accruals[item.index + 1];
+				vm.entity.accruals[item.index].index = item.index;
+
+				vm.entity.accruals[item.index + 1] = swap;
+				vm.entity.accruals[item.index + 1].index = item.index + 1;
+
+			}
+
+		};
+
+		vm.moveUp = function (item, $event) {
+
+			$event.stopPropagation();
+
+			if (vm.entity.accruals[item.index - 1]) {
+
+				const swap = item;
+
+				vm.entity.accruals[item.index] = vm.entity.accruals[item.index - 1];
+				vm.entity.accruals[item.index].index = item.index;
+
+				vm.entity.accruals[item.index - 1] = swap;
+				vm.entity.accruals[item.index - 1].index = item.index - 1;
+
+			}
+
+		};
+
         vm.deletePane = function (item, $event, _$popup) {
 
             $event.stopPropagation();
@@ -331,8 +371,8 @@
 
 				if (res.status === 'agree') {
 
-					vm.entity.accruals.splice(item.order, 1);
-					vm.entity.accruals.forEach((accrual, index) => accrual.order = index);
+					vm.entity.accruals.splice(item.index, 1);
+					vm.entity.accruals.forEach((accrual, index) => accrual.index = index);
 
 				}
 
@@ -342,41 +382,52 @@
 
         };
 
-        vm.moveDown = function (item, $event) {
+		vm.makeCopy = function (accrualToCopy, _$popup) {
 
-            $event.stopPropagation();
+			_$popup.cancel();
 
-			if (vm.entity.accruals[item.order + 1]) {
+			const accrualIndex = accrualToCopy.index;
+			const accrualCopy = JSON.parse(angular.toJson(accrualToCopy));
 
-				const swap = JSON.parse(JSON.stringify(item));
+			delete accrualCopy.id;
+			/* delete eventCopy.eventItemsGridTableDataService;
+			delete eventCopy.eventItemsGridTableEventService;
 
-				vm.entity.accruals[item.order] = vm.entity.accruals[item.order + 1];
-				vm.entity.accruals[item.order].order = item.order;
+			delete eventCopy.eventBlockableItemsGridTableDataService;
+			delete eventCopy.eventBlockableItemsGridTableEventService;
 
-				vm.entity.accruals[item.order + 1] = swap;
-				vm.entity.accruals[item.order + 1].order = item.order + 1;
+			delete eventCopy.eventActionsGridTableDataService;
+			delete eventCopy.eventActionsGridTableEventService; */
+
+			// delete eventCopy.index;
+			let accrualCopyName = accrualToCopy.name + ' (Copy)';
+
+			let a = 0, nameOccupied = true;
+			while (nameOccupied) { // check that copy name is unique
+
+				nameOccupied = false;
+
+				const copyWithSameName = vm.entity.accruals.find(accrual => accrual.name === accrualCopyName);
+
+				if (copyWithSameName) {
+
+					a++;
+
+					accrualCopyName = accrualToCopy.name + ' (Copy ' + a + ')';
+					nameOccupied = true;
+
+				}
 
 			}
 
-        };
+			accrualCopy.name = accrualCopyName;
 
-        vm.moveUp = function (item, $event) {
+			formatExistingAccrual(accrualCopy, accrualCopy.index);
 
-            $event.stopPropagation();
+			vm.entity.accruals.splice(accrualIndex + 1, 0, accrualCopy);
+			vm.entity.accruals.forEach((accrual, index) => accrual.index = index);
 
-			if (vm.entity.accruals[item.order - 1]) {
-
-				const swap = JSON.parse(JSON.stringify(item));
-
-				vm.entity.accruals[item.order] = vm.entity.accruals[item.order - 1];
-				vm.entity.accruals[item.order].order = item.order;
-
-				vm.entity.accruals[item.order - 1] = swap;
-				vm.entity.accruals[item.order - 1].order = item.order - 1;
-
-			}
-
-        };
+		};
 
         const periodicityItemsPromise = instrumentPeriodicityService.getList().then(data => {
             vm.periodicityItems = data;
@@ -386,27 +437,30 @@
             vm.accrualModels = data;
         });
 
+        const formatExistingAccrual = function (accrual, accrualIndex) {
+
+			accrual.accrualsGridTableDataService = new GridTableDataService();
+			accrual.accrualsGridTableEventService = new GridTableEventService();
+
+			var accrualsGridTableData = getAccrualsGridTableData(accrual);
+
+			accrualsGridTableData.index = accrualIndex;
+
+			accrual.accrualsGridTableDataService.setTableData(accrualsGridTableData);
+
+			accrual.accrualsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+				onAccrualTableCellChange(argumentsObj, accrual.accrualsGridTableDataService, accrual.accrualsGridTableEventService);
+			});
+
+		};
+
         var init = function () {
-            Promise.all([periodicityItemsPromise, accrualModelsPromise]).then(() => {
+
+        	Promise.all([periodicityItemsPromise, accrualModelsPromise]).then(() => {
 
                 vm.entity.accruals.forEach(function (item, index) {
 
-                    if (item.data) {
-
-                        item.accrualsGridTableDataService = new GridTableDataService();
-                        item.accrualsGridTableEventService = new GridTableEventService();
-
-                        item.accrualsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
-                            onAccrualTableCellChange(argumentsObj, item.accrualsGridTableDataService, item.accrualsGridTableEventService);
-                        });
-
-                        var accrualsGridTableData = getAccrualsGridTableData(item);
-
-                        accrualsGridTableData.index = index;
-
-                        item.accrualsGridTableDataService.setTableData(accrualsGridTableData);
-
-                    }
+                    if (item.data) formatExistingAccrual(item, index);
 
                 })
 

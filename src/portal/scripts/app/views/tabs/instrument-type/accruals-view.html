@@ -76,13 +76,13 @@
                             <div class="accordion-actions m-l-35">
                                 <button class="accordion-header-icon-btn icon-btn-basics"
                                         ng-click="vm.moveUp(item, $event)"
-                                        ng-disabled="item.order === 0">
+                                        ng-disabled="item.index === 0">
                                     <span class="material-icons">arrow_upward</span>
                                 </button>
 
                                 <button class="accordion-header-icon-btn icon-btn-basics"
                                         ng-click="vm.moveDown(item, $event)"
-                                        ng-disabled="item.order + 1 === vm.entity.accruals.length">
+                                        ng-disabled="item.index + 1 === vm.entity.accruals.length">
                                     <span class="material-icons">arrow_downward</span>
                                 </button>
 
@@ -92,6 +92,7 @@
                                         popup-template="vm.accordionActionsMenu"
                                         popup-data="{
                                             deletePane: vm.deletePane,
+                                            makeCopy: vm.makeCopy,
                                             item: item
                                         }"
                                         position-relative-to="element"
