@@ -58,6 +58,10 @@
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
 						   'ng-click="popupData.deletePane(popupData.item, $event, _$popup)">DELETE</md-button>' +
+			'</div>' +
+			'<div class="ev-editor-tabs-popup-content popup-menu">' +
+				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
+						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">MAKE COPY</md-button>' +
 			'</div>';
 
         const getTransactionTypes = function () {
@@ -103,10 +107,6 @@
             'notification_class': vm.notificationClasses,
             'periodicity': vm.periodicityItems
         }
-
-        const entityPropsFormultitypeFields = {
-
-		};
 
         const multitypeFieldsForRows = {
 			'effective_date': [
@@ -559,6 +559,42 @@
 
         }
 
+		vm.moveDown = function (item, $event) {
+
+			$event.stopPropagation();
+
+			if (vm.entity.events[item.order + 1]) {
+
+				var swap = item;
+
+				vm.entity.events[item.order] = vm.entity.events[item.order + 1];
+				vm.entity.events[item.order].order = item.order;
+
+				vm.entity.events[item.order + 1] = swap;
+				vm.entity.events[item.order + 1].order = item.order + 1;
+
+			}
+
+		};
+
+		vm.moveUp = function (item, $event) {
+
+			$event.stopPropagation();
+
+			if (vm.entity.events[item.order - 1]) {
+
+				const swap = item;
+
+				vm.entity.events[item.index] = vm.entity.events[item.index - 1];
+				vm.entity.events[item.index].index = item.index;
+
+				vm.entity.events[item.index - 1] = swap;
+				vm.entity.events[item.index - 1].index = item.index - 1;
+
+			}
+
+		};
+
         vm.deletePane = function (item, $event, _$popup) {
 
             $event.stopPropagation();
@@ -585,8 +621,8 @@
 
             	if (res.status === 'agree') {
 
-            		vm.entity.events.splice(item.order, 1);
-            		vm.entity.events.forEach((eventItem, index) => eventItem.order = index);
+            		vm.entity.events.splice(item.index, 1);
+            		vm.entity.events.forEach((eventItem, index) => eventItem.index = index);
 
 				}
 
@@ -596,41 +632,66 @@
 
         };
 
-        vm.moveDown = function (item, $event) {
+		vm.makeCopy = function (eventToCopy, _$popup) {
 
-            $event.stopPropagation();
+			_$popup.cancel();
 
-            if (vm.entity.events[item.order + 1]) {
+			const eventIndex = eventToCopy.index;
+			const eventCopy = JSON.parse(angular.toJson(eventToCopy));
 
-            	var swap = JSON.parse(JSON.stringify(item));
+			delete eventCopy.id;
+			/* delete eventCopy.eventItemsGridTableDataService;
+			delete eventCopy.eventItemsGridTableEventService;
 
-				vm.entity.events[item.order] = vm.entity.events[item.order + 1];
-				vm.entity.events[item.order].order = item.order;
+			delete eventCopy.eventBlockableItemsGridTableDataService;
+			delete eventCopy.eventBlockableItemsGridTableEventService;
 
-				vm.entity.events[item.order + 1] = swap;
-				vm.entity.events[item.order + 1].order = item.order + 1;
+			delete eventCopy.eventActionsGridTableDataService;
+			delete eventCopy.eventActionsGridTableEventService; */
+
+			// delete eventCopy.index;
+			let eventCopyName = eventToCopy.name + ' (Copy)';
+
+			let a = 0, nameOccupied = true;
+			while (nameOccupied) { // check that copy name is unique
+
+				nameOccupied = false;
+
+				const copyWithSameName = vm.entity.events.find(event => event.name === eventCopyName);
+
+				if (copyWithSameName) {
+
+					a++;
+
+					eventCopyName = eventToCopy.name + ' (Copy ' + a + ')';
+					nameOccupied = true;
+
+				}
+
+				/* for (a = 0; a < vm.entity.events.length; a++) {
+
+					if (vm.entity.actions[a].action_notes === actionName) {
+
+						c = c + 1;
+						actionName = actionCopy.action_notes + ' (Copy ' + c + ')';
+						actionNameOccupied = true;
+
+						break;
+
+					}
+
+				} */
 
 			}
 
-        };
+			eventCopy.name = eventCopyName;
 
-        vm.moveUp = function (item, $event) {
+			formatExistingEvent(eventCopy);
 
-            $event.stopPropagation();
+			vm.entity.events.splice(eventIndex + 1, 0, eventCopy);
+			vm.entity.events.forEach((event, index) => event.index = index);
 
-            if (vm.entity.events[item.order - 1]) {
-
-            	const swap = JSON.parse(JSON.stringify(item));
-
-				vm.entity.events[item.order] = vm.entity.events[item.order - 1];
-				vm.entity.events[item.order].order = item.order;
-
-				vm.entity.events[item.order - 1] = swap;
-				vm.entity.events[item.order - 1].order = item.order - 1;
-
-			}
-
-        };
+		};
 
 		const formatDataForEventGridTable = function (event, rows, eventIndex, gtDataService, gtEventService, eventItemsType) {
 
@@ -709,7 +770,7 @@
 
                 eventActionsGridTableDataService: new GridTableDataService(),
                 eventActionsGridTableEventService: new EventService(),
-                order: vm.entity.events.length,
+                index: vm.entity.events.length,
                 autogenerate: true,
                 data: {
                     form_message: "",
@@ -974,6 +1035,50 @@
 
 		};
 
+        const formatExistingEvent = function (event) {
+
+			//<editor-fold desc="Events grid table">
+
+			// for event ordinary rows
+			event.eventItemsGridTableDataService = new GridTableDataService();
+			event.eventItemsGridTableEventService = new EventService();
+
+			formatDataForEventGridTable(
+				event,
+				event.data.items,
+				vm.entity.events.length,
+				event.eventItemsGridTableDataService,
+				event.eventItemsGridTableEventService,
+				'items'
+			);
+
+			// for event blockable rows
+			event.eventBlockableItemsGridTableDataService = new GridTableDataService();
+			event.eventBlockableItemsGridTableEventService = new EventService();
+
+			if (!event.data.blockableItems) event.data.blockableItems = [];
+
+			formatDataForEventGridTable(
+				event,
+				event.data.blockableItems,
+				vm.entity.events.length,
+				event.eventBlockableItemsGridTableDataService,
+				event.eventBlockableItemsGridTableEventService,
+				'blockableItems'
+			);
+			//</editor-fold>
+
+			//<editor-fold desc="Actions grid table">
+			event.eventActionsGridTableDataService = new GridTableDataService();
+			event.eventActionsGridTableEventService = new EventService();
+
+			if(!event.data.actions) event.data.actions = [];
+
+			formatDataForEventActionsGridTable(event);
+			//</editor-fold>
+
+		};
+
         vm.init = function () {
 
         	vm.popupEventService = new EventService();
@@ -988,6 +1093,8 @@
 					getInstrumentPeriodicityItems
 				];
 
+				if (!Array.isArray(vm.entity.events)) vm.entity.events = [];
+
                 Promise.all(dataPromises).then(function (data) {
 
 					vm.transactionTypes = data[0];
@@ -995,80 +1102,11 @@
 
 					getOptionsForMultitypeFields();
 
-					vm.entity.events.forEach(function (item, index) {
+					vm.entity.events.forEach(function (item) {
 
 						if (item.data) {
 
-							//<editor-fold desc="Events grid table">
-
-							// for event ordinary rows
-							item.eventItemsGridTableDataService = new GridTableDataService();
-							item.eventItemsGridTableEventService = new EventService();
-
-							formatDataForEventGridTable(
-								item,
-								item.data.items,
-								vm.entity.events.length,
-								item.eventItemsGridTableDataService,
-								item.eventItemsGridTableEventService,
-								'items'
-							);
-
-							// for event blockable rows
-							item.eventBlockableItemsGridTableDataService = new GridTableDataService();
-							item.eventBlockableItemsGridTableEventService = new EventService();
-
-							if (!item.data.blockableItems) item.data.blockableItems = [];
-
-							formatDataForEventGridTable(
-								item,
-								item.data.blockableItems,
-								vm.entity.events.length,
-								item.eventBlockableItemsGridTableDataService,
-								item.eventBlockableItemsGridTableEventService,
-								'blockableItems'
-							);
-
-							/* var eventsGridTableData = getEventsGridTableData(item)
-							eventsGridTableData.index = index
-
-							item.eventsGridTableDataService.setTableData(eventsGridTableData);
-
-							item.eventsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
-
-								onEventTableCellChange(argumentsObj, item.eventsGridTableDataService, item.eventsGridTableEventService);
-
-							}); */
-							//</editor-fold>
-
-							//<editor-fold desc="Actions grid table">
-							item.eventActionsGridTableDataService = new GridTableDataService();
-							item.eventActionsGridTableEventService = new EventService();
-
-							if(!item.data.actions) item.data.actions = [];
-
-							/* var eventsActionGridTableData = getEventsActionGridTableData(item)
-							item.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
-
-							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
-
-								onActionsTableAddRow(item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService);
-
-							});
-
-							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (data) {
-
-								onActionsTableCellValueChanged(data, item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService);
-
-							});
-
-							item.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (data) {
-
-								onActionsTableDeleteRows(data, item, item.eventActionsGridTableDataService, item.eventActionsGridTableEventService);
-
-							}); */
-							formatDataForEventActionsGridTable(item);
-							//</editor-fold>
+							formatExistingEvent(item);
 
 						}
 
