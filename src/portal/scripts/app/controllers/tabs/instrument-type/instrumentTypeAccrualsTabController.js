@@ -126,7 +126,7 @@
                                 selectorOptions: []
                             },
                             styles: {
-                                'grid-table-cell': {'width': '196px'}
+                                'grid-table-cell': {'width': '266px'}
                             }
                         },
                         {
@@ -141,7 +141,7 @@
                                 isDisabled: false
                             },
                             styles: {
-                                'grid-table-cell': {'width': '196px'}
+                                'grid-table-cell': {'width': '266px'}
                             }
                         },
 						{
@@ -156,7 +156,7 @@
 								isDisabled: false
 							},
 							styles: {
-								'grid-table-cell': {'width': '196px'}
+								'grid-table-cell': {'width': '266px'}
 							}
 						},
                         {
@@ -165,7 +165,7 @@
                             order: 5,
                             cellType: 'empty',
                             styles: {
-                                'grid-table-cell': {'width': '65px'}
+                                'grid-table-cell': {'width': '48px'}
                             }
                         }
                     ],
@@ -302,12 +302,12 @@
                     form_message: "",
                     items: [
                         {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text', options: false},
-                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'date', options: false},
-                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'date', options: false},
-                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'number', options: false},
+                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'multitypeField', options: false},
+                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'multitypeField', options: false},
+                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'multitypeField', options: false},
                         {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options_settings: periodicitySelectorOptions},
                         {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options_settings: accrualModelsSelectorOptions},
-                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'number', options: false},
+                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'multitypeField', options: false},
                     ]
                 }
             };
