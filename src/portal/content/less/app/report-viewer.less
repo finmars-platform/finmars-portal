@@ -1,5 +1,4 @@
 @gRowSelectionWidth: 50px;
-@gRowSettingsWidth: 59px;
 
 .report-viewer-holder {
 
@@ -33,6 +32,17 @@
           display: block;
         }
 
+      }
+
+    }
+
+    &.g-row-settings-collapsed {
+
+      .g-row-settings {
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+        border: none;
       }
 
     }
@@ -162,6 +172,10 @@
 
   .g-wrapper .g-row-selection {
     background: transparent;
+  }
+
+  .g-row-settings {
+    padding-right: 6px;
   }
 
   .g-row {
@@ -484,11 +498,6 @@
 
     .g-row {
       position: absolute;
-    }
-
-    .g-row-settings:not(.closed) {
-      padding-right: 6px;
-      width: @gRowSettingsWidth;
     }
 
     .ev-content {
