@@ -68,7 +68,7 @@
 
 					}
 
-                    popupContent = "<div class='popup-area-container'>" +
+                    popupContent = "<div class='popup-area-container grid-table-popup'>" +
                         "<div class='popup-area-main'>" + popupMain + "</div>" +
                         popupFooter +
                     "</div>"
