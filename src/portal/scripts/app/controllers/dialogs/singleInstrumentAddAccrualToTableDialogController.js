@@ -4,6 +4,8 @@
 (function () {
     'use strict';
 
+    const metaHelper = require('../../helpers/meta.helper');
+
     module.exports = function singleInstrumentAddAccrualToTableDialogController ($scope, $mdDialog, gridTableHelperService, data) {
 
         var vm = this;
@@ -13,104 +15,7 @@
         vm.entity = data.entity;
         vm.accrual = {};
 
-        const multitypeFieldsForRows = {
-            'accrual_start_date': [
-                    {
-                        'model': null,
-                        'fieldType': 'dateInput',
-                        'isDefault': false,
-                        'isActive': false,
-                        'sign': '<div class="multitype-field-type-letter">A</div>',
-                        'value_type': 40,
-                        'fieldData': {
-                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-                        }
-                    },
-                    {
-                        'model': null,
-                        'fieldType': 'dropdownSelect',
-                        'isDefault': false,
-                        'isActive': false,
-                        'sign': '<div class="multitype-field-type-letter">L</div>',
-                        'value_type': 70,
-                        'fieldData': {
-                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-                        }
-                    }
-                ],
-            'first_payment_date': [
-                    {
-                        'model': null,
-                        'fieldType': 'dateInput',
-                        'isDefault': false,
-                        'isActive': false,
-                        'sign': '<div class="multitype-field-type-letter">A</div>',
-                        'value_type': 40,
-                        'fieldData': {
-                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-                        }
-                    },
-                    {
-                        'model': null,
-                        'fieldType': 'dropdownSelect',
-                        'isDefault': false,
-                        'isActive': false,
-                        'sign': '<div class="multitype-field-type-letter">L</div>',
-                        'value_type': 70,
-                        'fieldData': {
-                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-                        }
-                    }
-                ],
-            'accrual_size': [
-                    {
-                        'model': null,
-                        'fieldType': 'numberInput',
-                        'isDefault': false,
-                        'isActive': false,
-                        'sign': '<div class="multitype-field-type-letter">A</div>',
-                        'value_type': 20,
-                        'fieldData': {
-                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-                        }
-                    },
-                    {
-                        'model': null,
-                        'fieldType': 'dropdownSelect',
-                        'isDefault': false,
-                        'isActive': false,
-                        'sign': '<div class="multitype-field-type-letter">L</div>',
-                        'value_type': 70,
-                        'fieldData': {
-                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-                        }
-                    }
-                ],
-            'periodicity_n': [
-                    {
-                        'model': null,
-                        'fieldType': 'numberInput',
-                        'isDefault': false,
-                        'isActive': false,
-                        'sign': '<div class="multitype-field-type-letter">A</div>',
-                        'value_type': 20,
-                        'fieldData': {
-                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-                        }
-                    },
-                    {
-                        'model': null,
-                        'fieldType': 'dropdownSelect',
-                        'isDefault': false,
-                        'isActive': false,
-                        'sign': '<div class="multitype-field-type-letter">L</div>',
-                        'value_type': 70,
-                        'fieldData': {
-                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-                        }
-                    }
-                ]
-        }
+       const multitypeFieldsForRows = metaHelper.getMultitypeFieldsForAccruals();
 
         vm.fieldsObject = {};
 
@@ -138,29 +43,6 @@
                 status: 'agree', data: {
                     accrual: vm.accrual
                 }
-            });
-
-        };
-
-        const setSelectorItemsToMultiTypeFields = function (instrumentAttrTypes) {
-
-            Object.keys(multitypeFieldsForRows).forEach(key => {
-
-                const fieldTypeObj = multitypeFieldsForRows[key];
-
-                const selTypeIndex = fieldTypeObj.findIndex(type => type.fieldType === 'dropdownSelect');
-                const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect');
-
-                const formattedAttrTypes = instrumentAttrTypes
-                    .filter(attrType => attrType.value_type === notSelType.value_type)
-                    .map(attrType => {
-                        return {id: attrType.user_code, name: attrType.short_name};
-                    });
-
-                fieldTypeObj[selTypeIndex].fieldData = {
-                    menuOptions: formattedAttrTypes || []
-                };
-
             });
 
         };
@@ -200,7 +82,7 @@
         const init = function () {
 
             const instrumentAttrTypes = vm.entity.attributes.map(attr => attr.attribute_type_object);
-            setSelectorItemsToMultiTypeFields(instrumentAttrTypes);
+            metaHelper.setSelectorItemsToMultiTypeFields(instrumentAttrTypes, multitypeFieldsForRows);
 
             vm.fields.forEach(item => {
 
