@@ -111,140 +111,7 @@
 				// Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab
 				scope.accrualsShemes = [];
 
-				const multitypeFieldsForRows = {
-					'accrual_start_date': {
-						nativeType: 40, //date
-						fieldDataList: [
-							{
-								'model': "",
-								'fieldType': 'dateInput',
-								'isDefault': false,
-								'isActive': false,
-								'sign': '<div class="multitype-field-type-letter">A</div>',
-								'value_type': 40,
-								'fieldData': {
-									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-								}
-							},
-							{
-								'model': null,
-								'fieldType': 'dropdownSelect',
-								'isDefault': false,
-								'isActive': false,
-								'sign': '<div class="multitype-field-type-letter">L</div>',
-								'value_type': 70,
-								'fieldData': {
-									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-								}
-							}
-						]
-					},
-					'first_payment_date': {
-						nativeType: 40, //date
-						fieldDataList: [
-							{
-								'model': "",
-								'fieldType': 'dateInput',
-								'isDefault': false,
-								'isActive': false,
-								'sign': '<div class="multitype-field-type-letter">A</div>',
-								'value_type': 40,
-								'fieldData': {
-									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-								}
-							},
-							{
-								'model': null,
-								'fieldType': 'dropdownSelect',
-								'isDefault': false,
-								'isActive': false,
-								'sign': '<div class="multitype-field-type-letter">L</div>',
-								'value_type': 70,
-								'fieldData': {
-									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-								}
-							}
-						]
-					},
-					'accrual_size': {
-						nativeType: 20, //number
-						fieldDataList: [
-							{
-								'model': null,
-								'fieldType': 'numberInput',
-								'isDefault': false,
-								'isActive': false,
-								'sign': '<div class="multitype-field-type-letter">A</div>',
-								'value_type': 20,
-								'fieldData': {
-									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-								}
-							},
-							{
-								'model': null,
-								'fieldType': 'dropdownSelect',
-								'isDefault': false,
-								'isActive': false,
-								'sign': '<div class="multitype-field-type-letter">L</div>',
-								'value_type': 70,
-								'fieldData': {
-									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-								}
-							}
-						]
-					},
-					'periodicity_n': {
-						nativeType: 20, //number
-						fieldDataList: [
-							{
-								'model': null,
-								'fieldType': 'numberInput',
-								'isDefault': false,
-								'isActive': false,
-								'sign': '<div class="multitype-field-type-letter">A</div>',
-								'value_type': 20,
-								'fieldData': {
-									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-								}
-							},
-							{
-								'model': null,
-								'fieldType': 'dropdownSelect',
-								'isDefault': false,
-								'isActive': false,
-								'sign': '<div class="multitype-field-type-letter">L</div>',
-								'value_type': 70,
-								'fieldData': {
-									'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-								}
-							}
-						]
-					}
-				}
-
-				const setSelectorItemsToMultiTypeFields = function (instrumentAttrTypes) {
-
-					Object.keys(multitypeFieldsForRows).forEach(key => {
-
-						const fieldTypeObj = multitypeFieldsForRows[key];
-
-						const selTypeIndex = fieldTypeObj.fieldDataList.findIndex(type => type.fieldType === 'dropdownSelect');
-
-						const formattedAttrTypes = instrumentAttrTypes
-							.filter(attrType => attrType.value_type === fieldTypeObj.nativeType)
-							.map(attrType => {
-								return {id: attrType.user_code, name: attrType.short_name};
-							});
-
-						fieldTypeObj.fieldDataList[selTypeIndex].fieldData = {
-							menuOptions: formattedAttrTypes || []
-						};
-
-						console.log('#78 setSelectorItemsToMultiTypeFields', key, formattedAttrTypes)
-
-					});
-
-				};
+				const multitypeFieldsForRows = metaHelper.getMultitypeFieldsForAccruals();
 
 				const getInstrumentTypeAccrualsById = async function (id) {
 					const instrumentType = await instrumentTypeService.getByKey(id);
@@ -292,7 +159,37 @@
 
 				};
 
-				const newRowsKeys = []
+				const setActiveMultiTypeStateInColumn = function (column, rowData) {
+
+					const multitypeFieldData = metaHelper.recursiveDeepCopy(multitypeFieldsForRows[column.key], false);
+
+					const typeKey = `${column.key}_value_type`;
+					const valueType = rowData[typeKey];
+
+					let selectedIndex = 0;
+					if (valueType === 70) { // user attribute
+						selectedIndex = 1;
+
+						// in selector value is user attribute id. I need get name of selected option to write column.settings.value
+						const attribute = multitypeFieldData[selectedIndex].fieldData.menuOptions.find(attr => attr.id === column.settings.value);
+
+						if (attribute) {
+
+							column.settings.value = attribute.name;
+
+						}
+					}
+
+					multitypeFieldData[selectedIndex].isDefault = true;
+					multitypeFieldData[selectedIndex].isActive = true;
+
+					multitypeFieldData[selectedIndex].model =  rowData[column.key];
+
+					column.settings.fieldTypesData = multitypeFieldData;
+
+				}
+
+				const newRowsKeys = [];
 
 				const insertAccrualToTable = function (accrual) {
 
@@ -332,32 +229,7 @@
 						}
 						else if (column.cellType === 'multitypeField') {
 
-							// const multitypeFieldData = multitypeFieldsForRows[column.key].fieldDataList;
-							const multitypeFieldData = metaHelper.recursiveDeepCopy(multitypeFieldsForRows[column.key].fieldDataList, true);
-
-							const typeKey = `${column.key}_value_type`;
-							const valueType = accrual[typeKey];
-
-							let selectedIndex = 0;
-							if (valueType === 70) { // user attribute
-								selectedIndex = 1;
-
-								// in selector value is user attribute id. I need get name of selected option to write column.settings.value
-								const attribute = multitypeFieldData[selectedIndex].fieldData.menuOptions.find(attr => attr.id === column.settings.value);
-
-								if (attribute) {
-
-									column.settings.value = attribute.name;
-
-								}
-							}
-
-							multitypeFieldData[selectedIndex].isDefault = true;
-							multitypeFieldData[selectedIndex].isActive = true;
-
-							multitypeFieldData[selectedIndex].model =  accrual[column.key];
-
-							column.settings.fieldTypesData = multitypeFieldData;
+							setActiveMultiTypeStateInColumn(column, accrual);
 
 
 						}
@@ -538,30 +410,8 @@
 
 							if (column.cellType === 'multitypeField') {
 
-								const multitypeFieldData = metaHelper.recursiveDeepCopy(multitypeFieldsForRows[column.key].fieldDataList, true);
+								setActiveMultiTypeStateInColumn(column, rowData);
 
-								const typeKey = `${column.key}_value_type`;
-								const valueType = rowData[typeKey];
-
-								let selectedIndex = 0;
-								if (valueType === 70) { // user attribute
-									selectedIndex = 1;
-
-									// in selector value is user attribute id. I need get name of selected option to write column.settings.value
-									const attribute = multitypeFieldData[selectedIndex].fieldData.menuOptions.find(attr => attr.id === column.settings.value);
-
-									if (attribute) {
-
-										column.settings.value = attribute.name;
-
-									}
-								}
-
-								multitypeFieldData[selectedIndex].isDefault = true;
-								multitypeFieldData[selectedIndex].isActive = true;
-								multitypeFieldData[selectedIndex].model =  rowData[column.key];
-
-								column.settings.fieldTypesData = multitypeFieldData;
 							}
 
 						});
@@ -606,7 +456,7 @@
 						scope.popupData.items = scope.accrualsShemes;
 
 						const instrumentAttrTypes = scope.entity.attributes.map(attr => attr.attribute_type_object);
-						setSelectorItemsToMultiTypeFields(instrumentAttrTypes);
+						metaHelper.setSelectorItemsToMultiTypeFields(instrumentAttrTypes, multitypeFieldsForRows);
 
 						// <Victor 2021.03.10 #78 add row for accrual table component in GENERAL tab>
 
