@@ -42,6 +42,7 @@
         var vm = this;
 
         vm.entity = $scope.$parent.vm.entity;
+        if (!vm.entity.events) vm.entity.events = [];
 
         var gridTableHelperService = new GridTableHelperService();
 
@@ -685,8 +686,6 @@
 		};
 
         vm.createInstrumentTypeEvent = function () {
-
-            if (!vm.entity.events) vm.entity.events = [];
 
             const mapOptions = function (item) {
                 return {

@@ -21,6 +21,10 @@
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
 
+        if(!vm.entity.accruals) {
+            vm.entity.accruals = [];
+        }
+
         vm.readyStatus = {
             periodicityItems: false,
             accrualModels: false,
@@ -118,7 +122,7 @@
                                 selectorOptions: []
                             },
                             styles: {
-                                'grid-table-cell': {'width': '266px'}
+                                'grid-table-cell': {'width': '196px'}
                             }
                         },
                         {
@@ -133,7 +137,7 @@
                                 isDisabled: false
                             },
                             styles: {
-                                'grid-table-cell': {'width': '266px'}
+                                'grid-table-cell': {'width': '196px'}
                             }
                         },
 						{
@@ -148,16 +152,16 @@
 								isDisabled: false
 							},
 							styles: {
-								'grid-table-cell': {'width': '266px'}
+								'grid-table-cell': {'width': '196px'}
 							}
 						},
                         {
-                            key: 'options_settings',
+                            key: 'options',
                             columnName: '',
                             order: 5,
                             cellType: 'empty',
                             styles: {
-                                'grid-table-cell': {'width': '48px'}
+                                'grid-table-cell': {'width': '65px'}
                             }
                         }
                     ],
@@ -168,10 +172,10 @@
             };
 
             var optionsColumn = {
-                key: 'options_settings',
-                objPath: ['options'],
+                key: 'options',
+                objPath: ['options_settings'],
                 columnName: '',
-                order: 4,
+                order: 5,
                 cellType: 'customPopup',
                 settings: {
                     value: null,
@@ -253,12 +257,12 @@
                 rowObj.columns[3].settings.value = row.override_name;
 				rowObj.columns[4].settings.value = row.tooltip;
 
-                if (row.options) {
+                if (row.options_settings) {
 
                     const optionsCell = metaHelper.recursiveDeepCopy(optionsColumn, false);
 
                     rowObj.columns[5] = optionsCell;
-                    rowObj.columns[5].settings.value = row.options;
+                    rowObj.columns[5].settings.value = row.options_settings;
 
                 }
 
@@ -281,10 +285,6 @@
                 };
             };
 
-            if(!vm.entity.accruals) {
-                vm.entity.accruals = [];
-            }
-
             var periodicitySelectorOptions = vm.periodicityItems.map(mapOptions);
             var accrualModelsSelectorOptions = vm.accrualModels.map(mapOptions)
 
@@ -301,8 +301,8 @@
                         {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'date', options: false},
                         {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'date', options: false},
                         {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'number', options: false},
-                        {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options: periodicitySelectorOptions},
-                        {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options: accrualModelsSelectorOptions},
+                        {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options_settings: periodicitySelectorOptions},
+                        {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options_settings: accrualModelsSelectorOptions},
                         {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'number', options: false},
                     ]
                 }
