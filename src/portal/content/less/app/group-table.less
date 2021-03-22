@@ -825,7 +825,7 @@
   }
 
   .g-row-settings { // inside table
-    width: 100px;
+    width: @gRvRowSettingsWidth;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -834,12 +834,12 @@
     border-right: @gCellBorder;
     transition: width 100ms linear;
 
-    &.closed {
+    /* &.closed {
       width: 0;
       padding: 0;
       overflow: hidden;
       border-right: none;
-    }
+    } */
   }
 
   .g-row-color-picker-btn {
