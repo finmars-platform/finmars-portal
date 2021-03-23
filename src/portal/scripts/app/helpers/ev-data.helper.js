@@ -848,33 +848,13 @@
 
     };
 
-    var preparePopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
+    var preparePopupMenu = function (objectId, parentGroupHashId, evDataService) {
 
         var popup = document.createElement('div');
-// Victor 2021.02.01 #75 On right mouse click row don't need selected
-/*        if (isReport) {
-
-            var objects = evDataService.getObjects();
-
-            objects.forEach(function (item) {
-                item.___is_activated = false;
-                item.___is_last_selected = false;
-
-                evDataService.setObject(item);
-
-            });
-
-        }*/
 
         var obj = getObject(objectId, parentGroupHashId, evDataService);
 
         if (obj) {
-
-        	obj.___is_activated = true;
-
-			if (isReport) {
-				obj.___is_last_selected = true;
-			}
 
 			evDataService.setObject(obj);
 
