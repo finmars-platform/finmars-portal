@@ -426,6 +426,33 @@
 
     };
 
+    var handleSimpleClick = function (evDataService, evEventService, obj) {
+
+        clearSubtotalActiveState(evDataService);
+        clearObjectActiveState(evDataService);
+
+        obj.___is_activated = !obj.___is_activated;
+        obj.___is_last_selected = !obj.___is_last_selected;
+
+        evDataService.setObject(obj);
+
+        if (obj.___is_last_selected || obj.___is_activated) {
+            obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
+
+            evDataService.setActiveObject(obj);
+            evDataService.setLastActivatedRow(obj);
+            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+        } else {
+            evDataService.setActiveObject(null);
+            evDataService.setLastActivatedRow(null);
+        }
+
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+    };
+
     var clearSubtotalActiveState = function (evDataService) {
 
         var items = evDataService.getDataAsList();
@@ -579,28 +606,7 @@
 
         } else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
-            clearSubtotalActiveState(evDataService);
-            clearObjectActiveState(evDataService);
-
-            obj.___is_activated = !obj.___is_activated;
-            obj.___is_last_selected = !obj.___is_last_selected;
-
-            evDataService.setObject(obj);
-
-            if (obj.___is_last_selected || obj.___is_activated) {
-                obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
-
-                evDataService.setActiveObject(obj);
-                evDataService.setLastActivatedRow(obj);
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-            } else {
-                evDataService.setActiveObject(null);
-                evDataService.setLastActivatedRow(null);
-            }
-
-
-            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            handleSimpleClick(evDataService, evEventService, obj);
 
         }
 
@@ -1487,32 +1493,8 @@
                 const obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
                 if (obj) {
-                    // Victor #75 repeat this code as handleObjectClick TODO may be create method?
-                    clearSubtotalActiveState(evDataService);
-                    clearObjectActiveState(evDataService);
 
-                    obj.___is_activated = !obj.___is_activated;
-                    obj.___is_last_selected = !obj.___is_last_selected;
-
-                    evDataService.setObject(obj);
-
-                    if (obj.___is_last_selected || obj.___is_activated) {
-
-                        obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
-
-                        evDataService.setActiveObject(obj);
-                        evDataService.setLastActivatedRow(obj);
-                        evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                    } else {
-
-                        evDataService.setActiveObject(null);
-                        evDataService.setLastActivatedRow(null);
-
-                    }
-
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                    // <Victor #75 repeat this code as handleObjectClick>
+                    handleSimpleClick(evDataService, evEventService, obj)
 
                 } else { // subtotal
                     // Victor #75
