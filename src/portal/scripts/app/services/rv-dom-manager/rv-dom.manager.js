@@ -1313,12 +1313,12 @@
                 // Victor #75
                 if (obj) {
 
-                    item.name = obj.___is_activated ? 'Unselect row' : 'Select row';
+                    item.name = obj.___is_activated ? 'Unselect' : 'Select';
 
                 } else { // Subtotal
 
                     const parent = evDataService.getData(parentGroupHashId);
-                    item.name = parent.___is_line_subtotal_activated || parent.___is_area_subtotal_activated ? 'Unselect row' : 'Select row';
+                    item.name = parent.___is_line_subtotal_activated || parent.___is_area_subtotal_activated ? 'Unselect' : 'Select';
 
                 }
                 // <Victor #75>
