@@ -1135,6 +1135,19 @@
     };*/
 
     var checkContextMenuOptionVisibility = function (obj, option) {
+        // Victor #75 if obj === null then subtotal clicked
+        if (option.action === 'open_layout') {
+            return true;
+        }
+
+        if (option.action === 'mark_row') {
+            return true;
+        }
+
+        if (option.action === 'select_row') {
+            return true;
+        }
+        // <Victor #75 if obj === null then subtotal clicked>
 
         if (obj['instrument.id'] && option.action === 'edit_instrument') {
             return true;
@@ -1186,18 +1199,6 @@
         }
 
         if (obj['complex_transaction.id'] && option.action === 'rebook_transaction') {
-            return true;
-        }
-
-        if (option.action === 'open_layout') {
-            return true;
-        }
-
-        if (option.action === 'mark_row') {
-            return true;
-        }
-
-        if (option.action === 'select_row') {
             return true;
         }
 
@@ -1303,7 +1304,18 @@
             }
 
             if (item.action === 'select_row') {
-                item.name = obj.___is_activated ? 'Unselect row' : 'Select row';
+                // Victor #75
+                if (obj) {
+
+                    item.name = obj.___is_activated ? 'Unselect row' : 'Select row';
+
+                } else { // Subtotal
+
+                    const parent = evDataService.getData(parentGroupHashId);
+                    item.name = parent.___is_line_subtotal_activated || parent.___is_area_subtotal_activated ? 'Unselect row' : 'Select row';
+
+                }
+                // <Victor #75>
             }
 
             if (item.action === 'open_layout') {
@@ -1424,7 +1436,7 @@
 
 	};
 
-    var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
+    var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService, subtotalType) {
 
         function sendContextMenuActionToActiveObj(event) {
 
@@ -1474,22 +1486,86 @@
 
                 const obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-                if (obj.___is_activated) {
+                if (obj) {
+                    // Victor #75 repeat this code as handleObjectClick TODO may be create method?
+                    clearSubtotalActiveState(evDataService);
+                    clearObjectActiveState(evDataService);
 
-                    obj.___is_activated = false;
-                    obj.___is_last_selected = false;
+                    obj.___is_activated = !obj.___is_activated;
+                    obj.___is_last_selected = !obj.___is_last_selected;
 
-                } else {
+                    evDataService.setObject(obj);
 
-                    const objects = evDataService.getObjects();
+                    if (obj.___is_last_selected || obj.___is_activated) {
 
-                    objects.forEach(item => {
-                        item.___is_activated = false;
-                        item.___is_last_selected = false;
-                    });
+                        obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
 
-                    obj.___is_activated = true;
-                    obj.___is_last_selected = true;
+                        evDataService.setActiveObject(obj);
+                        evDataService.setLastActivatedRow(obj);
+                        evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                    } else {
+
+                        evDataService.setActiveObject(null);
+                        evDataService.setLastActivatedRow(null);
+
+                    }
+
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // <Victor #75 repeat this code as handleObjectClick>
+
+                } else { // subtotal
+                    // Victor #75
+                    var parent = Object.assign({}, evDataService.getData(parentGroupHashId));
+
+                    clearSubtotalActiveState(evDataService);
+                    clearObjectActiveState(evDataService);
+
+                    if (subtotalType === 'area') {
+                        parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
+                    }
+
+                    if (subtotalType === 'line') {
+                        parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
+                    }
+
+
+                    if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
+
+                        evDataService.setActiveObject(null);
+                        evDataService.setLastActivatedRow(null);
+
+                    } else if (parent.___level > 0) {
+
+                        const groups = evDataService.getGroups();
+                        const groupsActiveObj = Object.assign({}, parent);
+
+                        delete groupsActiveObj.next;
+                        delete groupsActiveObj.previous;
+                        delete groupsActiveObj.count;
+                        delete groupsActiveObj.results;
+                        delete groupsActiveObj.subtotal;
+
+                        const parents = evRvCommonHelper.getParents(parentGroupHashId, evDataService);
+                        parents.reverse();
+                        parents.splice(0, 1); // removing root group
+
+                        for (let i = 0; i < parents.length; i++) {
+                            groupsActiveObj[groups[i].key] = parents[i].___group_name;
+                        }
+
+                        evDataService.setActiveObject(groupsActiveObj);
+                        evDataService.setLastActivatedRow({
+                            ___id: objectId,
+                            ___parentId: parentGroupHashId
+                        });
+
+                        evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                    }
+
+                    evDataService.setData(parent);
+                    // <Victor #75>
 
                 }
 
@@ -1530,27 +1606,22 @@
 
     };
 
-    var createPopupMenu = function (objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, menuPosition) {
+    var createPopupMenu = function (objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, menuPosition, subtotalType) {
 
         clearDropdowns();
 
-        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, true);
+        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService);
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-		if (obj) {
+		popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
-			popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
+        evDataHelper.calculateMenuPosition(popup, menuPosition);
 
-			evDataHelper.calculateMenuPosition(popup, menuPosition);
+        document.body.appendChild(popup);
 
-			document.body.appendChild(popup);
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-			addEventListenerForContextMenu(popup, evDataService, evEventService);
-
-		}
-
+        addEventListenerForContextMenu(popup, evDataService, evEventService, subtotalType);
 
     };
 
@@ -1662,26 +1733,26 @@
                 ttypes = data;
 
                 elem.addEventListener('contextmenu', function (ev) {
-
                     var objectId;
                     var parentGroupHashId;
-                    let isSubtotal = false;
+                    let subtotalType = null;
+                    let contextMenuForClickedRow = contextMenu;
 
-                    if (event.target.offsetParent.classList.contains('ev-viewport')) {
+                    if (ev.target.offsetParent.classList.contains('ev-viewport')) {
 
-                        objectId = event.target.dataset.objectId;
-                        parentGroupHashId = event.target.dataset.parentGroupHashId;
+                        objectId = ev.target.dataset.objectId;
+                        parentGroupHashId = ev.target.dataset.parentGroupHashId;
 
                     } else {
 
-                        if (event.target.offsetParent.classList.contains('g-row')) {
+                        if (ev.target.offsetParent.classList.contains('g-row')) {
 
-                            objectId = event.target.offsetParent.dataset.objectId;
-                            parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+                            objectId = ev.target.offsetParent.dataset.objectId;
+                            parentGroupHashId = ev.target.offsetParent.dataset.parentGroupHashId;
 
-                            if (event.target.offsetParent.dataset.subtotalType) {
+                            if (ev.target.offsetParent.dataset.subtotalType) {
 
-                                isSubtotal = !!event.target.offsetParent.dataset.subtotalType;
+                                subtotalType = ev.target.offsetParent.dataset.subtotalType;
 
                             }
 
@@ -1689,7 +1760,7 @@
 
                     }
 
-                    console.log('initContextMenuEventDelegation.event', event);
+                    console.log('initContextMenuEventDelegation.event', ev);
 
                     console.log('initContextMenuEventDelegation.objectId', objectId);
 
@@ -1698,14 +1769,20 @@
                         ev.preventDefault();
                         ev.stopPropagation();
 
-                        if (isSubtotal) { // TODO Victor 2021.02.02 I need to know items for subtotals context menu
-                            return;
+                        var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
+
+                        if (subtotalType) {
+                            contextMenuForClickedRow = {
+                                root: {
+                                    items: [selectRowMenuItem]
+                                }
+                            };
                         }
 
                         //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
                         var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
-                        createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                        createPopupMenu(objectId, contextMenuForClickedRow, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition, subtotalType);
 
                         return false;
 

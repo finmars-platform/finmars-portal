@@ -676,7 +676,7 @@
         popup.style.cssText = menuPosition;
         popup.style.position = 'absolute';*/
 
-        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, false);
+        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService);
 
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
