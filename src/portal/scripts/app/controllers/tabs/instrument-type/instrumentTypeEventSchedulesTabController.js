@@ -327,6 +327,15 @@
                         contentHtml: {
                             main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
                         },
+                        popupData: {
+                            cancel: (popupData, _$popup) => {
+                                popupData.option.override_name = popupData.oldValue; // set value which saved before in template
+                                _$popup.cancel();
+                            },
+                            save: (_$popup) => {
+                                _$popup.cancel(); // user change model directly, simple close popup
+                            },
+                        },
                         classes: "ev-instr-accruals-settings-popup"
                     }
                 },
