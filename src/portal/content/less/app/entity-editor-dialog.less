@@ -298,8 +298,6 @@
   max-width: 90%;
 
   .popup-area-main {
-    max-height: 210px;
-    overflow: auto;
 
     .instr-sel-opts-to-show-checkbox-wrap {
       height: 40px;
@@ -323,4 +321,56 @@
   .add-accrual-column:nth-child(2) {
     margin-left: 8px;
   }
+}
+
+.instrument-options-selector {
+
+  table {
+    thead {
+      display: block;
+      border-bottom: none;
+    }
+
+    tbody {
+      display: block;
+      max-height: 300px;
+      overflow-y: scroll;
+
+      tr:first-child {
+        border-top: none;
+      }
+
+    }
+
+    tr {
+      height: 48px;
+      border: 1px solid #e0e0e0;
+
+      td.options-parameters {
+        width: 212px;
+        padding-left: 12px;
+        box-sizing: border-box;
+        border-right: 1px solid #e0e0e0;
+      }
+
+      td.options-show {
+        width: 68px;
+        text-align: center;
+        box-sizing: border-box;
+      }
+
+      td.options-override-name {
+        width: 180px;
+        box-sizing: border-box;
+      }
+
+    }
+  }
+}
+
+.popup-area-backdrop.back-drop-z-index {
+  z-index: 55;
+}
+.popup-container.popup-z-index {
+  z-index: 56;
 }
