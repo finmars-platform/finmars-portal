@@ -85,6 +85,21 @@
                 var dynamicAttrs = [];
                 // var keysOfColsToHide = [];
 
+                // Victor 2021.03.29 #88 fix bug with deleted custom fields
+                let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                console.log('#88 gColumnsComponent.js customFields', customFields)
+                scope.isColumnHaveError = function (column) {
+
+                    if (!column.key.startsWith('custom_fields')) {
+                        return false;
+                    }
+
+                    const customField = customFields.find( field => column.key === `custom_fields.${field.user_code}`);
+
+                    return !customField;
+                };
+                // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
                 // Victor 2020.12.14 #69 New report viewer design
                 scope.rowFilterColor = 'none';
 
@@ -464,7 +479,7 @@
 
                         scope.evDataService.setColumns(columns);
 
-                    scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -1469,6 +1484,13 @@
                 };
 
                 let initEventListeners = function () {
+
+                    // Victor 2021.03.29 #88 fix bug with deleted custom fields
+                    scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                        customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                        scope.$apply();
+                    })
+                    // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
