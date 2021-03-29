@@ -68,6 +68,10 @@
 				let dynamicAttrs = [];
 				let attrsWithoutFilters = ['notes'];
 
+                // Victor 2021.03.29 #88 fix bug with deleted custom fields
+                const customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
                 scope.calculateReport = function () {
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 };
@@ -724,6 +728,22 @@
 								}
 
 								filterData.text = chipText;
+
+                                // Victor 2021.03.29 #88 fix bug with deleted custom fields
+								if (filter.key.startsWith('custom_fields')) {
+								    const customField = customFields.find( field => filter.key === `custom_fields.${field.user_code}`)
+                                    if (!customField) {
+
+                                        filter.options.enabled = false;
+
+                                        filterData.error_data = {
+                                            description: `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
+                                        }
+
+                                    }
+
+                                }
+                                // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
 								scope.filtersChips.push(filterData);
 
