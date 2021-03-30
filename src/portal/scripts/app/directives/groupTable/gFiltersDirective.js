@@ -69,7 +69,7 @@
 				let attrsWithoutFilters = ['notes'];
 
                 // Victor 2021.03.29 #88 fix bug with deleted custom fields
-                const customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
                 // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
                 scope.calculateReport = function () {
@@ -801,6 +801,13 @@
 				// </editor-fold>
 
                 const initEventListeners = function () {
+
+                    // Victor 2021.03.29 #88 fix bug with deleted custom fields
+                    scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                        customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                        formatFiltersForChips();
+                    })
+                    // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
                 	scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, calculateFilterChipsContainerWidth);
 

@@ -759,6 +759,10 @@ md-tooltip.md-tooltip.md-panel.tooltip_1 {
   .md-content.md-show {
     background-color: rgba(0, 0, 0, 0.78);
   }
+
+  &.custom-field-error {
+    background-color: @orange;
+  }
 }
 
 md-tooltip.md-panel.md-tooltip.md-default-theme,
@@ -3051,6 +3055,7 @@ button.md-raised.md-warn.md-button {
   .chip-list-content {
     font-size: 14px;
     white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
   }
 
@@ -3070,7 +3075,14 @@ button.md-raised.md-warn.md-button {
 
   .chip-wrap:not(.add-chip-wrap) {
     .chip-div {
+      display: flex;
+      align-items: center;
       padding-right: 28px;
+
+      span.error {
+        color:  #f05a22;
+        margin-bottom: 2px;
+      }
     }
   }
 

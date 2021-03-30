@@ -7,10 +7,12 @@
          ng-init="$last && onLastChipInit()">
 
         <div class="chip-div chipDivElem"
-             ng-class="{error: chip.error_data}"
              ng-click="onChipClickMethod(chip, $event)">
 
+            <span data-ng-if="chip.error_data" class="material-icons error">error</span>
+
             <div ng-bind-html="chip.text"
+                 data-ng-class="{'custom-field-error': !!chip.error_data}"
                  class="chip-list-content"></div>
 
             <md-button ng-if="chipsDeletion"
@@ -22,6 +24,7 @@
             <md-tooltip ng-if="getTooltipContent(chip)"
                         md-direction="top"
                         class="tooltip_1"
+                        data-ng-class="{'custom-field-error': !!chip.error_data}"
                         ng-bind-html="getTooltipContent(chip)"></md-tooltip>
 
         </div>

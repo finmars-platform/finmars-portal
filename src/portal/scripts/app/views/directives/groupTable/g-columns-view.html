@@ -877,9 +877,10 @@
                  backdrop-classes="'low-z-index-backdrop'"
                  popup-event-service="evEventService">
 
-                <md-tooltip md-direction="top">
+                <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': isColumnHaveError(column)}">
                     <span ng-bind="column.name"></span>
                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                    <span data-ng-if="isColumnHaveError(column)">The group does not exist in the Configuration</span>
                 </md-tooltip>
 
                 <div class="g-cell g-table-header-cell g-table-header-group-cell">
@@ -891,6 +892,8 @@
                     <div class="g-cell-button" data-ng-if="!column.report_settings.is_level_folded" data-ng-click="foldLevel(column, $index)">
                         <span class="material-icons">remove</span>
                     </div>
+
+                    <span data-ng-if="isColumnHaveError(column)" class="material-icons error">error</span>
 
                     <div class="g-group-button flex-row"
                                data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
@@ -963,12 +966,15 @@
                  backdrop-classes="'low-z-index-backdrop'"
                  popup-event-service="evEventService">
 
-                <md-tooltip md-direction="top">
+                <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': isColumnHaveError(column)}">
                     <span ng-bind="column.name"></span>
                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                    <span data-ng-if="isColumnHaveError(column)">The column does not exist in the Configuration</span>
                 </md-tooltip>
 
                 <div class="g-cell g-table-header-cell">
+
+                        <span data-ng-if="isColumnHaveError(column)" class="material-icons error">error</span>
 
                     <div class="g-group-button flex-row"
                                data-ng-click="sortHandler(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
