@@ -87,7 +87,7 @@
 
                 // Victor 2021.03.29 #88 fix bug with deleted custom fields
                 let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
-                console.log('#88 gColumnsComponent.js customFields', customFields)
+
                 scope.isColumnHaveError = function (column) {
 
                     if (!column.key.startsWith('custom_fields')) {
