@@ -2,6 +2,16 @@
 
 @star-icon-size: 25px;
 
+// Victor 2020.1202 #69 New report viewer interface
+@g-top-part-height: 50px;
+@icon-size: 20px;
+@g-top-part-color: @gray;
+@g-table-header-background-color: rgba(242, 242, 242, 1);
+//@g-table-border-color: rgb(219, 219, 219);
+@g-table-border-color: #e0e0e0;
+@g-table-cell-hover-color: rgba(216, 216, 216, 1);
+@rv-active-color: #f05a22;
+
 .new-interface() {
   color: @g-top-part-color;
   font-size: 14px;
@@ -871,7 +881,7 @@
     }
 
     &.red {
-      color: #f05a22;
+      color: @rv-active-color;
     }
 
     &.yellow {
@@ -894,15 +904,6 @@
       color: @gray;
     }
   }
-
-  // Victor 2020.1202 #69 New report viewer interface
-  @g-top-part-height: 50px;
-  @icon-size: 20px;
-  @g-top-part-color: @gray;
-  @g-table-header-background-color: rgba(242, 242, 242, 1);
-  //@g-table-border-color: rgb(219, 219, 219);
-  @g-table-border-color: #e0e0e0;
-  @g-table-cell-hover-color: rgba(216, 216, 216, 1);
 
   .md-button {
     ng-md-icon{
@@ -1330,6 +1331,18 @@
         }
       }
 
+      &.error {
+        span.error {
+          padding-left: 10px;
+          color: @rv-active-color;
+        }
+
+        .g-group-button {
+          color: @rv-active-color;
+        }
+
+      }
+
       .resize-slider {
         width: 3px;
         height: 100%;
@@ -1486,7 +1499,7 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
   }
 
   &.red {
-    color: #f05a22;
+    color: @rv-active-color;
   }
 
   &.yellow {
@@ -2806,4 +2819,11 @@ button.md-button.toggle-dashboard-filter-btn {
 }
 .group-status-missing {
   opacity: .7;
+}
+
+
+.md-panel.md-tooltip {
+  &.custom-field-error {
+    background-color: @orange;
+  }
 }

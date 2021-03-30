@@ -1488,7 +1488,6 @@
                     // Victor 2021.03.29 #88 fix bug with deleted custom fields
                     scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
                         customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
-                        scope.$apply();
                     })
                     // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
