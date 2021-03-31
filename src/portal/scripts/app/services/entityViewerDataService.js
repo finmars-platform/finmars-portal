@@ -162,7 +162,11 @@
             activeObject: null,
             activeObjectsCount: 0,
             dataLoadEnded: false,
-            markedSubtotals: {}
+            markedSubtotals: {},
+            missingCustomFields: {
+                forFilters: [],
+                forColumns: [],
+            }
         };
 
         var dashboardData = {
@@ -1392,6 +1396,28 @@
             return null
         }
 
+        function setMissingCustomFields(options) {
+
+            if (!options) {
+                data.missingCustomFields = {
+                    forFilters: [],
+                    forColumns: [],
+                };
+            }
+
+            if (options.forFilters) {
+                data.missingCustomFields.forFilters = options.forFilters;
+            }
+
+            if (options.forColumns) {
+                data.missingCustomFields.forColumns = options.forColumns;
+            }
+        }
+
+        function getMissingCustomFields() {
+            return data.missingCustomFields;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1618,6 +1644,9 @@
 
             setColumnSortData: setColumnSortData,
             getColumnSortData: getColumnSortData,
+
+            setMissingCustomFields: setMissingCustomFields,
+            getMissingCustomFields: getMissingCustomFields,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,
