@@ -155,17 +155,17 @@
 
 			const cachedLayouts = getCacheProp(cachedLayoutsList);
 
-			if(cachedLayouts) {
+			if (cachedLayouts && typeof cachedLayouts === 'object') {
 
-                Object.keys(cachedLayouts).forEach(layoutId => {
+				Object.keys(cachedLayouts).forEach(layoutId => {
 
                     if (cachedLayouts[layoutId].content_type === layout.content_type) {
                         cachedLayouts[layoutId].is_default = false;
                     }
 
-                });
+				});
 
-            }
+			}
 
 			let cache = cacheData(cachedLayoutsList, cachedLayouts);
 
@@ -207,7 +207,7 @@
         let layoutToDelete = getCacheProp(layoutPath, cache);
 
         // clear content_type default layout
-        if (layoutToDelete.is_default) {
+        if (layoutToDelete && layoutToDelete.is_default) {
             let defLayoutPath = ['layouts', 'defaultLayouts', layoutToDelete.content_type];
             cache = removeFromCache(defLayoutPath, cache);
         }

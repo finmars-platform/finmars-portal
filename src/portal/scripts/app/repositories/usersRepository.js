@@ -355,6 +355,49 @@
         })
     };
 
+
+    var getUsercodePrefixList = function () {
+        return xhrService.fetch(baseUrl + 'users/usercode-prefix/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var createUsercodePrefix = function (item) {
+        return xhrService.fetch(baseUrl + 'users/usercode-prefix/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(item)
+            })
+    };
+
+    var deleteUserCodePrefixByKey = function (id) {
+        return xhrService.fetch(baseUrl + 'users/usercode-prefix/' + id + '/', {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                resolve({status: 'deleted'});
+            });
+            //return data.json();
+        })
+    };
+
     module.exports = {
         login: login,
         logout: logout,
@@ -390,7 +433,12 @@
         getGroupList: getGroupList,
 
         getOwnMemberSettings: getOwnMemberSettings,
-        updateOwnMemberSettings: updateOwnMemberSettings
+        updateOwnMemberSettings: updateOwnMemberSettings,
+
+
+        getUsercodePrefixList: getUsercodePrefixList,
+        createUsercodePrefix: createUsercodePrefix,
+        deleteUserCodePrefixByKey: deleteUserCodePrefixByKey
 
     }
 

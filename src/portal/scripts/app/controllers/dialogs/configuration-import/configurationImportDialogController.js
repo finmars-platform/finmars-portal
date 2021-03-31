@@ -283,6 +283,8 @@
                     return 'Context Menu Layout';
                 case 'ui.bookmark':
                     return "Bookmarks";
+                case 'ui.columnsortdata':
+                    return 'Column Sort Data';
                 case 'reference_tables.referencetable':
                     return "Reference Tables";
                 case 'csv_import.csvimportscheme':

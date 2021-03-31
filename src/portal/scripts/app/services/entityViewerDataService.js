@@ -33,6 +33,9 @@
                 width: headerToolbarWidth,
                 height: headerToolbarHeight
             },
+			topPart: {
+				height: 50
+			},
             mainContent: {
                 height: 0
             },
@@ -106,6 +109,10 @@
                 subtotal_type: false
             },
             filters: [],
+            rowTypeFilters: {
+                markedRowFilters: 'none'
+            },
+			useFromAboveFilters: [],
             pagination: {
                 page_size: 60
             },
@@ -154,7 +161,8 @@
             projection: [],
             activeObject: null,
             activeObjectsCount: 0,
-            dataLoadEnded: false
+            dataLoadEnded: false,
+            markedSubtotals: {}
         };
 
         var dashboardData = {
@@ -311,6 +319,16 @@
 
         function getFilters() {
             return data.filters;
+        }
+
+        function setRowTypeFilters (color) {
+            data.rowTypeFilters = {
+                markedRowFilters: color
+            };
+        }
+
+        function getRowTypeFilters () {
+            return data.rowTypeFilters;
         }
 
         function getPagination() {
@@ -605,7 +623,7 @@
 
         }
 
-        function resetRequestParameters() {
+        function resetRequestParameters() { // resets number of row's pages
             data.requestParameters = {};
         }
 
@@ -712,6 +730,17 @@
             data.activeRequestParametersId = id;
         }
 
+        function resetTableContent () {
+
+        	resetData();
+			resetRequestParameters();
+
+			var rootGroup = getRootGroupData();
+
+			setActiveRequestParametersId(rootGroup.___id);
+
+		}
+
 
         // Activated Row just for selection purpose
         // Active Object for Split panel,
@@ -782,6 +811,10 @@
 
         function getActiveObjectFromAbove() {
             return data.activeObjectFromAbove;
+        }
+
+        function setRowHeight(height) {
+            return data.virtualScroll.rowHeight = height;
         }
 
         function getRowHeight() {
@@ -963,6 +996,10 @@
             listLayout.data.columns = getColumns();
             listLayout.data.grouping = getGroups();
             listLayout.data.filters = getFilters();
+
+			listLayout.data.columns.forEach(column => delete column.frontOptions);
+			listLayout.data.grouping.forEach(group => delete group.frontOptions);
+
             emptyUseFromAboveFilters(listLayout.data.filters);
 
             listLayout.data.additions = getAdditions();
@@ -1034,7 +1071,9 @@
 
                 listLayout = Object.assign({}, activeListLayout);
 
-            } else {
+            }
+
+            else {
 
                 var defaultList = uiService.getListLayoutTemplate();
 
@@ -1129,7 +1168,9 @@
             });
 
             listLayout.data.components = {
-                columnArea: true,
+				filterArea: true,
+				topPart: true,
+            	columnArea: true,
                 viewer: true,
                 sidebar: true,
                 groupingArea: true,
@@ -1140,6 +1181,10 @@
                 layoutManager: true,
                 autoReportRequest: false
             };
+
+            if (isReport) {
+				listLayout.data.components.groupingArea = false
+			}
 
             setComponents(listLayout.data.components);
             setEditorTemplateUrl('views/additions-editor-view.html');
@@ -1313,6 +1358,40 @@
             return data.missingPrices;
         }
 
+        function setMarkedSubtotals (markedSubtotals) {
+            data.markedSubtotals = markedSubtotals;
+        }
+
+        function getMarkedSubtotals() {
+            return data.markedSubtotals;
+        }
+
+        function setCrossEntityAttributeExtensions(items) {
+            data.crossEntityAttributeExtensions = items;
+        }
+
+        function getCrossEntityAttributeExtensions() {
+            return data.crossEntityAttributeExtensions;
+        }
+
+        function setColumnSortData(key, item) {
+
+            if(!data.columnSortData) {
+                data.columnSortData = {}
+            }
+
+            data.columnSortData[key] = item;
+        }
+
+        function getColumnSortData(key) {
+
+            if (data.columnSortData && data.columnSortData.hasOwnProperty(key)) {
+                return data.columnSortData[key];
+            }
+
+            return null
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1405,6 +1484,8 @@
             resetRequestParameters: resetRequestParameters,
             getAllRequestParameters: getAllRequestParameters,
 
+			resetTableContent: resetTableContent,
+
             setActiveObjectFromAbove: setActiveObjectFromAbove,
             getActiveObjectFromAbove: getActiveObjectFromAbove,
 
@@ -1418,6 +1499,7 @@
             getActiveObjectActionData: getActiveObjectActionData,
 
             getRowHeight: getRowHeight,
+            setRowHeight: setRowHeight,
             getRequestThreshold: getRequestThreshold,
             getVirtualScrollStep: getVirtualScrollStep,
             setVirtualScrollStep: setVirtualScrollStep,
@@ -1524,6 +1606,18 @@
 
             setMissingPrices: setMissingPrices,
             getMissingPrices: getMissingPrices,
+
+            setRowTypeFilters: setRowTypeFilters,
+            getRowTypeFilters: getRowTypeFilters,
+
+            setMarkedSubtotals: setMarkedSubtotals,
+            getMarkedSubtotals: getMarkedSubtotals,
+
+            setCrossEntityAttributeExtensions: setCrossEntityAttributeExtensions,
+            getCrossEntityAttributeExtensions: getCrossEntityAttributeExtensions,
+
+            setColumnSortData: setColumnSortData,
+            getColumnSortData: getColumnSortData,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

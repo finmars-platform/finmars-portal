@@ -175,6 +175,15 @@
 
     };
 
+	let getDefaultFilterType = valueType => {
+
+		const defaultTextFilterType = "contains";
+		const defaultNumberAndDateFilterType = "equal";
+
+		return valueType === 10 ? defaultTextFilterType: defaultNumberAndDateFilterType;
+
+	};
+
     const getMultitypeFieldsForAccruals = function () {
         const multitypeFieldsForRows = {
             'accrual_start_date': [
@@ -309,9 +318,10 @@
 		openLinkInNewTab: openLinkInNewTab,
 
         closeComponent: closeComponent,
+		getDefaultFilterType: getDefaultFilterType,
 
-        getMultitypeFieldsForAccruals: getMultitypeFieldsForAccruals,
-        setSelectorItemsToMultiTypeFields:setSelectorItemsToMultiTypeFields
+		getMultitypeFieldsForAccruals: getMultitypeFieldsForAccruals,
+		setSelectorItemsToMultiTypeFields:setSelectorItemsToMultiTypeFields
     }
 
 }());

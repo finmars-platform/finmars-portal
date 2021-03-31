@@ -685,6 +685,8 @@
                     return 'System Tooltips';
                 case 'ui.colorpalette':
                     return 'Color Palettes';
+                case 'ui.columnsortdata':
+                    return 'Column Sort Data';
                 case 'reference_tables.referencetable':
                     return "Reference Tables";
                 case 'csv_import.csvimportscheme':
