@@ -682,6 +682,7 @@
                 const formatFiltersForChips = function () {
 
 					scope.filtersChips = [];
+                    const errors = [];
 
 					scope.filters.forEach(filter => {
 
@@ -735,10 +736,18 @@
                                     if (!customField) {
 
                                         filter.options.enabled = false;
+                                        const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
 
                                         filterData.error_data = {
-                                            description: `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
+                                            description: description
                                         }
+
+                                        const error = {
+                                            key: filter.key,
+                                            description: description
+
+                                        }
+                                        errors.push(error)
 
                                     }
 
@@ -752,6 +761,19 @@
 						}
 
 					});
+
+                    // Victor 2021.03.29 #88 fix bug with deleted custom fields
+					const missingCustomFields = [];
+					errors.forEach(error => {
+					    if (!missingCustomFields.find(field => field.key === error.key)) {
+
+					        missingCustomFields.push(error);
+
+                        }
+                    });
+
+					scope.evDataService.setMissingCustomFields({forFilters: missingCustomFields});
+                    // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
                     updateFilterAreaHeight()
 
