@@ -23,7 +23,7 @@
         vm.eventsProcessing = false;
         vm.dashboardsListReady = false;
 
-        vm.getFileUrl = function(id) {
+        vm.getFileUrl = function (id) {
 
             return baseUrl + 'file-reports/file-report/' + id + '/view/';
 
@@ -183,19 +183,23 @@
                 });
 
                 // newest at the bottom
-                vm.systemMessages =  vm.systemMessages.reverse();
+                vm.systemMessages = vm.systemMessages.reverse();
 
                 vm.systemMessagesReady = true;
 
                 $scope.$apply();
 
-                setTimeout(function (){
+                setTimeout(function () {
 
                     var elem = document.querySelector('.homepage-messages-container');
 
-                    elem.scrollTop = elem.scrollHeight;
+                    if (elem) {
 
-                }, 0)
+                        elem.scrollTop = elem.scrollHeight;
+
+                    }
+
+                }, 300)
 
             })
 

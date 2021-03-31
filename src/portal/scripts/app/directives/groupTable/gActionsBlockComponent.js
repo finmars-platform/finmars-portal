@@ -402,6 +402,10 @@
 					var postAddEntityFn = function (res) {
 						if (res && res.res === 'agree') {
 							scope.insertObjectAfterCreateHandler(res.data);
+                            // Victor 2021.02.15 Save button on ADD Entity
+/*							if (res.data.action === 'edit') {
+
+                            }*/
 						}
 					};
 

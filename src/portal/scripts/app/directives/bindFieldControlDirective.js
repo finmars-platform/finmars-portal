@@ -173,17 +173,18 @@
 				};
 
 				$scope.setDatePlus = function () {
-					$scope.entity[vm.fieldKey] = moment(
-						new Date($scope.entity[vm.fieldKey])
-					)
+
+					const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
+
+					$scope.entity[vm.fieldKey] = moment(date)
 						.add(1, "days")
 						.format("YYYY-MM-DD");
 				};
 
 				$scope.setDateMinus = function () {
-					$scope.entity[vm.fieldKey] = moment(
-						new Date($scope.entity[vm.fieldKey])
-					)
+
+					const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
+					$scope.entity[vm.fieldKey] = moment(date)
 						.subtract(1, "days")
 						.format("YYYY-MM-DD");
 				};

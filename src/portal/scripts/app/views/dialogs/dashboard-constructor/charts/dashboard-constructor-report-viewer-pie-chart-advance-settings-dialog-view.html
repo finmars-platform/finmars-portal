@@ -29,8 +29,8 @@
     <md-input-container class="dashboard-constructor-field1">
         <label for="">Pie Size (%)</label>
         <input data-ng-model="vm.item.settings.pie_size_percent"
+               data-ng-change="vm.onPieSizePercentChange()"
                type="number"
-               max="100"
                class="no-input-arrows">
 
     </md-input-container>

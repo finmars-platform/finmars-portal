@@ -29,14 +29,15 @@
                 contentWrapElement: '=',
                 workareaWrapElement: '='
             },
-            template: '<div>' +
+/*            template: '<div>' +
                 '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
                 '            <progress-linear class="ev-progressbar"></progress-linear>\n' +
                 '        </div>' +
                 '<div class="ev-viewport">' +
                 '<div class="ev-content"></div>' +
                 '</div>' +
-                '</div>',
+                '</div>',*/
+            templateUrl: 'views/directives/groupTable/g-table-body-view.html',
             link: function (scope, elem) {
 
                 var contentElem = elem[0].querySelector('.ev-content');
@@ -62,9 +63,23 @@
 
                 var activeLayoutConfigIsSet = false;
 
+                const setColorsForSubtotals = function (flatList, coloredSubtotals) {
+
+                    return flatList.map(item => {
+                        if (coloredSubtotals.hasOwnProperty(item.___id)) {
+                            item.___backgrond_color = coloredSubtotals[item.___id];
+                        }
+
+                        return item;
+                    })
+
+                };
+
                 function renderReportViewer() {
 
                     console.log('renderReportViewer');
+
+                    const coloredSubtotals = scope.evDataService.getMarkedSubtotals();
 
                     rvDataHelper.syncLevelFold(scope.evDataService);
 
@@ -97,7 +112,7 @@
                     });
                     console.log("flat list", flatList);
 
-
+                    flatList = setColorsForSubtotals(flatList, coloredSubtotals);
 
                     scope.evDataService.setFlatList(flatList);
 
@@ -110,8 +125,10 @@
                     rvDomManager.calculateScroll(elements, scope.evDataService);
 
                     window.requestAnimationFrame(function (){
-                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+
+                    	rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
 						cellContentOverflow();
+
                     });
 
                 }
@@ -233,95 +250,98 @@
 
                 }
 
+				function cellContentOverflow() {
+
+					var rows = contentElem.querySelectorAll('.g-row');
+					rows = Array.from(rows);
+
+					var subtotalRows = rows.filter(function (row) {
+						return row.dataset.type === 'subtotal';
+					});
+
+					var r, w;
+					for (r = 0; r < subtotalRows.length; r++) {
+
+						var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
+						var cells = subtotalRows[r].querySelectorAll('.g-cell');
+
+						for (w = 0; w < cellWraps.length; w++) {
+
+							var cellWrap = cellWraps[w], cellWrapWidth = cellWrap.clientWidth;
+							var cell = cells[w];
+							var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
+							var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
+
+							var rowIsGrandTotal = false;
+							var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
+
+							if (parentGroups[0].___level === 0 && w === 0) {
+								rowIsGrandTotal = true;
+							}
+
+							if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
+
+								var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
+								var cellSpaceForText = cellContentWrap.clientWidth;
+
+								if (!rowIsGrandTotal) {
+									cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
+								}
+
+								if (cellContentHolder.offsetWidth > cellSpaceForText) {
+
+									var cellStretchWidth = cellWrapWidth;
+									var nextCellIndex = w;
+									var overflowedCells = [];
+
+									// Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
+									while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
+
+										var nextCellIndex = nextCellIndex + 1;
+
+										var nextCellWrap = cellWraps[nextCellIndex], nextCellWrapWidth = nextCellWrap.clientWidth;
+										var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
+										var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
+
+										if (nexCellContentHolder || nextCellContentWrap.contentText) {
+											break;
+										}
+
+										overflowedCells.push(nextCellWrap);
+
+										cellSpaceForText = cellSpaceForText + nextCellWrapWidth;
+										cellStretchWidth = cellStretchWidth + nextCellWrapWidth;
+
+									}
+
+									if (cellStretchWidth > cellWrapWidth) { // check if there are available cells to be overflowed
+
+										overflowedCells.pop(); // leaving right border of last overflowed cell
+
+										overflowedCells.forEach(function (overflowedCell) {
+											overflowedCell.classList.add('g-overflowed-cell');
+										});
+
+										cellWrap.classList.add('g-overflowing-cell');
+										cell.style.width = cellStretchWidth + 'px';
+
+									}
+								}
+
+							}
+
+						}
+					}
+
+				}
+
                 function updateTableContent() {
                     if (isReport) {
                         renderReportViewer();
+
                     } else {
                         renderEntityViewer();
                     }
-                }
-
-                function cellContentOverflow() {
-
-                    var rows = contentElem.querySelectorAll('.g-row');
-                    rows = Array.from(rows);
-
-                    var subtotalRows = rows.filter(function (row) {
-                        return row.dataset.type === 'subtotal';
-                    });
-
-                    var r;
-                    for (r = 0; r < subtotalRows.length; r++) {
-
-                        var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
-                        var cells = subtotalRows[r].querySelectorAll('.g-cell');
-
-                        var w;
-                        for (w = 0; w < cellWraps.length; w++) {
-
-                            var cellWrap = cellWraps[w];
-                            var cell = cells[w];
-                            var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
-                            var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
-
-                            var rowIsGrandTotal = false;
-                            var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
-
-                            if (parentGroups[0].___level === 0 && w === 0) {
-                                rowIsGrandTotal = true;
-                            }
-
-                            if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
-
-                                var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
-                                var cellSpaceForText = cellContentWrap.clientWidth;
-
-                                if (!rowIsGrandTotal) {
-                                    cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
-                                }
-
-                                if (cellContentHolder.offsetWidth > cellSpaceForText) {
-                                    var cellStretchWidth = cellWrap.clientWidth;
-                                    var nextCellIndex = w;
-                                    var overflowedCells = [];
-
-                                    // Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
-                                    while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
-
-                                        var nextCellIndex = nextCellIndex + 1;
-
-                                        var nextCellWrap = cellWraps[nextCellIndex];
-                                        var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
-                                        var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
-
-                                        if (nexCellContentHolder || nextCellContentWrap.contentText) {
-                                            break;
-                                        }
-
-                                        overflowedCells.push(nextCellWrap);
-                                        cellSpaceForText = cellSpaceForText + nextCellWrap.clientWidth;
-                                        cellStretchWidth = cellStretchWidth + nextCellWrap.clientWidth;
-
-                                    }
-
-                                    if (cellStretchWidth !== cellWrap.clientWidth) { // check if there is available cells to be overflowed
-
-                                        overflowedCells.pop(); // leaving right border of last overflowed cell
-                                        overflowedCells.map(function (overflowedCell) {
-                                            overflowedCell.classList.add('g-overflowed-cell');
-                                        });
-
-                                        cellWrap.classList.add('g-overflowing-cell');
-                                        cell.style.width = cellStretchWidth + 'px';
-
-                                    }
-                                }
-
-                            }
-
-                        }
-                    }
-
                 }
 
                 function clearOverflowingCells() {
@@ -410,6 +430,8 @@
 
                     updateTableContent();
 
+					scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
+
                 });
 
                 /* scope.evEventService.addEventListener(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE, function () {
@@ -428,6 +450,8 @@
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
                     }
+
+					scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                 });
 
@@ -475,6 +499,36 @@
                     if (!isReport) {
                         scope.scrollManager = new EvScrollManager();
                     }
+
+					// TO DELETE remove after applying new interface for ev and rv
+                    if (isReport) {
+
+						var components = scope.evDataService.getComponents();
+						var interfaceLayout = scope.evDataService.getInterfaceLayout();
+
+						if (components.sidebar) {
+
+							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE after removing sidebar
+
+							interfaceLayout.filterArea.collapsed = true;
+							interfaceLayout.filterArea.width = 74;
+
+						}
+
+						components.groupingArea = false
+
+						if (viewContext !== 'dashboard') {
+							components.topPart = true
+						}
+
+						interfaceLayout.columnArea.height = 50
+						// interfaceLayout.filterArea.height = 50
+
+						scope.evDataService.setInterfaceLayout(interfaceLayout);
+						scope.evDataService.setComponents(components);
+
+					}
+					// < TO DELETE remove after applying new interface for ev and rv >
 
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
@@ -532,9 +586,9 @@
 
                         }
 
-						scope.$apply();
+						scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
-					}, 500);
+                    }, 500);
 
                     toggleBookmarksBtn.addEventListener('click', function () {
 

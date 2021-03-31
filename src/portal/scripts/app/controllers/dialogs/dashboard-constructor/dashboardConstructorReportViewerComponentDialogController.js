@@ -45,6 +45,7 @@
                 custom_component_name: '',
                 settings: {
                     components: {
+                    	topPart: false,
                         addEntityBtn: false,
                         autoReportRequest: false,
                         columnAreaHeader: true,

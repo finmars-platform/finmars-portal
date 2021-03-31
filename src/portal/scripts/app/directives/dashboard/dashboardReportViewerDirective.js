@@ -36,10 +36,13 @@
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
+                scope.filterAreaHidden = false;
+
                 var componentData;
 
                 if (scope.item && scope.item.data) {
-                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                	componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                     if (componentData.type === 'report_viewer_split_panel') {
                         componentData.type = 'report_viewer';
@@ -146,19 +149,35 @@
                 };
 
                 scope.disableFillInMode = function () {
+
                     var tableComponents = scope.fillInModeData.entityViewerDataService.getComponents();
-                    tableComponents.sidebar = false;
+
+                    tableComponents.topPart = false;
+					tableComponents.sidebar = false;
+
                     scope.fillInModeData.entityViewerDataService.setComponents(tableComponents);
 
                     scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
                     scope.fillInModeData = null;
+
                 };
 
                 scope.clearUseFromAboveFilters = function () {
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
+                scope.toggleFilterBlock = function ($event) {
+
+                	const elem = $event.currentTarget;
+					elem.classList.contains('active') ? elem.classList.remove('active') : elem.classList.add('active');
+
+					scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
+
+				};
+
                 scope.initEventListeners = function () {
+
+                	dashboardHelper.initEventListeners(scope);
 
                     if (scope.fillInModeData) { // if dashboard is in fillIn mode
 
@@ -209,7 +228,9 @@
 
                         });
 
-                    } else {
+                    }
+
+                    else {
 
                         scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
@@ -258,24 +279,6 @@
 
                     });
 
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
-
-                    	if (scope.vm.componentData.name === "BALANCE_TYPES") {
-							console.log("rv matrix COMPONENT_BLOCKAGE_ON");
-						}
-
-                    	scope.readyStatus.disabled = true;
-
-                    });
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
-						if (scope.vm.componentData.name === "BALANCE_TYPES") {
-							console.log("rv matrix COMPONENT_BLOCKAGE_OFF");
-						}
-                        scope.readyStatus.disabled = false;
-
-                    });
-
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET, function () {
 
                         var entityViewerDataService = scope.dashboardComponentDataService.getEntityViewerDataService();
@@ -319,6 +322,8 @@
                         scope.readyStatus.data = 'ready';
 
                     } else {
+
+                    	scope.vm.componentData.settings.components.topPart = false; // for already existing layouts
 
                         scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
 

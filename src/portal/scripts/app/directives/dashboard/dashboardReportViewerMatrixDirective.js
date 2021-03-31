@@ -159,7 +159,17 @@
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
+				scope.toggleFilterBlock = function ($event) {
+
+					const elem = $event.currentTarget;
+					elem.classList.contains('active') ? elem.classList.remove('active') : elem.classList.add('active');
+
+					scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
+				};
+
                 scope.initEventListeners = function () {
+
+					dashboardHelper.initEventListeners(scope);
 
                     if (!scope.fillInModeData) {
 
@@ -210,18 +220,6 @@
                         scope.vm.entityType = componentData.settings.entity_type;
 
                         scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_CONTENT_OF_COMPONENT);
-
-                    });
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
-
-                        scope.readyStatus.disabled = true;
-
-                    });
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
-
-                        scope.readyStatus.disabled = false;
 
                     });
 
