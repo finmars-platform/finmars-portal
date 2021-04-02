@@ -269,7 +269,7 @@
 				};
 
 				let removePopUp = function (event) {
-					console.trace();
+
 					document.body.removeChild(popupBackdropElem);
 					document.body.removeChild(popupElem);
 

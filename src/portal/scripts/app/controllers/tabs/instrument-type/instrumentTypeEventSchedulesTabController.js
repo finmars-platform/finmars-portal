@@ -37,7 +37,7 @@
         "event_class": null
     };
 
-    module.exports = function instrumentTypeEventSchedulesTabController($scope, $mdDialog) {
+    module.exports = function instrumentTypeEventSchedulesTabController($scope, $mdDialog, multitypeFieldService) {
 
         var vm = this;
 
@@ -110,106 +110,143 @@
         }
 
         const multitypeFieldsForRows = {
-			'effective_date': [
-				{
-                    'model': "",
-				    'fieldType': 'dateInput',
-                    'isDefault': true,
-                    'isActive': true,
-                    'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
-					'value_type': 40,
-					'fieldData': {
-						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+			'effective_date': {
+				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'dateInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
 					}
-                },
-				{
-                    'model': null,
-				    'fieldType': 'dropdownSelect',
-                    'isDefault': false,
-                    'isActive': false,
-                    'sign': '<div class="multitype-field-type-letter">L</div>',
-					'value_type': 70,
-					'fieldData': {
-						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+				]
+			},
+			'final_date': {
+				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'dateInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
 					}
-				}
-			],
-			'final_date': [
-                {
-                    'model': "",
-                    'fieldType': 'dateInput',
-                    'isDefault': true,
-                    'isActive': true,
-                    'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
-					'value_type': 40,
-					'fieldData': {
-						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+            	]
+			},
+			'periodicity_n': {
+				value_type: 20, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': null,
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
 					}
-                },
-                {
-                    'model': null,
-                    'fieldType': 'dropdownSelect',
-                    'isDefault': false,
-                    'isActive': false,
-                    'sign': '<div class="multitype-field-type-letter">L</div>',
-					'value_type': 70,
-					'fieldData': {
-						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-					}
-                }
-            ],
-			'periodicity_n': [
-                {
-                    'model': null,
-                    'fieldType': 'numberInput',
-                    'isDefault': true,
-                    'isActive': true,
-                    'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
-					'value_type': 20,
-					'fieldData': {
-						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-					}
-                },
-                {
-                    'model': null,
-                    'fieldType': 'dropdownSelect',
-                    'isDefault': false,
-                    'isActive': false,
-                    'sign': '<div class="multitype-field-type-letter">L</div>',
-					'value_type': 70,
-					'fieldData': {
-						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-					}
-                }
-            ]
+            	]
+			}
 		};
+
+		/* const getMultitypeFieldDataForDefaultValue = (rowKey, value, valueType) => {
+
+			const multitypeData = JSON.parse(JSON.stringify(multitypeFieldsForRows[rowKey].fieldDataList));
+
+			if (valueType) {
+
+				multitypeData.forEach((type) => {
+
+					if (type.value_type === valueType) {
+
+						type.model = value;
+						type.isActive = true;
+
+					} else {
+						type.isActive = false;
+					}
+
+				});
+
+			}
+
+			return multitypeData;
+
+		}; */
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.notificationClasses && vm.readyStatus.eventClasses && vm.readyStatus.eventSchedulesReady;
         };
 
-        const onDefaultValueMultitypeFieldChange = function (rowData, colData, gtDataService) {
+        /* const onDefaultValueMultitypeFieldChange = function (rowData, colData, gtDataService) {
 
 			const changedCell = gtDataService.getCell(rowData.order, colData.order);
 			const activeType = changedCell.settings.fieldTypesData.find(type => type.isActive);
 
 			const tableData = gtDataService.getTableData();
 
-			vm.entity.events[tableData.index].data[tableData.eventItemsType][rowData.order].default_value_type = activeType.value_type;
+			vm.entity.events[tableData.order].data[tableData.eventItemsType][rowData.order].default_value_type = activeType.value_type;
 
-		};
+		}; */
 
         const onEventTableCellChange = function (data, gtDataService, gtEventService, eventItemsType) {
 
             var tableData = gtDataService.getTableData();
-            // var gtRow = gtDataService.getRowByKey(data.row.key);
-
             var cell = gtDataService.getCellByKey(data.row.order, data.column.key);
             var path = cell.objPath[0];
             
             console.log('onEventTableCellChange.tableData', tableData);
 
-			vm.entity.events[tableData.index].data[eventItemsType][data.row.order][path] = cell.settings.value;
+			vm.entity.events[tableData.order].data[eventItemsType][data.row.order][path] = cell.settings.value;
+
+			if (cell.key === 'default_value') {
+				const activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+				vm.entity.events[tableData.order].data[eventItemsType][data.row.order].default_value_type = activeType.value_type;
+			}
 
         };
 
@@ -394,16 +431,18 @@
                 else if (row.defaultValueType === 'multitypeField') {
 
                     rowObj.columns[2].cellType = 'multitypeField';
-					const multitypeFieldData = multitypeFieldsForRows[rowObj.key];
+					// const multitypeFieldData = getMultitypeFieldDataForDefaultValue(rowObj.key, row.default_value, row.default_value_type);
+					const fieldTypesList = JSON.parse(JSON.stringify(multitypeFieldsForRows[rowObj.key].fieldTypesList));
+					const fieldTypesData = multitypeFieldService.setActiveTypeByValueType(fieldTypesList, row.default_value, row.default_value_type);
 
 					rowObj.columns[2].settings = {
-						value: null,
-						fieldTypesData: multitypeFieldData
+						value: row.default_value,
+						fieldTypesData: fieldTypesData
 					};
 
-					rowObj.columns[2].methods = {
+					/* rowObj.columns[2].methods = {
 						onChange: onDefaultValueMultitypeFieldChange
-					};
+					}; */
 
 				}
 
@@ -586,11 +625,11 @@
 
 				const swap = item;
 
-				vm.entity.events[item.index] = vm.entity.events[item.index - 1];
-				vm.entity.events[item.index].index = item.index;
+				vm.entity.events[item.order] = vm.entity.events[item.order - 1];
+				vm.entity.events[item.order].order = item.order;
 
-				vm.entity.events[item.index - 1] = swap;
-				vm.entity.events[item.index - 1].index = item.index - 1;
+				vm.entity.events[item.order - 1] = swap;
+				vm.entity.events[item.order - 1].order = item.order - 1;
 
 			}
 
@@ -622,8 +661,8 @@
 
             	if (res.status === 'agree') {
 
-            		vm.entity.events.splice(item.index, 1);
-            		vm.entity.events.forEach((eventItem, index) => eventItem.index = index);
+            		vm.entity.events.splice(item.order, 1);
+            		vm.entity.events.forEach((eventItem, index) => eventItem.order = index);
 
 				}
 
@@ -637,20 +676,11 @@
 
 			_$popup.cancel();
 
-			const eventIndex = eventToCopy.index;
+			const eventOrder = eventToCopy.order;
 			const eventCopy = JSON.parse(angular.toJson(eventToCopy));
 
 			delete eventCopy.id;
-			/* delete eventCopy.eventItemsGridTableDataService;
-			delete eventCopy.eventItemsGridTableEventService;
 
-			delete eventCopy.eventBlockableItemsGridTableDataService;
-			delete eventCopy.eventBlockableItemsGridTableEventService;
-
-			delete eventCopy.eventActionsGridTableDataService;
-			delete eventCopy.eventActionsGridTableEventService; */
-
-			// delete eventCopy.index;
 			let eventCopyName = eventToCopy.name + ' (Copy)';
 
 			let a = 0, nameOccupied = true;
@@ -689,8 +719,8 @@
 
 			formatExistingEvent(eventCopy);
 
-			vm.entity.events.splice(eventIndex + 1, 0, eventCopy);
-			vm.entity.events.forEach((event, index) => event.index = index);
+			vm.entity.events.splice(eventOrder + 1, 0, eventCopy);
+			vm.entity.events.forEach((event, index) => event.order = index);
 
 		};
 
@@ -698,7 +728,7 @@
 
 			const gridTableData = getEventsGridTableData(rows, eventItemsType);
 
-			gridTableData.index = eventIndex; // vm.entity.events.length;
+			gridTableData.order = eventIndex; // vm.entity.events.length;
 			gridTableData.eventItemsType = eventItemsType;
 
 			gtDataService.setTableData(gridTableData);
@@ -712,7 +742,7 @@
 		const formatDataForEventActionsGridTable = function (event, eventIndex) {
 
 			const eventsActionGridTableData = getEventsActionGridTableData(event);
-			eventsActionGridTableData.index = eventIndex;
+			eventsActionGridTableData.order = eventIndex;
 
 			event.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
 
@@ -769,7 +799,7 @@
 
                 eventActionsGridTableDataService: new GridTableDataService(),
                 eventActionsGridTableEventService: new EventService(),
-                index: vm.entity.events.length,
+                order: vm.entity.events.length,
                 autogenerate: true,
                 data: {
                     form_message: "",
@@ -979,7 +1009,7 @@
         const onActionsOrderChange = function (rowData, gtDataService, gtEventService) {
 
 			const tableData = gtDataService.getTableData();
-			const item = vm.entity.events[tableData.index];
+			const item = vm.entity.events[tableData.order];
 
 			const sortedActions = [];
 
@@ -1006,19 +1036,18 @@
 
 		};
 
-        const getOptionsForMultitypeFields = function () {
+        /* const getOptionsForMultitypeFields = function () {
 
         	Object.keys(multitypeFieldsForRows).forEach(key => {
 
 				const fieldTypeObj = multitypeFieldsForRows[key];
-				const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect');
-				const selTypeIndex = fieldTypeObj.findIndex(type => type.fieldType === 'dropdownSelect');
+				const selType = fieldTypeObj.fieldDataList.find(type => type.fieldType === 'dropdownSelect');
 
 				const formattedAttrTypes = [];
 
 				instrumentAttrTypes.forEach(attrType => {
 
-					if (attrType.value_type === notSelType.value_type) {
+					if (attrType.value_type === fieldTypeObj.value_type) {
 
 						formattedAttrTypes.push({id: attrType.user_code, name: attrType.short_name});
 
@@ -1026,13 +1055,14 @@
 
 				});
 
-				fieldTypeObj[selTypeIndex].fieldData = {
-					menuOptions: formattedAttrTypes || []
+				// fieldTypeObj[selTypeIndex].fieldData = {
+				selType.fieldData = {
+					menuOptions: formattedAttrTypes
 				};
 
 			});
 
-		};
+		}; */
 
         const formatExistingEvent = function (event) {
 
@@ -1081,43 +1111,37 @@
         vm.init = function () {
 
         	vm.popupEventService = new EventService();
-            // getTransactionTypes().then(function (data){ // TODO refactor this
 
-                // vm.transactionTypes = data;
-				const dataPromises = [
-					getTransactionTypes(),
-					getInstrumentAttrTypes(),
-					getNotificationClasses,
-					getEventClasses,
-					getInstrumentPeriodicityItems
-				];
+			const dataPromises = [
+				getTransactionTypes(),
+				getInstrumentAttrTypes(),
+				getNotificationClasses,
+				getEventClasses,
+				getInstrumentPeriodicityItems
+			];
 
-				if (!Array.isArray(vm.entity.events)) vm.entity.events = [];
+			if (!Array.isArray(vm.entity.events)) vm.entity.events = [];
 
-                Promise.all(dataPromises).then(function (data) {
+			Promise.all(dataPromises).then(function (data) {
 
-					vm.transactionTypes = data[0];
-					instrumentAttrTypes = data[1] || [];
+				vm.transactionTypes = data[0];
+				instrumentAttrTypes = data[1] || [];
 
-					getOptionsForMultitypeFields();
+				// getOptionsForMultitypeFields();
+				multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
-					vm.entity.events.forEach(function (item) {
+				vm.entity.events.forEach(function (item) {
 
-						if (item.data) {
+					if (item.data) formatExistingEvent(item);
 
-							formatExistingEvent(item);
+				});
 
-						}
+				vm.readyStatus.gridTable = true;
 
-					})
+				$scope.$apply();
 
-                	vm.readyStatus.gridTable = true;
+			});
 
-                	$scope.$apply();
-
-            	});
-
-            // })
         };
 
         vm.init();

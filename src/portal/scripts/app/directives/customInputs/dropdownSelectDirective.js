@@ -113,9 +113,7 @@
 
                         setTimeout(function () {
 
-                            if (scope.onChangeCallback) {
-                                scope.onChangeCallback();
-                            }
+                            if (scope.onChangeCallback) scope.onChangeCallback();
 
                             scope.$apply();
 
@@ -131,23 +129,29 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
+					inputContainer.classList.remove('custom-input-focused');
+
+					if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+
                     scope.dropdownMenuShown = false;
 
                     window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
 
-                    if (updateScope) {
-                        scope.$apply();
-                    }
+                    if (updateScope) scope.$apply();
 
                 }
 
                 var closeDDMenuOnClick = function (event) {
-                    var targetElem = event.target;
+
+                	var targetElem = event.target;
+
+					scope.dropdownMenuFilter = null;
 
                     if (!inputContainer.contains(targetElem)) {
                         closeDropdownMenu(true);
                     }
+
                 };
 
                 var onTabKeyPress = function (event) {
@@ -252,8 +256,11 @@
 
                                 switch (scope.eventSignal.key) {
                                     case 'mark_not_valid_fields':
-                                        if (scope.smallOptions && scope.smallOptions.notNull && !scope.item) {
-                                            scope.error = 'Field should not be null'
+                                        if (scope.smallOptions && scope.smallOptions.notNull &&
+											!scope.model && scope.model !== 0) {
+
+                                            scope.error = 'Field should not be null';
+
                                         }
 
                                         break;
@@ -296,7 +303,6 @@
 
                         } else {
                             scope.inputText = '';
-
                         }
 
                     });
@@ -317,25 +323,28 @@
 
 						scope.inputText = "";
 						inputContainer.classList.add('custom-input-focused');
-                        scope.dropdownMenuShown = true;
+
+						scope.dropdownMenuShown = true;
 
                         window.addEventListener('click', closeDDMenuOnClick);
                         document.addEventListener('keydown', onTabKeyPress);
 
                         scope.$apply();
 
-                    });
+                    }, false);
 
-                    inputElem.addEventListener('blur', function (event) {
+                    /* inputElem.addEventListener('blur', function (event) {
 
                         inputContainer.classList.remove('custom-input-focused');
 
                         if (scope.itemName) {
-                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+
+                        	scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                             scope.$apply();
+
                         }
 
-                    });
+                    }); */
 
                 };
 

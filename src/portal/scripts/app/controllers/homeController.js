@@ -46,7 +46,8 @@
         };
 
         var processEventsPromise = function () {
-            return new Promise(function (resolve, reject) {
+
+        	return new Promise(function (resolve, reject) {
 
                 usersService.getOwnMemberSettings().then(function (data) {
 

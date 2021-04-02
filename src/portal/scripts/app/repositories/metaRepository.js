@@ -218,6 +218,7 @@
                 return [
                     {
                         label: 'Pricing',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/currency/pricing-view.html'
                     }
                     // {
@@ -229,10 +230,12 @@
                 return [
                     {
                         label: 'Accruals',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/accrual-calculation-schedules-view.html'
                     },
                     {
                         label: 'Events',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/events-schedules-tab-view.html'
                     },
                     // {
@@ -241,10 +244,12 @@
                     // },
                     {
                         label: 'Factors',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/factor-schedule-view.html'
                     },
                     {
                         label: 'Pricing',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/pricing-view.html'
                     }
                 ];
@@ -252,18 +257,22 @@
                 return [
                     {
                         label: 'Pricing',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/pricing-view.html'
                     },
                     {
                         label: 'Accruals',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/accruals-view.html'
                     },
                     {
                         label: 'Events',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
                     },
                     {
                         label: 'Layout Settings',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }
                 ];
@@ -283,14 +292,17 @@
                 return [
                     {
                         label: 'General',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-general-tab-view.html'
                     },
                     {
                         label: 'Inputs',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-inputs-tab-view.html'
                     },
                     {
                         label: 'Actions',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
                     }
                 ];

@@ -6,7 +6,7 @@
 
     const metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function singleInstrumentAddAccrualToTableDialogController ($scope, $mdDialog, gridTableHelperService, data) {
+    module.exports = function singleInstrumentAddAccrualToTableDialogController ($scope, $mdDialog, gridTableHelperService, multitypeFieldService, data) {
 
         var vm = this;
 
@@ -15,9 +15,10 @@
         vm.entity = data.entity;
         vm.accrual = {};
 
-       const multitypeFieldsForRows = metaHelper.getMultitypeFieldsForAccruals();
+        const multitypeFieldsData = multitypeFieldService.getTypesForInstrumentAccruals();
+		const attrTypes = data.attributeTypes;
 
-        vm.fieldsObject = {};
+		vm.fieldsObject = {};
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -25,29 +26,60 @@
 
         vm.agree = function () {
 
-            // vm.accrual not contains data from multi type fields.
-            // I need collect them from multitypeFieldsForRows
+            // vm.accrual does not contain data from multitype fields.
+            // Need to collect it from multitypeFieldsData
             Object.keys(vm.accrual).forEach(key => {
-                if (multitypeFieldsForRows.hasOwnProperty(key)) {
 
-                    const activeType = multitypeFieldsForRows[key].find(field => field.isActive)
-                    const typeKey = `${key}_value_type`;
+            	if (multitypeFieldsData.hasOwnProperty(key)) {
 
-                    vm.accrual[key] = activeType.model;
-                    vm.accrual[typeKey] = activeType.value_type;
+					let modelValue = null;
+					let valueType;
+
+					if (vm.fieldsObject[key].to_show) {
+
+						const activeType = vm.fieldsObject[key].fieldTypes.find(type => type.isActive);
+
+						modelValue = activeType.model;
+						valueType = activeType.value_type;
+
+					}
+
+					else {
+						const defaultType = vm.fieldsObject[key].fieldTypes.find(type => type.isDefault);
+						valueType = defaultType.value_type;
+					}
+
+					const valueTypeKey = `${key}_value_type`;
+
+                    vm.accrual[key] = modelValue;
+                    vm.accrual[valueTypeKey] = valueType;
 
                 }
+
             })
 
             $mdDialog.hide({
-                status: 'agree', data: {
+                status: 'agree',
+				data: {
                     accrual: vm.accrual
                 }
             });
 
         };
 
-        const setSelectorItemsToSelectors = function (item) {
+        const setMultitypeFieldTypesData = function (item) {
+
+			multitypeFieldsData[item.key].fieldTypesList.forEach(type => {
+
+				type.label = item.override_name || item.name;
+
+				if (item.tooltip) type.fieldData.tooltipText = item.tooltip;
+
+			});
+
+		};
+
+        const formatOptionsForSelector = function (item) {
 
             const mapOptions = function (item) {
                 return {
@@ -63,8 +95,8 @@
 
         };
 
-        const setActiveMultiTypeState = function (item) {
-            const multitypeFieldData = multitypeFieldsForRows[item.key];
+        /* const setActiveMultiTypeState = function (item) {
+            const multitypeFieldData = multitypeFieldsData[item.key];
 
             let selectedIndex = 0;
             if (item.default_value_type === 'dynamic_attribute') { // TODO old format
@@ -79,44 +111,60 @@
             vm.fieldsObject[item.key].multitypeFieldData = multitypeFieldData;
         };
 
+		const prepareDataForMultitypeField = function (item) {
+
+			const fieldData = multitypeFieldsData[item.key].fieldTypesList;
+
+			fieldData.forEach(type => {
+
+				type.is_active = false;
+
+				if (type.value_type === item.default_value_type) {
+
+					type.is_active = true;
+					type.model = item.default_value;
+
+				}
+
+			});
+
+			vm.fieldsObject[item.key].fieldTypes = fieldData;
+
+		}; */
+
         const init = function () {
 
-            const instrumentAttrTypes = vm.entity.attributes.map(attr => attr.attribute_type_object);
-            metaHelper.setSelectorItemsToMultiTypeFields(instrumentAttrTypes, multitypeFieldsForRows);
+			// const instrumentAttrTypes = vm.entity.attributes.map(attr => attr.attribute_type_object);
+			multitypeFieldService.fillSelectorOptionsBasedOnValueType(attrTypes, multitypeFieldsData);
 
             vm.fields.forEach(item => {
 
-                vm.accrual[item.key] = item.default_value || null;
-                vm.fieldsObject[item.key] = item;
+            	vm.accrual[item.key] = item.default_value || null;
+				vm.fieldsObject[item.key] = item;
 
-                if (item.defaultValueType === 'selector') {
-
-                    setSelectorItemsToSelectors(item);
-
-                }
+                if (item.defaultValueType === 'selector') formatOptionsForSelector(item);
 
                 if (item.defaultValueType === 'multitypeField') { // multiType field
 
-                    const typeKey = `${item.key}_value_type`;
+					setMultitypeFieldTypesData(item);
+                    /* const typeKey = `${item.key}_value_type`;
 
-                    if (item.default_value_type === 'text') {
+					const fieldTypeObj = multitypeFieldsData[item.key];
+					const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect');
 
-                        const fieldTypeObj = multitypeFieldsForRows[item.key];
-                        const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect');
+					vm.accrual[typeKey] = notSelType.value_type;
 
-                        vm.accrual[typeKey] = notSelType.value_type;
+                    setActiveMultiTypeState(item); */
+					const typesList = multitypeFieldsData[item.key].fieldTypesList;
+					multitypeFieldsData[item.key].fieldTypesList = multitypeFieldService.setActiveTypeByValueType(typesList, item.default_value, item.default_value_type);
 
-                    } else if (item.default_value_type === 'dynamic_attribute' ) {
-
-                        vm.accrual[typeKey] = 70; // user attribute
-
-                    }
-
-                    setActiveMultiTypeState(item);
+					vm.fieldsObject[item.key].fieldTypes = multitypeFieldsData[item.key].fieldTypesList;
+					// prepareDataForMultitypeField(item);
 
                 }
 
             });
+
         }
 
         init();

@@ -50,15 +50,24 @@
         return instrumentRepository.deleteBulk(data);
     };
 
+	/**
+	 * Initiate accrual table event listeners
+	 *
+	 * @param gridTableDataService {Object}
+	 * @param gridTableEventService {Object}
+	 * @param entity {Object} - data of entity
+	 * @param evEditorEventService {Object}
+	 * @param tableChangeObj {Object} - mutating object that helps to determine which of multiple accrual tables changed
+	 */
 	const initAccrualsScheduleGridTableEvents = function (
 		gridTableDataService, gridTableEventService, entity, evEditorEventService, tableChangeObj
 	) {
 
 		const tableChangeArgObj = {
 			key: 'accrual_calculation_schedules'
-		}
+		};
 
-		gridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
+		/* gridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
 
 			const gridTableData = gridTableDataService.getTableData();
 
@@ -84,18 +93,28 @@
 			tableChangeObj.value = true;
 			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, tableChangeArgObj);
 
-		});
+		}); */
 
 		gridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argObj) {
 
 			var rowOrder = argObj.row.order,
-				colOrder = argObj.column.order;
+				colOrder = argObj.column.order,
+				cell = gridTableDataService.getCell(rowOrder, colOrder);
 
 			gridTableHelperService.onGridTableCellChange(
 				entity.accrual_calculation_schedules,
 				gridTableDataService,
 				rowOrder, colOrder
 			);
+
+			if (cell.cellType === 'multitypeField') {
+
+				var activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+				if (!activeType) activeType = cell.settings.fieldTypesData.find(type => type.isDefault);
+
+				entity.accrual_calculation_schedules[rowOrder][cell.key + '_value_type'] = activeType.value_type;
+
+			}
 
 			tableChangeObj.value = true;
 			const cellValChangeArgObj = tableChangeArgObj;
@@ -154,14 +173,6 @@
 		}
 
 		return uiService.getDefaultEditLayout('instrument');
-		/*return new Promise(res => {
-
-			uiService.getDefaultEditLayout('instrument').then(data => {
-				const defLayout = data.results.find(layout => layout.is_default);
-				res(defLayout);
-			});
-
-		});*/
 
 	};
 

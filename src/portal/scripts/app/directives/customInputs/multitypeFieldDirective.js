@@ -6,6 +6,8 @@
 			restrict: "E",
 			scope: {
 				fieldTypesData: '=',
+				enteredValue: '<', // object {model: "entered into field value", type: "selected type"}
+				testVal: '=',
 				onValueChange: '&?'
 			},
 			templateUrl: "views/directives/customInputs/multitype-field-view.html",
@@ -39,7 +41,12 @@
 
                     scope.activeType = scope.fieldTypesData.find(type => type.isActive);
 
-                    if (!scope.activeType) scope.activeType = scope.fieldTypesData.find(type => type.isDefault) || {};
+                    if (!scope.activeType) {
+
+                    	scope.activeType = scope.fieldTypesData.find(type => type.isDefault) || {};
+						scope.activeType.isActive = true;
+
+					}
 
                 };
 

@@ -1,14 +1,14 @@
 (function () {
     'use strict';
 
-    var metaHelper = require('../helpers/meta.helper');
+	const metaHelper = require('../helpers/meta.helper');
 
-    module.exports = function () {
+    module.exports = function (multitypeFieldService) {
 
-        var onGridTableCellChange = function (originalItems, gtDataService, rowOrder, colOrder) {
+        const onGridTableCellChange = function (originalItems, gtDataService, rowOrder, colOrder) {
 
-            var column = gtDataService.getCell(rowOrder, colOrder);
-            var oItem = originalItems[rowOrder];
+            const column = gtDataService.getCell(rowOrder, colOrder);
+            let oItem = originalItems[rowOrder];
 
             if (column.objPath) {
                 metaHelper.setObjectNestedPropVal(oItem, column.objPath, column.settings.value);
@@ -23,21 +23,39 @@
 
         };
 
-        var getCellFromRowByKey = function (row, colKey) {
+		const getCellFromRowByKey = function (row, colKey) {
 
-            for (var i = 0; i < row.columns.length; i++) {
-
-                if (row.columns[i].key === colKey) {
-                    return row.columns[i];
-                }
-
+			for (var i = 0; i < row.columns.length; i++) {
+                if (row.columns[i].key === colKey) return row.columns[i];
             }
 
         };
 
+		const setMultitypeFieldDataForCell = function (fieldTypesList, column, value, valueType) {
+
+			const multitypeFieldData = multitypeFieldService.setActiveTypeByValueType(fieldTypesList, value, valueType);
+
+			let cellValue = value;
+
+			if (column.hasOwnProperty("objPaths")) {
+
+				const activeType = multitypeFieldData.find(type => type.isActive) || {value_type: null};
+				cellValue = [value, activeType.value_type];
+
+			}
+
+			column.settings = {
+				value: cellValue,
+				fieldTypesData: multitypeFieldData
+			}
+
+		};
+
         return {
             onGridTableCellChange: onGridTableCellChange,
-            getCellFromRowByKey: getCellFromRowByKey
+            getCellFromRowByKey: getCellFromRowByKey,
+
+			setMultitypeFieldDataForCell: setMultitypeFieldDataForCell
         }
 
     }

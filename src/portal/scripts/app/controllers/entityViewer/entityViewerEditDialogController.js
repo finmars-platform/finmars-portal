@@ -40,12 +40,10 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerEditDialogController(
-        $scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data
-    ) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data) {
 
         var vm = this;
-        var evEditorSharedLogicHelper = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
@@ -71,7 +69,7 @@
             vm.hasEnabledStatus = false;
         }
 
-        vm.readyStatus = evEditorSharedLogicHelper.readyStatusObj;
+        vm.readyStatus = vm.sharedLogic.readyStatusObj;
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
@@ -123,7 +121,7 @@
         // id of popup field which value will be shown when popup closed
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
-        vm.fixedAreaPopup = evEditorSharedLogicHelper.getFixedAreaPopup();
+        vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
 
@@ -153,24 +151,6 @@
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
 
-        vm.tabWithErrors = function (tab) {
-            const tabName = tab.label.toLowerCase();
-            return tabsWithErrors.hasOwnProperty(tabName);
-        };
-
-        vm.getTabBtnClasses = function (tab) {
-
-            var result = '';
-
-            if (vm.activeTab === tab) {
-                result = 'active-tab-button';
-            }
-
-
-            return result;
-
-        };
-
         vm.getEntityPropertyByDefault = function () {
             return vm.entity[vm.showByDefault];
         };
@@ -179,19 +159,19 @@
             return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).name;
         };
 
-        vm.entityTabsMenuTplt = evEditorSharedLogicHelper.entityTabsMenuTplt;
+        vm.entityTabsMenuTplt = vm.sharedLogic.entityTabsMenuTplt;
         vm.entityTabsMenuPopupData = {viewModel: vm};
         vm.entityTablePopupClasses = "border-radius-2";
-        vm.onPopupSaveCallback = evEditorSharedLogicHelper.onPopupSaveCallback;
-        vm.onFixedAreaPopupCancel = evEditorSharedLogicHelper.onFixedAreaPopupCancel;
+        vm.onPopupSaveCallback = vm.sharedLogic.onPopupSaveCallback;
+        vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel;
         // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
 
         //vm.currenciesSorted = [];
 
         vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
-        var tabsWithErrors = {};
-        var errorFieldsList = [];
+        /* vm.tabsWithErrors = {"system_tab": {}, "user_tab": {}};
+        vm.formErrorsList = []; */
         var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
         vm.rearrangeMdDialogActions = function () {
@@ -256,205 +236,6 @@
             })
 
         };
-
-        /* var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
-
-            var i, l, e;
-
-            tab.layout.fields.forEach(function (field, fieldIndex) {
-
-                var fieldResult = {};
-
-                if (field && field.type !== 'empty') {
-
-                    if (field.attribute_class === 'attr') {
-
-                        var dAttrFound = false;
-
-                        for (i = 0; i < vm.attributeTypes.length; i = i + 1) {
-
-                            if (field.key) {
-
-                                if (field.key === vm.attributeTypes[i].user_code) {
-
-                                    vm.attributeTypes[i].options = field.options;
-                                    fieldResult = vm.attributeTypes[i];
-                                    dAttrFound = true;
-                                    break;
-
-                                }
-
-                            } else {
-
-                                if (field.attribute.user_code) {
-
-                                    if (field.attribute.user_code === vm.attributeTypes[i].user_code) {
-
-                                        vm.attributeTypes[i].options = field.options;
-                                        fieldResult = vm.attributeTypes[i];
-                                        dAttrFound = true;
-                                        break;
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                        if (!dAttrFound) {
-                            var fieldPath = {
-                                tabIndex: tabIndex,
-                                fieldIndex: fieldIndex
-                            };
-
-                            fieldsToEmptyList.push(fieldPath);
-                        }
-
-                    } else {
-
-                        for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                            if (field.name === vm.entityAttrs[e].name) {
-                                vm.entityAttrs[e].options = field.options;
-                                fieldResult = vm.entityAttrs[e];
-                            }
-                        }
-
-                        for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                            if (field.name === vm.layoutAttrs[l].name) {
-                                vm.layoutAttrs[l].options = field.options;
-                                fieldResult = vm.layoutAttrs[l];
-                            }
-                        }
-
-                    }
-
-                    if (field.backgroundColor) {
-                        fieldResult.backgroundColor = field.backgroundColor;
-                    }
-
-                }
-
-                tabResult.push(fieldResult)
-
-
-            });
-
-        };
-
-        vm.generateAttributesFromLayoutFields = function () {
-
-            vm.attributesLayout = [];
-            var fieldsToEmptyList = [];
-            dcLayoutHasBeenFixed = false;
-
-            var tabResult;
-
-            vm.tabs.forEach(function (tab, tabIndex) {
-
-                tabResult = [];
-
-                getMatchForLayoutFields(tab, tabIndex, fieldsToEmptyList, tabResult);
-                vm.attributesLayout.push(tabResult);
-
-            });
-
-            if (vm.fixedArea && vm.fixedArea.isActive) {
-
-                vm.fixedAreaAttributesLayout = [];
-                getMatchForLayoutFields(vm.fixedArea, 'fixedArea', fieldsToEmptyList, vm.fixedAreaAttributesLayout);
-
-            }
-
-            // Empty sockets that have no attribute that matches them
-            fieldsToEmptyList.forEach(function (fieldPath) {
-
-                if (fieldPath.tabIndex === 'fixedArea') {
-                    var dcLayoutFields = vm.fixedArea.layout.fields;
-                    var layoutFieldsToSave = dataConstructorLayout.data.fixedArea.layout.fields;
-                } else {
-                    var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
-
-                    if (Array.isArray(dataConstructorLayout.data)) {
-                        var layoutFieldsToSave = dataConstructorLayout.data[fieldPath.tabIndex].layout.fields;
-                    } else {
-                        var layoutFieldsToSave = dataConstructorLayout.data.tabs[fieldPath.tabIndex].layout.fields;
-                    }
-
-                }
-
-                var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
-                var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
-
-                dcLayoutFields[fieldPath.fieldIndex] = { // removing from view
-                    colspan: 1,
-                    column: fieldToEmptyColumn,
-                    editMode: false,
-                    row: fieldToEmptyRow,
-                    type: 'empty'
-                };
-
-                layoutFieldsToSave[fieldPath.fieldIndex] = { // removing from layout copy for saving
-                    colspan: 1,
-                    column: fieldToEmptyColumn,
-                    editMode: false,
-                    row: fieldToEmptyRow,
-                    type: 'empty'
-                };
-
-            });
-
-            if (fieldsToEmptyList.length) {
-                dcLayoutHasBeenFixed = true;
-            }
-            // < Empty sockets that have no attribute that matches them >
-        };
-
-        var fixFieldsLayoutWithMissingSockets = function () {
-
-            var socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(vm.tabs, dataConstructorLayout);
-
-            if (vm.fixedArea && vm.fixedArea.isActive) {
-                var socketsHasBeenAddedToFixedArea = entityEditorHelper.fixCustomTabs(vm.fixedArea, dataConstructorLayout);
-            }
-
-            if (socketsHasBeenAddedToTabs || socketsHasBeenAddedToFixedArea) {
-                dcLayoutHasBeenFixed = true;
-            }
-
-        };
-
-        var mapAttributesToLayoutFields = function () {
-
-            var attributes = {
-                entityAttrs: vm.entityAttrs,
-                dynamicAttrs: vm.attributeTypes,
-                layoutAttrs: vm.layoutAttrs
-            };
-
-            var attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.tabs, attributes, dataConstructorLayout, true);
-
-            vm.attributesLayout = attributesLayoutData.attributesLayout;
-
-            if (vm.fixedArea && vm.fixedArea.isActive) {
-                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(vm.fixedArea, attributes, dataConstructorLayout, true);
-
-                vm.fixedAreaAttributesLayout = fixedAreaAttributesLayoutData.attributesLayout;
-            }
-
-            if (attributesLayoutData.dcLayoutHasBeenFixed || (fixedAreaAttributesLayoutData && fixedAreaAttributesLayoutData.dcLayoutHasBeenFixed)) {
-                dcLayoutHasBeenFixed = true;
-            }
-
-        };
-
-        var mapAttributesAndFixFieldsLayout = function () {
-            dcLayoutHasBeenFixed = false;
-
-            fixFieldsLayoutWithMissingSockets();
-            mapAttributesToLayoutFields();
-        }; */
 
         vm.loadPermissions = function () {
 
@@ -647,27 +428,7 @@
 
         };
 
-        vm.manageAttrs = function (ev) {
-
-            /*var entityType = {entityType: vm.entityType};
-            if (vm.fromEntityType) {
-                entityType = {entityType: vm.entityType, from: vm.fromEntityType};
-            }
-            $state.go('app.attributesManager', entityType);
-            $mdDialog.hide();*/
-
-            $mdDialog.show({
-                controller: 'AttributesManagerDialogController as vm',
-                templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
-                targetEvent: ev,
-                multiple: true,
-                locals: {
-                    data: {
-                        entityType: vm.entityType
-                    }
-                }
-            });
-        };
+        vm.manageAttrs = vm.sharedLogic.manageAttributeTypes;
 
         vm.copy = function (windowType) {
 
@@ -839,15 +600,16 @@
                     }
 
                     // vm.getFormLayout();
-                    evEditorSharedLogicHelper.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
+                    vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
 						vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
 						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
+						vm.attributeTypes = formLayoutData.attributeTypes;
+
                     	vm.tabs = formLayoutData.tabs;
 						vm.attributesLayout = formLayoutData.attributesLayout;
-
-						/* evEditorSharedLogicHelper.getFieldsForFixedAreaPopup().then(fieldsData => {
+						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
 							vm.fixedAreaPopup.fields = fieldsData;
 							vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
@@ -865,19 +627,9 @@
 
         };
 
-        /* vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
-                vm.attributeTypes = data.results;
-            });
-        };
-
-        vm.checkReadyStatus = function () {
-            // return vm.readyStatus.attributeTypes && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.userFields;
-        }; */
-
-        vm.checkReadyStatus = evEditorSharedLogicHelper.checkReadyStatus;
-        vm.bindFlex = evEditorSharedLogicHelper.bindFlex;
-        vm.checkFieldRender = evEditorSharedLogicHelper.checkFieldRender;
+        vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
+        vm.bindFlex = vm.sharedLogic.bindFlex;
+        vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
 
         vm.checkViewState = function (tab) {
 
@@ -1162,15 +914,25 @@
 
             vm.updateEntityBeforeSave();
 
-            var errors = entityEditorHelper.validateEntityFields(vm.entity,
+            /* var errors = entityEditorHelper.validateEntityFields(vm.entity,
                 vm.entityType,
                 vm.tabs,
                 vm.keysOfFixedFieldsAttrs,
                 vm.entityAttrs,
                 vm.attributeTypes,
-                []);
+                []); */
 
-            if (entityType === 'instrument-type') {
+			var errors = entityEditorHelper.validateEntity(
+				vm.entity,
+				vm.entityType,
+				vm.tabs,
+				vm.keysOfFixedFieldsAttrs,
+				vm.entityAttrs,
+				vm.attributeTypes,
+				[]
+			);
+
+            /* if (entityType === 'instrument-type') {
 
                 vm.entity.accruals.forEach(accrual => {
 
@@ -1187,17 +949,17 @@
 
                 });
 
-
-            }
-
+            } */
 
             if (errors.length) {
 
-                tabsWithErrors = {};
+				// vm.tabsWithErrors = {};
 
-                evEditorSharedLogicHelper.processTabsErrors(errors, tabsWithErrors, errorFieldsList, $event);
+                vm.sharedLogic.processTabsErrors(errors, $event);
 
-            } else {
+            }
+
+            else {
 
                 // var result = entityEditorHelper.removeNullFields(vm.entity);
                 var result = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
@@ -2075,18 +1837,19 @@
 
         };
 
-        vm.onFieldChange = function (fieldKey) {
+        vm.onEntityChange = function (fieldKey) {
 
             if (fieldKey) {
-                var attributes = {
+
+            	var attributes = {
                     entityAttrs: vm.entityAttrs,
                     attrsTypes: vm.attributeTypes
                 }
 
-                entityEditorHelper.checkTabsForErrorFields(fieldKey, errorFieldsList, tabsWithErrors,
-                    attributes,
-                    vm.entity, vm.entityType, vm.tabs);
+                entityEditorHelper.checkTabsForErrorFields(fieldKey, vm.evEditorDataService, attributes, vm.entity, vm.entityType, vm.tabs);
+
             }
+
         }
 
         vm.onNameInputBlur = function () {
@@ -2127,11 +1890,14 @@
             }
 
             setTimeout(function () {
-                vm.dialogElemToResize = evEditorSharedLogicHelper.onEditorStart();
+                vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
+
+			vm.evEditorDataService.setTabsWithErrors({"system_tab": {}, "user_tab": {}});
+			vm.evEditorDataService.setFormErrorsList([]);
 
             var tooltipsOptions = {
                 pageSize: 1000,
@@ -2173,7 +1939,7 @@
 
                 vm.typeSelectorChange = function () {
 
-					evEditorSharedLogicHelper.typeSelectorChangeFns[vm.entityType]().then(data => {
+					vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
 						vm.tabs = data.tabs;
 						vm.attributesLayout = data.attributesLayout;
@@ -2216,17 +1982,19 @@
                         vm.instrumentTypeLayouts = vm.entity.instrument_form_layouts.split(',')
                     }
 
-                    evEditorSharedLogicHelper.getDailyPricingModelFields().then(data => {
+                    vm.sharedLogic.getDailyPricingModelFields().then(data => {
                         vm.dailyPricingModelFields = data;
                     });
 
-                    evEditorSharedLogicHelper.getCurrencyFields().then(data => {
+                    vm.sharedLogic.getCurrencyFields().then(data => {
                         vm.currencyFields = data;
                     });
 
                 }
 
                 getEntityStatus();
+
+                vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
                 /* evHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
 
@@ -2247,7 +2015,7 @@
             vm.entityId = entityId;
         };
 
-        /*vm.entityChange = function () {
+        /*vm.onEntityChange = function () {
 
             console.log("entityChange", vm);
 

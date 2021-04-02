@@ -88,7 +88,7 @@
             <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" md-on-select="vm.activeTab = tab">
 
                 <md-tab-label>
-                    <div class="tab-name-elem" data-tab-name="{{tab.name | lowercase}}">
+                    <div class="tab-name-elem evFormUserTabName" data-tab-name="{{tab.name | lowercase}}">
                         <span class="grey-tab">{{tab.name}}</span>
                     </div>
                 </md-tab-label>
@@ -109,7 +109,7 @@
                                                     ev-editor-data-service="vm.evEditorDataService"
                                                     ev-editor-event-service="vm.evEditorEventService"
                                                     item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
-                                                    entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
+                                                    entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                             </div>
                         </div>
                     </md-content>
