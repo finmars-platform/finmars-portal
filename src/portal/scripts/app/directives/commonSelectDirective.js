@@ -27,7 +27,7 @@
                 scope.optionsFilterByProperty = "name";
                 if (!scope.optionsFilterBy) {
                     scope.optionsFilterBy = scope.optionsName;
-                };
+                }
 
                 scope.filterPredicateFunction = function (propertyName, searchTerm) {
                     if (searchTerm) {

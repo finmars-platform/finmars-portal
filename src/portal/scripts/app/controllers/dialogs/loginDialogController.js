@@ -6,6 +6,9 @@
     'use strict';
 
     var usersService = require('../../services/usersService');
+    var authorizerService = require('../../services/authorizerService');
+    var cookieService = require('../../../../../core/services/cookieService');
+
 
     module.exports = function LoginDialogController($scope, $mdDialog, data){
 
@@ -20,7 +23,15 @@
 
             vm.processing = true;
 
-            usersService.login(vm.username, vm.password).then(function (data) {
+            authorizerService.tokenLogin(vm.username, vm.password).then(function (data) {
+
+                console.log('authorizerService.login.data', data);
+
+                if (data.token) {
+                    console.log('authorizerService.login.setCookie auth token', data.token);
+                    cookieService.setCookie('authtoken', data.token);
+                }
+
 
                 if (!data.two_factor_check) {
 
@@ -29,6 +40,7 @@
                     return;
 
                 }
+
 
                 vm.processing = false;
 

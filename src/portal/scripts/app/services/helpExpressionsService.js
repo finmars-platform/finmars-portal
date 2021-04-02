@@ -12,7 +12,11 @@
 
     var getFunctionsItems = function () {
 
-        /*return window.fetch('portal/content/json/functions_items.json').then(function (data) {
+        /*
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch('portal/content/json/functions_items.json').then(function (data) {
             return data.json();
         })*/
         return functionsItemsService.functionsItems;
@@ -20,7 +24,11 @@
     };
 
     var getFunctionsGroups = function () {
-        /*return window.fetch('portal/content/json/functions_groups.json').then(function (data) {
+        /*
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch('portal/content/json/functions_groups.json').then(function (data) {
             return data.json();
         })*/
         return functionsGroupsService.functionsGroups;
