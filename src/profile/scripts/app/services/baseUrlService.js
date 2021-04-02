@@ -27,13 +27,24 @@
     }
 
     var setMasterUserPrefix = function (_prefix) {
-        prefix = '/' + _prefix;
+        prefix = _prefix;
+    }
+
+    var getMasterUserPrefix = function () {
+        return prefix
+    }
+
+    var getApiVersion = function () {
+        return 'api/v1'
     }
 
     module.exports = {
         resolve: resolve,
         getAuthorizerUrl: getAuthorizerUrl,
-        setMasterUserPrefix: setMasterUserPrefix
+        setMasterUserPrefix: setMasterUserPrefix,
+        getMasterUserPrefix: getMasterUserPrefix,
+
+        getApiVersion: getApiVersion
     }
 
 }());

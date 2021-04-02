@@ -13,14 +13,14 @@
 
     var getByKey = function (id) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'user/' + id + '/', {
+        return window.fetch(authorizerUrl + '/user/' + id + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -30,15 +30,15 @@ return window.fetch( authorizerUrl + 'user/' + id + '/', {
 
     var update = function (id, user) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'user/' + id + '/', {
+        return window.fetch(authorizerUrl + '/user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
@@ -57,14 +57,14 @@ return window.fetch( authorizerUrl + 'user/' + id + '/', {
     var checkMasterUserUniqueness = function (name) {
 
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user-check-uniqueness/?name=' + name, {
+        return window.fetch(authorizerUrl + '/master-user-check-uniqueness/?name=' + name, {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -74,15 +74,15 @@ return window.fetch( authorizerUrl + 'master-user-check-uniqueness/?name=' + nam
 
     var createMasterUser = function (user) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user-create/', {
+        return window.fetch(authorizerUrl + '/master-user-create/', {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
@@ -104,14 +104,14 @@ return window.fetch( authorizerUrl + 'master-user-create/', {
 
     var getMasterList = function () {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user/', {
+        return window.fetch(authorizerUrl + '/master-user/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -121,14 +121,14 @@ return window.fetch( authorizerUrl + 'master-user/', {
 
     var getMasterListLight = function () {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user-light/', {
+        return window.fetch(authorizerUrl + '/master-user-light/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -138,14 +138,14 @@ return window.fetch( authorizerUrl + 'master-user-light/', {
 
     var getMasterByKey = function (id) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user/' + id, {
+        return window.fetch(authorizerUrl + '/master-user/' + id, {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -155,15 +155,15 @@ return window.fetch( authorizerUrl + 'master-user/' + id, {
 
     var updateMaster = function (id, user) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user/' + id + '/', {
+        return window.fetch(authorizerUrl + '/master-user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(user)
@@ -174,15 +174,15 @@ return window.fetch( authorizerUrl + 'master-user/' + id + '/', {
 
     var setMasterUser = function (id) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user/' + id + '/set-current/', {
+        return window.fetch(authorizerUrl + '/master-user/' + id + '/set-current/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -192,14 +192,14 @@ return window.fetch( authorizerUrl + 'master-user/' + id + '/set-current/', {
 
     var getInviteFromMasterUserList = function (status) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'invite-from-master-user/?status=' + status, {
+        return window.fetch(authorizerUrl + '/invite-from-master-user/?status=' + status, {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -209,15 +209,15 @@ return window.fetch( authorizerUrl + 'invite-from-master-user/?status=' + status
 
     var updateInviteFromMasterUserByKey = function (id, invite) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'invite-from-master-user/' + id + '/', {
+        return window.fetch(authorizerUrl + '/invite-from-master-user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(invite)
@@ -228,14 +228,14 @@ return window.fetch( authorizerUrl + 'invite-from-master-user/' + id + '/', {
 
     var leaveMasterUser = function (masterUserId) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user-leave/' + masterUserId + '/', {
+        return window.fetch(authorizerUrl + '/master-user-leave/' + masterUserId + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -245,15 +245,15 @@ return window.fetch( authorizerUrl + 'master-user-leave/' + masterUserId + '/', 
 
     var deleteMasterUser = function (masterUserId) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user-delete/' + masterUserId + '/', {
+        return window.fetch(authorizerUrl + '/master-user-delete/' + masterUserId + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -261,18 +261,18 @@ return window.fetch( authorizerUrl + 'master-user-delete/' + masterUserId + '/',
         })
     };
 
-    var copyMasterUser = function(data) {
+    var copyMasterUser = function (data) {
 
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch( authorizerUrl + 'master-user-copy/', {
+        return window.fetch(authorizerUrl + '/master-user-copy/', {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(data)
