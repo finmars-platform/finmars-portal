@@ -19,7 +19,8 @@
         method: 'GET',
             credentials: 'include',
         headers: {
-            Accept: 'application/json',
+           'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
             'Content-type': 'application/json'
         }
     };
@@ -29,13 +30,18 @@
         credentials: 'include',
         headers: {
             'X-CSRFToken': cookieService.getCookie('csrftoken'),
-            Accept: 'application/json',
+           'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
             'Content-type': 'application/json'
         }
     };
 
     var getPortalInterfaceAccess = function (uiLayoutId) {
-        return xhrService.fetch(baseUrl + 'ui/portal-interface-access/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/portal-interface-access/',
             getRequestParams2)
     };
 
@@ -43,7 +49,11 @@
 
         /* if (entity == 'all') {
 
-            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
                 getRequestParams)
 
         } else {
@@ -56,7 +66,11 @@
                 options.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
             }
 
-            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
                 getRequestParams);
         } */
 
@@ -74,12 +88,20 @@
                 options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
             }
 
-            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
                 getRequestParams);
 
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
             getRequestParams);
 
     };
@@ -100,23 +122,39 @@
                 options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
             }
 
-            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout-light/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
                 getRequestParams);
 
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout-light/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
             getRequestParams);
 
     };
 
     var getListLayoutByKey = function (uiLayoutId) {
-        return xhrService.fetch(baseUrl + 'ui/list-layout/' + uiLayoutId + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + uiLayoutId + '/',
             getRequestParams2);
     };
 
     /* var getListLayoutDefault = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/list-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
             getRequestParams);
     }; */
 
@@ -124,7 +162,11 @@
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
-        return xhrService.fetch(baseUrl + 'ui/list-layout/?is_active=2&content_type=' + contentType,
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_active=2&content_type=' + contentType,
             getRequestParams2)
     }; */
 
@@ -132,19 +174,28 @@
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
-        return xhrService.fetch(baseUrl + 'ui/list-layout/?is_default=2&content_type=' + contentType,
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_default=2&content_type=' + contentType,
             getRequestParams2)
     };
 
     var createListLayout = function (ui) {
 
-        return xhrService.fetch(baseUrl + 'ui/list-layout/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(ui)
@@ -152,13 +203,18 @@
     };
 
     var updateListLayout = function (id, ui) {
-        return xhrService.fetch(baseUrl + 'ui/list-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(ui)
@@ -167,13 +223,14 @@
 
     var deleteListLayoutByKey = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/list-layout/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {
@@ -183,7 +240,11 @@
     };
 
     var pingListLayoutByKey = function (layoutId) {
-        return xhrService.fetch(baseUrl + 'ui/list-layout/' + layoutId + '/ping/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + layoutId + '/ping/',
             getRequestParams2)
     };
 
@@ -233,12 +294,20 @@
                 options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
             }
 
-            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/edit-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/', options),
                 getRequestParams);
 
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/edit-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/', options),
             getRequestParams);
 
     };
@@ -247,17 +316,27 @@
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
-        return xhrService.fetch(baseUrl + 'ui/edit-layout/?is_default=2&content_type=' + contentType, getRequestParams2);
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?is_default=2&content_type=' + contentType,
+            getRequestParams2);
     };
 
     var getEditLayoutByKey = function (id) {
 
-        return xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             });
@@ -274,13 +353,18 @@
 
     var createEditLayout = function (ui) {
 
-        return xhrService.fetch(baseUrl + 'ui/edit-layout/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(ui)
@@ -288,13 +372,18 @@
     };
 
     var updateEditLayout = function (id, ui) {
-        return xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(ui)
@@ -303,13 +392,14 @@
 
     var deleteEditLayoutByKey = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/edit-layout/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {
@@ -323,19 +413,28 @@
 
     var getConfigurationList = function () {
 
-        return xhrService.fetch(baseUrl + 'ui/configuration/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/',
             getRequestParams)
     };
 
     var createConfiguration = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/configuration/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -343,13 +442,18 @@
     };
 
     var updateConfiguration = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/configuration/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -358,13 +462,14 @@
 
     var deleteConfigurationByKey = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/configuration/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {
@@ -375,19 +480,28 @@
 
     var getConfigurationExportLayoutList = function () {
 
-        return xhrService.fetch(baseUrl + 'ui/configuration-export-layout/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/',
             getRequestParams)
     };
 
     var createConfigurationExportLayout = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/configuration-export-layout/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -395,13 +509,18 @@
     };
 
     var updateConfigurationExportLayout = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/configuration-export-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -410,13 +529,14 @@
 
     var deleteConfigurationExportLayoutByKey = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/configuration-export-layout/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {
@@ -429,20 +549,29 @@
 
         console.log('options', options);
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/transaction-user-field/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/', options),
             getRequestParams)
 
     };
 
     var createTransactionField = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/transaction-user-field/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -450,13 +579,18 @@
     };
 
     var updateTransactionField = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/transaction-user-field/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -465,20 +599,29 @@
 
     var getInstrumentFieldList = function (options) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/instrument-user-field/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/', options),
             getRequestParams)
 
     };
 
     var createInstrumentField = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/instrument-user-field/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -486,13 +629,18 @@
     };
 
     var updateInstrumentField = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/instrument-user-field/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -501,36 +649,57 @@
 
     var getDashboardLayoutList = function (entity, options) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/dashboard-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/', options),
             getRequestParams)
     };
 
     var getDashboardLayoutByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
             getRequestParams2)
     };
 
     var getActiveDashboardLayout = function () {
 
-        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/?is_active=2',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_active=2',
             getRequestParams2)
     };
 
     var getDefaultDashboardLayout = function () {
 
-        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/?is_default=2',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_default=2',
             getRequestParams2)
     };
 
     var createDashboardLayout = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -538,13 +707,18 @@
     };
 
     var updateDashboardLayout = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/dashboard-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -553,13 +727,14 @@
 
     var deleteDashboardLayoutByKey = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/dashboard-layout/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {
@@ -573,30 +748,47 @@
 
         console.log('options', options);
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/template-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/', options),
             getRequestParams)
     };
 
     var getTemplateLayoutByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'ui/template-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
             getRequestParams2)
     };
 
     var getDefaultTemplateLayout = function () {
 
-        return xhrService.fetch(baseUrl + 'ui/template-layout/?is_default=2',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/?is_default=2',
             getRequestParams2)
     };
 
     var createTemplateLayout = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/template-layout/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -604,13 +796,18 @@
     };
 
     var updateTemplateLayout = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/template-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -619,13 +816,14 @@
 
     var deleteTemplateLayoutByKey = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/template-layout/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {
@@ -638,24 +836,37 @@
 
         console.log('options', options);
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/context-menu-layout/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/', options),
             getRequestParams)
     };
 
     var getContextMenuLayoutByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'ui/context-menu-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
             getRequestParams2)
     };
 
     var createContextMenuLayout = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/context-menu-layout/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -663,13 +874,18 @@
     };
 
     var updateContextMenuLayout = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/context-menu-layout/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -678,13 +894,14 @@
 
     var deleteContextMenuLayoutByKey = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/context-menu-layout/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {
@@ -698,19 +915,28 @@
 
         console.log('options', options);
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/entity-tooltip/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/', options),
             getRequestParams)
     };
 
     var createEntityTooltip = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/entity-tooltip/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -718,13 +944,18 @@
     };
 
     var updateEntityTooltip = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/entity-tooltip/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -737,18 +968,27 @@
 
         console.log('options', options);
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/cross-entity-attribute-extension/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/', options),
             getRequestParams)
     };
 
     var getCrossEntityAttributeExtension = function (id) {
-        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -756,13 +996,18 @@
 
     var createCrossEntityAttributeExtension = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -770,13 +1015,18 @@
     };
 
     var updateCrossEntityAttributeExtension = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -785,13 +1035,14 @@
 
     var deleteCrossEntityAttributeExtension = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/cross-entity-attribute-extension/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {
@@ -806,18 +1057,27 @@
 
         console.log('options', options);
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/column-sort-data/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/', options),
             getRequestParams)
     };
 
     var getColumnSortData = function (id) {
-        return xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -825,13 +1085,18 @@
 
     var createColumnSortData = function (data) {
 
-        return xhrService.fetch(baseUrl + 'ui/column-sort-data/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -839,13 +1104,18 @@
     };
 
     var updateColumnSortData = function (id, data) {
-        return xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -854,13 +1124,14 @@
 
     var deleteColumnSortData = function (id) {
         return new Promise(function (resolve, reject) {
-            xhrService.fetch(baseUrl + 'ui/column-sort-data/' + id + '/',
+            xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
                 {
                     method: 'DELETE',
                     credentials: 'include',
                     headers: {
                         'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                        Accept: 'application/json',
+                       'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                         'Content-type': 'application/json'
                     }
                 }).then(function (data) {

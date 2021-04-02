@@ -32,7 +32,7 @@
                     var paletteNotFound = true;
 
                     var i,a;
-                    loop1: for (i = 0; i < scope.palettesList.length; i++) {
+                    for (i = 0; i < scope.palettesList.length; i++) {
 
                         if (scope.palettesList[i].user_code === scope.model.paletteUserCode) {
 
