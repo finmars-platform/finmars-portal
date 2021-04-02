@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 04.05.2016.
+ * Created by szhitenev on 30.03.2021.
  */
 
 (function () {
@@ -9,13 +9,13 @@
     var cookieService = require('../../../../core/services/cookieService');
     var baseUrlService = require('./baseUrlService');
 
-    var baseUrl = baseUrlService.resolve();
+    var authorizerUrl = baseUrlService.getAuthorizerUrl();
 
     var getByKey = function (id) {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/user/' + id + '/', {
+return window.fetch( authorizerUrl + 'user/' + id + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -32,7 +32,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/user/' + id + '/', {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/user/' + id + '/', {
+return window.fetch( authorizerUrl + 'user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -59,7 +59,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/user/' + id + '/', {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-check-uniqueness/?name=' + name, {
+return window.fetch( authorizerUrl + 'master-user-check-uniqueness/?name=' + name, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -76,7 +76,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-check-uniquenes
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-create/', {
+return window.fetch( authorizerUrl + 'master-user-create/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -106,7 +106,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-create/', {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user/', {
+return window.fetch( authorizerUrl + 'master-user/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -123,7 +123,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user/', {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-light/', {
+return window.fetch( authorizerUrl + 'master-user-light/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -140,7 +140,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-light/', {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user/' + id, {
+return window.fetch( authorizerUrl + 'master-user/' + id, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -157,7 +157,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user/' + id, {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user/' + id + '/', {
+return window.fetch( authorizerUrl + 'master-user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -176,7 +176,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user/' + id + '/', {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user/' + id + '/set-current/', {
+return window.fetch( authorizerUrl + 'master-user/' + id + '/set-current/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -194,7 +194,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user/' + id + '/set-
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/invite-from-master-user/?status=' + status, {
+return window.fetch( authorizerUrl + 'invite-from-master-user/?status=' + status, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -211,7 +211,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/invite-from-master-user/?st
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/invite-from-master-user/' + id + '/', {
+return window.fetch( authorizerUrl + 'invite-from-master-user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -230,7 +230,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/invite-from-master-user/' +
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-leave/' + masterUserId + '/', {
+return window.fetch( authorizerUrl + 'master-user-leave/' + masterUserId + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -247,7 +247,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-leave/' + maste
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-delete/' + masterUserId + '/', {
+return window.fetch( authorizerUrl + 'master-user-delete/' + masterUserId + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -266,7 +266,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-delete/' + mast
 
 var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'users/master-user-copy/', {
+return window.fetch( authorizerUrl + 'master-user-copy/', {
             method: 'POST',
             credentials: 'include',
             headers: {

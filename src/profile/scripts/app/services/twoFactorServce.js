@@ -12,11 +12,15 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return window.fetch(baseUrl + 'users/two-factor/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'users/two-factor/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -25,12 +29,16 @@
     };
 
     var pachByKey = function (id, token) {
-        return window.fetch(baseUrl + 'users/two-factor/' + id + '/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'users/two-factor/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(token)
@@ -41,12 +49,16 @@
 
 
     var generateCode = function (data) {
-        return window.fetch(baseUrl + 'users/two-factor/generate-code/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'users/two-factor/generate-code/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(data)
@@ -56,12 +68,16 @@
     };
 
     var validateCode = function (data) {
-        return window.fetch(baseUrl + 'users/two-factor/validate-code/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'users/two-factor/validate-code/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(data)
@@ -71,12 +87,16 @@
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'users/two-factor/' + id + '/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'users/two-factor/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -87,12 +107,16 @@
     };
 
     var activateTwoFactor = function (id) {
-        return window.fetch(baseUrl + 'users/two-factor/' + id + '/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'users/two-factor/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({id: id, is_active: true})

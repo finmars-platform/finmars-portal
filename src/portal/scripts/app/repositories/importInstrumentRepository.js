@@ -12,12 +12,17 @@
     var baseUrl = baseUrlService.resolve();
 
     var getInstrumentMappingList = function () {
-        return xhrService.fetch(baseUrl + 'import/instruments/instrument/mapping/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/instruments/instrument/mapping/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })

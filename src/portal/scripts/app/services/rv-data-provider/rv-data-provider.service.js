@@ -389,7 +389,7 @@
             var options = requestParameters.body;
             var event = requestParameters.event;
 
-            var page = new Number(options.page) - 1;
+            var page = Number(options.page) - 1;
             // var pagination = entityViewerDataService.getPagination();
             var step = 10000; // TODO fix pagination problem in future
             var i;

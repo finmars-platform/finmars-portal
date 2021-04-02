@@ -8,6 +8,8 @@
     "use strict";
 
     var getMenu = function () {
+
+
         return window.fetch("portal/content/json/menu.json").then(function (data) {
             return data.json();
         });
@@ -153,10 +155,10 @@
         }, {
             "value": 110,
             "display_name": "Selector"
-        },{
+        }, {
             "value": 120,
             "display_name": "Button"
-        },{
+        }, {
             "value": "decoration",
             "display_name": "Decoration"
         }, {
@@ -302,6 +304,10 @@
                 path = "portal/content/json/groups/configuration_export_import_files_groups_list.json";
                 break;
         }
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
 
         return window.fetch(path).then(function (data) {
             return data.json();
