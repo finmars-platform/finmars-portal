@@ -8,6 +8,8 @@
     "use strict";
 
     var getMenu = function () {
+
+
         return window.fetch("portal/content/json/menu.json").then(function (data) {
             return data.json();
         });
@@ -337,6 +339,10 @@
                 path = "portal/content/json/groups/configuration_export_import_files_groups_list.json";
                 break;
         }
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
 
         return window.fetch(path).then(function (data) {
             return data.json();

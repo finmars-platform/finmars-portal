@@ -231,7 +231,7 @@
                                     vm.transactionTypeLayouts.push(layout);
                                     break;
 
-                            };
+                            }
 
                         });
 
