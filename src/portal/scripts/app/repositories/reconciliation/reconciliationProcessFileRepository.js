@@ -10,7 +10,11 @@
     var baseUrl = baseUrlService.resolve();
 
     var process = function (config) {
-        return xhrService.fetch(baseUrl + 'reconciliation/process-bank-file/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'reconciliation/process-bank-file/',
             {
                 method: 'POST',
                 credentials: 'include',

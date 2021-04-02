@@ -100,7 +100,7 @@
                         vm.tabs[i].attrs = [];
 
                         for (x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
-                            ;
+
                             if (vm.tabs[i].layout.fields[x].type === 'field') {
                                 if (vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
                                     vm.tabs[i].attrs.push({
@@ -745,13 +745,11 @@
                             for (a = 0; a < attrsList.length; a = a + 1) {
 
                                 if (attrsList[a].key === identifier) {
-                                    https://www.linkedin.com/help/linkedin?trk=neptune_help
-
-                                        if (target === document.querySelector('#filtersbag .drop-new-filter')) {
-                                            filters.push(attrsList[a]);
-                                        } else {
-                                            filters.splice(index, 0, attrsList[a]);
-                                        }
+                                    if (target === document.querySelector('#filtersbag .drop-new-filter')) {
+                                        filters.push(attrsList[a]);
+                                    } else {
+                                        filters.splice(index, 0, attrsList[a]);
+                                    }
 
                                     //columns.push(attrsList[a]);
                                 }

@@ -11,12 +11,17 @@
     var baseUrl = baseUrlService.resolve();
 
     var getValuesForSelect = function (contentType, key, valueType) {
-        return xhrService.fetch(baseUrl + 'specific-data/values-for-select?content_type=' + contentType + '&key=' + key + '&value_type=' + valueType,
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'specific-data/values-for-select?content_type=' + contentType + '&key=' + key + '&value_type=' + valueType,
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })

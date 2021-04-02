@@ -17,10 +17,10 @@
 
         vm.baseUrl = 'https://finmars.com/portal/help/';
 
-        vm.helpPage = vm.baseUrl + 'index.html';
+        vm.helpPage = vm.baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'index.html';
 
         if (vm.data.helpPageUrl) {
-            vm.helpPage = vm.baseUrl + vm.data.helpPageUrl;
+            vm.helpPage = vm.baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + vm.data.helpPageUrl;
         }
 
         vm.cancel = function () {
