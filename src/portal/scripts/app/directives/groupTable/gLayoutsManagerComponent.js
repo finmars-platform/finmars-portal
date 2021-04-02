@@ -242,7 +242,7 @@
                     // delete scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                };
+                }
 
                 var createNewLayoutMethod = function ($event) {
 
