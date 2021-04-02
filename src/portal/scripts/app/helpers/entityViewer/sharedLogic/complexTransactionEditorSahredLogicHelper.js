@@ -7,7 +7,7 @@
 
 	module.exports = function (viewModel, $scope, $mdDialog) {
 
-		let removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
+		const removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
 
 			inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
 
@@ -43,7 +43,7 @@
 
 		};
 
-		let preRecalculationActions = (inputs, updateScope) => {
+		const preRecalculationActions = (inputs, updateScope) => {
 
 			let book = {
 				transaction_type: viewModel.entity.transaction_type,
@@ -67,7 +67,7 @@
 
 		};
 
-		let processRecalculationResolve = function (recalculationPromise, inputs, recalculationData) {
+		const processRecalculationResolve = function (recalculationPromise, inputs, recalculationData) {
 
 			recalculationPromise.then(function (data) {
 
@@ -96,7 +96,7 @@
 
 		let recalculateTimeoutID;
 
-		let onFieldChange = function (fieldKey) {
+		const onFieldChange = function (fieldKey) {
 
 			if (fieldKey) {
 
@@ -209,12 +209,54 @@
 
 		};
 
+		const processTabsErrors = function (errors, tabsWithErrors, errorFieldsList) {
+
+			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+
+			errors.forEach(errorObj => {
+
+				if (errorObj.locationData &&
+					errorObj.locationData.type === 'system_tab' || errorObj.locationData.type === 'user_tab') {
+
+					var tabName = errorObj.locationData.name.toLowerCase();
+
+					if (errorObj.locationData.type === 'user_tab') {
+
+						const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
+						const tabNameElem = document.querySelector(selectorString);
+
+						if (tabNameElem) tabNameElem.classList.add('error-tab');
+
+					}
+
+					else if (errorObj.locationData.type === 'system_tab') {
+						entityTabsMenuBtn.classList.add('error-tab');
+					}
+
+					if (!tabsWithErrors.hasOwnProperty(tabName)) { // if it is tab's first error, create property
+						tabsWithErrors[tabName] = [errorObj.key];
+
+					} else if (!tabsWithErrors[tabName].includes(errorObj.key)) { // if there is no same error, add it
+						tabsWithErrors[tabName].push(errorObj.key);
+
+					}
+
+					if (!errorFieldsList.includes(errorObj.key)) errorFieldsList.push(errorObj.key);
+
+				}
+
+			});
+
+		};
+
 		return {
 			preRecalculationActions: preRecalculationActions,
 			removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
 			processRecalculationResolve: processRecalculationResolve,
 
-			onFieldChange: onFieldChange
+			onFieldChange: onFieldChange,
+
+			processTabsErrors: processTabsErrors
 		}
 
 	};

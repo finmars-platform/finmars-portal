@@ -44,12 +44,16 @@
 		//<editor-fold desc="entityTabsMenuTplt">
 		const entityTabsMenuTplt =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
-				'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" class="entity-tabs-menu-option popup-menu-option" ng-class="popupData.viewModel.getTabBtnClasses(tab)" ng-click="popupData.viewModel.activeTab = tab">' +
+				'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
+						   'class="entity-tabs-menu-option popup-menu-option" ' +
+						   'ng-class="popupData.viewModel.sharedLogic.getTabBtnClasses(tab)" ' +
+						   'ng-click="popupData.viewModel.activeTab = tab">' +
 					'<span>{{tab.label}}</span>' +
-					'<div ng-if="popupData.viewModel.tabWithErrors(tab)" class="tab-option-error-icon">' +
+					'<div ng-if="popupData.viewModel.sharedLogic.isTabWithErrors(tab)" class="tab-option-error-icon">' +
 						'<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
 					'</div>' +
 				'</md-button>' +
+
 				'<md-button ng-if="popupData.viewModel.canManagePermissions" class="entity-tabs-menu-option popup-menu-option" ng-class="{\'active-tab-button\': popupData.viewModel.activeTab === \'permissions\'}" ng-click="popupData.viewModel.activeTab = \'permissions\'">' +
 					'<span>Permissions</span>' +
 				'</md-button>' +
@@ -580,6 +584,34 @@
 
 		};
 
+        const manageAttributeTypes = function (ev) {
+
+        	$mdDialog.show({
+				controller: 'AttributesManagerDialogController as vm',
+				templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+				targetEvent: ev,
+				multiple: true,
+				locals: {
+					data: {
+						entityType: viewModel.entityType
+					}
+				}
+
+			}).then(res => {
+
+				if (res.status === 'agree') {
+
+					viewModel.attributeTypes = res.attributeTypes;
+					viewModel.evEditorDataService.setEntityAttributeTypes(viewModel.attributeTypes);
+
+					viewModel.evEditorEventService.dispatchEvent(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE);
+
+				}
+
+			});
+
+		};
+
         const getFormLayout = async formLayoutFromAbove => {
 
 			const hasRelationSelectorInFixedArea = typeSelectorValueEntities.hasOwnProperty(viewModel.entityType);
@@ -652,7 +684,12 @@
 					viewModel.readyStatus.layout = true;
 					viewModel.readyStatus.entity = true;
 
-					resolve({tabs: tabs, attributesLayout: attributesLayout, fixedAreaData: fixedAreaData});
+					resolve({
+						fixedAreaData: fixedAreaData,
+						tabs: tabs,
+						attributeTypes: viewModel.attributeTypes,
+						attributesLayout: attributesLayout
+					});
 
 				});
 
@@ -716,37 +753,63 @@
 				return fields;
 		};
 
-        const processTabsErrors = function (errors, tabsWithErrors, errorFieldsList, $event) {
+		/**
+		 * Highlight errors on the form
+		 *
+		 * @param errors {Array.<Object>} - data for dialog with validator results
+		 * @param $event
+		 */
+        const processTabsErrors = function (errors, $event) {
 
-            const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
             errors.forEach(function (errorObj) {
 
                 if (errorObj.locationData &&
-                    errorObj.locationData.type === 'tab') {
+                    ['user_tab', 'system_tab'].includes(errorObj.locationData.type)) {
 
                     const tabName = errorObj.locationData.name.toLowerCase();
+					const tabType = errorObj.locationData.type; // system_tab || user_tab
 
-                    const selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
-                    const tabNameElem = document.querySelector(selectorString);
+					let tabIsNotMarked = false;
 
-                    if (tabNameElem) {
-                        tabNameElem.classList.add('error-tab');
+					const tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+					const formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
 
-                    } else {
-                        entityTabsMenuBtn.classList.add('error-tab');
-                    }
+					if (!tabsWithErrors[tabType].hasOwnProperty(tabName)) {
 
-                    if (!tabsWithErrors.hasOwnProperty(tabName)) {
-                        tabsWithErrors[tabName] = [errorObj.key];
+						tabsWithErrors[tabType][tabName] = [errorObj.key];
+						tabIsNotMarked = true;
 
-                    } else if (tabsWithErrors[tabName].includes(errorObj.key)) {
+					} else if (!tabsWithErrors[tabType][tabName].includes(errorObj.key)) {
 
-                        tabsWithErrors[tabName].push(errorObj.key);
+						tabsWithErrors[tabType][tabName].push(errorObj.key);
+						tabIsNotMarked = true;
 
-                    }
+					}
 
-                    errorFieldsList.push(errorObj.key);
+					if (tabIsNotMarked) {
+
+						if (!formErrorsList.includes(errorObj.key)) { // component can be in multiple tabs (e.g. maturity_date) but formErrorsList should contain only one key
+
+							formErrorsList.push(errorObj.key);
+
+						}
+
+						if (tabType === 'user_tab') {
+
+							const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
+							const tabNameElem = document.querySelector(selectorString);
+
+							if (tabNameElem) tabNameElem.classList.add('error-tab');
+
+						}
+
+						else if (tabType === 'system_tab') {
+							entityTabsMenuBtn.classList.add('error-tab');
+						}
+
+					}
 
                 }
 
@@ -768,7 +831,7 @@
 
         };
 
-        const onSuccessfulEntitySave = function (responseData, isAutoExitAfterSave) {
+        /* const onSuccessfulEntitySave = function (responseData, isAutoExitAfterSave) {
 
             viewModel.processing = false;
 
@@ -793,7 +856,7 @@
 
             }
 
-        };
+        }; */
 
         const getDailyPricingModelFields = async function () {
 
@@ -821,6 +884,31 @@
 			'instrument': getAndFormatUserTabs
 		};
 
+        const isTabWithErrors = (tab) => {
+
+        	const tabName = tab.label.toLowerCase();
+			const tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+
+			return tabsWithErrors[tab.type].hasOwnProperty(tabName);
+
+		};
+
+        const getTabBtnClasses = function (tab) {
+
+			var result = [];
+
+			if (viewModel.activeTab.label === tab.label) {
+				result.push('active-tab-button');
+			}
+
+			if (isTabWithErrors(tab)) {
+				result.push('error-menu-option');
+			}
+
+			return result;
+
+		};
+
         return {
 
 			readyStatusObj: readyStatusObj,
@@ -834,6 +922,7 @@
             checkReadyStatus: checkReadyStatus,
 			bindFlex: bindFlex,
 			checkFieldRender: checkFieldRender,
+			manageAttributeTypes: manageAttributeTypes,
             getFormLayout: getFormLayout,
 			// getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
             onEditorStart: onEditorStart,
@@ -842,6 +931,9 @@
 
             getDailyPricingModelFields: getDailyPricingModelFields,
             getCurrencyFields: getCurrencyFields,
+
+			isTabWithErrors: isTabWithErrors,
+			getTabBtnClasses: getTabBtnClasses
 
         }
 

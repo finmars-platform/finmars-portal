@@ -1121,7 +1121,7 @@
 
             vm.updateEntityBeforeSave();
 
-            var errors = entityEditorHelper.validateComplexTransactionFields(vm.entity,
+            var errors = entityEditorHelper.validateComplexTransaction(vm.entity,
                                                                              vm.transactionType.actions,
                                                                              vm.tabs,
                                                                              vm.entityAttrs,
@@ -1132,7 +1132,7 @@
 
                 vm.tabsWithErrors = {};
 
-                errors.forEach(function (errorObj) {
+                /* errors.forEach(function (errorObj) {
 
                     if (errorObj.locationData &&
                         errorObj.locationData.type === 'tab') {
@@ -1156,7 +1156,8 @@
 
                     }
 
-                });
+                }); */
+				sharedLogicHelper.processTabsErrors(errors, vm.tabsWithErrors, vm.errorFieldsList);
 
                 vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
@@ -1561,7 +1562,7 @@
             vm.entityId = entityId;
         };
 
-        /*vm.entityChange = function () {
+        /*vm.onEntityChange = function () {
 
             console.log("entityChange", vm);
 
@@ -1603,7 +1604,7 @@
             console.log('resultInput', resultInput);
 
         };*/
-		vm.onFieldChange = sharedLogicHelper.onFieldChange;
+		vm.onEntityChange = sharedLogicHelper.onFieldChange;
   };
 
 }());

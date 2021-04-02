@@ -41,7 +41,7 @@
 
         vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
         vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
-        vm.entityChange = $scope.$parent.vm.entityChange;
+        vm.onEntityChange = $scope.$parent.vm.onEntityChange;
 
         // Victor 06.10.2020 Not used after switching to grid table
         // var activeItemOriginal = null;

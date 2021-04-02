@@ -16,11 +16,11 @@
 
     var GridTableDataService = require('../../../services/gridTableDataService');
     var EventService = require('../../../services/eventService');
-    var gtEvents = require('../../../services/gridTableEvents');
+    var gridTableEvents = require('../../../services/gridTableEvents');
 
 	var evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
-    module.exports = function accrualCalculationSchedulesController($scope, $mdDialog, gridTableHelperService) {
+    module.exports = function accrualCalculationSchedulesController($scope, $mdDialog, gridTableHelperService, multitypeFieldService) {
 
         var vm = this;
 
@@ -34,6 +34,7 @@
 
         vm.readyStatus = {accrualModals: false, periodicityItems: false};
 
+        /** Helps to determine which of multiple accrual tables changed */
         var schedulesTableChangedHere = {value: false};
 
         var accrualCalcModelPromise = new Promise(function (resolve, reject) {
@@ -181,18 +182,18 @@
 
         vm.getCurrencyFields = function () {
 
-            fieldResolverService.getFields('accrued_currency', {
-                entityType: 'instrument',
-                key: 'accrued_currency'
-            }).then(function (res) {
+			fieldResolverService.getFields('accrued_currency', {
+				entityType: 'instrument',
+				key: 'accrued_currency',
+				pageSize: 1000
+			}).then(function (res) {
 
-                // Victor 19.10.2020
-                // vm.currencyFields = res.data;
-                vm.currencyFields = metaHelper.textWithDashSort(res.data);
+				// Victor 19.10.2020
+				// vm.currencyFields = res.data;
+				vm.currencyFields = metaHelper.textWithDashSort(res.data);
+				// $scope.$apply();
 
-                $scope.$apply();
-
-            });
+			});
 
         };
 
@@ -200,14 +201,15 @@
 
             fieldResolverService.getFields('payment_size_detail', {
                 entityType: 'instrument',
-                key: 'payment_size_detail'
+                key: 'payment_size_detail',
+				pageSize: 1000
             }).then(function (res) {
 
                 // Victor 19.10.2020
                 // vm.dailyPricingModelFields = res.data;
                 vm.dailyPricingModelFields = metaHelper.textWithDashSort(res.data);
 
-                $scope.$apply();
+                // $scope.$apply();
 
             });
 
@@ -290,6 +292,11 @@
         };
 
 		//<editor-fold desc="Schedules grid table">
+		var accrualMultitypeFieldsData = multitypeFieldService.getTypesForInstrumentAccruals();
+
+		var instrumentAttrTypes = vm.entity.attributes.map(attr => attr.attribute_type_object);
+		multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, accrualMultitypeFieldsData);
+
 		vm.schedulesGridTableData = {
             header: {
                 order: 'header',
@@ -301,12 +308,13 @@
                 columns: [
                     {
                         key: 'accrual_start_date',
-                        objPath: ['accrual_start_date'],
+                        objPath: [['accrual_start_date'], ['accrual_start_date_value_type']],
                         columnName: 'Accrual start date',
                         order: 0,
-                        cellType: 'date',
+                        cellType: 'multitypeField',
                         settings: {
-                            value: null
+							value: [null, null],
+							fieldTypesData: null
                         },
                         styles: {
                             'grid-table-cell': {'width': '210px'}
@@ -314,12 +322,13 @@
                     },
                     {
                         key: 'first_payment_date',
-                        objPath: ['first_payment_date'],
+						objPaths: [['first_payment_date'], ['first_payment_date_value_type']],
                         columnName: 'First payment date',
                         order: 1,
-                        cellType: 'date',
+                        cellType: 'multitypeField',
                         settings: {
-                            value: null
+                            value: [null, null],
+							fieldTypesData: accrualMultitypeFieldsData['first_payment_date'].fieldTypesList
                         },
                         styles: {
                             'grid-table-cell': {'width': '160px'}
@@ -327,13 +336,13 @@
                     },
                     {
                         key: 'accrual_size',
-                        objPath: ['accrual_size'],
+                        objPaths: [['accrual_size'], ['accrual_size_value_type']],
                         columnName: 'Accrual size',
                         order: 2,
-                        cellType: 'number',
+                        cellType: 'multitypeField',
                         settings: {
-                            value: null,
-                            closeOnMouseOut: false
+                            value: [null, null],
+							fieldTypesData: accrualMultitypeFieldsData['accrual_size'].fieldTypesList
                         },
                         styles: {
                             'grid-table-cell': {'width': '210px'}
@@ -359,7 +368,7 @@
                                 },
                                 popupData: [
                                     {selectorOptions: vm.accrualModels},
-									null,
+									{fieldTypesData: null},
                                     {selectorOptions: vm.periodicityItems}
                                 ]
                             }
@@ -379,6 +388,13 @@
 									periodicityCell.settings.cellText = selectedPeriodicity.name
 
 								}
+
+								var typesList = periodicityCell.settings.popupSettings.popupData[1].fieldTypesData;
+                                var activeType = typesList.find(type => type.isActive);
+
+                                if (!activeType) activeType = typesList.find(type => type.isDefault);
+
+                                vm.entity.accrual_calculation_schedules[rowData.order]['periodicity_n_value_type'] = activeType.value_type;
 
                                 /* for (var i = 0; i < vm.periodicityItems.length; i++) {
 
@@ -435,15 +451,29 @@
 				rowObj.newRow = !!(schedule.frontOptions && schedule.frontOptions.newRow);
 				rowObj.order = scheduleIndex;
 
-				rowObj.columns[0].settings.value = schedule.accrual_start_date;
-				rowObj.columns[1].settings.value = schedule.first_payment_date;
-				rowObj.columns[2].settings.value = schedule.accrual_size;
+				// rowObj.columns[0].settings.value = schedule.accrual_start_date;
+				var typesList0 = accrualMultitypeFieldsData[rowObj.columns[0].key].fieldTypesList;
+				gridTableHelperService.setMultitypeFieldDataForCell(typesList0, rowObj.columns[0], schedule.accrual_start_date, schedule.accrual_start_date_value_type);
+
+				// rowObj.columns[1].settings = schedule.first_payment_date;
+				var typesList1 = accrualMultitypeFieldsData[rowObj.columns[1].key].fieldTypesList;
+				gridTableHelperService.setMultitypeFieldDataForCell(typesList1, rowObj.columns[1], schedule.first_payment_date, schedule.first_payment_date_value_type);
+
+				// rowObj.columns[2].settings.value = schedule.accrual_size;
+				var accrualSizeTypesList = accrualMultitypeFieldsData[rowObj.columns[2].key].fieldTypesList;
+				gridTableHelperService.setMultitypeFieldDataForCell(accrualSizeTypesList, rowObj.columns[2], schedule.accrual_size, schedule.accrual_size_value_type);
 
 				rowObj.columns[3].settings.value = [
 					schedule.accrual_calculation_model,
 					schedule.periodicity_n,
 					schedule.periodicity
 				];
+
+				var periodicityNTypesList = accrualMultitypeFieldsData['periodicity_n'].fieldTypesList;
+				periodicityNTypesList = multitypeFieldService.setActiveTypeByValueType(periodicityNTypesList, schedule.periodicity_n, schedule.periodicity_n_value_type);
+				periodicityNTypesList.forEach(type => type.label = 'Number of days');
+
+				rowObj.columns[3].settings.popupSettings.popupData[1].fieldTypesData = periodicityNTypesList;
 
 				for (var i = 0; i < vm.periodicityItems.length; i++) {
 
@@ -559,6 +589,57 @@
 
         }; */
 
+		var initEventListeners = function () {
+
+			//<editor-fold desc="Accruals table">
+			instrumentService.initAccrualsScheduleGridTableEvents(
+				vm.schedulesGridTableDataService, vm.schedulesGridTableEventService, vm.entity, vm.evEditorEventService, schedulesTableChangedHere
+			);
+
+			vm.schedulesGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, () => {
+
+				const gridTableData = vm.schedulesGridTableDataService.getTableData();
+
+				const newRow = gridTableData.body[0];
+				const newSchedule = {
+					"accrual_start_date": '',
+					"first_payment_date": '',
+					"accrual_size": '',
+					"accrual_calculation_model": '',
+					"periodicity": '',
+					"periodicity_n": '',
+					"notes": '',
+					frontOptions: {newRow: true, gtKey: newRow.key}
+				};
+
+				vm.entity.accrual_calculation_schedules.unshift(newSchedule);
+
+				// Update rows in schedules grid table
+				vm.entity.accrual_calculation_schedules.forEach((schedule, scheduleIndex) => {
+					gridTableData.body[scheduleIndex].order = scheduleIndex;
+				});
+
+				schedulesTableChangedHere.value = true;
+				vm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'accrual_calculation_schedules'});
+
+			});
+			//</editor-fold>
+
+			vm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, function (argObj) {
+
+				if (argObj && argObj.key === 'accrual_calculation_schedules' && !schedulesTableChangedHere.value) {
+
+					assembleGridTableBody();
+					vm.schedulesGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
+
+				}
+
+				schedulesTableChangedHere.value = false;
+
+			});
+
+		};
+
         vm.init = function () {
 
             vm.setDefaultCurrencyFields();
@@ -566,6 +647,7 @@
             // Victor 19.10.2020
             // vm.setDefaultPaymentSizeDetailFields();
             vm.getPaymentSizeDetailFields();
+			vm.getCurrencyFields();
 
 			if (!vm.entity.accrual_calculation_schedules) {
 				vm.entity.accrual_calculation_schedules = [];
@@ -574,24 +656,16 @@
             vm.schedulesGridTableDataService = new GridTableDataService();
             vm.schedulesGridTableEventService = new EventService();
 
-			instrumentService.initAccrualsScheduleGridTableEvents(
-				vm.schedulesGridTableDataService, vm.schedulesGridTableEventService, vm.entity, vm.evEditorEventService, schedulesTableChangedHere
-			);
+			initEventListeners();
 
-			vm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, function (argObj) {
+			var initPromises = [
+				accrualCalcModelPromise,
+				instrumentPeriodicPromise,
+				vm.getPaymentSizeDetailFields(),
+				vm.getCurrencyFields()
+			];
 
-				if (argObj && argObj.key === 'accrual_calculation_schedules' && !schedulesTableChangedHere.value) {
-
-					assembleGridTableBody();
-					vm.schedulesGridTableEventService.dispatchEvent(gtEvents.REDRAW_TABLE);
-
-				}
-
-				schedulesTableChangedHere.value = false;
-
-			});
-
-            Promise.all([accrualCalcModelPromise, instrumentPeriodicPromise]).then(function () {
+            Promise.all(initPromises).then(function () {
 
                 $scope.$apply();
                 formatDataForSchedulesGridTable();

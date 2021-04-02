@@ -121,9 +121,10 @@ app.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$cont
 app.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/bigDrawerService')]);
 
 app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
-app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
+app.service('gridTableHelperService', ['multitypeFieldService', require('./app/helpers/gridTableHelperService')]);
 app.service('evRvDomManagerService', ['$mdDialog', require('./app/services/evRvDomManagerService')]);
 app.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
+app.service('multitypeFieldService', [require('./app/services/multitypeFieldService')]);
 
 // Dashboard
 
@@ -394,20 +395,19 @@ app.controller('BookUniquenessWarningDialogController', ['$scope', '$mdDialog', 
 
 // Instrument form - tabs
 
-app.controller('AccrualCalculationSchedulesController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
+app.controller('AccrualCalculationSchedulesController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
 app.controller('EventSchedulesTabController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
 app.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 
 // Instrument type form - tabs
 
-app.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
-app.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
+app.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
+app.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
 
 // Currency form - tabs
 
 app.controller('PricingTabController', ['$scope', require('./app/controllers/tabs/currency/pricingTabController')]);
-
 
 app.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
 app.controller('GenerateEventScheduleDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/generateEventScheduleDialogController')]);
@@ -539,7 +539,7 @@ app.directive('menuLink', [require('./app/directives/menuLinkDirective')]);
 app.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownMenuDirective')]);
 
 app.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
-app.directive('bindFieldTable', ['$mdDialog', require('./app/directives/bindFieldTableDirective')]);
+app.directive('bindFieldTable', ['$mdDialog', 'gridTableHelperService', 'multitypeFieldService', require('./app/directives/bindFieldTableDirective')]);
 app.directive('layoutConstructorField', ['$mdDialog', 'entityDataConstructorService', require('./app/directives/layoutConstructorFieldDirective')]);
 // app.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
@@ -589,7 +589,7 @@ app.controller('RunPricingInstrumentDialogController', ['$scope', '$mdDialog', '
 app.controller('RunPricingCurrencyDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingCurrencyDialogController')]);
 app.controller('SingleInstrumentGenerateEventDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/singleInstrumentGenerateEventDialogController')]);
 app.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
-app.controller('SingleInstrumentAddAccrualToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'data', require('./app/controllers/dialogs/singleInstrumentAddAccrualToTableDialogController')]);
+app.controller('SingleInstrumentAddAccrualToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/singleInstrumentAddAccrualToTableDialogController')]);
 
 
 app.controller('CurrencyPricingSchemeAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/currencyPricingSchemeAddDialogController')]);

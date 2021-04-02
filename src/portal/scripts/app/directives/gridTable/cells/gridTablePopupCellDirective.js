@@ -135,22 +135,25 @@
 						var activeTypeData = scope.column.settings.fieldTypesData.find(type => type.isActive);
 						popupValue = activeTypeData.model;
 
-						if (
-							(activeTypeData.fieldType === 'dropdownSelect' ||
-							activeTypeData.fieldType === 'entitySearch') &&
-							popupValue
-						) {
+						if (['dropdownSelect', 'entitySearch'].includes(activeTypeData.fieldType) && popupValue) {
 
 							var selectedOption = activeTypeData.fieldData.menuOptions.find(option => option.id === popupValue);
 							scope.column.settings.cellText = selectedOption.name;
 
-						}
-
-						else {
+						} else {
 							scope.column.settings.cellText = popupValue;
 						}
+						// for multiselector
+						if (Array.isArray(popupValue)) popupValue = JSON.parse(angular.toJson(popupValue));
 
-						if (Array.isArray(popupValue)) popupValue = JSON.parse(angular.toJson(popupValue)); // for multiselector
+						if (scope.column.hasOwnProperty("objPaths")) { // if we want capture multitype field value type outside of grid table
+
+							scope.column.settings.value[0] = popupValue;
+							scope.column.settings.value[1] = activeTypeData.value_type;
+
+						} else {
+							scope.column.settings.value = popupValue;
+						}
 
 					}
 
@@ -166,11 +169,10 @@
 
 						}
 
+						scope.column.settings.value = popupValue;
 						scope.column.settings.cellText = popupValue;
 
 					}
-
-					scope.column.settings.value = popupValue;
 
 				}
 
@@ -369,7 +371,15 @@
 					cellTextContainer = elem[0].querySelector('.gt-cell-text-container');
 
                     if (!scope.column.settings.hasOwnProperty('cellText')) {
-                        scope.column.settings.cellText = scope.column.settings.value;
+
+                    	scope.column.settings.cellText = scope.column.settings.value;
+
+                        if (scope.column.cellType === 'multitypeField' && scope.column.hasOwnProperty("objPaths")) {
+
+                        	scope.column.settings.cellText = scope.column.settings.value[0];
+
+						}
+
                     }
 
                     if (scope.onLoadEnd) {

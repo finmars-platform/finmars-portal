@@ -1,4 +1,5 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-30" drag-dialog>
+<md-dialog class="draggable-dialog"
+           aria-label="add accrual for instrument inside user tab"  drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -10,63 +11,58 @@
 
     <md-dialog-content class="p-24">
 
-        <div layout="row" class="m-t-8 add-accrual-row">
+        <div class="add-accrual-row m-t-8">
 
-            <div class="width-50 add-accrual-column">
+            <div ng-if="vm.fieldsObject.notes.to_show"
+                 class="add-accrual-column">
                 <text-input label="{{vm.fieldsObject.notes.override_name || vm.fieldsObject.notes.name}}"
                             placeholder-text="{{vm.fieldsObject.notes.override_name || vm.fieldsObject.notes.name}}"
+                            small-options="{tooltipText: vm.fieldsObject.notes.tooltip}"
                             model="vm.accrual.notes"
                             style="width: 100%"
                 ></text-input>
             </div>
 
-            <div class="width-50 add-accrual-column">
-                <multitype-field field-types-data="vm.fieldsObject.accrual_start_date.multitypeFieldData"></multitype-field>
+            <div ng-if="vm.fieldsObject.accrual_start_date.to_show"
+                 class="add-accrual-column">
+                <multitype-field field-types-data="vm.fieldsObject.accrual_start_date.fieldTypes"></multitype-field>
             </div>
 
-        </div>
-
-        <div layout="row" class="m-t-8 add-accrual-row">
-            <div class="width-50 add-accrual-column">
-                <multitype-field field-types-data="vm.fieldsObject.first_payment_date.multitypeFieldData"></multitype-field>
+            <div ng-if="vm.fieldsObject.first_payment_date.to_show"
+                 class="add-accrual-column">
+                <multitype-field field-types-data="vm.fieldsObject.first_payment_date.fieldTypes"></multitype-field>
             </div>
 
-            <div class="width-50 add-accrual-column">
-                <multitype-field field-types-data="vm.fieldsObject.accrual_size.multitypeFieldData"></multitype-field>
+            <div ng-if="vm.fieldsObject.accrual_size.to_show"
+                 class="add-accrual-column">
+                <multitype-field field-types-data="vm.fieldsObject.accrual_size.fieldTypes" test-val="vm.fieldsObject.accrual_size"></multitype-field>
             </div>
-        </div>
 
-        <div layout="row" class="m-t-8 add-accrual-row">
-
-            <div class="width-50 add-accrual-column">
+            <div ng-if="vm.fieldsObject.periodicity.to_show"
+                 class="add-accrual-column">
                 <dropdown-select label="{{vm.fieldsObject.periodicity.override_name || vm.fieldsObject.periodicity.name}}"
                                  model="vm.accrual.periodicity"
                                  placeholder-text="{{vm.fieldsObject.periodicity.override_name || vm.fieldsObject.periodicity.name}}"
                                  menu-options="vm.fieldsObject.periodicity.selectorOptions"
-                                 small-options="{tooltipText: '{{vm.fieldsObject.periodicity.override_name || vm.fieldsObject.periodicity.name}}'}"
+                                 small-options="{tooltipText: vm.fieldsObject.periodicity.tooltip}"
                                  style="width: 100%">
                 </dropdown-select>
             </div>
 
-            <div class="width-50 add-accrual-column">
+            <div ng-if="vm.fieldsObject.accrual_calculation_model.to_show"
+                 class="add-accrual-column">
                 <dropdown-select label="{{vm.fieldsObject.accrual_calculation_model.override_name || vm.fieldsObject.accrual_calculation_model.name}}"
                                  model="vm.accrual.accrual_calculation_model"
                                  placeholder-text="{{vm.fieldsObject.accrual_calculation_model.override_name || vm.fieldsObject.accrual_calculation_model.name}}"
                                  menu-options="vm.fieldsObject.accrual_calculation_model.selectorOptions"
-                                 small-options="{tooltipText: '{{vm.fieldsObject.accrual_calculation_model.override_name || vm.fieldsObject.accrual_calculation_model.name}}'}"
+                                 small-options="{tooltipText: vm.fieldsObject.accrual_calculation_model.tooltip}"
                                  style="width: 100%">
                 </dropdown-select>
             </div>
 
-
-
-        </div>
-
-        <div layout="row add-accrual-row"
-             class="m-t-8">
-
-            <div class="width-50 add-accrual-column">
-                <multitype-field field-types-data="vm.fieldsObject.periodicity_n.multitypeFieldData"></multitype-field>
+            <div ng-if="vm.fieldsObject.periodicity_n.to_show"
+                 class="add-accrual-column">
+                <multitype-field field-types-data="vm.fieldsObject.periodicity_n.fieldTypes"></multitype-field>
             </div>
 
         </div>

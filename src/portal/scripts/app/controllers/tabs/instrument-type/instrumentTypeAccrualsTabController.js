@@ -4,34 +4,42 @@
 (function (){
     'use strict';
 
-    var metaService = require('../../../services/metaService');
-    var GridTableDataService = require('../../../services/gridTableDataService');
-    var GridTableEventService = require('../../../services/gridTableEventService');
-    var gridTableEvents = require('../../../services/gridTableEvents');
+    const metaService = require('../../../services/metaService');
+	const GridTableDataService = require('../../../services/gridTableDataService');
+	const GridTableEventService = require('../../../services/gridTableEventService');
+	const gridTableEvents = require('../../../services/gridTableEvents');
+	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents')
 
-    var metaHelper = require('../../../helpers/meta.helper');
+    const metaHelper = require('../../../helpers/meta.helper');
 
-    var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
-    var accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
+	const fieldResolverService = require('../../../services/fieldResolverService');
+	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
+	const accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
 
-    var instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
+	const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
-    module.exports = function instrumentTypeAccrualsTabController ($scope, $mdDialog) {
+    module.exports = function instrumentTypeAccrualsTabController ($scope, $mdDialog, multitypeFieldService) {
 
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
 
-        if(!vm.entity.accruals) {
+        if (!vm.entity.accruals) {
             vm.entity.accruals = [];
         }
+
+		vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
+		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
 
         vm.readyStatus = {
             periodicityItems: false,
             accrualModels: false,
 
-            gritTable: false
+			topPart: false,
+			accrualsAccordions: false
         };
+		vm.evEditorFieldEvent = {};
 
+		//<editor-fold desc="Accordion actions menu">
 		vm.accordionActionsMenu =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
@@ -41,6 +49,62 @@
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
 						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">MAKE COPY</md-button>' +
 			'</div>';
+		//</editor-fold>
+
+		const getPaymentSizeDetailFields = function () {
+
+			return new Promise(res => {
+
+				fieldResolverService.getFields('payment_size_detail', {
+					entityType: 'instrument',
+					key: 'payment_size_detail',
+					pageSize: 1000
+
+				}).then(fieldsData => {
+
+					vm.dailyPricingModelFields = metaHelper.textWithDashSort(fieldsData.data);
+
+					res();
+
+				}).catch(error => {
+
+					console.error("getPaymentSizeDetailFields", error);
+					res();
+
+				});
+
+			});
+
+		};
+
+		const getCurrencyFields = function () {
+
+			return new Promise(res => {
+
+				fieldResolverService.getFields('accrued_currency', {
+					entityType: 'instrument',
+					key: 'accrued_currency',
+					pageSize: 1000
+
+				}).then(fieldsData => {
+
+					vm.currencyFields = metaHelper.textWithDashSort(fieldsData.data);
+					vm.currencyFields = vm.currencyFields.map(field => {
+						return {id: field.id, name: field.short_name};
+					});
+
+					res();
+
+				}).catch(error => {
+
+					console.error("getCurrencyFields", error);
+					res();
+
+				});
+
+			});
+
+		};
 
         vm.onNameFocus = function (event) {
             var textAreaElement = event.target;
@@ -50,30 +114,26 @@
             })
         };
 
-        const onDefaultValueMultitypeFieldChange = function (rowData, colData, gtDataService, gtEventService) {
-
-            const changedCell = gtDataService.getCell(rowData.order, colData.order);
-            const activeType = changedCell.settings.fieldTypesData.find(type => type.isActive);
-
-            const tableData = gtDataService.getTableData();
-
-            const defValType = (activeType.fieldType === 'dropdownSelect') ? 'dynamic_attribute' : 'text';
-            vm.entity.accruals[tableData.index].data.items[rowData.order].default_value_type = defValType;
-
-        };
-
         var onAccrualTableCellChange = function (data, gtDataService, gtEventService) {
 
             var tableData = gtDataService.getTableData()
             var cell = gtDataService.getCellByKey(data.row.order, data.column.key)
             var path = cell.objPath[0];
 
-            vm.entity.accruals[tableData.index].data.items[data.row.order][path] = cell.settings.value;
+            vm.entity.accruals[tableData.order].data.items[data.row.order][path] = cell.settings.value;
+
+			vm.onDataChange('accruals');
+
+			if (cell.key === 'default_value') {
+				const activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+				vm.entity.accruals[tableData.order].data.items[data.row.order].default_value_type = activeType.value_type;
+			}
 
         };
 
         var getAccrualsGridTableData = function (item) {
-            var rows = item.data.items;
+
+        	var rows = item.data.items;
 
             const accrualsGridTableData = {
                 header: {
@@ -245,15 +305,12 @@
 
                     rowObj.columns[2].cellType = 'multitypeField';
 
-                    const multitypeFieldData = multitypeFieldsForRows[rowObj.key].fieldDataList;
+					const fieldTypesList = JSON.parse(JSON.stringify(multitypeFieldsForRows[rowObj.key].fieldTypesList));
+                    const fieldTypesData = multitypeFieldService.setActiveTypeByValueType(fieldTypesList, row.default_value, row.default_value_type);
 
                     rowObj.columns[2].settings = {
                         value: row.default_value,
-                        fieldTypesData: multitypeFieldData
-                    };
-
-                    rowObj.columns[2].methods = {
-                        onChange: onDefaultValueMultitypeFieldChange
+                        fieldTypesData: fieldTypesData
                     };
 
                 }
@@ -275,6 +332,7 @@
             })
 
             return accrualsGridTableData;
+
         };
 
         vm.createInstrumentTypeAccrual = function () {
@@ -296,7 +354,7 @@
                 accrualsGridTableDataService: new GridTableDataService(),
                 accrualsGridTableEventService: new GridTableEventService(),
                 name: '',
-                index: vm.entity.accruals.length,
+                order: vm.entity.accruals.length,
                 autogenerate: true,
                 data: {
                     form_message: "",
@@ -318,7 +376,7 @@
 
             var accrualGridTableData = getAccrualsGridTableData(accrual);
 
-            accrualGridTableData.index = vm.entity.accruals.length;
+            accrualGridTableData.order = vm.entity.accruals.length;
             accrual.accrualsGridTableDataService.setTableData(accrualGridTableData);
 
             vm.entity.accruals.push(accrual);
@@ -336,23 +394,21 @@
                 item.isPaneExpanded = !item.isPaneExpanded;
             }
 
-
-
         };
 
 		vm.moveDown = function (item, $event) {
 
 			$event.stopPropagation();
 
-			if (vm.entity.accruals[item.index + 1]) {
+			if (vm.entity.accruals[item.order + 1]) {
 
 				const swap = item;
 
-				vm.entity.accruals[item.index] = vm.entity.accruals[item.index + 1];
-				vm.entity.accruals[item.index].index = item.index;
+				vm.entity.accruals[item.order] = vm.entity.accruals[item.order + 1];
+				vm.entity.accruals[item.order].order = item.order;
 
-				vm.entity.accruals[item.index + 1] = swap;
-				vm.entity.accruals[item.index + 1].index = item.index + 1;
+				vm.entity.accruals[item.order + 1] = swap;
+				vm.entity.accruals[item.order + 1].order = item.order + 1;
 
 			}
 
@@ -362,15 +418,15 @@
 
 			$event.stopPropagation();
 
-			if (vm.entity.accruals[item.index - 1]) {
+			if (vm.entity.accruals[item.order - 1]) {
 
 				const swap = item;
 
-				vm.entity.accruals[item.index] = vm.entity.accruals[item.index - 1];
-				vm.entity.accruals[item.index].index = item.index;
+				vm.entity.accruals[item.order] = vm.entity.accruals[item.order - 1];
+				vm.entity.accruals[item.order].order = item.order;
 
-				vm.entity.accruals[item.index - 1] = swap;
-				vm.entity.accruals[item.index - 1].index = item.index - 1;
+				vm.entity.accruals[item.order - 1] = swap;
+				vm.entity.accruals[item.order - 1].order = item.order - 1;
 
 			}
 
@@ -398,8 +454,8 @@
 
 				if (res.status === 'agree') {
 
-					vm.entity.accruals.splice(item.index, 1);
-					vm.entity.accruals.forEach((accrual, index) => accrual.index = index);
+					vm.entity.accruals.splice(item.order, 1);
+					vm.entity.accruals.forEach((accrual, index) => accrual.order = index);
 
 				}
 
@@ -413,20 +469,11 @@
 
 			_$popup.cancel();
 
-			const accrualIndex = accrualToCopy.index;
+			const accrualOrder = accrualToCopy.order;
 			const accrualCopy = JSON.parse(angular.toJson(accrualToCopy));
 
 			delete accrualCopy.id;
-			/* delete eventCopy.eventItemsGridTableDataService;
-			delete eventCopy.eventItemsGridTableEventService;
 
-			delete eventCopy.eventBlockableItemsGridTableDataService;
-			delete eventCopy.eventBlockableItemsGridTableEventService;
-
-			delete eventCopy.eventActionsGridTableDataService;
-			delete eventCopy.eventActionsGridTableEventService; */
-
-			// delete eventCopy.index;
 			let accrualCopyName = accrualToCopy.name + ' (Copy)';
 
 			let a = 0, nameOccupied = true;
@@ -449,25 +496,37 @@
 
 			accrualCopy.name = accrualCopyName;
 
-			formatExistingAccrual(accrualCopy, accrualCopy.index);
+			formatExistingAccrual(accrualCopy, accrualCopy.order);
 
-			vm.entity.accruals.splice(accrualIndex + 1, 0, accrualCopy);
-			vm.entity.accruals.forEach((accrual, index) => accrual.index = index);
+			vm.entity.accruals.splice(accrualOrder + 1, 0, accrualCopy);
+			vm.entity.accruals.forEach((accrual, index) => accrual.order = index);
+
+		};
+
+		vm.onDataChange = function (fieldKey) {
+
+			let tabsWithErrors = vm.evEditorDataService.getTabsWithErrors();
+
+			if (tabsWithErrors['system_tab'].hasOwnProperty('accruals')) {
+				$scope.$parent.vm.onEntityChange(fieldKey);
+			}
 
 		};
 
         let instrumentAttrTypes;
 
-        const multitypeFieldsForRows = {
+        const multitypeFieldsForRows = multitypeFieldService.getTypesForInstrumentAccruals();
+		/* {
             'accrual_start_date': {
-                nativeType: 40, //date
+            	value_type: 40, // used to filter instrument user attributes options for dropdownSelect
                 fieldDataList: [
                     {
                         'model': "",
                         'fieldType': 'dateInput',
                         'isDefault': true,
                         'isActive': true,
-                        'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -478,6 +537,7 @@
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -485,14 +545,15 @@
                 ]
             },
             'first_payment_date': {
-                nativeType: 40, //date
+				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
                 fieldDataList: [
                     {
                         'model': "",
                         'fieldType': 'dateInput',
                         'isDefault': true,
                         'isActive': true,
-                        'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -503,6 +564,7 @@
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -510,14 +572,15 @@
                 ]
             },
             'accrual_size': {
-                nativeType: 20, //number
+            	value_type: 20, // used to filter instrument user attributes options for dropdownSelect
                 fieldDataList: [
                     {
                         'model': null,
                         'fieldType': 'numberInput',
                         'isDefault': true,
                         'isActive': true,
-                        'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
+						'value_type': 20,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -528,6 +591,7 @@
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -535,14 +599,15 @@
                 ]
             },
             'periodicity_n': {
-                nativeType: 20, //number
+				value_type: 20, // used to filter instrument user attributes options for dropdownSelect
                 fieldDataList: [
                     {
                         'model': null,
                         'fieldType': 'numberInput',
                         'isDefault': true,
                         'isActive': true,
-                        'sign': '<div class="multitype-field-type-letter">A</div>',
+                        'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
+						'value_type': 20,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
@@ -553,21 +618,32 @@
                         'isDefault': false,
                         'isActive': false,
                         'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
                         'fieldData': {
                             'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
                         }
                     }
                 ]
             }
-        }
+        } */
 
-        const periodicityItemsPromise = instrumentPeriodicityService.getList().then(data => {
-            vm.periodicityItems = data;
+        const periodicityItemsPromise = new Promise(res => {
+
+        	instrumentPeriodicityService.getList().then(data => {
+				vm.periodicityItems = data;
+				res();
+			});
+
         });
 
-        const accrualModelsPromise = accrualCalculationModelService.getList().then(data => {
-            vm.accrualModels = data;
-        });
+        const accrualModelsPromise = new Promise(res => {
+
+        	accrualCalculationModelService.getList().then(data => {
+				vm.accrualModels = data;
+				res();
+			});
+
+		});
 
         const getInstrumentAttrTypes = function () {
 
@@ -587,7 +663,7 @@
 
 			var accrualsGridTableData = getAccrualsGridTableData(accrual);
 
-			accrualsGridTableData.index = accrualIndex;
+			accrualsGridTableData.order = accrualIndex;
 
 			accrual.accrualsGridTableDataService.setTableData(accrualsGridTableData);
 
@@ -597,42 +673,52 @@
 
 		};
 
-        var init = function () {
-            const dataPromises = [
+		vm.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, () => {
+			vm.evEditorFieldEvent = { key: "mark_not_valid_fields" };
+		});
+
+        const init = function () {
+
+        	const dataPromises = [
                 getInstrumentAttrTypes(),
                 periodicityItemsPromise,
-                accrualModelsPromise
+                accrualModelsPromise,
+				getPaymentSizeDetailFields(),
+				getCurrencyFields()
             ];
 
-            Promise.all(dataPromises).then((data) => {
+			Promise.all(dataPromises).then(data => {
 
                 instrumentAttrTypes = data[0] || [];
 
-                Object.keys(multitypeFieldsForRows).forEach(key => {
+                /* Object.keys(multitypeFieldsForRows).forEach(key => {
 
                     const fieldTypeObj = multitypeFieldsForRows[key];
-                    const selTypeIndex = fieldTypeObj.fieldDataList.findIndex(type => type.fieldType === 'dropdownSelect');
+					const selType = fieldTypeObj.fieldTypesList.find(type => type.fieldType === 'dropdownSelect');
 
                     const formattedAttrTypes = instrumentAttrTypes
-                        .filter(attrType => attrType.value_type === fieldTypeObj.nativeType)
+                        .filter(attrType => attrType.value_type === fieldTypeObj.value_type)
                         .map(attrType => {
                             return {id: attrType.user_code, name: attrType.short_name};
                         });
 
-                    fieldTypeObj.fieldDataList[selTypeIndex].fieldData = {
+					selType.fieldData = {
                         menuOptions: formattedAttrTypes || []
                     };
 
-                });
+                }); */
+				multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
                 vm.entity.accruals.forEach(function (item, index) {
-
                     if (item.data) formatExistingAccrual(item, index);
+                });
 
-                })
+				vm.readyStatus.topPart = true;
+                vm.readyStatus.accrualsAccordions = true;
 
-                vm.readyStatus.gridTable = true;
-            })
+                $scope.$apply();
+
+            });
 
         }
 
