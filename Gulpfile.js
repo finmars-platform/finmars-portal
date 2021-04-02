@@ -17,7 +17,7 @@
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
     var WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
     var HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
-    var AUTHORIZER_URL = process.env.AUTHORIZER_URL || 'http://0.0.0.0:8083/authorizer/';
+    var AUTHORIZER_URL = process.env.AUTHORIZER_URL || 'http://0.0.0.0:8083/authorizer';
 
     gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All'));
 
