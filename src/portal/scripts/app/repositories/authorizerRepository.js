@@ -18,7 +18,7 @@
 
     var login = function (login, password) {
 
-        return xhrService.fetch(authorizerUrl + 'login/', {
+        return xhrService.fetch(authorizerUrl + '/login/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -33,9 +33,9 @@
     var tokenLogin = function (login, password) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'token-auth/', {
+        return xhrService.fetch(authorizerUrl + '/token-auth/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -51,9 +51,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var logout = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'logout/', {
+        return xhrService.fetch(authorizerUrl + '/logout/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -69,9 +69,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var ping = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'ping/', {
+        return xhrService.fetch(authorizerUrl + '/ping/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -85,9 +85,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var protectedPing = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'protected-ping/', {
+        return xhrService.fetch(authorizerUrl + '/protected-ping/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -101,9 +101,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getList = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user/', {
+        return xhrService.fetch(authorizerUrl + '/user/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -117,9 +117,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -133,9 +133,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getUser = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user/0/', {
+        return xhrService.fetch(authorizerUrl + '/user/0/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -149,9 +149,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getMyCurrentMember = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'member/0/', {
+        return xhrService.fetch(authorizerUrl + '/member/0/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -165,9 +165,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getCurrentMasterUser = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'get-current-master-user', {
+        return xhrService.fetch(authorizerUrl + '/get-current-master-user', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -181,9 +181,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var changePassword = function (id, user) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user/' + id + '/set-password/', {
+        return xhrService.fetch(authorizerUrl + '/user/' + id + '/set-password/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -199,9 +199,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var update = function (id, user) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -217,9 +217,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var patch = function (id, user) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -234,9 +234,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var deleteByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -250,9 +250,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var createMasterUser = function (user) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'master-user/', {
+        return xhrService.fetch(authorizerUrl + '/master-user/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -267,9 +267,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getMasterListLight = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'master-user-light/', {
+        return xhrService.fetch(authorizerUrl + '/master-user-light/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -283,9 +283,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getMasterList = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'master-user/', {
+        return xhrService.fetch(authorizerUrl + '/master-user/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -299,9 +299,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getMasterByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'master-user/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -315,9 +315,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var updateMaster = function (id, user) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'master-user/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -333,9 +333,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var patchMaster = function (id, user) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'master-user/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -351,9 +351,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var deleteMasterByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'master-user/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -368,9 +368,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var setMasterUser = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'master-user/' + id + '/set-current/', {
+        return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/set-current/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -385,9 +385,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getMemberList = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'member/', {
+        return xhrService.fetch(authorizerUrl + '/member/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -401,9 +401,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getMemberByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'member/' + id, {
+        return xhrService.fetch(authorizerUrl + '/member/' + id, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -417,9 +417,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var updateMember = function (id, user) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'member/' + id, {
+        return xhrService.fetch(authorizerUrl + '/member/' + id, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -434,9 +434,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var patchMember = function (id, user) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'member/' + id, {
+        return xhrService.fetch(authorizerUrl + '/member/' + id, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -451,9 +451,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var deleteMemberByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'member/' + id, {
+        return xhrService.fetch(authorizerUrl + '/member/' + id, {
             method: 'DELETE',
             credentials: 'include',
             headers: {
@@ -467,9 +467,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getGroupList = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'group/', {
+        return xhrService.fetch(authorizerUrl + '/group/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -483,9 +483,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getOwnMemberSettings = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user-member/', {
+        return xhrService.fetch(authorizerUrl + '/user-member/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -499,9 +499,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var updateOwnMemberSettings = function (id, member) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'user-member/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/user-member/' + id + '/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -518,9 +518,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getUsercodePrefixList = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'usercode-prefix/',
+        return xhrService.fetch(authorizerUrl + '/usercode-prefix/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -535,9 +535,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var createUsercodePrefix = function (item) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'usercode-prefix/',
+        return xhrService.fetch(authorizerUrl + '/usercode-prefix/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -554,9 +554,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var deleteUserCodePrefixByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(authorizerUrl + 'usercode-prefix/' + id + '/', {
+        return xhrService.fetch(authorizerUrl + '/usercode-prefix/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
