@@ -12,11 +12,15 @@
     var baseUrl = baseUrlService.resolve();
 
     var getEcosystemConfiguration = function () {
-        return window.fetch(baseUrl + 'system/ecosystem-configuration/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'system/ecosystem-configuration/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {

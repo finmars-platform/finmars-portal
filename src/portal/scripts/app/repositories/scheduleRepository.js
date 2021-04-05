@@ -14,37 +14,52 @@
 
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'schedules/schedule/', options),
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'schedules/schedule/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'schedules/schedule/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'schedules/schedule/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var create = function (item) {
-        return xhrService.fetch(baseUrl + 'schedules/schedule/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'schedules/schedule/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(item)
@@ -52,13 +67,18 @@
     };
 
     var update = function (id, item) {
-        return xhrService.fetch(baseUrl + 'schedules/schedule/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'schedules/schedule/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(item)
@@ -67,13 +87,18 @@
 
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'schedules/schedule/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'schedules/schedule/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -86,13 +111,18 @@
     };
 
     var runSchedule = function (id, item) {
-        return xhrService.fetch(baseUrl + 'schedules/schedule/' + id + '/run-schedule/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'schedules/schedule/' + id + '/run-schedule/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(item)
