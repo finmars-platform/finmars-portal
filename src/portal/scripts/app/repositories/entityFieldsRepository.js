@@ -9,36 +9,51 @@
     var baseUrl = baseUrlService.resolve();
 
     var getPricingConditionChoices = function () {
-        return xhrService.fetch(baseUrl + 'instruments/pricing-condition/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/pricing-condition/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var getDailyPricingModelChoices = function () {
-        return xhrService.fetch(baseUrl + 'instruments/daily-pricing-model/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/daily-pricing-model/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var getPaymentSizeDetailChoices = function () {
-        return xhrService.fetch(baseUrl + 'instruments/payment-size-detail/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/payment-size-detail/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })

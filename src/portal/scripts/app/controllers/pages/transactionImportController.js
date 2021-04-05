@@ -624,7 +624,7 @@
 
         vm.getFileUrl = function(id) {
 
-            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 

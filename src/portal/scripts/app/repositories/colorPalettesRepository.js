@@ -17,25 +17,35 @@
             }
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'ui/color-palette/', options),
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/color-palette/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     }
 
     var create = function (palette) {
-        return xhrService.fetch(baseUrl + 'ui/color-palette/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/color-palette/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(palette)
@@ -43,13 +53,18 @@
     };
 
     var updateById = function (id, palettes) {
-        return xhrService.fetch(baseUrl + 'ui/color-palette/' + id + '/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/color-palette/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(palettes)
@@ -57,13 +72,18 @@
     };
 
     var deleteById = function (id) {
-        return xhrService.fetch(baseUrl + 'ui/color-palette/' + id + '/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/color-palette/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
