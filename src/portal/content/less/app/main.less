@@ -3113,7 +3113,8 @@ button.md-raised.md-warn.md-button {
 
   .popup-menu-item {
     text-align: left;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     border-radius: 0;
     font-size: 15px;
     text-transform: none;
@@ -3121,16 +3122,18 @@ button.md-raised.md-warn.md-button {
     height: 100%;
 
     margin: auto 0;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 6px 16px;
+/*    padding-left: 16px;
+    padding-right: 16px;*/
     width: 100%;
 
     color: @g-top-part-color;
 
-    ng-md-icon {
+/*    ng-md-icon {
       position: relative;
       top: 6px;
-      margin-right: 10px;
+      margin-right: 5px;
+      margin-left: -7px;
     }
 
     .z-dropdown-icon {
@@ -3138,7 +3141,17 @@ button.md-raised.md-warn.md-button {
       right: 0;
       top: 7px;
       opacity: .5;
+    }*/
+    .material-icons {
+      margin-right: 6px;
+      margin-left: -9px;
     }
+
+    .arrow-right {
+      position: absolute;
+      right: 8px;
+    }
+
 
   }
 
@@ -3277,4 +3290,8 @@ button.md-raised.md-warn.md-button {
 
 .column-sorting-layout-manager-row.active {
   background: #f3d074;
+}
+
+.alignment-menu-item {
+  padding-left: 22px;
 }

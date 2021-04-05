@@ -85,6 +85,19 @@
                 var dynamicAttrs = [];
                 // var keysOfColsToHide = [];
 
+                scope.isSubtotalWeighted = false;
+                scope.isSubtotalAvgWeighted = false;
+
+                scope.onSubtotalWeightedClick = function () {
+                    scope.isSubtotalAvgWeighted = false;
+                    scope.isSubtotalWeighted = !scope.isSubtotalWeighted;
+                };
+
+                scope.onSubtotalAvgWeightedClick = function () {
+                    scope.isSubtotalWeighted = false;
+                    scope.isSubtotalAvgWeighted = !scope.isSubtotalAvgWeighted;
+                }
+
                 // Victor 2020.12.14 #69 New report viewer design
                 scope.rowFilterColor = 'none';
 
@@ -107,12 +120,19 @@
                         checkSubtotalFormula: scope.checkSubtotalFormula,
                         resizeColumn: scope.resizeColumn,
                         removeColumn: scope.removeColumn,
+                        unGroup: scope.unGroup,
 
                         changeColumnTextAlign: scope.changeColumnTextAlign,
                         checkColTextAlign: scope.checkColTextAlign,
                         removeGroup: scope.removeGroup,
                         reportHideSubtotal: scope.reportHideSubtotal,
-                        isSubtotalWeightedShouldBeExcluded: scope.isSubtotalWeightedShouldBeExcluded
+                        isSubtotalWeightedShouldBeExcluded: scope.isSubtotalWeightedShouldBeExcluded,
+
+                        isSubtotalWeighted: scope.isSubtotalWeighted,
+                        isSubtotalAvgWeighted: scope.isSubtotalAvgWeighted,
+                        onSubtotalWeightedClick: scope.onSubtotalWeightedClick,
+                        onSubtotalAvgWeightedClick: scope.onSubtotalAvgWeightedClick,
+
                     };
 
                     const groups = scope.evDataService.getGroups();
@@ -136,6 +156,17 @@
 
                     return "'views/popups/entity-viewer/g-report-viewer-column-settings-popup-menu.html'";
                 };
+
+                scope.getPopupMenuClasses = function (column) {
+
+                    if (scope.isReport && column.value_type == 20) {
+
+                        return "rounded-border g-column-number-context-menu-popup";
+
+                    }
+
+                    return "rounded-border g-column-context-menu-popup";
+                }
 
                 scope.rowFiltersToggle = function () {
 
@@ -981,6 +1012,33 @@
                     scope.evDataService.setColumns(scope.columns);
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 
+                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                };
+
+                scope.unGroup = function (columnTableId) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    var groups = scope.evDataService.getGroups();
+
+                    /** remove group */
+                    var i;
+                    for (i = 0; i < groups.length; i++) {
+                        if (groups[i].___group_type_id === columnTableId) {
+                            groups.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                    scope.groups = groups;
+                    scope.evDataService.setGroups(groups);
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+                    scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
 
