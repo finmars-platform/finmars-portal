@@ -112,7 +112,7 @@
                             </div>
                         </md-card-title-text>
                     </md-card-title>
-                    <md-card-actions layout="row" layout-align="space-between center">
+                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="item.is_initialized">
                         <!--<md-button>Leave</md-button>-->
 
                         <md-button data-ng-if="!item.is_owner" class="md-raised"
@@ -133,6 +133,9 @@
 
                         <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Open
                         </md-button>
+                    </md-card-actions>
+                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="!item.is_initialized">
+                        <div class="text-center">Ecosystem is initializing</div>
                     </md-card-actions>
                 </md-card>
 
