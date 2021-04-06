@@ -1034,6 +1034,18 @@
                         }
                     }
 
+                    const columns = scope.evDataService.getColumns();
+                    const ungroupedColumn = columns.find(column => column.___column_id === columnTableId);
+
+                    if (ungroupedColumn) {
+                        if (!ungroupedColumn.frontOptions) {
+                            ungroupedColumn.frontOptions = {};
+                        }
+
+                        ungroupedColumn.frontOptions.lastDragged = true;
+                        scope.evDataService.setColumns(columns);
+                    }
+
                     scope.groups = groups;
                     scope.evDataService.setGroups(groups);
                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
