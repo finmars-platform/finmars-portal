@@ -6,8 +6,8 @@
 	'use strict';
 
 	var baseUrlService = require('../services/baseUrlService');
-	var xhrService = require('../../../../core/services/xhrService');
 	var cookieService = require('../../../../core/services/cookieService');
+	var xhrService = require('../../../../core/services/xhrService');
 	var baseUrl = baseUrlService.resolve();
 
 	var getPricingConditionChoices = function () {

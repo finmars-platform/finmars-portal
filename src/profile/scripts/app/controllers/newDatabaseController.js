@@ -7,6 +7,7 @@
 
     var systemService = require('../services/systemService');
     var usersService = require('../services/usersService');
+    var authorizerService = require('../services/authorizerService');
 
     // TODO resolve service from profile module
     var backendConfigurationImportService = require('../services/backendConfigurationImportService')
@@ -61,15 +62,15 @@
             }
         };
 
-        vm.checkUniqueness = function(){
+        vm.checkUniqueness = function () {
 
             vm.processingCheckName = true;
 
-            usersService.checkMasterUserUniqueness(vm.name).then(function (data) {
+            authorizerService.checkMasterUserUniqueness(vm.name).then(function (data) {
 
                 console.log('data', data);
 
-                if(data.hasOwnProperty('unique')) {
+                if (data.hasOwnProperty('unique')) {
                     vm.nameIsUnique = data.unique
                 }
 
@@ -85,9 +86,19 @@
 
             vm.finishingSetup = true;
 
-            usersService.createMasterUser({name: vm.name, description: vm.description}).then(function (data) {
+            var options = {
+                name: vm.name,
+                description: vm.description,
+                base_api_url: vm.base_api_url,
+                db_host: vm.db_host,
+                db_name: vm.db_name,
+                db_user: vm.user,
+                db_password: vm.db_password,
+            }
 
-                usersService.setMasterUser(data.id).then(function (value) {
+            authorizerService.createMasterUser(options).then(function (data) {
+
+                authorizerService.setMasterUser(data.id).then(function (value) {
 
                     if (vm.activeConfig === 'custom') {
 
@@ -109,12 +120,11 @@
                 })
 
 
-
             });
 
         };
 
-        vm.importConfiguration = function(resolve){
+        vm.importConfiguration = function (resolve) {
 
             backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
 
@@ -160,8 +170,9 @@
 
         vm.init = function () {
 
-            vm.getEcosystemConfigurationList();
+            // vm.getEcosystemConfigurationList();
 
+            vm.readyStatus.ecosystemConfigurations = true;
         };
 
         vm.init()
