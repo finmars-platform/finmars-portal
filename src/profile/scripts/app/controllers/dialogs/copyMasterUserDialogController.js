@@ -6,6 +6,7 @@
     'use strict';
 
     var usersService = require('../../services/usersService');
+    var authorizerService = require('../../services/authorizerService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
@@ -27,7 +28,7 @@
 
             vm.processing = true;
 
-            usersService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id}).then(function (data) {
+            authorizerService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id}).then(function (data) {
 
                 console.log('data success', data);
 
