@@ -238,7 +238,10 @@
 
         else if (columnNumber > obj.___level - 1) {
 
-            if (column.report_settings && column.report_settings.subtotal_formula_id && !column.report_settings.hide_subtotal) {
+            const isHideSubtotal = column.report_settings && column.report_settings.subtotal_formula_id && column.report_settings.hide_subtotal;
+            const isHideGrandTotal = obj.___level === 0 && column.report_settings && column.report_settings.subtotal_formula_id && column.report_settings.hide_grandtotal;
+
+            if (!isHideSubtotal && !isHideGrandTotal) {
 
                 if (obj.hasOwnProperty(column.key)) {
 
