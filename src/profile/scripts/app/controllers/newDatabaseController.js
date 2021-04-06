@@ -98,29 +98,36 @@
 
             authorizerService.createMasterUser(options).then(function (data) {
 
-                authorizerService.setMasterUser(data.id).then(function (value) {
 
-                    if (vm.activeConfig === 'custom') {
-
-                        setTimeout(function () {
-
-                            $state.go('app.home', {}, {reload: 'app'});
-
-                        }, 100)
-
-                    } else {
-
-                        var item = vm.ecosystemConfigurations.find(function (item) {
-                            return item.id === vm.activeConfig
-                        });
-
-                        vm.applyItem($event, item)
-                    }
-
-                })
+                // authorizerService.setMasterUser(data.id).then(function (value) {
+                //
+                //     if (vm.activeConfig === 'custom') {
+                //
+                //         setTimeout(function () {
+                //
+                //             $state.go('app.home', {}, {reload: 'app'});
+                //
+                //         }, 100)
+                //
+                //     } else {
+                //
+                //         var item = vm.ecosystemConfigurations.find(function (item) {
+                //             return item.id === vm.activeConfig
+                //         });
+                //
+                //         vm.applyItem($event, item)
+                //     }
+                //
+                // })
 
 
             });
+
+            setTimeout(function () {
+
+                $state.go('app.profile', {}, {reload: 'app'});
+
+            }, 1000)
 
         };
 
