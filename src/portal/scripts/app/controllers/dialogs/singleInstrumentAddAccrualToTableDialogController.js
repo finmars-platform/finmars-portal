@@ -5,6 +5,7 @@
     'use strict';
 
     const metaHelper = require('../../helpers/meta.helper');
+    const instrumentService = require('../../services/instrumentService');
 
     module.exports = function singleInstrumentAddAccrualToTableDialogController ($scope, $mdDialog, gridTableHelperService, multitypeFieldService, data) {
 
@@ -15,7 +16,7 @@
         vm.entity = data.entity;
         vm.accrual = {};
 
-        const multitypeFieldsData = multitypeFieldService.getTypesForInstrumentAccruals();
+        const multitypeFieldsData = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
 		const attrTypes = data.attributeTypes;
 
 		vm.fieldsObject = {};
@@ -28,7 +29,7 @@
 
             // vm.accrual does not contain data from multitype fields.
             // Need to collect it from multitypeFieldsData
-            Object.keys(vm.accrual).forEach(key => {
+            /* Object.keys(vm.accrual).forEach(key => {
 
             	if (multitypeFieldsData.hasOwnProperty(key)) {
 
@@ -56,7 +57,28 @@
 
                 }
 
-            })
+            }) */
+
+			Object.keys(multitypeFieldsData).forEach(key => {
+
+				let modelValue = null;
+				let valueType;
+
+				if (vm.fieldsObject[key].to_show) {
+
+					const activeType = vm.fieldsObject[key].fieldTypes.find(type => type.isActive);
+
+					modelValue = activeType.model;
+					valueType = activeType.value_type;
+
+					const valueTypeKey = `${key}_value_type`;
+
+					vm.accrual[key] = modelValue;
+					vm.accrual[valueTypeKey] = valueType;
+
+				}
+
+			})
 
             $mdDialog.hide({
                 status: 'agree',
@@ -73,7 +95,15 @@
 
 				type.label = item.override_name || item.name;
 
-				if (item.tooltip) type.fieldData.tooltipText = item.tooltip;
+				if (item.tooltip) {
+
+					if (!type.fieldData) type.fieldData = {};
+
+					if (!type.fieldData.smallOptions) type.fieldData.smallOptions = {};
+
+					type.fieldData.smallOptions.tooltipText = item.tooltip;
+
+				}
 
 			});
 
@@ -155,11 +185,13 @@
 					vm.accrual[typeKey] = notSelType.value_type;
 
                     setActiveMultiTypeState(item); */
-					const typesList = multitypeFieldsData[item.key].fieldTypesList;
-					multitypeFieldsData[item.key].fieldTypesList = multitypeFieldService.setActiveTypeByValueType(typesList, item.default_value, item.default_value_type);
 
-					vm.fieldsObject[item.key].fieldTypes = multitypeFieldsData[item.key].fieldTypesList;
+					const typesList = multitypeFieldsData[item.key].fieldTypesList;
+					const valueType = multitypeFieldService.setActiveTypeByValueType(typesList, item.default_value, item.default_value_type);
+
+					vm.fieldsObject[item.key].fieldTypes = typesList;
 					// prepareDataForMultitypeField(item);
+					vm.accrual[item.key + '_value_type'] = valueType;
 
                 }
 

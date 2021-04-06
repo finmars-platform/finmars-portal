@@ -5,17 +5,19 @@
 
     'use strict';
 
-    var transactionTypeService = require('../../services/transactionTypeService');
-    var gridTableEvents = require('../../services/gridTableEvents');
-    var GridTableDataService = require('../../services/gridTableDataService');
-    var GridTableEventService = require('../../services/gridTableEventService');
+	const instrumentService = require('../../services/instrumentService');
+	const transactionTypeService = require('../../services/transactionTypeService');
+	const gridTableEvents = require('../../services/gridTableEvents');
 
-    var metaHelper = require('../../helpers/meta.helper');
+	const GridTableDataService = require('../../services/gridTableDataService');
+	const GridTableEventService = require('../../services/gridTableEventService');
+
+	const metaHelper = require('../../helpers/meta.helper');
     // var gridTableHelperService = require('../../helpers/gridTableHelperService');
 
-    module.exports = function singleInstrumentAddEventToTableDialogController($scope, $mdDialog, gridTableHelperService, data) {
+    module.exports = function singleInstrumentAddEventToTableDialogController($scope, $mdDialog, gridTableHelperService, multitypeFieldService, data) {
 
-    	var vm = this;
+    	let vm = this;
 
         vm.readyStatus = {
         	actionsGridTable: false
@@ -28,8 +30,16 @@
 
         vm.transactionTypes = [];
 
-        var getRangeOfNumbers = function (number) {
-            var buttonPositions = [{id: 1, name: 1}];
+        const instrAttrTypes = data.instrumentAttrTypes;
+        let multitypeFieldsData = instrumentService.getInstrumentEventsMultitypeFieldsData();
+
+        const getRangeOfNumbers = function (number) {
+            var buttonPositions = [
+            	{
+            		id: 1,
+					name: 1
+            	}
+            ];
 
             for (var i = 2; i <= number; i++) {
                 buttonPositions.push({id: i, name: i});
@@ -38,10 +48,9 @@
             return buttonPositions;
         };
 
-        var onActionsTableAddRow = function () {
+		const onActionsTableAddRow = function () {
 
             var newRow = vm.eventActionsGridTableData.body[0];
-            console.log('newRow', newRow)
 
             var newAction = {
                 "transaction_type": '',
@@ -67,7 +76,7 @@
 
         };
 
-        var onActionsTableDeleteRows = function (data) {
+		const onActionsTableDeleteRows = function (data) {
 
             vm.event.actions = vm.event.actions.filter(function (action) {
 
@@ -82,7 +91,7 @@
 
         };
 
-        var onActionsTableCellValueChanged = function (argObj) {
+		const onActionsTableCellValueChanged = function (argObj) {
 
             var rowOrder = argObj.row.order,
                 colOrder = argObj.column.order;
@@ -189,7 +198,7 @@
 
         };
 
-        var formatDataForActionsGridTable = function () {
+		const formatDataForActionsGridTable = function () {
 
             // assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
@@ -248,7 +257,7 @@
         };
         // < Event actions grid table >
 
-        var initGridTableEvents = function () {
+		const initGridTableEvents = function () {
 
             vm.eventActionsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, onActionsTableAddRow);
 
@@ -258,13 +267,30 @@
 
         };
 
+		const collectDataFromMultitypeFields = function () {
+
+			Object.keys(multitypeFieldsData).forEach(fieldKey => {
+
+				const fieldData = multitypeFieldsData[fieldKey];
+				const activeType = fieldData.fieldTypesList.find(type => type.isActive);
+
+				vm.event[fieldKey] = activeType.model;
+				vm.event[fieldKey + '_value_type'] = activeType.value_type;
+
+			});
+
+		};
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function () {
-            var hashTableOfButtonPositions = {};
+
+        	var hashTableOfButtonPositions = {};
             var buttonPositionNotValid = false;
+
+			collectDataFromMultitypeFields();
 
             for (var i = 0; i < vm.event.actions.length; i++) {
 
@@ -276,9 +302,7 @@
                     break;
 
                 } else {
-
                     hashTableOfButtonPositions[prop] = i;
-
                 }
 
             }
@@ -300,7 +324,9 @@
                     }
                 })
 
-            } else {
+            }
+
+            else {
 
                 $mdDialog.hide({
                     status: 'agree', data: {
@@ -350,7 +376,18 @@
 
         vm.init = function () {
 
-            vm.eventActionsGridTableDataService = new GridTableDataService();
+			multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrAttrTypes, multitypeFieldsData);
+
+			vm.effectiveDateFieldTypes = multitypeFieldsData.effective_date.fieldTypesList;
+			multitypeFieldService.setActiveTypeByValueType(vm.effectiveDateFieldTypes, vm.event.effective_date, vm.event.effective_date_value_type,);
+
+			vm.finalDateFieldTypes = multitypeFieldsData.final_date.fieldTypesList;
+			multitypeFieldService.setActiveTypeByValueType(vm.finalDateFieldTypes, vm.event.final_date, vm.event.final_date_value_type,);
+
+			vm.periodicityNFieldTypes = multitypeFieldsData.periodicity_n.fieldTypesList;
+			multitypeFieldService.setActiveTypeByValueType(vm.periodicityNFieldTypes, vm.event.periodicity_n, vm.event.periodicity_n_value_type,);
+
+			vm.eventActionsGridTableDataService = new GridTableDataService();
             vm.eventActionsGridTableEventService = new GridTableEventService();
 
             initGridTableEvents();

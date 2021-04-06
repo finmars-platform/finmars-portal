@@ -2,11 +2,10 @@
 
     var gtEvents = require('../../services/gridTableEvents');
     var metaHelper = require('../../helpers/meta.helper');
-    var md5Helper = require('../../helpers/md5.helper');
 
     'use strict';
 
-    module.exports = function () {
+    module.exports = function (gridTableHelperService) {
 
         return {
             restrict: 'E',
@@ -27,9 +26,8 @@
 
                 var assembleNewRow = function () {
 
-                	var newRowsList = scope.gridTableData.body.filter(row => row.newRow);
                     var newRow = metaHelper.recursiveDeepCopy(scope.gridTableData.templateRow, true);
-                    var newRowKey = md5Helper.md5('newGridTableRow', newRowsList.length);
+                    var newRowKey = gridTableHelperService.getNewRowUniqueKey(scope.gtDataService);
 
                     newRow.key = newRowKey;
 					newRow.newRow = true;

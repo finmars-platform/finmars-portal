@@ -588,7 +588,7 @@ app.controller('PricingSchemePageController', ['$scope', '$mdDialog', require('.
 app.controller('RunPricingInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingInstrumentDialogController')]);
 app.controller('RunPricingCurrencyDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingCurrencyDialogController')]);
 app.controller('SingleInstrumentGenerateEventDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/singleInstrumentGenerateEventDialogController')]);
-app.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
+app.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
 app.controller('SingleInstrumentAddAccrualToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/singleInstrumentAddAccrualToTableDialogController')]);
 
 
@@ -768,7 +768,7 @@ app.directive('multitypeField', [require('./app/directives/customInputs/multityp
 
 // Grid Table
 app.directive('gridTable', [require('./app/directives/gridTable/gridTableDirective')]);
-app.directive('gridTableTopPanel', [require('./app/directives/gridTable/gridTableTopPanelDirective')]);
+app.directive('gridTableTopPanel', ['gridTableHelperService', require('./app/directives/gridTable/gridTableTopPanelDirective')]);
 app.directive('gridTableCell', ['$compile', require('./app/directives/gridTable/gridTableCellDirective')]);
 app.directive('gridTableHeaderCell', [require('./app/directives/gridTable/cells/gridTableHeaderCellDirective')]);
 app.directive('gridTablePopupCell', ['$compile', '$mdDialog', require('./app/directives/gridTable/cells/gridTablePopupCellDirective')]);

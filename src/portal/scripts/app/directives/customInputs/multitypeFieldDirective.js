@@ -5,6 +5,7 @@
 		return {
 			restrict: "E",
 			scope: {
+				label: "@",
 				fieldTypesData: '=',
 				enteredValue: '<', // object {model: "entered into field value", type: "selected type"}
 				testVal: '=',
@@ -12,6 +13,16 @@
 			},
 			templateUrl: "views/directives/customInputs/multitype-field-view.html",
 			link: function (scope, elem, attr) {
+
+				scope.getLabel = function () {
+
+					if (scope.activeType.hasOwnProperty('label')) {
+						return scope.activeType.label;
+					}
+
+					return scope.label || null;
+
+				};
 
 				scope.onChangeCallback = function () {
 					if (scope.onValueChange) {
