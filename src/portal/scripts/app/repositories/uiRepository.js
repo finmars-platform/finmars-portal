@@ -222,6 +222,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteListLayoutByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
 				{
@@ -321,10 +325,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?is_default=2&content_type=' + contentType,
-			getRequestParams2);
+			getRequestParams2)
 	};
 
-	var getEditLayoutByKey = function (id) {
+	var getEditLayout = function (id) {
+
 
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
@@ -338,18 +343,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 					Accept: 'application/json',
 					'Content-type': 'application/json'
 				}
-			});
-	};
-
-	var getEditLayoutByUserCode = function (entityType, userCode) {
-
-		var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
-
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?content_type=' + contentType + '&user_code=' + userCode,
-			getRequestParams2);
-
+			})
 	};
 
 	var createEditLayout = function (ui) {
@@ -392,6 +386,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteEditLayoutByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
 				{
@@ -462,6 +460,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteConfigurationByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
 				{
@@ -529,6 +531,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteConfigurationExportLayoutByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
 				{
@@ -599,7 +605,6 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var getInstrumentFieldList = function (options) {
-
 
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
@@ -727,6 +732,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteDashboardLayoutByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
 				{
@@ -816,6 +825,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteTemplateLayoutByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
 				{
@@ -894,6 +907,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteContextMenuLayoutByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
 				{
@@ -1035,6 +1052,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteCrossEntityAttributeExtension = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
 				{
@@ -1124,6 +1145,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	};
 
 	var deleteColumnSortData = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
 				{
@@ -1167,8 +1192,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		getListEditLayout: getListEditLayout,
 		getDefaultEditLayout: getDefaultEditLayout,
-		getEditLayoutByKey: getEditLayoutByKey,
-		getEditLayoutByUserCode: getEditLayoutByUserCode,
+		getEditLayout: getEditLayout,
 		createEditLayout: createEditLayout,
 		updateEditLayout: updateEditLayout,
 		deleteEditLayoutByKey: deleteEditLayoutByKey,
