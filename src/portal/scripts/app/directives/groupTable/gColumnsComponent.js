@@ -1051,32 +1051,30 @@
 
                 };
 
-                scope.reportHideSubtotal = function (column) {
-
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                const hideSubtotalForColumn = function (prop, column) {
 
                     if (!column.hasOwnProperty('report_settings')) {
                         column.report_settings = {};
                     }
 
-                    column.report_settings.hide_subtotal = !column.report_settings.hide_subtotal;
+                    column.report_settings[prop] = !column.report_settings[prop];
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+
+                }
+
+                scope.reportHideSubtotal = function (column) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    hideSubtotalForColumn('hide_subtotal', column)
 
                 };
 
                 scope.reportHideGrandTotal = function (column) {
+
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-
-                    if (!column.hasOwnProperty('report_settings')) {
-                        column.report_settings = {};
-                    }
-
-                    column.report_settings.hide_grandtotal = !column.report_settings.hide_grandtotal;
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                    scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+                    hideSubtotalForColumn('hide_grandtotal', column)
 
                 };
 
