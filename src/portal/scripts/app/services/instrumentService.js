@@ -9,6 +9,8 @@
 
 	const GridTableHelperService = require('../helpers/gridTableHelperService');
 	const gridTableHelperService = new GridTableHelperService();
+	const MultitypeFieldService = require('../services/multitypeFieldService');
+	const multitypeFieldService = new MultitypeFieldService();
 
 	const evEditorEvents = require('./ev-editor/entityViewerEditorEvents');
 
@@ -59,9 +61,7 @@
 	 * @param evEditorEventService {Object}
 	 * @param tableChangeObj {Object} - mutating object that helps to determine which of multiple accrual tables changed
 	 */
-	const initAccrualsScheduleGridTableEvents = function (
-		gridTableDataService, gridTableEventService, entity, evEditorEventService, tableChangeObj
-	) {
+	const initAccrualsScheduleGridTableEvents = function (gridTableDataService, gridTableEventService, entity, evEditorEventService, tableChangeObj) {
 
 		const tableChangeArgObj = {
 			key: 'accrual_calculation_schedules'
@@ -107,14 +107,15 @@
 				rowOrder, colOrder
 			);
 
-			if (cell.cellType === 'multitypeField') {
+			/*if (cell.cellType === 'multitypeField') {
 
 				var activeType = cell.settings.fieldTypesData.find(type => type.isActive);
 				if (!activeType) activeType = cell.settings.fieldTypesData.find(type => type.isDefault);
 
+				metaHelper
 				entity.accrual_calculation_schedules[rowOrder][cell.key + '_value_type'] = activeType.value_type;
 
-			}
+			}*/
 
 			tableChangeObj.value = true;
 			const cellValChangeArgObj = tableChangeArgObj;
@@ -176,6 +177,232 @@
 
 	};
 
+	const getInstrumentAccrualsMultitypeFieldsData = () => {
+		return {
+			'accrual_start_date': {
+				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'dateInput',
+						'isDefault': true,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'menuOptions': [],
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'first_payment_date': {
+				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': null,
+						'fieldType': 'dateInput',
+						'isDefault': true,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'menuOptions': [],
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'accrual_size': {
+				value_type: 20, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': null,
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'menuOptions': [],
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'periodicity_n': {
+				value_type: 20, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': null,
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'menuOptions': [],
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			}
+		};
+	};
+
+	const getInstrumentEventsMultitypeFieldsData = () => {
+		return {
+			'effective_date': {
+				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'dateInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'final_date': {
+				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'dateInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'periodicity_n': {
+				value_type: 20, // used to filter instrument user attributes options for dropdownSelect
+				fieldTypesList: [
+					{
+						'model': null,
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			}
+		};
+	};
+
+	const updateMultitypeFieldSelectorOptionsInsideGridTable = function (instrumentAttributeTypes, multitypeFieldsObj, gridTableData) {
+
+		multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttributeTypes, multitypeFieldsObj);
+
+		gridTableData.body.forEach(row => {
+
+			row.columns.forEach(cell => {
+
+				if (cell.cellType === 'multitypeField') {
+
+					let selectorData = cell.settings.fieldTypesData.find(type => type.fieldType === 'dropdownSelect');
+					const defaultSelectorData = multitypeFieldsObj[cell.key].fieldTypesList.find(type => type.fieldType === 'dropdownSelect');
+
+					selectorData.fieldData.menuOptions = defaultSelectorData.fieldData.menuOptions;
+
+				}
+
+			});
+
+		});
+
+	};
+
     module.exports = {
         getList: getList,
         getListLight: getListLight,
@@ -189,8 +416,12 @@
         deleteBulk: deleteBulk,
 
 		initAccrualsScheduleGridTableEvents: initAccrualsScheduleGridTableEvents,
+		getInstrumentAccrualsMultitypeFieldsData: getInstrumentAccrualsMultitypeFieldsData,
+		getInstrumentEventsMultitypeFieldsData: getInstrumentEventsMultitypeFieldsData,
+		updateMultitypeFieldSelectorOptionsInsideGridTable: updateMultitypeFieldSelectorOptionsInsideGridTable,
 
-		getEditLayoutBasedOnUserCodes: getEditLayoutBasedOnUserCodes
+		getEditLayoutBasedOnUserCodes: getEditLayoutBasedOnUserCodes,
+
     }
 
 

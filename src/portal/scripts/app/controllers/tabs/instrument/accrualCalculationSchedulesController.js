@@ -292,9 +292,9 @@
         };
 
 		//<editor-fold desc="Schedules grid table">
-		var accrualMultitypeFieldsData = multitypeFieldService.getTypesForInstrumentAccruals();
+		let accrualMultitypeFieldsData = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
 
-		var instrumentAttrTypes = vm.entity.attributes.map(attr => attr.attribute_type_object);
+		const instrumentAttrTypes = vm.evEditorDataService.getEntityAttributeTypes();
 		multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, accrualMultitypeFieldsData);
 
 		vm.schedulesGridTableData = {
@@ -308,7 +308,7 @@
                 columns: [
                     {
                         key: 'accrual_start_date',
-                        objPath: [['accrual_start_date'], ['accrual_start_date_value_type']],
+                        objPaths: [['accrual_start_date'], ['accrual_start_date_value_type']],
                         columnName: 'Accrual start date',
                         order: 0,
                         cellType: 'multitypeField',
@@ -389,12 +389,15 @@
 
 								}
 
+								//<editor-fold desc="Process data from periodicity_n multitypeField ">
 								var typesList = periodicityCell.settings.popupSettings.popupData[1].fieldTypesData;
                                 var activeType = typesList.find(type => type.isActive);
 
                                 if (!activeType) activeType = typesList.find(type => type.isDefault);
 
+								periodicityCell.settings.value[1] = activeType.model;
                                 vm.entity.accrual_calculation_schedules[rowData.order]['periodicity_n_value_type'] = activeType.value_type;
+								//</editor-fold>
 
                                 /* for (var i = 0; i < vm.periodicityItems.length; i++) {
 
@@ -451,17 +454,51 @@
 				rowObj.newRow = !!(schedule.frontOptions && schedule.frontOptions.newRow);
 				rowObj.order = scheduleIndex;
 
+				var insertMultitypeFieldDataIntroCell = function (columnKey, label) {
+
+					var cell = gridTableHelperService.getCellFromRowByKey(rowObj, columnKey);
+
+					var valueProp = cell.objPaths[0],
+						valueTypeProp = cell.objPaths[1],
+						value = schedule[valueProp],
+						valueType = schedule[valueTypeProp];
+
+					var typesList = accrualMultitypeFieldsData[columnKey].fieldTypesList;
+					typesList.forEach(type => type.label = label);
+
+					var cellData = gridTableHelperService.getMultitypeFieldDataForCell(typesList, cell, value, valueType);
+					rowObj.columns[cell.order] = cellData.cell;
+					schedule[valueTypeProp] = cellData.value_type; // for existing accruals without _value_type
+
+				};
+
 				// rowObj.columns[0].settings.value = schedule.accrual_start_date;
-				var typesList0 = accrualMultitypeFieldsData[rowObj.columns[0].key].fieldTypesList;
-				gridTableHelperService.setMultitypeFieldDataForCell(typesList0, rowObj.columns[0], schedule.accrual_start_date, schedule.accrual_start_date_value_type);
+
+				/*var startDateTypesList = accrualMultitypeFieldsData[rowObj.columns[0].key].fieldTypesList;
+				startDateTypesList.forEach(type => type.label = 'Accrual start date');
+
+				cellData = gridTableHelperService.getMultitypeFieldDataForCell(startDateTypesList, rowObj.columns[0], schedule.accrual_start_date, schedule.accrual_start_date_value_type);
+				rowObj.columns[0] = cellData.cell;
+				schedule.accrual_start_date_value_type = cellData.value_type; // for existing accruals without _value_type*/
+				insertMultitypeFieldDataIntroCell('accrual_start_date', 'Accrual start date');
 
 				// rowObj.columns[1].settings = schedule.first_payment_date;
-				var typesList1 = accrualMultitypeFieldsData[rowObj.columns[1].key].fieldTypesList;
-				gridTableHelperService.setMultitypeFieldDataForCell(typesList1, rowObj.columns[1], schedule.first_payment_date, schedule.first_payment_date_value_type);
+				/*var firstPayDateTypesList = accrualMultitypeFieldsData[rowObj.columns[1].key].fieldTypesList;
+				firstPayDateTypesList.forEach(type => type.label = 'First payment date');
+
+				cellData = gridTableHelperService.getMultitypeFieldDataForCell(firstPayDateTypesList, rowObj.columns[1], schedule.first_payment_date, schedule.first_payment_date_value_type);
+				rowObj.columns[1] = cellData.cell;
+				schedule.first_payment_date_value_type = cellData.value_type; // for existing accruals without _value_type*/
+				insertMultitypeFieldDataIntroCell('first_payment_date', 'First payment date');
 
 				// rowObj.columns[2].settings.value = schedule.accrual_size;
-				var accrualSizeTypesList = accrualMultitypeFieldsData[rowObj.columns[2].key].fieldTypesList;
-				gridTableHelperService.setMultitypeFieldDataForCell(accrualSizeTypesList, rowObj.columns[2], schedule.accrual_size, schedule.accrual_size_value_type);
+				/* var accrualSizeTypesList = accrualMultitypeFieldsData[rowObj.columns[2].key].fieldTypesList;
+				accrualSizeTypesList.forEach(type => type.label = 'Accrual size');
+
+				cellData = gridTableHelperService.getMultitypeFieldDataForCell(accrualSizeTypesList, rowObj.columns[2], schedule.accrual_size, schedule.accrual_size_value_type);
+				rowObj.columns[2] = cellData.cell;
+				schedule.accrual_size_value_type = cellData.value_type; // for existing accruals without _value_type */
+				insertMultitypeFieldDataIntroCell('accrual_size', 'First payment date');
 
 				rowObj.columns[3].settings.value = [
 					schedule.accrual_calculation_model,
@@ -469,8 +506,8 @@
 					schedule.periodicity
 				];
 
-				var periodicityNTypesList = accrualMultitypeFieldsData['periodicity_n'].fieldTypesList;
-				periodicityNTypesList = multitypeFieldService.setActiveTypeByValueType(periodicityNTypesList, schedule.periodicity_n, schedule.periodicity_n_value_type);
+				var periodicityNTypesList = JSON.parse(JSON.stringify(accrualMultitypeFieldsData['periodicity_n'].fieldTypesList));
+				schedule.periodicity_n_value_type = multitypeFieldService.setActiveTypeByValueType(periodicityNTypesList, schedule.periodicity_n, schedule.periodicity_n_value_type);
 				periodicityNTypesList.forEach(type => type.label = 'Number of days');
 
 				rowObj.columns[3].settings.popupSettings.popupData[1].fieldTypesData = periodicityNTypesList;
@@ -491,14 +528,59 @@
 
 			});
 
-		};
+        };
 
-        var formatDataForSchedulesGridTable = function () {
+        var convertDataForSchedulesGridTable = function () {
 
-            // Needed to update data after downloading it from server
-            var tmplRowPeriodicityPopup = vm.schedulesGridTableData.templateRow.columns[3].settings.popupSettings;
-            tmplRowPeriodicityPopup.popupData[0].selectorOptions = vm.accrualModels;
-            tmplRowPeriodicityPopup.popupData[2].selectorOptions = vm.periodicityItems;
+			var templateRow = vm.schedulesGridTableData.templateRow;
+
+			var insertMultitypeFieldDataIntroCell = function (columnKey, label) {
+
+				var cell = gridTableHelperService.getCellFromRowByKey(templateRow, columnKey);
+				var typesList = JSON.parse(JSON.stringify(accrualMultitypeFieldsData[columnKey].fieldTypesList));
+				typesList.forEach(type => type.label = label);
+
+				var activeValueType = multitypeFieldService.setActiveTypeByValueType(typesList, null, null);
+
+				cell.settings.value[1] = activeValueType;
+				cell.settings.fieldTypesData = typesList;
+				// gridTableHelperService.setCellInsideRow(templateRow, cell);
+
+			}
+
+			insertMultitypeFieldDataIntroCell('accrual_start_date', 'Accrual start date');
+
+			/*var firstPayDateCell = gridTableHelperService.getCellFromRowByKey(templateRow, 'first_payment_date');
+			var firstPayDateTypesList = accrualMultitypeFieldsData['first_payment_date'].fieldTypesList;
+			firstPayDateTypesList.forEach(type => type.label = 'First payment date');
+
+			multitypeFieldService.setActiveTypeByValueType(firstPayDateTypesList, null, null);
+			gridTableHelperService.setCellInsideRow(templateRow, firstPayDateCell);*/
+
+			insertMultitypeFieldDataIntroCell('first_payment_date', 'First payment date');
+
+			/* var accrualSizeCell = gridTableHelperService.getCellFromRowByKey(templateRow, 'accrual_size');
+			var accrualSizeTypesList = accrualMultitypeFieldsData['accrual_size'].fieldTypesList;
+			accrualSizeTypesList.forEach(type => type.label = 'Accrual size');
+
+			multitypeFieldService.setActiveTypeByValueType(accrualSizeTypesList, null, null);
+			gridTableHelperService.setCellInsideRow(templateRow, accrualSizeCell); */
+
+			insertMultitypeFieldDataIntroCell('accrual_size', 'Accrual size');
+
+			//<editor-fold desc="Set multitype field data for periodicity_n inside periodicity">
+			var periodicityNTypesList = JSON.parse(JSON.stringify(accrualMultitypeFieldsData['periodicity_n'].fieldTypesList));
+			multitypeFieldService.setActiveTypeByValueType(periodicityNTypesList, null, null);
+			periodicityNTypesList.forEach(type => type.label = 'Number of days');
+
+			var periodicityCell = gridTableHelperService.getCellFromRowByKey(templateRow, 'periodicity');
+			periodicityCell.settings.popupSettings.popupData[1].fieldTypesData = periodicityNTypesList;
+			//</editor-fold>
+
+			// Needed to update data after downloading it from server
+			var tmplRowPeriodicityPopup = vm.schedulesGridTableData.templateRow.columns[3].settings.popupSettings;
+			tmplRowPeriodicityPopup.popupData[0].selectorOptions = vm.accrualModels;
+			tmplRowPeriodicityPopup.popupData[2].selectorOptions = vm.periodicityItems;
 
 			//<editor-fold desc="Assemble header columns">
 			var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);
@@ -603,11 +685,14 @@
 				const newRow = gridTableData.body[0];
 				const newSchedule = {
 					"accrual_start_date": '',
+					"accrual_start_date_value_type": 40,
 					"first_payment_date": '',
+					"first_payment_date_value_type": 40,
 					"accrual_size": '',
 					"accrual_calculation_model": '',
 					"periodicity": '',
 					"periodicity_n": '',
+					"periodicity_n_value_type": 20,
 					"notes": '',
 					frontOptions: {newRow: true, gtKey: newRow.key}
 				};
@@ -625,7 +710,7 @@
 			});
 			//</editor-fold>
 
-			vm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, function (argObj) {
+			vm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, argObj => {
 
 				if (argObj && argObj.key === 'accrual_calculation_schedules' && !schedulesTableChangedHere.value) {
 
@@ -636,6 +721,11 @@
 
 				schedulesTableChangedHere.value = false;
 
+			});
+
+			vm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {
+				const instrumentAttrTypes = vm.evEditorDataService.getEntityAttributeTypes();
+				instrumentService.updateMultitypeFieldSelectorOptionsInsideGridTable(instrumentAttrTypes, accrualMultitypeFieldsData, vm.schedulesGridTableData);
 			});
 
 		};
@@ -668,7 +758,7 @@
             Promise.all(initPromises).then(function () {
 
                 $scope.$apply();
-                formatDataForSchedulesGridTable();
+				convertDataForSchedulesGridTable();
 
             });
 

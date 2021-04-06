@@ -1,8 +1,8 @@
 <div class="custom-input-container multitype-field-container multitypeFieldContainer">
 
-    <div ng-if="activeType.label"
+    <div ng-if="getLabel()"
          class="custom-input-top-row">
-        <span class="custom-input-textarea-span-pan">{{activeType.label}}</span>
+        <span class="custom-input-textarea-span-pan">{{getLabel()}}</span>
     </div>
 
     <div class="custom-input-main-container customInputBackgroundColor">

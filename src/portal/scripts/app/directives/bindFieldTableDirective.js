@@ -61,28 +61,28 @@
 					},
 					'accrual_start_date': {
 						key: 'accrual_start_date',
-						objPath: ['accrual_start_date'],
+						objPaths: [['accrual_start_date'], ['accrual_start_date_value_type']],
 						cellType: 'multitypeField',
 						settings: {
-							value: null,
+							value: [null, null],
 							fieldTypesData: null,
 						}
 					},
 					'first_payment_date': {
 						key: 'first_payment_date',
-						objPath: ['first_payment_date'],
+						objPaths: [['first_payment_date'], ['first_payment_date_value_type']],
 						cellType: 'multitypeField',
 						settings: {
-							value: null,
+							value: [null, null],
 							fieldTypesData: null,
 						}
 					},
 					'accrual_size': {
 						key: 'accrual_size',
-						objPath: ['accrual_size'],
+						objPaths: [['accrual_size'], ['accrual_size_value_type']],
 						cellType: 'multitypeField',
 						settings: {
-							value: null,
+							value: [null, null],
 							fieldTypesData: null,
 						},
 					},
@@ -104,10 +104,10 @@
 					},
 					'periodicity_n': {
 						key: 'periodicity_n',
-						objPath: ['periodicity_n'],
+						objPaths: [['periodicity_n'], ['periodicity_n_value_type']],
 						cellType: 'multitypeField',
 						settings: {
-							value: null,
+							value: [null, null],
 							fieldTypesData: null,
 						}
 					}
@@ -247,10 +247,10 @@
 
 				const addNewAccrual = function (accrual) {
 
-					const newRowsList = gridTableData.body.filter(row => row.newRow);
-					const newRowKey = md5Helper.md5('newGridTableRow', newRowsList.length);
+					const newRowKey = gridTableHelperService.getNewRowUniqueKey(scope.gridTableDataService);
 
-					accrual.frontOptions = {gtKey: newRowKey};
+					accrual.frontOptions = {newRow: true, gtKey: newRowKey};
+
 					const rowObj = metaHelper.recursiveDeepCopy(gridTableData.templateRow);
 					rowObj.key = newRowKey;
 					rowObj.newRow = true;
@@ -423,35 +423,67 @@
 				 */
 				const fillGridTableRowCells = function (item, row) {
 
-					row.columns.forEach(cell => {
+					row.columns.forEach((cell, index) => {
 
-						cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
+						if (cell.cellType === 'multitypeField') {
 
-						if (cell.cellType === 'selector') {
-							/* const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
+							/* const fieldTypesList = multitypeFieldsForRows[cell.key].fieldTypesList;
 
-							if (optionIndex < 0) { // if selected option hidden, add it until another selected
+							let valueTypePath = [...[], ...cell.objPath];
+							let valueTypeLastProp = valueTypePath.pop();
 
-								const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
-									return option.id === column.settings.value;
-								});
+							valueTypeLastProp = valueTypeLastProp + '_value_type';
+							valueTypePath.push(valueTypeLastProp);
 
-								if (optionData) {
+							const valueType = metaHelper.getObjectNestedPropVal(item, valueTypePath); */
+							if (cell.hasOwnProperty('objPaths')) {
 
-									column.settings.selectorOptions.push({
-										id: optionData.id,
-										name: optionData.name
-									});
+								const fieldTypesList = multitypeFieldsForRows[cell.key].fieldTypesList;
 
+								const cellValuePath = cell.objPaths[0];
+								const cellValueTypePath = cell.objPaths[1];
+
+								const cellValue = metaHelper.getObjectNestedPropVal(item, cellValuePath);
+								const valueType = metaHelper.getObjectNestedPropVal(item, cellValueTypePath);
+
+								const cellData = gridTableHelperService.getMultitypeFieldDataForCell(fieldTypesList, cell, cellValue, valueType);
+								row.columns[index] = cellData.cell;
+
+								// for existing accruals without _value_type
+								if (!valueType && !isNaN(valueType)) {
+									metaHelper.setObjectNestedPropVal(item, cellValueTypePath, cellData.valueType);
 								}
 
-							} */
-							addSelectedHiddenOption(cell);
+							}
 
-						} else if (cell.cellType === 'multitypeField') {
-							const fieldTypesList = JSON.parse(JSON.stringify(multitypeFieldsForRows[cell.key].fieldTypesList));
-							gridTableHelperService.setMultitypeFieldDataForCell(fieldTypesList, cell, item[cell.key], item[cell.key + '_value_type']);
-							// makeMultitypeFieldCell(row, cell);
+						}
+
+						else {
+
+							cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
+
+							if (cell.cellType === 'selector') {
+								/* const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
+
+								if (optionIndex < 0) { // if selected option hidden, add it until another selected
+
+									const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
+										return option.id === column.settings.value;
+									});
+
+									if (optionData) {
+
+										column.settings.selectorOptions.push({
+											id: optionData.id,
+											name: optionData.name
+										});
+
+									}
+
+								} */
+								addSelectedHiddenOption(cell);
+							}
+
 						}
 
 					});
@@ -459,7 +491,7 @@
 
 				};
 
-				const convertDataIntoGridTable = function () {
+				const convertDataForGridTable = function () {
 
 					if (!scope.entity[bfcVm.fieldKey]) scope.entity[bfcVm.fieldKey] = [];
 
@@ -518,7 +550,7 @@
 
 					if (scope.entityType === 'instrument') {
 
-						multitypeFieldsForRows = multitypeFieldService.getTypesForInstrumentAccruals();
+						multitypeFieldsForRows = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
 
 						await loadDataForInstrumentAccruals();
 
@@ -548,11 +580,17 @@
 
 						asyncOperation = true;
 
+						// Update selector options after dynamic attributes change
+						bfcVm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {
+							const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
+							instrumentService.updateMultitypeFieldSelectorOptionsInsideGridTable(instrumentAttrTypes, multitypeFieldsForRows, gridTableData);
+						});
+
 					}
 
 					assembleGridTable();
 					setTableMinWidth();
-					convertDataIntoGridTable();
+					convertDataForGridTable();
 
 					scope.readyStatus = true;
 					if (asyncOperation) scope.$apply();
@@ -561,24 +599,11 @@
 						scope.gridTableDataService, scope.gridTableEventService, scope.entity, bfcVm.evEditorEventService, thisTableChanged
 					);
 
-					/* bfcVm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {
-
-						const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
-						multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
-
-						/!* gridTableData.body.forEach(row => {
-
-
-
-						}); *!/
-
-					}); */
-
 					bfcVm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, argObj => {
 
 						if (argObj && argObj.key === 'accrual_calculation_schedules' && !thisTableChanged.value) {
 
-							convertDataIntoGridTable();
+							convertDataForGridTable();
 							scope.gridTableEventService.dispatchEvent(gtEvents.REDRAW_TABLE);
 
 						}

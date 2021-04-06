@@ -16,6 +16,7 @@
 	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 	const accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
 
+	const instrumentService = require('../../../services/instrumentService');
 	const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
     module.exports = function instrumentTypeAccrualsTabController ($scope, $mdDialog, multitypeFieldService) {
@@ -124,9 +125,11 @@
 
 			vm.onDataChange('accruals');
 
-			if (cell.key === 'default_value') {
+			if (cell.key === 'default_value' && cell.cellType === 'multitypeField') {
+
 				const activeType = cell.settings.fieldTypesData.find(type => type.isActive);
 				vm.entity.accruals[tableData.order].data.items[data.row.order].default_value_type = activeType.value_type;
+
 			}
 
         };
@@ -315,11 +318,11 @@
                     rowObj.columns[2].cellType = 'multitypeField';
 
 					const fieldTypesList = JSON.parse(JSON.stringify(multitypeFieldsForRows[rowObj.key].fieldTypesList));
-                    const fieldTypesData = multitypeFieldService.setActiveTypeByValueType(fieldTypesList, row.default_value, row.default_value_type);
+                    multitypeFieldService.setActiveTypeByValueType(fieldTypesList, row.default_value, row.default_value_type);
 
                     rowObj.columns[2].settings = {
                         value: row.default_value,
-                        fieldTypesData: fieldTypesData
+                        fieldTypesData: fieldTypesList
                     };
 
                 }
@@ -524,7 +527,7 @@
 
         let instrumentAttrTypes;
 
-        const multitypeFieldsForRows = multitypeFieldService.getTypesForInstrumentAccruals();
+        const multitypeFieldsForRows = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
 		/* {
             'accrual_start_date': {
             	value_type: 40, // used to filter instrument user attributes options for dropdownSelect

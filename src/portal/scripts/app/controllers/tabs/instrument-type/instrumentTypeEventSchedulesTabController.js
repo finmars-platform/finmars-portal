@@ -14,6 +14,7 @@
     // const GridTableEventService = require('../../../services/gridTableEventService');
 	const transactionTypeService = require('../../../services/transactionTypeService');
 	const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
+	const instrumentService = require('../../../services/instrumentService');
 
 	const gridTableEvents = require('../../../services/gridTableEvents');
 	const popupEvents = require('../../../services/events/popupEvents');
@@ -55,7 +56,8 @@
 
         vm.transactionTypes = [];
 
-        vm.accordionActionsMenu =
+		//<editor-fold desc="Accordiion actions menu">
+		vm.accordionActionsMenu =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
 						   'ng-click="popupData.deletePane(popupData.item, $event, _$popup)">DELETE</md-button>' +
@@ -64,6 +66,7 @@
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
 						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">MAKE COPY</md-button>' +
 			'</div>';
+		//</editor-fold>
 
         const getTransactionTypes = function () {
 
@@ -109,89 +112,7 @@
             'periodicity': vm.periodicityItems
         }
 
-        const multitypeFieldsForRows = {
-			'effective_date': {
-				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
-				fieldTypesList: [
-					{
-						'model': "",
-						'fieldType': 'dateInput',
-						'isDefault': true,
-						'isActive': true,
-						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
-						'value_type': 40,
-						'fieldData': {
-							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-						}
-					},
-					{
-						'model': null,
-						'fieldType': 'dropdownSelect',
-						'isDefault': false,
-						'isActive': false,
-						'sign': '<div class="multitype-field-type-letter">L</div>',
-						'value_type': 70,
-						'fieldData': {
-							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-						}
-					}
-				]
-			},
-			'final_date': {
-				value_type: 40, // used to filter instrument user attributes options for dropdownSelect
-				fieldTypesList: [
-					{
-						'model': "",
-						'fieldType': 'dateInput',
-						'isDefault': true,
-						'isActive': true,
-						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
-						'value_type': 40,
-						'fieldData': {
-							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-						}
-					},
-					{
-						'model': null,
-						'fieldType': 'dropdownSelect',
-						'isDefault': false,
-						'isActive': false,
-						'sign': '<div class="multitype-field-type-letter">L</div>',
-						'value_type': 70,
-						'fieldData': {
-							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-						}
-					}
-            	]
-			},
-			'periodicity_n': {
-				value_type: 20, // used to filter instrument user attributes options for dropdownSelect
-				fieldTypesList: [
-					{
-						'model': null,
-						'fieldType': 'numberInput',
-						'isDefault': true,
-						'isActive': true,
-						'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
-						'value_type': 20,
-						'fieldData': {
-							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-						}
-					},
-					{
-						'model': null,
-						'fieldType': 'dropdownSelect',
-						'isDefault': false,
-						'isActive': false,
-						'sign': '<div class="multitype-field-type-letter">L</div>',
-						'value_type': 70,
-						'fieldData': {
-							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-						}
-					}
-            	]
-			}
-		};
+        const multitypeFieldsForRows = instrumentService.getInstrumentEventsMultitypeFieldsData();
 
 		/* const getMultitypeFieldDataForDefaultValue = (rowKey, value, valueType) => {
 
@@ -440,6 +361,7 @@
                 else if (row.defaultValueType === 'multitypeField') {
 
                     rowObj.columns[2].cellType = 'multitypeField';
+					/*
 					// const multitypeFieldData = getMultitypeFieldDataForDefaultValue(rowObj.key, row.default_value, row.default_value_type);
 					const fieldTypesList = JSON.parse(JSON.stringify(multitypeFieldsForRows[rowObj.key].fieldTypesList));
 					const fieldTypesData = multitypeFieldService.setActiveTypeByValueType(fieldTypesList, row.default_value, row.default_value_type);
@@ -448,10 +370,12 @@
 						value: row.default_value,
 						fieldTypesData: fieldTypesData
 					};
+					*/
 
-					/* rowObj.columns[2].methods = {
-						onChange: onDefaultValueMultitypeFieldChange
-					}; */
+					const fieldTypesList = JSON.parse(JSON.stringify(multitypeFieldsForRows[rowObj.key].fieldTypesList));
+					const cellData = gridTableHelperService.getMultitypeFieldDataForCell(fieldTypesList, rowObj.columns[2], row.default_value, row.default_value_type);
+					rowObj.columns[2] = cellData.cell;
+					row.default_value_type = cellData.value_type;
 
 				}
 

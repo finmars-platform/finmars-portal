@@ -17,6 +17,12 @@
   }
 }
 
+.custom-input-bottom-space {
+  .custom-input-container {
+    margin-bottom: 13px;
+  }
+}
+
 .ci-icon-color {
   fill: @gray;
   color: @gray;
@@ -455,8 +461,16 @@
       margin-bottom: 0;
 
       .custom-input-borders {
-        height: 38px;
+        height: 36px;
         border: none;
+      }
+
+      .custom-input-side-items {
+        right: 34px; // @customInputsRightSpace + width of multitype switch element
+      }
+
+      .custom-input-bottom-error-text {
+        top: 2px;
       }
 
     }

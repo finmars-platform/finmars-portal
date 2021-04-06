@@ -4,119 +4,6 @@
 
 	module.exports = function () {
 
-		const getTypesForInstrumentAccruals = function () {
-			return {
-				'accrual_start_date': {
-					value_type: 40, // used to filter instrument user attributes options for dropdownSelect
-					fieldTypesList: [
-						{
-							'model': "",
-							'fieldType': 'dateInput',
-							'isDefault': true,
-							'isActive': false,
-							'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
-							'value_type': 40,
-							'fieldData': {
-								'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-							}
-						},
-						{
-							'model': null,
-							'fieldType': 'dropdownSelect',
-							'isDefault': false,
-							'isActive': false,
-							'sign': '<div class="multitype-field-type-letter">L</div>',
-							'value_type': 70,
-							'fieldData': {
-								'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-							}
-						}
-					]
-				},
-				'first_payment_date': {
-					value_type: 40, // used to filter instrument user attributes options for dropdownSelect
-					fieldTypesList: [
-						{
-							'model': null,
-							'fieldType': 'dateInput',
-							'isDefault': true,
-							'isActive': false,
-							'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
-							'value_type': 40,
-							'fieldData': {
-								'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-							}
-						},
-						{
-							'model': null,
-							'fieldType': 'dropdownSelect',
-							'isDefault': false,
-							'isActive': false,
-							'sign': '<div class="multitype-field-type-letter">L</div>',
-							'value_type': 70,
-							'fieldData': {
-								'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-							}
-						}
-					]
-				},
-				'accrual_size': {
-					value_type: 20, // used to filter instrument user attributes options for dropdownSelect
-					fieldTypesList: [
-						{
-							'model': null,
-							'fieldType': 'numberInput',
-							'isDefault': true,
-							'isActive': false,
-							'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
-							'value_type': 20,
-							'fieldData': {
-								'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-							}
-						},
-						{
-							'model': null,
-							'fieldType': 'dropdownSelect',
-							'isDefault': false,
-							'isActive': false,
-							'sign': '<div class="multitype-field-type-letter">L</div>',
-							'value_type': 70,
-							'fieldData': {
-								'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-							}
-						}
-					]
-				},
-				'periodicity_n': {
-					value_type: 20, // used to filter instrument user attributes options for dropdownSelect
-					fieldTypesList: [
-						{
-							'model': null,
-							'fieldType': 'numberInput',
-							'isDefault': true,
-							'isActive': false,
-							'sign': '<div class="multitype-field-type-letter type-with-constant">N</div>',
-							'value_type': 20,
-							'fieldData': {
-								'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-							}
-						},
-						{
-							'model': null,
-							'fieldType': 'dropdownSelect',
-							'isDefault': false,
-							'isActive': false,
-							'sign': '<div class="multitype-field-type-letter">L</div>',
-							'value_type': 70,
-							'fieldData': {
-								'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
-							}
-						}
-					]
-				}
-			};
-		};
-
 		const fillSelectorOptionsBasedOnValueType = function (instrumentAttrTypes, multitypeFields) {
 
 			Object.keys(multitypeFields).forEach(key => {
@@ -147,14 +34,18 @@
 		};
 
 		/**
+		 * Set active type inside typesList based on activeValueType
 		 *
-		 * @param typesList {Array.<Object>} - array of types for multitype field
+		 * @param typesList {Array.<Object>} - Changed by function. Array of types for multitype field
 		 * @param modelValue {*} - value of field
-		 * @param activeValueType {number} - value type of active field
+		 * @param activeValueType {number|*} - value type of active field
+		 * @return {number} - returns active value_type
 		 */
 		const setActiveTypeByValueType = (typesList, modelValue, activeValueType) => {
 
-			if (activeValueType) {
+			var activeTypeNotFound = true;
+
+			if (activeValueType && !isNaN(activeValueType)) {
 
 				typesList.forEach(type => {
 
@@ -162,6 +53,27 @@
 
 						type.model = modelValue;
 						type.isActive = true;
+						activeTypeNotFound = false;
+
+					} else {
+						type.isActive = false;
+					}
+
+				});
+
+				if (activeTypeNotFound) console.error("setActiveTypeByValueType: activeValueType does not match any type from typesList", typesList, activeValueType)
+
+			}
+
+			if (activeTypeNotFound) { // if wrong or no value_type was passed, make default type active
+
+				typesList.forEach(type => {
+
+					if (type.isDefault) {
+
+						type.model = modelValue;
+						type.isActive = true;
+						activeValueType = type.value_type;
 
 					} else {
 						type.isActive = false;
@@ -171,13 +83,11 @@
 
 			}
 
-			return typesList;
+			return activeValueType;
 
 		};
 
 		return {
-			getTypesForInstrumentAccruals: getTypesForInstrumentAccruals,
-
 			fillSelectorOptionsBasedOnValueType: fillSelectorOptionsBasedOnValueType,
 			setActiveTypeByValueType: setActiveTypeByValueType
 		};

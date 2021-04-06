@@ -43,7 +43,6 @@
                 return data.tableData.body[rowOrder];
             } */
 			if (rowOrder === 'header') {
-				console.trace();
 				throw("Can't get data from header row");
 			}
 
