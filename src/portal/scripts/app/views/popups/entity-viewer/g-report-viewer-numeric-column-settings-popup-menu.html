@@ -119,6 +119,15 @@
     </div>
 
     <div>
+        <md-button ng-click="popupData.data.reportHideGrandTotal(popupData.data.column)"
+                   class="popup-menu-item">
+            <ng-md-icon icon="done" style="visibility: hidden;"></ng-md-icon>
+            <span data-ng-show="!popupData.data.column.report_settings.hide_grandtotal">Hide Grand Total</span>
+            <span data-ng-show="popupData.data.column.report_settings.hide_grandtotal">Show Grand Total</span>
+        </md-button>
+    </div>
+
+    <div>
         <md-button ng-click="popupData.data.reportHideSubtotal(popupData.data.column)"
                    class="popup-menu-item">
             <ng-md-icon icon="done" style="visibility: hidden;"></ng-md-icon>
