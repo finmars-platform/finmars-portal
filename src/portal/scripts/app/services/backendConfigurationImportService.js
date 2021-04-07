@@ -12,12 +12,17 @@
     var baseUrl = baseUrlService.resolve();
 
     var importConfigurationAsJson = function (data) {
-        return window.fetch(baseUrl + 'import/configuration-json/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/configuration-json/', {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(data)

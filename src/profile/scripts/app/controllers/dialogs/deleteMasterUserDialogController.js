@@ -6,6 +6,7 @@
     'use strict';
 
     var usersService = require('../../services/usersService');
+    var authorizerService = require('../../services/authorizerService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -45,7 +46,7 @@
 
                     vm.processing = true;
 
-                    usersService.deleteMasterUser(vm.masterUser.id).then(function () {
+                    authorizerService.deleteMasterUser(vm.masterUser.id).then(function () {
 
                         vm.processing = false;
 
