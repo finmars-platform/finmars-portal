@@ -10,7 +10,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function copyMasterUserDialogController($scope, $mdDialog, data) {
+    module.exports = function copyMasterUserDialogController($scope, $mdDialog, $state, data) {
 
         console.log('data', data);
 
