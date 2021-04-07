@@ -6,6 +6,9 @@
     'use strict';
 
     var usersService = require('../services/usersService');
+    var authorizerService = require('../services/authorizerService');
+
+    var baseUrlService = require('../services/baseUrlService');
 
     module.exports = function ($scope, $state, $mdDialog) {
 
@@ -19,7 +22,7 @@
 
             vm.readyStatus.masterUsers = false;
 
-            usersService.getMasterListLight().then(function (data) {
+            authorizerService.getMasterList().then(function (data) {
                 vm.masters = data.results;
                 vm.readyStatus.masterUsers = true;
                 $scope.$apply();
@@ -91,7 +94,13 @@
 
             // console.log('item', item);
 
-            usersService.setMasterUser(item.id).then(function (value) {
+            authorizerService.setMasterUser(item.id).then(function (data) {
+                
+                console.log('vm.activateDatabase.data', data);
+
+
+                baseUrlService.setMasterUserPrefix(data.base_api_url);
+                
                 $state.go('app.home');
             })
 
@@ -257,7 +266,8 @@
 
         vm.init = function () {
             vm.getMasterUsersList();
-            vm.getInvites();
+            // vm.getInvites();
+            vm.readyStatus.invites = true;
         };
 
         vm.init();
