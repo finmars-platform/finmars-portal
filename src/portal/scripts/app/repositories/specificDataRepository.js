@@ -3,29 +3,35 @@
  */
 (function () {
 
-    'use strict';
+	'use strict';
 
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrlService = require('../services/baseUrlService');
+	var cookieService = require('../../../../core/services/cookieService');
+	var xhrService = require('../../../../core/services/xhrService');
+	var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = baseUrlService.resolve();
+	var baseUrl = baseUrlService.resolve();
 
-    var getValuesForSelect = function (contentType, key, valueType) {
-        return xhrService.fetch(baseUrl + 'specific-data/values-for-select?content_type=' + contentType + '&key=' + key + '&value_type=' + valueType,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+	var getValuesForSelect = function (contentType, key, valueType) {
 
-    module.exports = {
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-        getValuesForSelect: getValuesForSelect,
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'specific-data/values-for-select?content_type=' + contentType + '&key=' + key + '&value_type=' + valueType,
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
 
-    }
+	module.exports = {
+
+		getValuesForSelect: getValuesForSelect,
+
+	}
 
 }());

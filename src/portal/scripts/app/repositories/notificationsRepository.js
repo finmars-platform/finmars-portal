@@ -20,11 +20,16 @@
                 listUrl = '?all=true&page=' + page
         }
 
-        return xhrService.fetch(baseUrl + 'notifications/notification/' + listUrl,
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'notifications/notification/' + listUrl,
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -33,12 +38,17 @@
 
     var markAsReaded = function (url, data) {
         var markUrl;
-        return xhrService.fetch(baseUrl + 'notifications/notification/' + url + '/mark-as-read/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'notifications/notification/' + url + '/mark-as-read/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -47,14 +57,17 @@
     }
 
     var markAllAsReaded = function () {
-        var markUrl;
-        //return xhrService.fetch(baseUrl + 'notifications/notification/mark-as-read/',
-        return xhrService.fetch(baseUrl + 'notifications/notification/mark-all-as-read/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'notifications/notification/mark-all-as-read/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },

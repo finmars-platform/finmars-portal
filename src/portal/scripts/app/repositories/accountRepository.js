@@ -13,11 +13,16 @@
     var baseUrl = baseUrlService.resolve();
 
     var getTypeList = function () {
-        return xhrService.fetch(baseUrl + 'accounts/account-type/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account-type/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -25,11 +30,16 @@
     };
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'accounts/account/', options),
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -37,11 +47,16 @@
     };
 
     var getListLight = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'accounts/account-light/', options),
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account-light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -49,11 +64,16 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'accounts/account/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -61,12 +81,17 @@
     };
 
     var create = function (account) {
-        return xhrService.fetch(baseUrl + 'accounts/account/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -75,12 +100,17 @@
     };
 
     var update = function (id, account) {
-        return xhrService.fetch(baseUrl + 'accounts/account/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -89,12 +119,17 @@
     };
 
     var updateBulk = function (accounts) {
-        return xhrService.fetch(baseUrl + 'accounts/account/bulk-update/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/bulk-update/',
             {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -103,12 +138,17 @@
     };
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'accounts/account/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -122,12 +162,17 @@
     };
 
     var deleteBulk = function (data) {
-        return xhrService.fetch(baseUrl + 'accounts/account/bulk-delete/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/bulk-delete/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
