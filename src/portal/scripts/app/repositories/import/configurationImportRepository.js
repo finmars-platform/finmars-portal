@@ -15,14 +15,15 @@
     var checkForDuplicates = function (config) {
 
 
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/configuration/check-duplicates/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/configuration/check-duplicates/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: config
