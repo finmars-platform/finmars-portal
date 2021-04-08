@@ -587,6 +587,15 @@
                                             </md-button>
                                         </li>
 
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.manual-sorting-layout-manager">
+                                                <span class="side-nav-title">Manual Sorting</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
                                     </ul>
 
                                 </div>
@@ -866,6 +875,16 @@
                                                        class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.settings.color-palettes">
                                                 <span class="side-nav-title">Palettes</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li>
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.settings.cross-entity-attribute-extensions">
+                                                <span class="side-nav-title">Reports</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>

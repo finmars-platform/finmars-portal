@@ -68,6 +68,9 @@
             rowSelection = '<div class="g-row-selection"></div>';
         }
 
+		// TODO find out whether mark row should work for blanklines
+		var rowSettings = renderHelper.getRowSettings('disabled');
+
         if (obj.___is_activated) {
             classList.push('activated');
         }
@@ -78,14 +81,16 @@
         var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="blankline" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
-        result = result + rowSelection;
+        result = result + rowSelection + rowSettings;
 
         columns.forEach(function (column, index) {
+
+			var columnNumber = index + 1;
 
             var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, index + 1, groups);
             var borderRightTransparent = getBorderRightTransparent(obj, index + 1);
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + borderBottomTransparent + ' ' + borderRightTransparent + '">&nbsp;</div></div>';
+            cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap" style="width: ' + column.style.width + '"><div class="g-cell ' + borderBottomTransparent + ' ' + borderRightTransparent + '">&nbsp;</div></div>';
 
             result = result + cell
 

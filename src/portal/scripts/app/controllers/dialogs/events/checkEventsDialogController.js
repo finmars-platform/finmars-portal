@@ -216,12 +216,12 @@
 
             var options = {};
             if (sortingOptions && sortingOptions.hasOwnProperty("sort")) {
-                options.sort = new Object();
+                options.sort = {};
                 options.sort = sortingOptions.sort;
             }
 
             // var filters = {};
-            options.filters = new Object();
+            options.filters = {};
             options.filters.effective_date_0 = vm.effective_date_from;
             options.filters.effective_date_1 = vm.effective_date_to;
 

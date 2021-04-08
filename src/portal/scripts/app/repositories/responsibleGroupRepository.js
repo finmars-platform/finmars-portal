@@ -13,37 +13,52 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'counterparties/responsible-group/', options),
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'counterparties/responsible-group/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'counterparties/responsible-group/' + id + '/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'counterparties/responsible-group/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var create = function (responsible) {
-        return xhrService.fetch(baseUrl + 'counterparties/responsible-group/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'counterparties/responsible-group/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(responsible)
@@ -51,13 +66,18 @@
     };
 
     var update = function (id, responsible) {
-        return xhrService.fetch(baseUrl + 'counterparties/responsible-group/' + id + '/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'counterparties/responsible-group/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(responsible)
@@ -65,13 +85,18 @@
     };
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'counterparties/responsible-group/' + id + '/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'counterparties/responsible-group/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
@@ -83,13 +108,18 @@
     };
 
     var deleteBulk = function (data) {
-        return xhrService.fetch(baseUrl + 'counterparties/responsible-group/bulk-delete/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'counterparties/responsible-group/bulk-delete/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)

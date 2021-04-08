@@ -12,7 +12,11 @@
 
     var getFunctionsItems = function () {
 
-        /*return window.fetch('portal/content/json/functions_items.json').then(function (data) {
+        /*
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch('portal/content/json/functions_items.json').then(function (data) {
             return data.json();
         })*/
         return functionsItemsService.functionsItems;
@@ -20,7 +24,11 @@
     };
 
     var getFunctionsGroups = function () {
-        /*return window.fetch('portal/content/json/functions_groups.json').then(function (data) {
+        /*
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch('portal/content/json/functions_groups.json').then(function (data) {
             return data.json();
         })*/
         return functionsGroupsService.functionsGroups;
@@ -120,13 +128,14 @@
 
         return expressionsList
             .filter(function (item) {
-                return item.func.includes('(') || (item.validation_data && item.validation_data.type === "function");
+                // return item.func.includes('(') || (item.validation_data && item.validation_data.type === "function");
+				return item.func.includes('(');
             })
             .map(function (item) {
 
-            	if (item.validation_data) {
+            	/* if (item.validation_data) {
 					return item.validation_data.key_words[0];
-				}
+				} */
 
                 return item.func.split('(')[0];
 
@@ -312,7 +321,7 @@
 
     }
 
-    var eatFloatNumber = function (expression, index) {
+    /* var eatFloatNumber = function (expression, index) {
 
     	var token = {
 			value: '',
@@ -334,7 +343,7 @@
 
 		return token;
 
-	}
+	} */
 
     var eatInput = function (expression, index) {
 

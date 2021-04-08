@@ -14,7 +14,7 @@
             return t4;
 
 
-        };
+        }
 
 
 
@@ -54,7 +54,7 @@
             return str;
 
 
-        };
+        }
 
 
 
@@ -88,7 +88,7 @@
             return str;
 
 
-        };
+        }
 
 
 
@@ -209,7 +209,7 @@
 
 
 
-        var word_array = new Array();
+        var word_array = [];
 
 
         for( i=0; i<msg_len-3; i+=4 ) {

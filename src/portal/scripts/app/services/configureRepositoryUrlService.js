@@ -44,7 +44,7 @@
 
                 keys.forEach(function (keysItem) {
 
-                    if (options.filters[keysItem]) {
+                    if (options.filters[keysItem] !== null && options.filters[keysItem] !== undefined) {
                         var filterItems = options.filters[keysItem];
                         if (typeof filterItems === 'string' || typeof filterItems === 'number') {
                             url = url + '&' + entityPluralToSingular(keysItem) + '=' + filterItems;
