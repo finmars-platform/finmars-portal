@@ -14,13 +14,18 @@
     var baseUrl = baseUrlService.resolve();
 
     var check = function (data) {
-        return xhrService.fetch(baseUrl + 'reports/price-history-check-sql/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'reports/price-history-check-sql/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(data)

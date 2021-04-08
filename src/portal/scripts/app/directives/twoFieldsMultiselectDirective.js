@@ -6,7 +6,7 @@
 	"use strict";
 
 	let ChipsListEventService = require('../services/eventService');
-	let directivesEvents = require("../services/directivesEvents");
+	let directivesEvents = require("../services/events/directivesEvents");
 
 	module.exports = function ($mdDialog) {
 		return {
@@ -79,17 +79,21 @@
 
 				let getSelectedOptionsIds = function () {
 
-					selOptionsIdsList = scope.model.map(function (selOption) {
+					if (scope.model) {
 
-						let optionId = selOption;
+						selOptionsIdsList = scope.model.map(function (selOption) {
 
-						if (typeof selOption === 'object') {
-							optionId = selOption.id;
-						}
+							let optionId = selOption;
 
-						return optionId;
+							if (typeof selOption === 'object') {
+								optionId = selOption.id;
+							}
 
-					});
+							return optionId;
+
+						});
+
+					}
 
 				};
 
@@ -319,17 +323,21 @@
 
 						scope.chipsList = selOptionsIdsList.map(function (selOptId) {
 
-							for (let i = 0; i < items.length; i++) {
+							let selOpt = items.find(item => {
 
-								if (items[i].id === selOptId) {
+								let itemId = item;
 
-									return {
-										id: selOptId,
-										text: items[i][scope.nameProperty]
-									};
-
+								if (typeof item === 'object') {
+									itemId = item.id;
 								}
 
+								return itemId === selOptId;
+
+							});
+
+							return {
+								id: selOptId,
+								text: selOpt[scope.nameProperty]
 							}
 
 						});
@@ -388,7 +396,7 @@
 
 						chipElem = elem[0].querySelector("chips-list");
 
-						scope.onDropdownMenuFilterBlur = function (terms) {
+						scope.onDropdownMenuFilterBlur = function () {
 							scope.dropdownMenuShown = false
 							scope.menuFilterTerms[scope.nameProperty] = ""
 						}
@@ -422,7 +430,7 @@
 
 						};
 
-						scope.onChipDeletion = function (chipsData) {
+						scope.onChipsDeletion = function (chipsData) {
 
 							chipsData.forEach(function (chipData) {
 
@@ -444,6 +452,8 @@
 							});
 
 							getAvailableOptions();
+
+							scope.onChangeCallback();
 
 						};
 
@@ -470,6 +480,8 @@
 								directivesEvents.CHIPS_LIST_CHANGED,
 								{chipsList: scope.chipsList, updateScope: true}
 							);
+
+							scope.onChangeCallback();
 
 						};
 

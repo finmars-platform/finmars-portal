@@ -123,7 +123,7 @@
 
             const duplicateEntity = async function (entity) {
 
-                var editLayout = await uiService.getEditLayout(vm.entityType);
+                var editLayout = await uiService.getDefaultEditLayout(vm.entityType);
                 var bigDrawerWidthPercent;
                 var fixedAreaColumns;
 
@@ -803,6 +803,35 @@
                                 $mdDialog.show({
                                     controller: 'EntityViewerDeleteBulkDialogController as vm',
                                     templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-bulk-dialog-view.html',
+                                    parent: angular.element(document.body),
+                                    targetEvent: activeObject.event,
+                                    //clickOutsideToClose: false,
+                                    locals: {
+                                        evDataService: vm.entityViewerDataService,
+                                        evEventService: vm.entityViewerEventService
+                                    }
+                                }).then(function (res) {
+
+                                    vm.entityViewerDataService.setActiveObjectAction(null);
+                                    vm.entityViewerDataService.setActiveObjectActionData(null);
+
+                                    if (res.status === 'agree') {
+
+                                        updateTableAfterEntitiesDeletion(res.data.ids);
+
+                                    }
+                                });
+
+                                break;
+
+                            case 'restore_deleted':
+
+                                console.log('restore_deleted.activeObject', activeObject )
+                                console.log('restore_deleted.entitytype', entitytype )
+
+                                $mdDialog.show({
+                                    controller: 'EntityViewerRestoreDeletedBulkDialogController as vm',
+                                    templateUrl: 'views/entity-viewer/entity-viewer-entity-restore-deleted-bulk-dialog-view.html',
                                     parent: angular.element(document.body),
                                     targetEvent: activeObject.event,
                                     //clickOutsideToClose: false,

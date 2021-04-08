@@ -181,7 +181,7 @@
                         scope.filter.options.dates_tree = [];
                     }
 
-                    if (filterType === 'from_to') {
+                    if (filterType === 'from_to' || filterType === 'out_of_range') {
 
                         scope.filter.options.filter_values = {};
 
@@ -408,27 +408,20 @@
                 };
 
                 var initEventListeners = function () {
-                    if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
+
+                	if (!dataLoadEndId) { // if needed to prevent multiple addEventListener
                         dataLoadEndId = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
                     }
 
-                    /*toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
-
-                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
-
-                    });*/
                 };
 
-
                 scope.init = function () {
-                    scope.initSplitPanelMode();
+
+                	/* Turn old filters off
+                	scope.initSplitPanelMode();
 
                     initEventListeners();
-
-                    /*var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;*/
+                    */
 
                     if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
                         setTimeout(function () {
