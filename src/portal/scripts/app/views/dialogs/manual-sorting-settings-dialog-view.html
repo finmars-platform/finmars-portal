@@ -97,8 +97,50 @@
 
                 </div>
 
+            </div>
+
+            <div data-ng-if="vm.layout.id && vm.newValues.length">
+
+                <h4>New Values</h4>
+
+                <div layour="column">
+
+                    <div layout="row">
+                        <div class="m-8">
+                            <md-checkbox data-ng-click="vm.toggleSelectAll()"
+                                         data-ng-checked="vm.selectAll"
+                                         aria-label="common sort">
+                                <md-tooltip md-direction="bottom">Select/Deselect All</md-tooltip>
+                            </md-checkbox>
+                        </div>
+                        <div class="m-8" style="width: 400px;">
+                            Value
+                        </div>
+                        <div class="m-8">
+                            <md-button class="md-raised" data-ng-click="vm.addSelected()">Add Selected</md-button>
+                        </div>
+                    </div>
+
+                    <div data-ng-repeat="item in vm.newValues track by $index" layout="row">
+
+                        <div class="m-8">
+                            <md-checkbox ng-model="item.selected"
+                                         aria-label="common sort">
+                            </md-checkbox>
+                        </div>
+
+                        <div class="m-8" style="width: 400px;">
+                            {{item.value}}
+                        </div>
+
+                    </div>
+
+
+
+                </div>
 
             </div>
+
 
         </div>
 

@@ -6,6 +6,8 @@
 
     let setUMuM = function (userId, masterUserId, memberId) {
 
+        console.log('setUMuM', userId, masterUserId, memberId)
+
     	if ((userId || userId === 0) &&
 			(masterUserId || masterUserId === 0) &&
 			(memberId || memberId === 0)) {

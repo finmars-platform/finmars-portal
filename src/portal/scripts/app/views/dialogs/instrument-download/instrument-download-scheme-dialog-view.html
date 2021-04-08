@@ -15,7 +15,8 @@
             <div layout="row" layout-align="center center">
                 <md-card flex="50" class="inm-card-special">
                     <md-card-content>
-                        <md-input-container class="md-block">
+                        <usercode-input data-item="vm.scheme" data-ng-if="!vm.scheme.id"></usercode-input>
+                        <md-input-container class="md-block" data-ng-if="vm.scheme.id">
                             <label for="">User code</label>
                             <input type="text" data-ng-model="vm.scheme.user_code">
                         </md-input-container>
@@ -274,67 +275,67 @@
                                     <div layout="row" flex="100">
 
                                         <md-input-container class="margin-0" aria-label="select with filter" flex="30">
-                                                <!--<md-select data-ng-model="field.value"
-                                                           data-ng-change="vm.resolveFieldType(field)"
-                                                           data-ng-focus="vm.checkAttrs()">
-                                                    <md-option data-ng-repeat="item in vm.baseAttrs"
-                                                               ng-value="item"
-                                                               class="{{item.disabled ? 'disabled' : ''}}">
-                                                        {{item.name}}
+                                            <!--<md-select data-ng-model="field.value"
+                                                       data-ng-change="vm.resolveFieldType(field)"
+                                                       data-ng-focus="vm.checkAttrs()">
+                                                <md-option data-ng-repeat="item in vm.baseAttrs"
+                                                           ng-value="item"
+                                                           class="{{item.disabled ? 'disabled' : ''}}">
+                                                    {{item.name}}
+                                                </md-option>
+                                                <md-option data-ng-repeat="item in vm.entityAttrs"
+                                                           ng-value="item"
+                                                           class="{{item.disabled ? 'disabled' : ''}}">
+                                                    {{item.name}}
+                                                </md-option>
+                                                <md-option data-ng-repeat="item in vm.attrs" ng-value="item"
+                                                           class="{{item.disabled ? 'disabled' : ''}}">
+                                                    {{item.name}}
+                                                </md-option>
+                                            </md-select>-->
+
+                                            <label></label>
+                                            <md-select ng-model="field.value"
+                                                       ng-change="vm.resolveFieldType(field)"
+                                                       ng-focus="vm.checkAttrs()"
+                                                       md-container-class="common-select-container"
+                                                       md-on-close="searchTerm = ''"
+                                                       ng-if="vm.readyStatus.dataProviders"
+                                                       style="margin: 0 0 24px">
+
+                                                <md-select-header>
+                                                    <input data-ng-model="searchTerm"
+                                                           type="search"
+                                                           placeholder="Search for a ..."
+                                                           class="md-text md-select-search-pattern select-input-filter"
+                                                           ng-keydown="$event.stopPropagation()">
+                                                </md-select-header>
+
+                                                <div class="select-options-holder">
+
+                                                    <md-option
+                                                            data-ng-repeat="item in vm.baseAttrs | filter: {name: searchTerm}"
+                                                            ng-value="item"
+                                                            ng-bind="item.name"
+                                                            class="{{item.disabled ? 'disabled' : ''}}">
                                                     </md-option>
-                                                    <md-option data-ng-repeat="item in vm.entityAttrs"
-                                                               ng-value="item"
-                                                               class="{{item.disabled ? 'disabled' : ''}}">
-                                                        {{item.name}}
+                                                    <md-option
+                                                            data-ng-repeat="item in vm.entityAttrs | filter: {name: searchTerm}"
+                                                            ng-value="item"
+                                                            ng-bind="item.name"
+                                                            class="{{item.disabled ? 'disabled' : ''}}">
                                                     </md-option>
-                                                    <md-option data-ng-repeat="item in vm.attrs" ng-value="item"
-                                                               class="{{item.disabled ? 'disabled' : ''}}">
-                                                        {{item.name}}
+                                                    <md-option
+                                                            data-ng-repeat="item in vm.attrs | filter: {name: searchTerm}"
+                                                            ng-value="item"
+                                                            ng-bind="item.name"
+                                                            class="{{item.disabled ? 'disabled' : ''}}">
                                                     </md-option>
-                                                </md-select>-->
 
-                                                <label></label>
-                                                <md-select ng-model="field.value"
-                                                           ng-change="vm.resolveFieldType(field)"
-                                                           ng-focus="vm.checkAttrs()"
-                                                           md-container-class="common-select-container"
-                                                           md-on-close="searchTerm = ''"
-                                                           ng-if="vm.readyStatus.dataProviders"
-                                                           style="margin: 0 0 24px">
+                                                </div>
 
-                                                    <md-select-header>
-                                                        <input data-ng-model="searchTerm"
-                                                               type="search"
-                                                               placeholder="Search for a ..."
-                                                               class="md-text md-select-search-pattern select-input-filter"
-                                                               ng-keydown="$event.stopPropagation()">
-                                                    </md-select-header>
-
-                                                    <div class="select-options-holder">
-
-                                                        <md-option
-                                                                data-ng-repeat="item in vm.baseAttrs | filter: {name: searchTerm}"
-                                                                ng-value="item"
-                                                                ng-bind="item.name"
-                                                                class="{{item.disabled ? 'disabled' : ''}}">
-                                                        </md-option>
-                                                        <md-option
-                                                                data-ng-repeat="item in vm.entityAttrs | filter: {name: searchTerm}"
-                                                                ng-value="item"
-                                                                ng-bind="item.name"
-                                                                class="{{item.disabled ? 'disabled' : ''}}">
-                                                        </md-option>
-                                                        <md-option
-                                                                data-ng-repeat="item in vm.attrs | filter: {name: searchTerm}"
-                                                                ng-value="item"
-                                                                ng-bind="item.name"
-                                                                class="{{item.disabled ? 'disabled' : ''}}">
-                                                        </md-option>
-
-                                                    </div>
-
-                                                </md-select>
-                                            </md-input-container>
+                                            </md-select>
+                                        </md-input-container>
 
                                         <div flex="70">
 
@@ -368,9 +369,10 @@
                                                     </md-button>
 
                                                     <div ng-if="field.value" style="display: inline-block">
-                                                        <md-button data-ng-click="vm.openClassifierMapping(field.value.id, $event)"
-                                                                   class="md-raised md-primary import-mapping-small-btn"
-                                                                   data-ng-if="vm.checkForClassifierMapping(field.value.id)">
+                                                        <md-button
+                                                                data-ng-click="vm.openClassifierMapping(field.value.id, $event)"
+                                                                class="md-raised md-primary import-mapping-small-btn"
+                                                                data-ng-if="vm.checkForClassifierMapping(field.value.id)">
                                                             <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                         </md-button>
                                                     </div>

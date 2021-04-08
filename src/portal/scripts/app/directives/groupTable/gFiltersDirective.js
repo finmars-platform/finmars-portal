@@ -41,7 +41,6 @@
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.viewContext = scope.evDataService.getViewContext();
-                console.log('#69 viewContext', scope.viewContext)
 
                 scope.isFiltersOpened = true
 				scope.filters = scope.evDataService.getFilters();

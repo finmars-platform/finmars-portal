@@ -11,7 +11,11 @@
         vm.column = null;
         vm.layout = null;
 
+        vm.selectAll = false;
+
         vm.readyStatus = {content: false};
+
+        vm.newValues = [];
 
         vm.agree = function ($event) {
 
@@ -19,14 +23,14 @@
 
             if (vm.layout.id) {
 
-                uiService.updateColumnSortData(vm.layout.id, vm.layout).then(function (data){
+                uiService.updateColumnSortData(vm.layout.id, vm.layout).then(function (data) {
 
                     $mdDialog.hide({status: 'agree'});
                 })
 
 
             } else {
-                uiService.createColumnSortData(vm.layout).then(function (data){
+                uiService.createColumnSortData(vm.layout).then(function (data) {
 
                     $mdDialog.hide({status: 'agree'});
                 })
@@ -39,7 +43,40 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.syncDataStructure = function(){
+        vm.toggleSelectAll = function () {
+
+            vm.selectAll = !vm.selectAll;
+
+            vm.newValues = vm.newValues.map(function (item) {
+
+                item.selected = vm.selectAll;
+
+                return item
+            })
+
+        }
+
+        vm.addSelected = function () {
+
+            vm.newValues.forEach(function (item) {
+
+                if (item.selected) {
+                    vm.layout.data.items.push({
+                        order: vm.layout.data.items.length,
+                        value: item.value
+                    })
+
+                }
+
+            })
+
+            vm.newValues = vm.newValues.filter(function (item) {
+                return !item.selected;
+            })
+
+        }
+
+        vm.syncDataStructure = function () {
 
             if (!vm.layout.data.items) {
                 vm.layout.data.items = []
@@ -49,9 +86,9 @@
             var uniqueColumnValues = []
             var value;
 
-            flatListItems.forEach(function (flatListItem){
+            flatListItems.forEach(function (flatListItem) {
 
-                if(flatListItem.___type === 'object') {
+                if (flatListItem.___type === 'object') {
 
                     value = flatListItem[vm.column.key]
 
@@ -72,7 +109,7 @@
 
                     exist = false;
 
-                    vm.layout.data.items.forEach(function (item){
+                    vm.layout.data.items.forEach(function (item) {
 
                         if (item.value === value) {
                             exist = true;
@@ -81,12 +118,13 @@
                     })
 
                     if (exist === false) {
-                        vm.layout.data.items.push({
-                            order: vm.layout.data.items.length,
+
+                        vm.newValues.push({
+                            order: vm.newValues.length,
                             value: value
                         })
-                    }
 
+                    }
 
 
                 })
@@ -104,6 +142,8 @@
                 })
 
             }
+
+            console.log('vm.syncDataStructure.newValues', vm.newValues);
 
         }
 
@@ -131,7 +171,7 @@
 
             })
 
-            vm.layout.data.items = vm.layout.data.items.sort(function(a, b){
+            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
             })
 
@@ -161,7 +201,7 @@
 
             })
 
-            vm.layout.data.items = vm.layout.data.items.sort(function(a, b){
+            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
             })
 
@@ -193,7 +233,7 @@
 
             })
 
-            vm.layout.data.items = vm.layout.data.items.sort(function(a, b){
+            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
             })
 
@@ -222,16 +262,16 @@
                 vm.layout = {
                     name: '',
                     user_code: '',
-                    column_key:  vm.column.key,
-                    data: {
-
-                    }
+                    column_key: vm.column.key,
+                    data: {}
                 }
             }
 
             vm.readyStatus.content = true;
 
-            vm.syncDataStructure();
+            if (entityViewerDataService) {
+                vm.syncDataStructure();
+            }
 
 
         };
