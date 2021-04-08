@@ -340,10 +340,6 @@
                 break;
         }
 
-
-        var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
-
         return window.fetch(path).then(function (data) {
             return data.json();
         });
