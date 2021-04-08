@@ -57,6 +57,11 @@
             controller: 'ContextMenuLayoutManagerController as vm'
         });
 
+        $stateProvider.state('app.manual-sorting-layout-manager', {
+            url: '/manual-sorting-layouts',
+            templateUrl: 'views/manual-sorting-layout-manager-view.html',
+            controller: 'ManualSortingLayoutManagerController as vm'
+        });
 
         $stateProvider.state('app.home', {
             url: '/',

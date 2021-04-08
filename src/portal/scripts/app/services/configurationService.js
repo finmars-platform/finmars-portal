@@ -11,12 +11,17 @@
 
     var exportAll = function () {
 
-        return window.fetch(baseUrl + 'export/configuration/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -25,11 +30,16 @@
 
     var getConfigurationData = function () {
 
-        return window.fetch(baseUrl + 'export/configuration/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -40,11 +50,16 @@
 
     var getMappingData = function () {
 
-        return window.fetch(baseUrl + 'export/mapping/', {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export/mapping/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-                Accept: 'application/json',
+               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {

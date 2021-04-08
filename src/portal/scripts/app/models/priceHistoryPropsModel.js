@@ -37,6 +37,16 @@
                 "key": "accrued_price",
                 "name": "Accrued price",
                 "value_type": 20
+            },
+            {
+                "key": "long_delta",
+                "name": "Long delta",
+                "value_type": 20
+            },
+            {
+                "key": "short_delta",
+                "name": "Short delta",
+                "value_type": 20
             }
             //{
             //    "key": "factor",

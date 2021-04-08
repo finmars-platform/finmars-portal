@@ -5,19 +5,46 @@
 
     'use strict';
 
+    function getItemValue (item, valueProperty) {
+
+    	return item[valueProperty] || 0;
+
+		// if (value === null || value === undefined || value === "") value = 0;
+
+    	// return value;
+
+	}
+
     function sum(items, column) {
 
-        var result = 0;
+        let result = 0;
 
-        var i;
+        let i;
 
         for (i = 0; i < items.length; i = i + 1) {
 
-            if (!isNaN(parseFloat(items[i][column.key]))) {
+        	var itemVal = getItemValue(items[i], column.key);
 
-                result = result + parseFloat(items[i][column.key]);
+            /* if (!isNaN(parseFloat(itemVal))) {
 
-            }
+                result = result + parseFloat(itemVal);
+
+            } else {
+
+                result = '#Error';
+
+            } */
+			if (!isNaN(itemVal)) {
+				result = result + parseFloat(itemVal);
+			}
+
+			else {
+
+				result = '#Error';
+				console.error(column.key + " with not a number", items[i], items[i][column.key]);
+				break;
+
+			}
 
         }
 
@@ -25,242 +52,110 @@
 
     }
 
-    function weightedMarketValue(items, column) {
 
-        var result = 0;
+    const getWeightedValue = (items, columnKey, weightedKey) => {
 
-        var i;
+		let result = 0;
 
-        for (i = 0; i < items.length; i = i + 1) {
+		let i;
 
-            if (items[i].hasOwnProperty("market_value") && !isNaN(parseFloat(items[i]["market_value"]))) {
+		for (i = 0; i < items.length; i = i + 1) {
 
-                if (!isNaN(parseFloat(items[i][column.key]))) {
+			let value = getItemValue(items[i], weightedKey);
 
-                    result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["market_value"]);
+			if (value) {
 
-                }
+				var itemVal = getItemValue(items[i], columnKey);
 
-            } else {
+				if (itemVal) {
 
-                throw Error("market_value is not set");
-            }
+					result = result + parseFloat(itemVal) * parseFloat(value);
 
-        }
+				}
 
-        return result;
+			}
+		}
 
-    }
+		return result;
 
-    function weightedMarketValuePercent(items, column) {
+	};
 
-        var result = 0;
+	function weightedMarketValue(items, column) {
+		return getWeightedValue(items, column.key, "market_value");
+	}
 
-        var i;
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (items[i]["market_value_percent"] && !isNaN(parseFloat(items[i]["market_value_percent"]))) {
-
-                if (!isNaN(parseFloat(items[i][column.key]))) {
-
-                    result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["market_value_percent"]);
-
-                }
-
-            } else {
-
-                throw Error("market_value_percent is not set")
-            }
-
-        }
-    }
+	function weightedMarketValuePercent(items, column) {
+		return getWeightedValue(items, column.key, "market_value_percent");
+	}
 
     function weightedExposure(items, column) {
-
-        var result = 0;
-
-        var i;
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (items[i].hasOwnProperty("exposure") && !isNaN(parseFloat(items[i]["exposure"]))) {
-
-                if (!isNaN(parseFloat(items[i][column.key]))) {
-
-                    result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["exposure"]);
-
-                }
-
-            } else {
-
-                throw Error('exposure is not set')
-            }
-
-        }
-
-        return result
-
+		return getWeightedValue(items, column.key, "exposure");
     }
 
     function weightedExposurePercent(items, column) {
-
-        var result = 0;
-
-        var i;
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (items[i]["exposure_percent"] && !isNaN(parseFloat(items[i]["exposure_percent"]))) {
-
-                if (!isNaN(parseFloat(items[i][column.key]))) {
-
-                    result = result + parseFloat(items[i][column.key]) * parseFloat(items[i]["exposure_percent"]);
-
-                }
-
-            } else {
-
-                throw Error("exposure_percent is not set");
-            }
-
-        }
-
-        return result
-
+		return getWeightedValue(items, column.key, "exposure_percent");
     }
 
+
+    const getWeightedAverageValue = (items, columnKey, weightedAverageKey) => {
+
+		let result = 0;
+		let total = 0;
+
+		let i;
+
+		for (i = 0; i < items.length; i = i + 1) {
+
+			let value = getItemValue(items[i], weightedAverageKey);
+
+			if (value) total = total + value;
+
+		}
+
+		if (total) {
+
+			for (i = 0; i < items.length; i = i + 1) {
+
+				let itemVal = getItemValue(items[i], columnKey);
+
+				if (!isNaN(itemVal)) {
+
+					let value = getItemValue(items[i], weightedAverageKey);
+
+					var average = parseFloat(value) / total;
+
+					result = result + parseFloat(itemVal) * average;
+
+				} else {
+					result = '#Error';
+					break;
+				}
+
+			}
+
+		} else {
+			console.error(weightedAverageKey + " totals is", total, columnKey);
+			result = '#Error';
+		}
+
+		return result;
+
+	};
+
     function weightedAverageMarketValue(items, column) {
-
-        var result = 0;
-        var total = 0;
-
-        var i;
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (items[i].hasOwnProperty("market_value") && !isNaN(parseFloat(items[i]["market_value"]))) {
-                total = total + parseFloat(items[i]["market_value"]);
-            } else {
-                throw Error("market_value is not set");
-            }
-
-        }
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (!isNaN(parseFloat(items[i][column.key]))) {
-
-                var average = parseFloat(items[i]["market_value"]) / total;
-
-                result = result + parseFloat(items[i][column.key]) * average;
-
-            }
-
-        }
-
-        return result;
-
+		return getWeightedAverageValue(items, column.key, "market_value");
     }
 
     function weightedAverageMarketValuePercent(items, column) {
-
-        var result = 0;
-        var total = 0;
-
-        var i;
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (items[i]["market_value_percent"] && !isNaN(parseFloat(items[i]["market_value_percent"]))) {
-                total = total + parseFloat(items[i]["market_value_percent"]);
-            } else {
-                throw Error("market_value_percent is not set");
-            }
-
-        }
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (!isNaN(parseFloat(items[i][column.key]))) {
-
-                var average = parseFloat(items[i]["market_value_percent"]) / total;
-
-                result = result + parseFloat(items[i][column.key]) * average;
-
-            }
-
-
-        }
-
-        return result;
-
+		return getWeightedAverageValue(items, column.key, "market_value_percent");
     }
 
     function weightedAverageExposure(items, column) {
-
-        var result = 0;
-        var total = 0;
-
-        var i;
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (items[i].hasOwnProperty("exposure") && !isNaN(parseFloat(items[i]["exposure"]))) {
-                total = total + parseFloat(items[i]["exposure"]);
-            } else {
-                throw Error("exposure is not set");
-            }
-
-        }
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (!isNaN(parseFloat(items[i][column.key]))) {
-
-                var average = parseFloat(items[i]["exposure"]) / total;
-
-                result = result + parseFloat(items[i][column.key]) * average;
-
-            }
-
-        }
-
-        return result;
-
+		return getWeightedAverageValue(items, column.key, "exposure");
     }
 
     function weightedAverageExposurePercent(items, column) {
-
-        var result = 0;
-        var total = 0;
-
-        var i;
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (items[i]["exposure_percent"] && !isNaN(parseFloat(items[i]["exposure_percent"]))) {
-                total = total + parseFloat(items[i]["exposure_percent"]);
-            } else {
-                throw Error("exposure_percent is not set");
-            }
-
-        }
-
-        for (i = 0; i < items.length; i = i + 1) {
-
-            if (!isNaN(parseFloat(items[i][column.key]))) {
-
-                var average = parseFloat(items[i]["exposure_percent"]) / total;
-
-                result = result + parseFloat(items[i][column.key]) * average;
-
-            }
-
-        }
-
-        return result;
-
+		return getWeightedAverageValue(items, column.key, "exposure_percent");
     }
 
     function resolveSubtotalFunction(items, column) {
