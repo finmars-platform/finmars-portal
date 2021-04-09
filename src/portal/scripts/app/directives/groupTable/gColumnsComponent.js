@@ -177,6 +177,129 @@
 
                 // <Victor 2020.12.14 #69 New report viewer design>
 
+                // Victor 2021.04.07 #90 sort setting for column
+
+                const clearAllSortOptions = function (columns) {
+
+                    columns.forEach(column => {
+
+                        if (!column.options) {
+                            column.options = {};
+                        }
+
+                        column.options.sort = null;
+
+                    });
+
+                }
+
+                scope.changeSortMode = function (column, sortMode) {
+                    console.log('#90 changeSortMode column' , column)
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    const direction = column.options && column.options.sort ? column.options.sort : 'ASC'; // save direction before clear sort options for all columns
+
+                    if (column.groups) {
+
+                        clearAllSortOptions(scope.groups);
+
+                    } else {
+
+                        clearAllSortOptions(scope.columns);
+
+                    }
+
+                    column.options.sort_mode = sortMode;
+                    column.options.sort = direction;
+                    sort(column);
+
+                }
+
+                scope.changeSortDirection = function (column, direction) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    if (column.groups) {
+
+                        clearAllSortOptions(scope.groups);
+
+                    } else {
+
+                        clearAllSortOptions(scope.columns);
+
+                    }
+
+                    column.options.sort = direction;
+                    sort(column);
+
+                };
+
+                const sort = function (column) {
+
+                    if (column.options.sort_mode === 'manual') { // manual sort handler
+
+                        uiService.getColumnSortDataList({
+                            filters: {
+                                user_code: column.manual_sort_layout_user_code
+                            }
+                        }).then(function (data){
+
+                            if(data.results.length) {
+
+                                var layout = data.results[0];
+
+                                console.log('#90 layout', layout)
+
+                                scope.evDataService.setColumnSortData(column.key, layout.data)
+
+                                if (column.groups) {
+
+                                    scope.evDataService.setActiveGroupTypeSort(column);
+                                    scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
+
+                                } else {
+
+                                    scope.evDataService.setActiveColumnSort(column);
+                                    scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
+
+                                }
+
+                            } else {
+
+                                toastNotificationService.error("Manual Sort is not configured");
+                                column.manual_sort_layout_user_code = null;
+
+                            }
+
+                        })
+
+                    } else { // default sort handler TODO External sort mode is not defined, and handling as default
+
+                        if (column.groups) {
+
+                            scope.evDataService.setActiveGroupTypeSort(column);
+                            scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
+
+                        } else {
+
+                            scope.evDataService.setActiveColumnSort(column);
+                            scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
+
+                        }
+
+
+/*                        scope.evDataService.setGroups(groups);
+                        scope.evDataService.setActiveGroupTypeSort(group);
+
+                        scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);*/
+
+                    }
+
+                }
+
+                // <Victor 2021.04.07 #90 sort setting for columnn>
+
                 var getAttributes = function () {
 
                     var allAttrsList = [];
@@ -464,7 +587,7 @@
 
                         scope.evDataService.setColumns(columns);
 
-                    scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 

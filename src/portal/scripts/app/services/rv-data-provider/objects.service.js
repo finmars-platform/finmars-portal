@@ -72,8 +72,13 @@
                     }
 
                     var columnSortData = entityViewerDataService.getColumnSortData(key)
+                    console.log('#90 columnSortData', columnSortData)
 
-                    items = sortService.sortItemsManual(items, options.ordering, columnSortData);
+                    if (columnSortData) {
+
+                        items = sortService.sortItemsManual(items, options.ordering, columnSortData);
+
+                    }
 
                 } else {
 
