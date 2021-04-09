@@ -9,6 +9,7 @@
     var authorizerService = require('../services/authorizerService');
 
     var baseUrlService = require('../services/baseUrlService');
+    var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
 
     module.exports = function ($scope, $state, $mdDialog) {
 
@@ -100,7 +101,8 @@
 
 
                 baseUrlService.setMasterUserPrefix(data.base_api_url);
-                
+                portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+
                 $state.go('app.home');
             })
 
