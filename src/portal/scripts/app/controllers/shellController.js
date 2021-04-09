@@ -581,7 +581,7 @@
                             window.location.reload()
                         }
 
-                        cookiesService.deleteCookie();
+                        cookiesService.deleteCookie('authtoken');
 
                     });
 
