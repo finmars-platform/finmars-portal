@@ -571,7 +571,7 @@
 
                     middlewareService.initLogOut();
 
-                    usersService.logout().then(function (data) {
+                    authorizerService.logout().then(function (data) {
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
 
