@@ -739,14 +739,15 @@
                                         const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
 
                                         filterData.error_data = {
+											code: 10,
                                             description: description
                                         }
 
                                         const error = {
                                             key: filter.key,
                                             description: description
-
                                         }
+
                                         errors.push(error)
 
                                     }
