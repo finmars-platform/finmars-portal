@@ -89,9 +89,11 @@
 
 					if (scope.positionRelativeTo === 'element') {
 
-						if (!coords) { // better for rendering performance to declare it once
+/*						if (!coords) { // better for rendering performance to declare it once
 							coords = elem[0].getBoundingClientRect();
-						}
+						}*/
+
+						coords = elem[0].getBoundingClientRect();
 
 						if (scope.popupWidth === 'element') {
 
