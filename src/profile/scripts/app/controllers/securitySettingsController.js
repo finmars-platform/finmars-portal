@@ -68,7 +68,6 @@
                 if (res.status === 'agree') {
 
                     twoFactorService.deleteByKey(item.id).then(function (value) {
-
                         vm.getTwoFactors();
 
                     })
@@ -105,7 +104,7 @@
 
             vm.getUser();
 
-            // vm.getTwoFactors();
+            vm.getTwoFactors();
 
         };
 
