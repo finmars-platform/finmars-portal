@@ -81,9 +81,11 @@
                                 column.error_data = null;
 
                             } else {
-                                const description = `The ${column.groups ? 'group' : 'column'} does not exist in the Configuration`
+
+                            	const description = `The ${column.groups ? 'group' : 'column'} does not exist in the Configuration`
 
                                 column.error_data = {
+                                	code: 10,
                                     description: description
                                 };
 
