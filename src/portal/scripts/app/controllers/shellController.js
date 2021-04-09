@@ -155,9 +155,15 @@
 
                 middlewareService.masterUserChanged();
 
-                authorizerService.setMasterUser(master.id).then(function (value) {
+                authorizerService.setMasterUser(master.id).then(function (data) {
 
-                    $state.go('app.home', null, {reload: 'app'});
+                    if (data.base_api_url) {
+                        baseUrlService.setMasterUserPrefix(data.base_api_url)
+                    }
+
+                    // $state.go('app.home', null, {reload: 'app'});
+
+                    window.location.reload();
 
                     if (vm.broadcastManager) {
                         vm.broadcastManager.postMessage({event: crossTabEvents.MASTER_USER_CHANGED});
