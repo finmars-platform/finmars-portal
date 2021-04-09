@@ -925,9 +925,9 @@
 
 
                     setTimeout(function () {
-                    vm.initShell();
-                    window.location.hash = '#!/profile';
-                    window.location.reload();
+                        vm.initShell();
+                        window.location.hash = '#!/profile';
+                        window.location.reload();
                     }, 100);
 
                 }
