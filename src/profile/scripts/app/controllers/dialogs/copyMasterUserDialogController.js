@@ -6,10 +6,11 @@
     'use strict';
 
     var usersService = require('../../services/usersService');
+    var authorizerService = require('../../services/authorizerService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function copyMasterUserDialogController($scope, $mdDialog, data) {
+    module.exports = function copyMasterUserDialogController($scope, $mdDialog, $state, data) {
 
         console.log('data', data);
 
@@ -27,43 +28,56 @@
 
             vm.processing = true;
 
-            usersService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id}).then(function (data) {
 
-                console.log('data success', data);
+            authorizerService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id})
 
-                vm.processing = false;
-                $scope.$apply();
+            setTimeout(function (){
 
                 toastNotificationService.info("Copy of Database  " + vm.name + ' is currently processing');
 
-                $mdDialog.hide({status: 'agree', data: {
-                    task: data
-                }});
+                $state.go('app.profile', {}, {reload: 'app'});
 
-            }).catch(function (reason) {
+            }, 1000)
 
-                console.log('reason', reason);
 
-                vm.processing = false;
-                $scope.$apply();
 
-                $mdDialog.show({
-                    controller: 'ProfileInfoDialogController as vm',
-                    templateUrl: 'views/dialogs/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    locals: {
-                        data: {
-                            title: 'Warning!',
-                            description: "Something went wrong"
-                        }
-                    },
-                    multiple: true,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    targetEvent: $event
-                })
-            })
+            // authorizerService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id}).then(function (data) {
+            //
+            //     console.log('data success', data);
+            //
+            //     vm.processing = false;
+            //     $scope.$apply();
+            //
+            //     toastNotificationService.info("Copy of Database  " + vm.name + ' is currently processing');
+            //
+            //     $mdDialog.hide({status: 'agree', data: {
+            //         task: data
+            //     }});
+            //
+            // }).catch(function (reason) {
+            //
+            //     console.log('reason', reason);
+            //
+            //     vm.processing = false;
+            //     $scope.$apply();
+            //
+            //     $mdDialog.show({
+            //         controller: 'ProfileInfoDialogController as vm',
+            //         templateUrl: 'views/dialogs/info-dialog-view.html',
+            //         parent: angular.element(document.body),
+            //         locals: {
+            //             data: {
+            //                 title: 'Warning!',
+            //                 description: "Something went wrong"
+            //             }
+            //         },
+            //         multiple: true,
+            //         preserveScope: true,
+            //         autoWrap: true,
+            //         skipHide: true,
+            //         targetEvent: $event
+            //     })
+            // })
 
         };
     }

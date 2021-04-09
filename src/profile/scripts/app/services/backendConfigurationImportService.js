@@ -13,15 +13,15 @@
 
     var importConfigurationAsJson = function (data) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
+        var prefix = baseUrlService.getMasterUserPrefix();
 
-return window.fetch(baseUrl  + prefix + '/' + 'import/configuration-json/', {
+        return window.fetch(baseUrl + prefix + '/' + 'import/configuration-json/', {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(data)
