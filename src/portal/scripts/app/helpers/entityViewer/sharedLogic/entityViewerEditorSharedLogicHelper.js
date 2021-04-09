@@ -115,9 +115,27 @@
             return fieldsInFixedArea;
         }
 
-        const onPopupSaveCallback = function () {
+        const onPopupSaveCallback = async function () {
 
             const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
+
+			if (viewModel.entityType === 'instrument') {
+
+				if (viewModel.fixedAreaPopup.fields.type.value !== viewModel.entity.instrument_type) {
+
+					viewModel.entity.instrument_type = viewModel.fixedAreaPopup.fields.type.value;
+					// const showByDefaultValue = viewModel.showByDefault;
+					const formLayoutData = await getAndFormatUserTabs();
+
+					viewModel.tabs = formLayoutData.tabs;
+					viewModel.attributesLayout = formLayoutData.attributesLayout;
+					$scope.$apply();
+					// set 'show by default' that user saved in popup after it was changed by getAndFormatUserTabs()
+					// viewModel.showByDefault = showByDefaultValue;
+
+				}
+
+			}
 
             viewModel.keysOfFixedFieldsAttrs.forEach(key => {
 
@@ -343,7 +361,8 @@
         };
 
         const onBigDrawerResizeButtonClick = function () {
-            viewModel.fixedAreaPopup.tabColumns = 6;
+
+        	viewModel.fixedAreaPopup.tabColumns = 6;
             viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
             $scope.$apply();
@@ -499,7 +518,7 @@
 
         }
 
-        const getUserTabs = formLayoutFromAbove => {
+        const getUserTabsAndFixedAreaData = formLayoutFromAbove => {
 
         	return new Promise(async resolve => {
 
@@ -528,15 +547,14 @@
 					viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
 
 					if (Array.isArray(editLayout.results[0].data)) {
-
-						// viewModel.tabs = editLayout.results[0].data
 						tabs = editLayout.results[0].data;
-
-					} else {
+					}
+					else {
 
 						// viewModel.tabs = editLayout.results[0].data.tabs
-						tabs = editLayout.results[0].data.tabs
-						viewModel.fixedArea = editLayout.results[0].data.fixedArea
+						tabs = editLayout.results[0].data.tabs;
+						/** @type {{showByDefault: string=}} - Received by getUserTabsAndFixedAreaData() */
+						viewModel.fixedArea = editLayout.results[0].data.fixedArea;
 
 					}
 
@@ -569,11 +587,18 @@
 
 			viewModel.readyStatus.layout = false;
 
-			const tabs = await getUserTabs();
+			const tabs = await getUserTabsAndFixedAreaData();
 
 			if (viewModel.entityType === 'instrument') await applyInstrumentUserFieldsAliases(tabs);
 
         	entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+
+			if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
+
+				viewModel.showByDefault = viewModel.fixedArea.showByDefault;
+				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
+
+			}
 
 			const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
 
@@ -621,11 +646,11 @@
 				await getTypeSelectorOptions(valueEntity);
 			}
 
-			const tabs = await getUserTabs(formLayoutFromAbove);
+			const tabs = await getUserTabsAndFixedAreaData(formLayoutFromAbove);
 
             if (viewModel.openedIn === 'big-drawer') {
 
-                // Victor 2020.11.20 #59 Fixed area popup
+                // viewModel.fixedArea received by getUserTabsAndFixedAreaData()
                 if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
                     viewModel.showByDefault = viewModel.fixedArea.showByDefault;
                     viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;

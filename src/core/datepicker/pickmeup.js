@@ -173,8 +173,6 @@
             max_date.addDays(-1);
         }
 
-        //console.trace('options', JSON.stringify(options.current));
-
         /!**
          * Remove old content except header navigation
          *!/
@@ -606,7 +604,6 @@
     function update_date() {
 
         //console.log('update_date');
-        //console.trace();
 
         var $this = $(this),
             options = $this.data('pickmeup-options'),
@@ -765,9 +762,6 @@
 
     function show(force) {
 
-        // console.log('show');
-        // console.trace();
-
         var pickmeup = this.pickmeup;
         if (force || !pickmeup.is(':visible')) {
             var $this = $(this),
@@ -883,9 +877,6 @@
 
     function update() {
 
-        console.log('update');
-        console.trace();
-
         var options = $(this).data('pickmeup-options');
         $(document)
             .off(namespaced_events(options.trigger_event, options.events_namespace), options.binded.hide)
@@ -956,11 +947,6 @@
     }
 
     function set_date(date) {
-
-        //console.log('set')
-
-        //console.trace();
-        //console.log('data', date);
 
         var $this = $(this),
             options = $this.data('pickmeup-options');
