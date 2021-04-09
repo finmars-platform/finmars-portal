@@ -230,7 +230,6 @@
 
 	const getDefaultListLayout = function (entityType) {
 
-        // console.trace();
         return new Promise (function (resolve, reject) {
 
             var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
