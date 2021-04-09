@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var prefix = '';
+    window.base_api_url = '';
 
     var resolve = function () {
 
@@ -28,11 +28,11 @@
     }
 
     var setMasterUserPrefix = function (_prefix) {
-        prefix = _prefix;
+        window.base_api_url = _prefix;
     }
 
     var getMasterUserPrefix = function () {
-        return prefix
+        return window.base_api_url
     }
 
     var getApiVersion = function () {
