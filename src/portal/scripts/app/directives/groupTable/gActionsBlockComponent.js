@@ -332,9 +332,7 @@
 
 				scope.addEntity = async function (ev) {
 
-				    const entity = {};
-
-                    let editLayout;
+                    let editLayout, entity = {};
 					switch (scope.entityType) {
 
 						case 'transaction-type':

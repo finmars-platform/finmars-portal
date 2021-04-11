@@ -7,14 +7,15 @@
  */
 (function () {
 
-    let objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    let uiService = require('../services/uiService');
+    const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
+	const uiService = require('../services/uiService');
 
-    var entityResolverService = require('../services/entityResolverService');
+	const entityResolverService = require('../services/entityResolverService');
 
-    var middlewareService = require('../services/middlewareService');
-    var evRvCommonHelper = require('../helpers/ev-rv-common.helper');
-    var evEvents = require('../services/entityViewerEvents');
+    const middlewareService = require('../services/middlewareService');
+	const evEvents = require('../services/entityViewerEvents');
+    const evRvCommonHelper = require('../helpers/ev-rv-common.helper');
+	const metaHelper = require('../helpers/meta.helper');
 
     'use strict';
 
@@ -158,20 +159,45 @@
             attrTypeToAdd.filters = attrInstance.filters;
         }
 
-        switch (form) {
-            case 'group':
-                attrTypeToAdd.groups = true;
-                break;
-            case 'column':
-                attrTypeToAdd.columns = true;
-                break;
-            case 'filter':
-                attrTypeToAdd.filters = true;
-                break;
-        }
-
         attrTypeToAdd.name = attrInstance.name;
         attrTypeToAdd.value_type = attrInstance.value_type;
+
+        if (attrInstance.layout_name) {
+            attrTypeToAdd.layout_name = attrInstance.layout_name;
+        }
+
+		switch (form) {
+
+			case 'group':
+				attrTypeToAdd.groups = true;
+				break;
+
+			case 'column':
+				attrTypeToAdd.columns = true;
+				break;
+
+			case 'filter':
+
+				attrTypeToAdd.filters = true;
+
+				if (!attrTypeToAdd.options) {
+					attrTypeToAdd.options = {};
+				}
+
+				if (!attrTypeToAdd.options.filter_type) {
+					attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
+				}
+
+				if (!attrTypeToAdd.options.filter_values) {
+					attrTypeToAdd.options.filter_values = [];
+				}
+
+				if (!attrTypeToAdd.options.hasOwnProperty('exclude_empty_cells')) {
+					attrTypeToAdd.options.exclude_empty_cells = false;
+				}
+
+				break;
+		}
 
         return attrTypeToAdd;
 
@@ -242,6 +268,14 @@
 
     };
 
+	/**
+	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+	 * @param {string} userCode
+	 * @param {obj} $mdDialog
+	 * @param {string} viewContext
+	 * @memberOf module:EntityViewerHelperService
+	 * @return {promise}
+	 */
     let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
 
     	return new Promise(function (resolve) {
@@ -299,6 +333,12 @@
 
     };
 
+	/**
+	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+	 * @param {string} viewContext
+	 * @memberOf module:EntityViewerHelperService
+	 * @return {promise}
+	 */
     let getDefaultLayout = function (viewModel, viewContext) {
 
     	return new Promise(function (resolve, reject) {

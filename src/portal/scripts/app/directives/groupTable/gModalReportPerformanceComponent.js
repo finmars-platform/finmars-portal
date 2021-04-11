@@ -55,7 +55,7 @@
                         vm.tabs[i].attrs = [];
 
                         for (x = 0; x < vm.tabs[i].layout.fields.length; x = x + 1) {
-                            ;
+
                             if (vm.tabs[i].layout.fields[x].type === 'field') {
                                 if (vm.tabs[i].layout.fields[x].hasOwnProperty('id')) {
                                     vm.tabs[i].attrs.push({

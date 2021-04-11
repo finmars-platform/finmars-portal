@@ -10,7 +10,10 @@
         </div>
 
         <div layout="row">
-            <md-input-container style="width: 300px">
+
+            <usercode-input data-item="vm.entity" data-ng-if="!vm.entity.id"></usercode-input>
+
+            <md-input-container style="width: 300px" data-ng-if="vm.entity.id">
                 <label for="">User code</label>
                 <input type="text" data-ng-model="vm.entity.user_code">
             </md-input-container>

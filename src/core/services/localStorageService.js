@@ -6,6 +6,8 @@
 
     let setUMuM = function (userId, masterUserId, memberId) {
 
+        console.log('setUMuM', userId, masterUserId, memberId)
+
     	if ((userId || userId === 0) &&
 			(masterUserId || masterUserId === 0) &&
 			(memberId || memberId === 0)) {
@@ -207,7 +209,7 @@
         let layoutToDelete = getCacheProp(layoutPath, cache);
 
         // clear content_type default layout
-        if (layoutToDelete.is_default) {
+        if (layoutToDelete && layoutToDelete.is_default) {
             let defLayoutPath = ['layouts', 'defaultLayouts', layoutToDelete.content_type];
             cache = removeFromCache(defLayoutPath, cache);
         }

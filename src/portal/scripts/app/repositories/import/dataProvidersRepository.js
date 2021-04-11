@@ -13,36 +13,51 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function () {
-        return xhrService.fetch(baseUrl + 'import/provider/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/provider/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var getConfigs = function () {
-        return xhrService.fetch(baseUrl + 'import/config',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/config',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var getConfig = function (providerId) {
-        return xhrService.fetch(baseUrl + 'import/config/?provider=' + providerId,
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/config/?provider=' + providerId,
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -51,15 +66,21 @@
     var setConfig = function (providerId, provider) {
 
         // Important! No headers as below required:
+        //'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
         // Accept: 'application/json',
         // 'Content-type': 'application/json'
 
-        return xhrService.fetch(baseUrl + 'import/config/' + providerId + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/config/' + providerId + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                 },
                 body: provider
             })
@@ -70,15 +91,21 @@
     var createConfig = function (provider) {
 
         // Important! No headers as below required:
+        //'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
         // Accept: 'application/json',
         // 'Content-type': 'application/json
 
-        return xhrService.fetch(baseUrl + 'import/config/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/config/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken')
                 },
                 body: provider
             })
@@ -88,12 +115,17 @@
 
     var bloombergTestCertificate = function (data) {
 
-        return xhrService.fetch(baseUrl + 'import/test-certificate/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/test-certificate/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
@@ -103,12 +135,17 @@
 
     var getPersonalProvidersList = function () {
 
-        return xhrService.fetch(baseUrl + 'integrations/data-provider/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'integrations/data-provider/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -117,12 +154,17 @@
 
     var getCredentials = function () {
 
-        return xhrService.fetch(baseUrl + 'credentials/credentials/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'credentials/credentials/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -131,7 +173,11 @@
 
     var createCredential = function (data) {
 
-        return xhrService.fetch(baseUrl + 'credentials/credentials/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'credentials/credentials/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -145,7 +191,11 @@
 
     var editCredential = function (credentialId, credential) {
 
-        return xhrService.fetch(baseUrl + 'credentials/credentials/' + credentialId + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'credentials/credentials/' + credentialId + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -159,12 +209,17 @@
 
     var deleteCredential = function (credentialId) {
 
-        return xhrService.fetch(baseUrl + 'credentials/credentials/' + credentialId + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'credentials/credentials/' + credentialId + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 }

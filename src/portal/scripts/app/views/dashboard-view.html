@@ -53,13 +53,32 @@
 
             <div class="dashboard-top-row">
                 <div class="dashboard-title">
-                    <b>{{vm.layout.name}}</b>
+
+                    <md-button class="g-dashboard-top-button g-top-button flex-row"
+                               popup
+                               popup-template-url="'views/popups/dashboard/dashboard-layouts-manager-popup-view.html'"
+                               popup-data="vm.popupData"
+                               position-relative-to="element"
+                               open-on="click"
+                               offset-x="-30"
+                               popup-classes="'rounded-border'"
+                               close-on-click-outside="true"
+                               backdrop-classes="'low-z-index-backdrop'"
+                               popup-event-service="vm.dashboardEventService">
+
+                        <span class="material-icons">view_quilt</span>
+                        <span class="m-l-8">{{vm.layout.name}}</span>
+                        <span class="material-icons">arrow_drop_down</span>
+
+                    </md-button>
+
                 </div>
 
                 <div class="dashboard-tabs-control-panel">
 
-                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                               data-ng-click="vm.clearActiveTabUfaFilters()">
+                    <md-button class="dashboard-control-button"
+                               data-ng-click="vm.clearActiveTabUfaFilters()"
+                               ng-disabled="vm.processing">
                         <ng-md-icon icon="leak_remove"
                                     size="20"
                                     style="fill: #777777">
@@ -69,8 +88,9 @@
                         </ng-md-icon>
                     </md-button>
 
-                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                               data-ng-click="vm.refreshActiveTab()">
+                    <md-button class="dashboard-control-button"
+                               data-ng-click="vm.refreshActiveTab()"
+                               ng-disabled="vm.processing">
                         <ng-md-icon icon="refresh"
                                     size="20"
                                     style="fill: #777777">
@@ -78,8 +98,9 @@
                         </ng-md-icon>
                     </md-button>
 
-                    <md-button class="dashboard-control-button" ng-class="{'disabled-btn': vm.processing}"
-                               data-ng-click="vm.refreshAll()">
+                    <md-button class="dashboard-control-button"
+                               data-ng-click="vm.refreshAll()"
+                               ng-disabled="vm.processing">
                         <ng-md-icon icon="loop"
                                     size="20"
                                     style="fill: #777777">
@@ -87,43 +108,49 @@
                         </ng-md-icon>
                     </md-button>
 
-                    <md-menu class="full-width dashboard-control-menu" layout="row">
-                        <md-button class="dashboard-control-button"
-                                   ng-click="$mdOpenMenu($event)"
-                                   type="button">
-                            <ng-md-icon icon="list"
-                                        size="20"
-                                        style="fill: #777777">
-                                <md-tooltip class="tooltip_1" md-direction="bottom">Layouts</md-tooltip>
-                            </ng-md-icon>
+<!--                    Deprecated -->
+<!--                    <md-menu class="full-width dashboard-control-menu" layout="row">-->
+<!--                        <md-button class="dashboard-control-button"-->
+<!--                                   ng-click="$mdOpenMenu($event)"-->
+<!--                                   type="button">-->
+<!--                            <ng-md-icon icon="list"-->
+<!--                                        size="20"-->
+<!--                                        style="fill: #777777">-->
+<!--                                <md-tooltip class="tooltip_1" md-direction="bottom">Layouts</md-tooltip>-->
+<!--                            </ng-md-icon>-->
 
-                        </md-button>
+<!--                        </md-button>-->
 
-                        <md-menu-content width="4">
-                            <md-menu-item>
-                                <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">
-                                    <span>Open Layout Manager</span>
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn">
-                                    <span>Save Dashboard Layout</span>
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button data-ui-sref="app.dashboard-constructor({id: vm.layout.id})"
-                                           class="g-settings-option-btn">
-                                    <span>Edit Layout</span>
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-                                <md-button data-ng-click="vm.exportDashboardLayout($event)"
-                                           class="g-settings-option-btn">
-                                    <span>Export Layout</span>
-                                </md-button>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
+<!--                        <md-menu-content width="4">-->
+<!--                            <md-menu-item>-->
+<!--                                <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">-->
+<!--                                    <span>Open Layout Manager</span>-->
+<!--                                </md-button>-->
+<!--                            </md-menu-item>-->
+<!--                            <md-menu-item>-->
+<!--                                <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn" data-ng-class="{'disabled-btn': vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout}">-->
+<!--                                    <span>Save Dashboard Layout</span>-->
+<!--                                </md-button>-->
+<!--                            </md-menu-item>-->
+<!--                            <md-menu-item>-->
+<!--                                <md-button ng-click="vm.makeCopyDashboardLayout($event)" class="g-settings-option-btn">-->
+<!--                                    <span>Duplicate Layout</span>-->
+<!--                                </md-button>-->
+<!--                            </md-menu-item>-->
+<!--                            <md-menu-item>-->
+<!--                                <md-button data-ui-sref="app.dashboard-constructor({id: vm.layout.id})"-->
+<!--                                           class="g-settings-option-btn">-->
+<!--                                    <span>Edit Layout</span>-->
+<!--                                </md-button>-->
+<!--                            </md-menu-item>-->
+<!--                            <md-menu-item>-->
+<!--                                <md-button data-ng-click="vm.exportDashboardLayout($event)"-->
+<!--                                           class="g-settings-option-btn">-->
+<!--                                    <span>Export Layout</span>-->
+<!--                                </md-button>-->
+<!--                            </md-menu-item>-->
+<!--                        </md-menu-content>-->
+<!--                    </md-menu>-->
 
                 </div>
             </div>

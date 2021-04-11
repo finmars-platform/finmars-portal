@@ -694,6 +694,34 @@
         </div>
 
 
+        <div>
+
+            <h4>Group Tokens for User Code prefixes</h4>
+
+            <div data-ng-repeat="item in vm.usercodeGroups" layout="row">
+
+                <div class="p-t-8">{{item.value}}</div>
+
+                <md-button class="md-warn md-raised" data-ng-click="vm.deleteUsercodeGroup($event, item)">Delete</md-button>
+
+            </div>
+
+            <div layout="row">
+
+                <md-input-container>
+                    <label>Group prefix</label>
+                    <input type="text" data-ng-model="vm.groupPrefix">
+                </md-input-container>
+
+                <md-button class="md-raised md-primary" data-ng-click="vm.createNewUserCodeGroup($event)">Create</md-button>
+
+            </div>
+
+
+
+        </div>
+
+
     </div>
 
     <div data-ng-if="!vm.readyStatus.content">

@@ -192,7 +192,7 @@
 
                     if (vm.layoutId) {
 
-                        uiService.getEditLayout(vm.layoutId).then(function (data) {
+                        uiService.getEditLayoutByKey(vm.layoutId).then(function (data) {
 
                             vm.ui = data;
 
