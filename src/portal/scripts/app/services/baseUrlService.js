@@ -5,22 +5,47 @@
 
     'use strict';
 
+    window.base_api_url = '';
+
     var resolve = function () {
 
         if ('__PROJECT_ENV__') {
 
             var host = '__API_HOST__';
 
-            return host + '/api/v1/';
+            return host;
 
         }
 
-        return '/api/v1/'
+        return ''
 
     };
 
+    var getAuthorizerUrl = function () {
+
+        return '__AUTHORIZER_URL__'
+
+    }
+
+    var setMasterUserPrefix = function (_prefix) {
+        window.base_api_url = _prefix;
+    }
+
+    var getMasterUserPrefix = function () {
+        return window.base_api_url
+    }
+
+    var getApiVersion = function () {
+        return 'api/v1'
+    }
+
     module.exports = {
-        resolve: resolve
+        resolve: resolve,
+        getAuthorizerUrl: getAuthorizerUrl,
+        setMasterUserPrefix: setMasterUserPrefix,
+        getMasterUserPrefix: getMasterUserPrefix,
+
+        getApiVersion: getApiVersion
     }
 
 }());

@@ -1,0 +1,60 @@
+.md-button.link-button {
+  background-color: #ffffff;
+  color: #f05a22;
+  font-weight: 700;
+  border-radius: 3px;
+
+  &:not([disabled]):hover {
+    background-color: @btnHover;
+  }
+}
+
+.cancel-small-btn {
+  min-width: 24px;
+  width: 24px;
+  min-height: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+
+  &:not([disabled]):hover {
+    background-color: transparent;
+    opacity: .5;
+  }
+
+  .material-icons {
+    color: #747474;
+    font-size: 24px;
+  }
+}
+
+md-checkbox {
+  .md-container {
+    width: 18px;
+    height: 18px;
+
+    .md-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+    }
+
+  }
+
+  &.md-checked {
+
+    .md-container .md-icon {
+      &:after {
+        top: initial;
+        bottom: 3px;
+        left: 3.7px;
+      }
+    }
+
+  }
+
+  .md-label {
+    margin-top: 4px;
+  }
+
+}

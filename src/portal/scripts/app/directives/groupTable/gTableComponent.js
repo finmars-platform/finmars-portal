@@ -12,13 +12,13 @@
     module.exports = function () {
         return {
             restrict: 'AE',
-            templateUrl: 'views/directives/groupTable/g-table-component-view.html',
             scope: {
                 attributeDataService: '=',
                 evDataService: '=',
                 evEventService: '=',
                 spExchangeService: '='
             },
+			templateUrl: 'views/directives/groupTable/g-table-component-view.html',
             link: function (scope, elem, attrs) {
 
                 console.log("gTableComponent.Link", scope, elem, attrs);
@@ -32,6 +32,7 @@
 
                 scope.viewType = scope.evDataService.getViewType();
                 scope.viewSettings = scope.evDataService.getViewSettings(scope.viewType);
+                scope.readyToRenderTable = false;
 
                 scope.reportOptions = scope.evDataService.getReportOptions();
 
@@ -44,8 +45,10 @@
                 var activeLayoutConfigIsSet = false;
 
                 scope.isInsideDashboard = false;
+
                 if (viewContext === 'dashboard') {
-                    scope.isInsideDashboard = true;
+
+                	scope.isInsideDashboard = true;
 
                     interfaceLayout.groupingArea.collapsed = true;
                     interfaceLayout.groupingArea.height = 2;
@@ -56,6 +59,7 @@
 
                     scope.additions.isOpen = false;
                     scope.evDataService.setAdditions(scope.additions);
+
                 }
 
 
@@ -141,7 +145,8 @@
                 };
 
                 scope.getWrapperClasses = function () {
-                    var classes = '';
+
+                	var classes = '';
 
                     if (scope.isRootEntityViewer) {
                         classes = 'g-root-wrapper';
@@ -152,6 +157,10 @@
                     if (scope.evDataService.isVerticalSplitPanelActive()) {
                         classes += ' g-v-split-panel-active';
                     }
+
+                    if (scope.isReport) {
+						classes += ' g-is-report';
+					}
 
                     return classes;
 
@@ -192,6 +201,10 @@
                     scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
                         scope.activeObject = scope.evDataService.getActiveObject();
                     });
+
+					scope.evEventService.addEventListener(evEvents.FILTERS_RENDERED, function () {
+						scope.readyToRenderTable = true
+					});
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
@@ -241,6 +254,8 @@
                 scope.init = function () {
 
                     initEventListeners();
+
+					scope.readyToRenderTable = !scope.isReport // TO DELETE after updating ev interface
 
                     if (document.querySelector('body').classList.contains('filter-side-nav-collapsed')) {
 

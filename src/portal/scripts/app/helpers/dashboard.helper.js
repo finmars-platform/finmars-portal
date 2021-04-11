@@ -2,16 +2,18 @@
 
     'use strict';
 
-	var uiService = require('../services/uiService');
+	var dashboardEvents = require('../services/dashboard/dashboardEvents');
 
-	var toastNotificationService = require('../../../../core/services/toastNotificationService');
+	const uiService = require('../services/uiService');
+
+	const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
     let componentsForLinking = [
         'report_viewer', 'report_viewer_split_panel', 'report_viewer_matrix',
         'report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_grand_total'
     ];
 
-    let getLinkingToFilters = function (layout) {
+	const getLinkingToFilters = function (layout) {
 
     	var linkingToFilters = [];
 
@@ -62,7 +64,7 @@
 
     };
 
-    let getDataForLayoutSelectorWithFilters = function (layouts) {
+	const getDataForLayoutSelectorWithFilters = function (layouts) {
 
         var result = [];
 
@@ -84,11 +86,11 @@
 
     };
 
-    let getComponentsForLinking = function () {
+	const getComponentsForLinking = function () {
         return componentsForLinking;
     };
 
-    let saveComponentSettingsFromDashboard = function (dashboardDataService, componentData) {
+	const saveComponentSettingsFromDashboard = function (dashboardDataService, componentData) {
 
 		var listLayout = dashboardDataService.getListLayout();
 
@@ -124,12 +126,38 @@
 
 	};
 
+    const initEventListeners = function (scope) {
+
+		scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
+
+			scope.readyStatus.disabled = true;
+
+			setTimeout(function () {
+				scope.$apply();
+			}, 100);
+
+		});
+
+		scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
+
+			scope.readyStatus.disabled = false;
+
+			setTimeout(function () {
+				scope.$apply();
+			}, 100);
+
+		});
+
+	};
+
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
         getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
         getComponentsForLinking: getComponentsForLinking,
 
-		saveComponentSettingsFromDashboard: saveComponentSettingsFromDashboard
+		saveComponentSettingsFromDashboard: saveComponentSettingsFromDashboard,
+
+		initEventListeners: initEventListeners
     };
 
 }());

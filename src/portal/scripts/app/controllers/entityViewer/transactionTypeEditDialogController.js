@@ -270,7 +270,7 @@
 
         vm.getLayout = function () {
 
-            uiService.getEditLayout(vm.entityType).then(function (data) {
+            uiService.getDefaultEditLayout(vm.entityType).then(function (data) {
 
                 if (data.results.length) {
                     vm.tabs = data.results[0].data;
