@@ -14,11 +14,16 @@
 
     var startImport = function (config) {
 
-        return xhrService.fetch(baseUrl + 'import/csv/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: config
@@ -27,11 +32,16 @@
 
     var validateImport = function (config) {
 
-        return xhrService.fetch(baseUrl + 'import/csv-validate/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv-validate/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: config

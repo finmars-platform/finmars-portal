@@ -12,13 +12,17 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return window.fetch(baseUrl + 'chats/thread-group/?ordering=created&page=' + options.page,
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/?ordering=created&page=' + options.page,
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
@@ -27,13 +31,17 @@
     };
 
     var getByKey = function (id) {
-        return window.fetch(baseUrl + 'chats/thread-group/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
@@ -42,13 +50,17 @@
     };
 
     var create = function (thread) {
-        return window.fetch(baseUrl + 'chats/thread-group/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(thread)
@@ -58,13 +70,17 @@
     };
 
     var update = function (id, thread) {
-        return window.fetch(baseUrl + 'chats/thread-group/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(thread)
@@ -74,13 +90,17 @@
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'chats/thread-group/' + id + '/',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+
+return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
