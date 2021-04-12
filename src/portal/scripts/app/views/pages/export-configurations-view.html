@@ -67,6 +67,41 @@
             </div>
         </div>
 
+        <div>
+            <hr>
+
+            <h4>Filters</h4>
+
+            <div layout="row">
+
+                <md-input-container class="export-configuration-file-name-input">
+                    <label>Prefix Type</label>
+                    <md-select data-ng-model="vm.prefixType" data-ng-change="vm.updateFilters()">
+                        <md-option ng-value="2">
+                            User ID
+                        </md-option>
+                        <md-option ng-value="5">
+                            Hashed User ID
+                        </md-option>
+                        <md-option ng-value="4">
+                            Group Name
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="export-configuration-file-name-input" data-ng-if="vm.prefixType == 4">
+                    <label>Prefix Value</label>
+                    <md-select data-ng-model="vm.selectedGroupPrefix" data-ng-change="vm.updateFilters()">
+                        <md-option  data-ng-repeat="item in vm.groupPrefixes" ng-value="item.value">
+                            {{item.value}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+        </div>
+
         <div class="overflow-hidden"
              layout="column"
              style="position: relative;">

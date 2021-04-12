@@ -223,6 +223,7 @@ app.controller('TextEditorDialogController', ['$scope', '$mdDialog', 'data', req
 
 app.controller('InputTemplateLayoutViewerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/inputTemplateLayoutViewerDialogController')]);
 app.controller('TemplateLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateLayoutManagerController')]);
+app.controller('NewLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/newLayoutDialogController')]);
 app.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
 app.controller('SaveAsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveAsDialogController')]);
 app.controller('LoaderDialogController', ['$scope', '$customDialog', 'data', require('./app/controllers/dialogs/loaderDialogController')]);
@@ -353,6 +354,8 @@ app.controller('EntityViewerPermissionEditorController', ['$scope', '$mdDialog',
 app.controller('PriceHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/priceHistoryErrorEditDialogController')]);
 app.controller('CurrencyHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/currencyHistoryErrorEditDialogController')]);
 
+app.controller('ListLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/listLayoutExportDialogController')]);
+
 
 // Transaction type form
 
@@ -442,6 +445,7 @@ app.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data'
 
 app.controller('ManualSortingSettingsDialogController', ['$scope', '$mdDialog', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingSettingsDialogController')]);
 app.controller('ManualSortingLayoutManagerDialogController', ['$scope', '$mdDialog', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingLayoutManagerDialogController')]);
+app.controller('ManualSortingLayoutManagerController', ['$scope', '$mdDialog',  require('./app/controllers/manualSortingLayoutManagerController')]);
 
 // Reports Missing Prices
 
@@ -504,6 +508,7 @@ app.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('.
 
 // Layouts
 
+app.controller('UiLayoutListInvitesDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutListInvitesDialogController')]);
 app.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
 app.controller('UiShareLayoutDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiShareLayoutDialogController')]);
 app.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutSaveAsDialogController')]);
@@ -713,6 +718,7 @@ app.directive('ttypeActionsInputSelect', [require('./app/directives/ttypeActions
 app.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
 app.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/customInputs/entitySearchSelect')]);
 app.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
+app.directive('usercodeInput', ['$mdDialog', require('./app/directives/usercodeInputDirective')]);
 app.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
 app.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
 app.directive('tableAttributeSelector', ['$mdDialog', require('./app/directives/tableAttributeSelectorDirective')]);

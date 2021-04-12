@@ -792,7 +792,7 @@
 
         <div data-ng-if="isReport" class="g-cell-rows-settings">
 
-            <div class="g-cell g-row-settings gRowSettings">
+            <div class="g-cell g-row-settings">
                 <md-button ng-if="!isReport"
                            class="g-cell-button"
                            data-ng-class="{'selected': isAllStarsSelected}"
@@ -846,8 +846,8 @@
             <md-button class="favorite-toggle" data-ng-click="rowFiltersToggle()">
                 <div class="flex-row flex-i-center height-100">
 <!--                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>-->
-                    <span ng-hide="hideRowFilters" class="material-icons f-s-16">keyboard_arrow_left</span>
-                    <span ng-hide="!hideRowFilters" class="material-icons f-s-16">keyboard_arrow_right</span>
+                    <span ng-hide="hideRowSettings" class="material-icons f-s-16">keyboard_arrow_left</span>
+                    <span ng-hide="!hideRowSettings" class="material-icons f-s-16">keyboard_arrow_right</span>
                 </div>
             </md-button>
         </div>
@@ -907,9 +907,18 @@
                                 <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                             </div>
 
+                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">
+                                m
+                                 <md-tooltip md-direction="top">
+                                       Manual Sorting Activated
+                                 </md-tooltip>
+                            </span>
+
                             <div class="sort">
+
                                 <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
                                 <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+
                             </div>
 
                         </div>
@@ -962,7 +971,7 @@
                 <div class="g-cell g-table-header-cell">
 
                     <div class="g-group-button flex-row"
-                               data-ng-click="sortHandler(column, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
+                               data-ng-click="sortHandler(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
 
                         <div  class="column-name-wrapper">
 
@@ -976,7 +985,15 @@
                                 <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                             </div>
 
+                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">
+                                m
+                                <md-tooltip md-direction="top">
+                                   Manual Sorting Activated
+                                </md-tooltip>
+                            </span>
+
                             <div class="sort">
+
                                 <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
                                 <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
                             </div>

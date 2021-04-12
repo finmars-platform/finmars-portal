@@ -13,18 +13,21 @@
 
 				let inputInvalid = true;
 
-				for (let i = 0; i < actualUserInputs.length; i++) {
+				if (inputName) {
 
-					if (inputName === actualUserInputs[i].name) { // whether input actually exist
+					for (let i = 0; i < actualUserInputs.length; i++) {
 
-						if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+						if (inputName === actualUserInputs[i].name) { // whether input actually exist
 
-							inputInvalid = false;
+							if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+
+								inputInvalid = false;
+
+							}
+
+							break;
 
 						}
-
-
-						break;
 
 					}
 

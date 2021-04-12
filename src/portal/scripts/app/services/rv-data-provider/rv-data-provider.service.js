@@ -337,6 +337,9 @@
 
                         if (!parentGroup.___is_open) {
                             obj.___is_open = false;
+                            groupSettings.is_open = false
+                            rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
+
                         }
 
                     }
@@ -386,7 +389,7 @@
             var options = requestParameters.body;
             var event = requestParameters.event;
 
-            var page = new Number(options.page) - 1;
+            var page = Number(options.page) - 1;
             // var pagination = entityViewerDataService.getPagination();
             var step = 10000; // TODO fix pagination problem in future
             var i;
@@ -470,6 +473,8 @@
 
                             if (!parentGroup.___is_open) {
                                 obj.___is_open = false;
+                                groupSettings.is_open = false
+                                rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
                             }
 
 
@@ -826,11 +831,9 @@
                         requestsParameters[key].body.ordering = activeColumnSort.key
                     } else if (activeColumnSort.options.sort === 'DESC') {
                         requestsParameters[key].body.ordering = '-' + activeColumnSort.key
-                    } else if (activeColumnSort.options.sort === 'MANUAL_ASC')  {
-                        requestsParameters[key].body.ordering_manual = activeColumnSort.key
-                    } else if (activeColumnSort.options.sort === 'MANUAL_DESC')  {
-                        requestsParameters[key].body.ordering_manual = '-' + activeColumnSort.key
                     }
+
+                    requestsParameters[key].body.ordering_mode = activeColumnSort.options.sort_mode
 
                     entityViewerDataService.setRequestParameters(requestsParameters[key]);
                     // < apply sorting settings >
