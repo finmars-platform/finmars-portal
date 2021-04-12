@@ -249,8 +249,6 @@
 
                                 var layout = data.results[0];
 
-                                console.log('#90 layout', layout)
-
                                 scope.evDataService.setColumnSortData(column.key, layout.data)
 
                                 if (column.groups) {
