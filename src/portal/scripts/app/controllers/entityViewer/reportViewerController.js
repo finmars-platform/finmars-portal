@@ -1008,8 +1008,6 @@
                                         var layout = data.results[0];
 
                                         console.log('activeColumnSortProm', layout);
-                                        console.log('#90 activeColumnSortProm', layout);
-
 
                                         vm.entityViewerDataService.setColumnSortData(activeColumnSort.key, layout.data)
 

@@ -919,6 +919,7 @@
             item.body.page = 1;
 
             item.body.groups_order = activeGroupSort.options.sort.toLocaleLowerCase();
+            item.body.ordering_mode = activeGroupSort.options.sort_mode;
 
             entityViewerDataService.setRequestParameters(item);
 
