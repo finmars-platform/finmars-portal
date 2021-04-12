@@ -9,6 +9,7 @@
     var uiRepository = require('../../repositories/uiRepository');
     var metaService = require('../../services/metaService');
     var configurationService = require('../../services/configurationService');
+    var usersService = require('../../services/usersService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -22,6 +23,8 @@
         vm.activeLayout = {
             data: {}
         };
+
+        vm.groupPrefixes = [];
 
         vm.selectAllState = false;
 
@@ -62,61 +65,60 @@
                             loop1:
                                 for (g = 0; g < groups.length; g++) {
 
-                                    loop2:
-                                        for (e = 0; e < groups[g].entities.length; e++) {
+                                    for (e = 0; e < groups[g].entities.length; e++) {
 
-                                            if (groups[g].entities[e] === parent.entity) {
+                                        if (groups[g].entities[e] === parent.entity) {
 
-                                                if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
+                                            if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
 
-                                                    if (renderedFirstLevelGroups.indexOf(groups[g].firstLevelGroup) === -1) {
-                                                        parent.first_level_header__ = groups[g].firstLevelGroup;
-                                                        renderedFirstLevelGroups.push(groups[g].firstLevelGroup);
-                                                    }
-
-                                                    parent.first_item__ = groups[g].name;
-                                                    groups[g].firstElementExist = true;
-
+                                                if (renderedFirstLevelGroups.indexOf(groups[g].firstLevelGroup) === -1) {
+                                                    parent.first_level_header__ = groups[g].firstLevelGroup;
+                                                    renderedFirstLevelGroups.push(groups[g].firstLevelGroup);
                                                 }
 
-                                                parent.order__ = g; // Set a group order position
+                                                parent.first_item__ = groups[g].name;
+                                                groups[g].firstElementExist = true;
 
-                                                // Divide children into subgroups
-                                                if (parent.entity === "ui.listlayout" ||
-                                                    parent.entity === "ui.reportlayout") {
-                                                    var subGroupsList = groups[g].subGroups[parent.entity];
-
-                                                    var children = parent.content;
-
-                                                    children.forEach(function (child) {
-
-                                                        for (s = 0; s < subGroupsList.length; s++) {
-
-                                                            if (child.content_type === subGroupsList[s].content_type) {
-
-                                                                if (!subGroupsList[s].firstElementExist) {
-                                                                    child.first_item__ = subGroupsList[s].name;
-                                                                    subGroupsList[s].firstElementExist = true;
-                                                                }
-
-                                                                child.order__ = s;
-                                                            }
-
-                                                        }
-
-                                                    });
-
-                                                } else if (parent.entity === "transactions.transactiontype") {
-
-                                                    vm.groupByProperty(parent.content, '___group__user_code');
-
-                                                }
-                                                // < Divide children into subgroups >
-
-                                                break loop1;
                                             }
 
+                                            parent.order__ = g; // Set a group order position
+
+                                            // Divide children into subgroups
+                                            if (parent.entity === "ui.listlayout" ||
+                                                parent.entity === "ui.reportlayout") {
+                                                var subGroupsList = groups[g].subGroups[parent.entity];
+
+                                                var children = parent.content;
+
+                                                children.forEach(function (child) {
+
+                                                    for (s = 0; s < subGroupsList.length; s++) {
+
+                                                        if (child.content_type === subGroupsList[s].content_type) {
+
+                                                            if (!subGroupsList[s].firstElementExist) {
+                                                                child.first_item__ = subGroupsList[s].name;
+                                                                subGroupsList[s].firstElementExist = true;
+                                                            }
+
+                                                            child.order__ = s;
+                                                        }
+
+                                                    }
+
+                                                });
+
+                                            } else if (parent.entity === "transactions.transactiontype") {
+
+                                                vm.groupByProperty(parent.content, '___group__user_code');
+
+                                            }
+                                            // < Divide children into subgroups >
+
+                                            break loop1;
                                         }
+
+                                    }
                                 }
                             // < Assign group to file >
 
@@ -225,7 +227,7 @@
                             case "accounts.account":
                                 daContentType = "Account";
                                 break;
-                        };
+                        }
 
                         var daName = attr.name;
                         var usagesCount = 0;
@@ -1142,6 +1144,39 @@
 
         };
 
+        vm.getCurrentMember = function () {
+
+            usersService.getMyCurrentMember().then(function (data) {
+
+                vm.member = data;
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.getUserCodePrefixes = function () {
+            usersService.getUsercodePrefixList().then(function (data) {
+
+                vm.groupPrefixes = data.results;
+
+                if (vm.groupPrefixes.length) {
+                    vm.selectedGroupPrefix = vm.groupPrefixes[0].value;
+                }
+
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.updateFilters = function () {
+
+            console.log('vm.prefixType', vm.prefixType);
+            console.log('vm.selectedGroupPrefix', vm.selectedGroupPrefix);
+
+        }
+
         // Mapping Section End
 
         vm.init = function () {
@@ -1151,6 +1186,9 @@
             });*/
             var getConfigsPromise = vm.getFile();
             var getMappingsPromise = vm.getMappingFile();
+
+            vm.getUserCodePrefixes();
+            vm.getCurrentMember();
 
             Promise.all([getConfigsPromise, getMappingsPromise]).then(function () {
                 vm.getConfigurationExportLayouts();

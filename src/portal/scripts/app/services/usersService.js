@@ -128,6 +128,19 @@
 
 	};
 
+
+    let getUsercodePrefixList = function () {
+        return usersRepository.getUsercodePrefixList();
+    };
+
+    let createUsercodePrefix = function (item) {
+        return usersRepository.createUsercodePrefix(item);
+    };
+
+    let deleteUserCodePrefixByKey = function (id) {
+        return usersRepository.deleteUserCodePrefixByKey(id);
+    };
+
     module.exports = {
         login: login,
         logout: logout,
@@ -164,7 +177,11 @@
         getGroupList: getGroupList,
 
         getOwnMemberSettings: getOwnMemberSettings,
-        updateOwnMemberSettings: updateOwnMemberSettings
+        updateOwnMemberSettings: updateOwnMemberSettings,
+
+        getUsercodePrefixList: getUsercodePrefixList,
+        createUsercodePrefix: createUsercodePrefix,
+        deleteUserCodePrefixByKey: deleteUserCodePrefixByKey
     }
 
 }());

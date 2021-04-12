@@ -5,12 +5,12 @@
 
     'use strict';
 
-    let metaContentTypesService = require('./metaContentTypesService');
-    let localStorageService = require('../../../../core/services/localStorageService');
+	const metaContentTypesService = require('./metaContentTypesService');
+	const localStorageService = require('../../../../core/services/localStorageService');
 
-    let uiRepository = require('../repositories/uiRepository');
+	const uiRepository = require('../repositories/uiRepository');
 
-    let isCachedLayoutActual = function (cachedLayout, layoutData) {
+	const isCachedLayoutActual = function (cachedLayout, layoutData) {
 
         if (cachedLayout && cachedLayout.modified) {
 
@@ -27,12 +27,12 @@
 
     };
 
-    let getPortalInterfaceAccess = function () {
+	const getPortalInterfaceAccess = function () {
         return uiRepository.getPortalInterfaceAccess();
     };
 
     // If there is actual layout in cache, resolve it. Otherwise resolve layout from server.
-    let resolveLayoutByKey = function (cachedLayoutResponse, fetchLayoutFn, resolve, reject) {
+	const resolveLayoutByKey = function (cachedLayoutResponse, fetchLayoutFn, resolve, reject, onRejectFn) {
 
         let cachedLayout;
 
@@ -42,6 +42,15 @@
         } else { // default layout returns inside results
             cachedLayout = cachedLayoutResponse.results[0];
         }
+
+		let onErrorResponse;
+
+        if (onRejectFn) {
+			onErrorResponse = onRejectFn;
+
+        } else {
+			onErrorResponse = (error) => reject(error);
+		}
 
         if (cachedLayout) {
 
@@ -54,9 +63,7 @@
                     fetchLayoutFn();
                 }
 
-            }).catch(function (error) {
-                reject(error);
-            });
+            }).catch(onErrorResponse);
 
         } else {
             fetchLayoutFn();
@@ -64,7 +71,7 @@
 
     };
 
-    let getListLayout = function (entityType, options) {
+	const getListLayout = function (entityType, options) {
 
         // get content_type by entityType when getting layout by user_code
         if (options && options.filters && options.filters.user_code && entityType) {
@@ -118,7 +125,7 @@
 
     };
 
-    let getListLayoutLight = function (options) {
+	const getListLayoutLight = function (options) {
         return uiRepository.getListLayoutLight(options);
     };
 
@@ -126,7 +133,7 @@
         return uiRepository.getListLayoutDefault(options);
     }; */
 
-    let getListLayoutByKey = function (key) {
+	const getListLayoutByKey = function (key) {
 
         return new Promise (function (resolve, reject) {
 
@@ -155,7 +162,7 @@
         // return uiRepository.getListLayoutByKey(key);
     };
 
-    let createListLayout = function (entity, ui) {
+	const createListLayout = function (entity, ui) {
 
         ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
@@ -175,7 +182,7 @@
 
     };
 
-    let updateListLayout = function (id, ui) {
+	const updateListLayout = function (id, ui) {
 
     	return new Promise(function (resolve, reject) {
 
@@ -200,7 +207,7 @@
 
     };
 
-    let deleteListLayoutByKey = function (id) {
+	const deleteListLayoutByKey = function (id) {
 
     	return new Promise(function (resolve, reject) {
 
@@ -217,11 +224,11 @@
 
     };
 
-    let getListLayoutTemplate = function () {
+	const getListLayoutTemplate = function () {
         return uiRepository.getListLayoutTemplate();
     };
 
-    let getDefaultListLayout = function (entityType) {
+	const getDefaultListLayout = function (entityType) {
 
         // console.trace();
         return new Promise (function (resolve, reject) {
@@ -254,7 +261,7 @@
 
             };
 
-            resolveLayoutByKey(cachedLayoutRes, fetchDefaultLayout, resolve, reject);
+            resolveLayoutByKey(cachedLayoutRes, fetchDefaultLayout, resolve, reject, fetchDefaultLayout);
 
         });
 
@@ -267,7 +274,7 @@
 
     // Input Form Layouts
 
-    let getListEditLayout = function (entityType, options) {
+    const getListEditLayout = function (entityType, options) {
 
         // get content_type by entityType when getting layout by user_code
         if (options && options.filters && options.filters.user_code && entityType) {
@@ -296,26 +303,64 @@
 
     };
 
-    let getDefaultEditLayout = function (entityType) {
-        return uiRepository.getDefaultEditLayout(entityType);
+	const getDefaultEditLayout = function (entityType) {
+
+		return new Promise((resolve, reject) => {
+
+			uiRepository.getDefaultEditLayout(entityType).then(defaultLayoutData => {
+
+				if (defaultLayoutData.results.length) {
+					resolve(defaultLayoutData);
+
+				} else {
+
+					uiRepository.getListEditLayout(entityType).then(layoutsList => {
+
+						const resolveObj = {results: []};
+
+						if (layoutsList.results.length) {
+
+							let defaultLayout = layoutsList.results.find(layout => layout.is_default);
+
+							if (!defaultLayout) {
+								defaultLayout = layoutsList.results[0];
+								defaultLayout.is_default = true;
+							}
+
+							resolveObj.results.push(defaultLayout);
+
+						}
+
+
+						resolve(resolveObj)
+
+					}).catch(error => reject(error));
+
+				}
+
+			}).catch(error => reject(error));
+
+		});
+
+		// return uiRepository.getDefaultEditLayout(entityType);
+	};
+
+	const getEditLayoutByKey = function (id) {
+        return uiRepository.getEditLayoutByKey(id);
     };
 
-    let getEditLayout = function (id) {
-        return uiRepository.getEditLayout(id);
-    };
-
-    let createEditLayout = function (entity, ui) {
+    const createEditLayout = function (entity, ui) {
 
         ui.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
         return uiRepository.createEditLayout(ui);
     };
 
-    let updateEditLayout = function (id, ui) {
+	const updateEditLayout = function (id, ui) {
         return uiRepository.updateEditLayout(id, ui);
     };
 
-    let deleteEditLayoutByKey = function (id) {
+	const deleteEditLayoutByKey = function (id) {
 
         return new Promise(function (resolve, reject) {
 
@@ -335,66 +380,66 @@
 
     // Configuration Layouts
 
-    let getConfigurationList = function () {
+	const getConfigurationList = function () {
         return uiRepository.getConfigurationList();
     };
 
-    let createConfiguration = function (data) {
+	const createConfiguration = function (data) {
         return uiRepository.createConfiguration(data)
     };
 
-    let updateConfiguration = function (id, data) {
+	const updateConfiguration = function (id, data) {
         return uiRepository.updateConfiguration(id, data);
     };
 
-    let deleteConfigurationByKey = function (id) {
+	const deleteConfigurationByKey = function (id) {
         return uiRepository.deleteConfigurationByKey(id);
     };
 
 
-    let getTransactionFieldList = function (options) {
+	const getTransactionFieldList = function (options) {
         return uiRepository.getTransactionFieldList(options)
     };
 
-    let createTransactionField = function (data) {
+	const createTransactionField = function (data) {
         return uiRepository.createTransactionField(data);
     };
 
-    let updateTransactionField = function (id, data) {
+	const updateTransactionField = function (id, data) {
         return uiRepository.updateTransactionField(id, data);
     };
 
-    let getInstrumentFieldList = function () {
+	const getInstrumentFieldList = function () {
         return uiRepository.getInstrumentFieldList()
     };
 
-    let createInstrumentField = function (data) {
+	const createInstrumentField = function (data) {
         return uiRepository.createInstrumentField(data);
     };
 
-    let updateInstrumentField = function (id, data) {
+	const updateInstrumentField = function (id, data) {
         return uiRepository.updateInstrumentField(id, data);
     };
 
     // Dashboard Layout
 
-    let getDashboardLayoutList = function (options) {
+	const getDashboardLayoutList = function (options) {
         return uiRepository.getDashboardLayoutList(options);
     };
 
-    let getActiveDashboardLayout = function () {
+	const getActiveDashboardLayout = function () {
         return uiRepository.getActiveDashboardLayout()
     };
 
-    let getDefaultDashboardLayout = function () {
+	const getDefaultDashboardLayout = function () {
         return uiRepository.getDefaultDashboardLayout()
     };
 
-    let getDashboardLayoutByKey = function (key) {
+	const getDashboardLayoutByKey = function (key) {
         return uiRepository.getDashboardLayoutByKey(key);
     };
 
-    let createDashboardLayout = function (data) {
+	const createDashboardLayout = function (data) {
 
         return uiRepository.createDashboardLayout(data);
     };
@@ -417,95 +462,95 @@
 
     };
 
-    let deleteDashboardLayoutByKey = function (id) {
+	const deleteDashboardLayoutByKey = function (id) {
         return uiRepository.deleteDashboardLayoutByKey(id);
     };
 
     // Template Layout
 
-    let getTemplateLayoutList = function (options) {
+	const getTemplateLayoutList = function (options) {
         return uiRepository.getTemplateLayoutList(options);
     };
 
-    let getDefaultTemplateLayout = function () {
+	const getDefaultTemplateLayout = function () {
         return uiRepository.getDefaultTemplateLayout()
     };
 
-    let getTemplateLayoutByKey = function (key) {
+	const getTemplateLayoutByKey = function (key) {
         return uiRepository.getTemplateLayoutByKey(key);
     };
 
-    let createTemplateLayout = function (data) {
+	const createTemplateLayout = function (data) {
 
         return uiRepository.createTemplateLayout(data);
     };
 
-    let updateTemplateLayout = function (id, data) {
+	const updateTemplateLayout = function (id, data) {
         return uiRepository.updateTemplateLayout(id, data)
     };
 
-    let deleteTemplateLayoutByKey = function (id) {
+	const deleteTemplateLayoutByKey = function (id) {
         return uiRepository.deleteTemplateLayoutByKey(id);
     };
 
     // Context Menu
 
-    let getContextMenuLayoutList = function (options) {
+	const getContextMenuLayoutList = function (options) {
         return uiRepository.getContextMenuLayoutList(options);
     };
 
-    let getContextMenuLayoutByKey = function (key) {
+	const getContextMenuLayoutByKey = function (key) {
         return uiRepository.getContextMenuLayoutByKey(key);
     };
 
-    let createContextMenuLayout = function (data) {
+	const createContextMenuLayout = function (data) {
 
         return uiRepository.createContextMenuLayout(data);
     };
 
-    let updateContextMenuLayout = function (id, data) {
+	const updateContextMenuLayout = function (id, data) {
         return uiRepository.updateContextMenuLayout(id, data)
     };
 
-    let deleteContextMenuLayoutByKey = function (id) {
+	const deleteContextMenuLayoutByKey = function (id) {
         return uiRepository.deleteContextMenuLayoutByKey(id);
     };
 
     // Entity Tooltip
 
-    let getEntityTooltipList = function (options) {
+	const getEntityTooltipList = function (options) {
         return uiRepository.getEntityTooltipList(options);
     };
 
-    let createEntityTooltip = function (data) {
+	const createEntityTooltip = function (data) {
         return uiRepository.createEntityTooltip(data);
     };
 
-    let updateEntityTooltip = function (id, data) {
+	const updateEntityTooltip = function (id, data) {
         return uiRepository.updateEntityTooltip(id, data);
     };
 
     // Cross Entity Attribute Extension
 
-    let getCrossEntityAttributeExtensionList = function (options) {
+	const getCrossEntityAttributeExtensionList = function (options) {
 
         return uiRepository.getCrossEntityAttributeExtensionList( options);
     };
 
-    let getCrossEntityAttributeExtension = function (id) {
+	const getCrossEntityAttributeExtension = function (id) {
         return uiRepository.getCrossEntityAttributeExtension(id);
     };
 
-    let createCrossEntityAttributeExtension = function (item) {
+	const createCrossEntityAttributeExtension = function (item) {
 
         return uiRepository.createCrossEntityAttributeExtension(item);
     };
 
-    let updateCrossEntityAttributeExtension = function (id, item) {
+	const updateCrossEntityAttributeExtension = function (id, item) {
         return uiRepository.updateCrossEntityAttributeExtension(id, item);
     };
 
-    let deleteCrossEntityAttributeExtension = function (id) {
+	const deleteCrossEntityAttributeExtension = function (id) {
 
         return new Promise(function (resolve, reject) {
 
@@ -523,25 +568,25 @@
 
     // Column Sort Data
 
-    let getColumnSortDataList = function (options) {
+	const getColumnSortDataList = function (options) {
 
         return uiRepository.getColumnSortDataList( options);
     };
 
-    let getColumnSortData = function (id) {
+	const getColumnSortData = function (id) {
         return uiRepository.getColumnSortData(id);
     };
 
-    let createColumnSortData = function (item) {
+	const createColumnSortData = function (item) {
 
         return uiRepository.createColumnSortData(item);
     };
 
-    let updateColumnSortData = function (id, item) {
+	const updateColumnSortData = function (id, item) {
         return uiRepository.updateColumnSortData(id, item);
     };
 
-    let deleteColumnSortData = function (id) {
+	const deleteColumnSortData = function (id) {
 
         return new Promise(function (resolve, reject) {
 
@@ -578,7 +623,7 @@
 
         getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
-        getEditLayout: getEditLayout,
+		getEditLayoutByKey: getEditLayoutByKey,
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
 

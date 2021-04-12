@@ -23,14 +23,14 @@
 
             if (vm.layout.id) {
 
-                uiService.updateColumnSortData(vm.layout.id, vm.layout).then(function (data){
+                uiService.updateColumnSortData(vm.layout.id, vm.layout).then(function (data) {
 
                     $mdDialog.hide({status: 'agree'});
                 })
 
 
             } else {
-                uiService.createColumnSortData(vm.layout).then(function (data){
+                uiService.createColumnSortData(vm.layout).then(function (data) {
 
                     $mdDialog.hide({status: 'agree'});
                 })
@@ -43,11 +43,11 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.toggleSelectAll = function (){
+        vm.toggleSelectAll = function () {
 
             vm.selectAll = !vm.selectAll;
 
-            vm.newValues = vm.newValues.map(function (item){
+            vm.newValues = vm.newValues.map(function (item) {
 
                 item.selected = vm.selectAll;
 
@@ -56,9 +56,9 @@
 
         }
 
-        vm.addSelected = function(){
+        vm.addSelected = function () {
 
-            vm.newValues.forEach(function (item){
+            vm.newValues.forEach(function (item) {
 
                 if (item.selected) {
                     vm.layout.data.items.push({
@@ -70,13 +70,13 @@
 
             })
 
-            vm.newValues = vm.newValues.filter(function (item){
+            vm.newValues = vm.newValues.filter(function (item) {
                 return !item.selected;
             })
 
         }
 
-        vm.syncDataStructure = function(){
+        vm.syncDataStructure = function () {
 
             if (!vm.layout.data.items) {
                 vm.layout.data.items = []
@@ -86,9 +86,9 @@
             var uniqueColumnValues = []
             var value;
 
-            flatListItems.forEach(function (flatListItem){
+            flatListItems.forEach(function (flatListItem) {
 
-                if(flatListItem.___type === 'object') {
+                if (flatListItem.___type === 'object') {
 
                     value = flatListItem[vm.column.key]
 
@@ -109,7 +109,7 @@
 
                     exist = false;
 
-                    vm.layout.data.items.forEach(function (item){
+                    vm.layout.data.items.forEach(function (item) {
 
                         if (item.value === value) {
                             exist = true;
@@ -125,7 +125,6 @@
                         })
 
                     }
-
 
 
                 })
@@ -172,7 +171,7 @@
 
             })
 
-            vm.layout.data.items = vm.layout.data.items.sort(function(a, b){
+            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
             })
 
@@ -202,7 +201,7 @@
 
             })
 
-            vm.layout.data.items = vm.layout.data.items.sort(function(a, b){
+            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
             })
 
@@ -234,7 +233,7 @@
 
             })
 
-            vm.layout.data.items = vm.layout.data.items.sort(function(a, b){
+            vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
             })
 
@@ -263,16 +262,16 @@
                 vm.layout = {
                     name: '',
                     user_code: '',
-                    column_key:  vm.column.key,
-                    data: {
-
-                    }
+                    column_key: vm.column.key,
+                    data: {}
                 }
             }
 
             vm.readyStatus.content = true;
 
-            vm.syncDataStructure();
+            if (entityViewerDataService) {
+                vm.syncDataStructure();
+            }
 
 
         };

@@ -28,54 +28,37 @@
         <span>Save as</span>
     </div>
 
+    <div class="layout-menu-item" data-ng-click="openLayoutList()">
+        <span class="material-icons" style="visibility: hidden;">open_in_new</span>
+        <span>Open</span>
+    </div>
+
+
     <md-menu-divider></md-menu-divider>
 
-    <md-menu md-offset="375px 0">
+    <div class="layout-menu-item" data-ng-click="exportLayout($event)">
+        <span class="material-icons">exit_to_app</span>
+        <span>Export</span>
+    </div>
 
-        <md-button class="layout-menu-item" data-ng-click="$mdMenu.open()">
-            <span class="material-icons">exit_to_app</span>
-            <span>Export</span>
-        </md-button>
-
-        <md-menu-content width="4">
-            <md-menu-item>
-                <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
-                    <span>Export to PDF</span>
-                </md-button>
-            </md-menu-item>
-
-            <md-menu-item>
-                <md-button data-ng-click="exportAsCSV()" class="g-settings-option-btn">
-                    <span>Export to CSV</span>
-                </md-button>
-            </md-menu-item>
-
-            <md-menu-item>
-                <md-button data-ng-click="exportAsExcel()" class="g-settings-option-btn">
-                    <span>Export to Excel</span>
-                </md-button>
-            </md-menu-item>
-
-
-            <md-menu-item>
-                <md-button data-ng-click="copyReport()" class="g-settings-option-btn">
-                    <span>Copy all to buffer</span>
-                </md-button>
-            </md-menu-item>
-            <md-menu-item>
-                <md-button data-ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
-                    <span>Copy selected to buffer</span>
-                </md-button>
-            </md-menu-item>
-        </md-menu-content>
-    </md-menu>
+    <div class="layout-menu-item" data-ng-click="openInvites($event)" data-ng-class="{'disabled-btn': !invites.length}">
+        <span class="material-icons">email</span>
+        <span>Invites ({{invites.length}})</span>
+    </div>
 
     <div class="layout-menu-item" data-ng-click="renameLayout($event)">
         <span class="material-icons">create</span>
         <span>Rename</span>
     </div>
 
-    <div class="layout-menu-item" data-ng-click="shareLayout($event)">
+    <div class="layout-menu-item" data-ng-click="pullUpdate($event)"
+         data-ng-if="layout.sourced_from_global_layout && !layout.origin_for_global_layout">
+        <span class="material-icons">share</span>
+        <span>Update</span>
+    </div>
+
+    <div class="layout-menu-item" data-ng-click="shareLayout($event)"
+         data-ng-if="(!layout.sourced_from_global_layout && !layout.origin_for_global_layout) || (layout.sourced_from_global_layout && layout.origin_for_global_layout)">
         <span class="material-icons">share</span>
         <span>Share</span>
     </div>

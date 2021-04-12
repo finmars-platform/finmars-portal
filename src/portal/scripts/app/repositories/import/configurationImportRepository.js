@@ -14,11 +14,16 @@
 
     var checkForDuplicates = function (config) {
 
-        return xhrService.fetch(baseUrl + 'import/configuration/check-duplicates/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/configuration/check-duplicates/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
                 body: config

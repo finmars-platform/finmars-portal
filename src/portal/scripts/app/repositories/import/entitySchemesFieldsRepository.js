@@ -12,25 +12,35 @@
     var baseUrl = baseUrlService.resolve();
 
     var getSchemeFields = function (schemeId) {
-        return xhrService.fetch(baseUrl + 'import/schema_fields/?schema_id=' + schemeId,
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/schema_fields/?schema_id=' + schemeId,
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var create = function (fields) {
-        return xhrService.fetch(baseUrl + 'import/schema_fields/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/schema_fields/',
             {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(fields)
@@ -38,13 +48,18 @@
     };
 
     var deleteById = function (id) {
-        return xhrService.fetch(baseUrl + 'import/schema_fields/' + id + '/',
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/schema_fields/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
