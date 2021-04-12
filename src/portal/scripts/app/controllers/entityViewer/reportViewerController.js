@@ -6,9 +6,9 @@
 
         'use strict';
 
+        var metaService = require('../../services/metaService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
-        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
         var usersService = require('../../services/usersService');
 
@@ -35,7 +35,7 @@
 
             vm.readyStatus = {
                 attributes: false,
-                layout: false
+                layout: false // changed by rvSharedLogicHelper.onSetLayoutEnd();
             };
 
             var doNotCheckLayoutChanges = false;
@@ -931,7 +931,7 @@
 
             vm.setLayout = function (layout) {
 
-                return new Promise(async function (resolve, reject) {
+            	return new Promise(async function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
                     vm.setFiltersValuesFromQueryParameters();
@@ -989,7 +989,7 @@
                         await rvSharedLogicHelper.calculateReportDatesExprs();
                         rvSharedLogicHelper.onSetLayoutEnd();
 
-                        var activeColumnSortProm = new Promise(function (resolve, reject) {
+                        var activeColumnSortProm = new Promise(function (sortResolve, sortReject) {
 
                             var activeColumnSort = vm.entityViewerDataService.getActiveColumnSort();
 
@@ -1011,8 +1011,6 @@
 
                                         vm.entityViewerDataService.setColumnSortData(activeColumnSort.key, layout.data)
 
-
-
                                     } else {
 
                                         toastNotificationService.error("Manual Sort is not configured");
@@ -1021,14 +1019,14 @@
 
                                     }
 
-                                    resolve()
+									sortResolve();
 
                                 })
 
 
 
                             } else {
-                                resolve()
+								sortResolve();
                             }
 
 
@@ -1085,8 +1083,9 @@
                         console.log('getCrossEntityAttributeExtensionList.data', data);
 
                         vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+						resolve();
 
-                    })
+                    }).catch(error => reject(error))
 
                 })
 
@@ -1129,8 +1128,9 @@
                     setLayoutProm = evHelperService.getDefaultLayout(vm);
                 }
 
-                Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function () {
-                    $scope.$apply();
+                Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
+					metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
+					$scope.$apply();
                 });
 
             };
