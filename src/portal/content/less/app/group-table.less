@@ -1307,6 +1307,39 @@
 
         }
 
+        .name-block {
+          outline: none;
+
+          .arrow-down {
+            display: none;
+          }
+
+          .column-manual-sort-icon {
+            margin-left: 5px;
+          }
+
+          &:hover {
+            .arrow-down {
+              display: block;
+            }
+
+            .column-manual-sort-icon {
+              margin-left: 0;
+            }
+          }
+
+          &.active {
+            .arrow-down {
+              display: block;
+            }
+
+            .column-manual-sort-icon {
+              margin-left: 0;
+            }
+          }
+        }
+
+
 
       }
 

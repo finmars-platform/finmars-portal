@@ -899,7 +899,8 @@
 
                         <div  class="column-name-wrapper">
 
-                            <div class="flex-row flex-i-center"
+                            <div class="flex-row flex-i-center name-block"
+                                 data-ng-click="showArrowDown($event)"
                                  popup
                                  popup-id="{{column.key}}"
                                  popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
@@ -909,6 +910,7 @@
                                  open-on="click"
                                  close-on-click-outside="true"
                                  popup-classes="'column-sort-popup'"
+                                 on-popup-Close="hideArrowDown()"
                                  popup-event-service="evEventService">
 
                                 <div ng-if="!column.layout_name">
@@ -920,6 +922,8 @@
                                     <span ng-bind="column.layout_name"></span>
                                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                                 </div>
+
+                                <span class="material-icons arrow-down">arrow_drop_down</span>
 
                                 <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
                                     m
@@ -990,7 +994,8 @@
 
                         <div  class="column-name-wrapper">
 
-                            <div class="flex-row flex-i-center"
+                            <div class="flex-row flex-i-center name-block"
+                                 data-ng-click="showArrowDown($event)"
                                  popup
                                  popup-id="{{column.key}}"
                                  popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
@@ -1000,6 +1005,7 @@
                                  open-on="click"
                                  close-on-click-outside="true"
                                  popup-classes="'column-sort-popup'"
+                                 on-popup-Close="hideArrowDown()"
                                  popup-event-service="evEventService">
 
                                 <div ng-if="!column.layout_name">
@@ -1013,7 +1019,7 @@
                                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                                 </div>
 
-                                <span class="material-icons ng-scope">arrow_drop_down</span>
+                                <span class="material-icons arrow-down">arrow_drop_down</span>
 
                                 <!--                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">-->
                                 <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
