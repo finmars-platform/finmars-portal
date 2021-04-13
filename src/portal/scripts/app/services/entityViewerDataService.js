@@ -1158,14 +1158,39 @@
 
             setListLayout(listLayout);
 
-            data.columns.forEach(function (column) {
+            const setActiveColumn = async (column) => {
 
                 if (column.options && column.options.sort) {
 
-                    setActiveColumnSort(column);
+                    if (column.groups) {
+                        setActiveGroupTypeSort(column);
+                    } else {
+                        setActiveColumnSort(column);
+                    }
+
+                    if (column.options.sort_mode === 'manual') {
+
+                        const {results} = await uiService.getColumnSortDataList({
+                            filters: {
+                                user_code: column.manual_sort_layout_user_code
+                            }
+                        });
+
+                        if (results.length) {
+
+                            const layout = results[0];
+                            setColumnSortData(column.key, layout.data);
+
+                        }
+
+                    }
+
                 }
 
-            });
+            };
+
+            data.columns.forEach(setActiveColumn);
+            data.groups.forEach(setActiveColumn);
 
             listLayout.data.components = {
 				filterArea: true,
