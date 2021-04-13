@@ -187,8 +187,10 @@
                 };
 
                 scope.hideArrowDown = () => {
-                    activeNameBlockElement.classList.remove('active');
-                    activeNameBlockElement = null;
+                    if (activeNameBlockElement) {
+                        activeNameBlockElement.classList.remove('active');
+                        activeNameBlockElement = null;
+                    }
                 }
 
                 const clearAllSortOptions = function (columns) {
@@ -298,17 +300,11 @@
 
                         }
 
-
-/*                        scope.evDataService.setGroups(groups);
-                        scope.evDataService.setActiveGroupTypeSort(group);
-
-                        scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);*/
-
                     }
 
                 }
 
-                // <Victor 2021.04.07 #90 sort setting for columnn>
+                // <Victor 2021.04.07 #90 sort setting for column>
 
                 var getAttributes = function () {
 
@@ -553,7 +549,6 @@
                                 scope.evDataService.setActiveColumnSort(column);
 
                                 scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                                console.log('#69 sortHandler notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
 
                                 scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
