@@ -921,7 +921,7 @@
                                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                                 </div>
 
-                                <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">
+                                <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
                                     m
                                     <md-tooltip md-direction="top">
                                        Manual Sorting Activated
