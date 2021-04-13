@@ -179,6 +179,18 @@
 
                 // Victor 2021.04.07 #90 sort setting for column
 
+                let activeNameBlockElement = null;
+
+                scope.showArrowDown = ($event) => {
+                    activeNameBlockElement = $event.target.closest('.name-block');
+                    activeNameBlockElement.classList.add('active');
+                };
+
+                scope.hideArrowDown = () => {
+                    activeNameBlockElement.classList.remove('active');
+                    activeNameBlockElement = null;
+                }
+
                 const clearAllSortOptions = function (columns) {
 
                     columns.forEach(column => {
@@ -194,8 +206,8 @@
                 }
 
                 scope.changeSortMode = function (column, sortMode) {
-                    console.log('#90 changeSortMode column' , column)
 
+                    scope.hideArrowDown();
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     const direction = column.options && column.options.sort ? column.options.sort : 'ASC'; // save direction before clear sort options for all columns

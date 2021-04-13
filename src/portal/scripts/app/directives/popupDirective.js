@@ -46,6 +46,7 @@
 
 				onCancel: '&?',
 				onSaveCallback: '&?',
+				onPopupClose: '&?'
 
             },
             link: function (scope, elem, attrs) {
@@ -274,6 +275,9 @@
 					removeListeners();
 
 					scope.isPopupOpen = false;
+					if (scope.onPopupClose) {
+						scope.onPopupClose()
+					}
 
 				}
 
