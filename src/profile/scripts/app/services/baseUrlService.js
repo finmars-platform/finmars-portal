@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var prefix = '';
+    window.base_api_url = '';
 
     var resolve = function () {
 
@@ -13,11 +13,12 @@
 
             var host = '__API_HOST__';
 
-            return host + prefix + '/api/v1/';
+            return host;
 
         }
 
-        return prefix + '/api/v1/'
+        return ''
+
     };
 
     var getAuthorizerUrl = function () {
@@ -27,11 +28,11 @@
     }
 
     var setMasterUserPrefix = function (_prefix) {
-        prefix = _prefix;
+        window.base_api_url = _prefix;
     }
 
     var getMasterUserPrefix = function () {
-        return prefix
+        return window.base_api_url
     }
 
     var getApiVersion = function () {
