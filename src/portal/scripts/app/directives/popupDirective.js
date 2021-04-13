@@ -276,7 +276,7 @@
 
 					scope.isPopupOpen = false;
 					if (scope.onPopupClose) {
-						scope.onPopupClose()
+						scope.onPopupClose();
 					}
 
 				}
