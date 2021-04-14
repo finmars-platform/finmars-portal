@@ -152,6 +152,10 @@
         };
 
         var postBookComplexTransactionActions = function (transactionData) {
+            // Victor 2020.12.01 #64
+            transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+            // <Victor 2020.12.01 #64>
+
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
@@ -619,7 +623,7 @@
 				vm.processing = true;
 
 				// Victor 2020.12.01 #64
-                await transactionHelper.fillMissingFieldsByDefaultValues(resultEntity, vm.userInputs, vm.transactionType);
+                //await transactionHelper.fillMissingFieldsByDefaultValues(resultEntity, vm.userInputs, vm.transactionType);
 				// <Victor 2020.12.01 #64>
 
                 new Promise(function (resolve, reject) {

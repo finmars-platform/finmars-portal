@@ -100,26 +100,36 @@
 
 		const formFieldsNames = userInputs.map(input => input.name);
 		const userInputsNotPlacedInTheForm = ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
+		console.log('#64 userInputsNotPlacedInTheForm', userInputsNotPlacedInTheForm)
 
 		const missingFieldsPromises =  [];
 
 		userInputsNotPlacedInTheForm
 			.filter(input => !entity[input.name] && !!input.value) // take inputs if property is empty and input have default value
 			.forEach(input => {
+				console.log('#64 input', input.name, input.value);
 
 				if (input.value_type === 20) { // Expression
 
 					const expressionPromise = expressionService.getResultOfExpression({'expression': input.value})
 						.then(data => entity[input.name] = data.result) // set property after expression resolved
+						.catch(err => {
+							console.log('#64 Error', err)
+							console.log('#64 input.name', input.name)
+							console.log('#64 expression', input.value)
+						})
 
 					missingFieldsPromises.push(expressionPromise);
 
-				}
+				} else {
 
-				entity[input.name] = input.value; // set property as default value
+					entity[input.name] = input.value; // set property as default value
+
+				}
 			});
 
 		await Promise.allSettled(missingFieldsPromises);
+		console.log('#64 after fillMissingFieldsByDefaultValues', JSON.parse(JSON.stringify(entity)))
 
 	};
 
