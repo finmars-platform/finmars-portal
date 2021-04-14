@@ -534,6 +534,10 @@
                 }
             });
 
+            // Victor 2020.12.01 #64
+            transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+            // <Victor 2020.12.01 #64>
+
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
@@ -1140,9 +1144,10 @@
 
                 vm.processing = true;
 
-				// Victor 2020.12.01 #64
-				await transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
-				// <Victor 2020.12.01 #64>
+                console.log('#64 result', result);
+                // Victor 2020.12.01 #64
+                // await transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
+                // <Victor 2020.12.01 #64>
 
             	new Promise(function (resolve, reject) {
 
