@@ -17,7 +17,7 @@
 
                 var filterValues = filter.options.filter_values;
 
-                if (filterType === 'from_to') {
+                if (filterType === 'from_to' || filterType === 'out_of_range') {
 
                     if ((filterValues.min_value || filterValues.min_value === 0) &&
                         (filterValues.max_value || filterValues.max_value === 0)) {
@@ -42,7 +42,7 @@
     var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
 
-        if (filterType === 'from_to') {
+        if (filterType === 'from_to' || filterType === 'out_of_range') {
 
             if ((regularFilterValue.min_value || regularFilterValue.min_value === 0) &&
                 (regularFilterValue.max_value || regularFilterValue.max_value === 0)) {
@@ -103,7 +103,7 @@
 
                             if (valueType === 20) {
 
-                                if (filterType !== 'from_to') {
+                                if (filterType !== 'from_to' && filterType !== 'out_of_range') {
                                     filterArgument = filterArgument[0];
                                 }
 
@@ -130,6 +130,7 @@
                                         break;
 
                                     case 'from_to':
+                                    case 'out_of_range':
                                         valueFromTable = new Date(valueFromTable);
                                         filterArgument.min_value = new Date(filterArgument.min_value);
                                         filterArgument.max_value = new Date(filterArgument.max_value);
@@ -270,7 +271,7 @@
 
                 break;
 
-            /*case 'top_n':
+            /* case 'top_n':
                 if (valueToFilter < filterBy) {
                     return true;
                 }
@@ -280,7 +281,7 @@
                 if (valueToFilter > filterBy) {
                     return true;
                 }
-                break;*/
+                break; */
 
             case 'from_to':
 
@@ -288,6 +289,17 @@
                 var maxValue = filterBy.max_value;
 
                 if (valueToFilter >= minValue && valueToFilter <= maxValue) {
+                    return true;
+                }
+
+                break;
+
+            case 'out_of_range':
+
+                var minValue = filterBy.min_value;
+                var maxValue = filterBy.max_value;
+
+                if (valueToFilter <= minValue || valueToFilter >= maxValue) {
                     return true;
                 }
 
@@ -388,6 +400,32 @@
 
     };
 
+    const filterByRowType = function (items, color) {
+
+        if (color === 'none') {
+            return items;
+        }
+
+        let markedReportRows = localStorage.getItem("marked_report_rows");
+
+        if (markedReportRows) {
+            markedReportRows = JSON.parse(markedReportRows);
+        } else {
+            markedReportRows = {};
+        }
+
+        const result = items.filter((item) => {
+
+            const id = item.id;
+
+            return markedReportRows[id] && markedReportRows[id].color === color;
+
+        });
+
+        return result;
+
+    };
+
     var getRegularFilters = function (options) {
 
         var result = {};
@@ -444,6 +482,7 @@
     module.exports = {
         filterTableRows: filterTableRows,
         filterByGroupsFilters: filterByGroupsFilters,
+        filterByRowType: filterByRowType,
         getRegularFilters: getRegularFilters,
         convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters
     }

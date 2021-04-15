@@ -551,7 +551,7 @@
                         if (!optionsFilter.is_frontend_filter) {
                             return true;
                         }
-                        ;
+
 
                         return false;
                     });

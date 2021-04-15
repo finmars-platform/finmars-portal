@@ -7,13 +7,18 @@
 
     var generatePdf = function (data) {
 
-        return window.fetch('/services/pdf',
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return window.fetch('/services/pdf',
             {
                 method: 'POST',
                 credentials: 'include',
                 body: JSON.stringify(data),
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {

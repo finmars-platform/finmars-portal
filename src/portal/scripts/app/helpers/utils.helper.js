@@ -66,6 +66,10 @@
     }
 
     function insertItemInNode(list, map, node, data) {
+// Victor 2021.02.09 filter by row color get error
+/*        if (!data[node.___parentId]) {
+            return
+        }*/
 
         var index = 0;
 
