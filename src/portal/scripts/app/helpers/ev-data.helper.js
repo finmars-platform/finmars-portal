@@ -848,17 +848,37 @@
 
     };
 
-    var preparePopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
+    var customizePopup = function (popup, objectId) {
+
+    	popup.id = 'dropdown-' + objectId;
+		popup.classList.add('ev-dropdown', 'fade-in', 'evDropdown');
+
+		popup.style.position = 'absolute';
+
+		return popup;
+
+	};
+
+	/**
+	 * Change row before opening context menu for it
+	 *
+	 * @param objectId {number} - id of row of ev / rv table
+	 * @param parentGroupHashId {number} - id of parent group of row of ev / rv table
+	 * @param evDataService {Object} - entityViewerDataService
+	 * @param isReport {Boolean}
+	 * @returns {HTMLDivElement} - HTML element for context menu of row
+	 */
+    var prepareRowAndGetPopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
 
         var popup = document.createElement('div');
-// Victor 2021.02.01 #75 On right mouse click row don't need selected
-/*        if (isReport) {
+		// Victor 2021.02.01 #75 On right mouse click row don't need selected
+		/* if (isReport) {
 
             var objects = evDataService.getObjects();
 
             objects.forEach(function (item) {
                 item.___is_activated = false;
-                item.___is_last_selected = false;
+                item.___is_last_activated = false;
 
                 evDataService.setObject(item);
 
@@ -866,28 +886,69 @@
 
         }*/
 
-        var obj = getObject(objectId, parentGroupHashId, evDataService);
+		var obj = getObject(objectId, parentGroupHashId, evDataService);
 
-        if (obj) {
+		if (obj) {
 
-        	obj.___is_activated = true;
-
-			if (isReport) {
-				obj.___is_last_selected = true;
-			}
+			// obj.___is_activated = true;
+			obj.___context_menu_is_opened = true;
+			/*if (isReport) {
+				obj.___context_menu_opened = true;
+			}*/
 
 			evDataService.setObject(obj);
 
 		}
 
-        popup.id = 'dropdown-' + objectId;
-        popup.classList.add('ev-dropdown', 'fade-in', 'evDropdown');
-
-        popup.style.position = 'absolute';
+        popup = customizePopup(popup);
 
         return popup;
 
     };
+
+	/**
+	 *
+	 * @param subtotalId {number}
+	 * @param type {string} - type or subtype of subtotal. Can be 'line' or 'area'
+	 * @param parentGroupHashId {number}
+	 * @param evDataService {Object}
+	 * @returns {HTMLDivElement} - html for context menu popup
+	 */
+	var prepareSubtotalAndGetPopupMenu = function (subtotalId, type, parentGroupHashId, evDataService) {
+
+		var popup = document.createElement('div');
+		// Victor 2021.02.01 #75 On right mouse click row don't need selected
+		/* if (isReport) {
+
+            var objects = evDataService.getObjects();
+
+            objects.forEach(function (item) {
+                item.___is_activated = false;
+                item.___is_last_activated = false;
+
+                evDataService.setObject(item);
+
+            });
+
+        }*/
+
+		var parent = Object.assign({}, evDataService.getData(parentGroupHashId));
+		// var subtotalType = obj.___subtotal_subtype ? obj.___subtotal_subtype : obj.___subtotal_type;
+
+		if (type === 'area') {
+			parent.___area_subtotal_context_menu_is_opened = true;
+
+		} else if (type === 'line') {
+			parent.___line_subtotal_context_menu_is_opened = true;
+		}
+
+		evDataService.setData(parent);
+
+		popup = customizePopup(popup, subtotalId);
+
+		return popup;
+
+	};
 
     var preparePopupMenuType2 = function (objectId, classesList) {
 
@@ -948,6 +1009,34 @@
 
     };
 
+    var clearLastActiveObject = function (evDataService) {
+
+    	var objects = evDataService.getObjects();
+
+		objects.forEach(function (item) {
+
+			item.___is_last_activated = false;
+			evDataService.setObject(item);
+
+		});
+
+	};
+
+	var clearObjectActiveState = function (evDataService) {
+
+		var objects = evDataService.getObjects();
+
+		objects.forEach(function (item) {
+
+			item.___is_activated = false;
+			item.___is_last_activated = false;
+
+			evDataService.setObject(item);
+
+		});
+
+	};
+
     module.exports = {
 
         getGroupNameFromParent: getGroupNameFromParent,
@@ -978,7 +1067,10 @@
         updateColumnsIds: updateColumnsIds,
 
         calculatePageFromOffset: calculatePageFromOffset,
-        preparePopupMenu: preparePopupMenu,
+
+		prepareRowAndGetPopupMenu: prepareRowAndGetPopupMenu,
+		prepareSubtotalAndGetPopupMenu: prepareSubtotalAndGetPopupMenu,
+
 		preparePopupMenuType2: preparePopupMenuType2,
         calculateMenuPosition: calculateMenuPosition,
 		calculateStaticMenuPosition: calculateStaticMenuPosition,
@@ -995,7 +1087,10 @@
         getGroupsValuesByItem: getGroupsValuesByItem,
 
         separateNotGroupingColumns: separateNotGroupingColumns,
-        importGroupsStylesFromColumns: importGroupsStylesFromColumns
+        importGroupsStylesFromColumns: importGroupsStylesFromColumns,
+
+		clearLastActiveObject: clearLastActiveObject,
+		clearObjectActiveState: clearObjectActiveState
     }
 
 

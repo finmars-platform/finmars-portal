@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var stringHelper = require('../helpers/stringHelper');
+	var stringHelper = require('../helpers/stringHelper');
     var metaHelper = require('../helpers/meta.helper');
 
     var getDefaultInterfaceLayout = function () {
@@ -99,7 +99,7 @@
         });
 
     };
-
+	/** @module entityViewerDataService */
     module.exports = function () {
 
         var data = {
@@ -554,7 +554,8 @@
 
             });
 
-            return result
+            return result;
+
         }
 
         function getData(hashId) {
@@ -755,7 +756,6 @@
         function getLastActivatedRow() {
             return data.lastActivatedRow;
         }
-
 
         function setActiveObject(obj) {
             data.activeObject = obj

@@ -287,9 +287,9 @@
                 var subtotal_type;
 
                 if (clickData.___subtotal_subtype) {
-                    subtotal_type = clickData.___subtotal_subtype
+                    subtotal_type = clickData.___subtotal_subtype;
                 } else {
-                    subtotal_type = clickData.___subtotal_type
+                    subtotal_type = clickData.___subtotal_type;
                 }
 
                 if (subtotal_type === 'area') {
@@ -395,7 +395,7 @@
             // var objects = evDataService.getObjects();
 
             clearSubtotalActiveState(evDataService);
-            clearObjectActiveState(evDataService);
+			evDataHelper.clearObjectActiveState(evDataService);
 
             list.forEach(function (object) {
 
@@ -438,19 +438,70 @@
 
     };
 
-    var clearObjectActiveState = function (evDataService) {
+    /*var clearObjectActiveState = function (evDataService) {
 
         var objects = evDataService.getObjects();
 
         objects.forEach(function (item) {
             item.___is_activated = false;
-            item.___is_last_selected = false;
+            item.___is_last_activated = false;
 
             evDataService.setObject(item);
 
         });
 
-    };
+    };*/
+
+	var clearContextMenuRow = function (evDataService) {
+
+		var objects = evDataService.getObjects();
+		var groupOfSubtotal = null;
+
+		var contextMenuItem = objects.find(obj => {
+
+			if (obj.___type === 'group') {
+
+				var group = evDataService.getData(obj.___id);
+
+				if (group.___line_subtotal_context_menu_is_opened || group.___area_subtotal_context_menu_is_opened) {
+
+					groupOfSubtotal = {...{}, ...group};
+					return true;
+
+				}
+
+				return false;
+
+			} else {
+				return !!obj.___context_menu_is_opened;
+			}
+
+		});
+
+		if (contextMenuItem) {
+
+			if (groupOfSubtotal) { // for subtotals
+
+				groupOfSubtotal.___line_subtotal_context_menu_is_opened = false;
+				groupOfSubtotal.___area_subtotal_context_menu_is_opened = false;
+
+				evDataService.setData(groupOfSubtotal);
+
+			} else {
+				contextMenuItem.___context_menu_is_opened = false;
+				evDataService.setObject(contextMenuItem);
+			}
+
+		}
+
+	};
+
+    var clearRowWithContextMenu = function (evDataService, evEventService, redrawTable) {
+
+    	clearContextMenuRow(evDataService);
+		if (redrawTable) evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+	};
 
     var handleSubtotalClick = function (clickData, evDataService, evEventService) {
 
@@ -462,7 +513,9 @@
 
             handleShiftSelection(evDataService, evEventService, clickData);
 
-        } else if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
+        }
+
+        else if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             if (clickData.___subtotal_subtype) {
                 subtotal_type = clickData.___subtotal_subtype
@@ -491,10 +544,12 @@
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        } else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+        }
+
+        else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             clearSubtotalActiveState(evDataService);
-            clearObjectActiveState(evDataService);
+            evDataHelper.clearObjectActiveState(evDataService);
 
             if (clickData.___subtotal_subtype) {
                 subtotal_type = clickData.___subtotal_subtype
@@ -565,7 +620,7 @@
             obj.___is_activated = !obj.___is_activated;
 
             if (!obj.___is_activated) {
-                obj.___is_last_selected = false;
+                obj.___is_last_activated = false;
             }
 
             evDataService.setObject(obj);
@@ -580,14 +635,14 @@
         } else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             clearSubtotalActiveState(evDataService);
-            clearObjectActiveState(evDataService);
+			evDataHelper.clearObjectActiveState(evDataService);
 
             obj.___is_activated = !obj.___is_activated;
-            obj.___is_last_selected = !obj.___is_last_selected;
+            obj.___is_last_activated = !obj.___is_last_activated;
 
             evDataService.setObject(obj);
 
-            if (obj.___is_last_selected || obj.___is_activated) {
+            if (obj.___is_last_activated || obj.___is_activated) {
                 obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
 
                 evDataService.setActiveObject(obj);
@@ -901,18 +956,17 @@
 
             }
 
-
         })
 
     };
 
-    var calculatePaddingTop = function (evDataService) {
+    /* var calculatePaddingTop = function (evDataService) {
 
         var scrollOffsetPx = evDataService.getVirtualScrollOffsetPx();
 
         return scrollOffsetPx;
 
-    };
+    }; */
 
     /* var calculateContentWrapHeight = function (rootWrapElem, contentWrapElement, evDataService) { // Works only for contentWrap that is not from split panel
 
@@ -1080,7 +1134,7 @@
         var dropdowns = document.querySelectorAll('.evDropdown');
 
 		dropdowns.forEach(dropdown => {
-
+			// remove popup after animation
 			if (!popupsToClear.includes(dropdown.id)) {
 
 				dropdown.classList.add("fade-out");
@@ -1099,11 +1153,49 @@
 
 		});
 
+		//<editor-fold desc="Remove dropdown related listeners">
+		for (const prop in eventListenerFn2Args) {
+			eventListenerFn2Args[prop] = null;
+		}
+		window.removeEventListener('click', executeContextMenuAction);
+		window.removeEventListener('click', executeSubtotalContextMenuAction);
+
+		clearDropdownsAndRowsArgs.evDataService = null;
+		clearDropdownsAndRowsArgs.evEventService = null;
+		window.removeEventListener('contextmenu', callClearDropdownsAndRows);
+		//</editor-fold>
 		/* for (var i = 0; i < dropdowns.length; i = i + 1) {
             dropdowns[i].remove();
         } */
 
     };
+
+	/**
+	 *
+	 * @param {Object} evDataService
+	 * @param {Object} evEventService
+	 * @param {Boolean=} redrawTable
+	 */
+    var clearDropdownsAndRows = function (evDataService, evEventService, redrawTable) {
+
+		clearRowWithContextMenu(evDataService, evEventService, redrawTable);
+
+		clearDropdowns();
+
+	};
+
+	/** Used to pass data into callClearDropdownsAndRows inside event listener */
+	var clearDropdownsAndRowsArgs = {
+		evDataService: null,
+		evEventService: null
+	}
+
+	/**
+	 * Used to call clearDropdownsAndRows() with arguments inside event listeners
+	 */
+	var callClearDropdownsAndRows = function (event) {
+		clearDropdownsAndRows(clearDropdownsAndRowsArgs.evDataService, clearDropdownsAndRowsArgs.evEventService, true);
+	};
 
     /*var getTransactionTypesMenu = function (ttypes, objectId, parentGroupHashId) {
 
@@ -1133,6 +1225,40 @@
         return result
 
     };*/
+
+	/**
+	 * Insert options into context menu popup of subtotal
+	 *
+	 * @param result {HTMLElement} - html of popup
+	 * @param evDataService {Object}
+	 * @param type {string} - type or subtype of subtotal. Can be 'line' or 'area'.
+	 * @param groupId {number}
+	 * @param parentGroupHashId {number}
+	 * @returns {HTMLElement} - html of popup
+	 */
+	var composeContextMenuForSubtotal = function (result, evDataService, type, groupId, parentGroupHashId) {
+
+		var parent = evDataService.getData(parentGroupHashId)
+		var isActivated;
+
+		if (type === 'line') {
+			isActivated = parent.___is_line_subtotal_activated;
+
+		} else if (type === 'area') {
+			isActivated = parent.___is_area_subtotal_activated;
+		}
+
+		var toggleRowName = isActivated ? 'Unselect row' : 'Select row';
+
+		result = result +
+			`<div class="ev-dropdown-option" 
+				  data-ev-dropdown-action="toggle_row"
+				  data-object-id="${groupId}" 
+				  data-parent-group-hash-id="${parentGroupHashId}">${toggleRowName}</div>`
+
+		return result;
+
+	};
 
     var checkContextMenuOptionVisibility = function (obj, option) {
 
@@ -1197,7 +1323,7 @@
             return true;
         }
 
-        if (option.action === 'select_row') {
+        if (option.action === 'toggle_row') {
             return true;
         }
 
@@ -1277,6 +1403,22 @@
 
     };
 
+	var generateContextMenuItems = function (parentOption, evDataService, ttypes, obj, objectId, parentGroupHashId) {
+
+		var result = '<div class="ev-dropdown-submenu">';
+
+		parentOption.items.forEach(function (item) {
+
+			result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
+
+		});
+
+		result = result + '</div>';
+
+		return result
+
+	};
+
     var composeContextMenuItem = function (result, item, evDataService, ttypes, obj, objectId, parentGroupHashId) {
 
         if (checkContextMenuOptionVisibility(obj, item)) {
@@ -1297,13 +1439,12 @@
                 }
 
             }
-
-            if (item.action === 'mark_row') {
+            else if (item.action === 'mark_row') {
                 ttype_specific_attr = ' data-ev-dropdown-action-data-color="' + item.action_data + '"'
-            }
 
-            if (item.action === 'select_row') {
-                item.name = obj.___is_activated ? 'Unselect row' : 'Select row';
+            }
+            else if (item.action === 'toggle_row') {
+            	item.name = obj.___is_activated ? 'Unselect row' : 'Select row';
             }
 
             if (item.action === 'open_layout') {
@@ -1326,7 +1467,8 @@
 
                 result = result + '</div>';
 
-            } else {
+            }
+            else {
 
                 result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
                     ' data-ev-dropdown-action="' + item.action + '"' +
@@ -1352,35 +1494,31 @@
         return result;
     };
 
-    var generateContextMenuItems = function (parentOption, evDataService, ttypes, obj, objectId, parentGroupHashId) {
-
-        var result = '<div class="ev-dropdown-submenu">';
-
-        parentOption.items.forEach(function (item) {
-
-            result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
-
-        });
-
-        result = result + '</div>';
-
-        return result
-
-    };
-
     var generateContextMenu = function (evDataService, menu, ttypes, obj, objectId, parentGroupHashId) {
 
         var result = '<div class="ev-dropdown-container">';
 
-        menu.root.items.forEach(function (item) {
-            result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
-        });
+		menu.root.items.forEach(function (item) {
+			result = composeContextMenuItem(result, item, evDataService, ttypes, obj, objectId, parentGroupHashId);
+		});
 
         result = result + '</div>';
 
         return result;
 
     };
+
+    var generateContextMenuForSubtotal = function (evDataService, subtotalType, groupId, parentGroupHashId) {
+
+    	var result = '<div class="ev-dropdown-container">';
+
+		result = composeContextMenuForSubtotal(result, evDataService, subtotalType, groupId, parentGroupHashId);
+
+		result = result + '</div>';
+
+		return result;
+
+	};
 
     var markRowByColor = function (objectId, parentGroupHashId, evDataService, evEventService, color) {
 
@@ -1423,118 +1561,218 @@
 		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
 	};
+	/**
+	 * transfer data into event listener callback executeContextMenuAction() or executeSubtotalContextMenuAction()
+	 *
+	 * @type {Object} eventListenerFn2Args
+	 * eventListenerFn2Args.evDataService {Object|null}
+	 * eventListenerFn2Args.evEventService {Object|null}
+	 * eventListenerFn2Args.subtotalType {string|null} - type or subtype of subtotal. Can be 'line' or 'area'.
+	 */
+    var eventListenerFn2Args = {
+		evDataService: null,
+		evEventService: null,
+		subtotalType: null
+	}
 
-    var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
+	function executeContextMenuAction(event) {
 
-        function sendContextMenuActionToActiveObj(event) {
+		var objectId = event.target.dataset.objectId;
+		var parentGroupHashId = event.target.dataset.parentGroupHashId;
+		var dropdownAction = event.target.dataset.evDropdownAction;
+		var evDataService = eventListenerFn2Args.evDataService;
+		var evEventService = eventListenerFn2Args.evEventService;
+		var dropdownActionData = {};
 
-            var objectId = event.target.dataset.objectId;
-            var parentGroupHashId = event.target.dataset.parentGroupHashId;
-            var dropdownAction = event.target.dataset.evDropdownAction;
+		if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
+			dropdownActionData.id = event.target.dataset.evDropdownActionDataId;
+		}
 
-            var dropdownActionData = {};
+		if (dropdownAction === 'mark_row') {
 
-            if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
-                dropdownActionData.id = event.target.dataset.evDropdownActionDataId
-            }
+			var color = event.target.dataset.evDropdownActionDataColor;
 
-            if (dropdownAction === 'mark_row') {
+			if (objectId && color && parentGroupHashId) {
 
-                var color = event.target.dataset.evDropdownActionDataColor;
+				markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+				/* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+				var markedReportRows = localStorage.getItem("marked_report_rows");
 
-                if (objectId && color && parentGroupHashId) {
+				if (markedReportRows) {
+					markedReportRows = JSON.parse(markedReportRows);
+				} else {
+					markedReportRows = {};
+				}
 
-					markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
-                    /* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-                    var markedReportRows = localStorage.getItem("marked_report_rows");
+				if (color === 'undo_mark_row') {
+					delete markedReportRows[obj.id]
+				} else {
+					markedReportRows[obj.id] = {
+						color: color
+					};
+				}
 
-                    if (markedReportRows) {
-                        markedReportRows = JSON.parse(markedReportRows);
-                    } else {
-                        markedReportRows = {};
-                    }
+				localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
 
-                    if (color === 'undo_mark_row') {
-                        delete markedReportRows[obj.id]
-                    } else {
-                        markedReportRows[obj.id] = {
-                            color: color
-                        };
-                    }
+				evEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
 
-                    localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
+			}
 
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE); */
+			clearDropdownsAndRows(evDataService, evEventService, true);
 
-                }
+		}
 
-                clearDropdowns();
+		else if (dropdownAction === 'toggle_row') {
 
-            } else if (dropdownAction === 'select_row') {
+			var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-                const obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+			if (obj.___is_activated) {
 
-                if (obj.___is_activated) {
+				obj.___is_activated = false;
+				obj.___is_last_activated = false;
 
-                    obj.___is_activated = false;
-                    obj.___is_last_selected = false;
-
-                } else {
-
-                    const objects = evDataService.getObjects();
-
-                    objects.forEach(item => {
-                        item.___is_activated = false;
-                        item.___is_last_selected = false;
-                    });
-
-                    obj.___is_activated = true;
-                    obj.___is_last_selected = true;
-
-                }
-
-                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                clearDropdowns();
-
-            } else {
-
-                if (objectId && dropdownAction && parentGroupHashId) {
-
-                    var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                    if (!obj) {
-                        obj = {}
-                    }
-
-                    obj.event = event;
-
-                    evDataService.setActiveObject(obj);
-                    evDataService.setActiveObjectAction(dropdownAction);
-                    evDataService.setActiveObjectActionData(dropdownActionData);
-
-                    evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                    clearDropdowns();
-
-                }
-            }
-
-            if (!event.target.classList.contains('ev-dropdown-option')) {
-                clearDropdowns();
-            }
+				evDataService.setActiveObject(null);
+				evDataService.setLastActivatedRow(null);
 
 
-        }
+			} else {
 
-        window.addEventListener('click', sendContextMenuActionToActiveObj, {once: true});
+				evDataHelper.clearLastActiveObject(evDataService);
+				// clearObjectActiveState(evDataService);
+				obj.___is_activated = true;
+				obj.___is_last_activated = true;
+
+				evDataService.setActiveObject(obj);
+				evDataService.setLastActivatedRow(obj);
+
+			}
+
+			evDataService.setObject(obj);
+
+			/* evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+			clearDropdowns(); */
+			clearDropdownsAndRows(evDataService, evEventService, true);
+
+		}
+
+		else {
+
+			if (objectId && dropdownAction && parentGroupHashId) {
+
+				var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+				if (!obj) {
+					obj = {}
+				}
+
+				obj.event = event;
+
+				evDataService.setActiveObject(obj);
+				evDataService.setActiveObjectAction(dropdownAction);
+				evDataService.setActiveObjectActionData(dropdownActionData);
+
+				evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+				// clearDropdowns();
+				clearDropdownsAndRows(evDataService, evEventService, true);
+
+			}
+		}
+
+		if (!event.target.classList.contains('ev-dropdown-option')) {
+			clearDropdownsAndRows(evDataService, evEventService, true);
+		}
+		//
+		for (const prop in eventListenerFn2Args) {
+			eventListenerFn2Args[prop] = null;
+		}
+
+	}
+
+	function executeSubtotalContextMenuAction(event) {
+
+    	var targetElem = event.target;
+		// var groupId = targetElem.dataset.objectId;
+		var parentGroupHashId = targetElem.dataset.parentGroupHashId;
+		var dropdownAction = targetElem.dataset.evDropdownAction;
+
+		var evDataService = eventListenerFn2Args.evDataService;
+		var evEventService = eventListenerFn2Args.evEventService;
+		var subtotalType = eventListenerFn2Args.subtotalType;
+
+		if (dropdownAction === 'toggle_row') {
+
+			var group = evDataService.getData(parentGroupHashId);
+			if (group) group = {...{}, ...group};
+
+			var activatedProperty = subtotalType === 'line' ? '___is_line_subtotal_activated' : '___is_area_subtotal_activated';
+
+			/* if (group.___is_activated) {
+
+				group.___is_activated = false;
+				group.___is_last_activated = false;
+
+				evDataService.setData(group);
+
+			} else {
+
+				// clearSubtotalActiveState(evDataService);
+				group.___is_activated = true;
+				group.___is_last_activated = true;
+
+				evDataService.setData(group);
+
+			} */
+			group[activatedProperty] = !group[activatedProperty];
+			evDataService.setData(group);
+
+			/* evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+			clearDropdowns(); */
+			clearDropdownsAndRows(evDataService, evEventService, true);
+
+		}
+
+		if (!event.target.classList.contains('ev-dropdown-option')) {
+			clearDropdownsAndRows(evDataService, evEventService, true);
+		}
+		//
+		for (const prop in eventListenerFn2Args) {
+			eventListenerFn2Args[prop] = null;
+		}
+
+	}
+
+	/**
+	 *
+	 * @param evDataService {Object}
+	 * @param evEventService {Object}
+	 * @param type {any=} - Type or subtype of subtotal Can be 'line' or 'area'.
+	 */
+    var addEventListenersForContextMenu = function (evDataService, evEventService, type) {
+
+		eventListenerFn2Args.evDataService = evDataService;
+		eventListenerFn2Args.evEventService = evEventService;
+
+		if (type) {
+
+			eventListenerFn2Args.subtotalType = type;
+			window.addEventListener('click', executeSubtotalContextMenuAction);
+
+		} else {
+			window.addEventListener('click', executeContextMenuAction);
+		}
+
+		clearDropdownsAndRowsArgs.evDataService = evDataService;
+		clearDropdownsAndRowsArgs.evEventService = evEventService;
+		window.addEventListener('contextmenu', callClearDropdownsAndRows);
 
     };
 
     var createPopupMenu = function (objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
-        clearDropdowns();
+		clearDropdownsAndRows(evDataService, evEventService);
 
-        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, true);
+        var popup = evDataHelper.prepareRowAndGetPopupMenu(objectId, parentGroupHashId, evDataService, true);
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
 		if (obj) {
@@ -1545,14 +1783,49 @@
 
 			document.body.appendChild(popup);
 
-			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-			addEventListenerForContextMenu(popup, evDataService, evEventService);
+			addEventListenersForContextMenu(evDataService, evEventService);
 
 		}
 
+		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
 
     };
+
+	/**
+	 *
+	 * @param groupId {Number}
+	 * @param subtotalData {{type: string, subType: string=}}
+	 * @param parentGroupHashId {Number}
+	 * @param evDataService {Object}
+	 * @param evEventService {Object}
+	 * @param menuPosition {{positionX: number, positionY: number}} - coordinates of mouse click on row
+	 */
+	var createPopupMenuForSubtotal = function (groupId, subtotalData, parentGroupHashId, evDataService, evEventService, menuPosition) {
+
+		clearDropdownsAndRows(evDataService, evEventService);
+
+		var parent = evDataService.getData(parentGroupHashId);
+		var type = subtotalData.type === 'arealine' ? subtotalData.subType : subtotalData.type;
+
+		var popup = evDataHelper.prepareSubtotalAndGetPopupMenu(groupId, type, parentGroupHashId, evDataService);
+
+		if (parent) {
+
+			popup.innerHTML = generateContextMenuForSubtotal(evDataService, type, groupId, parentGroupHashId);
+
+			evDataHelper.calculateMenuPosition(popup, menuPosition);
+
+			document.body.appendChild(popup);
+
+			addEventListenersForContextMenu(evDataService, evEventService, type);
+
+		}
+
+		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+	};
+    // var createSubtotalPopupMenu
 
     var getAllTTypes = function () {
 
@@ -1608,7 +1881,8 @@
                     var contextMenuLayout = contextMenuData.results[0];
                     contextMenu = contextMenuLayout.data.menu
 
-                } else {
+                }
+                else {
                     contextMenu = {
                         root: {
                             items: [
@@ -1654,9 +1928,10 @@
                 }
 
                 const selectRowMenuItem = { // required item in first position
-                        name: 'Select/Unselect row',
-                        action: 'select_row'
+                	name: 'Select/Unselect row',
+                	action: 'toggle_row'
                 };
+
                 contextMenu.root.items.unshift(selectRowMenuItem)
 
                 ttypes = data;
@@ -1665,31 +1940,43 @@
 
                     var objectId;
                     var parentGroupHashId;
-                    let isSubtotal = false;
+                    /** @type {{type: string, subType: string=}|null} */
+                    var subtotalData = null;
 
-                    if (event.target.offsetParent.classList.contains('ev-viewport')) {
+                    if (ev.target.offsetParent.classList.contains('ev-viewport')) {
 
-                        objectId = event.target.dataset.objectId;
-                        parentGroupHashId = event.target.dataset.parentGroupHashId;
+                        objectId = ev.target.dataset.objectId;
+                        parentGroupHashId = ev.target.dataset.parentGroupHashId;
 
                     } else {
 
-                        if (event.target.offsetParent.classList.contains('g-row')) {
+                    	var gRowElem = ev.target.closest('.g-row');
 
-                            objectId = event.target.offsetParent.dataset.objectId;
-                            parentGroupHashId = event.target.offsetParent.dataset.parentGroupHashId;
+                        if (gRowElem) {
 
-                            if (event.target.offsetParent.dataset.subtotalType) {
+                            objectId = gRowElem.dataset.objectId;
+                            parentGroupHashId = gRowElem.dataset.parentGroupHashId;
 
-                                isSubtotal = !!event.target.offsetParent.dataset.subtotalType;
+                            var subtotalType = gRowElem.dataset.subtotalType;
+                            if (subtotalType) {
 
-                            }
+                            	subtotalData = {type: subtotalType};
+
+								if (subtotalType === 'arealine') subtotalData.subType = gRowElem.dataset.subtotalSubtype;
+
+							}
+
+                            /*if (gRowElem.dataset.subtotalType) {
+
+								subtotalType = gRowElem.dataset.subtotalType;
+
+                            }*/
 
                         }
 
                     }
 
-                    console.log('initContextMenuEventDelegation.event', event);
+                    console.log('initContextMenuEventDelegation.event', ev);
 
                     console.log('initContextMenuEventDelegation.objectId', objectId);
 
@@ -1698,24 +1985,34 @@
                         ev.preventDefault();
                         ev.stopPropagation();
 
-                        if (isSubtotal) { // TODO Victor 2021.02.02 I need to know items for subtotals context menu
-                            return;
+                        /*if (isSubtotal) { // TODO Victor 2021.02.02 I need to know items for subtotals context menu
+                            return false;
                         }
 
-                        //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
-                        var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
+                        else {
 
-                        createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                        	// var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
+							var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
-                        return false;
+							createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+
+							return false;
+
+						}*/
+						var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
+
+						if (subtotalData) {
+							createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+
+						} else {
+							createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+						}
+
+						return false;
 
                     }
 
                 }, false);
-
-                window.addEventListener('contextmenu', function () {
-                    clearDropdowns();
-                });
 
                 /*window.addEventListener('click', function (event) {
 
@@ -1894,6 +2191,7 @@
         addScrollListener: addScrollListener,
         createPopupMenu: createPopupMenu,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
+		clearDropdowns: clearDropdowns,
         calculateTotalHeight: calculateTotalHeight,
         //calculateContentWrapHeight: calculateContentWrapHeight,
         calculateScroll: calculateScroll
