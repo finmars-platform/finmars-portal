@@ -5,7 +5,7 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var utilsHelper = require('../../helpers/utils.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-	var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper');
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
@@ -486,31 +486,31 @@
 
         if (rowElem) {
 
-        	if (clickData.target.classList.contains('openLinkInNewTab')) {
+            if (clickData.target.classList.contains('openLinkInNewTab')) {
 
-        		clickData.___type = 'hyperlink'
+                clickData.___type = 'hyperlink'
 
-			} else {
+            } else {
 
-				clickData.___type = rowElem.dataset.type;
-				clickData.___id = rowElem.dataset.objectId;
+                clickData.___type = rowElem.dataset.type;
+                clickData.___id = rowElem.dataset.objectId;
 
-				clickData.___parentId = rowElem.dataset.parentGroupHashId;
+                clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 
-				if (event.target.classList.contains('ev-fold-button')) {
-					clickData.isFoldButtonPressed = true;
-				}
+                if (event.target.classList.contains('ev-fold-button')) {
+                    clickData.isFoldButtonPressed = true;
+                }
 
-				if (rowElem.dataset.subtotalType) {
-					clickData.___subtotal_type = rowElem.dataset.subtotalType;
-				}
+                if (rowElem.dataset.subtotalType) {
+                    clickData.___subtotal_type = rowElem.dataset.subtotalType;
+                }
 
-				if (rowElem.dataset.subtotalSubtype) {
-					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-				}
+                if (rowElem.dataset.subtotalSubtype) {
+                    clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
+                }
 
-			}
+            }
 
         }
 
@@ -534,11 +534,9 @@
             console.log('selection', selection);
             if (clickData.___type === 'hyperlink') {
 
-				metaHelper.openLinkInNewTab(event);
+                metaHelper.openLinkInNewTab(event);
 
-			}
-
-            else if (event.detail === 2) { // double click handler
+            } else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -556,44 +554,36 @@
 
                 }
 
-            }
+            } else if (clickData.isShiftPressed) {
 
-			else if (clickData.isShiftPressed) {
+                if (event.detail === 1) {
 
-				if (event.detail === 1) {
+                    if (clickData.___type === 'group') {
 
-					if (clickData.___type === 'group') {
+                        handleGroupClick(clickData, evDataService, evEventService);
 
-						handleGroupClick(clickData, evDataService, evEventService);
+                    }
 
-					}
+                    if (clickData.___type === 'control') {
+                        handleControlClick(clickData, evDataService, evEventService);
+                    }
 
-					if (clickData.___type === 'control') {
-						handleControlClick(clickData, evDataService, evEventService);
-					}
+                    if (clickData.___type === 'object') {
 
-					if (clickData.___type === 'object') {
+                        handleObjectClick(clickData, evDataService, evEventService);
 
-						handleObjectClick(clickData, evDataService, evEventService);
+                    }
+                }
 
-					}
-				}
-
-			}
-
-            else if (!selection.length) {
+            } else if (!selection.length) {
 
                 if (event.detail === 1) {
 
                     if (clickData.___type === 'group') {
                         handleGroupClick(clickData, evDataService, evEventService);
-                    }
-
-                    else if (clickData.___type === 'control') {
+                    } else if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
-                    }
-
-                    else if (clickData.___type === 'object') {
+                    } else if (clickData.___type === 'object') {
                         handleObjectClick(clickData, evDataService, evEventService);
                     }
 
@@ -688,6 +678,8 @@
 
         var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, false);
 
+        var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
         var innerHTMLString = '';
         var viewContext = evDataService.getViewContext();
 
@@ -719,11 +711,15 @@
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="edit"' +
                 ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>';
+
+            if(!obj.is_deleted) {
+                innerHTMLString = innerHTMLString +
                 '<div class="ev-dropdown-option"' +
                 ' data-ev-dropdown-action="delete"' +
                 ' data-object-id="' + objectId + '"' +
                 ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+            }
 
 
             if (entityType === 'price-history') {
@@ -767,6 +763,19 @@
                     ' data-ev-dropdown-action="activate_instrument"' +
                     ' data-object-id="' + objectId + '"' +
                     ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate</div>';
+            }
+
+
+            if (['complex-transaction', 'price-history', 'currency-history'].indexOf(entityType) === -1) {
+
+                if (obj.is_deleted) {
+
+                    innerHTMLString = innerHTMLString +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="restore_deleted"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Restore</div>';
+                }
             }
 
             innerHTMLString = innerHTMLString + '</div>';
@@ -1102,11 +1111,11 @@
             // It means we render from 300 to 499
 
             if (from < lastFrom) {
-                if(Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
+                if (Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
                     evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
                 }
             } else {
-                if(Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
+                if (Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
                     evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
                 }
             }

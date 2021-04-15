@@ -57,6 +57,11 @@
             controller: 'ContextMenuLayoutManagerController as vm'
         });
 
+        $stateProvider.state('app.manual-sorting-layout-manager', {
+            url: '/manual-sorting-layouts',
+            templateUrl: 'views/manual-sorting-layout-manager-view.html',
+            controller: 'ManualSortingLayoutManagerController as vm'
+        });
 
         $stateProvider.state('app.home', {
             url: '/',
@@ -652,6 +657,12 @@
                 url: '/tooltips',
                 templateUrl: 'views/pages/entity-tooltip-page-view.html',
                 controller: 'EntityTooltipPageController as vm'
+            })
+
+            .state('app.settings.cross-entity-attribute-extensions', {
+                url: '/cross-entity-attribute-extension',
+                templateUrl: 'views/pages/cross-entity-attribute-extension-page-view.html',
+                controller: 'CrossEntityAttributeExtensionPageController as vm'
             })
             .state('app.settings.color-palettes', {
                 url: '/palettes',

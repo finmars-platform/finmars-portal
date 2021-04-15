@@ -655,6 +655,7 @@
                             var row_number = parseInt(data_source.dataset.row, 10);
                             var column_number = parseInt(data_source.dataset.column, 10);
 
+
                             if (elem.classList.contains('dashboard-socket-card')) { // when dragged from socket
 
                                 var dc_row_number = parseInt(elem.dataset.row, 10);
@@ -686,6 +687,10 @@
                                     var targetRow = layout.data.tabs[tab_number].layout.rows[row_number];
                                 }
 
+                                if (newColComponentType === 'accordion') {
+                                    column_number = 0
+                                }
+
                                 targetRow.columns[column_number].cell_type = 'component';
                                 targetRow.columns[column_number].data.type = newColComponentType;
                                 targetRow.columns[column_number].data.id = newColComponentId;
@@ -713,15 +718,17 @@
                                     var targetRow = layout.data.tabs[tab_number].layout.rows[row_number];
                                 }
 
+                                if (component.type === 'accordion') {
+                                    column_number = 0
+                                }
+
                                 targetRow.columns[column_number].cell_type = 'component';
                                 targetRow.columns[column_number].data.type = JSON.parse(JSON.stringify(component.type));
                                 targetRow.columns[column_number].data.id = component_id;
 
                             }
 
-                            if (newColComponentType === 'accordion') {
 
-                            }
 
                             vm.dashboardConstructorDataService.setData(layout);
 

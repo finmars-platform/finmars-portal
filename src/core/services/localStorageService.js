@@ -6,6 +6,8 @@
 
     let setUMuM = function (userId, masterUserId, memberId) {
 
+        console.log('setUMuM', userId, masterUserId, memberId)
+
     	if ((userId || userId === 0) &&
 			(masterUserId || masterUserId === 0) &&
 			(memberId || memberId === 0)) {
@@ -155,13 +157,17 @@
 
 			const cachedLayouts = getCacheProp(cachedLayoutsList);
 
-			Object.keys(cachedLayouts).forEach(layoutId => {
+			if (cachedLayouts && typeof cachedLayouts === 'object') {
 
-				if (cachedLayouts[layoutId].content_type === layout.content_type) {
-					cachedLayouts[layoutId].is_default = false;
-				}
+				Object.keys(cachedLayouts).forEach(layoutId => {
 
-			});
+					if (cachedLayouts[layoutId].content_type === layout.content_type) {
+						cachedLayouts[layoutId].is_default = false;
+					}
+
+				});
+
+			}
 
 			let cache = cacheData(cachedLayoutsList, cachedLayouts);
 
@@ -203,7 +209,7 @@
         let layoutToDelete = getCacheProp(layoutPath, cache);
 
         // clear content_type default layout
-        if (layoutToDelete.is_default) {
+        if (layoutToDelete && layoutToDelete.is_default) {
             let defLayoutPath = ['layouts', 'defaultLayouts', layoutToDelete.content_type];
             cache = removeFromCache(defLayoutPath, cache);
         }

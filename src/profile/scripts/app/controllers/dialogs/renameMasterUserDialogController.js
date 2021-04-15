@@ -6,6 +6,7 @@
     'use strict';
 
     var usersService = require('../../services/usersService');
+    var authorizerService = require('../../services/authorizerService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -24,7 +25,7 @@
 
             vm.master_user.name = vm.name;
 
-            usersService.updateMaster(vm.master_user.id, vm.master_user).then(function (data) {
+            authorizerService.updateMaster(vm.master_user.id, vm.master_user).then(function (data) {
 
                 toastNotificationService.success("Database was successfully renamed");
 

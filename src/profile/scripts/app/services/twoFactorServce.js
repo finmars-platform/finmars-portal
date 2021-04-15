@@ -11,11 +11,17 @@
 
     var baseUrl = baseUrlService.resolve();
 
+    var authorizerUrl = baseUrlService.getAuthorizerUrl();
+
     var getList = function () {
-        return window.fetch(baseUrl + 'users/two-factor/', {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+
+        return window.fetch(authorizerUrl + '/two-factor/', {
             method: 'GET',
             credentials: 'include',
             headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
@@ -25,11 +31,15 @@
     };
 
     var pachByKey = function (id, token) {
-        return window.fetch(baseUrl + 'users/two-factor/' + id + '/', {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+
+        return window.fetch(authorizerUrl + '/two-factor/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -41,11 +51,15 @@
 
 
     var generateCode = function (data) {
-        return window.fetch(baseUrl + 'users/two-factor/generate-code/', {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+
+        return window.fetch(authorizerUrl + '/two-factor/generate-code/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -56,11 +70,15 @@
     };
 
     var validateCode = function (data) {
-        return window.fetch(baseUrl + 'users/two-factor/validate-code/', {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+
+        return window.fetch(authorizerUrl + '/two-factor/validate-code/', {
             method: 'PUT',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
@@ -71,11 +89,15 @@
     };
 
     var deleteByKey = function (id) {
-        return window.fetch(baseUrl + 'users/two-factor/' + id + '/', {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+
+        return window.fetch(authorizerUrl + '/two-factor/' + id + '/', {
             method: 'DELETE',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             }
@@ -87,11 +109,15 @@
     };
 
     var activateTwoFactor = function (id) {
-        return window.fetch(baseUrl + 'users/two-factor/' + id + '/', {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+
+        return window.fetch(authorizerUrl + '/two-factor/' + id + '/', {
             method: 'PATCH',
             credentials: 'include',
             headers: {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },

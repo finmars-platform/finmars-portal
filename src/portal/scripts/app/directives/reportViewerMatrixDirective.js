@@ -81,9 +81,10 @@
 
                     var minWidth = 100;
 
-                    //var minHeight = 20;
+                    // var minHeight = 20;
 
-                    var matrixHolderMinHeight = elem[0].querySelector('.report-viewer-matrix').clientHeight;
+                    // var matrixHolderMinHeight = elem[0].querySelector('.report-viewer-matrix').clientHeight;
+					var matrixHolderMinHeight = 144; // equal to 3 rows
 
                     cellWidth = Math.floor(elemWidth / columnsCount);
                     //var cellHeight = Math.floor(elemHeight / rowsCount);
