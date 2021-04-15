@@ -177,7 +177,7 @@
                         }
                     }
 
-                };
+                }
             }
 
             ref.delete_node(sel);

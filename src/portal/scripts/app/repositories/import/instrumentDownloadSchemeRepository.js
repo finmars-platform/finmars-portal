@@ -13,11 +13,16 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (providerId) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/instrument-scheme/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -25,11 +30,16 @@
     };
 
     var getListLight = function (providerId) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme-light/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/instrument-scheme-light/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -38,12 +48,17 @@
 
 
     var create = function (scheme) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/instrument-scheme/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -52,12 +67,17 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/instrument-scheme/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -65,12 +85,17 @@
     };
 
     var update = function (id, scheme) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/instrument-scheme/' + id + '/',
             {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -79,12 +104,17 @@
     };
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'import/instrument-scheme/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/instrument-scheme/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

@@ -12,7 +12,7 @@
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
     var REPORT_GRAND_TOTAL_CSS_SELECTOR = 'report-grand-total-bg';
 
-    var getBorderBottomTransparent = function (evDataService, obj, columnNumber, groups) {
+    /* var getBorderBottomTransparent = function (evDataService, obj, columnNumber, groups) {
 
         var result = '';
 
@@ -23,6 +23,7 @@
             nextItem = flatList[obj.___flat_list_index + 1]
         }
 
+        // whether it is the first column of subtotal row
         if (columnNumber <= groups.length && columnNumber <= obj.___level) {
 
             if (nextItem) {
@@ -39,7 +40,30 @@
 
         return result;
 
-    };
+    }; */
+
+    var getBorderClasses = function (evDataService, obj, column, columnNumber) {
+
+		var columns = evDataService.getColumns();
+		var nextColumn = columns[columnNumber]; // columnNumber is columnIndex + 1
+
+		var isGrandTotalFirstColumn = obj.___level === 0 && columnNumber === 1;
+		var notLastColumn = columns.length > 1;
+
+		if (isGrandTotalFirstColumn && notLastColumn) {
+			return 'border-right-transparent';
+		}
+
+		// var isSubtotalRow = obj.___subtotal_type || obj.___subtotal_subtype;
+		var colSubtotalOff = !column.report_settings || !column.report_settings.subtotal_formula_id;
+		var nextColSubtotalOff = !nextColumn || !nextColumn.report_settings || !nextColumn.report_settings.subtotal_formula_id;
+		var nextIsNotCellWithGroupName = columnNumber + 1 !== obj.___level - 1;
+
+		if (colSubtotalOff && nextColSubtotalOff && nextIsNotCellWithGroupName) {
+			return 'border-right-transparent';
+		}
+
+	};
 
     var getDynamicAttributeValue = function (obj, column) {
 
@@ -142,7 +166,7 @@
                 }
 
                 if (proxyLineSubtotal && proxyLineSubtotal.___level < obj.___level && obj.___type === 'subtotal' && obj.___subtotal_type === 'area') {
-                    skip = true;
+                	skip = true;
                 }
 
                 if (skip === false) {
@@ -152,15 +176,11 @@
 
                     if (parentGroup.___is_open) {
 
-                        var foldButton = '';
+						var foldButtonSign = currentGroup.___is_open ? '-': '+';
 
-                        if (currentGroup.___is_open) {
-                            foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '"><div>-</div></div>';
-                        } else {
-                            foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '"><div>+</div></div>';
-                        }
+						var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
 
-                        var groupName = currentGroup.___group_name;
+						var groupName = currentGroup.___group_name;
 
 						if (groupName && typeof groupName === 'string') {
 
@@ -168,7 +188,7 @@
 
 						}
 
-                        result.html_result = foldButton + '<span class="text-bold">' + groupName + '</span>';
+                        result.html_result = foldButton + '<span class="">' + groupName + '</span>';
                         result.raw_text_result = currentGroup.___group_name;
 
                     }
@@ -181,7 +201,7 @@
 
         }
 
-        if (columnNumber === obj.___level - 1) {
+        else if (columnNumber === obj.___level - 1) {
 
             var foldButton = '';
             var foldButtonStr = '';
@@ -191,11 +211,9 @@
 
             if (parentGroup.___is_open) {
 
-                if (group.___is_open) {
-                    foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">-</div></div>';
-                } else {
-                    foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">+</div></div>';
-                }
+				var foldButtonSign = group.___is_open ? '-': '+';
+
+				foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' + foldButtonSign + '</div></div>';
 
                 if (obj.___level - 1 === columnNumber) {
                     foldButtonStr = foldButton
@@ -203,7 +221,7 @@
                     foldButtonStr = ''
                 }
 
-                var groupName = obj.___group_name;
+				var groupName = obj.___group_name;
 
 				if (groupName && typeof groupName === 'string') {
 
@@ -211,21 +229,23 @@
 
 				}
 
-                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="text-bold">' + groupName + '</span></span>';
+                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="">' + groupName + '</span></span>';
                 result.raw_text_result = obj.___group_name;
 
             }
 
         }
 
-        if (columnNumber > obj.___level - 1) {
+        else if (columnNumber > obj.___level - 1) {
 
             if (column.report_settings && column.report_settings.subtotal_formula_id && !column.report_settings.hide_subtotal) {
 
                 if (obj.hasOwnProperty(column.key)) {
-                    result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
+
+                	result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
                     result.numeric_result = obj[column.key];
                     result.raw_text_result = renderHelper.formatValue(obj, column);
+
                 } else {
                     result = getDynamicAttributeValue(obj, column);
                 }
@@ -235,13 +255,16 @@
         }
 
         /* Insert 'Grand Total' text inside first cell of the row */
-        var rootGroupOptions = evDataService.getRootGroupOptions();
+        /* var rootGroupOptions = evDataService.getRootGroupOptions();
         var grandTotalIsActive = rootGroupOptions.subtotal_type;
 
-        if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) {
-            result.html_result = '<span class="text-bold">Grand Total</span>';
+        if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) { */
+		// in new rv interface, there is always Grand total row
+
+		/* if (obj.___level === 0 && columnNumber === 1) {
+            result.html_result = '<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>';
             result.raw_text_result = 'Grand Total';
-        }
+        } */
 
         return result;
 
@@ -354,6 +377,32 @@
 
     };
 
+	var getCellClasses = function (evDataService, obj, column, columnNumber, groups) {
+
+		var result = [];
+
+		var textAlign = getCellTextAlign(evDataService, obj, column, columnNumber);
+
+		if (textAlign) {
+			result.push(textAlign);
+		}
+
+		var colorNegative = getColorNegativeNumber(obj, column);
+
+		if (colorNegative) {
+			result.push(colorNegative);
+		}
+
+		var borderClasses = getBorderClasses(evDataService, obj, column, columnNumber);
+		// grand total row
+		if (borderClasses) {
+			result.push(borderClasses);
+		}
+
+		return result;
+
+	}
+
     var render = function (evDataService, obj) {
 
         var columns = evDataService.getColumns();
@@ -362,10 +411,14 @@
 
         var parent = evDataService.getData(obj.___parentId);
 
-        var classList = ['g-row'];
+        var rowClassList = ['g-row'];
 
         if (obj.___subtotal_type === 'proxyline') {
-            classList.push('proxyline')
+			rowClassList.push('proxyline');
+        }
+
+        if (obj.___backgrond_color) {
+            rowClassList.push('g-row-marked-' + obj.___backgrond_color)
         }
 
         var is_activated = false;
@@ -377,64 +430,91 @@
             subtotal_type = obj.___subtotal_type
         }
 
-        if(subtotal_type === 'line') {
+        if (subtotal_type === 'line') {
             is_activated = parent.___is_line_subtotal_activated
         }
 
-        if(subtotal_type === 'area') {
+        if (subtotal_type === 'area') {
             is_activated = parent.___is_area_subtotal_activated
         }
 
+		var grandTotalCell = '';
         var rowSelection;
+		var rowSettings;
+
+        if (obj.___level === 0) {
+
+        	rowClassList.push('g-grand-total-row');
+
+			/* grandTotalCell = '<div class="g-grand-total-first-cell">' +
+				'<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>' +
+			'</div>'; */
+			grandTotalCell = '<div class="g-grand-total-first-cell">' +
+					'<span class="text-bold">GRAND TOTAL</span>' +
+				'</div>';
+
+			rowSelection = '<div class="g-row-selection border-right-transparent"></div>';
+
+			rowSettings = '<div class="g-row-settings g-row-settings-table border-right-transparent gRowSettings"></div>';
+
+		} else {
+
+			if (is_activated) {
+
+				rowClassList.push('selected');
+				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
+
+			} else {
+				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
+			}
+
+			rowSettings = renderHelper.getRowSettings();
+
+		}
 
         if (is_activated) {
-            classList.push('selected');
-            rowSelection = '<div class="g-row-selection">' + checkIcon + '</div>';
-        } else {
-            rowSelection = '<div class="g-row-selection"></div>';
+			rowClassList.push('activated');
         }
 
-        if (is_activated) {
-            classList.push('activated');
-        }
-
-        var classes = classList.join(' ');
+        var rowClasses = rowClassList.join(' ');
 
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
         var result;
 
         if (obj.___subtotal_subtype) {
-            result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
-        } else {
+            result = '<div class="' + rowClasses + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
 
-            result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        } else {
+            result = '<div class="' + rowClasses + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         }
+
         var cell;
 
-        result = result + rowSelection;
+        result = result + grandTotalCell + rowSelection + rowSettings;
 
         obj.___cells_values = [];
 
         columns.forEach(function (column, index) {
 
             var columnNumber = index + 1;
-            var textAlign = getCellTextAlign(evDataService, obj, column, columnNumber);
+            /* var textAlign = getCellTextAlign(evDataService, obj, column, columnNumber);
             var colorNegative = getColorNegativeNumber(obj, column);
 
-            /*if (column.value_type === 20) {
-                textAlign = 'text-right'
-            }*/
-
-            var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
+            var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups); */
 
             var value_obj = getValue(evDataService, obj, column, columnNumber);
 
+            var cellClassesList = getCellClasses(evDataService, obj, column, columnNumber, groups);
+            var cellClasses = cellClassesList.join(' ');
+
             obj.___cells_values.push({
                 width: column.style.width,
-                classList: [textAlign, colorNegative, borderBottomTransparent],
+                classList: cellClassesList,
                 value: value_obj.html_result
             });
+
+
 
             var gCellTitle = '';
             var resultValue = '';
@@ -447,12 +527,13 @@
                 gCellTitle = ' title="' + value_obj.raw_text_result + '"';
             }
 
-            cell = '<div class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
-                '<div class="g-cell-content-wrap">' +
-                resultValue +
-                '</div>' +
-                '</div>' +
+            cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
+                // '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
+					'<div class="g-cell' + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
+						'<div class="g-cell-content-wrap">' +
+							resultValue +
+						'</div>' +
+					'</div>' +
                 '</div>';
 
             result = result + cell

@@ -123,7 +123,7 @@
                     if (scope.filter.options.filter_type === filterRegime) {
                         return true;
                     }
-                    ;
+
 
                     return false;
                 };

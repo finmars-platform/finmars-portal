@@ -12,7 +12,8 @@
         var scrollSize = null;
 
         function DnDWheelScroll (event) {
-            event.preventDefault();
+
+        	event.preventDefault();
 
             var scrolled = DnDScrollElem.scrollTop;
 
@@ -29,10 +30,13 @@
             clearTimeout(DnDScrollTimeOutId);
 
             DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
-                DnDScrollElem.scroll({
+
+            	DnDScrollElem.scroll({
                     top: Math.max(0, scrollSize)
                 });
-                scrollSize = null;
+
+            	scrollSize = null;
+
             }, 30);
 
         }
