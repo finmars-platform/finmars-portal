@@ -4,394 +4,609 @@
 
 (function () {
 
-    'use strict';
+	'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrlService = require('../services/baseUrlService');
+	var cookieService = require('../../../../core/services/cookieService');
+	var xhrService = require('../../../../core/services/xhrService');
+	var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = baseUrlService.resolve();
+	var baseUrl = baseUrlService.resolve();
 
-    var handleError = function (methodName) {
-        console.log('Method: ' + methodName + '. Cannot get data from server');
-    };
+	var handleError = function (methodName) {
+		console.log('Method: ' + methodName + '. Cannot get data from server');
+	};
 
-    var login = function (login, password) {
-        return xhrService.fetch(baseUrl + 'users/login/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({username: login, password: password})
-        })
-    };
+	var login = function (login, password) {
 
-    var logout = function () {
-        return xhrService.fetch(baseUrl + 'users/logout/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({})
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var ping = function () {
-        return xhrService.fetch(baseUrl + 'users/ping/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/login/', {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify({username: login, password: password})
+		})
+	};
 
-    var protectedPing = function () {
-        return xhrService.fetch(baseUrl + 'users/protected-ping/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+	var logout = function () {
 
-    var getList = function () {
-        return xhrService.fetch(baseUrl + 'users/user/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'users/user/' + id + '/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/logout/', {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify({})
+		})
+	};
 
-    var getMe = function () {
-        return xhrService.fetch(baseUrl + 'users/user/0/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+	var ping = function () {
 
-    var getMyCurrentMember = function () {
-        return xhrService.fetch(baseUrl + 'users/member/0/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var getCurrentMasterUser = function () {
-        return xhrService.fetch(baseUrl + 'users/get-current-master-user', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/ping/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
 
-    var changePassword = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/user/' + id + '/set-password/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-    };
+	var protectedPing = function () {
 
-    var update = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/user/' + id + '/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var patch = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/user/' + id + '/', {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/protected-ping/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
 
-    var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'users/user/' + id + '/', {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+	var getList = function () {
 
-    var createMasterUser = function (user) {
-        return xhrService.fetch(baseUrl + 'users/master-user/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var getMasterListLight = function () {
-        return xhrService.fetch(baseUrl + 'users/master-user-light/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
 
-    var getMasterList = function () {
-        return xhrService.fetch(baseUrl + 'users/master-user/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+	var getByKey = function (id) {
 
-    var getMasterByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var updateMaster = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/' + id + '/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
 
-    var patchMaster = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/', {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-    };
+	var getMe = function () {
 
-    var deleteMasterByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/', {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		var baseUrl = baseUrlService.resolve();
 
-    var setMasterUser = function (id) {
-        return xhrService.fetch(baseUrl + 'users/master-user/' + id + '/set-current/', {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
 
-    var getMemberList = function () {
-        return xhrService.fetch(baseUrl + 'users/member/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var getMemberByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'users/member/' + id, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/0/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
 
-    var updateMember = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/member/' + id, {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-    };
+	var getMyCurrentMember = function () {
 
-    var patchMember = function (id, user) {
-        return xhrService.fetch(baseUrl + 'users/member/' + id, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-    };
+		var baseUrl = baseUrlService.resolve();
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var deleteMemberByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'users/member/' + id, {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/0/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
 
-    var getGroupList = function () {
-        return xhrService.fetch(baseUrl + 'users/group/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+	var getCurrentMasterUser = function () {
 
-    var getOwnMemberSettings = function () {
-        return xhrService.fetch(baseUrl + 'users/user-member/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var updateOwnMemberSettings = function (id, member) {
-        return xhrService.fetch(baseUrl + 'users/user-member/' + id + '/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(member)
-        })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/get-current-master-user', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
 
-    module.exports = {
-        login: login,
-        logout: logout,
+	var changePassword = function (id, user) {
 
-        ping: ping,
-        protectedPing: protectedPing,
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-        getList: getList,
-        getByKey: getByKey,
-        getMe: getMe,
-        getMyCurrentMember: getMyCurrentMember,
-        changePassword: changePassword,
-        update: update,
-        patch: patch,
-        deleteByKey: deleteByKey,
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/' + id + '/set-password/', {
+			method: 'PUT',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(user)
+		})
+	};
 
-        getCurrentMasterUser: getCurrentMasterUser,
-        createMasterUser: createMasterUser,
-        getMasterList: getMasterList,
-        getMasterListLight: getMasterListLight,
-        getMasterByKey: getMasterByKey,
-        updateMaster: updateMaster,
-        patchMaster: patchMaster,
-        deleteMasterByKey: deleteMasterByKey,
-        setMasterUser: setMasterUser,
+	var update = function (id, user) {
 
-        getMemberList: getMemberList,
-        getMemberByKey: getMemberByKey,
-        updateMember: updateMember,
-        patchMember: patchMember,
-        deleteMemberByKey: deleteMemberByKey,
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-        getGroupList: getGroupList,
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/' + id + '/', {
+			method: 'PUT',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(user)
+		})
+	};
 
-        getOwnMemberSettings: getOwnMemberSettings,
-        updateOwnMemberSettings: updateOwnMemberSettings
+	var patch = function (id, user) {
 
-    }
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/' + id + '/', {
+			method: 'PATCH',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(user)
+		})
+	};
+
+	var deleteByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/' + id + '/', {
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var createMasterUser = function (user) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user/', {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(user)
+		})
+	};
+
+	var getMasterListLight = function () {
+
+		var baseUrl = baseUrlService.resolve();
+
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user-light/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var getMasterList = function () {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var getMasterByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user/' + id + '/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var updateMaster = function (id, user) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user/' + id + '/', {
+			method: 'PUT',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(user)
+		})
+	};
+
+	var patchMaster = function (id, user) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user/' + id + '/', {
+			method: 'PATCH',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(user)
+		})
+	};
+
+	var deleteMasterByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user/' + id + '/', {
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var setMasterUser = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user/' + id + '/set-current/', {
+			method: 'PATCH',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var getMemberList = function () {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var getMemberByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/' + id, {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var updateMember = function (id, user) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/' + id, {
+			method: 'PUT',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(user)
+		})
+	};
+
+	var patchMember = function (id, user) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/' + id, {
+			method: 'PATCH',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(user)
+		})
+	};
+
+	var deleteMemberByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/' + id, {
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var getGroupList = function () {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/group/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var getOwnMemberSettings = function () {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user-member/', {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		})
+	};
+
+	var updateOwnMemberSettings = function (id, member) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user-member/' + id + '/', {
+			method: 'PUT',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(member)
+		})
+	};
+
+
+	var getUsercodePrefixList = function () {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/usercode-prefix/',
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
+
+	var createUsercodePrefix = function (item) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/usercode-prefix/',
+			{
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(item)
+			})
+	};
+
+	var deleteUserCodePrefixByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/usercode-prefix/' + id + '/', {
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		}).then(function (data) {
+			return new Promise(function (resolve, reject) {
+				resolve({status: 'deleted'});
+			});
+			//return data.json();
+		})
+	};
+
+	module.exports = {
+		login: login,
+		logout: logout,
+
+		ping: ping,
+		protectedPing: protectedPing,
+
+		getList: getList,
+		getByKey: getByKey,
+		getMe: getMe,
+		getMyCurrentMember: getMyCurrentMember,
+		changePassword: changePassword,
+		update: update,
+		patch: patch,
+		deleteByKey: deleteByKey,
+
+		getCurrentMasterUser: getCurrentMasterUser,
+		createMasterUser: createMasterUser,
+		getMasterList: getMasterList,
+		getMasterListLight: getMasterListLight,
+		getMasterByKey: getMasterByKey,
+		updateMaster: updateMaster,
+		patchMaster: patchMaster,
+		deleteMasterByKey: deleteMasterByKey,
+		setMasterUser: setMasterUser,
+
+		getMemberList: getMemberList,
+		getMemberByKey: getMemberByKey,
+		updateMember: updateMember,
+		patchMember: patchMember,
+		deleteMemberByKey: deleteMemberByKey,
+
+		getGroupList: getGroupList,
+
+		getOwnMemberSettings: getOwnMemberSettings,
+		updateOwnMemberSettings: updateOwnMemberSettings,
+
+
+		getUsercodePrefixList: getUsercodePrefixList,
+		createUsercodePrefix: createUsercodePrefix,
+		deleteUserCodePrefixByKey: deleteUserCodePrefixByKey
+
+	}
 
 }());

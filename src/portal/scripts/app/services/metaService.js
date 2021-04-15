@@ -469,6 +469,9 @@
                 case 'app.processes':
                     name = 'SETTINGS > ACTIVE PROCESSES';
                     break;
+                case 'app.schedules':
+                    name = 'SETTINGS > PRICING > SCHEDULES';
+                    break;
             }
         }
 
@@ -523,6 +526,29 @@
 
     };
 
+	/**
+	 *
+	 * @param promisesResultList {Array}
+	 * @param errorPremise {string=} - string to go before data from promise rejection
+	 */
+	var logRejectedPromisesAfterAllSettled = function (promisesResultList, errorPremise) {
+
+		promisesResultList.forEach(result => {
+			if (result.status === "rejected") {
+
+				var errorArgs = [];
+
+				if (errorPremise) errorArgs.push(errorPremise);
+
+				errorArgs.push(result.reason);
+
+				console.error(...errorArgs);
+
+			}
+		});
+
+	};
+
     module.exports = {
         isReport: isReport,
         getMenu: getMenu,
@@ -544,7 +570,8 @@
         getCurrentLocation: getCurrentLocation,
         getHeaderTitleForCurrentLocation: getHeaderTitleForCurrentLocation,
         getContentGroups: getContentGroups,
-        getEntityViewerFixedFieldsAttributes: getEntityViewerFixedFieldsAttributes
+        getEntityViewerFixedFieldsAttributes: getEntityViewerFixedFieldsAttributes,
+		logRejectedPromisesAfterAllSettled: logRejectedPromisesAfterAllSettled
     }
 
 }());

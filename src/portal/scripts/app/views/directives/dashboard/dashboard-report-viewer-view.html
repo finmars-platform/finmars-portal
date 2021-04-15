@@ -1,36 +1,57 @@
-<div class="height-100" data-ng-if="readyStatus.data === 'ready'" layout="column">
+<div data-ng-if="readyStatus.data === 'ready'"
+     layout="column"
+     class="dashboard-component height-100"
+     ng-class="{'dashboard-component-filled-in': fillInModeData}">
 
     <div class="dashboard-component-header" flex="noshrink">
-        <div class="dashboard-component-name">
-            <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
-            <span data-ng-if="!customName && item" title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
-        </div>
-
         <div class="dashboard-component-header-left">
 
-            <md-button  data-ng-if="missingPricesData.items.length" class="md-raised md-warn" data-ng-click="openMissingPricesDialog($event)">
+            <div ng-if="customName || (item && item.data.name)" class="dashboard-component-name">
+                <span ng-if="customName" ng-bind="customName" title="{{customName}}"></span>
+                <span ng-if="!customName && item" ng-bind="item.data.name" title="{{item.data.name}}"></span>
+            </div>
+
+            <div class="flex-row fi-start">
+                <md-button class="small-button-icon dashboard-comp-h-btn g-filter-area-toggle active"
+                           ng-click="toggleFilterBlock($event)">
+
+                    <span class="material-icons">filter_list</span>
+                    <md-tooltip data-md-direction="top">Toggle filter area</md-tooltip>
+
+                </md-button>
+            </div>
+
+        </div>
+
+        <div class="dashboard-component-header-right">
+
+            <md-button data-ng-if="missingPricesData.items.length"
+                       class="md-raised md-warn dashboard-comp-h-btn"
+                       data-ng-click="openMissingPricesDialog($event)">
                 <ng-md-icon size="24" icon="warning"></ng-md-icon>
                 <md-tooltip data-md-direction="top"> Warning ({{missingPricesData.items.length}})</md-tooltip>
             </md-button>
 
             <md-button data-ng-if="fillInModeData"
-                       data-ng-click="disableFillInMode()">
+                       data-ng-click="disableFillInMode()"
+                       class="dashboard-comp-h-btn">
                 <ng-md-icon size="24" icon="close"></ng-md-icon>
                 <md-tooltip data-md-direction="top">Collapse Component</md-tooltip>
             </md-button>
 
-            <md-button data-ng-click="clearUseFromAboveFilters()">
+            <md-button data-ng-click="clearUseFromAboveFilters()" class="dashboard-comp-h-btn">
                 <ng-md-icon size="24" icon="leak_remove"></ng-md-icon>
                 <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>
             </md-button>
 
             <md-button data-ng-if="!fillInModeData"
-                       data-ng-click="enableFillInMode()">
+                       data-ng-click="enableFillInMode()"
+                       class="dashboard-comp-h-btn">
                 <ng-md-icon size="24" icon="zoom_out_map"></ng-md-icon>
                 <md-tooltip data-md-direction="top">Expand component</md-tooltip>
             </md-button>
 
-            <md-button class="md-button dashboard-component-settings-btn"
+            <md-button class="md-button dashboard-component-settings-btn dashboard-comp-h-btn"
                        aria-label="dashboard component settings btn"
                        data-ng-click="openComponentSettingsEditorDialog($event)">
                 <ng-md-icon size="24" icon="settings"></ng-md-icon>

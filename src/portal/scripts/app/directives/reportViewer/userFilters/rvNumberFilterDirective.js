@@ -127,7 +127,7 @@
                 scope.filterSettingsChange = function () {
                     // console.log("filter filterSettingsChange", scope.filter.options);
 
-                    if (scope.filter.options.enabled || filterEnabled) {
+                    /* if (scope.filter.options.enabled || filterEnabled) {
 
                         filterEnabled = scope.filter.options.enabled;
 
@@ -140,7 +140,7 @@
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                    }
+                    } */
 
                 };
 
@@ -311,24 +311,11 @@
 
                 };
 
-                /*var initEventListeners = function () {
-
-                    toggleFilterAreaID = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
-
-                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-                        scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
-
-                    });
-                };*/
-
                 scope.init = function () {
-                    //initEventListeners();
 
-                    /*var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;*/
-
+                    /* Turn old filters off
                     scope.initSplitPanelMode();
+                    */
                 };
 
                 scope.init();

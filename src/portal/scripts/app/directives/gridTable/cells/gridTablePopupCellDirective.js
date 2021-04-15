@@ -51,7 +51,7 @@
                                                     "placeholder-text='{{column.columnName}}' " +
                                                     "model='popupData.value' " +
                                                     "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
-                                        "</text-input>"
+                                        "</text-input>";
 
                             break;
 
@@ -59,13 +59,13 @@
                             popupMain = "<number-input label='{{column.columnName}}' " +
                                                       "model='popupData.value' " +
                                                       "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
-                                        "</number-input>"
+                                        "</number-input>";
                             break;
 
                         case 'custom_popup':
 
                             if (scope.popupSettings.contentHtml.hasOwnProperty('main')) {
-                                popupMain = scope.popupSettings.contentHtml.main
+                                popupMain = scope.popupSettings.contentHtml.main;
                             }
 
                             break;
@@ -74,7 +74,7 @@
                     popupContent = "<div class='popup-area-container'>" +
                         "<div class='popup-area-main'>" + popupMain + "</div>" +
                         popupFooter +
-                    "</div>"
+                    "</div>";
 
                 };
 

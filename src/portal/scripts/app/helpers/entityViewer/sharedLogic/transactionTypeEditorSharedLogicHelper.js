@@ -71,6 +71,10 @@
                 {
                     id: 'accrued_currency',
                     name: 'Accrued Currency'
+                },
+                {
+                    id: 'currency',
+                    name: 'Currency'
                 }
             ],
             'portfolios.portfolio': [

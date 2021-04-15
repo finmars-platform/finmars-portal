@@ -180,6 +180,10 @@
                     console.log('getItemDataStore.item', scope.item)
                     console.log('getItemDataStore.componentData', scope.componentData)
 
+                    if (scope.componentData.custom_component_name) {
+                        scope.customName = scope.componentData.custom_component_name;
+                    }
+
                     var promisify = function (value) {
                         return new Promise(function (resolve) {
                             return resolve(value);

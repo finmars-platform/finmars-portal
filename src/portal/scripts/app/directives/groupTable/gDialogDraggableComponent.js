@@ -19,7 +19,8 @@
 
 				//set md-dialog-contaner overflow to visible
 				var dialogContainer = $(elem).parent('.md-dialog-container');
-				dialogContainer.addClass('viewConstructorDialog');
+				dialogContainer.addClass('viewConstructorDialog z-index-47');
+
 
 				var posY = 0, posX = 0;
 				var elemLeft = 0, elemTop = 0;
