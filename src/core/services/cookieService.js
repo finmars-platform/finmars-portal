@@ -51,7 +51,7 @@
         document.cookie = updatedCookie;
     };
 
-    var deleteCookie = function () {
+    var deleteCookie = function (name) {
         setCookie(name, "", {expires: -1})
     };
 
