@@ -792,7 +792,7 @@
 
         <div data-ng-if="isReport" class="g-cell-rows-settings">
 
-            <div class="g-cell g-row-settings gRowSettings">
+            <div class="g-cell g-row-settings">
                 <md-button ng-if="!isReport"
                            class="g-cell-button"
                            data-ng-class="{'selected': isAllStarsSelected}"
@@ -846,8 +846,8 @@
             <md-button class="favorite-toggle" data-ng-click="rowFiltersToggle()">
                 <div class="flex-row flex-i-center height-100">
 <!--                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>-->
-                    <span ng-hide="hideRowFilters" class="material-icons f-s-16">keyboard_arrow_left</span>
-                    <span ng-hide="!hideRowFilters" class="material-icons f-s-16">keyboard_arrow_right</span>
+                    <span ng-hide="hideRowSettings" class="material-icons f-s-16">keyboard_arrow_left</span>
+                    <span ng-hide="!hideRowSettings" class="material-icons f-s-16">keyboard_arrow_right</span>
                 </div>
             </md-button>
         </div>

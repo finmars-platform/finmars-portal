@@ -6,6 +6,7 @@
     'use strict';
 
     var twoFactorService = require('../../../../../profile/scripts/app/services/twoFactorServce');
+    var cookieService = require('../../../../../core/services/cookieService');
 
     module.exports = function ($scope, $mdDialog, username) {
 
@@ -26,6 +27,10 @@
             if (vm.securityCode && vm.securityCode.length === 6) {
 
                 twoFactorService.validateCode({code: vm.securityCode, username: vm.username}).then(function (data) {
+
+                    if (data.token) {
+                        cookieService.setCookie('authtoken', data.token);
+                    }
 
 
                     vm.codeIsValid = data.match;
