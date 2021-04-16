@@ -327,6 +327,8 @@
 				const assembleGridTable = function () {
 
 					const tableData = scope.item.options.tableData;
+					if (scope.item.options.label) gridTableData.name = scope.item.options.label;
+
 					let shownColIndex = 0;
 
 					tableData.forEach(column => {
