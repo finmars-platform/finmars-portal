@@ -7,6 +7,7 @@
 
     var twoFactorService = require('../../services/twoFactorServce');
     var usersService = require('../../services/usersService');
+    var authorizerService = require('../../services/authorizerService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -85,7 +86,7 @@
 
         vm.getUser = function () {
 
-            usersService.getByKey(0).then(function (data) {
+            authorizerService.getByKey(0).then(function (data) {
                 vm.user = data;
 
                 vm.generateToken();

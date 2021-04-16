@@ -69,7 +69,7 @@
         ];
 
         var performanceAttrsComp = [
-            'item_group_name', 'item_subtype_name', 'total', 'total_fixed', 'total_fx', 'principal', 'principal_fixed', 'principal_fx', 'carry', 'carry_fixed', 'carry_fx',
+            'item_group_name', 'item_subtype_name', 'pl_first_date', 'report_date', 'total', 'total_fixed', 'total_fx', 'principal', 'principal_fixed', 'principal_fx', 'carry', 'carry_fixed', 'carry_fx',
             'overheads', 'overheads_fixed', 'overheads_fx', 'total_loc', 'total_fixed_loc', 'total_fx_loc', 'principal_loc', 'principal_fixed_loc', 'principal_fx_loc',
             'carry_loc', 'carry_fixed_loc', 'carry_fx_loc', 'overheads_loc', 'overheads_fixed_loc',
 
