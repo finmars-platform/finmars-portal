@@ -3,8 +3,11 @@
 
 	const metaHelper = require('../helpers/meta.helper');
 	const md5Helper = require('../helpers/md5.helper');
+	const MultitypeFieldService = require('../services/multitypeFieldService');
 
-    module.exports = function (multitypeFieldService) {
+    module.exports = function () {
+
+    	const multitypeFieldService = new MultitypeFieldService();
 
         const onGridTableCellChange = function (originalItems, gtDataService, rowOrder, colOrder) {
 

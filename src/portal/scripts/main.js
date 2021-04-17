@@ -120,11 +120,11 @@ app.factory('Pickr', ['$window', function ($window) {
 app.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/customDialogService')]);
 app.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/bigDrawerService')]);
 
-app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
-app.service('gridTableHelperService', ['multitypeFieldService', require('./app/helpers/gridTableHelperService')]);
-app.service('evRvDomManagerService', ['$mdDialog', require('./app/services/evRvDomManagerService')]);
-app.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
 app.service('multitypeFieldService', [require('./app/services/multitypeFieldService')]);
+app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
+app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
+app.service('evRvDomManagerService', [require('./app/services/evRvDomManagerService')]);
+app.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
 
 // Dashboard
 
