@@ -498,7 +498,12 @@
 			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
 
         };
-
+		/**
+		 * Changes vm.entity, vm.tabs, vm.userInputs
+		 *
+		 * @param cTransactionData {Object} - complex transaction data
+		 * @returns {Promise<void>} - returns promise after all async functions done
+		 */
         var postRebookComplexTransactionActions = async function (cTransactionData) {
 
 			var keys = Object.keys(cTransactionData.values);
@@ -534,10 +539,6 @@
                 }
             });
 
-            // Victor 2020.12.01 #64
-            await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-            // <Victor 2020.12.01 #64>
-
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
@@ -550,7 +551,6 @@
             }
 
             dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-
             // vm.userInputs = [];
 			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
 
@@ -789,7 +789,7 @@
 
             return new Promise(function (res, rej) {
 
-                complexTransactionService.initRebookComplexTransaction(vm.entityId).then(function (cTransactionData) {
+                complexTransactionService.initRebookComplexTransaction(vm.entityId).then(async function (cTransactionData) {
 
                     vm.complexTransactionData = cTransactionData;
 
@@ -805,8 +805,10 @@
                     vm.fillTransactionInputs();
 
 
-                    postRebookComplexTransactionActions(cTransactionData);
-
+                    postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
+					// Victor 2020.12.01 #64
+					await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+					// <Victor 2020.12.01 #64>
 
                     vm.dataConstructorData = {
                         entityType: vm.entityType,
