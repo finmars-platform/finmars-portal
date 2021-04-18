@@ -151,10 +151,7 @@
 
         };
 
-        var postBookComplexTransactionActions = async function (transactionData) {
-            // Victor 2020.12.01 #64
-            await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-            // <Victor 2020.12.01 #64>
+        var postBookComplexTransactionActions = function (transactionData) {
 
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
@@ -269,7 +266,6 @@
 
             }
 
-
             mapAttributesAndFixFieldsLayout();
 
         };
@@ -300,10 +296,11 @@
 
                 console.log('contextParameters', contextParameters);
 
-                transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(function (data) {
+                transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(async function (data) {
 
                     vm.transactionType = data.transaction_type_object;
                     vm.entity = data.complex_transaction;
+
 
                     vm.specialRulesReady = true;
                     vm.readyStatus.entity = true;
@@ -318,9 +315,10 @@
 
                         vm.missingLayoutError = false;
 
-
                         postBookComplexTransactionActions(data);
-
+						// Victor 2020.12.01 #64
+						await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+						// <Victor 2020.12.01 #64>
 
                         /*vm.oldValues = {};
 

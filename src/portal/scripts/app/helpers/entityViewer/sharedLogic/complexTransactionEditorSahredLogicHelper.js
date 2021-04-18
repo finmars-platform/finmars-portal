@@ -134,7 +134,7 @@
 			const userInputsNotPlacedInTheForm = ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
 			console.log('#64 userInputsNotPlacedInTheForm', userInputsNotPlacedInTheForm)
 
-			const missingFieldsPromises =  [];
+			const missingFieldsPromises = [];
 
 			userInputsNotPlacedInTheForm
 				.filter(input => !entity[input.name] && !!input.value) // take inputs if property is empty and input have default value

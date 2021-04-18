@@ -694,8 +694,6 @@
 
             } else {
 
-                console.log('vm.fieldsTree[tab.tabOrder]', vm.fieldsTree[tab.tabOrder], row)
-
                 // TODO this line get throw
                 // Error: [$interpolate:interr] Can't interpolate: {{vm.bindFlex(tab, row, column)}}
                 // vm.fieldsTree[tab.tabOrder] have not property [row]
