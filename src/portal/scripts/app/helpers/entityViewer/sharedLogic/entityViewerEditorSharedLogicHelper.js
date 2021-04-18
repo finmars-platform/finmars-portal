@@ -380,7 +380,7 @@
 
                 } catch (error) {
 
-                    сonsole.error('resolveEditLayout error', error)
+                    console.error('resolveEditLayout error', error);
 
                     gotEditLayout = false;
                 }
