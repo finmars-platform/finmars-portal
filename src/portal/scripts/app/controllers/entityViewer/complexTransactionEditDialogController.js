@@ -499,7 +499,7 @@
 
         };
 
-        var postRebookComplexTransactionActions = function (cTransactionData) {
+        var postRebookComplexTransactionActions = async function (cTransactionData) {
 
 			var keys = Object.keys(cTransactionData.values);
 
@@ -535,7 +535,7 @@
             });
 
             // Victor 2020.12.01 #64
-            transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+            await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
             // <Victor 2020.12.01 #64>
 
             // ng-repeat with bindFieldControlDirective may not update without this
@@ -551,8 +551,8 @@
 
             dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
-            vm.userInputs = [];
-            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+            // vm.userInputs = [];
+			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
 
 			vm.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
@@ -616,7 +616,7 @@
 
         };
 
-        let recalculateTimeoutID;
+        // let recalculateTimeoutID;
 
         vm.recalculate = function (paramsObj) {
 
@@ -1126,7 +1126,8 @@
 
                 result.values = {};
 
-                vm.userInputs.forEach(function (userInput) {
+				result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
+                /* vm.userInputs.forEach(function (userInput) {
 
                     if (userInput !== null) {
                         var keys = Object.keys(vm.entity);
@@ -1137,7 +1138,7 @@
                             }
                         });
                     }
-                });
+                }); */
 
                 result.store = true;
                 result.calculate = true;
@@ -1145,9 +1146,6 @@
                 vm.processing = true;
 
                 console.log('#64 result', result);
-                // Victor 2020.12.01 #64
-                // await transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
-                // <Victor 2020.12.01 #64>
 
             	new Promise(function (resolve, reject) {
 
@@ -1329,25 +1327,22 @@
 
                     var result = entityEditorHelper.removeNullFields(vm.entity);
 
-                    result.values = {};
+					/*result.values = {};
 
-                    vm.userInputs.forEach(function (userInput) {
+					 vm.userInputs.forEach(function (userInput) {
 
-                        if (userInput !== null) {
-                            var keys = Object.keys(vm.entity);
-                            keys.forEach(function (key) {
-                                if (key === userInput.name) {
-                                    result.values[userInput.name] = vm.entity[userInput.name];
-                                }
-                            });
-                        }
-                    });
+						if (userInput !== null) {
+							var keys = Object.keys(vm.entity);
+							keys.forEach(function (key) {
+								if (key === userInput.name) {
+									result.values[userInput.name] = vm.entity[userInput.name];
+								}
+							});
+						}
+					}); */
+					result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
 
                     vm.processing = true;
-
-					// Victor 2020.12.01 #64
-                    await transactionHelper.fillMissingFieldsByDefaultValues(result, vm.userInputs, vm.transactionType);
-					// <Victor 2020.12.01 #64>
 
                     result.store = true;
                     result.calculate = true;

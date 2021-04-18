@@ -151,9 +151,9 @@
 
         };
 
-        var postBookComplexTransactionActions = function (transactionData) {
+        var postBookComplexTransactionActions = async function (transactionData) {
             // Victor 2020.12.01 #64
-            transactionHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+            await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
             // <Victor 2020.12.01 #64>
 
             // ng-repeat with bindFieldControlDirective may not update without this
@@ -173,9 +173,9 @@
 
             dataConstructorLayout = JSON.parse(JSON.stringify(transactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
-            vm.userInputs = [];
+            // vm.userInputs = [];
 
-            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
 
             /*vm.tabs.forEach(function (tab) {
                 tab.layout.fields.forEach(function (field) {
@@ -276,8 +276,6 @@
 
         vm.recalculate = function (paramsObj) {
 
-
-
 			var inputs = paramsObj.inputs;
 			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
@@ -305,9 +303,7 @@
                 transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(function (data) {
 
                     vm.transactionType = data.transaction_type_object;
-
                     vm.entity = data.complex_transaction;
-
 
                     vm.specialRulesReady = true;
                     vm.readyStatus.entity = true;
@@ -591,29 +587,30 @@
 
                 var resultEntity = vm.entity;
 
-                resultEntity.values = {};
+				/* resultEntity.values = {};
 
-                vm.userInputs.forEach(function (userInput) {
+				vm.userInputs.forEach(function (userInput) {
 
-                    if (userInput !== null) {
+					if (userInput !== null) {
 
 						Object.keys(vm.entity).forEach(function (key) {
 
-                    		if (key === userInput.name) {
+							if (key === userInput.name) {
 
-                            	resultEntity.values[userInput.name] = vm.entity[userInput.name];
+								resultEntity.values[userInput.name] = vm.entity[userInput.name];
 
-                                if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
-                                    resultEntity.values[userInput.name] = true;
-                                }
+								if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
+									resultEntity.values[userInput.name] = true;
+								}
 
-                            }
+							}
 
-                        });
+						});
 
-                    }
+					}
 
-                });
+				}); */
+				resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
 
                 resultEntity.store = true;
                 resultEntity.calculate = true;
@@ -621,10 +618,6 @@
                 console.log('resultEntity', resultEntity);
 
 				vm.processing = true;
-
-				// Victor 2020.12.01 #64
-                //await transactionHelper.fillMissingFieldsByDefaultValues(resultEntity, vm.userInputs, vm.transactionType);
-				// <Victor 2020.12.01 #64>
 
                 new Promise(function (resolve, reject) {
 
@@ -794,7 +787,7 @@
 
                     var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
-                    resultEntity.values = {};
+                    /*resultEntity.values = {};
 
                     vm.userInputs.forEach(function (userInput) {
 
@@ -806,15 +799,11 @@
                                 }
                             });
                         }
-                    });
+                    });*/
+					resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
 
                     resultEntity.store = true;
                     resultEntity.calculate = true;
-
-                    console.log('resultEntity', resultEntity);
-					// Victor 2020.12.01 #64
-                    await transactionHelper.fillMissingFieldsByDefaultValues(resultEntity, vm.userInputs, vm.transactionType);
-					// <Victor 2020.12.01 #64>
 
                     new Promise(function (resolve, reject) {
 
