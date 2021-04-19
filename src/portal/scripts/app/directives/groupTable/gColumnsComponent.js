@@ -95,6 +95,7 @@
 
                         popupData.isSubtotalAvgWeighted = false;
                         popupData.isSubtotalWeighted = false;
+                        popupData.isTemporaryWeighted = false;
                         popupData.isSubtotalSum = !popupData.isSubtotalSum;
 
                     }
@@ -111,6 +112,7 @@
 
                         popupData.isSubtotalSum = false;
                         popupData.isSubtotalAvgWeighted = false;
+                        popupData.isTemporaryWeighted = true;
                         popupData.isSubtotalWeighted = !popupData.isSubtotalWeighted
 
                     }
@@ -125,6 +127,7 @@
 
                         popupData.isSubtotalSum = false;
                         popupData.isSubtotalWeighted = false;
+                        popupData.isTemporaryWeighted = true;
                         popupData.isSubtotalAvgWeighted = !popupData.isSubtotalAvgWeighted
 
                     }
@@ -144,12 +147,10 @@
 
                     })
 
-                    console.log('#86 makePopupDataForColumns', scope.columnsPopupsData)
                 }
 
                 scope.onSubtotalTypeSelectCancel = function () {
                     makePopupDataForColumns(scope.columns);
-
                 };
 
                 function getPopupData(column, $index) {
@@ -185,6 +186,7 @@
                         isSubtotalWeighted: isSubtotalWeighted(column),
                         isSubtotalAvgWeighted: isSubtotalAvgWeighted(column),
                         subtotalFormula: getSubtotalFormula(column),
+                        isTemporaryWeighted: false,
 
                         onSubtotalSumClick: onSubtotalSumClick,
                         onSubtotalWeightedClick: onSubtotalWeightedClick,
