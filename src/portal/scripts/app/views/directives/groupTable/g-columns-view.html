@@ -870,12 +870,15 @@
                  close-on-click-outside="true"
                  prevent-default="'true'"
                  on-save-callback=""
-                 popup-data="{data: getPopupData(column, $index)}"
+                 popup-data="columnsPopupsData[column.key]"
                  offset-x="-10"
                  offset-y="-10"
                  popup-classes="getPopupMenuClasses(column)"
                  backdrop-classes="'low-z-index-backdrop'"
+                 on-popup-close="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
+
+<!--                popup-data="{data: getPopupData(column, $index)}"-->
 
                 <md-tooltip md-direction="top">
                     <span ng-bind="column.name"></span>
@@ -956,11 +959,12 @@
                  close-on-click-outside="true"
                  prevent-default="'true'"
                  on-save-callback=""
-                 popup-data="{data: getPopupData(column, $index)}"
+                 popup-data="columnsPopupsData[column.key]"
                  offset-x="-10"
                  offset-y="-10"
                  popup-classes="getPopupMenuClasses(column)"
                  backdrop-classes="'low-z-index-backdrop'"
+                 on-popup-close="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top">

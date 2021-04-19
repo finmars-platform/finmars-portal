@@ -79,7 +79,7 @@
     <md-menu-divider></md-menu-divider>
 
     <div data-ng-if="popupData.data.$index !== 0">
-        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 1)"
+        <md-button ng-click="popupData.data.onSubtotalSumClick(popupData.data.column, 1)"
                    class="popup-menu-item">
 <!--            <ng-md-icon icon="done"
                         data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 1)"
@@ -88,75 +88,30 @@
             <ng-md-icon icon="done"
                         data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 1)"
                         class="z-menu-icon"></ng-md-icon>-->
-            <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 1)">done</span>
-            <span class="material-icons" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 1)" style="visibility: hidden;">done</span>
+<!--            <span class="material-icons" data-ng-show="subtotalFormula === 1 && !isSubtotalWeighted && !isSubtotalAvgWeighted">done</span>-->
+            <span class="material-icons" data-ng-show="popupData.data.isSubtotalSum">done</span>
+            <span class="material-icons" data-ng-show="!popupData.data.isSubtotalSum" style="visibility: hidden;">done</span>
+<!--            <span class="material-icons" data-ng-show="popupData.data.isSubtotalSum">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.isSubtotalSum">done</span>-->
+
             <span>Subtotal SUM</span>
         </md-button>
     </div>
 
-<!--    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)">
-
-        <md-button aria-label="Open phone interactions menu"
-                   class="popup-menu-item"
-                   popup
-                   popup-template-url="'views/popups/entity-viewer/g-report-viewer-subtotal-weighted-popup-menu.html'"
-                   open-on="mouse_over"
-                   close-on-click-outside="true"
-                   close-on-mouse-leave="true"
-                   prevent-default="true"
-                   popup-data="popupData"
-                   position-relative-to="element"
-                   relative-popup-x="right"
-                   relative-popup-y="top"
-                   popup-classes="'g-column-context-menu-submenu-popup'"
-                   backdrop-classes="'low-z-index-backdrop'"
-                   popup-event-service="popupEventService">
-
-                <span class="material-icons" style="visibility: hidden;">done</span>
-                <span>Subtotal Weighted</span>
-                <span class="material-icons arrow-right">navigate_next</span>
-            </md-button>
-
-    </div>-->
     <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)">
 
-        <md-button ng-click="popupData.data.onSubtotalWeightedClick()"
+        <md-button ng-click="popupData.data.onSubtotalWeightedClick(popupData.data.column)"
                    class="popup-menu-item">
             <span class="material-icons" data-ng-show="popupData.data.isSubtotalWeighted">done</span>
             <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.isSubtotalWeighted">done</span>
             <span>Subtotal Weighted</span>
-<!--            <span class="material-icons arrow-right">navigate_next</span>-->
         </md-button>
 
     </div>
 
-<!--    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)">
-
-        <md-button aria-label="Open phone interactions menu"
-                   class="popup-menu-item"
-                   popup
-                   popup-template-url="'views/popups/entity-viewer/g-report-viewer-subtotal-avg-weighted-popup-menu.html'"
-                   open-on="mouse_over"
-                   close-on-click-outside="true"
-                   close-on-mouse-leave="true"
-                   prevent-default="'true'"
-                   popup-data="popupData"
-                   position-relative-to="element"
-                   relative-popup-x="right"
-                   relative-popup-y="top"
-                   popup-classes="'g-column-context-menu-submenu-popup'"
-                   backdrop-classes="'low-z-index-backdrop'"
-                   popup-event-service="popupEventService">
-            <span class="material-icons" style="visibility: hidden;">done</span>
-            <span>Subtotal Avg. Weighted</span>
-            <span class="material-icons arrow-right">navigate_next</span>
-        </md-button>
-
-    </div>-->
-
     <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)">
 
-        <md-button ng-click="popupData.data.onSubtotalAvgWeightedClick()"
+        <md-button ng-click="popupData.data.onSubtotalAvgWeightedClick(popupData.data.column)"
                    class="popup-menu-item">
             <span class="material-icons" data-ng-show="popupData.data.isSubtotalAvgWeighted">done</span>
             <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.isSubtotalAvgWeighted">done</span>
@@ -178,40 +133,67 @@
 
     <md-menu-divider data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)"></md-menu-divider>
 
-    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)">
-        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 2 + popupData.data.isSubtotalAvgWeighted * 4)"
+    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)"
+         data-ng-init="subtotalFormula = popupData.data.getSubtotalFormula(popupData.data.column)">
+
+        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 2 + 4 * popupData.data.isSubtotalAvgWeighted)"
                    class="popup-menu-item" data-ng-disabled="!popupData.data.isSubtotalWeighted && !popupData.data.isSubtotalAvgWeighted">
-            <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 2 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
-            <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 2 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
+<!--            <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 2 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 2 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>-->
+            <span class="material-icons" data-ng-show="subtotalFormula === 2 || subtotalFormula === 6">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="subtotalFormula !== 2 && subtotalFormula !== 6">done</span>
             <span>Market Value</span>
         </md-button>
+
     </div>
 
-    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)">
-        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 3 + popupData.data.isSubtotalAvgWeighted * 4)"
-        class="popup-menu-item" data-ng-disabled="!popupData.data.isSubtotalWeighted && !popupData.data.isSubtotalAvgWeighted">
-        <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 3 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
-        <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 3 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
-        <span>Market Value %</span>
+    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)"
+         data-ng-init="subtotalFormula = popupData.data.getSubtotalFormula(popupData.data.column)">
+
+        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 3 + 4 * popupData.data.isSubtotalAvgWeighted)"
+                   class="popup-menu-item" data-ng-disabled="!popupData.data.isSubtotalWeighted && !popupData.data.isSubtotalAvgWeighted">
+
+    <!--        <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 3 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 3 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>-->
+            <span class="material-icons" data-ng-show="subtotalFormula === 3 || subtotalFormula === 7">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="subtotalFormula !== 3 && subtotalFormula !== 7">done</span>
+            <span>Market Value %</span>
+
         </md-button>
+
     </div>
 
-    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)">
-        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 4 + popupData.data.isSubtotalAvgWeighted * 4)"
-        class="popup-menu-item" data-ng-disabled="!popupData.data.isSubtotalWeighted && !popupData.data.isSubtotalAvgWeighted">
-        <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 4 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
-        <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 4 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
-        <span>Exposure</span>
+    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)"
+         data-ng-init="subtotalFormula = popupData.data.getSubtotalFormula(popupData.data.column)">
+
+        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 4 + 4 * popupData.data.isSubtotalAvgWeighted)"
+                   class="popup-menu-item" data-ng-disabled="!popupData.data.isSubtotalWeighted && !popupData.data.isSubtotalAvgWeighted">
+
+    <!--        <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 4 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 4 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>-->
+            <span class="material-icons" data-ng-show="subtotalFormula === 4 || subtotalFormula === 8">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="subtotalFormula !== 4 && subtotalFormula !== 8">done</span>
+            <span>Exposure</span>
+
         </md-button>
+
     </div>
 
-    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)">
-        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 5 + popupData.data.isSubtotalAvgWeighted * 4)"
+    <div data-ng-if="popupData.data.$index !== 0 && !popupData.data.isSubtotalWeightedShouldBeExcluded(popupData.data.column)"
+         data-ng-init="subtotalFormula = popupData.data.getSubtotalFormula(popupData.data.column)">
+
+        <md-button ng-click="popupData.data.selectSubtotalType(popupData.data.column, 5 + 4 * popupData.data.isSubtotalAvgWeighted)"
         class="popup-menu-item" data-ng-disabled="!popupData.data.isSubtotalWeighted && !popupData.data.isSubtotalAvgWeighted">
-        <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 5 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
-        <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 5 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
-        <span>Exposure %</span>
+
+    <!--        <span class="material-icons" data-ng-show="popupData.data.checkSubtotalFormula(popupData.data.column, 5 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="!popupData.data.checkSubtotalFormula(popupData.data.column, 5 + popupData.data.isSubtotalAvgWeighted * 4)">done</span>-->
+
+            <span class="material-icons" data-ng-show="subtotalFormula === 5 || subtotalFormula === 9">done</span>
+            <span class="material-icons" style="visibility: hidden;" data-ng-show="subtotalFormula !== 5 && subtotalFormula !== 9">done</span>
+            <span>Exposure %</span>
+
         </md-button>
+
     </div>
 
 

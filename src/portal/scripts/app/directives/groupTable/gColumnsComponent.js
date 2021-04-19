@@ -29,6 +29,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.columns = scope.evDataService.getColumns();
+                makePopupDataForColumns(scope.columns);
 
                 scope.groups = scope.evDataService.getGroups();
                 evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
@@ -85,23 +86,73 @@
                 var dynamicAttrs = [];
                 // var keysOfColsToHide = [];
 
-                scope.isSubtotalWeighted = false;
-                scope.isSubtotalAvgWeighted = false;
 
-                scope.onSubtotalWeightedClick = function () {
-                    scope.isSubtotalAvgWeighted = false;
-                    scope.isSubtotalWeighted = !scope.isSubtotalWeighted;
-                };
+                function onSubtotalSumClick(column) {
 
-                scope.onSubtotalAvgWeightedClick = function () {
-                    scope.isSubtotalWeighted = false;
-                    scope.isSubtotalAvgWeighted = !scope.isSubtotalAvgWeighted;
+                    const popupData = scope.columnsPopupsData[column.key].data;
+
+                    if (popupData) {
+
+                        popupData.isSubtotalAvgWeighted = false;
+                        popupData.isSubtotalWeighted = false;
+                        popupData.isSubtotalSum = !popupData.isSubtotalSum;
+
+                    }
+
+                    scope.selectSubtotalType(column, 1);
+
+                }
+
+                function onSubtotalWeightedClick(column) {
+
+                    const popupData = scope.columnsPopupsData[column.key].data;
+
+                    if (popupData) {
+
+                        popupData.isSubtotalSum = false;
+                        popupData.isSubtotalAvgWeighted = false;
+                        popupData.isSubtotalWeighted = !popupData.isSubtotalWeighted
+
+                    }
+
+                }
+
+                function onSubtotalAvgWeightedClick(column) {
+
+                    const popupData = scope.columnsPopupsData[column.key].data;
+
+                    if (popupData) {
+
+                        popupData.isSubtotalSum = false;
+                        popupData.isSubtotalWeighted = false;
+                        popupData.isSubtotalAvgWeighted = !popupData.isSubtotalAvgWeighted
+
+                    }
+
                 }
 
                 // Victor 2020.12.14 #69 New report viewer design
                 scope.rowFilterColor = 'none';
 
-                scope.getPopupData = function (column, $index) {
+                scope.columnsPopupsData = null;
+                function makePopupDataForColumns(columns) {
+                    scope.columnsPopupsData = {};
+                    columns.forEach((column, index) => {
+                        scope.columnsPopupsData[column.key] = {
+                            data: getPopupData(column, index)
+                        }
+
+                    })
+
+                    console.log('#86 makePopupDataForColumns', scope.columnsPopupsData)
+                }
+
+                scope.onSubtotalTypeSelectCancel = function () {
+                    makePopupDataForColumns(scope.columns);
+
+                };
+
+                function getPopupData(column, $index) {
 
                     let data = {
                         $index: $index,
@@ -118,6 +169,8 @@
                         openColumnNumbersRenderingSettings: scope.openColumnNumbersRenderingSettings,
                         selectSubtotalType: scope.selectSubtotalType,
                         checkSubtotalFormula: scope.checkSubtotalFormula,
+                        // isSubtotalFormulaSelected: isSubtotalFormulaSelected,
+                        getSubtotalFormula: getSubtotalFormula,
                         resizeColumn: scope.resizeColumn,
                         removeColumn: scope.removeColumn,
                         unGroup: scope.unGroup,
@@ -128,10 +181,14 @@
                         reportHideSubtotal: scope.reportHideSubtotal,
                         isSubtotalWeightedShouldBeExcluded: scope.isSubtotalWeightedShouldBeExcluded,
 
-                        isSubtotalWeighted: scope.isSubtotalWeighted,
-                        isSubtotalAvgWeighted: scope.isSubtotalAvgWeighted,
-                        onSubtotalWeightedClick: scope.onSubtotalWeightedClick,
-                        onSubtotalAvgWeightedClick: scope.onSubtotalAvgWeightedClick,
+                        isSubtotalSum: isSubtotalSum(column),
+                        isSubtotalWeighted: isSubtotalWeighted(column),
+                        isSubtotalAvgWeighted: isSubtotalAvgWeighted(column),
+                        subtotalFormula: getSubtotalFormula(column),
+
+                        onSubtotalSumClick: onSubtotalSumClick,
+                        onSubtotalWeightedClick: onSubtotalWeightedClick,
+                        onSubtotalAvgWeightedClick: onSubtotalAvgWeightedClick,
 
                     };
 
@@ -495,7 +552,7 @@
 
                         scope.evDataService.setColumns(columns);
 
-                    scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
 
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -547,9 +604,34 @@
                         column.report_settings.subtotal_formula_id = type;
                     }
 
+                    makePopupDataForColumns(scope.columns);
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
                 };
+
+                function getSubtotalFormula(column) {
+                    if (column.hasOwnProperty('report_settings')) {
+                        return column.report_settings.subtotal_formula_id;
+                    }
+
+                    return null;
+                }
+
+                function isSubtotalSum(column) {
+                    const subtotalFormula = getSubtotalFormula(column);
+                    return subtotalFormula === 1;
+                }
+
+                function isSubtotalWeighted(column) {
+                    const subtotalFormula = getSubtotalFormula(column);
+                    return subtotalFormula >= 2 && subtotalFormula <= 5;
+                }
+
+                function isSubtotalAvgWeighted(column) {
+                    const subtotalFormula = getSubtotalFormula(column);
+                    return subtotalFormula >= 6 && subtotalFormula <= 9;
+                }
 
                 scope.checkSubtotalFormula = function (column, type) {
 
@@ -1571,6 +1653,7 @@
 
                         getColsAvailableForAdditions();
                         flagMissingColumns();
+                        makePopupDataForColumns(scope.columns);
 
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                         setFiltersLayoutNames()
@@ -1601,6 +1684,7 @@
 
                     scope.columns = scope.evDataService.getColumns();
                     flagMissingColumns();
+                    makePopupDataForColumns(scope.columns);
 
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                     setFiltersLayoutNames();
