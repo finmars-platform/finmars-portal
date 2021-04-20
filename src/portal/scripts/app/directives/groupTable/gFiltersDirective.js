@@ -631,7 +631,7 @@
 
 					useFromAboveFilters = scope.filters.filter((filter, index) => {
 
-						if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
+						if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
 
 							filter.filtersListIndex = index;
 							return true;
