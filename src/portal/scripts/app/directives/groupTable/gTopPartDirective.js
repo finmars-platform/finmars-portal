@@ -131,7 +131,7 @@
                     if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportFirstDatepicker')) {
                         scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
                     }
-
+					console.log("testing toppart scope.reportLayoutOptions", scope.reportLayoutOptions);
                     scope.datepickerFromDisplayOptions = {
                         position: 'left',
                         labelName: 'Date from (excl)'
@@ -139,7 +139,7 @@
 
                     scope.datepickerToDisplayOptions = {position: 'left'};
 
-                    if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
+                    /* if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
 
                         if (scope.entityType === 'transaction-report') {
                             scope.datepickerFromDisplayOptions = {
@@ -155,7 +155,7 @@
                                 inception: false
                             }
                         }
-                    }
+                    } */
                     /* < preparing data for complexZhDatePickerDirective > */
 
                 };
