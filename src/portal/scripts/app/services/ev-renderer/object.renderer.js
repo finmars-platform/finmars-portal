@@ -80,11 +80,11 @@
             result = 'deletedIcon';
         }
 
-        else if (!obj.is_enabled) {
+        else if (obj.hasOwnProperty('is_enabled') && !obj.is_enabled) {
             result = 'disabledIcon';
         }
 
-        else if (!obj.is_active) {
+        else if (obj.hasOwnProperty('is_active') && !obj.is_active) {
             result = 'inactiveIcon';
         }
 
