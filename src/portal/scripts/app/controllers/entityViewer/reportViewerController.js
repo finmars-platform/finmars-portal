@@ -964,6 +964,8 @@
                         vm.entityViewerDataService.setSplitPanelStatus(true);
                     }
 
+                    interfaceLayout.filterArea.width = 0;
+
                     // Check if there is need to solve report datepicker expression
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
