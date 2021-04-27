@@ -511,7 +511,7 @@
 							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE after removing sidebar
 
 							interfaceLayout.filterArea.collapsed = true;
-							interfaceLayout.filterArea.width = 74;
+							interfaceLayout.filterArea.width = 0;
 
 						}
 
