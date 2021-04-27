@@ -1,5 +1,4 @@
 @gRowSelectionWidth: 50px;
-@gRowSettingsWidth: 59px;
 
 .report-viewer-holder {
 
@@ -33,6 +32,17 @@
           display: block;
         }
 
+      }
+
+    }
+
+    &.g-row-settings-collapsed {
+
+      .g-row-settings {
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+        border: none;
       }
 
     }
@@ -162,6 +172,10 @@
 
   .g-wrapper .g-row-selection {
     background: transparent;
+  }
+
+  .g-row-settings {
+    padding-right: 6px;
   }
 
   .g-row {
@@ -486,11 +500,6 @@
       position: absolute;
     }
 
-    .g-row-settings:not(.closed) {
-      padding-right: 6px;
-      width: @gRowSettingsWidth;
-    }
-
     .ev-content {
       position: relative;
 
@@ -517,22 +526,35 @@
       }
 
       .g-row-selection-button {
-
         width: 17px;
         height: 17px;
         min-width: 17px;
         font-size: 15px;
         line-height: 13px;
-        border: 2px solid #747474;
+        border: 2px solid @borderPale;
         border-radius: 3px;
         box-sizing: border-box;
         background: rgba(0,0,0,.01960784);
-        margin: 8px auto 0;
+        margin: 4px auto 0;
         cursor: pointer;
 
         svg {
           width: 14px;
           height: 14px;
+        }
+
+        &.checked {
+          background-color: @orange;
+          border-color: @orange;
+
+          svg {
+            position: relative;
+            width: 19px;
+            height: 19px;
+            bottom: 4px;
+            right: 3px;
+            fill: #fff;
+          }
         }
 
       }

@@ -43,12 +43,14 @@
 
 .g-filters {
   position: relative;
-  max-height: 0;
+  height: 0;
+  overflow: hidden;
   // transition: max-height 0.5s linear;
   .new-interface();
 
   &.open-filters {
-    max-height: 300px;
+    height: auto;
+    overflow: visible;
   }
 
   .g-filter-left-part {
@@ -744,6 +746,7 @@
 
   .g-columns-holder {
     float: left;
+    white-space: nowrap;
 
     .modal-dialog-card {
       margin: 3px 0 5px;
@@ -825,7 +828,7 @@
   }
 
   .g-row-settings { // inside table
-    width: 100px;
+    width: @gRvRowSettingsWidth;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -834,12 +837,12 @@
     border-right: @gCellBorder;
     transition: width 100ms linear;
 
-    &.closed {
+    /* &.closed {
       width: 0;
       padding: 0;
       overflow: hidden;
       border-right: none;
-    }
+    } */
   }
 
   .g-row-color-picker-btn {
@@ -1094,6 +1097,7 @@
       align-items: center;
 
       padding-top: 0;
+      padding-bottom: 0;
 
       height: @g-table-header-height;
 
