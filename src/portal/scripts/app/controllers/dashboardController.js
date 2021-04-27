@@ -287,7 +287,6 @@
 
         };
 
-        // Deprecated
         vm.saveDashboardLayout = function ($event) {
 
             uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
