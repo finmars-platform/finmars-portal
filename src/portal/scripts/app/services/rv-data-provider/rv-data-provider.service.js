@@ -334,19 +334,21 @@
 
                         var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
 
-                        console.log('groupSettings', groupSettings);
+                        console.log('groupSettings.getObjects', JSON.parse(JSON.stringify(groupSettings)));
 
                         if (groupSettings.hasOwnProperty('is_open')) {
                             obj.___is_open = groupSettings.is_open;
                         }
-
+						if (parentGroup) console.log("groupSettings.getObjects parentGroup", JSON.parse(JSON.stringify(parentGroup)));
                         if (!parentGroup.___is_open) {
-                            obj.___is_open = false;
-                            groupSettings.is_open = false
+
+                        	obj.___is_open = false;
+                            groupSettings.is_open = false;
+							console.log('groupSettings.getObjects parentGroup is closed');
                             rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
 
                         }
-
+						console.log('groupSettings.getObjects obj', obj, JSON.parse(JSON.stringify(obj)));
                     }
 
                 }
@@ -470,16 +472,19 @@
 
                             var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
 
-                            console.log('groupSettings', groupSettings);
+                            console.log('groupSettings', JSON.parse(JSON.stringify(groupSettings)));
 
                             if (groupSettings.hasOwnProperty('is_open')) {
                                 obj.___is_open = groupSettings.is_open;
                             }
-
+							if (parentGroup) console.log("groupSettings parentGroup", JSON.parse(JSON.stringify(parentGroup)));
                             if (!parentGroup.___is_open) {
-                                obj.___is_open = false;
-                                groupSettings.is_open = false
+
+                            	obj.___is_open = false;
+                                groupSettings.is_open = false;
+								console.log('groupSettings parentGroup is closed');
                                 rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
+
                             }
 
 

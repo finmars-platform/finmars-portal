@@ -211,6 +211,49 @@
 
     };
 
+    var toggleColumnsVisibilityAfterGroupsFolding = function (evDataService, evEventService) {
+
+    	// var groups = evDataService.getGroups();
+		var columns = evDataService.getColumns();
+
+		var columnsVisibilityList = columns.map(column => column.isHidden);
+		var columnsVisibilityChanged = false;
+		/* var columnsChanged = false;
+		var foldedLevel;
+
+		for (var groupLevel = 1; groupLevel <= groups.length; groupLevel++) {
+
+			var unfoldedGroupRowsList = evDataHelper.getUnfoldedGroupsByLevel(groupLevel, evDataService);
+
+			if (!unfoldedGroupRowsList.length) {
+
+				foldedLevel = groupLevel;
+				break;
+
+			}
+
+		}*/
+		rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(evDataService);
+
+		columns = evDataService.getColumns();
+
+		//<editor-fold desc="Check whether hidden columns changed">
+		for (var i = 0; i < columns.length; i++) {
+
+			var columnVisibility = columnsVisibilityList[i];
+
+			if (columnVisibility !== columns[i].isHidden) {
+				columnsVisibilityChanged = true;
+				break;
+			}
+
+		}
+		//</editor-fold>
+
+		if (columnsVisibilityChanged) evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+
+	};
+
     var handleFoldButtonClick = function (clickData, evDataService, evEventService) {
 
     	var group = evDataService.getData(clickData.___parentId);
@@ -225,38 +268,56 @@
 
             console.log('handleFoldButtonClick.group type', groups[group.___level - 1])
 
-            groups[group.___level - 1].report_settings.is_level_folded = null;
+            groups[group.___level - 1].report_settings.is_level_folded = false;
 
             var groupSettings = rvDataHelper.getOrCreateGroupSettings(evDataService, group);
+			var foldingEvent = group.___is_open ? evEvents.GROUPS_LEVEL_FOLD: evEvents.GROUPS_LEVEL_UNFOLD;
 
             if (group.___is_open) {
 
                 group.___is_open = false;
 
-                groupSettings.is_open = group.___is_open
-                rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
+                groupSettings.is_open = group.___is_open;
+                /*rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
 
-                evDataService.setData(group);
+                evDataService.setData(group);*/
 
                 // console.log('folld?');
 
                 foldChildGroups(group.___id, evDataService);
 
-            } else {
+            }
+            else {
 
                 group.___is_open = true;
 
-                groupSettings.is_open = group.___is_open
-                rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
+                groupSettings.is_open = group.___is_open;
+                /*rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
 
                 evDataService.setData(group);
 
                 evDataService.setGroups(groups);
 
-                // evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+                // evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);*/
 
             }
 
+			var unfoldedGroupRowsList = evDataHelper.getUnfoldedGroupsByLevel(group.___level, evDataService);
+
+			if (!unfoldedGroupRowsList.length) { // Mark changed group and groups after it as folded
+
+				for (var i = group.___level - 1; i < groups.length; i++) {
+					groups[i].report_settings.is_level_folded = true;
+				}
+
+			}
+            // toggleColumnsVisibilityAfterGroupsFolding(evDataService, evEventService);
+
+			evDataService.setData(group);
+			evDataService.setGroups(groups);
+			rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
+
+			evEventService.dispatchEvent(foldingEvent, {updateScope: true});
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         }
@@ -1845,7 +1906,7 @@
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         calculateTotalHeight: calculateTotalHeight,
         //calculateContentWrapHeight: calculateContentWrapHeight,
-        calculateScroll: calculateScroll
+        calculateScroll: calculateScroll,
     }
 
 

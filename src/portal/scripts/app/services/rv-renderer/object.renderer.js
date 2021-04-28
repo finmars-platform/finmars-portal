@@ -380,6 +380,8 @@
 			results.push(borderBottomTransparent);
 		}
 
+
+
 		// grouping columns cells except last
     	if (groups.length && columnNumber < groups.length) {
 
@@ -444,6 +446,10 @@
 				result.push(colorNegative);
 			}
 
+		}
+
+		if (column.isHidden) {
+			result.push('display-none');
 		}
 
     	return result;

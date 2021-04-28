@@ -8,6 +8,8 @@
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
+    var localStorageService = require('../../../../../core/services/localStorageService');
 
     module.exports = function () {
         return {
@@ -41,6 +43,7 @@
 
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
                 var viewContext = scope.evDataService.getViewContext();
+                var contentType = scope.evDataService.getContentType();
 
                 var activeLayoutConfigIsSet = false;
 
@@ -256,6 +259,33 @@
                     initEventListeners();
 
 					scope.readyToRenderTable = !scope.isReport // TO DELETE after updating ev interface
+
+					if (scope.isReport) {
+
+						var listLayout = scope.evDataService.getListLayout();
+						var reportData = localStorageService.getReportDataForLayout(contentType, listLayout.user_code);
+
+						if (reportData.groupsList && reportData.groupsList.length) {
+
+							var groups = scope.evDataService.getGroups();
+
+							reportData.groupsList.forEach(groupObj => {
+
+								var group = groups.find(group => group.key === groupObj.key);
+
+								if (!group.report_settings) group.report_settings = {};
+
+								group.report_settings.is_level_folded = groupObj.report_settings.is_level_folded;
+
+							});
+
+							scope.evDataService.setGroups(groups);
+
+							rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
+
+						}
+
+					}
 
                     if (document.querySelector('body').classList.contains('filter-side-nav-collapsed')) {
 

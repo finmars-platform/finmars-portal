@@ -854,23 +854,24 @@
 
         <div class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
 
-            <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
-                 data-ng-repeat="column in groups track by column.key"
-                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged}"
-                 data-ng-style="column.style"
-                 data-column-id="{{column.___group_type_id}}"
-                 data-attr-key="{{column.key}}"
+            <div class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"
+                 ng-repeat="group in groups track by group.key"
+                 ng-hide="group.isHidden"
+                 ng-class="{'last-dragged': group.frontOptions && group.frontOptions.lastDragged}"
+                 ng-style="group.style"
+                 data-column-id="{{group.___group_type_id}}"
+                 data-attr-key="{{group.key}}"
                  draggable="{{groupsAreaDraggable}}"
 
                  popup
-                 popup-id="{{column.key}}"
-                 popup-template-url="{{getPopupMenuTemplate(column)}}"
+                 popup-id="{{group.key}}"
+                 popup-template-url="{{getPopupMenuTemplate(group)}}"
                  position-relative-to="mouse"
                  open-on="right_click"
                  close-on-click-outside="true"
                  prevent-default="'true'"
                  on-save-callback=""
-                 popup-data="{data: getPopupData(column, $index)}"
+                 popup-data="{data: getPopupData(group, $index)}"
                  offset-x="-10"
                  offset-y="-10"
                  popup-classes="'rounded-border g-column-context-menu-popup'"
@@ -878,36 +879,40 @@
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top">
-                    <span ng-bind="column.name"></span>
-                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                    <span ng-bind="group.name"></span>
+                    <span data-ng-if="group.status == 'missing'">(Deleted)</span>
                 </md-tooltip>
 
                 <div class="g-cell g-table-header-cell g-table-header-group-cell">
 
-                    <div class="g-cell-button" data-ng-if="column.report_settings.is_level_folded" data-ng-click="unfoldLevel(column, $index)">
+                    <div ng-if="group.report_settings.is_level_folded"
+                         class="g-cell-button"
+                         ng-click="unfoldLevel(group, $index)">
                         <span class="material-icons">add</span>
                     </div>
 
-                    <div class="g-cell-button" data-ng-if="!column.report_settings.is_level_folded" data-ng-click="foldLevel(column, $index)">
+                    <div ng-if="!group.report_settings.is_level_folded"
+                         class="g-cell-button"
+                         ng-click="foldLevel(group, $index)">
                         <span class="material-icons">remove</span>
                     </div>
 
                     <div class="g-group-button flex-row"
-                               data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
+                               data-ng-click="groupsSortHandler($index, group.options.sort === 'DESC'? 'ASC' : 'DESC')">
 
                         <div  class="column-name-wrapper">
 
-                            <div ng-if="!column.layout_name">
-                                <span ng-bind="column.name"></span>
-                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                            <div ng-if="!group.layout_name">
+                                <span ng-bind="group.name"></span>
+                                <span data-ng-if="group.status == 'missing'">(Deleted)</span>
                             </div>
 
-                            <div ng-if="column.layout_name">
-                                <span ng-bind="column.layout_name"></span>
-                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                            <div ng-if="group.layout_name">
+                                <span ng-bind="group.layout_name"></span>
+                                <span data-ng-if="group.status == 'missing'">(Deleted)</span>
                             </div>
 
-                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">
+                            <span data-ng-if="group.manual_sort_layout_user_code" class="column-manual-sort-icon">
                                 m
                                  <md-tooltip md-direction="top">
                                        Manual Sorting Activated
@@ -916,8 +921,8 @@
 
                             <div class="sort">
 
-                                <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
-                                <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+                                <span data-ng-show="group.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
+                                <span data-ng-show="group.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
 
                             </div>
 
@@ -933,7 +938,7 @@
                      ev-event-service="evEventService"></div>
 
                 <div class="g-table-header-drop gDraggableHeadArea"
-                     data-attr-key="{{column.key}}"></div>
+                     data-attr-key="{{group.key}}"></div>
 
             </div>
 
@@ -941,13 +946,15 @@
 
         <div class="flex-row width-100 g-cols-holder gColumnsHolder gcAreaDnD">
 <!--            data-ng-repeat="column in notGroupingColumns track by column.key"-->
-            <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
-                 data-ng-repeat="column in notGroupingColumns track by column.key"
-                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged}"
-                 data-ng-style="column.style"
+            <div class="g-table-header-cell-wrapper gColumnElem gDraggableHead gcAreaDnD"
+                 ng-repeat="column in notGroupingColumns track by column.key"
+                 ng-hide="column.isHidden"
+                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged}"
+                 ng-style="column.style"
                  data-column-id="{{column.___column_id}}"
                  data-attr-key="{{column.key}}"
                  draggable="true"
+
                  popup
                  popup-id="{{column.key}}"
                  popup-template-url="{{getPopupMenuTemplate(column)}}"

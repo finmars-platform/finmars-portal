@@ -399,6 +399,10 @@
 			result.push(borderClasses);
 		}
 
+		if (column.isHidden) {
+			result.push('display-none');
+		}
+
 		return result;
 
 	}

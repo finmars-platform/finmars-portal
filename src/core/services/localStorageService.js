@@ -3,6 +3,7 @@
     'use strict';
 
     let UMuM = ''; // <user.id>_<masterUser.id>_<member.id>
+	const noUMuMErrorMessage = "No user, master user or/and member set";
 
     let setUMuM = function (userId, masterUserId, memberId) {
 
@@ -219,6 +220,70 @@
 
     };
 
+	const cacheReportData = function (reportData) {
+
+		if (UMuM) {
+
+			const storageKey = UMuM + '_report_data';
+
+			localStorage.setItem(storageKey, JSON.stringify(reportData));
+
+		} else {
+			throw(noUMuMErrorMessage);
+		}
+
+	};
+
+	const getReportData = function () {
+
+		if (UMuM) {
+
+			const storageKey = UMuM + '_report_data';
+			const storageValue = localStorage.getItem(storageKey);
+			let reportData = {};
+
+			if (storageValue) reportData = JSON.parse(storageValue);
+
+			return reportData;
+
+		} else {
+			throw(noUMuMErrorMessage);
+		}
+
+	};
+
+	const getReportDataForLayout = function (contentType, layoutUserCode) {
+
+		const reportData = getReportData();
+
+		if (reportData[contentType] && reportData[contentType][layoutUserCode]) {
+
+			return reportData[contentType][layoutUserCode];
+
+		}
+
+		return {};
+
+	};
+
+	const cacheReportDataForLayout = function (contentType, layoutUserCode, reportData) {
+
+		const reportsData = getReportData();
+
+		if (!reportsData[contentType]) {
+			reportsData[contentType] = {};
+		}
+
+		if (!reportsData[contentType][layoutUserCode]) {
+			reportsData[contentType][layoutUserCode] = {};
+		}
+
+		reportsData[contentType][layoutUserCode] = reportData;
+
+		cacheReportData(reportsData);
+
+	};
+
     module.exports = {
 
 		setUMuM: setUMuM,
@@ -227,7 +292,12 @@
         getDefaultLayout: getDefaultLayout,
         cacheLayout: cacheLayout,
         getCachedLayout: getCachedLayout,
-        deleteLayoutFromCache: deleteLayoutFromCache
+        deleteLayoutFromCache: deleteLayoutFromCache,
+
+		cacheReportData: cacheReportData,
+		getReportData: getReportData,
+		getReportDataForLayout: getReportDataForLayout,
+		cacheReportDataForLayout: cacheReportDataForLayout
 
     }
 
