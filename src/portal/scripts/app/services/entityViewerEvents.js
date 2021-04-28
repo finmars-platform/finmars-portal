@@ -35,7 +35,6 @@ module.exports = {
     'GROUPS_LEVEL_FOLD': 'GROUPS_LEVEL_FOLD',
     'GROUPS_LEVEL_UNFOLD': 'GROUPS_LEVEL_UNFOLD',
 
-
     'UPDATE_EV_UI': 'UPDATE_EV_UI',
     'TOGGLE_FILTER_AREA': 'TOGGLE_FILTER_AREA',
     'TOGGLE_FILTER_BLOCK': 'TOGGLE_FILTER_BLOCK', // Victor 2021.01.06 #69 new report viewer interface toggle filter block visibility
