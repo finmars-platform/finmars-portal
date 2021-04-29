@@ -1114,6 +1114,18 @@
       position: relative;
       width: @g-table-header-height;
       border-right: 1px solid @g-table-border-color;
+
+      .md-checked {
+
+        .md-container .md-icon {
+          &:after {
+            top: 0;
+            bottom: 0;
+            left: 5px;
+          }
+        }
+
+      }
     }
 
     md-checkbox {
