@@ -885,8 +885,14 @@
       color: #a5d9c9;
     }
 
+    &.g-cell-button {
+      .label-icon {
+        color: @gray;
+      }
+    }
+
     .label-icon {
-      color: #dbdbdb;
+      color: @gCellBroderColor;
     }
 
     .arrow-icon {
@@ -1116,7 +1122,7 @@
       .md-icon {
         width: 17px;
         height: 17px;
-        border-color: @g-table-border-color;
+        border: 2px solid @gray;
         border-radius: 4px;
       }
 
