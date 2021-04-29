@@ -730,9 +730,11 @@
 
                         if (action === 'rebook_transaction') {
 
+                            var complex_transaction_id = activeObject['complex_transaction.id'] || activeObject['complex_transaction']
+
                             var locals = {
                                 entityType: 'complex-transaction',
-                                entityId: activeObject['complex_transaction.id'],
+                                entityId: complex_transaction_id,
                                 data: {}
                             };
 
