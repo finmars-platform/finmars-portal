@@ -3322,6 +3322,12 @@ button.md-raised.md-warn.md-button {
     }
   }
 
+  .complex-datepicker-date-fields-divider {
+    position: relative;
+    bottom: 8px;
+    margin: 0 9px;
+  }
+
   .complex-datepicker-date-input-holder {
     position: relative;
     width: 145px;
@@ -3414,6 +3420,30 @@ button.md-raised.md-warn.md-button {
         color: @gray;
       }
 
+      .pmu-months, .pmu-years {
+        .pmu-button {
+          width: 46px;
+          height: 47px;
+          margin: 5px;
+          line-height: 48px;
+          border-radius: 100%;
+          color: #000;
+
+          &.pmu-selected {
+            background-color: @orange;
+            color: #fff;
+
+            &:hover {
+              opacity: .5;
+            }
+          }
+
+          &:not(.pmu-selected):hover {
+            background-color: @paleOrange;
+          }
+        }
+      }
+
       .pmu-day-of-week {
         padding: 0 13px;
         border-bottom: 2px solid @borderPale;
@@ -3443,17 +3473,15 @@ button.md-raised.md-warn.md-button {
             visibility: hidden;
           }
 
-          // Separate calendars
-          /*&.pmu-selected {
-            background: @orange;
-            color: #fff;
-          }*/
-          // < Separate calendars >
-
-          &.pmu-selected, &.custom-pmu-selected {
+          &.pmu-selected {
             background: @orange;
             color: #fff;
           }
+
+          /* &.pmu-selected, &.custom-pmu-selected {
+            background: @orange;
+            color: #fff;
+          } */
 
           &:not(.pmu-selected):hover {
             background-color: @paleOrange;
@@ -3496,6 +3524,7 @@ button.md-raised.md-warn.md-button {
         &:hover {
           color: @orange;
         }
+
       }
 
       .pmu-next {
@@ -3550,25 +3579,37 @@ button.md-raised.md-warn.md-button {
 
         } */
         .pmu-button.pmu-selected:not(.custom-pmu-date-from-to) {
-          // Separate calendars
-          width: 44px;
-          background-color: #fcd7ca;
-          border-radius: 0;
-          margin-right: 0;
-          margin-left: 0;
-          // < Separate calendars >
 
           &.custom-pmu-date-from {
             background-color: @orange;
-            border-top-left-radius: 100%;
-            border-bottom-left-radius: 100%;
+            /*border-top-left-radius: 100%;
+            border-bottom-left-radius: 100%;*/
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            margin-right: 0;
           }
 
           &.custom-pmu-date-to {
             background-color: @orange;
-            border-top-right-radius: 100%;
-            border-bottom-right-radius: 100%;
+            /*border-top-right-radius: 100%;
+            border-bottom-right-radius: 100%;*/
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            margin-left: 0;
           }
+
+        }
+
+        .pmu-button:not(.pmu-selected) {
+
+          &.custom-pmu-day-in-range {
+            width: 44px;
+            background-color: #fcd7ca;
+            border-radius: 0;
+            margin-right: 0;
+            margin-left: 0;
+          }
+
         }
 
       }

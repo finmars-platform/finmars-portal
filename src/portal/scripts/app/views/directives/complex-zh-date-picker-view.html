@@ -1,4 +1,4 @@
-<div class="complex-datepicker-wrapper">
+<div class="complex-datepicker-wrapper" ng-class="{'range-of-dates': rangeOfDates}">
     <md-button popup
                popup-template-url="'views/popups/complex-zh-datepicker-popup-view.html'"
                popup-data="popupData"
@@ -11,7 +11,7 @@
                on-cancel="onPopupCancel()"
                class="complex-datepicker-popup-btn">
         <span ng-bind="date"></span>
-        <span ng-if="rangeOfDates"> - <span ng-bind="dateTo"></span></span>
+        <span ng-if="rangeOfDates && secondDate">&nbsp;- <span ng-bind="secondDate"></span></span>
         <span class="material-icons closed-selector-icon">arrow_drop_down</span>
     </md-button>
     <!-- <div ng-hide="datepickerOptions.datepickerMode === 'inception'">
