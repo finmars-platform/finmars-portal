@@ -11,6 +11,8 @@
 	const popupEvents = require('../services/events/popupEvents');
 	const evEvents = require('../services/entityViewerEvents');
 
+	const toastNotificationService = require('../../../../core/services/toastNotificationService');
+
 	module.exports = function ($mdDialog, pickmeup) {
 
 		return {
@@ -18,8 +20,8 @@
 			scope: {
 				date: '=', // also used as dateFrom if datepicker in rangeOfDates mode
 				datepickerOptions: '=',
-				dateTo: '=',
-				datepickerToOptions: '=',
+				secondDate: '=',
+				secondDatepickerOptions: '=',
 				evDataService: '=',
 				evEventService: '=',
 				attributeDataService: '=',
@@ -27,18 +29,21 @@
 			},
 			templateUrl: 'views/directives/complex-datepicker-view.html',
 			link: function (scope, elem, attrs) {
-				console.log("testing complexDatepickerDirective date", scope.date, scope.datepickerOptions);
-				console.log("testing complexDatepickerDirective dateTo", scope.dateTo, scope.datepickerToOptions);
-				scope.rangeOfDates = scope.dateTo !== undefined;
-				scope.dateIsDisabled = false;
+
+				scope.rangeOfDates = scope.secondDate !== undefined;
 
 				const entityType = scope.evDataService.getEntityType();
 				const isReport = metaService.isReport(entityType);
+				const pickmeupOptions = {
+					default_date: false,
+					flat: true,
+					format: 'Y-m-d'
+				}
 
-				let firstCalendarElem, secondCalendarElem;
+				let firstCalendarElem;
+				let firstDate, secondDate, secondCalendarElem;
 				let useFromAboveEventIndex, attributeKey;
 
-				console.log("testing scope.datepickerOptions", scope.datepickerOptions);
 				scope.openEditExpressionDialog = function ($event, dateNumber) {
 
 					/* if (scope.datepickerOptions.datepickerMode !== 'expression') {
@@ -55,10 +60,10 @@
 					let datepickerOptsProp = 'datepickerOptions';
 
 					if (dateNumber === 2) {
-						dateProp = 'dateTo';
-						datepickerOptsProp = 'datepickerToOptions';
+						dateProp = 'secondDate';
+						datepickerOptsProp = 'secondDatepickerOptions';
 					}
-					console.log("testing openEditExpressionDialog", dateProp, datepickerOptsProp);
+
 					const datepickerOptionsCopy = JSON.parse(JSON.stringify(scope[datepickerOptsProp]));
 
 					let eeData = {returnExpressionResult: true};
@@ -84,16 +89,11 @@
 						}
 
 					})
-					.then(function (res) {
+					.then(res => {
 
 						if (res.status === 'agree') {
 
 							scope[datepickerOptsProp].expression = res.data.item.expression;
-
-							var expressionData = {
-								expression: scope[datepickerOptsProp].expression,
-								is_eval: true
-							};
 
 							// if no expression entered, turn off expression mode
 							scope[datepickerOptsProp].datepickerMode = 'datepicker';
@@ -102,32 +102,61 @@
 
 								scope[datepickerOptsProp].datepickerMode = 'expression';
 
+								const expressionData = {
+									expression: scope[datepickerOptsProp].expression,
+									is_eval: true
+								};
+
 								expressionService.getResultOfExpression(expressionData).then(function (resData) {
 
-									scope[datepickerOptsProp].date = resData.result;
+									if (moment(resData.result, 'YYYY-MM-DD', true).isValid()) {
 
-									scope[dateProp] = resData.result;
-									pickmeup(firstCalendarElem).set_date(new Date(scope[dateProp]));
+										scope[dateProp] = resData.result;
+										scope[datepickerOptsProp].date = resData.result;
 
-									scope.$apply();
+										var exprDate = new Date(scope[dateProp]);
 
-									if (scope.callbackMethod) scope.callbackMethod();
+										if (dateNumber === 1) {
+
+											firstDate = exprDate;
+											pickmeup(firstCalendarElem).set_date(exprDate);
+											if (scope.rangeOfDates) pickmeup(secondCalendarElem).update();
+
+										} else if (dateNumber === 2) {
+
+											secondDate = exprDate;
+											pickmeup(secondCalendarElem).set_date(exprDate);
+											if (scope.rangeOfDates) pickmeup(firstCalendarElem).update();
+
+										}
+
+										scope.$apply();
+										// if (scope.callbackMethod) scope.callbackMethod();
+
+									} else {
+
+										const errorMessage = `Invalid ${dateNumber === 2 ? 'second' : 'first'} date`;
+										toastNotificationService.error(errorMessage);
+										/* scope[dateProp] = null;
+										scope[datepickerOptsProp].date = null;
+
+										if (dateNumber === 1) {
+											firstDate = null;
+											pickmeup(firstCalendarElem).set_date();
+											if (scope.rangeOfDates) pickmeup(secondCalendarElem).update();
+
+										} else {
+											secondDate = null;
+											pickmeup(firstCalendarElem).update();
+											pickmeup(secondCalendarElem).set_date();
+										} */
+
+									}
 
 								})
 								.catch(error => {
-
-									$mdDialog.show({
-										controller: 'WarningDialogController as vm',
-										templateUrl: 'views/dialogs/warning-dialog-view.html',
-										clickOutsideToClose: false,
-										locals: {
-											warning: {
-												title: 'Error',
-												description: 'Invalid expression'
-											}
-										}
-									});
-
+									const errorMessage = `Invalid expression for ${dateNumber === 2 ? 'second' : 'first'} date`;
+									toastNotificationService.error(errorMessage);
 								});
 
 							}
@@ -141,19 +170,18 @@
 				/* const onDateFromPickmeupChange = event => {
 
 					let datesRange = [];
-					console.log("testing on date from event", event);
+
 					const dateFrom = event.detail.date[0];
 					const secondCalendarDates = pickmeup(secondCalendarElem).get_date();
-					console.log("testing on date from secondCalendarDates", secondCalendarDates);
-					const dateTo = secondCalendarDates[1];
+					const secondDate = secondCalendarDates[1];
 					// const dateFrom = firstCalendarDates[0];
 
-					datesRange.push(dateTo);
+					datesRange.push(secondDate);
 					datesRange.push(dateFrom);
 
 					let reversedDatesRange = [...[], ...datesRange];
 					reversedDatesRange.reverse();
-					console.log("testing on date from", datesRange, reversedDatesRange);
+
 					pickmeup(firstCalendarElem).set_date(datesRange);
 					pickmeup(secondCalendarElem).set_date(reversedDatesRange);
 
@@ -165,12 +193,12 @@
 
 					const firstCalendarDates = pickmeup(firstCalendarElem).get_date();
 					const dateFrom = firstCalendarDates[0];
-					const dateTo = event.detail.date[1];
+					const secondDate = event.detail.date[1];
 					// const dateFrom = firstCalendarDates[0];
 
 					datesRange.push(dateFrom);
-					datesRange.push(dateTo);
-					console.log("testing on date to", datesRange);
+					datesRange.push(secondDate);
+
 					pickmeup(firstCalendarElem).set_date(datesRange);
 					pickmeup(secondCalendarElem).set_date(datesRange);
 
@@ -186,8 +214,8 @@
 
 					if (dateNumber === 2) {
 
-						dateProp = 'dateTo';
-						datepickerOptsProp = 'datepickerToOptions';
+						dateProp = 'secondDate';
+						datepickerOptsProp = 'secondDatepickerOptions';
 						secondCalendarElem = elem[0].querySelector(".secondCalendar");
 						calendarElem = secondCalendarElem;
 
@@ -201,14 +229,15 @@
 					} */
 					firstCalendarElem = elem[0].querySelector(".firstCalendar");
 
-					pickmeup(firstCalendarElem, {
-						date: new Date(scope.date),
-						flat: true,
-						format: 'Y-m-d'
-					});
+					const pOpts = {
+						...{date: new Date(scope.date)},
+						...pickmeupOptions
+					}
+                    // console.log("testing pOpts", pOpts);
+					pickmeup(firstCalendarElem, pOpts);
 
 					/* calendarElem.addEventListener("pickmeup-change", event => {
-						console.log("testing pickmeup-change event", event);
+
 						scope[dateProp] = event.detail.formatted_date;
 						scope[datepickerOptsProp].datepickerMode = 'datepicker';
 
@@ -217,8 +246,8 @@
 					}); */
 
 					firstCalendarElem.addEventListener("pickmeup-change", event => {
-						console.log("testing pickmeup-change event", event);
 						// firstDate = event.detail.date;
+						firstDate = event.detail.date;
 						scope.date = event.detail.formatted_date;
 
 						scope.datepickerOptions.datepickerMode = 'datepicker';
@@ -229,7 +258,7 @@
 
 				};
 
-				const getSelectedDatesForPickmeup = function () {
+				/* const getSelectedDatesForPickmeup = function () {
 
 					let dateFrom;
 
@@ -237,34 +266,34 @@
 						dateFrom = new Date(scope.date);
 					}
 
-					let dateTo;
+					let secondDate;
 
-					if (moment(scope.dateTo, 'YYYY-MM-DD', true).isValid()) {
-						dateTo = new Date(scope.dateTo);
+					if (moment(scope.secondDate, 'YYYY-MM-DD', true).isValid()) {
+						secondDate = new Date(scope.secondDate);
 					}
 
 					// if only one date selected, dates range is this one date
-					if (dateFrom && !dateTo) dateTo = dateFrom;
-					if (!dateFrom && dateTo)  dateFrom = dateTo;
+					if (dateFrom && !secondDate) secondDate = dateFrom;
+					if (!dateFrom && secondDate)  dateFrom = secondDate;
 
-					if (dateFrom && dateTo) return [dateFrom, dateTo];
+					if (dateFrom && secondDate) return [dateFrom, secondDate];
 
 					return [];
 
 				};
 
 				const dayRenderFn = date => {
-					// console.log("testing dayRenderFn", scope.date, scope.dateTo);
+
 					const ymdDate = moment(date).format('YYYY-MM-DD');
 
-					if (ymdDate === scope.date && ymdDate === scope.dateTo) {
+					if (ymdDate === scope.date && ymdDate === scope.secondDate) {
 						return {class_name: "custom-pmu-date-from-to"};
 					}
 
 					if (ymdDate === scope.date) {
 						return {class_name: "custom-pmu-date-from"};
 
-					} else if (ymdDate === scope.dateTo) {
+					} else if (ymdDate === scope.secondDate) {
 						return {class_name: "custom-pmu-date-to"};
 					}
 
@@ -291,34 +320,33 @@
 					pickmeup(firstCalendarElem, pickmeupOpts);
 
 					firstCalendarElem.addEventListener('pickmeup-change', event => {
-						console.log("testing event", event);
-						/* const dateFrom = new Date(scope.date);
+
+						/!* const dateFrom = new Date(scope.date);
 						if (event.detail.formatted_date[0] === event.detail.formatted_date[1] &&
 							event.detail.date[1] > dateFrom) {
 
 							const datesRange = [dateFrom, event.detail.date[1]];
 
 							pickmeup(firstCalendarElem).set_date(datesRange);
-							scope.dateTo = event.detail.formatted_date[1];
+							scope.secondDate = event.detail.formatted_date[1];
 							// pickmeup(firstCalendarElem).update();
 
-						}*/
+						}*!/
 
-						/* if (scope.date !== event.detail.formatted_date[0] &&
+						/!* if (scope.date !== event.detail.formatted_date[0] &&
 							event.detail.date[0] < dateFrom) {
-							console.log("testing event1");
+
 							const datesRange = [event.detail.date[0], event.detail.date[0]];
 							scope.date = event.detail.formatted_date[0];
-							scope.dateTo = event.detail.formatted_date[0];
-							console.log("testing event1 datesRange", datesRange);
+							scope.secondDate = event.detail.formatted_date[0];
+
 							scope.$apply();
 
 							// pickmeup(firstCalendarElem).set_date(datesRange);
 							pickmeup(firstCalendarElem).set_date(event.detail.date[0]);
 
-						} */
+						} *!/
 
-						console.log("testing event2");
 						const formattedDatesList = event.detail.formatted_date;
 
 						if (scope.date !== formattedDatesList[0]) {
@@ -327,10 +355,10 @@
 
 						scope.date = formattedDatesList[0];
 
-						if (scope.dateTo !== formattedDatesList[1]) {
+						if (scope.secondDate !== formattedDatesList[1]) {
 
-							scope.datepickerToOptions.datepickerMode = 'datepicker';
-							scope.dateTo = formattedDatesList[1];
+							scope.secondDatepickerOptions.datepickerMode = 'datepicker';
+							scope.secondDate = formattedDatesList[1];
 
 						}
 
@@ -338,21 +366,46 @@
 
 					});
 
-				};
+				}; */
 
-				/*
-				// Separate calendars
+				const dayRenderFn = date => {
 
-				let firstDate;
+					if (firstDate && secondDate) {
 
-				if (moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
-					firstDate = new Date(scope.date);
-				}
+						const dateFrom = firstDate > secondDate ? secondDate : firstDate;
+						const dateTo = firstDate > secondDate ? firstDate : secondDate;
+						/* const dateTime = date.getTime();
+						const firstDateTime = firstDate.getTime();
+						const secondDateTime = secondDate.getTime(); */
+						const ymdDate = moment(date).format('YYYY-MM-DD');
+						/* const ymdFirstDate = moment(firstDate).format('YYYY-MM-DD');
+						const ymdSecondDate = moment(secondDate).format('YYYY-MM-DD'); */
 
-				let secondDate;
+						if (ymdDate === moment(dateFrom).format('YYYY-MM-DD') &&
+							ymdDate === moment(dateTo).format('YYYY-MM-DD')) {
 
-				if (scope.rangeOfDates && moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
-					secondDate = new Date(scope.dateTo);
+							return {class_name: "custom-pmu-day-in-range"}
+
+						}
+						else if (ymdDate === moment(dateFrom).format('YYYY-MM-DD')) {
+							return {class_name: "custom-pmu-date-from custom-pmu-day-in-range"};
+
+						} else if (ymdDate === moment(dateTo).format('YYYY-MM-DD')) {
+							return {class_name: "custom-pmu-date-to custom-pmu-day-in-range"};
+						}
+
+						if (dateFrom < date && date < dateTo) {
+							return {class_name: "custom-pmu-day-in-range"};
+						}
+
+					}
+					/*if (firstDate && secondDate &&
+						firstDate < date && date < secondDate) {
+						return {class_name: "custom-pmu-day-in-range"}
+					}*/
+
+					return {};
+
 				}
 
 				const initRangeOfDatesCalendars = function () {
@@ -360,49 +413,19 @@
 					firstCalendarElem = elem[0].querySelector(".firstCalendar");
 					secondCalendarElem = elem[0].querySelector(".secondCalendar");
 
-					const dayRenderFn = date => {
-
-						if (firstDate && secondDate) {
-
-							/!* const dateTime = date.getTime();
-							const firstDateTime = firstDate.getTime();
-							const secondDateTime = secondDate.getTime(); *!/
-							const ymdDate = moment(date).format('YYYY-MM-DD');
-							/!* const ymdFirstDate = moment(firstDate).format('YYYY-MM-DD');
-							const ymdSecondDate = moment(secondDate).format('YYYY-MM-DD');
-							console.log("testing dayRenderFn", ymdDate, ymdFirstDate, ymdSecondDate); *!/
-
-							// Separate calendars
-							/!*if (ymdDate === scope.date || ymdDate === scope.dateTo) {
-								return {class_name: "custom-pmu-selected"};
-
-							} else if (firstDate < date && date < secondDate) {
-								return {class_name: "custom-pmu-day-in-range"};
-							}*!/
-							// < Separate calendars >
-
-						}
-						/!*if (firstDate && secondDate &&
-							firstDate < date && date < secondDate) {
-							console.log("testing dayRenderFn", firstDate, secondDate, date);
-							return {class_name: "custom-pmu-day-in-range"}
-
-						}*!/
-
-						return {};
-
+					const pOpts = {
+						...{
+							date: new Date(scope.date),
+							render: dayRenderFn
+						},
+						...pickmeupOptions
 					}
 
-					pickmeup(firstCalendarElem, {
-						date: new Date(scope.date),
-						flat: true,
-						format: 'Y-m-d',
-						render: dayRenderFn
-					});
+					pickmeup(firstCalendarElem, pOpts);
 
 					// firstCalendarElem.addEventListener("pickmeup-change", onDateFromPickmeupChange);
 					firstCalendarElem.addEventListener("pickmeup-change", event => {
-						console.log("testing pickmeup-change event", event);
+
 						firstDate = event.detail.date;
 						scope.date = event.detail.formatted_date;
 
@@ -413,20 +436,23 @@
 
 					});
 
-					pickmeup(secondCalendarElem, {
-						date: new Date(scope.dateTo),
-						flat: true,
-						format: 'Y-m-d',
-						render: dayRenderFn
-					});
+					const pOpts2 = {
+						...{
+							date: new Date(scope.secondDate),
+							render: dayRenderFn
+						},
+						...pickmeupOptions
+					}
+
+					pickmeup(secondCalendarElem, pOpts2);
 
 					// secondCalendarElem.addEventListener("pickmeup-change", onDateToPickmeupChange);
 					secondCalendarElem.addEventListener("pickmeup-change", event => {
-						console.log("testing pickmeup-change event", event);
-						secondDate = event.detail.date;
-						scope.dateTo = event.detail.formatted_date;
 
-						scope.datepickerToOptions.datepickerMode = 'datepicker';
+						secondDate = event.detail.date;
+						scope.secondDate = event.detail.formatted_date;
+
+						scope.secondDatepickerOptions.datepickerMode = 'datepicker';
 
 						scope.$apply();
 						pickmeup(firstCalendarElem).update();
@@ -434,48 +460,72 @@
 					});
 
 				};
-				// < Separate calendars >
-				*/
 
 				const onDateInputChange = function (date) {
-					console.log("testing onDateInputChange triggered", date);
+					// console.log("testing onDateInputChange", date);
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
-						// firstDate = new Date(date);
-						pickmeup(firstCalendarElem).set_date(new Date(date));
+						firstDate = new Date(date);
+
+						pickmeup(firstCalendarElem).set_date(firstDate);
+						if (scope.rangeOfDates) pickmeup(secondCalendarElem).update();
 
 						// if previously date was taken from expression, and now date field changed
 						scope.datepickerOptions.datepickerMode = 'datepicker';
 
-						// if (scope.rangeOfDates) pickmeup(secondCalendarElem).update();
-						console.log("testing onDateInputChange datepicker", scope.datepickerOptions.datepickerMode);
-					}
+					} else if (date === null) {
 
+						firstDate = null;
+						pickmeup(firstCalendarElem).set_date();
+						// console.log("testing onDateInputChange empty date");
+						// pickmeup(firstCalendarElem).update();
+					}
+					// console.log("testing onDateInputChange end", scope.date);
 				};
 
-				const onDateRangeInputChange = function (date, dateNumber) {
+				scope.onSecondDateInputChange = function (date) {
 
-					// const optionsProp = dateNumber === 2 ? 'datepickerToOptions' : 'datepickerOptions';
+					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
+
+						secondDate = new Date(date);
+
+						pickmeup(firstCalendarElem).update();
+						pickmeup(secondCalendarElem).set_date(secondDate);
+
+						// if previously date was taken from expression, and now date field changed
+						scope.secondDatepickerOptions.datepickerMode = 'datepicker';
+
+					} else if (date === null) {
+						secondDate = null;
+						scope.secondDate = null;
+						pickmeup(secondCalendarElem).set_date();
+					}
+					// console.log("testing onSecondDateInputChange end", scope.secondDate);
+				};
+
+				/* const onDateRangeInputChange = function (date, dateNumber) {
+
+					// const optionsProp = dateNumber === 2 ? 'secondDatepickerOptions' : 'datepickerOptions';
 					let firstDate, secondDate, optionsProp;
 					if (dateNumber === 2) {
 
-						/*firstDate = new Date(scope.date);
-						secondDate = new Date(date);*/
-						scope.dateTo = date;
-						optionsProp = 'datepickerToOptions';
+						/!*firstDate = new Date(scope.date);
+						secondDate = new Date(date);*!/
+						scope.secondDate = date;
+						optionsProp = 'secondDatepickerOptions';
 
 					} else {
 
-						/*firstDate = new Date(date);
-						secondDate = new Date(scope.dateTo);*/
+						/!*firstDate = new Date(date);
+						secondDate = new Date(scope.secondDate);*!/
 						scope.date = date;
 						optionsProp = 'datepickerOptions';
 
 					}
-					// console.log("testing onDateRangeInputChange", scope.date, firstDate, scope.dateTo, secondDate);
+
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
-						const datesRange = [new Date(scope.date), new Date(scope.dateTo)];
+						const datesRange = [new Date(scope.date), new Date(scope.secondDate)];
 						// firstDate = new Date(date);
 						pickmeup(firstCalendarElem).set_date(datesRange);
 
@@ -483,10 +533,11 @@
 						scope[optionsProp].datepickerMode = 'datepicker';
 
 						// if (scope.rangeOfDates) pickmeup(secondCalendarElem).update();
-						console.log("testing onDateInputChange datepicker mode", scope[optionsProp].datepickerMode);
+
 					}
 
-				};
+				}; */
+
 
 				const disableUseFromAboveMode = function () {
 
@@ -524,9 +575,36 @@
 						scope.dateIsDisabled = false;
 						firstCalendarElem.classList.remove("pmu-calendar-disabled");
 
+						if (scope.rangeOfDates) {
+							scope.secondDateIsDisabled = false;
+							secondCalendarElem.classList.remove("pmu-calendar-disabled");
+						}
+
 						disableUseFromAboveMode();
 
 					}
+
+				};
+
+				const applyFirstDate = function (date) {
+					firstDate = date;
+					scope.date = moment(date).format('YYYY-MM-DD');
+					pickmeup(firstCalendarElem).set_date(firstDate);
+				};
+
+				const applySecondDate = function (date) {
+					secondDate = date;
+					scope.secondDate = moment(date).format('YYYY-MM-DD');
+					pickmeup(secondCalendarElem).set_date(secondDate);
+				};
+
+				const disableFieldsAndCalendars = function () {
+
+					scope.dateIsDisabled = true;
+					firstCalendarElem.classList.add("pmu-calendar-disabled");
+
+					scope.secondDateIsDisabled = true;
+					secondCalendarElem.classList.add("pmu-calendar-disabled");
 
 				};
 
@@ -538,37 +616,203 @@
 
 							scope.datepickerOptions.datepickerMode = 'today';
 							scope.datepickerOptions.expression = 'now()';
-							scope.date = moment(new Date()).format('YYYY-MM-DD');
 
+							scope.date = moment(new Date()).format('YYYY-MM-DD');
 							pickmeup(firstCalendarElem).set_date(new Date(scope.date));
 
 							scope.dateIsDisabled = true;
 							firstCalendarElem.classList.add("pmu-calendar-disabled");
 
-							disableUseFromAboveMode();
+							break;
+
+						case 'yesterday':
+
+							scope.datepickerOptions.datepickerMode = 'yesterday';
+							scope.datepickerOptions.expression = 'now()-days(1)';
+
+							const yesterdayDate = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
+							scope.date = yesterdayDate;
+							pickmeup(firstCalendarElem).set_date(new Date(scope.date));
+
+							scope.dateIsDisabled = true;
+							firstCalendarElem.classList.add("pmu-calendar-disabled");
+
+							break;
+
+						case 'inception':
+
+							scope.datepickerOptions.datepickerMode = 'inception';
+
+							scope.date = '0001-01-01';
+							pickmeup(firstCalendarElem).set_date(new Date(scope.date));
+
+							scope.dateIsDisabled = true;
+							firstCalendarElem.classList.add("pmu-calendar-disabled");
 
 							break;
 
 					}
 
+					/*pickmeup(firstCalendarElem).destroy(); // redraw calendar after mode switch
+
+					const pOpts = {
+						...{date: new Date(scope.date)},
+						...pickmeupOptions
+					};
+
+					pickmeup(firstCalendarElem, pOpts);*/
+
+					if (mode !== 'link_to_above') disableUseFromAboveMode();
+
+				};
+
+				scope.activateRangeMode = function (mode) {
+
+					const currentDate = new Date();
+
+					switch (mode) {
+
+						case 'month-to-date':
+
+							const firstDayOfCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+							//<editor-fold desc="First date">
+							applyFirstDate(firstDayOfCurrentMonth);
+
+							scope.datepickerOptions.datepickerMode = 'month-to-date';
+							scope.datepickerOptions.expression = 'now()';
+							//</editor-fold>
+
+							//<editor-fold desc="Second date">
+							applySecondDate(currentDate);
+
+							scope.secondDatepickerOptions.datepickerMode = 'month-to-date';
+							scope.secondDatepickerOptions.expression = 'now()';
+							//</editor-fold>
+
+							disableFieldsAndCalendars();
+
+							break;
+
+						case 'quarter-to-date':
+
+							break;
+
+						case 'year-to-date':
+
+							const firstDayOfCurrentYear = new Date(currentDate.getFullYear(), 0, 1);
+
+							//<editor-fold desc="First date">
+							applyFirstDate(firstDayOfCurrentYear);
+
+							scope.datepickerOptions.datepickerMode = 'year-to-date';
+							scope.datepickerOptions.expression = '';
+							//</editor-fold>
+
+							//<editor-fold desc="Second date">
+							applySecondDate(currentDate);
+
+							scope.secondDatepickerOptions.datepickerMode = 'year-to-date';
+							scope.secondDatepickerOptions.expression = 'now()';
+							//</editor-fold>
+
+							disableFieldsAndCalendars();
+
+							break;
+
+						case 'inception':
+
+							//<editor-fold desc="First date">
+							applyFirstDate(new Date('0001-01-01'));
+
+							scope.datepickerOptions.datepickerMode = 'inception';
+							scope.datepickerOptions.expression = '';
+							//</editor-fold>
+
+							//<editor-fold desc="Second date">
+							applySecondDate(currentDate);
+
+							scope.secondDatepickerOptions.datepickerMode = 'inception';
+							scope.secondDatepickerOptions.expression = 'now()';
+							//</editor-fold>
+
+							disableFieldsAndCalendars();
+
+							break;
+
+					}
+
+					if (mode !== 'link_to_above') disableUseFromAboveMode();
+
+				};
+
+				const applyDatepickerModeOnInit = function () {
+
+					if (scope.rangeOfDates) {
+
+						switch (scope.datepickerOptions.datepickerMode) {
+
+							case 'month-to-date':
+							case 'quarter-to-date':
+							case 'year-to-date':
+							case 'inception':
+
+								scope.dateIsDisabled = true;
+								firstCalendarElem.classList.add("pmu-calendar-disabled");
+
+								scope.secondDateIsDisabled = true;
+								secondCalendarElem.classList.add("pmu-calendar-disabled");
+
+								break;
+
+
+						}
+
+					}
+
+					else {
+
+						switch (scope.datepickerOptions.datepickerMode) {
+
+							case 'today':
+							case 'yesterday':
+							case 'inception':
+								scope.dateIsDisabled = true;
+								firstCalendarElem.classList.add("pmu-calendar-disabled");
+								break;
+
+						}
+
+					}
+
+
 				};
 
 				const init = function () {
 
+					if (moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
+						firstDate = new Date(scope.date);
+					}
+
+					scope.onDateInputChange = onDateInputChange;
+
 					if (scope.rangeOfDates) {
 
-						scope.onDateInputChange = onDateRangeInputChange;
+						if (scope.rangeOfDates && moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
+							secondDate = new Date(scope.secondDate);
+						}
 
+						// scope.onDateInputChange = onDateRangeInputChange;
 						initRangeOfDatesCalendars();
 
 					} else {
 
-						scope.onDateInputChange = onDateInputChange;
+						// scope.onDateInputChange = onDateInputChange;
 						initCalendar(1);
 
 					}
 
-					// if (scope.dateTo) initCalendar(2);
+					applyDatepickerModeOnInit();
 
 				};
 

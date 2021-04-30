@@ -131,7 +131,7 @@
                     if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportFirstDatepicker')) {
                         scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
                     }
-					console.log("testing toppart scope.reportLayoutOptions", scope.reportLayoutOptions);
+
                     scope.datepickerFromDisplayOptions = {
                         position: 'left',
                         labelName: 'Date from (excl)'

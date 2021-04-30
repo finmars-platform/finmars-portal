@@ -20,8 +20,8 @@
                 callbackMethod: '&',
 				date: '=',
                 datepickerOptions: '=',
-				dateTo: '=',
-				datepickerToOptions: '=',
+				secondDate: '=',
+				secondDatepickerOptions: '=',
                 evDataService: '=',
                 evEventService: '=',
                 attributeDataService: '=',
@@ -31,25 +31,25 @@
             link: function (scope, elem, attrs) {
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-                scope.rangeOfDates = (scope.dateTo !== undefined && !!scope.datepickerToOptions);
+                scope.rangeOfDates = (scope.secondDate !== undefined && !!scope.secondDatepickerOptions);
 
                 const entityType = scope.evDataService.getEntityType();
-				const isReport = metaService.isReport(entityType);
+				/* const isReport = metaService.isReport(entityType);
 
                 // var input = $(elem).find('.complex-datepicker-input');
                 let input = elem[0].querySelector('.complex-datepicker-input');
 
-                let linkToAboveEventIndex;
+                let linkToAboveEventIndex; */
                 let attributesFromAbove;
                 let columnKey;
 
 				/* OLD COMPLEX DATEPICKER CODE
 
-				// TIPS
-				// scope.displayOptions is an object that may contain next properties:
-				// position: side to show datepicker on
-				// defaultDate: show default date in datepicker empty
-				// labelName: name to show in label of input
+				/!* TIPS
+					// scope.displayOptions is an object that may contain next properties:
+					// position: side to show datepicker on
+					// defaultDate: show default date in datepicker empty
+					// labelName: name to show in label of input *!/
 
 				scope.availableModes = { // determine whether to hide some of datepicker modes
 					inception: true
@@ -204,9 +204,9 @@
 						linkToAboveEventIndex = null;
 					}
 
-				}; */
+				};
 
-                /*scope.openEditExpressionDialog = function ($event) {
+                scope.openEditExpressionDialog = function ($event) {
 
                     if (scope.datepickerOptions.datepickerMode !== 'expression') {
                         scope.datepickerOptions.datepickerMode = 'expression';
@@ -275,9 +275,9 @@
                         }
 
                     });
-                };*/
+                };
 
-                /* var enableInceptionDateMode = function () {
+                var enableInceptionDateMode = function () {
                     delete scope.datepickerOptions.expression;
 
                     scope.date = '0001-01-01';
@@ -362,9 +362,9 @@
 
                     });
 
-                }; */
+                };
 
-                /* scope.$watch("datepickerOptions.datepickerMode", function (datepickerMode) {
+                scope.$watch("datepickerOptions.datepickerMode", function (datepickerMode) {
 
                     switch (datepickerMode) {
                         case "today":
@@ -404,29 +404,85 @@
 				}
 
 				if (scope.rangeOfDates) {
-					scope.popupData.dateTo = scope.dateTo;
-					scope.popupData.datepickerToOptions = scope.datepickerToOptions;
+					scope.popupData.secondDate = scope.secondDate;
+					scope.popupData.secondDatepickerOptions = scope.secondDatepickerOptions;
 				}
 
-				scope.onPopupSave = function () {
+				const applyPopupDataToFirstDate = function (date) {
 
-					scope.date = scope.popupData.date;
+					scope.date = date;
+					scope.popupData.date = date;
 
 					if (scope.popupData.datepickerOptions.datepickerMode === 'datepicker') {
-						delete scope.popupData.datepickerOptions.expression;
+						delete scope.popupData.datepickerOptions.datepickerMode.expression;
 					}
 
 					scope.datepickerOptions = JSON.parse(JSON.stringify(scope.popupData.datepickerOptions));
 
+				}
+
+				const applyPopupDataToSecondDate = function (date) {
+
+					scope.secondDate = date;
+					scope.popupData.secondDate = date;
+
+					if (scope.popupData.secondDatepickerOptions.datepickerMode === 'datepicker') {
+						delete scope.popupData.secondDatepickerOptions.datepickerMode.expression;
+					}
+
+					scope.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.popupData.secondDatepickerOptions));
+
+				}
+
+				scope.onPopupSave = function () {
+					// console.log("testing scope.popupData", scope.popupData, JSON.parse(JSON.stringify(scope.popupData)));
 					if (scope.rangeOfDates) {
 
-						scope.dateTo = scope.popupData.dateTo;
-
-						if (scope.popupData.datepickerToOptions.datepickerMode === 'datepicker') {
-							delete scope.popupData.datepickerToOptions.expression;
+						if (!scope.popupData.date && scope.popupData.secondDate) {
+							scope.popupData.date = scope.popupData.secondDate;
 						}
 
-						scope.datepickerToOptions = JSON.parse(JSON.stringify(scope.popupData.datepickerToOptions));
+						if (!scope.popupData.secondDate && scope.popupData.date) {
+							scope.popupData.secondDate = scope.popupData.date;
+						}
+
+						let firstDate, firstOptions, secondDate, secondOptions;
+
+						if (new Date(scope.popupData.date) > new Date(scope.popupData.secondDate)) {
+
+							firstDate = scope.popupData.secondDate;
+							firstOptions = scope.popupData.secondDatepickerOptions;
+
+							secondDate = scope.popupData.date;
+							secondOptions = scope.popupData.datepickerOptions;
+
+						} else { // in case second date later than first, switch them
+
+							firstDate = scope.popupData.date;
+							firstOptions = scope.popupData.datepickerOptions;
+
+							secondDate = scope.popupData.secondDate;
+							secondOptions = scope.popupData.secondDatepickerOptions;
+
+						}
+
+						scope.popupData.datepickerOptions = firstOptions;
+						applyPopupDataToFirstDate(firstDate);
+
+						scope.popupData.secondDatepickerOptions = secondOptions;
+						applyPopupDataToSecondDate(secondDate);
+
+
+					} else {
+
+						/* scope.date = scope.popupData.date;
+
+						if (scope.popupData.datepickerOptions.datepickerMode === 'datepicker') {
+							delete scope.popupData.datepickerOptions.expression;
+						}
+
+						scope.datepickerOptions = JSON.parse(JSON.stringify(scope.popupData.datepickerOptions)); */
+						applyPopupDataToFirstDate(scope.popupData.date);
 
 					}
 
@@ -439,8 +495,8 @@
 
 					if (scope.rangeOfDates) {
 
-						scope.popupData.dateTo = scope.dateTo;
-						scope.popupData.datepickerToOptions = JSON.parse(JSON.stringify(scope.datepickerToOptions));
+						scope.popupData.secondDate = scope.secondDate;
+						scope.popupData.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.secondDatepickerOptions));
 
 					}
 
@@ -453,6 +509,9 @@
 					if (!scope.datepickerOptions) scope.datepickerOptions = {};
 
 					if (!scope.datepickerOptions.datepickerMode) scope.datepickerOptions.datepickerMode = 'datepicker';
+
+					scope.datepickerOptions.date = scope.date;
+					if (scope.rangeOfDates) scope.secondDatepickerOptions.date = scope.secondDate;
 
 				};
 
