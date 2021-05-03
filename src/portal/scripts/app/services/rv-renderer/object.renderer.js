@@ -496,11 +496,14 @@
             rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
         }
 
-        var rowSettings = renderHelper.getRowSettings();
 
+        let color = 'none';
         if (markedReportRows.hasOwnProperty(obj.id)) {
-            classList.push('g-row-marked-' + markedReportRows[obj.id].color)
+            color = markedReportRows[obj.id].color
+            classList.push('g-row-marked-' + color);
         }
+
+        var rowSettings = renderHelper.getRowSettings('', color);
 
         var classes = classList.join(' ');
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;

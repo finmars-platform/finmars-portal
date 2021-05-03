@@ -468,7 +468,7 @@
 				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
 			}
 
-			rowSettings = renderHelper.getRowSettings();
+			rowSettings = renderHelper.getRowSettings('', obj.___backgrond_color);
 
 		}
 

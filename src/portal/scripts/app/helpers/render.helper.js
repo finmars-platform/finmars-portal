@@ -52,7 +52,9 @@
         return icons[key] || '';
     }
 
-    var getRowSettings = function (buttonClasses) {
+    var getRowSettings = function (buttonClasses, color) {
+
+        const icon = ['red', 'yellow', 'green'].includes(color) ? 'label' : 'label_outline';
 
     	var classes = "g-row-color-picker-btn gTableActionBtn";
 
@@ -62,7 +64,7 @@
 
     	return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
 				'<button class="' + classes + '" data-click-action-type="open_row_color_picker">' +
-					'<span class="material-icons label-icon">label_outline</span>' +
+					'<span class="material-icons label-icon">' + icon + '</span>' +
 					'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
 				'</button>' +
 			'</div>';
