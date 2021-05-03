@@ -31,10 +31,11 @@
 			link: function (scope, elem, attrs) {
 
 				scope.rangeOfDates = scope.secondDate !== undefined;
+				// scope.inceptionInput = "inception";
 
 				const entityType = scope.evDataService.getEntityType();
 				const isReport = metaService.isReport(entityType);
-				const pickmeupOptions = {
+				let pickmeupOptions = {
 					default_date: false,
 					flat: true,
 					format: 'Y-m-d'
@@ -233,7 +234,7 @@
 						...{date: new Date(scope.date)},
 						...pickmeupOptions
 					}
-                    // console.log("testing pOpts", pOpts);
+
 					pickmeup(firstCalendarElem, pOpts);
 
 					/* calendarElem.addEventListener("pickmeup-change", event => {
@@ -414,12 +415,9 @@
 					secondCalendarElem = elem[0].querySelector(".secondCalendar");
 
 					const pOpts = {
-						...{
-							date: new Date(scope.date),
-							render: dayRenderFn
-						},
+						...{date: new Date(scope.date)},
 						...pickmeupOptions
-					}
+					};
 
 					pickmeup(firstCalendarElem, pOpts);
 
@@ -462,7 +460,7 @@
 				};
 
 				const onDateInputChange = function (date) {
-					// console.log("testing onDateInputChange", date);
+
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
 						firstDate = new Date(date);
@@ -477,10 +475,9 @@
 
 						firstDate = null;
 						pickmeup(firstCalendarElem).set_date();
-						// console.log("testing onDateInputChange empty date");
-						// pickmeup(firstCalendarElem).update();
+
 					}
-					// console.log("testing onDateInputChange end", scope.date);
+
 				};
 
 				scope.onSecondDateInputChange = function (date) {
@@ -500,7 +497,7 @@
 						scope.secondDate = null;
 						pickmeup(secondCalendarElem).set_date();
 					}
-					// console.log("testing onSecondDateInputChange end", scope.secondDate);
+
 				};
 
 				/* const onDateRangeInputChange = function (date, dateNumber) {
@@ -561,6 +558,54 @@
 
 				};
 
+				const applyFirstDate = function (date) {
+					firstDate = date;
+					scope.date = moment(date).format('YYYY-MM-DD');
+					pickmeup(firstCalendarElem).set_date(firstDate);
+				};
+
+				const applySecondDate = function (date) {
+					secondDate = date;
+					scope.secondDate = moment(date).format('YYYY-MM-DD');
+					pickmeup(secondCalendarElem).set_date(secondDate);
+				};
+
+				const disableFieldsAndCalendars = function () {
+
+					scope.dateIsDisabled = true;
+					firstCalendarElem.classList.add("pmu-calendar-disabled");
+
+					scope.secondDateIsDisabled = true;
+					secondCalendarElem.classList.add("pmu-calendar-disabled");
+
+				};
+
+				const resetPmuCalendars = function (calendarElem) {
+
+					pickmeup(firstCalendarElem).destroy(); // redraw calendar after mode switch
+
+					const options = {
+						...{date: new Date(scope.date)},
+						...pickmeupOptions
+					};
+
+					pickmeup(firstCalendarElem, options);
+
+					if (scope.rangeOfDates) {
+
+						pickmeup(secondCalendarElem).destroy(); // redraw calendar after mode switch
+
+						const sOptions = {
+							...{date: new Date(scope.secondDate)},
+							...pickmeupOptions
+						};
+
+						pickmeup(secondCalendarElem, sOptions);
+
+					}
+
+				};
+
 				scope.activateCustomMode = function () {
 
 					if (!scope.modeIsActive(['datepicker', 'expression'])) {
@@ -583,28 +628,6 @@
 						disableUseFromAboveMode();
 
 					}
-
-				};
-
-				const applyFirstDate = function (date) {
-					firstDate = date;
-					scope.date = moment(date).format('YYYY-MM-DD');
-					pickmeup(firstCalendarElem).set_date(firstDate);
-				};
-
-				const applySecondDate = function (date) {
-					secondDate = date;
-					scope.secondDate = moment(date).format('YYYY-MM-DD');
-					pickmeup(secondCalendarElem).set_date(secondDate);
-				};
-
-				const disableFieldsAndCalendars = function () {
-
-					scope.dateIsDisabled = true;
-					firstCalendarElem.classList.add("pmu-calendar-disabled");
-
-					scope.secondDateIsDisabled = true;
-					secondCalendarElem.classList.add("pmu-calendar-disabled");
 
 				};
 
@@ -653,16 +676,9 @@
 
 					}
 
-					/*pickmeup(firstCalendarElem).destroy(); // redraw calendar after mode switch
-
-					const pOpts = {
-						...{date: new Date(scope.date)},
-						...pickmeupOptions
-					};
-
-					pickmeup(firstCalendarElem, pOpts);*/
-
 					if (mode !== 'link_to_above') disableUseFromAboveMode();
+
+					resetPmuCalendars();
 
 				};
 
@@ -744,6 +760,8 @@
 
 					if (mode !== 'link_to_above') disableUseFromAboveMode();
 
+					resetPmuCalendars();
+
 				};
 
 				const applyDatepickerModeOnInit = function () {
@@ -769,7 +787,6 @@
 						}
 
 					}
-
 					else {
 
 						switch (scope.datepickerOptions.datepickerMode) {
@@ -784,7 +801,6 @@
 						}
 
 					}
-
 
 				};
 
@@ -801,6 +817,8 @@
 						if (scope.rangeOfDates && moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
 							secondDate = new Date(scope.secondDate);
 						}
+
+						pickmeupOptions.render = dayRenderFn;
 
 						// scope.onDateInputChange = onDateRangeInputChange;
 						initRangeOfDatesCalendars();

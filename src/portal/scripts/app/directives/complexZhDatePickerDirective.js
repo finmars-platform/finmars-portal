@@ -435,7 +435,7 @@
 				}
 
 				scope.onPopupSave = function () {
-					// console.log("testing scope.popupData", scope.popupData, JSON.parse(JSON.stringify(scope.popupData)));
+
 					if (scope.rangeOfDates) {
 
 						if (!scope.popupData.date && scope.popupData.secondDate) {
