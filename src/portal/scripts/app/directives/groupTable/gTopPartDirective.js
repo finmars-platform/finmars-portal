@@ -156,7 +156,7 @@
 
                     scope.datepickerToDisplayOptions = {position: 'left'};
 
-                    if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
+                    /* if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
 
                         if (scope.entityType === 'transaction-report') {
                             scope.datepickerFromDisplayOptions = {
@@ -172,7 +172,7 @@
                                 inception: false
                             }
                         }
-                    }
+                    } */
                     /* < preparing data for complexZhDatePickerDirective > */
 
                 };

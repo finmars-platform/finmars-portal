@@ -869,7 +869,6 @@
                  open-on="right_click"
                  close-on-click-outside="true"
                  prevent-default="'true'"
-                 on-save-callback=""
                  popup-data="{data: getPopupData(column, $index)}"
                  offset-x="-10"
                  offset-y="-10"
@@ -892,29 +891,49 @@
                         <span class="material-icons">remove</span>
                     </div>
 
-                    <div class="g-group-button flex-row"
-                               data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">
+                    <div class="g-group-button">
+
+<!--                        <div class="g-group-button flex-row"
+                             data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">-->
 
                         <div  class="column-name-wrapper">
 
-                            <div ng-if="!column.layout_name">
-                                <span ng-bind="column.name"></span>
-                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                            </div>
+                            <div class="flex-row flex-i-center name-block"
+                                 data-ng-click="showArrowDown($event)"
+                                 popup
+                                 popup-id="{{column.key}}"
+                                 popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
+                                 popup-data="{column: column, changeSortMode: changeSortMode}"
+                                 position-relative-to="element"
+                                 relative-popup-x="left"
+                                 open-on="click"
+                                 close-on-click-outside="true"
+                                 popup-classes="'column-sort-popup'"
+                                 on-popup-close="hideArrowDown()"
+                                 popup-event-service="evEventService">
 
-                            <div ng-if="column.layout_name">
-                                <span ng-bind="column.layout_name"></span>
-                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                            </div>
+                                <div ng-if="!column.layout_name">
+                                    <span ng-bind="column.name"></span>
+                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                                </div>
 
-                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">
-                                m
-                                 <md-tooltip md-direction="top">
+                                <div ng-if="column.layout_name">
+                                    <span ng-bind="column.layout_name"></span>
+                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                                </div>
+
+                                <span class="material-icons arrow-down">arrow_drop_down</span>
+
+                                <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
+                                    m
+                                    <md-tooltip md-direction="top">
                                        Manual Sorting Activated
-                                 </md-tooltip>
-                            </span>
+                                    </md-tooltip>
+                                </span>
 
-                            <div class="sort">
+                            </div>
+
+                            <div class="sort" data-ng-click="changeSortDirection(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
 
                                 <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
                                 <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
@@ -955,7 +974,6 @@
                  open-on="right_click"
                  close-on-click-outside="true"
                  prevent-default="'true'"
-                 on-save-callback=""
                  popup-data="{data: getPopupData(column, $index)}"
                  offset-x="-10"
                  offset-y="-10"
@@ -970,29 +988,48 @@
 
                 <div class="g-cell g-table-header-cell">
 
-                    <div class="g-group-button flex-row"
-                               data-ng-click="sortHandler(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
+                    <div class="g-group-button" >
 
                         <div  class="column-name-wrapper">
 
-                            <div ng-if="!column.layout_name">
-                                <span ng-bind="column.name"></span>
-                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                            <div class="flex-row flex-i-center name-block"
+                                 data-ng-click="showArrowDown($event)"
+                                 popup
+                                 popup-id="{{column.key}}"
+                                 popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
+                                 popup-data="{column: column, changeSortMode: changeSortMode}"
+                                 position-relative-to="element"
+                                 relative-popup-x="left"
+                                 open-on="click"
+                                 close-on-click-outside="true"
+                                 popup-classes="'column-sort-popup'"
+                                 on-popup-Close="hideArrowDown()"
+                                 popup-event-service="evEventService">
+
+                                <div ng-if="!column.layout_name">
+                                    <span ng-bind="column.name"></span>
+                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+
+                                </div>
+
+                                <div ng-if="column.layout_name">
+                                    <span ng-bind="column.layout_name"></span>
+                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                                </div>
+
+                                <span class="material-icons arrow-down">arrow_drop_down</span>
+
+                                <!--                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">-->
+                                <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
+                                    m
+                                    <md-tooltip md-direction="top">
+                                       Manual Sorting Activated
+                                    </md-tooltip>
+                                </span>
+
                             </div>
 
-                            <div ng-if="column.layout_name">
-                                <span ng-bind="column.layout_name"></span>
-                                <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                            </div>
-
-                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">
-                                m
-                                <md-tooltip md-direction="top">
-                                   Manual Sorting Activated
-                                </md-tooltip>
-                            </span>
-
-                            <div class="sort">
+                            <div class="sort" data-ng-click="changeSortDirection(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
 
                                 <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
                                 <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
