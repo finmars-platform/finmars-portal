@@ -101,6 +101,10 @@
         };
 
         vm.getFileUrl = function (id) {
+
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
             return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
         };
 

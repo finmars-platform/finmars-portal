@@ -45,7 +45,7 @@
 				offsetY: '@', // add offset to the top
 
 				onCancel: '&?',
-				onSaveCallback: '&?',
+				onSave: '&?',
 				onPopupClose: '&?'
 
             },
@@ -90,9 +90,11 @@
 
 					if (scope.positionRelativeTo === 'element') {
 
-						if (!coords) { // better for rendering performance to declare it once
+/*						if (!coords) { // better for rendering performance to declare it once
 							coords = elem[0].getBoundingClientRect();
-						}
+						}*/
+
+						coords = elem[0].getBoundingClientRect();
 
 						if (scope.popupWidth === 'element') {
 
@@ -112,9 +114,9 @@
 
 					else if (scope.positionRelativeTo === 'mouse' && event) {
 
-						if (!positionX) { positionX = event.clientX; }
+						if (!positionX) positionX = event.clientX;
 
-						if (!positionY) { positionY = positionY = event.clientY; }
+						if (!positionY) positionY = positionY = event.clientY;
 
 					}
 
@@ -266,15 +268,16 @@
 				};
 
 				let removePopUp = function (event) {
-					console.trace();
+
 					document.body.removeChild(popupBackdropElem);
 					document.body.removeChild(popupElem);
 
 					removeListeners();
 
 					scope.isPopupOpen = false;
+
 					if (scope.onPopupClose) {
-						scope.onPopupClose()
+						scope.onPopupClose();
 					}
 
 				}
@@ -343,8 +346,8 @@
 
 				scope.save = function () {
 
-					if (scope.onSaveCallback) {
-						scope.onSaveCallback();
+					if (scope.onSave) {
+						scope.onSave();
 					}
 
 					if (scope.popupEventService) {
@@ -384,7 +387,7 @@
 
 					}
 
-/*					if (scope.closeOnClickOutside) {
+					/* if (scope.closeOnClickOutside) {
 						popupBackdropElem.addEventListener("click", removePopUp);
 					}
 
@@ -393,7 +396,7 @@
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
 						popupBackdropElem.addEventListener('mouseenter', removePopUp);
 
-					}*/
+					} */
 
 					if (scope.popupEventService) {
 

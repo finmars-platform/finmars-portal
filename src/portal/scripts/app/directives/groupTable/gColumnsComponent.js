@@ -79,7 +79,7 @@
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
                 scope.isAllStarsSelected = false;
-                scope.hideRowFilters = false;
+                scope.hideRowSettings = !!scope.evDataService.getRowSettings().folded;
                 scope.groupsAreaDraggable = scope.viewContext !== 'dashboard';
 
                 var entityAttrs = [];
@@ -229,20 +229,36 @@
 
                 scope.rowFiltersToggle = function () {
 
-                    scope.hideRowFilters = !scope.hideRowFilters
+                    scope.hideRowSettings = !scope.hideRowSettings;
+					/* var rowColorsColumnCollapsed = scope.evDataService.getRowColorsColumnData();
 
-                    var rowSettingsElems = scope.contentWrapElement.querySelectorAll(".gRowSettings");
+					rowColorsColumnCollapsed = !rowColorsColumnCollapsed; */
+
+					var rowSettings = scope.evDataService.getRowSettings(scope.hideRowSettings);
+
+					rowSettings.folded = scope.hideRowSettings;
+
+					scope.evDataService.setRowSettings(rowSettings);
+
+					if (scope.hideRowSettings) {
+						scope.contentWrapElement.classList.add('g-row-settings-collapsed');
+
+					} else {
+						scope.contentWrapElement.classList.remove('g-row-settings-collapsed');
+					}
+
+                    /* var rowSettingsElems = scope.contentWrapElement.querySelectorAll(".gRowSettings");
 
                     rowSettingsElems.forEach(rowSElem => {
 
-                        if (scope.hideRowFilters) {
+                        if (scope.hideRowSettings) {
                             rowSElem.classList.add('closed');
 
                         } else {
                             rowSElem.classList.remove('closed');
                         }
 
-                    });
+                    }); */
 
                 };
 
@@ -266,6 +282,135 @@
                 }
 
                 // <Victor 2020.12.14 #69 New report viewer design>
+
+                // Victor 2021.04.07 #90 sort setting for column
+
+                let activeNameBlockElement = null;
+
+                scope.showArrowDown = ($event) => {
+                    activeNameBlockElement = $event.target.closest('.name-block');
+                    activeNameBlockElement.classList.add('active');
+                };
+
+                scope.hideArrowDown = () => {
+                    if (activeNameBlockElement) {
+                        activeNameBlockElement.classList.remove('active');
+                        activeNameBlockElement = null;
+                    }
+                }
+
+                const clearAllSortOptions = function (columns) {
+
+                    columns.forEach(column => {
+
+                        if (!column.options) {
+                            column.options = {};
+                        }
+
+                        column.options.sort = null;
+
+                    });
+
+                }
+
+                scope.changeSortMode = function (column, sortMode) {
+
+                    scope.hideArrowDown();
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    const direction = column.options && column.options.sort ? column.options.sort : 'ASC'; // save direction before clear sort options for all columns
+
+                    if (column.groups) {
+
+                        clearAllSortOptions(scope.groups);
+
+                    } else {
+
+                        clearAllSortOptions(scope.columns);
+
+                    }
+
+                    column.options.sort_mode = sortMode;
+                    column.options.sort = direction;
+                    sort(column);
+
+                }
+
+                scope.changeSortDirection = function (column, direction) {
+
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    if (column.groups) {
+
+                        clearAllSortOptions(scope.groups);
+
+                    } else {
+
+                        clearAllSortOptions(scope.columns);
+
+                    }
+
+                    column.options.sort = direction;
+                    sort(column);
+
+                };
+
+                const sort = function (column) {
+
+                    if (column.options.sort_mode === 'manual') { // manual sort handler
+
+                        uiService.getColumnSortDataList({
+                            filters: {
+                                user_code: column.manual_sort_layout_user_code
+                            }
+                        }).then(function (data){
+
+                            if(data.results.length) {
+
+                                var layout = data.results[0];
+
+                                scope.evDataService.setColumnSortData(column.key, layout.data)
+
+                                if (column.groups) {
+
+                                    scope.evDataService.setActiveGroupTypeSort(column);
+                                    scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
+
+                                } else {
+
+                                    scope.evDataService.setActiveColumnSort(column);
+                                    scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
+
+                                }
+
+                            } else {
+
+                                toastNotificationService.error("Manual Sort is not configured");
+                                column.manual_sort_layout_user_code = null;
+
+                            }
+
+                        })
+
+                    } else { // default sort handler TODO External sort mode is not defined, and handling as default
+
+                        if (column.groups) {
+
+                            scope.evDataService.setActiveGroupTypeSort(column);
+                            scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
+
+                        } else {
+
+                            scope.evDataService.setActiveColumnSort(column);
+                            scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
+
+                        }
+
+                    }
+
+                }
+
+                // <Victor 2021.04.07 #90 sort setting for column>
 
                 var getAttributes = function () {
 
@@ -510,7 +655,6 @@
                                 scope.evDataService.setActiveColumnSort(column);
 
                                 scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                                console.log('#69 sortHandler notGroupingColumns', scope.notGroupingColumns.map(col => col.key))
 
                                 scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -1682,6 +1826,13 @@
 
                 const init = function () {
 
+					if (scope.hideRowSettings) {
+						scope.contentWrapElement.classList.add('g-row-settings-collapsed');
+
+					} else {
+						scope.contentWrapElement.classList.remove('g-row-settings-collapsed');
+					}
+
                     updateGroupTypeIds();
 
                     scope.columns = scope.evDataService.getColumns();
@@ -1696,7 +1847,7 @@
 
                     if (scope.viewContext === 'dashboard') {
                         getColsAvailableForAdditions();
-                        //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
+                        // keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
                     }
 
                     initEventListeners();
