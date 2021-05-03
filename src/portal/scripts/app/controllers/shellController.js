@@ -155,9 +155,15 @@
 
                 middlewareService.masterUserChanged();
 
-                authorizerService.setMasterUser(master.id).then(function (value) {
+                authorizerService.setMasterUser(master.id).then(function (data) {
 
-                    $state.go('app.home', null, {reload: 'app'});
+                    if (data.base_api_url) {
+                        baseUrlService.setMasterUserPrefix(data.base_api_url)
+                    }
+
+                    // $state.go('app.home', null, {reload: 'app'});
+
+                    window.location.reload();
 
                     if (vm.broadcastManager) {
                         vm.broadcastManager.postMessage({event: crossTabEvents.MASTER_USER_CHANGED});
@@ -571,7 +577,7 @@
 
                     middlewareService.initLogOut();
 
-                    usersService.logout().then(function (data) {
+                    authorizerService.logout().then(function (data) {
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
 
@@ -581,7 +587,7 @@
                             window.location.reload()
                         }
 
-                        cookiesService.deleteCookie();
+                        cookiesService.deleteCookie('authtoken');
 
                     });
 
@@ -862,9 +868,22 @@
 
             var getMasterUsersProm = vm.getMasterUsersList();
 
-            var getMemberProm = getMember();
 
-            Promise.allSettled([getUserProm, getMasterUsersProm, getMemberProm]).then(function () {
+
+
+            var promises = []
+
+            promises.push(getUserProm)
+            promises.push(getMasterUsersProm)
+
+            if (baseUrlService.getMasterUserPrefix()) {
+
+                var getMemberProm = getMember();
+
+                promises.push(getMemberProm)
+            }
+
+            Promise.allSettled(promises).then(function () {
 
                 localStorageService.setUMuM(vm.user.id, vm.currentMasterUser.id, member.id);
                 enableAccessHandler($transitions); // TODO Run after successful auth
@@ -925,9 +944,9 @@
 
 
                     setTimeout(function () {
-                    vm.initShell();
-                    window.location.hash = '#!/profile';
-                    window.location.reload();
+                        vm.initShell();
+                        window.location.hash = '#!/profile';
+                        window.location.reload();
                     }, 100);
 
                 }

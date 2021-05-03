@@ -728,6 +728,7 @@ app.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/dire
 app.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 app.directive('zhDatePicker', ['pickmeup', require('./app/directives/zhDatePickerDirective')]);
 app.directive('complexZhDatePicker', ['$mdDialog', 'pickmeup', require('./app/directives/complexZhDatePickerDirective')]);
+app.directive('complexDatepicker', ['$mdDialog', 'pickmeup', require('./app/directives/complexDatepickerDirective')]);
 app.directive('dateTreeInput', ['$mdDialog', require('./app/directives/dateTreeInputDirective')]);
 app.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 app.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);
