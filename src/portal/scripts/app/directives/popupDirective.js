@@ -45,7 +45,7 @@
 				offsetY: '@', // add offset to the top
 
 				onCancel: '&?',
-				onSaveCallback: '&?',
+				onSave: '&?',
 
             },
             link: function (scope, elem, attrs) {
@@ -111,9 +111,9 @@
 
 					else if (scope.positionRelativeTo === 'mouse' && event) {
 
-						if (!positionX) { positionX = event.clientX; }
+						if (!positionX) positionX = event.clientX;
 
-						if (!positionY) { positionY = positionY = event.clientY; }
+						if (!positionY) positionY = positionY = event.clientY;
 
 					}
 
@@ -339,8 +339,8 @@
 
 				scope.save = function () {
 
-					if (scope.onSaveCallback) {
-						scope.onSaveCallback();
+					if (scope.onSave) {
+						scope.onSave();
 					}
 
 					if (scope.popupEventService) {
@@ -380,7 +380,7 @@
 
 					}
 
-/*					if (scope.closeOnClickOutside) {
+					/* if (scope.closeOnClickOutside) {
 						popupBackdropElem.addEventListener("click", removePopUp);
 					}
 
@@ -389,7 +389,7 @@
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
 						popupBackdropElem.addEventListener('mouseenter', removePopUp);
 
-					}*/
+					} */
 
 					if (scope.popupEventService) {
 
