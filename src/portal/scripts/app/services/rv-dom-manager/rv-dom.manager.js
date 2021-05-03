@@ -1185,7 +1185,7 @@
             return true;
         }
 
-        if (obj['complex_transaction.id'] && option.action === 'rebook_transaction') {
+        if ((obj['complex_transaction.id'] || obj['complex_transaction'])  && option.action === 'rebook_transaction') {
             return true;
         }
 

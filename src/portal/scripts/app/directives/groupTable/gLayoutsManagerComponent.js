@@ -688,6 +688,8 @@
                         targetEvent: $event,
                         locals: {
                             options: {
+                            	label: "Save layout as",
+								layoutName: listLayout.name,
                                 complexSaveAsLayoutDialog: {
                                     entityType: scope.entityType
                                 }
