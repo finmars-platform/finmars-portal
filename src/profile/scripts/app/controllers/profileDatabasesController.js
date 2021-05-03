@@ -125,7 +125,7 @@
 
                 if (res.status === 'agree') {
 
-                    usersService.leaveMasterUser(item.id).then(function () {
+                    authorizerService.leaveMasterUser(item.id).then(function () {
 
                         vm.getMasterUsersList();
 

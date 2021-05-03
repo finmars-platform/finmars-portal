@@ -19,9 +19,8 @@
         vm.agree = function ($event) {
 
             var groups = vm.assignedGroupsList.map(function (group) {
-                return group.id
-            });
-
+                return group.name
+            }).join(',')
 
             authorizerService.inviteUser({username: vm.username, groups: groups}).then(function (data) {
 
