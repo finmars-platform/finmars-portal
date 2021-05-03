@@ -238,11 +238,15 @@
 
         else if (columnNumber > obj.___level - 1) {
 
-            if (column.report_settings && column.report_settings.subtotal_formula_id && !column.report_settings.hide_subtotal) {
+            const isHideSubtotal = column.report_settings && column.report_settings.subtotal_formula_id && column.report_settings.hide_subtotal;
+            const isGrandTotal = obj.___level === 0
+            const isHideGrandTotal =  column.report_settings && column.report_settings.subtotal_formula_id && column.report_settings.hide_grandtotal;
+
+            if (!isGrandTotal && !isHideSubtotal || isGrandTotal && !isHideGrandTotal) {
 
                 if (obj.hasOwnProperty(column.key)) {
 
-                	result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
+                    result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
                     result.numeric_result = obj[column.key];
                     result.raw_text_result = renderHelper.formatValue(obj, column);
 
