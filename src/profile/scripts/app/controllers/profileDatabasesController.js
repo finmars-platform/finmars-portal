@@ -9,6 +9,7 @@
     var authorizerService = require('../services/authorizerService');
 
     var baseUrlService = require('../services/baseUrlService');
+    var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
 
     module.exports = function ($scope, $state, $mdDialog) {
 
@@ -36,7 +37,7 @@
 
             var status = 0; // 0 - SENT, 1 - ACCEPTED, 2 - DECLINED
 
-            usersService.getInviteFromMasterUserList(status).then(function (data) {
+            authorizerService.getInviteFromMasterUserList(status).then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;
@@ -100,7 +101,8 @@
 
 
                 baseUrlService.setMasterUserPrefix(data.base_api_url);
-                
+                portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+
                 $state.go('app.home');
             })
 
@@ -242,7 +244,7 @@
 
             item.status = 2; // Decline code
 
-            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getInvites();
 
@@ -254,11 +256,10 @@
 
             item.status = 1; // Accept code
 
-            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
-                usersService.setMasterUser(item.to_master_user).then(function (value) {
-                    $state.go('app.setup');
-                })
+                vm.getMasterUsersList();
+                vm.getInvites();
 
             })
 
@@ -266,8 +267,8 @@
 
         vm.init = function () {
             vm.getMasterUsersList();
-            // vm.getInvites();
-            vm.readyStatus.invites = true;
+            vm.getInvites();
+            // vm.readyStatus.invites = true;
         };
 
         vm.init();

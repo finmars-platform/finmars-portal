@@ -57,10 +57,10 @@
 
 				if (scope.smallOptions) {
 
-					scope.tooltipText = scope.smallOptions.tooltipText
-					scope.isReadonly = scope.smallOptions.readonly
-					scope.dialogParent = scope.smallOptions.dialogParent
-					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
+					scope.tooltipText = scope.smallOptions.tooltipText;
+					scope.isReadonly = scope.smallOptions.readonly;
+					scope.dialogParent = scope.smallOptions.dialogParent;
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
 
 				}
 

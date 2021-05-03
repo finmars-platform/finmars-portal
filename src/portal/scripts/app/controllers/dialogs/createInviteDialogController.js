@@ -3,6 +3,7 @@
     'use strict';
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
+    var authorizerService = require('../../services/authorizerService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -22,7 +23,7 @@
             });
 
 
-            membersAndGroupsService.inviteUser({username: vm.username, groups: groups}).then(function (data) {
+            authorizerService.inviteUser({username: vm.username, groups: groups}).then(function (data) {
 
                 console.log('data', data);
 
