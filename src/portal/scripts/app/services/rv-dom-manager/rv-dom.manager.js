@@ -1747,13 +1747,13 @@
 					'<span class="material-icons">label_outline</span>' +
 				'</button>' +
                 '<button class="g-row-color-picker-option red gPopupMenuOption" data-color="red">' +
-					'<span class="material-icons">label_outline</span>' +
+					'<span class="material-icons">label</span>' +
 				'</button>' +
                 '<button class="g-row-color-picker-option yellow gPopupMenuOption" data-color="yellow">' +
-					'<span class="material-icons">label_outline</span>' +
+					'<span class="material-icons">label</span>' +
 				'</button>' +
                 '<button class="g-row-color-picker-option green gPopupMenuOption" data-color="green">' +
-					'<span class="material-icons">label_outline</span>' +
+					'<span class="material-icons">label</span>' +
 				'</button>' +
             '</div>'
 		//</editor-fold>
