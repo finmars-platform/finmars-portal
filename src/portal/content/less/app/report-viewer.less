@@ -2,6 +2,10 @@
 
 .report-viewer-holder {
 
+  .g-filter-sidebar {
+    display: none;
+  }
+
   .no-data-block {
     font-size: 24px;
     padding: 120px;
@@ -526,22 +530,35 @@
       }
 
       .g-row-selection-button {
-
         width: 17px;
         height: 17px;
         min-width: 17px;
         font-size: 15px;
         line-height: 13px;
-        border: 2px solid #747474;
+        border: 2px solid @borderPale;
         border-radius: 3px;
         box-sizing: border-box;
         background: rgba(0,0,0,.01960784);
-        margin: 8px auto 0;
+        margin: 4px auto 0;
         cursor: pointer;
 
         svg {
           width: 14px;
           height: 14px;
+        }
+
+        &.checked {
+          background-color: @orange;
+          border-color: @orange;
+
+          svg {
+            position: relative;
+            width: 19px;
+            height: 19px;
+            bottom: 4px;
+            right: 3px;
+            fill: #fff;
+          }
         }
 
       }
