@@ -44,7 +44,6 @@
 
                     <input ng-if="!renderHyperlinks"
                            ng-model="model"
-                           ng-model-options="{debounce: 500}"
                            ng-readonly="isReadonly"
                            ng-disabled="isDisabled"
                            ng-init="elemInited()"
@@ -113,7 +112,6 @@
 
             <div ng-if="!renderHyperlinks">
                 <textarea ng-model="model"
-                          ng-model-options="{debounce: 500}"
                           ng-change="onInputChange(model)"
                           class="custom-input-full-text customInputBackgroundColor customInputFullText"
                           ng-readonly="isReadonly"

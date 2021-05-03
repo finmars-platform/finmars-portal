@@ -25,6 +25,9 @@
 
         vm.getFileUrl = function (id) {
 
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
             return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
@@ -46,7 +49,8 @@
         };
 
         var processEventsPromise = function () {
-            return new Promise(function (resolve, reject) {
+
+        	return new Promise(function (resolve, reject) {
 
                 usersService.getOwnMemberSettings().then(function (data) {
 

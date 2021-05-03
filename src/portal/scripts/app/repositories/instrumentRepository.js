@@ -3,209 +3,207 @@
  */
 (function () {
 
-    'use strict';
+	'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService'); var xhrService = require('../../../../core/services/xhrService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
-    var baseUrlService = require('../services/baseUrlService');
+	var cookieService = require('../../../../core/services/cookieService');
+	var xhrService = require('../../../../core/services/xhrService');
+	var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+	var baseUrlService = require('../services/baseUrlService');
 
-    var baseUrl = baseUrlService.resolve();
+	var baseUrl = baseUrlService.resolve();
 
-    var getList = function (options) {
+	var getList = function (options) {
 
-        if (!options) {
-            options = {};
-        }
+		if (!options) options = {};
 
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/', options),
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					'Accept': 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
 
-    var getListLight = function (options) {
+	var getListLight = function (options) {
 
-        if (!options) {
-            options = {};
-        }
+		if (!options) {
+			options = {};
+		}
 
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument-light/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var getByKey = function (id) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument-light/', options),
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+	var getByKey = function (id) {
 
-    var create = function (instrument) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(instrument)
-            })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/',
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
 
-    var update = function (id, instrument) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+	var create = function (instrument) {
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(instrument)
-            })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var patch = function (id, data) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/',
+			{
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(instrument)
+			})
+	};
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/',
-            {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-    };
+	var update = function (id, instrument) {
 
-    var updateBulk = function (instruments) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/bulk-update/',
-            {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(instruments)
-            })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/',
+			{
+				method: 'PUT',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(instrument)
+			})
+	};
 
-    var deleteByKey = function (id) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+	var patch = function (id, data) {
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/',
-            {
-                method: 'DELETE',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return new Promise(function(resolve,reject) {
-                resolve({status: 'deleted'});
-            });
-            //return data.json();
-        })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var deleteBulk = function (data) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/',
+			{
+				method: 'PATCH',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+	};
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/bulk-delete/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(function (data) {
-                return new Promise(function (resolve, reject) {
-                    resolve({status: 'deleted'});
-                });
-            })
-    };
+	var updateBulk = function (instruments) {
 
-    module.exports = {
-        getList: getList,
-        getListLight: getListLight,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        patch: patch,
-        deleteByKey: deleteByKey,
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-        updateBulk: updateBulk,
-        deleteBulk: deleteBulk
-    }
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/bulk-update/',
+			{
+				method: 'PATCH',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(instruments)
+			})
+	};
+
+	var deleteByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/' + id + '/',
+			{
+				method: 'DELETE',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			}).then(function (data) {
+			return new Promise(function (resolve, reject) {
+				resolve({status: 'deleted'});
+			});
+			//return data.json();
+		})
+	};
+
+	var deleteBulk = function (data) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/bulk-delete/',
+			{
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+			.then(function (data) {
+				return new Promise(function (resolve, reject) {
+					resolve({status: 'deleted'});
+				});
+			})
+	};
+
+	module.exports = {
+		getList: getList,
+		getListLight: getListLight,
+		getByKey: getByKey,
+		create: create,
+		update: update,
+		patch: patch,
+		deleteByKey: deleteByKey,
+
+		updateBulk: updateBulk,
+		deleteBulk: deleteBulk
+	}
 
 }());

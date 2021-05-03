@@ -65,19 +65,19 @@
         </div>
     </div>
 
-    <div
-            data-ng-if="dropdownMenuHidden"
-            class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
+    <div data-ng-if="dropdownMenuHidden"
+         class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
+
         <div class="custom-input-sel-menu-block">
             <div
                     data-ng-repeat="option in menuOptions | filter: inputText"
-                    data-ng-mousedown="selectOption(option)"
+                    data-ng-click="selectOption(option)"
                     data-ng-bind="option.name"
                     class="custom-input-sel-option"
                     style="padding-left: {{(option.level + 1) * 10}}px"
             ></div>
-
         </div>
+
     </div>
 
     <div ng-if="error"
