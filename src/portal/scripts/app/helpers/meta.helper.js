@@ -175,10 +175,10 @@
 
     };
 
-    let getDefaultFilterType = valueType => {
+	let getDefaultFilterType = valueType => {
 
-    	const defaultTextFilterType = "contains";
-    	const defaultNumberAndDateFilterType = "equal";
+		const defaultTextFilterType = "contains";
+		const defaultNumberAndDateFilterType = "equal";
 
 		return valueType === 10 ? defaultTextFilterType: defaultNumberAndDateFilterType;
 

@@ -1,13 +1,13 @@
 <div ng-class="{'disabled-field': !isEditableField()}">
 
-    <div ng-class="{'display-none': !readyStatus.content}">
+    <div ng-class="{'display-none': !vm.readyStatus.content}">
 
         <div data-ng-if="fieldType['display_name'] === 'Number'"
              class="bind-field-number-field-container">
 
             <number-input
                     label="{{getName()}}"
-                    model="entity[fieldKey]"
+                    model="entity[vm.fieldKey]"
                     number-format="item.options.number_format"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
@@ -23,7 +23,7 @@
 
             <text-input label="{{getName()}}"
                         placeholder-text="text"
-                        model="entity[fieldKey]"
+                        model="entity[vm.fieldKey]"
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
                         event-signal="ciEventObj.event"
@@ -42,7 +42,7 @@
                                    data-options="options"
                                    ev-editor-data-service="evEditorDataService"
                                    ev-editor-event-service="evEditorEventService"
-                                   data-entity-type="entityType"
+                                   data-entity-type="vm.entityType"
                                    data-item-change="itemChange()">
                 </ev-field-resolver>
             </div>
@@ -56,7 +56,7 @@
                                    data-options="options"
                                    ev-editor-data-service="evEditorDataService"
                                    ev-editor-event-service="evEditorEventService"
-                                   data-entity-type="entityType"
+                                   data-entity-type="vm.entityType"
                                    data-item-change="itemChange()">
                 </ev-field-resolver>
             </div>
@@ -65,7 +65,7 @@
         <div ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
             <date-input
                     label="{{getName()}}"
-                    model="entity[fieldKey]"
+                    model="entity[vm.fieldKey]"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
                     event-signal="ciEventObj.event"
@@ -77,7 +77,7 @@
         <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
             <md-checkbox
                     class="checkbox-bind-field"
-                    data-ng-model="entity[fieldKey]"
+                    data-ng-model="entity[vm.fieldKey]"
                     data-ng-change="itemChange()"
                     aria-label="checkbox">
                 <label data-ng-bind="getName()"></label>
@@ -85,20 +85,20 @@
         </div>
 
         <div data-ng-if="fieldType['display_name'] === 'Classifier'">
-            <div data-ng-if="readyStatus.classifier">
+            <div data-ng-if="vm.readyStatus.classifier">
 
                 <!--  Victor 2020.10.23 Change for classifier-select
                       <md-input-container class="md-block md-select-pan">
                         <label data-ng-bind="getName()"></label>
 
                         <md-select
-                          data-ng-model="entity[fieldKey]"
+                          data-ng-model="entity[vm.fieldKey]"
                           data-classifier-modal-resolver
                           data-classifier-attr="item"
-                          data-classifier-value="entity[fieldKey]"
+                          data-classifier-value="entity[vm.fieldKey]"
                           data-ng-change="changeClassifier()"
                           md-container-class="h-classifier-select"
-                          data-entity-type="entityType"
+                          data-entity-type="vm.entityType"
                           style="{{inputBackgroundColor()}}"
                         >
                           <md-option ng-value="node.id" selected="selected">
@@ -109,15 +109,15 @@
 
                 <classifier-select label="{{getName()}}"
                                    placeholder-text="{{getName()}}"
-                                   model="entity[fieldKey]"
+                                   model="entity[vm.fieldKey]"
                                    classifier-attr="item"
-                                   classifier-value="entity[fieldKey]"
-                                   entity-type="entityType"
+                                   classifier-value="entity[vm.fieldKey]"
+                                   entity-type="vm.entityType"
                 ></classifier-select>
 
             </div>
 
-            <div data-ng-if="!readyStatus.classifier">
+            <div data-ng-if="!vm.readyStatus.classifier">
                 <div layout="row" layout-sm="column" layout-align="space-around">
                     <progress-circular diameter="20"></progress-circular>
                 </div>
@@ -130,7 +130,7 @@
         </div>
 
         <div data-ng-if="fieldType['display_name'] === 'Decoration' && item.key === 'layoutLineWithLabel'"
-         class="ec-decoration-container">
+             class="ec-decoration-container">
             <span class="ec-decoration labeled" data-ng-if="item.options.labelText">
                 <span class="w-rp" data-ng-bind="item.options.labelText"></span>
             </span>
@@ -142,11 +142,11 @@
         </div>
 
         <div data-ng-if="fieldType['display_name'] === 'Selector'"
-           class="ec-decoration-container">
+             class="ec-decoration-container">
             <ev-selector-resolver item="item"
                                   entity="entity"
                                   options="options"
-                                  entity-type="entityType"
+                                  entity-type="vm.entityType"
                                   item-change="itemChange()">
             </ev-selector-resolver>
         </div>
@@ -159,9 +159,13 @@
             </div>
         </div>
 
+        <div ng-if="fieldType['display_name'] === 'Table'" style="padding: 0 10px;">
+            <bind-field-table item="item" entity="entity"></bind-field-table>
+        </div>
+
     </div>
 
-    <div ng-if="!readyStatus.content" class="bind-field-loader" style="height: 42px; margin-bottom: 13px;">
+    <div ng-if="!vm.readyStatus.content" class="bind-field-loader" style="height: 42px; margin-bottom: 13px;">
         <div layout="row" layout-sm="column" layout-align="space-around space-around" class="height-100">
             <progress-circular diameter="30"></progress-circular>
         </div>
