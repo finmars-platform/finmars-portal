@@ -486,6 +486,10 @@
 
 					}
 
+					setTimeout(() => {
+						if (scope.callbackMethod) scope.callbackMethod();
+					}, 0);
+
 				};
 
 				scope.onPopupCancel = function () {
