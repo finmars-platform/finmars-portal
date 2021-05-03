@@ -50,23 +50,32 @@
         <div class="flex-column">
 
             <div class="flex-row" style="margin-left: 18px;">
+
                 <div class="complex-datepicker-date-input-holder"
                      ng-class="{'expression-mode': datepickerOptions.datepickerMode === 'expression'}">
 
-                    <button ng-show="modeIsActive(['datepicker', 'expression'])"
-                            class="expression-builder-btn"
-                            ng-click="openEditExpressionDialog($event, 1)"
-                            ng-disabled="dateIsDisabled"><span class="material-icons">functions</span></button>
+                    <div ng-if="datepickerOptions.datepickerMode !== 'inception'">
 
-                    <date-input model="date"
-                                on-change-callback="onDateInputChange(date)"
-                                small-options="{noIndicatorBtn: true}"
-                                is-disabled="dateIsDisabled"></date-input>
-                    <!--<md-input-container class="no-error-spacer">
-                        <input type="text"
-                               ng-model="date"
-                               ng-change="onDateInputChange()" />
-                    </md-input-container>-->
+                        <button ng-show="modeIsActive(['datepicker', 'expression'])"
+                                class="expression-builder-btn"
+                                ng-click="openEditExpressionDialog($event, 1)"
+                                ng-disabled="dateIsDisabled"><span class="material-icons">functions</span></button>
+
+                        <date-input model="date"
+                                    on-change-callback="onDateInputChange(date)"
+                                    small-options="{noIndicatorBtn: true}"
+                                    is-disabled="dateIsDisabled"></date-input>
+                        <!--<md-input-container class="no-error-spacer">
+                            <input type="text"
+                                   ng-model="date"
+                                   ng-change="onDateInputChange()" />
+                        </md-input-container>-->
+                    </div>
+
+                    <div ng-if="datepickerOptions.datepickerMode === 'inception'">
+                        <p class="complex-datepicker-text">Inception</p>
+                    </div>
+
                 </div>
 
                 <div ng-if="secondDate" class="flex-row fi-center">
