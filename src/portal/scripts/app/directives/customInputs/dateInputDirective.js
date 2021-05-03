@@ -31,6 +31,7 @@
 				// scope.smallOptions probable properties
 					// tooltipText: custom tolltip text
 					// notNull: turn on error mode if field is not filled
+					// noIndicatorBtn: whether to show button at the right part of input
 
 				var inputContainer = elem[0].querySelector(".dateInputContainer");
 				var inputElem = elem[0].querySelector(".dateInputElem");
@@ -45,13 +46,10 @@
 
 					scope.tooltipText = scope.smallOptions.tooltipText;
 
-					if (scope.smallOptions.position) {
-						position = scope.position;
-					}
+					if (scope.smallOptions.position) position = scope.position;
+					if (scope.smallOptions.defaultDate) defaultDate = scope.defaultDate;
 
-					if (scope.smallOptions.defaultDate) {
-						defaultDate = scope.defaultDate;
-					}
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
 
 				}
 

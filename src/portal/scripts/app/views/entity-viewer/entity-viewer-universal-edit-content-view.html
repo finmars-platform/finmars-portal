@@ -28,7 +28,7 @@
                  popup-data="vm.fixedAreaPopup"
                  prevent-default="true"
                  on-cancel="vm.onFixedAreaPopupCancel()"
-                 on-save-callback="vm.onPopupSaveCallback()">
+                 on-save="vm.onPopupSaveCallback()">
 
                 <text-input label="{{vm.entityTypeSlug()}}"
                             model="vm.getEntityPropertyByDefault()"
