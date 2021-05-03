@@ -58,7 +58,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         clickOutsideToClose: false,
@@ -688,6 +688,8 @@
                         targetEvent: $event,
                         locals: {
                             options: {
+                            	label: "Save layout as",
+								layoutName: listLayout.name,
                                 complexSaveAsLayoutDialog: {
                                     entityType: scope.entityType
                                 }
