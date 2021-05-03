@@ -281,18 +281,24 @@
     };
 
     var getCellTextAlign = function (column) {
-        var result = '';
+
+    	var result = '';
 
         if (column.style && column.style.text_align) {
             result = ' text-' + column.style.text_align;
         }
 
         return result;
+
     };
 
     var getRowGeneralClasses = function (obj, classList) {
 
-        if (obj.___is_last_selected) {
+		if (obj.___context_menu_is_opened) {
+			classList.push('context-menu-opened');
+		}
+
+        if (obj.___is_last_activated) {
             classList.push('last-selected');
 
         } else if (obj.___is_activated) {

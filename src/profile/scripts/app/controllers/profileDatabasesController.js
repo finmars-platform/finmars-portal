@@ -37,7 +37,7 @@
 
             var status = 0; // 0 - SENT, 1 - ACCEPTED, 2 - DECLINED
 
-            usersService.getInviteFromMasterUserList(status).then(function (data) {
+            authorizerService.getInviteFromMasterUserList(status).then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;
@@ -244,7 +244,7 @@
 
             item.status = 2; // Decline code
 
-            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getInvites();
 
@@ -256,7 +256,7 @@
 
             item.status = 1; // Accept code
 
-            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 usersService.setMasterUser(item.to_master_user).then(function (value) {
                     $state.go('app.setup');
