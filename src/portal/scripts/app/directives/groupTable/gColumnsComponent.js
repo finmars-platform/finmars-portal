@@ -78,7 +78,7 @@
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
                 scope.isAllStarsSelected = false;
-                scope.hideRowFilters = false;
+                scope.hideRowSettings = !!scope.evDataService.getRowSettings().folded;
                 scope.groupsAreaDraggable = scope.viewContext !== 'dashboard';
 
                 var entityAttrs = [];
@@ -139,20 +139,36 @@
 
                 scope.rowFiltersToggle = function () {
 
-                    scope.hideRowFilters = !scope.hideRowFilters
+                    scope.hideRowSettings = !scope.hideRowSettings;
+					/* var rowColorsColumnCollapsed = scope.evDataService.getRowColorsColumnData();
 
-                    var rowSettingsElems = scope.contentWrapElement.querySelectorAll(".gRowSettings");
+					rowColorsColumnCollapsed = !rowColorsColumnCollapsed; */
+
+					var rowSettings = scope.evDataService.getRowSettings(scope.hideRowSettings);
+
+					rowSettings.folded = scope.hideRowSettings;
+
+					scope.evDataService.setRowSettings(rowSettings);
+
+					if (scope.hideRowSettings) {
+						scope.contentWrapElement.classList.add('g-row-settings-collapsed');
+
+					} else {
+						scope.contentWrapElement.classList.remove('g-row-settings-collapsed');
+					}
+
+                    /* var rowSettingsElems = scope.contentWrapElement.querySelectorAll(".gRowSettings");
 
                     rowSettingsElems.forEach(rowSElem => {
 
-                        if (scope.hideRowFilters) {
+                        if (scope.hideRowSettings) {
                             rowSElem.classList.add('closed');
 
                         } else {
                             rowSElem.classList.remove('closed');
                         }
 
-                    });
+                    }); */
 
                 };
 
@@ -1655,6 +1671,13 @@
 
                 const init = function () {
 
+					if (scope.hideRowSettings) {
+						scope.contentWrapElement.classList.add('g-row-settings-collapsed');
+
+					} else {
+						scope.contentWrapElement.classList.remove('g-row-settings-collapsed');
+					}
+
                     updateGroupTypeIds();
 
                     scope.columns = scope.evDataService.getColumns();
@@ -1668,7 +1691,7 @@
 
                     if (scope.viewContext === 'dashboard') {
                         getColsAvailableForAdditions();
-                        //keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
+                        // keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
                     }
 
                     initEventListeners();

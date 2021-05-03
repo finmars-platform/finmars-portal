@@ -260,7 +260,7 @@
 
         vm.getLayout = function () {
 
-            uiService.getEditLayout(vm.entityType).then(function (data) {
+            uiService.getDefaultEditLayout(vm.entityType).then(function (data) {
 
                 if (data.results.length) {
                     vm.tabs = data.results[0].data;
@@ -288,19 +288,7 @@
 
         vm.transactionUserFields = {};
 
-        vm.getTransactionUserFields = function () {
-
-            return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
-
-                data.results.forEach(function (field) {
-
-                    vm.transactionUserFields[field.key] = field.name;
-
-                })
-
-            })
-
-        };
+        vm.getTransactionUserFields = ttypeEditorSlHelper.getTransactionUserFields;
 
         vm.getItem = function () {
 

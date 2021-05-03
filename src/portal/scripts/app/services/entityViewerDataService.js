@@ -162,7 +162,8 @@
             activeObject: null,
             activeObjectsCount: 0,
             dataLoadEnded: false,
-            markedSubtotals: {}
+            markedSubtotals: {},
+			rowSettings: {}
         };
 
         var dashboardData = {
@@ -188,7 +189,8 @@
         }
 
         function toggleRightSidebar (collapse) {
-            var interfaceLayout = getInterfaceLayout();
+
+        	var interfaceLayout = getInterfaceLayout();
 
             if (collapse || interfaceLayout.filterArea.width === 239) {
 
@@ -203,6 +205,7 @@
             }
 
             setInterfaceLayout(interfaceLayout);
+
         }
 
         function setRootEntityViewer(isRootEntityViewer) {
@@ -1002,6 +1005,7 @@
 
             emptyUseFromAboveFilters(listLayout.data.filters);
 
+            listLayout.data.rowSettings = getRowSettings();
             listLayout.data.additions = getAdditions();
 
             var interfaceLayout = getInterfaceLayout();
@@ -1053,7 +1057,9 @@
                 delete listLayout.data.reportOptions.item_currencies;
                 delete listLayout.data.reportOptions.item_accounts;
 
-            } else {
+            }
+
+            else {
 
                 listLayout.data.pagination = getPagination();
                 listLayout.data.ev_options = getEntityViewerOptions();
@@ -1414,8 +1420,16 @@
                 return data.columnSortData[key];
             }
 
-            return null
+            return null;
         }
+
+		function setRowSettings (rowSettings) {
+			data.rowSettings = rowSettings;
+		}
+
+        function getRowSettings () {
+			return data.rowSettings || {};
+		}
 
         return {
 
@@ -1540,6 +1554,8 @@
 
             setActiveColumnSort: setActiveColumnSort,
             getActiveColumnSort: getActiveColumnSort,
+			setColumnSortData: setColumnSortData,
+			getColumnSortData: getColumnSortData,
 
             setActiveGroupTypeSort: setActiveGroupTypeSort,
             getActiveGroupTypeSort: getActiveGroupTypeSort,
@@ -1641,8 +1657,8 @@
             setCrossEntityAttributeExtensions: setCrossEntityAttributeExtensions,
             getCrossEntityAttributeExtensions: getCrossEntityAttributeExtensions,
 
-            setColumnSortData: setColumnSortData,
-            getColumnSortData: getColumnSortData,
+			setRowSettings: setRowSettings,
+			getRowSettings: getRowSettings,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

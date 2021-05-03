@@ -123,7 +123,7 @@
 
             const duplicateEntity = async function (entity) {
 
-                var editLayout = await uiService.getEditLayout(vm.entityType);
+                var editLayout = await uiService.getDefaultEditLayout(vm.entityType);
                 var bigDrawerWidthPercent;
                 var fixedAreaColumns;
 
