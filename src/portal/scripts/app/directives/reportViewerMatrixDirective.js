@@ -37,7 +37,7 @@
 
                 var cellWidth = 0;
 
-                var matrixHolder;
+                var matrixWrap, matrixHolder;
                 var bodyScrollElem;
                 var rvmHeaderScrollableRow;
                 var rvmBottomRowScrollableElem;
@@ -52,6 +52,7 @@
 
                 var getElemsForScripts = function () {
 
+					matrixWrap = elem[0].querySelector('.rvMatrixWrap');
                     matrixHolder = elem[0].querySelector('.rvMatrixHolder');
 
                     bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
@@ -96,11 +97,10 @@
                         minWidth = 2;
 
                         var elemHeight = elem.height();
-
                         var cellHeight = Math.floor(elemHeight / rowsCount);
 
                         cellHeight = Math.max(cellHeight, 14);
-                        cellHeight = Math.min(cellHeight, 25);
+                        cellHeight = Math.min(cellHeight, 48);
 
                     }
 
@@ -135,8 +135,8 @@
 
                     var matrixProbableHeight = rowsCount * cellHeight;
 
-                    var matrixVCAvailableWidth = matrixHolder.clientWidth - cellWidth;
-                    var matrixVCAvailableHeight = matrixHolder.clientHeight - cellHeight;
+                    var matrixVCAvailableWidth = matrixWrap.clientWidth - cellWidth;
+                    var matrixVCAvailableHeight = matrixWrap.clientHeight - cellHeight;
                     // whether matrix has scrolls
                     if (matrixVCAvailableWidth < matrixVCContainerWidth) {
 
@@ -153,7 +153,7 @@
                         matrixHolder.classList.remove('has-y-scroll');
                     }
 
-                    if (matrixProbableHeight < matrixHolder.clientHeight) {
+                    if (matrixProbableHeight < matrixWrap.clientHeight) {
                         matrixHolder.style.height = matrixProbableHeight + 'px';
                     } else {
                         matrixHolder.style.height = matrixHolderMinHeight + 'px';
@@ -190,10 +190,12 @@
                 };
 
                 var initMatrixMethods = function () {
-                    getElemsForScripts();
+
+                	getElemsForScripts();
                     scope.alignGrid();
 
                     bodyScrollElem.addEventListener('scroll', scrollHeaderAndColumn);
+
                 };
 
                 scope.checkNegative = function (val) {
@@ -456,7 +458,7 @@
 
                         initMatrixMethods();
 
-                    }, 0)
+                    }, 100)
 
                 };
 
@@ -571,25 +573,6 @@
                     // scope.top_left_title = scope.matrixSettings.top_left_title;
                     scope.styles = scope.matrixSettings.styles;
 
-                    // If we already have data (e.g. viewType changed) start
-                    var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
-
-                    if (flatList.length > 1) {
-
-                        scope.processing = false;
-
-                        scope.createMatrix();
-
-                        /*setTimeout(function () {
-
-                            scope.$apply();
-
-                            initMatrixMethods();
-                        }, 0)*/
-                    }
-
-                    // If we already have data (e.g. viewType changed) end
-
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.processing = false;
@@ -605,6 +588,23 @@
                     clearUseFromAboveFilterId = scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
                         scope.alignGrid();
                     });
+
+					//<editor-fold desc="If we already have data (e.g. viewType changed) start">
+                    var dataLoadEnded = scope.evDataService.didDataLoadEnd();
+
+					if (dataLoadEnded) {
+
+						var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+
+						if (flatList.length > 1) {
+
+							scope.processing = false;
+							scope.createMatrix();
+
+						}
+
+					}
+					//</editor-fold>
 
                     window.addEventListener('resize', scope.alignGrid);
 
