@@ -868,9 +868,22 @@
 
             var getMasterUsersProm = vm.getMasterUsersList();
 
-            var getMemberProm = getMember();
 
-            Promise.allSettled([getUserProm, getMasterUsersProm, getMemberProm]).then(function () {
+
+
+            var promises = []
+
+            promises.push(getUserProm)
+            promises.push(getMasterUsersProm)
+
+            if (baseUrlService.getMasterUserPrefix()) {
+
+                var getMemberProm = getMember();
+
+                promises.push(getMemberProm)
+            }
+
+            Promise.allSettled(promises).then(function () {
 
                 localStorageService.setUMuM(vm.user.id, vm.currentMasterUser.id, member.id);
                 enableAccessHandler($transitions); // TODO Run after successful auth

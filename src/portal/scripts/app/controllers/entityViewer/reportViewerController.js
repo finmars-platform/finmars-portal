@@ -730,9 +730,11 @@
 
                         if (action === 'rebook_transaction') {
 
+                            var complex_transaction_id = activeObject['complex_transaction.id'] || activeObject['complex_transaction']
+
                             var locals = {
                                 entityType: 'complex-transaction',
-                                entityId: activeObject['complex_transaction.id'],
+                                entityId: complex_transaction_id,
                                 data: {}
                             };
 
@@ -963,6 +965,8 @@
                     if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
                         vm.entityViewerDataService.setSplitPanelStatus(true);
                     }
+
+                    interfaceLayout.filterArea.width = 0;
 
                     // Check if there is need to solve report datepicker expression
                     if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
