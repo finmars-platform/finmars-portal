@@ -57,7 +57,7 @@
                     <tr data-ng-repeat="item in vm.invites">
 
                         <td>{{item.user_object.username}}</td>
-                        <td>{{item.from_member_object.username}}</td>
+                        <td>{{item.from_user_object.username}}</td>
                         <td>{{item.assigned_groups_pretty}}</td>
                         <td>{{vm.getInviteStatus(item)}}</td>
                         <td class="members-groups-delete">

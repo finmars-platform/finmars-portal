@@ -258,9 +258,8 @@
 
             authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
-                usersService.setMasterUser(item.to_master_user).then(function (value) {
-                    $state.go('app.setup');
-                })
+                vm.getMasterUsersList();
+                vm.getInvites();
 
             })
 
@@ -268,8 +267,8 @@
 
         vm.init = function () {
             vm.getMasterUsersList();
-            // vm.getInvites();
-            vm.readyStatus.invites = true;
+            vm.getInvites();
+            // vm.readyStatus.invites = true;
         };
 
         vm.init();
