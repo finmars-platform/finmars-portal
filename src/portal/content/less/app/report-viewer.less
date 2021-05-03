@@ -185,7 +185,7 @@
   .g-row {
 
     &.selected {
-      background: #ffeee8;
+      background: #e4c1b5;
 
       .g-row-selection {
         fill: #4C334D;
@@ -481,17 +481,15 @@
   background: rgba(152, 251, 152, 0.6);
 }
 
-.g-wrapper .g-row.g-row-marked-red:not(.selected) {
+.g-wrapper .g-row.g-row-marked-red:not(.selected):not(.last-selected) {
   background-color: #FDECE5;
 }
 
-.g-wrapper .g-row.g-row-marked-yellow:not(.selected) {
-  //background: #fefea4;
+.g-wrapper .g-row.g-row-marked-yellow:not(.selected):not(.last-selected) {
   background-color: #FEF9EF;
 }
 
-.g-wrapper .g-row.g-row-marked-green:not(.selected) {
-  //background: #99c099;
+.g-wrapper .g-row.g-row-marked-green:not(.selected):not(.last-selected) {
   background-color: #E1FEF5;
 }
 
