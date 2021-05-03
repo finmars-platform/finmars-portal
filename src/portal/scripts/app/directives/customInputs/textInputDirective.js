@@ -2,8 +2,8 @@
 
 	"use strict";
 
-	let stringHelper = require('../../helpers/stringHelper');
-	let metaHelper = require('../../helpers/meta.helper');
+	const stringHelper = require('../../helpers/stringHelper');
+	const metaHelper = require('../../helpers/meta.helper');
 
 	module.exports = function ($mdDialog) {
 		return {
@@ -19,7 +19,8 @@
 				isDisabled: "=",
 				renderHyperlinks: "=",
 				onChangeCallback: "&?",
-				onBlurCallback: "&?"
+				onBlurCallback: "&?",
+				onFocus: "=" // I can't bind as "&?" because onFocus need event argument
 			},
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {
@@ -93,34 +94,44 @@
 
 				};
 
+				var onChangeIndex;
+
 				scope.onInputChange = function (modelVal) {
 
 					if (modelVal !== undefined) { // needed for textarea.customInputFullText
 						scope.model = modelVal
 					}
 
-					scope.error = "";
-					stylePreset = "";
-					scope.valueIsValid = false;
+					clearTimeout(onChangeIndex);
 
-					if (scope.model) {
-						scope.valueIsValid = true;
+					onChangeIndex = setTimeout(() => {
 
-					} else {
+						scope.error = "";
+						stylePreset = "";
+						scope.valueIsValid = false;
 
-						if (scope.smallOptions && scope.smallOptions.notNull) {
-							scope.error = "Field should not be null";
+						if (scope.model) {
+							scope.valueIsValid = true;
+
+						} else {
+
+							if (scope.smallOptions && scope.smallOptions.notNull) {
+								scope.error = "Field should not be null";
+							}
+
 						}
 
-					}
+						/* if (scope.onChangeCallback) {
+							 setTimeout(function () {
+								scope.onChangeCallback();
+							}, 0);
+						} */
+						scope.$apply();
 
-					if (scope.onChangeCallback) {
+						if (scope.onChangeCallback) scope.onChangeCallback();
 
-						setTimeout(function () {
-							scope.onChangeCallback();
-						}, 0);
+					}, 500);
 
-					}
 				};
 
 				var applyCustomStyles = function () {
@@ -325,6 +336,12 @@
 
 					fullTextElem.addEventListener("blur", function () {
 
+						if (typeof scope.onFocus === "function") {
+
+							fullTextElem.removeEventListener("focus", scope.onFocus);
+
+						}
+
 						inputContainer.classList.remove("custom-input-full-text-focused");
 
 						if (scope.onBlurCallback) {
@@ -337,6 +354,12 @@
 						}
 
 					});
+
+					if (typeof scope.onFocus === "function") {
+
+						fullTextElem.addEventListener("focus", scope.onFocus);
+
+					}
 
 				};
 

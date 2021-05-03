@@ -1,4 +1,4 @@
-<div data-ng-if="vm.checkReadyStatus()">
+<div ng-if="vm.readyStatus.permissions && vm.readyStatus.entity">
 
 <!--    <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-fields-container">
@@ -14,7 +14,7 @@
                                     ev-editor-data-service="vm.evEditorDataService"
                                     ev-editor-event-service="vm.evEditorEventService"
                                     item="vm.fixedFieldsAttributes[0]"
-                                    entity-change="vm.entityChange()"
+                                    entity-change="vm.onEntityChange()"
                                     on-field-blur="vm.onNameInputBlur()">
                 </bind-field-control>
             </div>
@@ -24,7 +24,7 @@
                  flex="35">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]" entity-type="vm.entityType"
                                     entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.entityChange()"
+                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
                                     item="vm.fixedFieldsAttributes[1]"></bind-field-control>
             </div>
 
@@ -33,7 +33,7 @@
                  flex="15">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]" entity-type="vm.entityType"
                                     entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.entityChange()"
+                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
                                     item="vm.fixedFieldsAttributes[2]"></bind-field-control>
             </div>
         </div>
@@ -44,7 +44,7 @@
                  flex="50">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]" entity-type="vm.entityType"
                                     entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.entityChange()"
+                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
                                     item="vm.fixedFieldsAttributes[3]"></bind-field-control>
             </div>
 
@@ -53,7 +53,7 @@
                  flex="35">
                 <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]" entity-type="vm.entityType"
                                     entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.entityChange()"
+                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
                                     item="vm.fixedFieldsAttributes[4]"></bind-field-control>
             </div>
 
@@ -155,6 +155,7 @@
                                  placeholder-text="{{vm.typeFieldLabel}}"
                                  menu-options="vm.typeSelectorOptions"
                                  small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
+                                 on-change-callback="vm.typeSelectorChange()"
                                  class="ev-editor-field"></dropdown-select>
 
                 <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
@@ -225,7 +226,7 @@
                              data-ng-if="vm.checkFieldRender(tab, row, field)">
                             <bind-field-control entity-type="vm.entityType"
                                                 entity="vm.entity"
-                                                entity-change="vm.entityChange(fieldKey)"
+                                                entity-change="vm.onEntityChange(fieldKey)"
                                                 ev-editor-data-service="vm.evEditorDataService"
                                                 ev-editor-event-service="vm.evEditorEventService"
                                                 item="vm.attributesLayout[tab.tabOrder][field.row][field.column]">
@@ -352,20 +353,20 @@
         </md-tab>
     </md-tabs>-->
 
-    <div class="position-relative">
+    <div ng-if="vm.readyStatus.layout" class="position-relative">
 
         <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
             <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" md-on-select="vm.activeTab = tab">
 
                 <md-tab-label>
-                    <div class="tab-name-elem" data-tab-name="{{tab.name | lowercase}}">
+                    <div class="tab-name-elem evFormUserTabName" data-tab-name="{{tab.name | lowercase}}">
                         <span class="grey-tab">{{tab.name}}</span>
                     </div>
                 </md-tab-label>
 
                 <md-tab-body>
-                    <md-content class="md-padding p-t-26"">
+                    <md-content class="md-padding p-t-26">
                         <div layout="row"
                          data-ng-repeat="row in vm.range(tab.layout.rows)"
                          class="entity-editor-row">
@@ -376,7 +377,7 @@
                              data-ng-if="vm.checkFieldRender(tab, row, field)">
                             <bind-field-control entity-type="vm.entityType"
                                                 entity="vm.entity"
-                                                entity-change="vm.entityChange(fieldKey)"
+                                                entity-change="vm.onEntityChange(fieldKey)"
                                                 ev-editor-data-service="vm.evEditorDataService"
                                                 ev-editor-event-service="vm.evEditorEventService"
                                                 item="vm.attributesLayout[tab.tabOrder][field.row][field.column]">
@@ -528,7 +529,7 @@
 </div>
 
 <div data-ng-if="!vm.checkReadyStatus()">
-    <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+    <div class="flex-row fc-space-around m-large">
         <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
         <progress-circular diameter="100"></progress-circular>
     </div>

@@ -72,7 +72,11 @@
 
 				if (scope.popupClasses) {
 
-					const classes = scope.popupClasses.split(' ');
+					let classes = scope.popupClasses;
+
+					if (typeof scope.popupClasses === 'string') {
+						classes = scope.popupClasses.split(' ');
+					}
 
 					popupElem.classList.add(...classes);
 
@@ -275,6 +279,7 @@
 					removeListeners();
 
 					scope.isPopupOpen = false;
+
 					if (scope.onPopupClose) {
 						scope.onPopupClose();
 					}
@@ -377,6 +382,10 @@
 
 
 				scope.init = function () {
+
+					scope._$popup = {
+						cancel: scope.cancel
+					}
 
 					if (scope.openOn) {
 

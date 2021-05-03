@@ -8,7 +8,7 @@
     var usersGroupService = require('../../services/usersGroupService');
     var usersService = require('../../services/usersService');
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
@@ -859,7 +859,7 @@
         vm.checkFieldRender = function (tab, row, field) {
 
             if (field.row === row) {
-                if (field.type === 'field') {
+                if (field.type !== 'empty') {
                     return true;
                 } else {
 
@@ -871,7 +871,7 @@
 
                     itemsInRow.forEach(function (item) {
 
-                        if (item.type === 'field' && item.colspan > 1) {
+                        if (item.type !== 'empty' && item.colspan > 1) {
                             var columnsToSpan = item.column + item.colspan - 1;
 
                             for (var i = item.column; i <= columnsToSpan; i = i + 1) {
@@ -1121,7 +1121,7 @@
 
             vm.updateEntityBeforeSave();
 
-            var errors = entityEditorHelper.validateComplexTransactionFields(vm.entity,
+            var errors = entityEditorHelper.validateComplexTransaction(vm.entity,
                                                                              vm.transactionType.actions,
                                                                              vm.tabs,
                                                                              vm.entityAttrs,
@@ -1132,7 +1132,7 @@
 
                 vm.tabsWithErrors = {};
 
-                errors.forEach(function (errorObj) {
+                /* errors.forEach(function (errorObj) {
 
                     if (errorObj.locationData &&
                         errorObj.locationData.type === 'tab') {
@@ -1156,7 +1156,8 @@
 
                     }
 
-                });
+                }); */
+				sharedLogicHelper.processTabsErrors(errors, vm.tabsWithErrors, vm.errorFieldsList);
 
                 vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
@@ -1561,7 +1562,7 @@
             vm.entityId = entityId;
         };
 
-        /*vm.entityChange = function () {
+        /*vm.onEntityChange = function () {
 
             console.log("entityChange", vm);
 
@@ -1603,7 +1604,7 @@
             console.log('resultInput', resultInput);
 
         };*/
-		vm.onFieldChange = sharedLogicHelper.onFieldChange;
+		vm.onEntityChange = sharedLogicHelper.onFieldChange;
   };
 
 }());

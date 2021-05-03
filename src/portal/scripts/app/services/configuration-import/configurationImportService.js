@@ -943,7 +943,7 @@
 
                                 var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
 
-                                uiRepository.getEditLayout(entityType).then(function (data) {
+                                uiRepository.getEditLayoutByKey(entityType).then(function (data) {
 
                                     if (data.results.length) {
                                         uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {
@@ -1629,7 +1629,7 @@
 
                                 var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
 
-                                uiRepository.getEditLayout(entityType).then(function (data) {
+                                uiRepository.getEditLayoutByKey(entityType).then(function (data) {
 
                                     if (data.results.length) {
                                         uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {

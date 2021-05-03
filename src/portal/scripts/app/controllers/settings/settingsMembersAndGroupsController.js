@@ -64,7 +64,8 @@
                             // item.assigned_groups_pretty = item.groups_object.map(function (group) {
                             //     return group.name
                             // }).join(', ');
-                            item.assigned_groups_pretty = item.groups.join(', ');
+                            // item.assigned_groups_pretty = item.groups.join(', ');
+                            item.assigned_groups_pretty = item.groups;
 
                             return item;
 
