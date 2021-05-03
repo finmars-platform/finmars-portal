@@ -572,6 +572,56 @@
         })
     };
 
+    var inviteUser = function (data) {
+
+        return xhrService.fetch(authorizerUrl + '/create-invite-to-user/', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+
+    };
+
+    var getInvitesList = function (options) {
+
+        return xhrService.fetch(authorizerUrl + '/invite-to-user/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    };
+
+    var deleteInviteByKey = function (id) {
+
+        return xhrService.fetch(authorizerUrl + '/invite-to-user/' + id + '/',
+            {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                resolve({status: 'deleted'});
+            });
+        })
+    };
+
     module.exports = {
         tokenLogin: tokenLogin,
         login: login,
@@ -613,7 +663,11 @@
 
         getUsercodePrefixList: getUsercodePrefixList,
         createUsercodePrefix: createUsercodePrefix,
-        deleteUserCodePrefixByKey: deleteUserCodePrefixByKey
+        deleteUserCodePrefixByKey: deleteUserCodePrefixByKey,
+
+        inviteUser: inviteUser,
+        getInvitesList: getInvitesList,
+        deleteInviteByKey: deleteInviteByKey
 
     }
 

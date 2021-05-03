@@ -157,7 +157,7 @@
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/get-current-master-user', {
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/get-current-master-user/', {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
