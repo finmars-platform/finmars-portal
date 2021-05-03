@@ -110,7 +110,7 @@
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: activeObject.event,
+                targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
                 multiple: true,
