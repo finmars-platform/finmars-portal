@@ -422,6 +422,7 @@
         }
 
         var is_activated = false;
+        var contextMenuIsOpened = false;
         var subtotal_type;
 
         if (obj.___subtotal_subtype) {
@@ -432,11 +433,17 @@
 
         if (subtotal_type === 'line') {
             is_activated = parent.___is_line_subtotal_activated
-        }
 
-        if (subtotal_type === 'area') {
+        } else if (subtotal_type === 'area') {
             is_activated = parent.___is_area_subtotal_activated
         }
+
+		if (subtotal_type === 'line') {
+			contextMenuIsOpened = parent.___line_subtotal_context_menu_is_opened;
+
+		} else if (subtotal_type === 'area') {
+			contextMenuIsOpened = parent.___area_subtotal_context_menu_is_opened;
+		}
 
 		var grandTotalCell = '';
         var rowSelection;
@@ -466,6 +473,10 @@
 
 			} else {
 				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
+			}
+
+			if (contextMenuIsOpened) {
+				rowClassList.push('context-menu-opened');
 			}
 
 			rowSettings = renderHelper.getRowSettings();

@@ -1249,6 +1249,7 @@
       }
 
       .g-group-button {
+        width: 100%;
         overflow: hidden;
         padding: 2px 0 2px 10px;
         color: #666666;
@@ -1269,6 +1270,8 @@
         .sort {
           width: 13px;
           margin-top: -7px;
+          margin-right: 10px;
+          outline: none;
         }
 
         .gt-sorting-icon {
@@ -1292,7 +1295,7 @@
       .column-name-wrapper {
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
 
         width: 100%;
@@ -1307,6 +1310,39 @@
           }
 
         }
+
+        .name-block {
+          outline: none;
+
+          .arrow-down {
+            display: none;
+          }
+
+          .column-manual-sort-icon {
+            margin-left: 5px;
+          }
+
+          &:hover {
+            .arrow-down {
+              display: block;
+            }
+
+            .column-manual-sort-icon {
+              margin-left: 0;
+            }
+          }
+
+          &.active {
+            .arrow-down {
+              display: block;
+            }
+
+            .column-manual-sort-icon {
+              margin-left: 0;
+            }
+          }
+        }
+
 
 
       }
