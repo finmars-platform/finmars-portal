@@ -1152,8 +1152,8 @@
 
                         linkedFilter.options.filter_values = [componentOutput.data.value];
 
-                        if ((linkedFilter.value_type === 100 || linkedFilter.value_type === 'field') &&
-                            Array.isArray(componentOutput.data.value)) {
+						if ((linkedFilter.value_type === 100 || linkedFilter.value_type !== 'empty') &&
+							Array.isArray(componentOutput.data.value)) {
 
                             linkedFilter.options.filter_values = componentOutput.data.value;
 

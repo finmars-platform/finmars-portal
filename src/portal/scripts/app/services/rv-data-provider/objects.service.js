@@ -47,7 +47,6 @@
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
-
                 // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js and filter flatList
                 /*                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
@@ -73,7 +72,11 @@
 
                     var columnSortData = entityViewerDataService.getColumnSortData(key)
 
-                    items = sortService.sortItemsManual(items, options.ordering, columnSortData);
+                    if (columnSortData) {
+
+                        items = sortService.sortItemsManual(items, options.ordering, columnSortData);
+
+                    }
 
                 } else {
 
