@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    var metaService = require('../services/metaService');
+
+    var entityEditorHelper = require('./entity-editor.helper');
+
     var isUserInputUsedInTTypeExpr = function (userInput, transactionsTypeActions) {
 
         var i, a, b;
@@ -58,8 +62,119 @@
 
     };
 
+	var removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
+
+		inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+
+			let inputInvalid = true;
+
+			for (let i = 0; i < actualUserInputs.length; i++) {
+
+				if (inputName === actualUserInputs[i].name) { // whether input actually exist
+
+					if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+
+						inputInvalid = false;
+
+					}
+
+
+					break;
+
+				}
+
+			}
+
+			if (inputInvalid) {
+				inputsList.splice(index, 1);
+			}
+
+		});
+
+		// return inputsList;
+
+	};
+
+	var updateEntityBeforeSave = function (viewModel) {
+
+		if (metaService.getEntitiesWithoutDynAttrsList().includes(viewModel.entityType)) {
+			viewModel.entity.attributes = [];
+		}
+
+		if (viewModel.entity.attributes) {
+
+			var i, a, c;
+			var keys = Object.keys(viewModel.entity),
+				attrExist;
+
+			for (i = 0; i < viewModel.attrs.length; i = i + 1) {
+
+				for (a = 0; a < keys.length; a = a + 1) {
+
+					if (viewModel.attrs[i].name === keys[a]) {
+
+						attrExist = false;
+
+						for (c = 0; c < viewModel.entity.attributes.length; c = c + 1) {
+
+							if (viewModel.entity.attributes[c]['attribute_type'] === viewModel.attrs[i].id) {
+								attrExist = true;
+								viewModel.entity.attributes[c] = entityEditorHelper.updateValue(viewModel.entity.attributes[c], viewModel.attrs[i], viewModel.entity[keys[a]]);
+							}
+
+						}
+
+						if (!attrExist) {
+							viewModel.entity.attributes.push(entityEditorHelper.appendAttribute(viewModel.attrs[i], viewModel.entity[keys[a]]));
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+		if (viewModel.entity.attributes) {
+
+			viewModel.entity = entityEditorHelper.checkEntityAttrTypes(viewModel.entity, viewModel.entityAttrs);
+			viewModel.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(viewModel.entity.attributes);
+
+		}
+
+		viewModel.entity.object_permissions = [];
+
+		if (viewModel.groups) {
+
+			viewModel.groups.forEach(function (group) {
+
+				if (group.objectPermissions && group.objectPermissions.manage === true) {
+					viewModel.entity.object_permissions.push({
+						member: null,
+						group: group.id,
+						permission: "manage_" + viewModel.entityType.split('-').join('')
+					})
+				}
+
+				if (group.objectPermissions && group.objectPermissions.change === true) {
+					viewModel.entity.object_permissions.push({
+						member: null,
+						group: group.id,
+						permission: "change_" + viewModel.entityType.split('-').join('')
+					})
+				}
+
+			});
+
+		}
+
+	};
+
     // updating user inputs from input form editor layout using user inputs inside transaction type
     var updateTransactionUserInputs = function (userInputs, tabs, fixedArea, ttype) {
+
+		userInputs = [];
 
         tabs.forEach(function (tab) {
             tab.layout.fields.forEach(function (field) {
@@ -109,12 +224,18 @@
 
         });
 
+        return userInputs;
+
     };
     // < updating user inputs from input form editor layout using user inputs inside transaction type >
 
     module.exports = {
         isUserInputUsedInTTypeExpr: isUserInputUsedInTTypeExpr,
-        updateTransactionUserInputs: updateTransactionUserInputs
+        updateTransactionUserInputs: updateTransactionUserInputs,
+		updateEntityBeforeSave: updateEntityBeforeSave,
+
+		removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
+
     }
 
 }());

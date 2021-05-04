@@ -874,7 +874,7 @@
 
 					if (item.to_show) {
 
-						if (!item.default_value) {
+						if (!item.default_value && item.default_value !== 0) {
 
 							errorsList.push({
 								key: 'accruals',
