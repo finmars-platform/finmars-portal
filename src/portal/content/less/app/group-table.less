@@ -971,9 +971,9 @@
     }
 
 
-    .complex-date-picker-wrapper {
+    /* .complex-datepicker-wrapper {
       top: 15px;
-    }
+    } */
 
     md-select {
       margin: 0;
@@ -1249,6 +1249,7 @@
       }
 
       .g-group-button {
+        width: 100%;
         overflow: hidden;
         padding: 2px 0 2px 10px;
         color: #666666;
@@ -1269,6 +1270,8 @@
         .sort {
           width: 13px;
           margin-top: -7px;
+          margin-right: 10px;
+          outline: none;
         }
 
         .gt-sorting-icon {
@@ -1292,7 +1295,7 @@
       .column-name-wrapper {
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
 
         width: 100%;
@@ -1307,6 +1310,39 @@
           }
 
         }
+
+        .name-block {
+          outline: none;
+
+          .arrow-down {
+            display: none;
+          }
+
+          .column-manual-sort-icon {
+            margin-left: 5px;
+          }
+
+          &:hover {
+            .arrow-down {
+              display: block;
+            }
+
+            .column-manual-sort-icon {
+              margin-left: 0;
+            }
+          }
+
+          &.active {
+            .arrow-down {
+              display: block;
+            }
+
+            .column-manual-sort-icon {
+              margin-left: 0;
+            }
+          }
+        }
+
 
 
       }
@@ -1460,8 +1496,20 @@
   }
 }
 
-.g-column-context-menu-popup, .g-column-context-menu-submenu-popup {
-  min-width: 256px;
+.g-column-context-menu-popup {
+  min-width: 235px;
+}
+
+.g-column-number-context-menu-popup {
+  min-width: 266px;
+}
+
+.g-column-context-menu-submenu-popup {
+  min-width: 186px;
+}
+
+.g-column-context-menu-number-format-popup {
+  min-width: 247px;
 }
 
 .g-row-color-picker-content {
@@ -2087,11 +2135,29 @@ body.md-dialog-is-showing {
   }
 }
 
-.complex-date-picker-wrapper {
+.complex-datepicker-wrapper {
   position: relative;
+
+  .complex-datepicker-popup-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-width: 78px;
+    min-height: 0;
+    height: 26px;
+    padding: 2px 26px 1px 2px;
+    margin: 0;
+  }
+
+  &.range-of-dates {
+    .complex-datepicker-popup-btn {
+      min-width: 156px;
+    }
+  }
+
 }
 
-.complex-date-picker-settings {
+.complex-datepicker-settings {
   position: absolute;
   right: 0;
   bottom: 25px;
@@ -2450,28 +2516,28 @@ body.md-dialog-is-showing {
       //border-bottom: 1px solid #363636;
     }
 
-    //.g-cell-wrap:last-child .g-cell {
-    //  box-shadow: 1px 0 0 0 #363636,
-    //  0 1px 0 0 #363636,
-    //  1px 1px 0 0 #363636,
-    //  1px 0 0 0 #363636 inset,
-    //  0 1px 0 0 #363636 inset;
-    //}
-    //.g-cell-wrap:nth-child(2) .g-cell { //wut?
-    //  box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
-    //}
+    /* .g-cell-wrap:last-child .g-cell {
+      box-shadow: 1px 0 0 0 #363636,
+      0 1px 0 0 #363636,
+      1px 1px 0 0 #363636,
+      1px 0 0 0 #363636 inset,
+      0 1px 0 0 #363636 inset;
+    }
+    .g-cell-wrap:nth-child(2) .g-cell { //wut?
+      box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
+    } */
   }
 
-  //.g-row.report-header-row {
-  //  .g-cell-wrap:nth-child(2) .g-cell { //wut?
-  //    box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
-  //  }
-  //}
-  //.g-row.report-normal-row {
-  //  .g-cell-wrap:nth-child(2) .g-cell { //wut?
-  //    box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
-  //  }
-  //}
+  /* .g-row.report-header-row {
+    .g-cell-wrap:nth-child(2) .g-cell { //wut?
+      box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
+    }
+  }
+  .g-row.report-normal-row {
+    .g-cell-wrap:nth-child(2) .g-cell { //wut?
+      box-shadow: 1px 0 0 0 #363636, 0 1px 0 0 #363636, 1px 1px 0 0 #363636, 1px 0 0 0 #363636 inset;
+    }
+  } */
 
   .g-row {
     //.g-cell.r-c-border-right {

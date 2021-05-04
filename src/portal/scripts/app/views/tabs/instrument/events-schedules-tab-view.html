@@ -5,7 +5,7 @@
             <div class="ev-data-field">
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
-                                    entity-change="vm.entityChange(fieldKey)"
+                                    entity-change="vm.onEntityChange(fieldKey)"
                                     small-options="{notNull: true}"
                                     ev-editor-data-service="vm.evEditorDataService"
                                     ev-editor-event-service="vm.evEditorEventService"
@@ -15,7 +15,7 @@
             <div class="ev-data-field">
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
-                                    entity-change="vm.entityChange(fieldKey)"
+                                    entity-change="vm.onEntityChange(fieldKey)"
                                     ev-editor-data-service="vm.evEditorDataService"
                                     ev-editor-event-service="vm.evEditorEventService"
                                     item="vm.maturityPriceAttr"></bind-field-control>

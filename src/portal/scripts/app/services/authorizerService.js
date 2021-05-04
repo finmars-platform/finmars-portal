@@ -86,6 +86,17 @@
         return authorizerRepository.getMasterListLight();
     };
 
+    var inviteUser = function (data) {
+        return authorizerRepository.inviteUser(data);
+    };
+
+    var getInvitesList = function(options){
+        return authorizerRepository.getInvitesList(options);
+    };
+
+    var deleteInviteByKey = function(id) {
+        return authorizerRepository.deleteInviteByKey(id)
+    };
 
 
     module.exports = {
@@ -111,6 +122,10 @@
         updateMaster: updateMaster,
 
         setMasterUser: setMasterUser,
+
+        inviteUser: inviteUser,
+        getInvitesList: getInvitesList,
+        deleteInviteByKey: deleteInviteByKey
 
 
     }

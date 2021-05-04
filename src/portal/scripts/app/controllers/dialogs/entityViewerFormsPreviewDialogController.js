@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
 
     var gridHelperService = require('../../services/gridHelperService');
@@ -52,7 +52,7 @@
 
                     fieldResult = {};
 
-                    if (field && field.type === 'field') {
+                    if (field && field.type !== 'empty') {
 
                         if (field.attribute_class === 'attr') {
 
@@ -252,7 +252,7 @@
         vm.checkFieldRender = function (tab, row, field) {
 
             if (field.row === row) {
-                if (field.type === 'field') {
+                if (field.type !== 'empty') {
                     return true;
                 } else {
 
@@ -263,7 +263,7 @@
 
                     itemsInRow.forEach(function (item) {
 
-                        if (item.type === 'field' && item.colspan > 1) {
+                        if (item.type !== 'empty' && item.colspan > 1) {
                             var columnsToSpan = item.column + item.colspan - 1;
 
                             for (var i = item.column; i <= columnsToSpan; i = i + 1) {

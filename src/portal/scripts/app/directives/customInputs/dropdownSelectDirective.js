@@ -31,11 +31,11 @@
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                 }
 
-                // TIPS
-                // scope.smallOptions probable properties
-                    // tooltipText: custom tolltip text
-                    // indicatorBtnIcon: sets icon for indicator button
-                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
+                /* TIPS
+                scope.smallOptions probable properties
+                    tooltipText: custom tolltip text
+                    indicatorBtnIcon: sets icon for indicator button
+                    dialogParent: 'string' - querySelector content for element to insert mdDialog into */
 
                 if (scope.smallOptions) {
 
@@ -98,6 +98,8 @@
 
                 scope.selectOption = function (item) {
 
+					closeDropdownMenu();
+
                     if (item.id !== scope.model) {
 
                         stylePreset = '';
@@ -109,13 +111,9 @@
                         scope.itemName = item.name;
                         scope.inputText = item.name;
 
-                        closeDropdownMenu();
-
                         setTimeout(function () {
 
-                            if (scope.onChangeCallback) {
-                                scope.onChangeCallback();
-                            }
+                            if (scope.onChangeCallback) scope.onChangeCallback();
 
                             scope.$apply();
 
@@ -131,23 +129,29 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
+					inputContainer.classList.remove('custom-input-focused');
+
+					if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+
                     scope.dropdownMenuShown = false;
 
                     window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
 
-                    if (updateScope) {
-                        scope.$apply();
-                    }
+                    if (updateScope) scope.$apply();
 
                 }
 
                 var closeDDMenuOnClick = function (event) {
-                    var targetElem = event.target;
+
+                	var targetElem = event.target;
+
+					scope.dropdownMenuFilter = null;
 
                     if (!inputContainer.contains(targetElem)) {
                         closeDropdownMenu(true);
                     }
+
                 };
 
                 var onTabKeyPress = function (event) {
@@ -181,6 +185,7 @@
 
                 scope.openSelectorDialog = function ($event) {
 
+					closeDropdownMenu();
                     // Victor 2020.11.09 If body is parent, then modal window under popup
                     // var dialogParent = angular.element(document.body);
                     var dialogParent =  document.querySelector('.dialog-containers-wrap');
@@ -252,8 +257,11 @@
 
                                 switch (scope.eventSignal.key) {
                                     case 'mark_not_valid_fields':
-                                        if (scope.smallOptions && scope.smallOptions.notNull && !scope.item) {
-                                            scope.error = 'Field should not be null'
+                                        if (scope.smallOptions && scope.smallOptions.notNull &&
+											!scope.model && scope.model !== 0) {
+
+                                            scope.error = 'Field should not be null';
+
                                         }
 
                                         break;
@@ -296,7 +304,6 @@
 
                         } else {
                             scope.inputText = '';
-
                         }
 
                     });
@@ -317,37 +324,44 @@
 
 						scope.inputText = "";
 						inputContainer.classList.add('custom-input-focused');
-                        scope.dropdownMenuShown = true;
+
+						scope.dropdownMenuShown = true;
 
                         window.addEventListener('click', closeDDMenuOnClick);
                         document.addEventListener('keydown', onTabKeyPress);
 
                         scope.$apply();
 
-                    });
+                    }, false);
 
-                    inputElem.addEventListener('blur', function (event) {
+                    /* inputElem.addEventListener('blur', function (event) {
 
                         inputContainer.classList.remove('custom-input-focused');
 
                         if (scope.itemName) {
-                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+
+                        	scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                             scope.$apply();
+
                         }
 
-                    });
+                    }); */
 
                 };
 
                 var init = function () {
 
-                    for (var i = 0; i < scope.menuOptions.length; i++) {
-                        if (scope.menuOptions[i].id === scope.model) {
+                    if (scope.menuOptions) {
 
-                            scope.itemName = scope.menuOptions[i].name;
-                            scope.inputText = scope.menuOptions[i].name;
+                        for (var i = 0; i < scope.menuOptions.length; i++) {
+                            if (scope.menuOptions[i].id === scope.model) {
 
-                            break;
+                                scope.itemName = scope.menuOptions[i].name;
+                                scope.inputText = scope.menuOptions[i].name;
+
+                                break;
+
+                            }
 
                         }
 

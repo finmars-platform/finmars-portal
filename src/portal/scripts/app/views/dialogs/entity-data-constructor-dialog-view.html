@@ -33,6 +33,7 @@
 
                     <div class="form-constructor-workarea scrollElemOnDrag tabsHolderElem">
                         <div data-ng-init="vm.setTabsHolderHeight()"></div>
+
                         <!-- CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR -->
                         <!--<div class="form-constructor-fixed-area">
                             <div>
@@ -94,33 +95,31 @@
                             </div>
 
                         </div>-->
-                        <!-- CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR -->
+                        <!-- < CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR > -->
 
-                        <div>
-
-
-
-                        </div>
-
-                        <div class="p-t-16" layout="row">
-
-                            <md-input-container class="md-block">
+                        <div class="flex-row fc-start fi-center p-t-16 p-l-8 m-b-8">
+                            <!-- <md-input-container class="md-block">
                                 <label>User Code</label>
                                 <input aria-label="scheme user code" type="text" data-ng-model="vm.ui.user_code">
-                            </md-input-container>
-
-                            <md-input-container class="md-block">
+                            </md-input-container> -->
+                            <text-input label="User Code"
+                                        model="vm.ui.user_code"
+                                        class="m-r-8"></text-input>
+                            <!-- <md-input-container class="md-block">
                                 <label>Name</label>
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.ui.name">
-                            </md-input-container>
+                            </md-input-container> -->
+                            <text-input label="Name"
+                                        model="vm.ui.name"
+                                        class="m-r-8"></text-input>
 
                             <div>
                                 <md-checkbox data-ng-model="vm.ui.is_default"
+                                             class="m-b-0"
                                              aria-label="checkbox">
                                     Is default
                                 </md-checkbox>
                             </div>
-
 
                         </div>
 
@@ -225,9 +224,10 @@
                         </p>
 
                         <div data-ng-repeat="item in vm.items track by $index" class="form-constructor-draggable-card" >
-                            <md-card class="p-l-16" data-index="{{$index}}">
-                                <p><b data-ng-bind="vm.getFieldName(item)"></b> (<span
-                                        data-ng-bind="vm.getFieldType(item.value_type)"></span>)</p>
+                            <md-card class="p-l-16"
+                                     data-index="{{$index}}"
+                                     data-occupies-whole-row="{{vm.doesAttrOccupiesWholeRow(item)}}">
+                                <p><b data-ng-bind="vm.getFieldName(item)"></b> (<span data-ng-bind="vm.getFieldType(item.value_type)"></span>)</p>
                             </md-card>
                         </div>
 
