@@ -152,6 +152,7 @@
         };
 
         var postBookComplexTransactionActions = function (transactionData) {
+
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
@@ -169,8 +170,10 @@
 
             dataConstructorLayout = JSON.parse(JSON.stringify(transactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
-            vm.userInputs = [];
-            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+            // vm.userInputs = [];
+
+			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+
             /*vm.tabs.forEach(function (tab) {
                 tab.layout.fields.forEach(function (field) {
                     if (field.attribute_class === 'userInput') {
@@ -263,14 +266,11 @@
 
             }
 
-
             mapAttributesAndFixFieldsLayout();
 
         };
 
         vm.recalculate = function (paramsObj) {
-
-
 
 			var inputs = paramsObj.inputs;
 			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
@@ -296,10 +296,9 @@
 
                 console.log('contextParameters', contextParameters);
 
-                transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(function (data) {
+                transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(async function (data) {
 
                     vm.transactionType = data.transaction_type_object;
-
                     vm.entity = data.complex_transaction;
 
 
@@ -316,9 +315,10 @@
 
                         vm.missingLayoutError = false;
 
-
                         postBookComplexTransactionActions(data);
-
+						// Victor 2020.12.01 #64
+						await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+						// <Victor 2020.12.01 #64>
 
                         /*vm.oldValues = {};
 
@@ -523,67 +523,9 @@
             return true;
         };
 
-        vm.updateEntityBeforeSave = function () {
+        vm.book = async function ($event) {
 
-            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
-                vm.entity.attributes = [];
-            }
-
-            if (vm.entity.attributes) {
-                var i, a, c;
-                var keys = Object.keys(vm.entity), attrExist;
-                for (i = 0; i < vm.attrs.length; i = i + 1) {
-                    for (a = 0; a < keys.length; a = a + 1) {
-                        if (vm.attrs[i].name === keys[a]) {
-                            attrExist = false;
-                            for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
-                                if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-                                    attrExist = true;
-                                    vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
-                                }
-                            }
-                            if (!attrExist) {
-                                vm.entity.attributes.push(entityEditorHelper.appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (vm.entity.attributes) {
-                vm.entity = entityEditorHelper.checkEntityAttrTypes(vm.entity, vm.entityAttrs);
-                vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
-            }
-
-            vm.entity.object_permissions = [];
-
-            if (vm.groups) {
-                vm.groups.forEach(function (group) {
-
-                    if (group.objectPermissions && group.objectPermissions.manage === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "manage_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.change === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "change_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                });
-            }
-
-        };
-
-        vm.book = function ($event) {
-
-            vm.updateEntityBeforeSave();
+            transactionHelper.updateEntityBeforeSave(vm);
 
             var errors = entityEditorHelper.validateComplexTransaction(vm.entity,
                 vm.transactionType.actions,
@@ -641,40 +583,42 @@
 
             else {
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+
                 var resultEntity = vm.entity;
 
-                resultEntity.values = {};
+				/* resultEntity.values = {};
 
-                vm.userInputs.forEach(function (userInput) {
+				vm.userInputs.forEach(function (userInput) {
 
-                    if (userInput !== null) {
+					if (userInput !== null) {
 
 						Object.keys(vm.entity).forEach(function (key) {
 
-                    		if (key === userInput.name) {
+							if (key === userInput.name) {
 
-                            	resultEntity.values[userInput.name] = vm.entity[userInput.name];
+								resultEntity.values[userInput.name] = vm.entity[userInput.name];
 
-                                if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
-                                    resultEntity.values[userInput.name] = true;
-                                }
+								if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
+									resultEntity.values[userInput.name] = true;
+								}
 
-                            }
+							}
 
-                        });
+						});
 
-                    }
+					}
 
-                });
+				}); */
+				resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
 
                 resultEntity.store = true;
                 resultEntity.calculate = true;
 
                 console.log('resultEntity', resultEntity);
 
-                new Promise(function (resolve, reject) {
+				vm.processing = true;
 
-                    vm.processing = true;
+                new Promise(function (resolve, reject) {
 
                     transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
 
@@ -799,7 +743,8 @@
 
                     });
 
-                }).then(function (data) {
+                })
+				.then(function (data) {
 
                     if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
@@ -821,14 +766,15 @@
 						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
 					}
 
-                })
+                });
+
             }
 
         };
 
-        vm.bookAsPending = function ($event) {
+        vm.bookAsPending = async function ($event) {
 
-            vm.updateEntityBeforeSave();
+            transactionHelper.updateEntityBeforeSave(vm);
 
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
@@ -840,7 +786,7 @@
 
                     var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
-                    resultEntity.values = {};
+                    /*resultEntity.values = {};
 
                     vm.userInputs.forEach(function (userInput) {
 
@@ -852,12 +798,11 @@
                                 }
                             });
                         }
-                    });
+                    });*/
+					resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
 
                     resultEntity.store = true;
                     resultEntity.calculate = true;
-
-                    console.log('resultEntity', resultEntity);
 
                     new Promise(function (resolve, reject) {
 

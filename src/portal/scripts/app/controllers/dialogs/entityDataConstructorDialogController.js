@@ -726,7 +726,6 @@
                 var flexUnit = 100 / vm.fixedArea.layout.columns;
 
             }
-
             else {
 
                 // TODO this line get throw
