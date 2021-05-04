@@ -463,6 +463,7 @@
 
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
+						scope.date = date;
 						firstDate = new Date(date);
 
 						pickmeup(firstCalendarElem).set_date(firstDate);
@@ -473,6 +474,7 @@
 
 					} else if (date === null) {
 
+						scope.date = null;
 						firstDate = null;
 						pickmeup(firstCalendarElem).set_date();
 
@@ -484,6 +486,7 @@
 
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
+						scope.secondDate = date;
 						secondDate = new Date(date);
 
 						pickmeup(firstCalendarElem).update();
@@ -493,9 +496,11 @@
 						scope.secondDatepickerOptions.datepickerMode = 'datepicker';
 
 					} else if (date === null) {
-						secondDate = null;
+
 						scope.secondDate = null;
+						secondDate = null;
 						pickmeup(secondCalendarElem).set_date();
+
 					}
 
 				};
