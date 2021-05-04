@@ -150,6 +150,22 @@
 
 	};
 
+    const toggleFilterBlock = function (scope) {
+
+        scope.showFiltersArea = !scope.showFiltersArea;
+
+        const id = scope.vm.componentData.id;
+        const components = scope.dashboardDataService.getComponents();
+        const currentComponent = components.find(component => component.id === id);
+
+        if (currentComponent) {
+            currentComponent.settings.filters.show_filters_area = scope.showFiltersArea;
+        }
+
+        scope.dashboardDataService.setComponents(components);
+        scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
+    };
+
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
         getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
@@ -157,7 +173,8 @@
 
 		saveComponentSettingsFromDashboard: saveComponentSettingsFromDashboard,
 
-		initEventListeners: initEventListeners
+		initEventListeners: initEventListeners,
+        toggleFilterBlock: toggleFilterBlock
     };
 
 }());
