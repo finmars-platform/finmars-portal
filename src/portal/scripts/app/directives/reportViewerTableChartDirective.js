@@ -173,7 +173,11 @@
 
                     scope.items = scope.items.map(function (item) {
 
-                        item.total = scope.formatValue(item.total, scope.tableChartSettings.number_format)
+                        if (item.total === null || item.total === undefined || isNaN(item.total)) {
+                            item.total = 0;
+                        }
+
+                        item.total_formated = scope.formatValue(item.total, scope.tableChartSettings.number_format)
 
                         return item
                     })
@@ -216,13 +220,15 @@
 
                             item.graph_value = Math.ceil(item.total / (positiveTotal / 100))
 
-                        } else {
+                        } else if (item.total < 0) {
 
                             item.graph_value = Math.ceil(Math.abs(item.total) / (negativeTotal / 100))
                             item.is_negative = true;
 
                             scope.hasNegativeValues = true;
 
+                        } else {
+                            item.graph_value = 0;
                         }
 
                         return item;
