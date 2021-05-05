@@ -274,6 +274,19 @@
 
                 }
 
+                scope.rowClick = function ($event, item) {
+
+                    var activeObject = {};
+
+                    activeObject[scope.tableChartSettings.title_column] = item.key;
+
+                    console.log('activeObject', activeObject);
+
+                    scope.evDataService.setActiveObject(activeObject);
+                    scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                };
+
                 scope.init = function () {
 
                     scope.evDataService.setActiveObject({});
