@@ -15,12 +15,13 @@
             scope: {
                 matrixSettings: '=',
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+
             },
             templateUrl: 'views/directives/report-viewer-matrix-view.html',
             link: function (scope, elem, attr) {
 
-                scope.activeItem = null;
+            	scope.activeItem = null;
 
                 // console.log('Report Viewer Matrix Component', scope);
 
@@ -30,6 +31,12 @@
                 scope.dashboardFilterCollapsed = true;
                 scope.matrixView = scope.matrixSettings.matrix_view;
                 scope.emptyLinesHidingType = '';
+
+                scope.availableAbscissaAttrs = scope.matrixSettings.available_abscissa_keys || [];
+                if (scope.availableAbscissaAttrs.length) scope.availableAbscissaAttrs = JSON.parse(angular.toJson(scope.availableAbscissaAttrs));
+
+                scope.availableOrdinateAttrs = scope.matrixSettings.available_ordinate_keys || [];
+                if (scope.availableOrdinateAttrs.length) scope.availableOrdinateAttrs = JSON.parse(angular.toJson(scope.availableOrdinateAttrs));
 
                 if (scope.matrixSettings.hide_empty_lines) {
                     scope.emptyLinesHidingType = scope.matrixSettings.hide_empty_lines;
@@ -42,6 +49,7 @@
                 var rvmHeaderScrollableRow;
                 var rvmBottomRowScrollableElem;
                 var bodyScrollableElem;
+				var axisAttrsSelectorHolder;
                 var rvMatrixValueRowsHolder;
                 var rvMatrixFixedBottomRow;
                 var rvMatrixLeftCol;
@@ -58,7 +66,6 @@
                     bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
                     rvmHeaderScrollableRow = elem[0].querySelector('.rvmHeaderScrollableRow');
                     rvmBottomRowScrollableElem = elem[0].querySelector('.rvmBottomRowScrollableElem');
-
                     bodyScrollableElem = elem[0].querySelectorAll('.scrollableMatrixBodyColumn');
 
                     rvMatrixValueRowsHolder = elem[0].querySelector('.rvMatrixValueRowsHolder');
@@ -66,6 +73,10 @@
 
                     rvMatrixLeftCol = elem[0].querySelector('.rvMatrixLeftCol');
                     rvMatrixRightCol = elem[0].querySelector('.rvMatrixRightCol');
+
+                    if (scope.viewContext === 'dashboard') {
+						axisAttrsSelectorHolder = elem[0].querySelector('.axisAttrSelectorBtnsHolder');
+					}
 
                 };
 
@@ -167,6 +178,11 @@
                     }
 
                     rvmHeaderScrollableRow.style.width = matrixMaxWidth + 'px';
+
+					if (scope.viewContext === 'dashboard') {
+						axisAttrsSelectorHolder.style.width = cellWidth + 'px';
+						axisAttrsSelectorHolder.style.height = cellHeight + 'px';
+					}
 
                     for (var i = 0; i < items.length; i = i + 1) {
 
@@ -351,9 +367,7 @@
                 var getValuesForMatrix = function () {
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
-                    itemList = flatList.filter(function (item) {
-                        return item.___type === 'object';
-                    });
+                    itemList = flatList.filter(item => item.___type === 'object');
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
@@ -380,7 +394,6 @@
                 };
 
                 scope.createMatrix = function () {
-
                     /*var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
                     var itemList = flatList.filter(function (item) {
                         return item.___type === 'object'
@@ -566,6 +579,55 @@
 
                 };
 
+				/**
+				 *
+				 * @param option {{id: string, name: string, isActive: boolean}}
+				 * @param axisProp {String} - can be 'abscissa' or 'ordinate'
+				 * @param _$popup {Object} - data from popup
+				 */
+				var onAxisAttrsOptionSelect = function (option, axisProp, _$popup) {
+
+					if (option.id !== scope.matrixSettings[axisProp]) {
+
+						scope.matrixSettings[axisProp] = option.id;
+						scope.createMatrix();
+
+						scope.evEventService.dispatchEvent(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED);
+
+					}
+
+					_$popup.cancel();
+
+				};
+
+				var formatAttrsForSelector = function (attrsList, selectedAttrKey) {
+
+                	return attrsList.map(attr => {
+
+                		return {
+							name: attr.layout_name || attr.attribute_data.name,
+							id: attr.attribute_data.key,
+							isActive: attr.attribute_data.key === selectedAttrKey
+						};
+
+					});
+
+				};
+
+                scope.abscissaSelectorData = {
+                	options: formatAttrsForSelector(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa),
+					selectOption: function (option, _$popup) {
+						onAxisAttrsOptionSelect(option, 'abscissa', _$popup);
+					}
+				};
+
+				scope.ordinateSelectorData = {
+					options: formatAttrsForSelector(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate),
+					selectOption: function (option, _$popup) {
+						onAxisAttrsOptionSelect(option, 'ordinate', _$popup);
+					}
+				};
+
                 scope.init = function () {
 
                     scope.evDataService.setActiveObject({});
@@ -576,9 +638,7 @@
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.processing = false;
-
                         scope.createMatrix();
-
                         /*scope.$apply();
 
                         initMatrixMethods();*/
@@ -597,10 +657,8 @@
 						var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
 
 						if (flatList.length > 1) {
-
 							scope.processing = false;
 							scope.createMatrix();
-
 						}
 
 					}
