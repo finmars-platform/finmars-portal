@@ -405,6 +405,9 @@
                     if (isReport) {
                         contentElem.style.opacity = '0.7';
                     }
+
+                    scope.evDataService.setDataLoadStatus(false);
+
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -421,6 +424,8 @@
                         scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
                     }
+
+					scope.evDataService.setDataLoadStatus(true);
 
                 });
 

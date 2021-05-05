@@ -206,6 +206,7 @@
 
                     }
 
+					//<editor-fold desc="Dashboard component events">
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
 
                         if (scope.item && scope.item.data) {
@@ -236,7 +237,12 @@
 
                         });
 
-                    })
+                    });
+
+					scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
+
+					});
+					//</editor-fold>
 
                 };
 
