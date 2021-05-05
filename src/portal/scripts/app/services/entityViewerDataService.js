@@ -146,7 +146,7 @@
                 step: 60, // rows to render
                 direction: null
             },
-            viewContext: '',
+            viewContext: '', // can be: reconciliation_viewer, dashboard, entity_viewer, reconciliation_viewer, split_panel
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
