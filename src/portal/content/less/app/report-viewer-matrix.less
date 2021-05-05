@@ -46,6 +46,45 @@
     //display: block;
   }
 
+  .axis-attr-selector-btns-holder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+
+    .axis-attr-selector-btn {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background-color: #fff;
+      padding: 0;
+      border: 1px solid @borderPale;
+      border-radius: 100%;
+
+      &[disabled] {
+        opacity: .5;
+      }
+
+      &.abscissa {
+        top: 50%;
+        transform: translateY(-50%);
+        right: -9px;
+      }
+
+      &.ordinate {
+        bottom: -9px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      span.material-icons {
+        color: @gray;
+        font-size: 18px;
+      }
+    }
+
+  }
+
   .rv-matrix-header {
     display: flex;
     flex-direction: row;
@@ -59,6 +98,7 @@
       position: relative;
       width: 100%;
       overflow: hidden;
+      z-index: 0;
     }
 
     .report-viewer-empty-header-cell {
@@ -132,6 +172,8 @@
   }
 
   .report-viewer-matrix-row {
+    z-index: 0;
+
     &:after {
       content: '';
       display: block;
@@ -319,3 +361,5 @@
     box-sizing: border-box;
   }
 }
+
+
