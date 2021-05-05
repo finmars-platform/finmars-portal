@@ -134,6 +134,33 @@
                     return Math.floor(Math.random() * (max - min + 1) + min);
                 }
 
+                scope.formatValue = function (val, number_format) {
+
+                    var result = val;
+
+                    if (number_format && (val || val === 0)) {
+
+                        result = renderHelper.formatValue(
+                            {
+                                value: val
+                            },
+                            {
+                                key: 'value',
+                                report_settings: number_format
+                            }
+                        );
+
+                    }
+
+                    if (!result && result !== 0) {
+                        return '';
+                    }
+
+                    return result;
+
+                };
+
+
                 scope.createTable = function () {
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
@@ -142,6 +169,14 @@
                     });
 
                     scope.items = scope.getUniqueValues(itemList, scope.tableChartSettings.title_column, scope.tableChartSettings.value_column)
+
+
+                    scope.items = scope.items.map(function (item) {
+
+                        item.total = scope.formatValue(item.total, scope.tableChartSettings.number_format)
+
+                        return item
+                    })
 
                     console.log('createTable.tableChartSettings', scope.tableChartSettings);
                     console.log('createTable.items', scope.items);
