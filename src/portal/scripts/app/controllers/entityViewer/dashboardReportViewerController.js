@@ -1850,12 +1850,17 @@
                 }
 
                 if (vm.componentData.type === 'report_viewer_table_chart') {
+
+                    console.log('DasboardReportViewer.report_viewer_table_chart.vm.componentData', vm.componentData)
+
                     vm.tableChartSettings = {
                         title_column: vm.componentData.settings.title_column,
                         value_column: vm.componentData.settings.value_column,
 
                         title_column_name: vm.componentData.settings.title_column_name,
-                        value_column_name: vm.componentData.settings.value_column_name
+                        value_column_name: vm.componentData.settings.value_column_name,
+
+                        number_format: vm.componentData.settings.number_format
                     };
                 }
 
