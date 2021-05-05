@@ -10,7 +10,8 @@
 
     let componentsForLinking = [
         'report_viewer', 'report_viewer_split_panel', 'report_viewer_matrix',
-        'report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_grand_total'
+        'report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_grand_total',
+        'report_viewer_table_chart'
     ];
 
 	const getLinkingToFilters = function (layout) {
