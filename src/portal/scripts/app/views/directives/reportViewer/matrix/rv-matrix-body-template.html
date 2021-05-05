@@ -70,7 +70,7 @@
                 {{formatValue(item.total)}}
             </div>
 
-            <div class="report-viewer-matrix-cell report-viewer-cell-border-left text-{{styles.cell.text_align}} rvMatrixCell"
+            <div class="report-viewer-matrix-cell report-viewer-cell-border-left report-viewer-matrix-cell-total text-{{styles.cell.text_align}} rvMatrixCell"
                  title="{{grandtotal}}"
                  data-ng-click="totalClick($event)"
                  data-ng-class="{'active': activeItem == 'total', 'negative-red': checkNegative(grandtotal)}">
