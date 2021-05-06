@@ -855,48 +855,48 @@
         <div class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
 
             <div class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"
-                 ng-repeat="group in groups track by group.key"
-                 ng-hide="group.isHidden"
-                 ng-class="{'last-dragged': group.frontOptions && group.frontOptions.lastDragged}"
-                 ng-style="group.style"
-                 data-column-id="{{group.___group_type_id}}"
-                 data-attr-key="{{group.key}}"
+                 ng-repeat="column in groups track by column.key"
+                 ng-hide="column.isHidden"
+                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged}"
+                 ng-style="column.style"
+                 data-column-id="{{column.___group_type_id}}"
+                 data-attr-key="{{column.key}}"
                  draggable="{{groupsAreaDraggable}}"
 
                  popup
-                 popup-id="{{group.key}}"
-                 popup-template-url="{{getPopupMenuTemplate(group)}}"
+                 popup-id="{{column.key}}"
+                 popup-template-url="{{getPopupMenuTemplate(column)}}"
                  position-relative-to="mouse"
                  open-on="right_click"
                  close-on-click-outside="true"
                  prevent-default="'true'"
                  on-save-callback=""
-                 popup-data="columnsPopupsData[group.key]"
+                 popup-data="columnsPopupsData[column.key]"
                  offset-x="-10"
                  offset-y="-10"
-                 popup-classes="getPopupMenuClasses(group)"
+                 popup-classes="getPopupMenuClasses(column)"
                  backdrop-classes="'low-z-index-backdrop'"
                  on-popup-close="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
-<!--                popup-data="{data: getPopupData(group, $index)}"-->
+<!--                popup-data="{data: getPopupData(column, $index)}"-->
 
                 <md-tooltip md-direction="top">
-                    <span ng-bind="group.name"></span>
-                    <span data-ng-if="group.status == 'missing'">(Deleted)</span>
+                    <span ng-bind="column.name"></span>
+                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                 </md-tooltip>
 
                 <div class="g-cell g-table-header-cell g-table-header-group-cell">
 
-                    <div ng-if="group.report_settings.is_level_folded"
+                    <div ng-if="column.report_settings.is_level_folded"
                          class="g-cell-button"
-                         ng-click="unfoldLevel(group, $index)">
+                         ng-click="unfoldLevel(column, $index)">
                         <span class="material-icons">add</span>
                     </div>
 
-                    <div ng-if="!group.report_settings.is_level_folded"
+                    <div ng-if="!column.report_settings.is_level_folded"
                          class="g-cell-button"
-                         ng-click="foldLevel(group, $index)">
+                         ng-click="foldLevel(column, $index)">
                         <span class="material-icons">remove</span>
                     </div>
 
@@ -910,9 +910,9 @@
                             <div class="flex-row flex-i-center name-block"
                                  data-ng-click="showArrowDown($event)"
                                  popup
-                                 popup-id="{{group.key}}"
+                                 popup-id="{{column.key}}"
                                  popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
-                                 popup-data="{column: group, changeSortMode: changeSortMode}"
+                                 popup-data="{column: column, changeSortMode: changeSortMode}"
                                  position-relative-to="element"
                                  relative-popup-x="left"
                                  open-on="click"
@@ -921,19 +921,19 @@
                                  on-popup-close="hideArrowDown()"
                                  popup-event-service="evEventService">
 
-                                <div ng-if="!group.layout_name">
-                                    <span ng-bind="group.name"></span>
-                                    <span data-ng-if="group.status == 'missing'">(Deleted)</span>
+                                <div ng-if="!column.layout_name">
+                                    <span ng-bind="column.name"></span>
+                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                                 </div>
 
-                                <div ng-if="group.layout_name">
-                                    <span ng-bind="group.layout_name"></span>
-                                    <span data-ng-if="group.status == 'missing'">(Deleted)</span>
+                                <div ng-if="column.layout_name">
+                                    <span ng-bind="column.layout_name"></span>
+                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
                                 </div>
 
                                 <span class="material-icons arrow-down">arrow_drop_down</span>
 
-                                <span data-ng-if="group.options.sort_mode === 'manual'" class="column-manual-sort-icon">
+                                <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
                                     m
                                     <md-tooltip md-direction="top">
                                        Manual Sorting Activated
@@ -942,10 +942,10 @@
 
                             </div>
 
-                            <div class="sort" data-ng-click="changeSortDirection(group, group.options.sort === 'DESC' ? 'ASC' : 'DESC')">
+                            <div class="sort" data-ng-click="changeSortDirection(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
 
-                                <span data-ng-show="group.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
-                                <span data-ng-show="group.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+                                <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
+                                <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
 
                             </div>
 
@@ -961,7 +961,7 @@
                      ev-event-service="evEventService"></div>
 
                 <div class="g-table-header-drop gDraggableHeadArea"
-                     data-attr-key="{{group.key}}"></div>
+                     data-attr-key="{{column.key}}"></div>
 
             </div>
 

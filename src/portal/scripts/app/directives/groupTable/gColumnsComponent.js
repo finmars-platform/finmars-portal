@@ -82,10 +82,9 @@
                 scope.hideRowSettings = !!scope.evDataService.getRowSettings().folded;
                 scope.groupsAreaDraggable = scope.viewContext !== 'dashboard';
 
-                var entityAttrs = [];
-                var dynamicAttrs = [];
+                let entityAttrs = [];
+                let dynamicAttrs = [];
                 // var keysOfColsToHide = [];
-
 
                 function onSubtotalSumClick(column) {
 
@@ -422,7 +421,7 @@
 
                 // <Victor 2021.04.07 #90 sort setting for column>
 
-                var getAttributes = function () {
+                const getAttributes = function () {
 
                     var allAttrsList = [];
 
@@ -1414,7 +1413,7 @@
                     }
                 };*/
 
-                let updateGroupTypeIds = function () {
+                const updateGroupTypeIds = function () {
 
                     let groups = scope.evDataService.getGroups();
 
@@ -1428,7 +1427,7 @@
 
                 };
 
-                let setDefaultGroupType = function () {
+				const setDefaultGroupType = function () {
 
                     let groups = scope.evDataService.getGroups();
 
@@ -1472,7 +1471,27 @@
 
                 };
 
-                let syncColumnsWithGroups = function () {
+				const updateGroupFoldingState = function () {
+
+					let groups = scope.evDataService.getGroups();
+					let parentGroupFullyFolded = false;
+
+					groups.forEach(group => {
+
+						if (parentGroupFullyFolded) {
+							group.report_settings.is_level_folded = true;
+
+						} else if (group.report_settings.is_level_folded) { // if group is fully folded, groups after it must be folded too
+							parentGroupFullyFolded = true;
+						}
+
+					});
+
+					scope.evDataService.setGroups(groups);
+
+				};
+
+				const syncColumnsWithGroups = function () {
 
                     let columns = scope.evDataService.getColumns();
                     let groups = scope.evDataService.getGroups();
@@ -1826,8 +1845,8 @@
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
                         updateGroupTypeIds();
-
                         setDefaultGroupType();
+                        updateGroupFoldingState();
 
                         scope.groups = scope.evDataService.getGroups();
                         scope.evDataService.resetTableContent();
