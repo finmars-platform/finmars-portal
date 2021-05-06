@@ -27,7 +27,20 @@
             ////    "name": "Opened Carry",
             ////    "value_type": 20
             ////},
-            {
+
+			// This models needed to facilitate linking to report dates
+			{
+				"key": "pl_first_date",
+				"name": "Date-from",
+				"value_type": 40
+			},
+			{
+				"key": "report_date",
+				"name": "Date-to",
+				"value_type": 40
+			},
+			// < This models needed to facilitate linking to report dates >
+			{
                 "key": "net_position_return",
                 "name": "Net position return",
                 "value_type": 20

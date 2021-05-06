@@ -14,10 +14,13 @@
 		vm.complexSaveAsLayoutDialog = false;
 		vm.userCodeIsTouched = false;
 		vm.userCodeError = false;
+		vm.label = '';
 
 		var layoutsUserCodes = ["New Layout"];
 
 		if (options) {
+
+			vm.label = options.label;
 
 		  if (options.complexSaveAsLayoutDialog) {
 

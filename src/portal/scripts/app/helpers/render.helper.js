@@ -52,7 +52,12 @@
         return icons[key] || '';
     }
 
-    var getRowSettings = function (buttonClasses) {
+	/**
+	 *
+	 * @param buttonClasses
+	 * @returns {string}
+	 */
+	var getRowSettings = function (buttonClasses) {
 
     	var classes = "g-row-color-picker-btn gTableActionBtn";
 

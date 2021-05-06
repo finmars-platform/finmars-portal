@@ -35,7 +35,6 @@
         }
 
         function dispatchEvent(eventName, argumentsObj) {
-
             // console.log('events[eventName]', events[eventName]);
 
             if (events.hasOwnProperty(eventName)) {
