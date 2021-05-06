@@ -15,12 +15,13 @@
             scope: {
                 matrixSettings: '=',
                 evDataService: '=',
-                evEventService: '='
+                evEventService: '=',
+
             },
             templateUrl: 'views/directives/report-viewer-matrix-view.html',
             link: function (scope, elem, attr) {
 
-                scope.activeItem = null;
+            	scope.activeItem = null;
 
                 // console.log('Report Viewer Matrix Component', scope);
 
@@ -31,17 +32,24 @@
                 scope.matrixView = scope.matrixSettings.matrix_view;
                 scope.emptyLinesHidingType = '';
 
+                scope.availableAbscissaAttrs = scope.matrixSettings.available_abscissa_keys || [];
+                if (scope.availableAbscissaAttrs.length) scope.availableAbscissaAttrs = JSON.parse(angular.toJson(scope.availableAbscissaAttrs));
+
+                scope.availableOrdinateAttrs = scope.matrixSettings.available_ordinate_keys || [];
+                if (scope.availableOrdinateAttrs.length) scope.availableOrdinateAttrs = JSON.parse(angular.toJson(scope.availableOrdinateAttrs));
+
                 if (scope.matrixSettings.hide_empty_lines) {
                     scope.emptyLinesHidingType = scope.matrixSettings.hide_empty_lines;
                 }
 
                 var cellWidth = 0;
 
-                var matrixHolder;
+                var matrixWrap, matrixHolder;
                 var bodyScrollElem;
                 var rvmHeaderScrollableRow;
                 var rvmBottomRowScrollableElem;
                 var bodyScrollableElem;
+				var axisAttrsSelectorHolder;
                 var rvMatrixValueRowsHolder;
                 var rvMatrixFixedBottomRow;
                 var rvMatrixLeftCol;
@@ -52,12 +60,12 @@
 
                 var getElemsForScripts = function () {
 
+					matrixWrap = elem[0].querySelector('.rvMatrixWrap');
                     matrixHolder = elem[0].querySelector('.rvMatrixHolder');
 
                     bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
                     rvmHeaderScrollableRow = elem[0].querySelector('.rvmHeaderScrollableRow');
                     rvmBottomRowScrollableElem = elem[0].querySelector('.rvmBottomRowScrollableElem');
-
                     bodyScrollableElem = elem[0].querySelectorAll('.scrollableMatrixBodyColumn');
 
                     rvMatrixValueRowsHolder = elem[0].querySelector('.rvMatrixValueRowsHolder');
@@ -65,6 +73,10 @@
 
                     rvMatrixLeftCol = elem[0].querySelector('.rvMatrixLeftCol');
                     rvMatrixRightCol = elem[0].querySelector('.rvMatrixRightCol');
+
+                    if (scope.viewContext === 'dashboard') {
+						axisAttrsSelectorHolder = elem[0].querySelector('.axisAttrSelectorBtnsHolder');
+					}
 
                 };
 
@@ -96,11 +108,10 @@
                         minWidth = 2;
 
                         var elemHeight = elem.height();
-
                         var cellHeight = Math.floor(elemHeight / rowsCount);
 
                         cellHeight = Math.max(cellHeight, 14);
-                        cellHeight = Math.min(cellHeight, 25);
+                        cellHeight = Math.min(cellHeight, 48);
 
                     }
 
@@ -135,8 +146,8 @@
 
                     var matrixProbableHeight = rowsCount * cellHeight;
 
-                    var matrixVCAvailableWidth = matrixHolder.clientWidth - cellWidth;
-                    var matrixVCAvailableHeight = matrixHolder.clientHeight - cellHeight;
+                    var matrixVCAvailableWidth = matrixWrap.clientWidth - cellWidth;
+                    var matrixVCAvailableHeight = matrixWrap.clientHeight - cellHeight;
                     // whether matrix has scrolls
                     if (matrixVCAvailableWidth < matrixVCContainerWidth) {
 
@@ -153,7 +164,7 @@
                         matrixHolder.classList.remove('has-y-scroll');
                     }
 
-                    if (matrixProbableHeight < matrixHolder.clientHeight) {
+                    if (matrixProbableHeight < matrixWrap.clientHeight) {
                         matrixHolder.style.height = matrixProbableHeight + 'px';
                     } else {
                         matrixHolder.style.height = matrixHolderMinHeight + 'px';
@@ -167,6 +178,11 @@
                     }
 
                     rvmHeaderScrollableRow.style.width = matrixMaxWidth + 'px';
+
+					if (scope.viewContext === 'dashboard') {
+						axisAttrsSelectorHolder.style.width = cellWidth + 'px';
+						axisAttrsSelectorHolder.style.height = cellHeight + 'px';
+					}
 
                     for (var i = 0; i < items.length; i = i + 1) {
 
@@ -190,10 +206,12 @@
                 };
 
                 var initMatrixMethods = function () {
-                    getElemsForScripts();
+
+                	getElemsForScripts();
                     scope.alignGrid();
 
                     bodyScrollElem.addEventListener('scroll', scrollHeaderAndColumn);
+
                 };
 
                 scope.checkNegative = function (val) {
@@ -349,9 +367,7 @@
                 var getValuesForMatrix = function () {
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
-                    itemList = flatList.filter(function (item) {
-                        return item.___type === 'object';
-                    });
+                    itemList = flatList.filter(item => item.___type === 'object');
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
@@ -378,7 +394,6 @@
                 };
 
                 scope.createMatrix = function () {
-
                     /*var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
                     var itemList = flatList.filter(function (item) {
                         return item.___type === 'object'
@@ -456,7 +471,7 @@
 
                         initMatrixMethods();
 
-                    }, 0)
+                    }, 100)
 
                 };
 
@@ -564,6 +579,55 @@
 
                 };
 
+				/**
+				 *
+				 * @param option {{id: string, name: string, isActive: boolean}}
+				 * @param axisProp {String} - can be 'abscissa' or 'ordinate'
+				 * @param _$popup {Object} - data from popup
+				 */
+				var onAxisAttrsOptionSelect = function (option, axisProp, _$popup) {
+
+					if (option.id !== scope.matrixSettings[axisProp]) {
+
+						scope.matrixSettings[axisProp] = option.id;
+						scope.createMatrix();
+
+						scope.evEventService.dispatchEvent(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED);
+
+					}
+
+					_$popup.cancel();
+
+				};
+
+				var formatAttrsForSelector = function (attrsList, selectedAttrKey) {
+
+                	return attrsList.map(attr => {
+
+                		return {
+							name: attr.layout_name || attr.attribute_data.name,
+							id: attr.attribute_data.key,
+							isActive: attr.attribute_data.key === selectedAttrKey
+						};
+
+					});
+
+				};
+
+                scope.abscissaSelectorData = {
+                	options: formatAttrsForSelector(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa),
+					selectOption: function (option, _$popup) {
+						onAxisAttrsOptionSelect(option, 'abscissa', _$popup);
+					}
+				};
+
+				scope.ordinateSelectorData = {
+					options: formatAttrsForSelector(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate),
+					selectOption: function (option, _$popup) {
+						onAxisAttrsOptionSelect(option, 'ordinate', _$popup);
+					}
+				};
+
                 scope.init = function () {
 
                     scope.evDataService.setActiveObject({});
@@ -571,31 +635,10 @@
                     // scope.top_left_title = scope.matrixSettings.top_left_title;
                     scope.styles = scope.matrixSettings.styles;
 
-                    // If we already have data (e.g. viewType changed) start
-                    var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
-
-                    if (flatList.length > 1) {
-
-                        scope.processing = false;
-
-                        scope.createMatrix();
-
-                        /*setTimeout(function () {
-
-                            scope.$apply();
-
-                            initMatrixMethods();
-                        }, 0)*/
-                    }
-
-                    // If we already have data (e.g. viewType changed) end
-
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.processing = false;
-
                         scope.createMatrix();
-
                         /*scope.$apply();
 
                         initMatrixMethods();*/
@@ -605,6 +648,21 @@
                     clearUseFromAboveFilterId = scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
                         scope.alignGrid();
                     });
+
+					//<editor-fold desc="If we already have data (e.g. viewType changed) start">
+                    var dataLoadEnded = scope.evDataService.didDataLoadEnd();
+
+					if (dataLoadEnded) {
+
+						var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+
+						if (flatList.length > 1) {
+							scope.processing = false;
+							scope.createMatrix();
+						}
+
+					}
+					//</editor-fold>
 
                     window.addEventListener('resize', scope.alignGrid);
 

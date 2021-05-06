@@ -6,7 +6,23 @@
 
         var vm = this;
 
-        vm.errors = data.errorsList;
+        vm.errors = [];
+        vm.tableErrors = [];
+
+        if (data.errorsList && data.errorsList.length) {
+
+			data.errorsList.forEach(error => {
+
+				if (error.hasOwnProperty('tableName')) {
+					vm.tableErrors.push(error);
+
+				} else {
+					vm.errors.push(error);
+				}
+
+			});
+
+		}
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

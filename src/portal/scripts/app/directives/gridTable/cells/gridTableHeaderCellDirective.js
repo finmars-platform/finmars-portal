@@ -13,9 +13,11 @@
                 gtEventService: '=',
                 onLoadEnd: '&?'
             },
-            template: '<div class="gt-cell-text-container">' +
+            template: '<div class="gt-cell-text-container" ng-class="{\'gt-header-sorting-cell\': column.sorting}">' +
                 '<div class="gt-cell-text">' +
-                    '<span data-ng-bind="column.columnName" class="sortingOnClick"></span>' +
+                    '<span data-ng-bind="column.columnName"' +
+						  'class="sortingOnClick">' +
+					'</span>' +
                 '</div>' +
             '</div>',
             link: function (scope, elem, attrs) {

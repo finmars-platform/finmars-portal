@@ -7,6 +7,7 @@
          ng-init="$last && onLastChipInit()">
 
         <div class="chip-div chipDivElem"
+             data-ng-class="{active: chip.isActive}"
              ng-click="onChipClickMethod(chip, $event)">
 
             <div ng-bind-html="chip.text"

@@ -8,7 +8,7 @@
 (function () {
 
     const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-	const uiService = require('../services/uiService');
+    const uiService = require('../services/uiService');
 
 	const entityResolverService = require('../services/entityResolverService');
 
@@ -18,37 +18,34 @@
 
     'use strict';
 
-    let transformItem = function (item, attrs) {
+    let transformItem = function (entity, attrs) {
 
-        if (item.attributes) {
+        if (entity.attributes) {
 
             let key;
 
-            console.log('transformItem.item', item);
-            console.log('transformItem.attrs', attrs);
-
             attrs.forEach(function (attributeType) {
 
-                item.attributes.forEach(function (attribute) {
+				entity.attributes.forEach(function (attribute) {
 
                     if (attributeType.user_code === attribute.attribute_type_object.user_code) {
 
                         key = attributeType.user_code;
 
                         if (attributeType.value_type === 10){
-                            item[key] = attribute.value_string
+							entity[key] = attribute.value_string
                         }
 
                         if (attributeType.value_type === 20) {
-                            item[key] = attribute.value_float
+							entity[key] = attribute.value_float
                         }
 
                         if (attributeType.value_type === 30) {
-                            item[key] = attribute.classifier
+							entity[key] = attribute.classifier
                         }
 
                         if (attributeType.value_type === 40) {
-                            item[key] = attribute.value_date
+							entity[key] = attribute.value_date
                         }
 
                     }
@@ -396,7 +393,7 @@
 
         return maxCols ? maxCols : 6;
 
-    }
+    };
 
     /**
      * Get big drawer width percentage by fixed area columns
@@ -430,61 +427,6 @@
 
     }
 
-	/**
-	 * Format data for popupDirective in fixed area
-	 * @param {object} viewModel - of add / edit controller
-	 * @param {array} keysOfFixedFieldsAttrs - array of strings that are keys of entity attributes
-	 * @returns {object} object where each property corresponding to field inside popup
-	 */
-    var getFieldsForFixedAreaPopup = function (viewModel) {
-
-    	return new Promise(function (resolve, reject) {
-
-			const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc,key) => {
-
-				const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
-
-				if (!attr) {
-					return acc;
-				}
-
-				const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
-				const field = {
-					[fieldKey]: {name: attr.name, value: viewModel.entity[key]}
-				};
-
-				if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
-					field[fieldKey].value_entity = attr.value_entity;
-				}
-
-				return {...acc, ...field};
-
-			}, {});
-
-			fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
-			fields.showByDefault = {key: 'Show by default', value: viewModel.showByDefault, options: viewModel.showByDefaultOptions}
-
-			// get options for 'type' or 'instrument type' fields
-			if (fields.hasOwnProperty('type')) {
-
-				entityResolverService.getListLight(fields.type.value_entity).then((data) => {
-
-					const options = Array.isArray(data) ? data : data.results;
-					fields.type.options = options;
-					viewModel.setTypeSelectorOptions(options);
-
-					resolve(fields);
-
-				}).catch(error => reject(error));
-
-			} else {
-				resolve(fields);
-			}
-
-		});
-
-    };
-
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
@@ -495,7 +437,6 @@
         getDefaultLayout: getDefaultLayout,
         getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
 
-        getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
         getBigDrawerWidthPercent: getBigDrawerWidthPercent
     }

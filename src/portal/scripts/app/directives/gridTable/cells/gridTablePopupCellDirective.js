@@ -22,12 +22,9 @@
             '</div>',
             link: function (scope, elem, attrs) {
 
-                scope.popupData = {};
-                scope.popupSettings = null;
-
-                var cellMethods = scope.column.methods;
+                var cellMethods;
                 var bodyElem = document.querySelector("body");
-                var cellTextContainer = elem[0].querySelector('.gt-cell-text-container');
+                var cellTextContainer;
 
                 var popupBackdropElem = document.createElement("div");
                 popupBackdropElem.classList.add("popup-area-backdrop");
@@ -37,41 +34,41 @@
                 var popupFooter = "<div class='popup-area-footer'>" +
                         "<md-button class='m-l-0' data-ng-click='cancelPopupArea()'>Cancel</md-button>" +
                         "<md-button class='m-r-0' data-ng-click='acceptPopupChanges()'>Agree</md-button>" +
-                    "</div>"
+                    "</div>";
 
-                // Popup methods
-                var getPopupHtmlContent = function () {
+				//<editor-fold desc="Popup methods">
+				var poupHtmlContentByCellType = {
+					'text': "<text-input label='{{column.columnName}}' " +
+										"placeholder-text='{{column.columnName}}' " +
+										"model='popupModel.value' " +
+										"small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
+							"</text-input>",
+
+					'number': "<number-input label='{{column.columnName}}' " +
+											"model='popupModel.value' " +
+											"small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
+						      "</number-input>",
+
+					'multitypeField': "<multitype-field field-types-data='fieldTypesData'></multitype-field>"
+				};
+
+				var getPopupHtmlContent = function () {
 
                     var popupMain;
 
-                    switch (scope.column.cellType) {
-                        case 'text':
+                    if (poupHtmlContentByCellType.hasOwnProperty(scope.column.cellType)) {
+						popupMain = poupHtmlContentByCellType[scope.column.cellType];
+					}
 
-                            popupMain = "<text-input label='{{column.columnName}}' " +
-                                                    "placeholder-text='{{column.columnName}}' " +
-                                                    "model='popupData.value' " +
-                                                    "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
-                                        "</text-input>";
+                    else if (scope.column.cellType === 'customPopup') {
 
-                            break;
+                    	if (scope.popupSettings.contentHtml.hasOwnProperty('main')) {
+							popupMain = scope.popupSettings.contentHtml.main;
+						}
 
-                        case 'number':
-                            popupMain = "<number-input label='{{column.columnName}}' " +
-                                                      "model='popupData.value' " +
-                                                      "small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
-                                        "</number-input>";
-                            break;
+					}
 
-                        case 'custom_popup':
-
-                            if (scope.popupSettings.contentHtml.hasOwnProperty('main')) {
-                                popupMain = scope.popupSettings.contentHtml.main;
-                            }
-
-                            break;
-                    }
-
-                    popupContent = "<div class='popup-area-container'>" +
+                    popupContent = "<div class='popup-area-container grid-table-popup'>" +
                         "<div class='popup-area-main'>" + popupMain + "</div>" +
                         popupFooter +
                     "</div>";
@@ -80,8 +77,21 @@
 
                 var createPopup = function (posX, posY) {
 
+                	let popupClasses = ["popup-area"];
+
+                	if (scope.popupSettings && scope.popupSettings.classes) {
+
+                		if (typeof scope.popupSettings.classes === "string") {
+							popupClasses = popupClasses.concat(scope.popupSettings.classes.split(' '));
+
+						} else {
+							popupClasses = popupClasses.concat(scope.popupSettings.classes);
+						}
+
+					}
+
                     popUpElem = document.createElement("div");
-                    popUpElem.classList.add("popup-area");
+                    popUpElem.classList.add(...popupClasses);
 
                     popUpElem.innerHTML = popupContent
 
@@ -99,9 +109,9 @@
                     setPopupPosition(posX, posY);
 
                     document.addEventListener('keyup', function (event) {
-                        if (event.key === "Escape") {
-                            closePopupArea();
-                        }
+
+                    	if (event.key === "Escape") closePopupArea();
+
                     }, {once: true});
 
                     if (scope.column.settings.closeOnMouseOut) {
@@ -112,45 +122,78 @@
                         popupBackdropElem.addEventListener('click', closePopupArea, {once: true});
                     }
 
-                }
+                };
+
+                var assignPopupValueToCell = function () {
+
+					var popupValue = null;
+
+                	if (scope.column.cellType === 'multitypeField') {
+
+                		scope.column.settings.fieldTypesData = scope.fieldTypesData;
+
+						var activeTypeData = scope.column.settings.fieldTypesData.find(type => type.isActive);
+						popupValue = activeTypeData.model;
+
+						if (['dropdownSelect', 'entitySearch'].includes(activeTypeData.fieldType) && popupValue) {
+
+							var selectedOption = activeTypeData.fieldData.menuOptions.find(option => option.id === popupValue);
+							scope.column.settings.cellText = selectedOption.name;
+
+						} else {
+							scope.column.settings.cellText = popupValue;
+						}
+						// for multiselector
+						if (Array.isArray(popupValue)) popupValue = JSON.parse(angular.toJson(popupValue));
+
+						if (scope.column.hasOwnProperty("objPaths")) { // if we want capture multitype field value type outside of grid table
+
+							scope.column.settings.value[0] = popupValue;
+							scope.column.settings.value[1] = activeTypeData.value_type;
+
+						} else {
+							scope.column.settings.value = popupValue;
+						}
+
+					}
+
+                	else {
+
+						if (scope.popupModel.value) {
+
+							popupValue = scope.popupModel.value;
+
+							if (Array.isArray(scope.popupModel.value) || typeof scope.popupModel.value === 'object') {
+								popupValue = JSON.parse(angular.toJson(scope.popupModel.value));
+							}
+
+						}
+
+						scope.column.settings.value = popupValue;
+						scope.column.settings.cellText = popupValue;
+
+					}
+
+				}
 
                 scope.acceptPopupChanges = function () {
 
-                    var popupValue = null;
+					assignPopupValueToCell();
 
-                    if (scope.popupData.value) {
-                        popupValue = scope.popupData.value
-                    }
-
-                    scope.column.settings.cellText = popupValue
-                    scope.column.settings.value = popupValue
+					var changedCellData = {
+						row: {
+							key: scope.row.key,
+							order: scope.row.order
+						},
+						column: {
+							key: scope.column.key,
+							order: scope.column.order
+						}
+					};
 
                     if (cellMethods && cellMethods.onChange) {
-
-                        var rowData = {
-                            key: scope.row.key,
-                            order: scope.row.order
-                        };
-
-                        var colData = {
-                            key: scope.column.key,
-                            order: scope.column.order
-                        };
-
-                        cellMethods.onChange(rowData, colData, scope.gtDataService, scope.gtEventService);
-
+                        cellMethods.onChange(changedCellData.row, changedCellData.column, scope.gtDataService, scope.gtEventService);
                     }
-
-                    var changedCellData = {
-                        row: {
-                            key: scope.row.key,
-                            order: scope.row.order
-                        },
-                        column: {
-                            key: scope.column.key,
-                            order: scope.column.order
-                        }
-                    };
 
                     scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
 
@@ -167,14 +210,20 @@
 
                     closePopupArea();
 
-                    if (scope.column.settings.value &&
-                        typeof scope.column.settings.value === 'object') {
+                    if (scope.column.cellType === 'multitypeField') scope.fieldTypesData = null;
 
-                        scope.popupData.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+                    else {
 
-                    } else {
-                        scope.popupData.value = scope.column.settings.value
-                    }
+                    	if (scope.column.settings.value &&
+							typeof scope.column.settings.value === 'object') {
+
+							scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value));
+
+						} else {
+							scope.popupModel.value = scope.column.settings.value;
+						}
+
+					}
 
                 };
 
@@ -211,13 +260,126 @@
                     }
 
                 }
+				//</editor-fold>
 
-                // < Popup methods >
+				//<editor-fold desc="Cell click functions">
+				function onTextCellContainerClick (e) {
+
+					var posX = e.pageX;
+					var posY = e.pageY;
+
+					if (scope.column.cellType === 'multitypeField') {
+						scope.fieldTypesData = JSON.parse(JSON.stringify(scope.column.settings.fieldTypesData));
+					}
+
+					else {
+
+						if (scope.column.settings.value) {
+
+							if (scope.column.settings.value &&
+								typeof scope.column.settings.value === 'object') {
+
+								scope.popupModel.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+
+							} else {
+								scope.popupModel.value = scope.column.settings.value
+							}
+
+						}
+
+					}
+
+					createPopup(posX, posY);
+
+				}
+
+				function onDateCellContainerClick () {
+					pickmeup(cellTextContainer).show();
+				}
+
+				function onDateChange (e) {
+
+					scope.column.settings.value = e.detail.formatted_date;
+					scope.column.settings.cellText = e.detail.formatted_date;
+					scope.$apply();
+
+					var changedCellData = {
+						row: {
+							key: scope.row.key,
+							order: scope.row.order
+						},
+						column: {
+							key: scope.column.key,
+							order: scope.column.order
+						}
+					};
+
+					scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
+
+				}
+
+				function onExpressionCellClick (e) {
+
+					$mdDialog.show({
+						controller: 'ExpressionEditorDialogController as vm',
+						templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+						parent: angular.element(document.body),
+						targetEvent: e,
+						preserveScope: true,
+						multiple: true,
+						autoWrap: true,
+						skipHide: true,
+						locals: {
+							item: {expression: scope.column.settings.value},
+							data: scope.column.settings.exprData
+						}
+
+					})
+					.then(function (res) {
+
+						if (res.status === 'agree') {
+
+							scope.column.settings.cellText = res.data.item.expression;
+							scope.column.settings.value = res.data.item.expression;
+
+							var changedCellData = {
+								row: {
+									key: scope.row.key,
+									order: scope.row.order
+								},
+								column: {
+									key: scope.column.key,
+									order: scope.column.order
+								}
+							};
+
+							scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
+
+						}
+
+					});
+
+				}
+				//</editor-fold>
 
                 var init = function () {
 
+					scope.popupModel = {};
+					scope.popupSettings = null;
+
+					cellMethods = scope.column.methods;
+					cellTextContainer = elem[0].querySelector('.gt-cell-text-container');
+
                     if (!scope.column.settings.hasOwnProperty('cellText')) {
-                        scope.column.settings.cellText = scope.column.settings.value
+
+                    	scope.column.settings.cellText = scope.column.settings.value;
+
+                        if (scope.column.cellType === 'multitypeField' && scope.column.hasOwnProperty("objPaths")) {
+
+                        	scope.column.settings.cellText = scope.column.settings.value[0];
+
+						}
+
                     }
 
                     if (scope.onLoadEnd) {
@@ -228,151 +390,97 @@
                         scope.cellValue = scope.column.settings.value;
                     }*/
 
-                    // Victor 12.10.2020
-                    if (scope.column.settings.isDisabled) { // not add handlers if column is disabled
-                        return;
-                    }
+                    if (!scope.column.settings.isDisabled) { // add handlers if column is enabled
 
-                    switch (scope.column.cellType) {
-                        case 'custom_popup':
+						switch (scope.column.cellType) {
 
-                            scope.popupSettings = scope.column.settings.popupSettings
+							case 'customPopup':
 
-                            if (scope.popupSettings.contentHtml.hasOwnProperty('footer')) {
-                                popupFooter = scope.popupSettings.contentHtml.footer
-                            }
+								scope.popupSettings = scope.column.settings.popupSettings;
 
-                        case 'text':
-                        case 'number':
+								if (scope.popupSettings.contentHtml.hasOwnProperty('footer')) {
+									popupFooter = scope.popupSettings.contentHtml.footer;
+								}
 
-                            getPopupHtmlContent();
+								if (scope.popupSettings.popupData) {
+									scope.popupData = scope.popupSettings.popupData;
+								}
 
-                            cellTextContainer.addEventListener('click', function (e) {
+							case 'text':
+							case 'number':
+							case 'multitypeField':
 
-                                var posX = e.pageX;
-                                var posY = e.pageY;
+								getPopupHtmlContent();
 
-                                if (scope.column.settings.value) {
+								// Using named function to prevent duplicate listeners on repeated init() call
+								cellTextContainer.addEventListener('click', onTextCellContainerClick, false);
 
-                                    if (scope.column.settings.value &&
-                                        typeof scope.column.settings.value === 'object') {
+								break;
 
-                                        scope.popupData.value = JSON.parse(JSON.stringify(scope.column.settings.value))
+							case 'date':
+								// Using named function to prevent duplicate listeners on repeated init() call
+								cellTextContainer.addEventListener('click', onDateCellContainerClick);
 
-                                    } else {
-                                        scope.popupData.value = scope.column.settings.value
-                                    }
+								var dataVal = scope.column.settings.value;
 
-                                }
+								if (dataVal) {
 
-                                createPopup(posX, posY);
+									pickmeup(cellTextContainer, {
+										date: new Date(dataVal),
+										current: new Date(dataVal),
+										position: 'right',
+										hide_on_select: true,
+										format: 'Y-m-d'
+									});
 
-                            })
+								}
 
-                            break;
+								else {
 
-                        case 'date':
+									pickmeup(cellTextContainer, {
+										position: 'right',
+										hide_on_select: true,
+										format: 'Y-m-d'
+									});
 
-                            cellTextContainer.addEventListener('click', function (e) {
-                                pickmeup(cellTextContainer).show();
-                            })
+								}
 
-                            var dataVal = scope.column.settings.value;
+								cellTextContainer.addEventListener('pickmeup-change', onDateChange);
 
-                            if (dataVal) {
+								break;
 
-                                pickmeup(cellTextContainer, {
-                                    date: new Date(dataVal),
-                                    current: new Date(dataVal),
-                                    position: 'right',
-                                    hide_on_select: true,
-                                    format: 'Y-m-d'
-                                });
+							case 'expression':
 
-                            } else {
+								cellTextContainer.addEventListener('click', onExpressionCellClick);
 
-                                pickmeup(cellTextContainer, {
-                                    position: 'right',
-                                    hide_on_select: true,
-                                    format: 'Y-m-d'
-                                });
+								break;
 
-                            }
-
-                            cellTextContainer.addEventListener('pickmeup-change', function (event) {
-
-                                scope.column.settings.value = event.detail.formatted_date;
-                                scope.column.settings.cellText = event.detail.formatted_date;
-                                scope.$apply();
-
-                                var changedCellData = {
-                                    row: {
-                                        key: scope.row.key,
-                                        order: scope.row.order
-                                    },
-                                    column: {
-                                        key: scope.column.key,
-                                        order: scope.column.order
-                                    }
-                                };
-
-                                scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
-
-                            });
-
-                            break;
-
-                        case 'expression':
-
-                            cellTextContainer.addEventListener('click', function (e) {
-
-                                $mdDialog.show({
-                                    controller: 'ExpressionEditorDialogController as vm',
-                                    templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                                    parent: angular.element(document.body),
-                                    targetEvent: e,
-                                    preserveScope: true,
-                                    multiple: true,
-                                    autoWrap: true,
-                                    skipHide: true,
-                                    locals: {
-                                        item: {expression: scope.column.settings.value},
-                                        data: scope.column.settings.exprData
-                                    }
-
-                                }).then(function (res) {
-
-                                    if (res.status === 'agree') {
-
-                                        scope.column.settings.cellText = res.data.item.expression;
-                                        scope.column.settings.value = res.data.item.expression;
-
-                                        var changedCellData = {
-                                            row: {
-                                                key: scope.row.key,
-                                                order: scope.row.order
-                                            },
-                                            column: {
-                                                key: scope.column.key,
-                                                order: scope.column.order
-                                            }
-                                        };
-
-                                        scope.gtEventService.dispatchEvent(gtEvents.CELL_VALUE_CHANGED, changedCellData);
-
-                                    }
-
-                                });
-
-                            })
-
-                        break;
+						}
 
                     }
 
                 };
 
                 init();
+
+				scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+
+					var row = scope.gtDataService.getRowByKey(scope.row.key);
+
+					if (row) var cell = row.columns.find(col => col.key === scope.column.key);
+
+					if (row && cell) {
+
+						scope.row = row;
+						scope.column = cell;
+
+						init();
+
+					}
+					/*
+					If cellText calculated by cellMethods.onChange. Calculate cellText outside grid table.
+					 */
+				});
 
             }
         }
