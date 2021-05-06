@@ -18,7 +18,8 @@
                 attributeDataService: '=',
                 evDataService: '=',
                 evEventService: '=',
-                spExchangeService: '='
+                spExchangeService: '=',
+                hideFiltersBlock: '='
             },
 			templateUrl: 'views/directives/groupTable/g-table-component-view.html',
             link: function (scope, elem, attrs) {

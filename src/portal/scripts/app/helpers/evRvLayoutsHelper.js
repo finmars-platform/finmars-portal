@@ -99,11 +99,10 @@
 
 			uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (updatedLayoutData) {
 
-				let listLayout = entityViewerDataService.getListLayout();
-				listLayout.modified = updatedLayoutData.modified
+                let listLayout = updatedLayoutData;
 
-				entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
-				entityViewerDataService.setListLayout(listLayout);
+                entityViewerDataService.setListLayout(listLayout);
+                entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
 
 				toastNotificationService.success("Success. Page was saved.");
 
