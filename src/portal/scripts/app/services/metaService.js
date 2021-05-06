@@ -21,8 +21,8 @@
         return metaRepository.getRequiredEntityAttrs(entityType);
     };
 
-    var getValueTypes = function () {
-        return metaRepository.getValueTypes();
+    var getEntityViewerFormComponentsValueTypes = function () {
+        return metaRepository.getEntityViewerFormComponentsValueTypes();
     };
 
     var getEntitiesWithoutBaseAttrsList = function () {
@@ -38,11 +38,11 @@
     };
 
     var getTypeCaptions = function () {
-        var filteredValueTypes = getValueTypes();
-        //var filteredValueTypes = getValueTypes().filter(function (item) {
-        //	// return item.value !== 'field' && item.value !== 'decoration';
-        //	return item.value !== 'field';
-        //});
+        var filteredValueTypes = getEntityViewerFormComponentsValueTypes();
+        /* var filteredValueTypes = getValueTypes().filter(function (item) {
+        	// return item.value !== 'field' && item.value !== 'decoration';
+        	return item.value !== 'field';
+        }); */
         var typeCaptions = filteredValueTypes.map(function (item) {
             switch (item['display_name']) {
                 case 'Number':
@@ -70,6 +70,9 @@
                 case 'Button':
                     item['caption_name'] = 'Button';
                     break;
+				case 'Table':
+					item['caption_name'] = 'Table';
+					break;
                 default:
                     item['caption_name'] = item['display_name'];
                     break;
@@ -526,13 +529,73 @@
 
     };
 
+	/**
+	 *
+	 * @param dataRequest {function} - asynchronous method that returns array of items
+	 * @param argumentsList {array} - array of arguments for dataRequest method. Must contain argument with options {pageSize: 1000, page: 1}
+	 * @returns {Promise<unknown>}
+	 */
+    var loadDataFromAllPages = function (dataRequest, argumentsList) {
+
+		var dataList = [];
+
+		var loadAllPages = (resolve, reject) => {
+
+			dataRequest(...argumentsList).then(function (data) {
+
+				dataList = dataList.concat(data.results);
+
+				if (data.next) {
+
+					options.page = options.page + 1;
+					loadAllPages(resolve, reject);
+
+				} else {
+					resolve(dataList);
+				}
+
+			}).catch(error => reject(error));
+
+		};
+
+		return new Promise((resolve, reject) => {
+
+			loadAllPages(resolve, reject);
+
+		});
+
+	};
+
+	/**
+	 *
+	 * @param promisesResultList {Array}
+	 * @param errorPremise {string=} - string to go before data from promise rejection
+	 */
+	var logRejectedPromisesAfterAllSettled = function (promisesResultList, errorPremise) {
+
+		promisesResultList.forEach(result => {
+			if (result.status === "rejected") {
+
+				var errorArgs = [];
+
+				if (errorPremise) errorArgs.push(errorPremise);
+
+				errorArgs.push(result.reason);
+
+				console.error(...errorArgs);
+
+			}
+		});
+
+	};
+
     module.exports = {
         isReport: isReport,
         getMenu: getMenu,
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
         getRequiredEntityAttrs: getRequiredEntityAttrs,
-        getValueTypes: getValueTypes,
+		getEntityViewerFormComponentsValueTypes: getEntityViewerFormComponentsValueTypes,
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
         getDynamicAttrsValueTypesCaptions: getDynamicAttrsValueTypesCaptions,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
@@ -547,7 +610,11 @@
         getCurrentLocation: getCurrentLocation,
         getHeaderTitleForCurrentLocation: getHeaderTitleForCurrentLocation,
         getContentGroups: getContentGroups,
-        getEntityViewerFixedFieldsAttributes: getEntityViewerFixedFieldsAttributes
+        getEntityViewerFixedFieldsAttributes: getEntityViewerFixedFieldsAttributes,
+
+		logRejectedPromisesAfterAllSettled: logRejectedPromisesAfterAllSettled,
+
+		loadDataFromAllPages: loadDataFromAllPages
     }
 
 }());

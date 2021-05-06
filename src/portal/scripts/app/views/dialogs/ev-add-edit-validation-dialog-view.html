@@ -20,7 +20,7 @@
                 <md-card-content>
                     <h3>Please see below the list of errors</h3>
 
-                    <table>
+                    <table ng-if="vm.errors.length" class="m-b-16">
 
                         <thead>
                             <tr>
@@ -32,7 +32,7 @@
 
                         <tbody>
 
-                            <tr data-ng-repeat="item in vm.errors track by $index">
+                            <tr data-ng-repeat="item in vm.errors">
                                 <td>
                                     <span data-ng-if="!item.locationData">Field is not inside the form.</span>
                                     <span data-ng-if="item.locationData" data-ng-bind="item.locationData.validatorText"></span>
@@ -44,6 +44,47 @@
 
                                 <td>
                                     <span data-ng-if="!item.message">Field should not be empty.</span>
+                                    <span data-ng-if="item.message" data-ng-bind="item.message"></span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                    <table ng-if="vm.tableErrors.length">
+
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Table Name</th>
+                                <th>Row</th>
+                                <th>Column</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr data-ng-repeat="item in vm.tableErrors track by $index">
+                                <td>
+                                    <span data-ng-if="!item.locationData">Field is not inside the form.</span>
+                                    <span data-ng-if="item.locationData" data-ng-bind="item.locationData.validatorText"></span>
+                                </td>
+
+                                <td>
+                                    {{item.tableName}}
+                                </td>
+
+                                <td>
+                                    {{item.rowName}}
+                                </td>
+
+                                <td>
+                                    {{item.columnName}}
+                                </td>
+
+                                <td>
+                                    <span data-ng-if="!item.message">Cell should not be empty.</span>
                                     <span data-ng-if="item.message" data-ng-bind="item.message"></span>
                                 </td>
                             </tr>

@@ -84,7 +84,6 @@
 
                 let locals = Object.assign(defaultLocals, drawerOptions.locals);
 
-                ctrl = $controller(drawerOptions.controller, locals);
 
 
                 /* let viewportWidth = window.innerWidth;
@@ -111,6 +110,7 @@
                 }*/
 
                 drawerWrap.appendChild(drawerContainer);
+				ctrl = $controller(drawerOptions.controller, locals);
 
                 $(drawerContainer).html(tpl);
                 $(drawerContainer).children().data('$ngControllerController', ctrl);

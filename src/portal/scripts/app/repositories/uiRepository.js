@@ -319,8 +319,6 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 	var getDefaultEditLayout = function (entityType) {
 
 		var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-
-
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
@@ -328,22 +326,24 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 			getRequestParams2)
 	};
 
-	var getEditLayout = function (id) {
-
+	var getEditLayoutByKey = function (id) {
 
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			})
+			getRequestParams)
+	};
+
+	var getEditLayoutByUserCode = function (entityType, userCode) {
+
+		var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?content_type=' + contentType + '&user_code=' + userCode,
+			getRequestParams2);
+
 	};
 
 	var createEditLayout = function (ui) {
@@ -1192,7 +1192,8 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		getListEditLayout: getListEditLayout,
 		getDefaultEditLayout: getDefaultEditLayout,
-		getEditLayout: getEditLayout,
+		getEditLayoutByKey: getEditLayoutByKey,
+		getEditLayoutByUserCode: getEditLayoutByUserCode,
 		createEditLayout: createEditLayout,
 		updateEditLayout: updateEditLayout,
 		deleteEditLayoutByKey: deleteEditLayoutByKey,

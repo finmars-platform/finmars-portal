@@ -230,7 +230,6 @@
 
 	const getDefaultListLayout = function (entityType) {
 
-        // console.trace();
         return new Promise (function (resolve, reject) {
 
             var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
@@ -345,9 +344,13 @@
 		// return uiRepository.getDefaultEditLayout(entityType);
 	};
 
-	const getEditLayout = function (id) {
-        return uiRepository.getEditLayout(id);
+    let getEditLayoutByKey = function (id) {
+        return uiRepository.getEditLayoutByKey(id);
     };
+
+	let getEditLayoutByUserCode = function (entityType, userCode) {
+		return uiRepository.getEditLayoutByUserCode(entityType, userCode);
+	};
 
     const createEditLayout = function (entity, ui) {
 
@@ -623,7 +626,8 @@
 
         getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
-        getEditLayout: getEditLayout,
+        getEditLayoutByKey: getEditLayoutByKey,
+		getEditLayoutByUserCode: getEditLayoutByUserCode,
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
 
