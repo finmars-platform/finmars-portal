@@ -134,6 +134,33 @@
                     return Math.floor(Math.random() * (max - min + 1) + min);
                 }
 
+                scope.formatValue = function (val, number_format) {
+
+                    var result = val;
+
+                    if (number_format && (val || val === 0)) {
+
+                        result = renderHelper.formatValue(
+                            {
+                                value: val
+                            },
+                            {
+                                key: 'value',
+                                report_settings: number_format
+                            }
+                        );
+
+                    }
+
+                    if (!result && result !== 0) {
+                        return '';
+                    }
+
+                    return result;
+
+                };
+
+
                 scope.createTable = function () {
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
@@ -142,6 +169,18 @@
                     });
 
                     scope.items = scope.getUniqueValues(itemList, scope.tableChartSettings.title_column, scope.tableChartSettings.value_column)
+
+
+                    scope.items = scope.items.map(function (item) {
+
+                        if (item.total === null || item.total === undefined || isNaN(item.total)) {
+                            item.total = 0;
+                        }
+
+                        item.total_formated = scope.formatValue(item.total, scope.tableChartSettings.number_format)
+
+                        return item
+                    })
 
                     console.log('createTable.tableChartSettings', scope.tableChartSettings);
                     console.log('createTable.items', scope.items);
@@ -181,13 +220,15 @@
 
                             item.graph_value = Math.ceil(item.total / (positiveTotal / 100))
 
-                        } else {
+                        } else if (item.total < 0) {
 
                             item.graph_value = Math.ceil(Math.abs(item.total) / (negativeTotal / 100))
                             item.is_negative = true;
 
                             scope.hasNegativeValues = true;
 
+                        } else {
+                            item.graph_value = 0;
                         }
 
                         return item;
@@ -238,6 +279,19 @@
                     scope.items = utilsHelper.sortItems(scope.items, prop)
 
                 }
+
+                scope.rowClick = function ($event, item) {
+
+                    var activeObject = {};
+
+                    activeObject[scope.tableChartSettings.title_column] = item.key;
+
+                    console.log('activeObject', activeObject);
+
+                    scope.evDataService.setActiveObject(activeObject);
+                    scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                };
 
                 scope.init = function () {
 
