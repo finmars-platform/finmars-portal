@@ -1146,7 +1146,7 @@
 
         vm.getCurrentMember = function () {
 
-            usersService.getMyCurrentMember().then(function (data){
+            usersService.getMyCurrentMember().then(function (data) {
 
                 vm.member = data;
                 $scope.$apply();
@@ -1156,11 +1156,13 @@
         }
 
         vm.getUserCodePrefixes = function () {
-            usersService.getUsercodePrefixList().then(function (data){
+            usersService.getUsercodePrefixList().then(function (data) {
 
                 vm.groupPrefixes = data.results;
 
-                vm.selectedGroupPrefix = vm.groupPrefixes[0].value;
+                if (vm.groupPrefixes.length) {
+                    vm.selectedGroupPrefix = vm.groupPrefixes[0].value;
+                }
 
                 $scope.$apply();
 
@@ -1168,7 +1170,7 @@
 
         }
 
-        vm.updateFilters = function() {
+        vm.updateFilters = function () {
 
             console.log('vm.prefixType', vm.prefixType);
             console.log('vm.selectedGroupPrefix', vm.selectedGroupPrefix);

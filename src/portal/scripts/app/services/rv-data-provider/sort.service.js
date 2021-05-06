@@ -72,24 +72,28 @@
                 if (item_value === manual_sort_value) {
 
                     matched = true;
-                    orderedItems[manual_sort_order] = items[i]
+
+                    if (orderedItems[manual_sort_order]) {
+                        orderedItems[manual_sort_order].push(items[i])
+                    } else {
+                        orderedItems[manual_sort_order] = [items[i]]
+                    }
 
                 }
 
-                if (matched === false) {
-                    missedItems.push(items[i])
-                }
+            }
 
-
+            if (matched === false) {
+                missedItems.push(items[i])
             }
 
         }
 
         Object.keys(orderedItems).forEach(function (orderKey) {
-            result.push(orderedItems[orderKey])
+            result.push(...orderedItems[orderKey])
         })
 
-        result.concat(missedItems);
+        result = result.concat(missedItems);
 
         if (isReverse) {
             result = result.reverse();

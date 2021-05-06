@@ -355,7 +355,7 @@
             var responseObj = {status: 'disagree'};
 
             if (attributesWereChanged) {
-                responseObj = {status: 'agree'};
+                responseObj = {status: 'agree', attributeTypes: vm.attrs};
             }
 
             $mdDialog.hide(responseObj);

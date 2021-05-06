@@ -31,7 +31,8 @@
                 evEventService: '=',
                 attributeDataService: '=',
                 contentWrapElement: '=',
-				workareaWrapElement: '='
+				workareaWrapElement: '=',
+                hideFiltersBlock: '=',
             },
 			templateUrl: 'views/directives/groupTable/g-filters-view.html',
             link: function (scope, elem, attrs) {
@@ -42,14 +43,14 @@
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.viewContext = scope.evDataService.getViewContext();
 
-                scope.isFiltersOpened = true
+                scope.isFiltersOpened = !scope.hideFiltersBlock;
 				scope.filters = scope.evDataService.getFilters();
 				scope.popupPosX = { value: null }
 				scope.popupPosY = { value: null }
 				scope.fpBackClasses = "z-index-48"
 				scope.fpClasses = "z-index-49"
 
-				scope.showUseFromAboveFilters = true;
+				scope.showUseFromAboveFilters = !scope.hideFiltersBlock;
 
 				scope.readyStatus = {
 					filters: false

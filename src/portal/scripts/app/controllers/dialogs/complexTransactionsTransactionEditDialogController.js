@@ -8,7 +8,7 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
 
     var metaPermissionsService = require('../../services/metaPermissionsService');
 

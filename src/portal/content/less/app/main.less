@@ -69,46 +69,44 @@ md-toolbar:not(.md-menu-toolbar) {
 }
 
 
-
 md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
   color: #747474;
 }
 
 .header {
 
-    color: #747474;
+  color: #747474;
+  min-height: 52px;
+  height: 52px;
+
+  .md-toolbar-tools {
     min-height: 52px;
     height: 52px;
+    background-color: rgba(242, 242, 242, 1);
 
-    .md-toolbar-tools {
-      min-height: 52px;
-      height: 52px;
-      background-color: rgba(242, 242, 242, 1);
-
-      .current-location-title {
-        text-transform: capitalize;
-        font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
-        font-weight: 500;
-        font-style: normal;
-        letter-spacing: 0.4px;
-        color: #747474;
-        font-size: 14px;
-      }
-    }
-
-    .md-button.md-default-theme {
-      border-radius: 99%; // round toolbar buttons
-    }
-
-    .toolbar-wrapper {
-      height: 53px; // 1px for border;
+    .current-location-title {
+      text-transform: capitalize;
+      font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+      font-weight: 500;
+      font-style: normal;
+      letter-spacing: 0.4px;
       color: #747474;
-      fill: #747474;
-      border-bottom: 1px solid rgba(224, 224, 224, 1);
+      font-size: 14px;
     }
+  }
+
+  .md-button.md-default-theme {
+    border-radius: 99%; // round toolbar buttons
+  }
+
+  .toolbar-wrapper {
+    height: 53px; // 1px for border;
+    color: #747474;
+    fill: #747474;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+  }
 
 }
-
 
 
 .md-toolbar-tools-bottom {
@@ -150,6 +148,7 @@ md-sidenav {
   .md-button {
     color: #fff;
   }
+
   md-toolbar {
     min-height: 52px;
     height: 52px;
@@ -442,11 +441,12 @@ md-sidenav {
   width: 100%;
 }
 
-@media screen and (max-height: 620px){
+@media screen and (max-height: 620px) {
   .side-menu-bottom-menu {
     position: relative;
     bottom: initial;
   }
+
   .build-date {
     display: none;
   }
@@ -1660,7 +1660,7 @@ md-input-container.error {
 }
 
 div.disabled-context-menu {
-  color: rgba(0,0,0,.4);
+  color: rgba(0, 0, 0, .4);
 }
 
 
@@ -2466,14 +2466,22 @@ button.md-button.toggle-calculator-block-btn {
 }
 
 .disabled-field {
-  pointer-events: none;
-  opacity: 0.5;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+
+  input {
+    pointer-events: none;
+    opacity: 0.5;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+  }
+
+  .custom-input-indicator-btn {
+    pointer-events: none;
+  }
 
   label {
     pointer-events: none;
@@ -2540,9 +2548,15 @@ button.md-button.toggle-calculator-block-btn {
   display: block;
 }
 
-md-checkbox.md-checked {
+md-checkbox.md-checked, md-checkbox.md-checked[disabled] {
   .md-icon {
     background-color: @orange;
+  }
+}
+
+md-checkbox.readonly {
+  .md-icon {
+    border-radius: 100%;
   }
 }
 
@@ -2864,10 +2878,10 @@ md-dialog.two-rows-dialog-actions {
       cursor: pointer;
     }
 
-      svg {
-        position: absolute;
-        top: 12px;
-      }
+    svg {
+      position: absolute;
+      top: 12px;
+    }
 
   }
 }
@@ -2906,7 +2920,7 @@ md-dialog.two-rows-dialog-actions {
   .big-drawer-footer {
     flex: 0 0 52px;
     background-color: white;
-    border-top: 1px solid rgba(0,0,0,0.12);
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -2945,7 +2959,7 @@ md-checkbox.md-indeterminate .md-icon:after {
   background-color: #f05a22;
 
   border-radius: 3px;
-  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
 
   &:not([disabled]):hover {
     opacity: 0.5;
@@ -2993,6 +3007,11 @@ button.md-raised.md-warn.md-button {
 
 .classifier-select-dialog-view {
   width: 500px;
+}
+
+.icon-btn-basics {
+  background-color: transparent;
+  border: none;
 }
 
 @font-face { // prevents showing of text of icons before they are loaded
@@ -3110,6 +3129,7 @@ button.md-raised.md-warn.md-button {
   }
 
 }
+
 //</editor-fold>
 
 // < chips >
@@ -3125,7 +3145,8 @@ button.md-raised.md-warn.md-button {
 
   .popup-menu-item {
     text-align: left;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     border-radius: 0;
     font-size: 15px;
     text-transform: none;
@@ -3133,16 +3154,18 @@ button.md-raised.md-warn.md-button {
     height: 100%;
 
     margin: auto 0;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 6px 16px;
+/*    padding-left: 16px;
+    padding-right: 16px;*/
     width: 100%;
 
     color: @g-top-part-color;
 
-    ng-md-icon {
+/*    ng-md-icon {
       position: relative;
       top: 6px;
-      margin-right: 10px;
+      margin-right: 5px;
+      margin-left: -7px;
     }
 
     .z-dropdown-icon {
@@ -3150,7 +3173,17 @@ button.md-raised.md-warn.md-button {
       right: 0;
       top: 7px;
       opacity: .5;
+    }*/
+    .material-icons {
+      margin-right: 6px;
+      margin-left: -9px;
     }
+
+    .arrow-right {
+      position: absolute;
+      right: 8px;
+    }
+
 
   }
 
@@ -3169,11 +3202,12 @@ button.md-raised.md-warn.md-button {
     min-height: 1px;
     max-height: 1px;
     width: 100%;
-    background-color: rgba(0,0,0,0.12);
+    background-color: rgba(0, 0, 0, 0.12);
   }
 
 
 }
+
 // <popup menu>
 @g-top-part-color: #747474;
 @primary-button-color: #f05a22;
@@ -3188,76 +3222,75 @@ button.md-raised.md-warn.md-button {
     max-height: 100%;
     font-size: 14px;
 
-      .layout-menu-item {
-        display: flex;
-        align-items: center;
+    .layout-menu-item {
+      display: flex;
+      align-items: center;
 
-        height: 48px;
+      height: 48px;
 
-        color: @g-top-part-color;
+      color: @g-top-part-color;
 
-        cursor: pointer;
+      cursor: pointer;
 
-        &.default-layout {
-          opacity: 0.5;
-        }
+      &.default-layout {
+        opacity: 0.5;
+      }
 
-        &.md-button {
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          text-transform: none;
-        }
+      &.md-button {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        text-transform: none;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &:hover {
+        //background-color: red;
+        background-color: rgba(0, 0, 0, 0.0274509803921569)
+      }
+
+      .material-icons {
+        width: 72px;
+        height: 100%;
+
+        text-align: center;
+        line-height: @layout-manager-item-height;
+
+        flex-grow: 0;
+
 
         &:focus {
           outline: none;
         }
 
-        &:hover {
-          //background-color: red;
-          background-color: rgba(0, 0, 0, 0.0274509803921569)
-        }
 
-        .material-icons {
-          width: 72px;
-          height: 100%;
+        &.default-icons {
+          color: white;
 
-          text-align: center;
-          line-height: @layout-manager-item-height;
-
-          flex-grow: 0;
-
-
-
-          &:focus {
-            outline: none;
+          &.default-layout {
+            color: @g-top-part-color;
           }
 
-
-          &.default-icons {
-            color: white;
-
-            &.default-layout {
-              color: @g-top-part-color;
-            }
-
-            &:hover {
-              color: @g-top-part-color;
-            }
+          &:hover {
+            color: @g-top-part-color;
           }
         }
-
-        .layout-menu-text {
-          height: 100%;
-          flex-grow: 1;
-          line-height: @layout-manager-item-height;
-
-          &:focus {
-            outline: none;
-          }
-        }
-
       }
+
+      .layout-menu-text {
+        height: 100%;
+        flex-grow: 1;
+        line-height: @layout-manager-item-height;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+    }
   }
 
   .layouts-container {
@@ -3271,6 +3304,7 @@ button.md-raised.md-warn.md-button {
 .popup-container.rounded-border {
   border-radius: 4px;
 }
+
 // <layouts manager>
 
 .homepage-messages-container {
@@ -3293,4 +3327,81 @@ button.md-raised.md-warn.md-button {
 
 .tooltip-error-icon {
   color: #f05a22;
+}
+
+.vAccordion-type1 {
+
+  v-pane-header {
+    margin-bottom: 20px;
+    border-bottom: none;
+
+    .accordion-header-content {
+      height: 48px;
+      padding: 4px 0;
+
+      .accordion-header-left, .accordion-header-right {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        md-checkbox {
+          margin-bottom: 0;
+        }
+
+      }
+
+      .accordion-header-left {
+        position: relative;
+        padding-left: 24px;
+
+        .accordion-expansion-icon {
+          position: absolute;
+          left: 0;
+        }
+
+      }
+
+      .accordion-actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .accordion-name-text {
+        margin-left: 43px;
+      }
+
+    }
+  }
+
+  v-pane-content {
+    padding-left: 54px;
+  }
+
+}
+
+.alignment-menu-item {
+  padding-left: 22px;
+}
+
+button.missing-prices-warning-button.md-button {
+  color: #F05A22;
+  text-transform: initial;
+  font-weight: 500;
+
+  span {
+    position: relative;
+    top: 6px;
+  }
+}
+
+.complex-datepicker-popup-footer {
+  height: 60px;
+  border-top: solid 2px @borderPale;
+}
+
+.closed-selector-icon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }

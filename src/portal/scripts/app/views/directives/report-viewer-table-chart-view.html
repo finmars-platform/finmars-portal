@@ -45,7 +45,7 @@
         </div>
 
         <div class="rv-table-chart-row-holder">
-            <div data-ng-repeat="item in items" class="rv-table-chart-row">
+            <div data-ng-repeat="item in items" class="rv-table-chart-row" data-ng-click="rowClick($event, item)">
 
                 <div class="rv-table-chart-table-cell rv-table-chart-table-cell-column-title rv-table-chart-border-right">
 
@@ -55,7 +55,7 @@
 
                 <div class="rv-table-chart-table-cell rv-table-chart-table-cell-column-value">
 
-                    {{item.total}}
+                    {{item.total_formated}}
 
                 </div>
 
