@@ -831,9 +831,8 @@
     width: @gRvRowSettingsWidth;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding: 0 12px;
     border-right: @gCellBorder;
     transition: width 100ms linear;
 
@@ -843,6 +842,23 @@
       overflow: hidden;
       border-right: none;
     } */
+
+    .context-menu-btn-wrapper {
+      margin-left: 6px;
+      .context-menu-btn {
+        display: flex;
+        align-items: center;
+        border-radius: 50%;
+        color: #B2B2B2;
+        font-size: 24px;
+        padding: 0;
+
+        &:hover {
+          color: @gray;
+          background-color: @g-table-header-background-color;
+        }
+      }
+    }
   }
 
   .g-row-color-picker-btn {
@@ -1157,10 +1173,9 @@
     }
 
     .g-cell-button {
-      margin: 0;
+      margin: 0 0 0 1px;
       padding: 0;
 
-      min-width: auto;
       min-height: auto;
 
       &.md-button {
