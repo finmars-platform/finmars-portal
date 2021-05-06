@@ -102,8 +102,10 @@
 							    option.isActive = false;
 
                                 if (option.id == hOptionId) {
-									removeFrom.splice(optionIndex, 1); //remove options from available
+
 									addTo.push(option); // add options to selected
+                                	removeFrom.splice(optionIndex, 1); //remove options from available
+
 								}
 
 							});
@@ -112,6 +114,7 @@
                         resetDnD();
 
 					}
+
 				};
 
 				scope.switchOptionOnDoubleClick = function (mode, optionToSwitchId) {
@@ -141,8 +144,8 @@
 
 					        option.isActive = false;
 
-                            removeFrom.splice(i, 1);
 							addTo.push(option);
+					        removeFrom.splice(i, 1);
 
 						}
 
@@ -324,7 +327,7 @@
                         var drake = this.dragula;
 
                         drake.on('drag', function () {
-                            document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+							scrollHelper.enableDnDWheelScroll();
                         });
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
@@ -370,7 +373,7 @@
                         });
 
                         drake.on('dragend', function (elem) {
-                            document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+							scrollHelper.disableDnDWheelScroll();
                         });
 
                     },

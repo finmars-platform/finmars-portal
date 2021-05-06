@@ -3,6 +3,7 @@ module.exports = {
     'FILTERS_CHANGE': 'FILTERS_CHANGE',
     'GROUPS_CHANGE': 'GROUPS_CHANGE',
     'CLEAR_USE_FROM_ABOVE_FILTERS': 'CLEAR_USE_FROM_ABOVE_FILTERS',
+	'FILTERS_RENDERED': 'FILTERS_RENDERED',
 
     'UPDATE_TABLE': 'UPDATE_TABLE', // async download
     'REDRAW_TABLE': 'REDRAW_TABLE', // inmemory redraw
@@ -23,7 +24,6 @@ module.exports = {
     'DATA_LOAD_END': 'DATA_LOAD_END',
     'DATA_LOAD_START': 'DATA_LOAD_START',
 
-
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
     'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
 
@@ -38,10 +38,12 @@ module.exports = {
 
     'UPDATE_EV_UI': 'UPDATE_EV_UI',
     'TOGGLE_FILTER_AREA': 'TOGGLE_FILTER_AREA',
+    'TOGGLE_FILTER_BLOCK': 'TOGGLE_FILTER_BLOCK', // Victor 2021.01.06 #69 new report viewer interface toggle filter block visibility
     'UPDATE_FILTER_AREA_SIZE': 'UPDATE_FILTER_AREA_SIZE',
 
     'UPDATE_TABLE_VIEWPORT': 'UPDATE_TABLE_VIEWPORT', // recalculate height and width for ev-viewport
     'UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE': 'UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE',
+	'TABLE_SIZES_CALCULATED': 'TABLE_SIZES_CALCULATED',
 
 
     'REPORT_OPTIONS_CHANGE': 'REPORT_OPTIONS_CHANGE',
@@ -75,11 +77,12 @@ module.exports = {
     'RECON_TOGGLE_MATCH_EDITOR': 'RECON_TOGGLE_MATCH_EDITOR',
     // < Trigger Entity Viewer methods from Split Panel >
 
-    // Event for dashboard
-    'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR',
+	//<editor-fold desc="When inside dashboard events">
+	'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR',
     'MISSING_PRICES_LOAD_END_TO_DASHBOARD': 'MISSING_PRICES_LOAD_END_TO_DASHBOARD',
-    // < Event for dashboard >
+	'DASHBOARD_COMPONENT_DATA_CHANGED': 'DASHBOARD_COMPONENT_DATA_CHANGED',
+	//</editor-fold>
 
-    'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END'
+    'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END',
 
 };

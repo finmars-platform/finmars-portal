@@ -65,7 +65,7 @@
 
                     entityResolverService.getList(propertyItem.value_entity, {
                         filters: {
-                            "system_code": '-'
+                            "user_code": '-'
                         }
                     }).then(function (data) {
 
@@ -73,7 +73,7 @@
 
                             data.forEach(function (resultItem) {
 
-                                if (resultItem.system_code === '-') {
+                                if (resultItem.user_code === '-') {
 
                                     item[propertyItem.key] = resultItem.id;
 
@@ -171,7 +171,7 @@
             var promises = [];
 
             promises.push(setDefaultRelation({}, {value_entity: 'transaction-type', code: 'user_code', key: 'transaction_type'}, cacheContainer));
-            promises.push(setDefaultRelation({}, {value_entity: 'transaction-class', code: 'system_code', key: 'transaction_class'}, cacheContainer));
+            promises.push(setDefaultRelation({}, {value_entity: 'transaction-class', code: 'user_code', key: 'transaction_class'}, cacheContainer));
 
             Promise.all(promises).then(function (data) {
 

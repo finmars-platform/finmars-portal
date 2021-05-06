@@ -1,6 +1,7 @@
 (function () {
 
     var renderHelper = require('../../helpers/render.helper');
+    var stringHelper = require('../../helpers/stringHelper');
 
     /* var checkIcon = renderHelper.getCheckIcon();
     var lockIcon = renderHelper.getLockIcon();
@@ -75,21 +76,20 @@
             result = 'lock2Icon';
         }
 
-        /* TODO uncomment after enabling angular material icons
         else if (obj.is_deleted) {
-            result = 'deletedIcon'
+            result = 'deletedIcon';
         }
 
-        else if (!obj.is_enabled) {
-            result = 'disabledIcon'
+        else if (obj.hasOwnProperty('is_enabled') && !obj.is_enabled) {
+            result = 'disabledIcon';
         }
 
-        else if (!obj.is_active) {
-            result = 'inactiveIcon'
-        } */
+        else if (obj.hasOwnProperty('is_active') && !obj.is_active) {
+            result = 'inactiveIcon';
+        }
 
         else if (currentMember && currentMember.is_admin) {
-            result = 'starIcon'
+            result = 'starIcon';
         }
 
         return renderHelper.getIconByKey(result);
@@ -99,13 +99,13 @@
     var getValue = function (obj, column) {
 
         if (column.status === 'missing') {
-            return "Deleted"
+            return "Deleted";
         }
 
         if (obj[column.key]) {
 
             if (typeof obj[column.key] === 'string') {
-                return obj[column.key]
+                return stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
             }
 
             if (typeof obj[column.key] === 'number') {
@@ -128,19 +128,22 @@
 
                     } else if (column.key === 'price_download_scheme') {
 
-                        return obj[column.key + '_object'].scheme_name;
+                        return obj[column.key + '_object'].user_code;
 
                     }
 
                 }
 
                 if (column.key === 'status') {
-                    if (obj[column.key] === 1) {
+
+                	if (obj[column.key] === 1) {
                         return 'Booked'
                     }
+
                     if (obj[column.key] === 2) {
                         return 'Pending'
                     }
+
                 }
 
                 return obj[column.key]
@@ -167,7 +170,7 @@
 
                 obj.attributes.forEach(function (item) {
 
-                    if (item.attribute_type_object.user_code === user_code) {
+                    if (item.attribute_type_object && item.attribute_type_object.user_code === user_code) {
 
                         if (column.value_type === 20 && item.value_float) {
 
@@ -177,7 +180,7 @@
 
                         if (column.value_type === 10 && item.value_string) {
 
-                            result = item.value_string;
+                            result = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
 
                         }
 
@@ -278,18 +281,24 @@
     };
 
     var getCellTextAlign = function (column) {
-        var result = '';
+
+    	var result = '';
 
         if (column.style && column.style.text_align) {
             result = ' text-' + column.style.text_align;
         }
 
         return result;
+
     };
 
     var getRowGeneralClasses = function (obj, classList) {
 
-        if (obj.___is_last_selected) {
+		if (obj.___context_menu_is_opened) {
+			classList.push('context-menu-opened');
+		}
+
+        if (obj.___is_last_activated) {
             classList.push('last-selected');
 
         } else if (obj.___is_activated) {
@@ -323,9 +332,11 @@
 
         result = result + rowSelection;
 
-        columns.forEach(function (column) {
+        columns.forEach(function (column, columnIndex) {
 
-            var cellValue = getValue(obj, column);
+			var columnNumber = columnIndex + 1;
+
+			var cellValue = getValue(obj, column);
             var textAlign = getCellTextAlign(column);
             var gCellTitle = '';
 
@@ -334,7 +345,7 @@
                 cellValue = '<span class="g-cell-content">' + cellValue + '</span>';
             }
 
-            cell = '<div class="g-cell-wrap" style="width: ' + column.style.width + '">' +
+            cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap" style="width: ' + column.style.width + '">' +
                 '<div class="g-cell' + textAlign + ' cell-status-' + column.status + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
                 cellValue +

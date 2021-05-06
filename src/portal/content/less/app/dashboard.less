@@ -61,6 +61,8 @@
   }
 
   .dashboard-title {
+    display: flex;
+    align-items: baseline;
     font-family: 'Roboto-Regular', 'Roboto', sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -100,7 +102,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1;
+    z-index: 9;
     //background: rgba(100, 100, 100, 0.3);
   }
 
@@ -182,6 +184,19 @@
     box-sizing: border-box;
     border-top: 1px solid #e0e0e0;
 
+    .dashboard-component-header-left {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding-left: 26px;
+      box-sizing: border-box;
+
+      .md-button.dashboard-comp-h-btn {
+        position: relative;
+        bottom: 2px;
+      }
+    }
 
     .dashboard-component-name {
       text-align: left;
@@ -192,35 +207,38 @@
       font-style: normal;
       font-size: 16px;
       letter-spacing: 0.4px;
-      padding-left: 16px;
+      margin-right: 12px;
       font-family: Roboto, "Helvetica Neue", sans-serif;
     }
 
-    .dashboard-component-header-left {
+    .dashboard-component-header-right {
       position: absolute;
       top: 20px;
       right: 0;
+    }
 
-      button.md-button {
-        min-width: 0;
-        min-height: 0;
-        height: 23px;
-        margin: 0 0 0 5px;
-        padding: 0;
+    .md-button.dashboard-comp-h-btn {
+      min-width: 0;
+      min-height: 0;
+      height: 23px;
+      margin: 0 16px 0 0;
+      padding: 0;
 
-        margin-right: 16px;
+      &:not(:first-child) {
+        margin-left: 5px;
+      }
 
+      ng-md-icon {
+        fill: #747474;
+      }
+
+      &.md-warn {
         ng-md-icon {
-          fill: #747474;
-        }
-
-        &.md-warn {
-          ng-md-icon {
-            fill: #fff;
-          }
+          fill: #fff;
         }
       }
     }
+
   }
 
   /*.dashboard-component-settings-btn {
@@ -288,7 +306,7 @@
     box-sizing: border-box;
 
     padding: 0;
-    &:hover {
+    &:not([disabled]):hover {
       background: #ccc;
     }
   }
@@ -574,7 +592,7 @@ dashboard-report-viewer-grand-total {
   background: #fff;
   //padding: 10px;
 }
-.dashboard-accordion {
+.dashboard-accordion-component {
   background: #fff;
   -webkit-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.247058823529412);
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.247058823529412);
@@ -612,4 +630,17 @@ dashboard-report-viewer-grand-total {
       display: none;
     }
   }
+}
+
+.g-dashboard-top-button {
+  margin: 0;
+
+  box-sizing: border-box;
+  color: #747474;
+  font-size: 14px;
+  background-color: transparent;
+  height: 30px;
+  min-height: 30px;
+  min-width: auto;
+
 }

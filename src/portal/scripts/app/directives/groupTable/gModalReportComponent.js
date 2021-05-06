@@ -11,13 +11,19 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
+    var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         var vm = this;
+
+        var gModalSharedLogicHelper = new GModalSharedLogicHelper(vm);
+
         vm.readyStatus = {content: false};
 
         vm.entityViewerDataService = entityViewerDataService;
         vm.entityViewerEventService = entityViewerEventService;
+        vm.attributeDataService = attributeDataService;
 
         vm.contentWrapElement = contentWrapElement;
 
@@ -75,6 +81,7 @@
         ];
 
         var portfolioAttrsComp = ['portfolio.name', 'portfolio.short_name', 'portfolio.notes', 'portfolio.user_code', 'portfolio.public_name'];
+        var currencyAttrsComp = ['currency.name', 'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.public_name'];
 
         var instrumentAttrsComp = [
             'instrument.name', 'instrument.short_name', 'instrument.user_code', 'instrument.public_name', 'instrument.instrument_type.name',
@@ -118,6 +125,7 @@
             vm.balancePerformanceAttrsFiltered = [];
             vm.instrumentAttrsFiltered = [];
             vm.linkedInstrumentAttrsFiltered = [];
+            vm.currencyAttrsFiltered = [];
             vm.accountAttrsFiltered = [];
             vm.portfolioAttrsFiltered = [];
             vm.strategy1attrsFiltered = [];
@@ -136,6 +144,8 @@
             vm.instrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
 
             vm.linkedInstrumentAttrs = attributeDataService.getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+
+            vm.currencyAttrs = attributeDataService.getAllAttributesAsFlatList('currencies.currency', 'currency', 'Currency', {maxDepth: 1});
 
             vm.accountAttrs = attributeDataService.getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
 
@@ -203,6 +213,7 @@
 
             vm.portfolioDynamicAttrs = attributeDataService.formatAttributeTypes(portfolioDynamicAttrs, 'portfolios.portfolio', 'portfolio', 'Portfolio');
             vm.accountDynamicAttrs = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'accounts.account', 'account', 'Account');
+            vm.currencyDynamicAttrs = attributeDataService.formatAttributeTypes(accountDynamicAttrs, 'currencies.currency', 'currency', 'Currency');
             vm.instrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
             vm.allocationDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             vm.linkedInstrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
@@ -220,6 +231,9 @@
 
             vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
             vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+
+            vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
 
             vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
             vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
@@ -239,6 +253,7 @@
             //filterAttrsToShow('accountAttrs', accountAttrsToRemove);
             composeAttrsInsideTab('accountAttrs', accountAttrsComp);
             composeAttrsInsideTab('portfolioAttrs', portfolioAttrsComp);
+            composeAttrsInsideTab('currencyAttrs', currencyAttrsComp);
             filterAttrsToShow('strategy1attrs', strategy1AttrsToRemove);
             filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
             filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);
@@ -283,6 +298,9 @@
             vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
             vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
 
+            vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
+
             vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
             vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
 
@@ -325,6 +343,9 @@
 
             syncTypeAttrs(vm.linkedInstrumentAttrs);
             syncTypeAttrs(vm.linkedInstrumentDynamicAttrs);
+
+            syncTypeAttrs(vm.currencyAttrs);
+            syncTypeAttrs(vm.currencyDynamicAttrs);
 
             syncTypeAttrs(vm.accountAttrs);
             syncTypeAttrs(vm.accountDynamicAttrs);
@@ -492,101 +513,37 @@
         };
 
         // format data for SELECTED tab
-        var selectedGroups = [];
-        var selectedColumns = [];
-        var selectedFilters = [];
-
-        var separateSelectedAttrs = function (attributes, attrsVmKey) {
-
-            for (var i = 0; i < attributes.length; i++) {
-                var attribute = JSON.parse(angular.toJson(attributes[i]));
-                attribute['attrsVmKey'] = attrsVmKey;
-
-                // attrsVmKey used in vm.updateAttrs and selectedDnD
-                /*if (attribute.groups) {
-                    selectedGroups.push(attribute);
-                } else if (attribute.columns) {
-                    selectedColumns.push(attribute);
-                } else if (attribute.filters) {
-                    selectedFilters.push(attribute);
-                };*/
-
-                if (attribute.groups) {
-                    selectedGroups.push(attribute);
-                }
-
-                if (attribute.columns) {
-                    selectedColumns.push(attribute);
-                }
-
-                if (attribute.filters) {
-                    selectedFilters.push(attribute);
-                }
-
-            }
-        };
-
-        var groupSelectedGroups = function (insideTable, selectedAttrs) { // putting selected attributes in the same order as in the table
-
-            var orderedSelAttrs = [];
-
-            var a;
-            for (a = 0; a < insideTable.length; a++) {
-                var attr = insideTable[a];
-
-                for (var i = 0; i < selectedAttrs.length; i++) {
-                    var sAttr = selectedAttrs[i];
-
-                    if (sAttr.key === attr.key) {
-                        orderedSelAttrs.push(sAttr);
-                        break;
-                    }
-
-                }
-
-            }
-
-            return orderedSelAttrs;
-
-        };
-
         vm.selectedGroups = [];
         vm.selectedColumns = [];
         vm.selectedFilters = [];
 
         var getSelectedAttrs = function () {
 
-            selectedGroups = [];
-            selectedColumns = [];
-            selectedFilters = [];
+            const attributes = [
+                'balanceAttrs',
+                'balancePerformanceAttrs',
+                'balanceMismatchAttrs',
+                'custom',
+                'allocationAttrs',
+                'allocationDynamicAttrs',
+                'instrumentAttrs',
+                'instrumentDynamicAttrs',
+                'linkedInstrumentAttrs',
+                'linkedInstrumentDynamicAttrs',
+                'accountAttrs',
+                'accountDynamicAttrs',
+                'currencyAttrs',
+                'currencyDynamicAttrs',
+                'portfolioAttrs',
+                'portfolioDynamicAttrs',
+                'strategy1attrs',
+                'strategy2attrs',
+                'strategy3attrs'
+            ];
 
-            separateSelectedAttrs(vm.balanceAttrs, 'balanceAttrs');
-            separateSelectedAttrs(vm.balancePerformanceAttrs, 'balancePerformanceAttrs');
-            separateSelectedAttrs(vm.balanceMismatchAttrs, 'balanceMismatchAttrs');
-            separateSelectedAttrs(vm.custom, 'custom');
-            separateSelectedAttrs(vm.allocationAttrs, 'allocationAttrs');
-            separateSelectedAttrs(vm.allocationDynamicAttrs, 'allocationDynamicAttrs');
+            const attrGroups = {groups, columns, filters}; // Victor 2020.12.10 I need variables: groups, columns, filters in gModalSharedLogicHelper
 
-            separateSelectedAttrs(vm.instrumentAttrs, 'instrumentAttrs');
-            separateSelectedAttrs(vm.instrumentDynamicAttrs, 'instrumentDynamicAttrs');
-
-            separateSelectedAttrs(vm.linkedInstrumentAttrs, 'linkedInstrumentAttrs');
-            separateSelectedAttrs(vm.linkedInstrumentDynamicAttrs, 'linkedInstrumentDynamicAttrs');
-
-            separateSelectedAttrs(vm.accountAttrs, 'accountAttrs');
-            separateSelectedAttrs(vm.accountDynamicAttrs, 'accountDynamicAttrs');
-
-            separateSelectedAttrs(vm.portfolioAttrs, 'portfolioAttrs');
-            separateSelectedAttrs(vm.portfolioDynamicAttrs, 'portfolioDynamicAttrs');
-
-            separateSelectedAttrs(vm.strategy1attrs, 'strategy1attrs');
-            separateSelectedAttrs(vm.strategy2attrs, 'strategy2attrs');
-            separateSelectedAttrs(vm.strategy3attrs, 'strategy3attrs');
-
-
-            vm.selectedGroups = groupSelectedGroups(groups, selectedGroups);
-            vm.selectedColumns = groupSelectedGroups(columns, selectedColumns);
-            vm.selectedFilters = groupSelectedGroups(filters, selectedFilters);
+            gModalSharedLogicHelper.getSelectedAttrs(attributes, attrGroups);
 
         };
         // < format data for SELECTED tab >

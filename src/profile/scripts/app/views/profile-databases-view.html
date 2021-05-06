@@ -37,7 +37,7 @@
                             <md-card-title-text>
                                 <div>
                                     You have been invited to a <b>{{item.to_master_user_object.name}}</b> database by
-                                    <b>{{item.from_member_object.username}}</b>
+                                    <b>{{item.from_user_object.username}}</b>
                                 </div>
 
                                 <div class="m-t-16" style="font-size: 13px;" data-ng-if="item.to_master_user_object.description">
@@ -69,6 +69,7 @@
                     <md-card-title>
                         <md-card-title-text>
                             <div class="md-headline m-b-8">{{item.name}}</div>
+                            <div data-ng-if="item.legacy_id"><b>Legacy Database</b></div>
 
                             <div class="m-b-8 mm-description" data-ng-if="!item.descriptionEdit">
                                 {{item.description}}
@@ -111,7 +112,7 @@
                             </div>
                         </md-card-title-text>
                     </md-card-title>
-                    <md-card-actions layout="row" layout-align="space-between center">
+                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="item.is_initialized">
                         <!--<md-button>Leave</md-button>-->
 
                         <md-button data-ng-if="!item.is_owner" class="md-raised"
@@ -132,6 +133,9 @@
 
                         <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Open
                         </md-button>
+                    </md-card-actions>
+                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="!item.is_initialized">
+                        <div class="text-center">Ecosystem is initializing</div>
                     </md-card-actions>
                 </md-card>
 

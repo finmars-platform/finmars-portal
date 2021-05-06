@@ -1,6 +1,9 @@
 .entity-editor-dialog {
   padding-bottom: 52px;
   width: 100%;
+}
+
+.entity-editor-dialog, .big-drawer-content {
 
   .entity-editor-fixed-area-container {
     padding-top: 20px;
@@ -36,8 +39,32 @@
 
 }
 
+.entity-editor-fixed-area {
+  padding: 24px 16px 10px;
+
+  .fa-field1 {
+    padding: 0 10px;
+    flex: 3 0 auto;
+    box-sizing: border-box;
+  }
+
+  .fa-field2 {
+    flex: 2 1 33%;
+  }
+
+  .fa-field3 {
+    flex: 1 2 33%;
+  }
+}
+
 .entity-editor-row {
   min-height: 40px;
+
+  bind-field-control {
+    .custom-input-container {
+      margin-bottom: 13px;
+    }
+  }
 }
 
 .disabled-input-form {
@@ -55,4 +82,307 @@
     margin-top: 5px;
   }
 
+}
+
+// .universal-editor {
+  .tabs-colored {
+    md-tabs-wrapper {
+      background-color: #f5f5f5;
+    }
+
+    md-tab-item {
+      padding: 0;
+
+      span {
+        display: inline-block;
+        padding: 12px 24px;
+      }
+    }
+
+    .md-tab.md-active {
+      color: #f05a22;
+      font-weight: bold;
+    }
+
+    md-ink-bar {
+      color: #f05a22;
+      background-color: #f05a22;
+    }
+  }
+
+
+  .entity-tabs-menu {
+    position: absolute;
+    min-height: 48px;
+    top: 0;
+    right: 0;
+
+    button.entity-tabs-menu-btn {
+      margin-top: 5px;
+
+      &.error-tab {
+        fill: #fa393e;
+      }
+    }
+
+    &.active {
+      color: #f05a22;
+      border-bottom: 2px solid #f05a22;
+      box-sizing:border-box;
+
+      ng-md-icon svg {
+        fill: #f05a22;
+      }
+    }
+
+    .tabs-menu-error-icon {
+      display: none;
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      color: @orange;
+
+      .material-icons {
+        font-size: 16px;
+      }
+
+    }
+
+  }
+
+  .entity-tabs-menu.error-tab {
+
+    button.entity-tabs-menu-btn {
+      fill: #fa393e;
+    }
+
+    .tabs-menu-error-icon {
+      display: block;
+    }
+
+  }
+// }
+
+.universal-editor-menu-content .active-tab-button {
+  border-left: 5px solid #f05a22;
+}
+
+.universal-editor-menu-content.optional-entity-menu {
+
+  ng-md-icon svg {
+    fill: #7d7d7d;
+  }
+
+  .color-delete {
+    color: #f05a22;
+
+    ng-md-icon svg {
+      fill: #f05a22;
+    }
+  }
+
+}
+
+.ev-editor-tabs-popup-content {
+  width: 192px;
+
+  .popup-menu-option {
+    padding-left: 32px;
+
+    &.active-tab-button {
+      color: @orange;
+      font-weight: bold;
+    }
+
+    &.error-menu-option {
+      color: #fa393e;
+    }
+
+    .tab-option-error-icon {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      top: 0;
+      left: 7px;
+
+      .material-icons {
+        font-size: 18px;
+      }
+    }
+
+  }
+}
+
+.instrument-type-event-block-items-container {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 19px;
+  border-top: 1px solid @borderPale;
+
+  md-checkbox {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+}
+
+.instrument-type-accruals-tab-view, .instrument-type-accordion {
+
+  v-pane-header {
+
+    md-checkbox {
+      font-size: 14px;
+    }
+
+  }
+
+  .instrument-type-event-block-items {
+    height: 60px;
+  }
+
+}
+
+@instrTypeAccordionGtWidth: 1253px;
+
+.instrument-type-accordion-top-fields {
+  width: @instrTypeAccordionGtWidth;
+}
+
+.instrument-type-accordion-grid-table {
+  width: @instrTypeAccordionGtWidth;
+
+  .disabled-grid-table {
+    .grid-table {
+      opacity: 0.5;
+    }
+  }
+
+}
+
+.instrument-type-accordion-grid-table.instrument-type-event-grid-tables {
+  border-right: 1px solid @borderPale;
+  border-left: 1px solid @borderPale;
+  border-bottom: 1px solid @borderPale;
+}
+
+.accrual-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  md-checkbox {
+    margin: 0 20px 13px 0;
+  }
+  &.header {
+    h4 {
+      text-align: center;
+      margin: 0;
+
+      &:first-child {
+        width: 30%;
+      }
+      &:last-child {
+        width: 70%;
+      }
+    }
+
+  }
+}
+
+.ev-instr-accruals-settings-popup {
+  padding-right: 0;
+  max-width: 90%;
+
+  .popup-area-main {
+
+    .instr-sel-opts-to-show-checkbox-wrap {
+      height: 40px;
+
+      md-checkbox {
+        margin-bottom: 0;
+      }
+    }
+
+    .custom-input-container {
+      margin-bottom: 13px;
+    }
+  }
+
+  .popup-area-footer {
+    padding-right: 16px;
+  }
+}
+
+.add-accrual-row {
+  min-width: 308px;
+  max-width: 616px;
+
+  .add-accrual-column {
+    display: inline-block;
+    width: 300px;
+    margin-right: 8px;
+    margin-bottom: 13px;
+    vertical-align: top;
+  }
+}
+
+.instrument-options-selector {
+
+  table {
+    thead {
+      display: block;
+      border-bottom: none;
+    }
+
+    tbody {
+      display: block;
+      max-height: 300px;
+      overflow-y: scroll;
+
+      tr:first-child {
+        border-top: none;
+      }
+
+    }
+
+    tr {
+      height: 48px;
+      border: 1px solid #e0e0e0;
+
+      td.options-parameters {
+        width: 212px;
+        padding-left: 12px;
+        box-sizing: border-box;
+        border-right: 1px solid #e0e0e0;
+      }
+
+      td.options-show {
+        width: 68px;
+        text-align: center;
+        box-sizing: border-box;
+      }
+
+      td.options-override-name {
+        width: 180px;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .grid-table-cell {
+        width: inherit;
+      }
+
+    }
+  }
+}
+
+.popup-area-backdrop.back-drop-z-index {
+  z-index: 55;
+}
+.popup-container.popup-z-index {
+  z-index: 56;
 }

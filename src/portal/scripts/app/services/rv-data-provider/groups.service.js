@@ -108,17 +108,43 @@
                 items = filterService.filterTableRows(items, regularFilters);
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
+                // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js
+
+/*				const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+
+				if (rowTypeFilters) {
+
+					items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
+
+				}*/
+
                 var group = options.groups_types[options.groups_types.length - 1];
 
                 var groups = getUniqueGroups(items, group);
 
-                // console.log('getUniqueGroups groups', groups);
+                const groupSortProperty = options.groups_order === 'desc' ? '-___group_name' : '___group_name';
 
-                if (options.groups_order === 'desc') {
+                if (options.ordering_mode === 'manual') {
+
+                    const {key} = entityViewerDataService.getActiveGroupTypeSort();
+
+                    const columnSortData = entityViewerDataService.getColumnSortData(key)
+
+                    if (columnSortData) {
+                        groups = sortService.sortItemsManual(groups, groupSortProperty, columnSortData);
+                    }
+
+                } else {
+
+                    groups = sortService.sortItems(groups, groupSortProperty);
+
+                }
+
+/*                if (options.groups_order === 'desc') {
                     groups = sortService.sortItems(groups, '-___group_name');
                 } else {
                     groups = sortService.sortItems(groups, '___group_name');
-                }
+                }*/
 
                 result.count = groups.length;
                 result.results = groups;

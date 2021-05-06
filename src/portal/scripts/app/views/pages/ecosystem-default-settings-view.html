@@ -216,9 +216,9 @@
 <!--                    </md-select-header>-->
 <!--                    <div class="select-options-holder">-->
 <!--                        <md-option-->
-<!--                                data-ng-repeat="field in vm.price_download_scheme_fields | orderBy:'-'+field.scheme_name | filter:{scheme_name: vm.searchTermPriceDownloadScheme} as results track by field.id "-->
+<!--                                data-ng-repeat="field in vm.price_download_scheme_fields | orderBy:'-'+field.user_code | filter:{user_code: vm.searchTermPriceDownloadScheme} as results track by field.id "-->
 <!--                                ng-value="field.id">-->
-<!--                            {{field.scheme_name}}-->
+<!--                            {{field.user_code}}-->
 <!--                        </md-option>-->
 <!--                    </div>-->
 <!--                </md-select>-->
@@ -690,6 +690,34 @@
             <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
                 <progress-circular diameter="30"></progress-circular>
             </div>
+
+        </div>
+
+
+        <div>
+
+            <h4>Group Tokens for User Code prefixes</h4>
+
+            <div data-ng-repeat="item in vm.usercodeGroups" layout="row">
+
+                <div class="p-t-8">{{item.value}}</div>
+
+                <md-button class="md-warn md-raised" data-ng-click="vm.deleteUsercodeGroup($event, item)">Delete</md-button>
+
+            </div>
+
+            <div layout="row">
+
+                <md-input-container>
+                    <label>Group prefix</label>
+                    <input type="text" data-ng-model="vm.groupPrefix">
+                </md-input-container>
+
+                <md-button class="md-raised md-primary" data-ng-click="vm.createNewUserCodeGroup($event)">Create</md-button>
+
+            </div>
+
+
 
         </div>
 

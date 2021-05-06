@@ -60,14 +60,20 @@
         vm.openPaletteSettings = function ($event) {
 
             $mdDialog.show({
-                controller: 'ColorPalettesSettingsDialogController as vm',
+                controller: 'ColorPalettesSettingsController as vm',
                 templateUrl: 'views/colorPicker/color-palettes-settings-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
-                multiple: true
+                multiple: true,
+				locals: {
+                	data: {
+                		openedInside: 'dialog'
+					}
+				}
             }).then(function (res) {
 
-                if (res && res.data) {
+                // if (res && res.data) {
+				if (res.status === 'agree') {
                     vm.palettesList = res.data.palettesList;
                     palettesListChanged = true;
                 }

@@ -85,7 +85,7 @@
 
             importPriceDownloadSchemeService.create(vm.newItem).then(function () {
                 vm.newItem = {
-                    "scheme_name": null,
+                    "user_code": null,
                     "provider": null,
                     "bid0": '',
                     "bid1": '',

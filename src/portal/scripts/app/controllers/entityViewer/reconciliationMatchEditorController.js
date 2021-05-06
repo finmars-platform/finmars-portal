@@ -10,6 +10,7 @@
     var reconciliationComplexTransactionFieldService = require('../../services/reconciliation/reconciliationComplexTransactionFieldService');
 
     var reconMatchHelper = require('../../helpers/reconMatchHelper');
+    var ScrollHelper = require('../../helpers/scrollHelper');
 
     var evEvents = require('../../services/entityViewerEvents');
 
@@ -65,6 +66,8 @@
                 id: 4
             }
         ];
+
+		var scrollHelper;
 
         vm.complexTransactionStatusChange = function ($event, field) {
 
@@ -304,7 +307,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -566,38 +569,6 @@
             document.body.addEventListener('mouseup', vm.turnOffDragging, {once: true});
         };
 
-        // scroll while dragging
-        var DnDScrollElem;
-        var DnDScrollTimeOutId;
-        var scrollSize = null;
-
-        var DnDWheel = function (event) {
-            event.preventDefault();
-
-            var scrolled = DnDScrollElem.scrollTop;
-
-            if (scrollSize === null) {
-                scrollSize = scrolled
-            }
-
-            if (event.deltaY > 0) {
-                scrollSize = scrollSize + 100;
-            } else {
-                scrollSize = scrollSize - 100;
-            }
-
-            clearTimeout(DnDScrollTimeOutId);
-
-            DnDScrollTimeOutId = setTimeout(function () { // timeout needed for smoother scroll
-                DnDScrollElem.scroll({
-                    top: Math.max(0, scrollSize)
-                });
-                scrollSize = null;
-            }, 30);
-
-        };
-        // < scroll while dragging >
-
         vm.initDragula = function () {
 
             vm.dragAndDropBankFileLines = {
@@ -616,7 +587,7 @@
                     });
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
+                        scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('out', function (elem, container, source) {
@@ -624,7 +595,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
+						scrollHelper.disableDnDWheelScroll();
                     });
 
                 },
@@ -671,7 +642,7 @@
                     });
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
+						scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('out', function (elem, container, source) {
@@ -679,7 +650,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
+						scrollHelper.disableDnDWheelScroll();
                     });
 
                 },
@@ -720,12 +691,13 @@
                     var areaItemsChanged;
                     var drake = this.dragula;
 
-                    drake.on('dragstart', function () {
+/*                    drake.on('dragstart', function () {
                         areaItemsChanged = false;
-                    });
+                    });*/
 
                     drake.on('drag', function () {
-                        document.addEventListener('wheel', DnDWheel);
+                        areaItemsChanged = false;
+						scrollHelper.enableDnDWheelScroll();
                     });
 
                     drake.on('over', function (elem, container, source) {
@@ -1113,7 +1085,7 @@
                     });
 
                     drake.on('dragend', function (elem) {
-                        document.removeEventListener('wheel', DnDWheel);
+						scrollHelper.disableDnDWheelScroll();
                     });
 
                 },
@@ -1172,10 +1144,14 @@
             };
 
             setTimeout(function () {
-                DnDScrollElem = document.querySelector('.dndScrollableElem');
+
+            	var DnDScrollElem = document.querySelector('.dndScrollableElem');
+				scrollHelper.setDnDScrollElem(DnDScrollElem);
+
                 vm.dragAndDropBankFileLines.init();
                 vm.dragAndDropComplexTransactionLines.init();
                 vm.dragAndDropFields.init();
+
             }, 500);
 
         };
@@ -1299,6 +1275,8 @@
         };
 
         vm.init = function () {
+
+        	var scrollHelper = new ScrollHelper();
 
             vm.parentEntityViewerEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 

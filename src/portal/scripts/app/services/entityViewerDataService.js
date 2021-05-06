@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var stringHelper = require('../helpers/stringHelper');
+	var stringHelper = require('../helpers/stringHelper');
     var metaHelper = require('../helpers/meta.helper');
 
     var getDefaultInterfaceLayout = function () {
@@ -33,6 +33,9 @@
                 width: headerToolbarWidth,
                 height: headerToolbarHeight
             },
+			topPart: {
+				height: 50
+			},
             mainContent: {
                 height: 0
             },
@@ -96,7 +99,7 @@
         });
 
     };
-
+	/** @module entityViewerDataService */
     module.exports = function () {
 
         var data = {
@@ -106,6 +109,10 @@
                 subtotal_type: false
             },
             filters: [],
+            rowTypeFilters: {
+                markedRowFilters: 'none'
+            },
+			useFromAboveFilters: [],
             pagination: {
                 page_size: 60
             },
@@ -139,7 +146,7 @@
                 step: 60, // rows to render
                 direction: null
             },
-            viewContext: '',
+            viewContext: '', // can be: reconciliation_viewer, dashboard, entity_viewer, reconciliation_viewer, split_panel
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
@@ -154,7 +161,9 @@
             projection: [],
             activeObject: null,
             activeObjectsCount: 0,
-            dataLoadEnded: false
+            dataLoadEnded: false,
+            markedSubtotals: {},
+			rowSettings: {}
         };
 
         var dashboardData = {
@@ -180,7 +189,8 @@
         }
 
         function toggleRightSidebar (collapse) {
-            var interfaceLayout = getInterfaceLayout();
+
+        	var interfaceLayout = getInterfaceLayout();
 
             if (collapse || interfaceLayout.filterArea.width === 239) {
 
@@ -195,6 +205,7 @@
             }
 
             setInterfaceLayout(interfaceLayout);
+
         }
 
         function setRootEntityViewer(isRootEntityViewer) {
@@ -311,6 +322,16 @@
 
         function getFilters() {
             return data.filters;
+        }
+
+        function setRowTypeFilters (color) {
+            data.rowTypeFilters = {
+                markedRowFilters: color
+            };
+        }
+
+        function getRowTypeFilters () {
+            return data.rowTypeFilters;
         }
 
         function getPagination() {
@@ -533,7 +554,8 @@
 
             });
 
-            return result
+            return result;
+
         }
 
         function getData(hashId) {
@@ -605,7 +627,7 @@
 
         }
 
-        function resetRequestParameters() {
+        function resetRequestParameters() { // resets number of row's pages
             data.requestParameters = {};
         }
 
@@ -712,6 +734,17 @@
             data.activeRequestParametersId = id;
         }
 
+        function resetTableContent () {
+
+        	resetData();
+			resetRequestParameters();
+
+			var rootGroup = getRootGroupData();
+
+			setActiveRequestParametersId(rootGroup.___id);
+
+		}
+
 
         // Activated Row just for selection purpose
         // Active Object for Split panel,
@@ -723,7 +756,6 @@
         function getLastActivatedRow() {
             return data.lastActivatedRow;
         }
-
 
         function setActiveObject(obj) {
             data.activeObject = obj
@@ -782,6 +814,10 @@
 
         function getActiveObjectFromAbove() {
             return data.activeObjectFromAbove;
+        }
+
+        function setRowHeight(height) {
+            return data.virtualScroll.rowHeight = height;
         }
 
         function getRowHeight() {
@@ -963,8 +999,13 @@
             listLayout.data.columns = getColumns();
             listLayout.data.grouping = getGroups();
             listLayout.data.filters = getFilters();
+
+			listLayout.data.columns.forEach(column => delete column.frontOptions);
+			listLayout.data.grouping.forEach(group => delete group.frontOptions);
+
             emptyUseFromAboveFilters(listLayout.data.filters);
 
+            listLayout.data.rowSettings = getRowSettings();
             listLayout.data.additions = getAdditions();
 
             var interfaceLayout = getInterfaceLayout();
@@ -1016,7 +1057,9 @@
                 delete listLayout.data.reportOptions.item_currencies;
                 delete listLayout.data.reportOptions.item_accounts;
 
-            } else {
+            }
+
+            else {
 
                 listLayout.data.pagination = getPagination();
                 listLayout.data.ev_options = getEntityViewerOptions();
@@ -1034,7 +1077,9 @@
 
                 listLayout = Object.assign({}, activeListLayout);
 
-            } else {
+            }
+
+            else {
 
                 var defaultList = uiService.getListLayoutTemplate();
 
@@ -1077,7 +1122,9 @@
                     }
                 }
 
-            } else {
+            }
+
+            else {
 
                 setPagination(listLayout.data.pagination);
 
@@ -1117,17 +1164,44 @@
 
             setListLayout(listLayout);
 
-            data.columns.forEach(function (column) {
+            const setActiveColumn = async (column) => {
 
                 if (column.options && column.options.sort) {
 
-                    setActiveColumnSort(column);
+                    if (column.groups) {
+                        setActiveGroupTypeSort(column);
+                    } else {
+                        setActiveColumnSort(column);
+                    }
+
+                    if (column.options.sort_mode === 'manual') {
+
+                        const {results} = await uiService.getColumnSortDataList({
+                            filters: {
+                                user_code: column.manual_sort_layout_user_code
+                            }
+                        });
+
+                        if (results.length) {
+
+                            const layout = results[0];
+                            setColumnSortData(column.key, layout.data);
+
+                        }
+
+                    }
+
                 }
 
-            });
+            };
+
+            data.columns.forEach(setActiveColumn);
+            data.groups.forEach(setActiveColumn);
 
             listLayout.data.components = {
-                columnArea: true,
+				filterArea: true,
+				topPart: true,
+            	columnArea: true,
                 viewer: true,
                 sidebar: true,
                 groupingArea: true,
@@ -1138,6 +1212,10 @@
                 layoutManager: true,
                 autoReportRequest: false
             };
+
+            if (isReport) {
+				listLayout.data.components.groupingArea = false
+			}
 
             setComponents(listLayout.data.components);
             setEditorTemplateUrl('views/additions-editor-view.html');
@@ -1311,6 +1389,48 @@
             return data.missingPrices;
         }
 
+        function setMarkedSubtotals (markedSubtotals) {
+            data.markedSubtotals = markedSubtotals;
+        }
+
+        function getMarkedSubtotals() {
+            return data.markedSubtotals;
+        }
+
+        function setCrossEntityAttributeExtensions(items) {
+            data.crossEntityAttributeExtensions = items;
+        }
+
+        function getCrossEntityAttributeExtensions() {
+            return data.crossEntityAttributeExtensions;
+        }
+
+        function setColumnSortData(key, item) {
+
+            if(!data.columnSortData) {
+                data.columnSortData = {}
+            }
+
+            data.columnSortData[key] = item;
+        }
+
+        function getColumnSortData(key) {
+
+            if (data.columnSortData && data.columnSortData.hasOwnProperty(key)) {
+                return data.columnSortData[key];
+            }
+
+            return null;
+        }
+
+		function setRowSettings (rowSettings) {
+			data.rowSettings = rowSettings;
+		}
+
+        function getRowSettings () {
+			return data.rowSettings || {};
+		}
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1403,6 +1523,8 @@
             resetRequestParameters: resetRequestParameters,
             getAllRequestParameters: getAllRequestParameters,
 
+			resetTableContent: resetTableContent,
+
             setActiveObjectFromAbove: setActiveObjectFromAbove,
             getActiveObjectFromAbove: getActiveObjectFromAbove,
 
@@ -1416,6 +1538,7 @@
             getActiveObjectActionData: getActiveObjectActionData,
 
             getRowHeight: getRowHeight,
+            setRowHeight: setRowHeight,
             getRequestThreshold: getRequestThreshold,
             getVirtualScrollStep: getVirtualScrollStep,
             setVirtualScrollStep: setVirtualScrollStep,
@@ -1431,6 +1554,8 @@
 
             setActiveColumnSort: setActiveColumnSort,
             getActiveColumnSort: getActiveColumnSort,
+			setColumnSortData: setColumnSortData,
+			getColumnSortData: getColumnSortData,
 
             setActiveGroupTypeSort: setActiveGroupTypeSort,
             getActiveGroupTypeSort: getActiveGroupTypeSort,
@@ -1522,6 +1647,18 @@
 
             setMissingPrices: setMissingPrices,
             getMissingPrices: getMissingPrices,
+
+            setRowTypeFilters: setRowTypeFilters,
+            getRowTypeFilters: getRowTypeFilters,
+
+            setMarkedSubtotals: setMarkedSubtotals,
+            getMarkedSubtotals: getMarkedSubtotals,
+
+            setCrossEntityAttributeExtensions: setCrossEntityAttributeExtensions,
+            getCrossEntityAttributeExtensions: getCrossEntityAttributeExtensions,
+
+			setRowSettings: setRowSettings,
+			getRowSettings: getRowSettings,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

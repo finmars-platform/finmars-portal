@@ -8,7 +8,7 @@
     var usersGroupService = require('../../services/usersGroupService');
     var usersService = require('../../services/usersService');
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
@@ -17,12 +17,13 @@
     var attributeTypeService = require('../../services/attributeTypeService');
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
-    var EntityViewerEditorEventService = require('../../services/ev-editor/entityViewerEditorEventService');
+    var EntityViewerEditorEventService = require('../../services/eventService');
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
+    var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
 	var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
 	var transactionHelper = require('../../helpers/transaction.helper');
@@ -74,13 +75,15 @@
         vm.baseTransactions = [];
         vm.reconFields = [];
 
-    vm.tabsWithErrors = {};
-    vm.errorFieldsList = [];
-    vm.inputsWithCalculations = null;
+		vm.tabsWithErrors = {};
+		vm.errorFieldsList = [];
+		vm.inputsWithCalculations = null;
 
-    var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
+		vm.openedIn = data.openedIn;
 
-        /*var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
+		var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
+
+        /* var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
 
             var i, l, e, u;
 
@@ -266,8 +269,9 @@
             }
             // < Empty sockets that have no attribute that matches them >
 
-        };*/
-        vm.rearrangeMdDialogActions = function () {
+        }; */
+
+		vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
 
             if (dialogWindowWidth < 905) {
@@ -446,7 +450,8 @@
             }
 
             //$mdDialog.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
-            $bigDrawer.hide({status: 'disagree', data: {updateRowIcon: updateRowIcon}});
+			var responseObj = {status: 'disagree', data: {updateRowIcon: updateRowIcon}};
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
         };
 
@@ -490,30 +495,47 @@
             });
 
             //$mdDialog.hide({status: 'disagree'});
-            $bigDrawer.hide({status: 'disagree'});
+			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
 
         };
+		/**
+		 * Changes vm.entity, vm.tabs, vm.userInputs
+		 *
+		 * @param cTransactionData {Object} - complex transaction data
+		 * @returns {Promise<void>} - returns promise after all async functions done
+		 */
+        var postRebookComplexTransactionActions = async function (cTransactionData) {
 
-        var postRebookComplexTransactionActions = function (cTransactionData, recalculationInfo) {
+			var keys = Object.keys(cTransactionData.values);
 
-            var keys = Object.keys(cTransactionData.values);
+            /* if (recalculationInfo &&
+				recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
 
-            keys.forEach(function (item) {
-                vm.entity[item] = cTransactionData.values[item];
-            });
+				recalculationInfo.recalculatedInputs.forEach(inputName => {
+					vm.entity[inputName] = cTransactionData.values[inputName]
+				});
+
+				vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+
+			} else {
+
+				keys.forEach(item => vm.entity[item] = cTransactionData.values[item]);
+
+			} */
+			keys.forEach(item => vm.entity[item] = cTransactionData.values[item]);
 
             cTransactionData.complex_transaction.attributes.forEach(function (item) {
                 if (item.attribute_type_object.value_type === 10) {
-                    vm.entity[item.attribute_type_object.name] = item.value_string;
+                    vm.entity[item.attribute_type_object.name] = item.value_string
                 }
                 if (item.attribute_type_object.value_type === 20) {
-                    vm.entity[item.attribute_type_object.name] = item.value_float;
+                    vm.entity[item.attribute_type_object.name] = item.value_float
                 }
                 if (item.attribute_type_object.value_type === 30) {
-                    vm.entity[item.attribute_type_object.name] = item.classifier;
+                    vm.entity[item.attribute_type_object.name] = item.classifier
                 }
                 if (item.attribute_type_object.value_type === 40) {
-                    vm.entity[item.attribute_type_object.name] = item.value_date;
+                    vm.entity[item.attribute_type_object.name] = item.value_date
                 }
             });
 
@@ -529,54 +551,8 @@
             }
 
             dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-
-            vm.userInputs = [];
-            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
-            /*vm.tabs.forEach(function (tab) {
-                tab.layout.fields.forEach(function (field) {
-                    if (field.attribute_class === 'userInput') {
-                        vm.userInputs.push(field.attribute);
-                    }
-                });
-            });
-
-            if (vm.fixedArea && vm.fixedArea.isActive) {
-                vm.fixedArea.layout.fields.forEach(function (field) {
-                    if (field.attribute_class === 'userInput') {
-                        vm.userInputs.push(field.attribute);
-                    }
-                });
-            }
-
-            if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
-                vm.tabs.forEach(function (tab, index) {
-                    tab.tabOrder = index;
-                });
-            }
-
-
-            vm.userInputs.forEach(function (userInput) {
-
-                if (!userInput.frontOptions) {
-                    userInput.frontOptions = {};
-                }
-
-                if (transactionHelper.isUserInputUsedInTTypeExpr(userInput, vm.transactionType.actions)) {
-                    userInput.frontOptions.usedInExpr = true;
-                }
-
-                for (var i = 0; i < vm.transactionType.inputs.length; i++) {
-
-                    if (vm.transactionType.inputs[i].name === userInput.name) {
-
-                        userInput.tooltip = vm.transactionType.inputs[i].tooltip;
-                        userInput.verbose_name = vm.transactionType.inputs[i].verbose_name;
-
-                    }
-
-                }
-
-            });*/
+            // vm.userInputs = [];
+			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
 
 			vm.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
@@ -623,10 +599,10 @@
                                 })
                             }
 
-                            if (recalculationInfo && recalculationInfo.recalculatedInputs.includes(userInput.name)) { // mark userInputs that were recalculated
+                            /* if (recalculationInfo && recalculationInfo.recalculatedInputs.includes(userInput.name)) { // mark userInputs that were recalculated
 								// mark userInputs that were recalculated
 								userInput.frontOptions.recalculated = recalculationInfo.recalculationData
-                            }
+                            } */
 
                         }
 
@@ -640,71 +616,23 @@
 
         };
 
-        var rebookComplexTransaction = function (inputsToRecalculate, recalculationData) {
-
-            vm.processing = true;
-
-            var values = {};
-
-            vm.userInputs.forEach(function (item) {
-                values[item.name] = vm.entity[item.name]
-            });
-
-            var book = {
-                id: vm.entityId,
-                transaction_type: vm.entity.transaction_type,
-                recalculate_inputs: inputsToRecalculate,
-                process_mode: 'recalculate',
-                complex_transaction: vm.entity,
-                values: values
-            };
-
-            complexTransactionService.rebookComplexTransaction(book.id, book).then(function (cTransactionData) {
-
-                vm.transactionTypeId = cTransactionData.transaction_type;
-                vm.editLayoutEntityInstanceId = cTransactionData.transaction_type;
-                vm.entity = cTransactionData.complex_transaction;
-
-                var recalculationInfo = {
-                    recalculatedInputs: inputsToRecalculate,
-                    recalculationData: recalculationData
-                }
-
-                postRebookComplexTransactionActions(cTransactionData, recalculationInfo);
-
-
-                vm.readyStatus.entity = true;
-
-                vm.processing = false;
-
-                $scope.$apply();
-
-                if (recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-                    vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATED);
-                }
-
-            }).catch(function (reason) {
-
-                console.log("Something went wrong with recalculation", reason);
-
-                vm.processing = false;
-                vm.readyStatus.layout = true;
-
-                $scope.$apply();
-
-            })
-
-        }
+        // let recalculateTimeoutID;
 
         vm.recalculate = function (paramsObj) {
 
             var inputs = paramsObj.inputs;
-            var recalculationData = paramsObj.recalculationData;
-
-            transactionHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
-                rebookComplexTransaction(inputs, recalculationData);
+
+				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+
+				book.id = vm.entityId;
+				book.complex_transaction = vm.entity;
+
+				var recalcProm = complexTransactionService.recalculateComplexTransaction(book.id, book);
+				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
+
             }
 
         };
@@ -861,7 +789,7 @@
 
             return new Promise(function (res, rej) {
 
-                complexTransactionService.initRebookComplexTransaction(vm.entityId).then(function (cTransactionData) {
+                complexTransactionService.initRebookComplexTransaction(vm.entityId).then(async function (cTransactionData) {
 
                     vm.complexTransactionData = cTransactionData;
 
@@ -877,8 +805,10 @@
                     vm.fillTransactionInputs();
 
 
-                    postRebookComplexTransactionActions(cTransactionData);
-
+                    postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
+					// Victor 2020.12.01 #64
+					await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+					// <Victor 2020.12.01 #64>
 
                     vm.dataConstructorData = {
                         entityType: vm.entityType,
@@ -935,7 +865,7 @@
         vm.checkFieldRender = function (tab, row, field) {
 
             if (field.row === row) {
-                if (field.type === 'field') {
+                if (field.type !== 'empty') {
                     return true;
                 } else {
 
@@ -947,7 +877,7 @@
 
                     itemsInRow.forEach(function (item) {
 
-                        if (item.type === 'field' && item.colspan > 1) {
+                        if (item.type !== 'empty' && item.colspan > 1) {
                             var columnsToSpan = item.column + item.colspan - 1;
 
                             for (var i = item.column; i <= columnsToSpan; i = i + 1) {
@@ -1017,64 +947,6 @@
 
         };
 
-        vm.updateEntityBeforeSave = function () {
-
-            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
-                vm.entity.attributes = [];
-            }
-
-            if (vm.entity.attributes) {
-                var i, a, c;
-                var keys = Object.keys(vm.entity), attrExist;
-                for (i = 0; i < vm.attrs.length; i = i + 1) {
-                    for (a = 0; a < keys.length; a = a + 1) {
-                        if (vm.attrs[i].name === keys[a]) {
-                            attrExist = false;
-                            for (c = 0; c < vm.entity.attributes.length; c = c + 1) {
-                                if (vm.entity.attributes[c]['attribute_type'] === vm.attrs[i].id) {
-                                    attrExist = true;
-                                    vm.entity.attributes[c] = entityEditorHelper.updateValue(vm.entity.attributes[c], vm.attrs[i], vm.entity[keys[a]]);
-                                }
-                            }
-                            if (!attrExist) {
-                                vm.entity.attributes.push(entityEditorHelper.appendAttribute(vm.attrs[i], vm.entity[keys[a]]));
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (vm.entity.attributes) {
-                vm.entity = entityEditorHelper.checkEntityAttrTypes(vm.entity, vm.entityAttrs);
-                vm.entity.attributes = entityEditorHelper.clearUnusedAttributeValues(vm.entity.attributes);
-            }
-
-            vm.entity.object_permissions = [];
-
-            if (vm.groups) {
-                vm.groups.forEach(function (group) {
-
-                    if (group.objectPermissions && group.objectPermissions.manage === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "manage_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.change === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "change_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                });
-            }
-
-        };
-
         vm.toggleLockStatus = function ($event) {
 
             vm.entity.is_locked = !vm.entity.is_locked;
@@ -1127,7 +999,10 @@
 
                 if (res.status === 'agree') {
                     //$mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-                    $bigDrawer.hide({res: 'agree', data: {action: 'delete'}});
+
+					var responseObj = {res: 'agree', data: {action: 'delete'}};
+					metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
                 }
 
             })
@@ -1190,11 +1065,11 @@
 
         };
 
-        vm.rebook = function ($event) {
+        vm.rebook = async function ($event) {
 
-            vm.updateEntityBeforeSave();
+            transactionHelper.updateEntityBeforeSave(vm);
 
-            var errors = entityEditorHelper.validateComplexTransactionFields(vm.entity,
+            var errors = entityEditorHelper.validateComplexTransaction(vm.entity,
                                                                              vm.transactionType.actions,
                                                                              vm.tabs,
                                                                              vm.entityAttrs,
@@ -1205,7 +1080,7 @@
 
                 vm.tabsWithErrors = {};
 
-                errors.forEach(function (errorObj) {
+                /* errors.forEach(function (errorObj) {
 
                     if (errorObj.locationData &&
                         errorObj.locationData.type === 'tab') {
@@ -1229,7 +1104,8 @@
 
                     }
 
-                });
+                }); */
+				sharedLogicHelper.processTabsErrors(errors, vm.tabsWithErrors, vm.errorFieldsList);
 
                 vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
@@ -1245,13 +1121,16 @@
                     }
                 })
 
-            } else {
+            }
+
+            else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
 
                 result.values = {};
 
-                vm.userInputs.forEach(function (userInput) {
+				result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
+                /* vm.userInputs.forEach(function (userInput) {
 
                     if (userInput !== null) {
                         var keys = Object.keys(vm.entity);
@@ -1262,16 +1141,18 @@
                             }
                         });
                     }
-                });
+                }); */
 
                 result.store = true;
                 result.calculate = true;
 
                 vm.processing = true;
 
-                new Promise(function (resolve, reject) {
+                console.log('#64 result', result);
 
-                    return complexTransactionService.initRebookComplexTransaction(result.id).then(function (data) {
+            	new Promise(function (resolve, reject) {
+
+                    complexTransactionService.initRebookComplexTransaction(result.id).then(function (data) {
 
                         var originValues = JSON.parse(JSON.stringify(result.values));
 
@@ -1308,7 +1189,9 @@
                             vm.processing = false;
 
                             resolve(data);
-                        }).catch(function (data) {
+
+                        })
+						.catch(function (data) {
 
                             if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
@@ -1327,22 +1210,24 @@
                                     }
                                 }).then(function (response) {
 
-                                    if(response.reaction === 'cancel') {
+                                    /* if (response.reaction === 'cancel') {
                                         // do nothing
+                                    } */
+
+                                    if (response.reaction === 'skip') {
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: null});
                                     }
 
-                                    if(response.reaction === 'skip') {
-                                        $mdDialog.hide({res: 'agree', data: null});
-                                    }
-
-                                    if(response.reaction === 'book_without_unique_code') {
+                                    else if (response.reaction === 'book_without_unique_code') {
 
                                         // TODO refactor here
                                         // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
 
-                                        res.uniqueness_reaction = 2;
+                                        result.uniqueness_reaction = 2;
 
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                        vm.processing = true;
+
+                                        transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
                                             vm.processing = false;
 
@@ -1354,14 +1239,16 @@
 
                                     }
 
-                                    if(response.reaction === 'overwrite') {
+                                    else if(response.reaction === 'overwrite') {
 
                                         // TODO refactor here
                                         //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
 
-                                        res.uniqueness_reaction = 3;
+                                        result.uniqueness_reaction = 3;
 
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                        vm.processing = true;
+
+                                        transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
                                             vm.processing = false;
 
@@ -1377,7 +1264,9 @@
                                 })
 
 
-                            } else {
+                            }
+
+                            else {
 
                                 console.log('data', data);
 
@@ -1404,7 +1293,8 @@
                         });
                     });
 
-                }).then(function (data) {
+                })
+				.then(function (data) {
 
                     if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
@@ -1412,24 +1302,23 @@
 
                     } else {
                         //$mdDialog.hide({res: 'agree', data: data});
-                        $bigDrawer.hide({res: 'agree', data: data});
-                    }
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
+					}
 
                 }).catch(function (reason) {
 
                     vm.processing = false;
-
                     $scope.$apply();
 
-                })
+                });
 
             }
 
         };
 
-        vm.rebookAsPending = function ($event) {
+        vm.rebookAsPending = async function ($event) {
 
-            vm.updateEntityBeforeSave();
+            transactionHelper.updateEntityBeforeSave(vm);
 
             vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
 
@@ -1441,19 +1330,20 @@
 
                     var result = entityEditorHelper.removeNullFields(vm.entity);
 
-                    result.values = {};
+					/*result.values = {};
 
-                    vm.userInputs.forEach(function (userInput) {
+					 vm.userInputs.forEach(function (userInput) {
 
-                        if (userInput !== null) {
-                            var keys = Object.keys(vm.entity);
-                            keys.forEach(function (key) {
-                                if (key === userInput.name) {
-                                    result.values[userInput.name] = vm.entity[userInput.name];
-                                }
-                            });
-                        }
-                    });
+						if (userInput !== null) {
+							var keys = Object.keys(vm.entity);
+							keys.forEach(function (key) {
+								if (key === userInput.name) {
+									result.values[userInput.name] = vm.entity[userInput.name];
+								}
+							});
+						}
+					}); */
+					result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
 
                     vm.processing = true;
 
@@ -1462,7 +1352,7 @@
 
                     new Promise(function (resolve, reject) {
 
-                        return complexTransactionService.initRebookPendingComplexTransaction(result.id).then(function (data) {
+                        complexTransactionService.initRebookPendingComplexTransaction(result.id).then(function (data) {
 
                             var originValues = JSON.parse(JSON.stringify(result.values));
 
@@ -1490,28 +1380,34 @@
                                 vm.processing = false;
 
                                 resolve(data);
+
                             });
+
                         });
-                    }).then(function (data) {
+
+                    })
+					.then(function (data) {
 
                         if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
                             vm.handleComplexTransactionErrors($event, data);
 
                         } else {
-                            //$mdDialog.hide({res: 'agree'});
-                            $bigDrawer.hide({res: 'agree'});
+							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree'});
                         }
 
-                    }).catch(function (reason) {
+                    })
+					.catch(function (reason) {
 
                         vm.processing = false;
 
                         $scope.$apply();
 
-                    })
+                    });
 
-                } else {
+                }
+
+                else {
 
                     var warningDescription = '<p>Next fields should have positive number value to proceed:';
 
@@ -1523,7 +1419,7 @@
 
                     $mdDialog.show({
                         controller: "WarningDialogController as vm",
-                        templateUrl: "views/warning-dialog-view.html",
+                        templateUrl: "views/dialogs/warning-dialog-view.html",
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {
@@ -1578,12 +1474,17 @@
         };
 
         vm.init = function () {
-            /*setTimeout(function () {
+
+        	/*
+            setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
-            }, 100);*/
+            }, 100);
+            */
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
+
+            vm.evEditorDataService.setRecalculationFunction(vm.recalculate);
 
             var tooltipsOptions = {
                 pageSize: 1000,
@@ -1616,7 +1517,7 @@
             vm.entityId = entityId;
         };
 
-        /*vm.entityChange = function () {
+        /*vm.onEntityChange = function () {
 
             console.log("entityChange", vm);
 
@@ -1658,7 +1559,7 @@
             console.log('resultInput', resultInput);
 
         };*/
-		vm.onFieldChange = sharedLogicHelper.onFieldChange;
+		vm.onEntityChange = sharedLogicHelper.onFieldChange;
   };
 
 }());

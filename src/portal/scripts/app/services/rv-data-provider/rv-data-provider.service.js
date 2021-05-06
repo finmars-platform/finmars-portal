@@ -8,6 +8,7 @@
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
     var entityViewerDataResolver = require('../entityViewerDataResolver');
     var stringHelper = require('../../helpers/stringHelper');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
     var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
     var reportHelper = require('../../helpers/reportHelper');
@@ -83,7 +84,7 @@
 
                     var filterValues = filterItem.options.filter_values;
 
-                    if (filterType === 'from_to') {
+                    if (filterType === 'from_to' || filterType === 'out_of_range') {
 
                         if ((filterValues.min_value || filterValues.min_value === 0) &&
                             (filterValues.max_value || filterValues.max_value === 0)) {
@@ -136,7 +137,9 @@
 
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
-        delete reportOptions.items;
+
+		//<editor-fold desc="Delete report options items">
+		delete reportOptions.items;
         delete reportOptions.custom_fields;
         delete reportOptions.custom_fields_object;
         delete reportOptions.item_complex_transactions;
@@ -152,6 +155,7 @@
         delete reportOptions.item_currency_fx_rates;
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts;
+		//</editor-fold>
 
         reportOptions.task_id = null;
 
@@ -166,6 +170,7 @@
         requestData(entityViewerDataService, entityViewerEventService).then(function (data) {
 
             var reportOptions = entityViewerDataService.getReportOptions();
+            var entityType = entityViewerDataService.getEntityType();
 
             reportOptions = Object.assign({}, reportOptions);
 
@@ -175,8 +180,12 @@
 
             if (reportOptions.items && reportOptions.items.length) {
 
+				var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
+
+				reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
+                reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
 
                 // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
@@ -323,6 +332,21 @@
                         obj.___id = event.___id;
                         obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
+                        var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+
+                        console.log('groupSettings', groupSettings);
+
+                        if (groupSettings.hasOwnProperty('is_open')) {
+                            obj.___is_open = groupSettings.is_open;
+                        }
+
+                        if (!parentGroup.___is_open) {
+                            obj.___is_open = false;
+                            groupSettings.is_open = false
+                            rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
+
+                        }
+
                     }
 
                 }
@@ -370,7 +394,7 @@
             var options = requestParameters.body;
             var event = requestParameters.event;
 
-            var page = new Number(options.page) - 1;
+            var page = Number(options.page) - 1;
             // var pagination = entityViewerDataService.getPagination();
             var step = 10000; // TODO fix pagination problem in future
             var i;
@@ -432,12 +456,32 @@
                             obj.___group_name = event.groupName ? event.groupName : '-';
                             obj.___group_identifier = event.groupId ? event.groupId : '-';
                             obj.___is_open = true;
+
+
+
+
                             // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
                             obj.___parentId = event.parentGroupId;
                             obj.___type = 'group';
                             obj.___id = event.___id;
                             obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+
+
+                            var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+
+                            console.log('groupSettings', groupSettings);
+
+                            if (groupSettings.hasOwnProperty('is_open')) {
+                                obj.___is_open = groupSettings.is_open;
+                            }
+
+                            if (!parentGroup.___is_open) {
+                                obj.___is_open = false;
+                                groupSettings.is_open = false
+                                rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
+                            }
+
 
                         }
                     }
@@ -470,6 +514,9 @@
                         }
 
                         item.___id = evRvCommonHelper.getId(item);
+
+
+
 
                         return item
                     });
@@ -787,9 +834,11 @@
 
                     if (activeColumnSort.options.sort === 'ASC') {
                         requestsParameters[key].body.ordering = activeColumnSort.key
-                    } else {
+                    } else if (activeColumnSort.options.sort === 'DESC') {
                         requestsParameters[key].body.ordering = '-' + activeColumnSort.key
                     }
+
+                    requestsParameters[key].body.ordering_mode = activeColumnSort.options.sort_mode
 
                     entityViewerDataService.setRequestParameters(requestsParameters[key]);
                     // < apply sorting settings >
@@ -875,6 +924,7 @@
             item.body.page = 1;
 
             item.body.groups_order = activeGroupSort.options.sort.toLocaleLowerCase();
+            item.body.ordering_mode = activeGroupSort.options.sort_mode;
 
             entityViewerDataService.setRequestParameters(item);
 

@@ -7,7 +7,7 @@
 
     // IMPORTANT: if you are changing popupMenu variables, also change them in 'entity-viewer.less'
     var popupMenuWidth = 320;
-    var popupMenuOptionHeight = 24;
+    var popupMenuOptionHeight = 33;
 
     var getNextPage = function (options, event, entityViewerDataService) {
 
@@ -143,7 +143,6 @@
     var getObject = function (objectId, parentGroupHashId, evDataService) {
 
         var parent = evDataService.getData(parentGroupHashId);
-
         var result = null;
 
         if (parent) {
@@ -172,11 +171,11 @@
 
         }
 
-        if (groupType.hasOwnProperty('id')) {
+        /* if (groupType.hasOwnProperty('id')) {
 
             pattern = [groupType.name, stringHelper.toHash(groupType.id)].join('');
 
-        }
+        } */
 
         return stringHelper.toHash(pattern)
 
@@ -192,11 +191,11 @@
 
         }
 
-        if (column.hasOwnProperty('id')) {
+        /* if (column.hasOwnProperty('id')) {
 
             pattern = [column.name, stringHelper.toHash(column.id)].join('');
 
-        }
+        } */
 
         return stringHelper.toHash(pattern)
 
@@ -363,6 +362,7 @@
         console.timeEnd('Creating projection');
 
         from = from - (step / 2) // two rows, before viewport
+
         if (from < 0) {
             from = 0;
         }
@@ -819,52 +819,223 @@
         if (bodyHeight < menuPosition.positionY + menuHeight) {
 
             popup.classList.add('ev-dropdown-opens-top');
-            popup.style.bottom = 0;
+            popup.style.bottom = 0
 
         } else {
-            popup.style.top = menuPosition.positionY + 'px';
+            popup.style.top = menuPosition.positionY + 'px'
         }
 
         //popup.style.cssText = menuPosition;
 
-    }
+    };
 
-    var preparePopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
+    var calculateStaticMenuPosition = function (popup, menuElem, popupHeight) {
+
+        var menuElemRect = menuElem.getBoundingClientRect();
+        // "-24" to create more space between mouse and popup borders
+		var popupTop = menuElemRect.top - 24;
+        popup.style.left = (menuElemRect.left - 24) + "px"
+
+		var bodyHeight = document.body.clientHeight;
+
+        if (bodyHeight < popupTop + popupHeight) {
+
+            popup.style.bottom = 0;
+
+        } else {
+			popup.style.top = popupTop + 'px'
+		}
+
+    };
+
+    var customizePopup = function (popup, objectId) {
+
+    	popup.id = 'dropdown-' + objectId;
+		popup.classList.add('ev-dropdown', 'fade-in', 'evDropdown');
+
+		popup.style.position = 'absolute';
+
+		return popup;
+
+	};
+
+	/**
+	 * Change row before opening context menu for it
+	 *
+	 * @param objectId {number} - id of row of ev / rv table
+	 * @param parentGroupHashId {number} - id of parent group of row of ev / rv table
+	 * @param evDataService {Object} - entityViewerDataService
+	 * @param isReport {Boolean}
+	 * @returns {HTMLDivElement} - HTML element for context menu of row
+	 */
+    var prepareRowAndGetPopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
 
         var popup = document.createElement('div');
-
-        if (isReport) {
+		// Victor 2021.02.01 #75 On right mouse click row don't need selected
+		/* if (isReport) {
 
             var objects = evDataService.getObjects();
 
             objects.forEach(function (item) {
                 item.___is_activated = false;
-                item.___is_last_selected = false;
+                item.___is_last_activated = false;
 
                 evDataService.setObject(item);
 
             });
 
-        }
+        }*/
 
-        var obj = getObject(objectId, parentGroupHashId, evDataService);
+		var obj = getObject(objectId, parentGroupHashId, evDataService);
 
-        obj.___is_activated = true;
+		if (obj) {
 
-        if (isReport) {
-            obj.___is_last_selected = true;
-        }
+			// obj.___is_activated = true;
+			obj.___context_menu_is_opened = true;
+			/*if (isReport) {
+				obj.___context_menu_opened = true;
+			}*/
 
-        evDataService.setObject(obj);
+			evDataService.setObject(obj);
 
-        popup.id = 'dropdown-' + objectId;
-        popup.classList.add('ev-dropdown');
+		}
 
-        popup.style.position = 'absolute';
+        popup = customizePopup(popup);
 
         return popup;
 
-    }
+    };
+
+	/**
+	 *
+	 * @param subtotalId {number}
+	 * @param type {string} - type or subtype of subtotal. Can be 'line' or 'area'
+	 * @param parentGroupHashId {number}
+	 * @param evDataService {Object}
+	 * @returns {HTMLDivElement} - html for context menu popup
+	 */
+	var prepareSubtotalAndGetPopupMenu = function (subtotalId, type, parentGroupHashId, evDataService) {
+
+		var popup = document.createElement('div');
+		// Victor 2021.02.01 #75 On right mouse click row don't need selected
+		/* if (isReport) {
+
+            var objects = evDataService.getObjects();
+
+            objects.forEach(function (item) {
+                item.___is_activated = false;
+                item.___is_last_activated = false;
+
+                evDataService.setObject(item);
+
+            });
+
+        }*/
+
+		var parent = Object.assign({}, evDataService.getData(parentGroupHashId));
+		// var subtotalType = obj.___subtotal_subtype ? obj.___subtotal_subtype : obj.___subtotal_type;
+
+		if (type === 'area') {
+			parent.___area_subtotal_context_menu_is_opened = true;
+
+		} else if (type === 'line') {
+			parent.___line_subtotal_context_menu_is_opened = true;
+		}
+
+		evDataService.setData(parent);
+
+		popup = customizePopup(popup, subtotalId);
+
+		return popup;
+
+	};
+
+    var preparePopupMenuType2 = function (objectId, classesList) {
+
+    	var popup = document.createElement('div');
+
+		popup.id = 'dropdown-' + objectId;
+
+		classesList = classesList || [];
+		classesList = classesList.concat(["fade-in", "evDropdown"]);
+
+		popup.classList.add(...classesList);
+
+		popup.style.position = 'absolute';
+
+		return popup;
+
+	};
+
+    var separateNotGroupingColumns = function (columns, groups) {
+
+        const notGroupingColumns = [];
+
+        columns.forEach(column => {
+
+            const isGroupingColumn = groups.find(group => {
+
+                return group.key === column.key;
+
+            });
+
+            if (!isGroupingColumn) {
+
+                notGroupingColumns.push(column);
+
+            }
+
+        });
+
+        return notGroupingColumns;
+    };
+
+    var importGroupsStylesFromColumns = function (groups, columns) {
+
+        let columnStyles = {};
+
+        columns.forEach(column => {
+
+            columnStyles[column.key] = column.style
+
+        });
+
+        groups.forEach(group => {
+
+            group.style = columnStyles[group.key]
+
+        });
+
+
+    };
+
+    var clearLastActiveObject = function (evDataService) {
+
+    	var objects = evDataService.getObjects();
+
+		objects.forEach(function (item) {
+
+			item.___is_last_activated = false;
+			evDataService.setObject(item);
+
+		});
+
+	};
+
+	var clearObjectActiveState = function (evDataService) {
+
+		var objects = evDataService.getObjects();
+
+		objects.forEach(function (item) {
+
+			item.___is_activated = false;
+			item.___is_last_activated = false;
+
+			evDataService.setObject(item);
+
+		});
+
+	};
 
     module.exports = {
 
@@ -896,8 +1067,13 @@
         updateColumnsIds: updateColumnsIds,
 
         calculatePageFromOffset: calculatePageFromOffset,
-        preparePopupMenu: preparePopupMenu,
+
+		prepareRowAndGetPopupMenu: prepareRowAndGetPopupMenu,
+		prepareSubtotalAndGetPopupMenu: prepareSubtotalAndGetPopupMenu,
+
+		preparePopupMenuType2: preparePopupMenuType2,
         calculateMenuPosition: calculateMenuPosition,
+		calculateStaticMenuPosition: calculateStaticMenuPosition,
 
         setDefaultGroups: setDefaultGroups,
         setDefaultObjects: setDefaultObjects,
@@ -908,7 +1084,13 @@
         isSelected: isSelected,
 
         getGroupsTypesToLevel: getGroupsTypesToLevel,
-        getGroupsValuesByItem: getGroupsValuesByItem
+        getGroupsValuesByItem: getGroupsValuesByItem,
+
+        separateNotGroupingColumns: separateNotGroupingColumns,
+        importGroupsStylesFromColumns: importGroupsStylesFromColumns,
+
+		clearLastActiveObject: clearLastActiveObject,
+		clearObjectActiveState: clearObjectActiveState
     }
 
 

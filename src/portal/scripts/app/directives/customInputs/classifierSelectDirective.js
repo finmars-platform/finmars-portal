@@ -118,23 +118,29 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
+					inputContainer.classList.remove('custom-input-focused');
+
+					if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+
                     scope.dropdownMenuHidden = false;
 
                     window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
 
-                    if (updateScope) {
-                        scope.$apply();
-                    }
+                    if (updateScope) scope.$apply();
 
                 }
 
                 var closeDDMenuOnClick = function (event) {
-                    var targetElem = event.target;
+
+                	var targetElem = event.target;
+
+					scope.dropdownMenuFilter = null;
 
                     if (!inputContainer.contains(targetElem)) {
                         closeDropdownMenu(true);
                     }
+
                 };
 
                 var onTabKeyPress = function (event) {
@@ -301,6 +307,7 @@
 
                     inputElem.addEventListener('focus', function () {
 
+						scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         scope.dropdownMenuHidden = true;
@@ -312,7 +319,7 @@
 
                     });
 
-                    inputElem.addEventListener('blur', function (event) {
+                    /* inputElem.addEventListener('blur', function (event) {
 
                         inputContainer.classList.remove('custom-input-focused');
 
@@ -321,20 +328,34 @@
                             scope.$apply();
                         }
 
-                    });
+                    }); */
 
                 };
 
-                const recursiveFlat = (classifiers) => classifiers.reduce(
-                    (acc, classifier) => classifier.children.length > 0
-                        ? [...acc, classifier, ...recursiveFlat(classifier.children)]
-                        : [...acc, classifier],
-                    []
-                );
+				/**
+				 * Convert classifier data tree into flat list
+				 *
+				 * @param classifiers {Array}
+				 */
+				const recursiveFlat = (classifiers) => {
+
+                	return classifiers.reduce((acc, classifier) => {
+
+                		if (classifier.children.length > 0) {
+							return [...acc, classifier, ...recursiveFlat(classifier.children)];
+						}
+
+                		return [...acc, classifier];
+
+					}, []);
+
+				}
 
                 var getTree = function () {
-                    var classifierId = scope.classifierAttr.id
-                    attributeTypeService.getByKey(scope.entityType, classifierId).then(function (data) {
+
+					var classifierId = scope.classifierAttr.id
+
+					attributeTypeService.getByKey(scope.entityType, classifierId).then(function (data) {
 
                         scope.menuOptions = recursiveFlat(data.classifiers);
 
@@ -349,11 +370,11 @@
                             }
 
                         }
+
                         scope.$apply();
 
-
-
                     });
+
                 }
 
                 var init = function () {

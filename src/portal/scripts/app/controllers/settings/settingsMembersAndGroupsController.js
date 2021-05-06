@@ -4,6 +4,7 @@
 
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
+    var authorizerService = require('../../services/authorizerService');
     var usersService = require('../../services/usersService');
 
     module.exports = function settingsMembersAndGroupsController($scope, $mdDialog) {
@@ -54,15 +55,17 @@
 
                     });
 
-                    membersAndGroupsService.getInvitesList().then(function (data) {
+                    authorizerService.getInvitesList().then(function (data) {
 
                         vm.invites = data.results;
 
                         vm.invites = vm.invites.map(function (item) {
 
-                            item.assigned_groups_pretty = item.groups_object.map(function (group) {
-                                return group.name
-                            }).join(', ');
+                            // item.assigned_groups_pretty = item.groups_object.map(function (group) {
+                            //     return group.name
+                            // }).join(', ');
+                            // item.assigned_groups_pretty = item.groups.join(', ');
+                            item.assigned_groups_pretty = item.groups;
 
                             return item;
 
@@ -118,7 +121,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -152,7 +155,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -283,7 +286,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -301,7 +304,7 @@
 
                 if (res && res.status === 'agree') {
 
-                    membersAndGroupsService.deleteInviteByKey(item.id).then(function () {
+                    authorizerService.deleteInviteByKey(item.id).then(function () {
 
                         vm.getData();
 

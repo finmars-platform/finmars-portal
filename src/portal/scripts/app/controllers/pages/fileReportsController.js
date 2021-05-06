@@ -39,7 +39,10 @@
 
         vm.getFileUrl = function(item) {
 
-            return baseUrl + 'file-reports/file-report/' + item.id + '/view/';
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
+            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + item.id + '/view/';
 
         };
 

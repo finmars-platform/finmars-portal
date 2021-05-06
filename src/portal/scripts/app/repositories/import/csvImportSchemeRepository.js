@@ -13,11 +13,16 @@
     var baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/csv/scheme/', options),
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/scheme/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -25,11 +30,16 @@
     };
 
     var getListLight = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'import/csv/scheme-light/', options),
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/scheme-light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -37,12 +47,17 @@
     };
 
     var create = function (scheme) {
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/scheme/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -51,12 +66,17 @@
     };
 
     var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/scheme/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -64,12 +84,17 @@
     };
 
     var update = function (id, scheme) {
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/scheme/' + id + '/',
             {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
@@ -78,12 +103,17 @@
     };
 
     var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'import/csv/scheme/' + id + '/',
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/scheme/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

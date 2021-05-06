@@ -58,8 +58,9 @@
                 scope.resizeLayoutWidth = function () {
 
                     var rowControlsWidth = 110;
+                    var accordionGuideWidth = 110;
 
-                    scope.dashboardLayoutElem.style.width = (scope.columnsTotal * scope.cellWidth + rowControlsWidth) + 'px'
+                    scope.dashboardLayoutElem.style.width = (scope.columnsTotal * scope.cellWidth + rowControlsWidth - accordionGuideWidth) + 'px'
 
                 };
 
@@ -140,9 +141,25 @@
 
                 scope.updateRowControlsHolderPosition = function (event) {
 
+                    var layout = scope.dashboardConstructorDataService.getData();
+
                     var rowControlsOffset = 100;
 
-                    scope.rowControlsHolderElem.style.left = (event.target.clientWidth + event.target.scrollLeft - rowControlsOffset) + 'px'
+                    var tab;
+
+                    if (scope.tabNumber === 'fixed_area') {
+                        tab = layout.data.fixed_area;
+                    } else {
+                        tab = layout.data.tabs[scope.tabNumber];
+                    }
+
+                    scope.columnsTotal = tab.layout.columns_count;
+
+                    var columnWidth = 121;
+
+                    console.log('scope.cellWidth',scope.cellWidth);
+
+                    scope.rowControlsHolderElem.style.left = (scope.columnsTotal * scope.cellWidth) + 'px'
 
                 };
 
@@ -170,6 +187,7 @@
                     scope.resizeLayoutWidth();
                     scope.resizeGridCells();
                     scope.resizeRowControls();
+                    scope.updateRowControlsHolderPosition();
 
                 };
 

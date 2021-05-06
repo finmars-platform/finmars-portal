@@ -1,10 +1,25 @@
 @customInputsRightSpace: 8px;
+@onFocusShadow: 0 0 0 1px #7d7d7d;
 
 .entity-editor-fixed-fields-container {
   .custom-input-container {
     .custom-input-textarea-span-pan {
       background-color: #fff7e1;
     }
+  }
+}
+
+.custom-input-container {
+  // margin-bottom: 13px;
+
+  .md-button {
+    margin: 0;
+  }
+}
+
+.custom-input-bottom-space {
+  .custom-input-container {
+    margin-bottom: 13px;
   }
 }
 
@@ -26,9 +41,7 @@
   font-size: 12px;
   max-width: 80%;
   white-space: nowrap;
-  /* Запрещаем перенос строк */
   overflow: hidden;
-  /* Обрезаем все, что не помещается в область */
   text-overflow: ellipsis;
 }
 
@@ -95,15 +108,21 @@
 }
 
 .custom-input-borders {
+  height: 40px;
   overflow: hidden;
   border-radius: 6px;
   border: 2px solid #7d7d7d;
+  box-sizing: border-box;
 }
 
 .custom-input-content {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   // height: 23px;
   width: 100%;
+  height: 100%;
   border-radius: 6px;
   padding-right: @customInputsRightSpace;
   box-sizing: border-box;
@@ -265,7 +284,7 @@
   box-sizing: border-box;
 
   .custom-input-dropdown-menu-filter {
-    width: 100%;
+    min-width: 100%;
     border: none;
     border-bottom: 1px solid @borderGray;
     padding-left: 10px;
@@ -312,7 +331,7 @@
   width: 100%;
   height: 100%;
   background-color: #fff;
-  padding: 28px;
+  padding: 38px;
   border: none;
   margin: 0;
   top: 0;
@@ -429,11 +448,96 @@
 
 }
 
+//<editor-fold desc="Multitype field">
+.multitype-field-container {
+  .multitype-field-inputs-wrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    .custom-input-container {
+      margin-bottom: 0;
+
+      .custom-input-borders {
+        height: 36px;
+        border: none;
+      }
+
+      .custom-input-side-items {
+        right: 34px; // @customInputsRightSpace + width of multitype switch element
+      }
+
+      .custom-input-bottom-error-text {
+        top: 2px;
+      }
+
+    }
+
+  }
+}
+
+.multitype-field-type-sign-wrap {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &:focus {
+    outline: none;
+    opacity: .7;
+  }
+}
+
+.multitype-field-type-letter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  align-items: center;
+  font-size: 12px;
+  color: #fff;
+  background-color: @gray;
+  cursor: pointer;
+
+  &.type-with-constant {
+    background-color: @orange;
+  }
+
+  &:hover {
+    opacity: .5;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+//</editor-fold>
+
 // should always be at the bottom
 .custom-input-container.no-indicator-btn {
   .custom-input {
     border-radius: 6px;
   }
+
+  .custom-input-full-text {
+    padding: 38px 8px 8px 8px;
+  }
+}
+
+.custom-input-container.render-hyperlinks {
+
+  .custom-input.text-input {
+    cursor: text;
+
+    & > span {
+      white-space: nowrap;
+    }
+  }
+
 }
 
 // When input focused
@@ -441,7 +545,7 @@
 
   .custom-input-main-container {
     .custom-input-borders {
-      box-shadow: 0 0 0 1px #7d7d7d;
+      box-shadow: @onFocusShadow;
     }
 
     .custom-input {
@@ -457,7 +561,8 @@
 
 .custom-input-full-text-focused {
 
-  .custom-input-textarea-span-pan, .custom-input-indicator-btn, textarea.custom-input-full-text {
+  .custom-input-textarea-span-pan, .custom-input-indicator-btn, textarea.custom-input-full-text,
+  .custom-input-custom-btn, .custom-input-tooltip {
     z-index: 11;
   }
 
@@ -467,6 +572,10 @@
     opacity: 1;
     z-index: 10;
     border-radius: 6px;
+  }
+
+  textarea.custom-input-full-text {
+    box-shadow: @onFocusShadow;
   }
 
   /*textarea.custom-input-full-text {
@@ -515,7 +624,8 @@
   }
 
   .custom-input-borders {
-    border-width: 2px;
+    // border-width: 3px;
+    border-color: #333;
   }
 
   .custom-input {
@@ -535,6 +645,10 @@
     padding: 0 12px;
   }
 }
+
+.md-panel.md-tooltip.error-tooltip {
+  background-color: @orange;
+}
 // < When input in error mode >
 
 .custom-input-container.custom-input-is-disabled {
@@ -550,56 +664,3 @@
   }
 }
 // < should always be at the bottom >
-
-.custom-input-container {
-  margin-bottom: 13px;
-}
-
-.custom-input-borders {
-  min-height: 40px;
-  position: relative;
-  border: 1px solid #7d7d7d;
-
-  .custom-input-content {
-    height: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-}
-
-.custom-input-full-text-container {
-  color: white;
-}
-
-.md-panel.md-tooltip.error-tooltip {
-  background-color: @orange;
-}
-
-/*.md-select-pan {
-
-  md-select {
-    height: 40px;
-    border: 1px solid @gray;
-    border-radius: 5px;
-    margin: 2.5px;
-
-    &:active {
-      md-select-value {
-        border-bottom: 2px solid transparent !important;
-      }
-    }
-
-    md-select-value {
-      border-bottom: 2px solid transparent !important;
-      span {
-        &:first-of-type {
-          color: @gray !important;
-          background-color: white;
-          max-width: 70%;
-        }
-      }
-    }
-  }
-
-}*/

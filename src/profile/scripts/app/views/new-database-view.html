@@ -17,10 +17,12 @@
                 <div class="width-100 position-relative">
                     <md-input-container class="width-100">
                         <label>Name</label>
-                        <input type="text" data-ng-model="vm.name" ng-model-options='{ debounce: 500 }' ng-change='vm.checkUniqueness()'>
+                        <input type="text" data-ng-model="vm.name" ng-model-options='{ debounce: 500 }'
+                               ng-change='vm.checkUniqueness()'>
                     </md-input-container>
 
-                    <div class="text-warning-red position-absolute" data-ng-if="!vm.nameIsUnique" style="bottom: 0; padding-left: 12px">
+                    <div class="text-warning-red position-absolute" data-ng-if="!vm.nameIsUnique"
+                         style="bottom: 0; padding-left: 12px">
                         This name is already registered, please choose another one
                     </div>
 
@@ -37,6 +39,53 @@
                         </div>
                     </md-input-container>
                 </div>
+
+                <div class="width-100 m-t-8 m-b-8">
+
+                    <md-button class="md-raised" data-ng-click="vm.showDetails = !vm.showDetails">Show Details
+                    </md-button>
+
+                </div>
+
+                <div data-ng-if="vm.showDetails">
+
+                    <div class="width-100 position-relative">
+                        <md-input-container class="width-100">
+                            <label>Base API URL</label>
+                            <input type="text" data-ng-model="vm.base_api_url">
+                        </md-input-container>
+                    </div>
+
+                    <div class="width-100 position-relative">
+                        <md-input-container class="width-100">
+                            <label>Database Host</label>
+                            <input type="text" data-ng-model="vm.db_host">
+                        </md-input-container>
+                    </div>
+
+                    <div class="width-100 position-relative">
+                        <md-input-container class="width-100">
+                            <label>Database name</label>
+                            <input type="text" data-ng-model="vm.db_name">
+                        </md-input-container>
+                    </div>
+
+                    <div class="width-100 position-relative">
+                        <md-input-container class="width-100">
+                            <label>Database User</label>
+                            <input type="text" data-ng-model="vm.db_user">
+                        </md-input-container>
+                    </div>
+
+                    <div class="width-100 position-relative">
+                        <md-input-container class="width-100">
+                            <label>Database User</label>
+                            <input type="password" data-ng-model="vm.db_password">
+                        </md-input-container>
+                    </div>
+
+                </div>
+
 
                 <div class="m-t-24">
                     <div class="setup-item-footer">

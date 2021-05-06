@@ -47,9 +47,9 @@
                                             <div class="select-options-holder">
 
                                                 <md-option
-                                                        data-ng-repeat="item in vm.schemes | filter: {scheme_name: searchTerm}"
+                                                        data-ng-repeat="item in vm.schemes | filter: {user_code: searchTerm}"
                                                         ng-value="item.id"
-                                                        ng-bind="item.scheme_name">
+                                                        ng-bind="item.user_code">
                                                 </md-option>
                                                 <md-option data-ng-click="vm.createScheme($event)">Add scheme
                                                 </md-option>
@@ -93,7 +93,7 @@
                                 <label>Separator</label>
                                 <md-select data-ng-model="vm.config.delimiter">
                                     <md-option value=",">Comma (,)</md-option>
-                                    <md-option value=";">Semicolon (;)</md-option>
+                                    <md-option value="">Semicolon (;)</md-option>
                                     <md-option value="\t">Tab</md-option>
                                 </md-select>
                             </md-input-container>

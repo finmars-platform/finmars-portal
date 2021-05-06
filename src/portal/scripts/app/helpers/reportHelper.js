@@ -39,170 +39,169 @@
 
     }
 
-    var injectIntoItems = function (items, report) {
+    var injectIntoItems = function (items, reportOptions, entityType) {
 
         items.forEach(function (item) {
 
             //console.error('item', item);
 
-            if (item.instrument && report.item_instruments.length) {
-                item.instrument_object = findEntityObject(report, 'item_instruments', item.instrument);
+            if (item.instrument && reportOptions.item_instruments.length) {
+                item.instrument_object = findEntityObject(reportOptions, 'item_instruments', item.instrument);
 
 
-                if(item.instrument_object.instrument_type) {
-                    item.instrument_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.instrument_object.instrument_type);
+                if (item.instrument_object.instrument_type) {
+                    item.instrument_object.instrument_type_object = findEntityObject(reportOptions, 'item_instrument_types', item.instrument_object.instrument_type);
                 }
 
                 if (item.instrument_object.pricing_currency) {
-                    item.instrument_object.pricing_currency_object = findEntityObject(report, 'item_currencies', item.instrument_object.pricing_currency);
+                    item.instrument_object.pricing_currency_object = findEntityObject(reportOptions, 'item_currencies', item.instrument_object.pricing_currency);
                 }
 
-                if (item.instrument_object  .accrued_currency) {
-                    item.instrument_object.accrued_currency_object = findEntityObject(report, 'item_currencies', item.instrument_object.accrued_currency);
-                }
-
-            }
-
-
-
-
-            if (item.linked_instrument && report.item_instruments.length) {
-
-                item.linked_instrument_object = findEntityObject(report, 'item_instruments', item.linked_instrument);
-
-                if(item.linked_instrument_object.instrument_type) {
-                    item.linked_instrument_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.linked_instrument_object.instrument_type);
+                if (item.instrument_object.accrued_currency) {
+                    item.instrument_object.accrued_currency_object = findEntityObject(reportOptions, 'item_currencies', item.instrument_object.accrued_currency);
                 }
 
             }
 
-            if (item.allocation_balance && report.item_instruments.length) {
+            if (item.linked_instrument && reportOptions.item_instruments.length) {
 
-                item.allocation_balance_object = findEntityObject(report, 'item_instruments', item.allocation_balance);
+                item.linked_instrument_object = findEntityObject(reportOptions, 'item_instruments', item.linked_instrument);
 
-                if(item.allocation_balance_object.instrument_type) {
-                    item.allocation_balance_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_balance_object.instrument_type);
+                if (item.linked_instrument_object.instrument_type) {
+                    item.linked_instrument_object.instrument_type_object = findEntityObject(reportOptions, 'item_instrument_types', item.linked_instrument_object.instrument_type);
                 }
 
             }
 
-            if (item.allocation && report.item_instruments.length) {
+            if (item.allocation_balance && reportOptions.item_instruments.length) {
 
-                item.allocation_object = findEntityObject(report, 'item_instruments', item.allocation);
+                item.allocation_balance_object = findEntityObject(reportOptions, 'item_instruments', item.allocation_balance);
 
-                if(item.allocation_object.instrument_type) {
-                    item.allocation_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_object.instrument_type);
+                if (item.allocation_balance_object.instrument_type) {
+                    item.allocation_balance_object.instrument_type_object = findEntityObject(reportOptions, 'item_instrument_types', item.allocation_balance_object.instrument_type);
                 }
 
             }
 
-            if (item.allocation_pl && report.item_instruments.length) {
+            if (item.allocation && reportOptions.item_instruments.length) {
 
-                item.allocation_pl_object = findEntityObject(report, 'item_instruments', item.allocation_pl);
+                item.allocation_object = findEntityObject(reportOptions, 'item_instruments', item.allocation);
 
-
-                if(item.allocation_pl_object.instrument_type) {
-                    item.allocation_pl_object.instrument_type_object = findEntityObject(report, 'item_instrument_types', item.allocation_pl_object.instrument_type);
+                if (item.allocation_object.instrument_type) {
+                    item.allocation_object.instrument_type_object = findEntityObject(reportOptions, 'item_instrument_types', item.allocation_object.instrument_type);
                 }
 
             }
 
-            //item.instrument_pricing_currency_history_object = findEntityObject(report, 'item_currencies');
-            //item.instrument_price_history_object = findEntityObject(report, 'item_currencies');
+            if (item.allocation_pl && reportOptions.item_instruments.length) {
 
-            if (item.account && report.item_accounts.length) {
-                item.account_object = findEntityObject(report, 'item_accounts', item.account);
+                item.allocation_pl_object = findEntityObject(reportOptions, 'item_instruments', item.allocation_pl);
+
+
+                if (item.allocation_pl_object.instrument_type) {
+                    item.allocation_pl_object.instrument_type_object = findEntityObject(reportOptions, 'item_instrument_types', item.allocation_pl_object.instrument_type);
+                }
+
             }
-            if (item.account_cash && report.item_accounts.length) {
-                item.account_cash_object = findEntityObject(report, 'item_accounts', item.account_cash);
+
+            //item.instrument_pricing_currency_history_object = findEntityObject(reportOptions, 'item_currencies');
+            //item.instrument_price_history_object = findEntityObject(reportOptions, 'item_currencies');
+
+            if (item.account && reportOptions.item_accounts.length) {
+                item.account_object = findEntityObject(reportOptions, 'item_accounts', item.account);
             }
-            if (item.account_interim && report.item_accounts.length) {
-                item.account_interim_object = findEntityObject(report, 'item_accounts', item.account_interim);
+            if (item.account_cash && reportOptions.item_accounts.length) {
+                item.account_cash_object = findEntityObject(reportOptions, 'item_accounts', item.account_cash);
             }
-            if (item.account_position && report.item_accounts.length) {
-                item.account_position_object = findEntityObject(report, 'item_accounts', item.account_position);
+            if (item.account_interim && reportOptions.item_accounts.length) {
+                item.account_interim_object = findEntityObject(reportOptions, 'item_accounts', item.account_interim);
             }
-            if (item.counterparty && report.item_counterparties.length) {
-                item.counterparty_object = findEntityObject(report, 'item_counterparties', item.counterparty);
+            if (item.account_position && reportOptions.item_accounts.length) {
+                item.account_position_object = findEntityObject(reportOptions, 'item_accounts', item.account_position);
             }
-            if (item.responsible && report.item_responsibles.length) {
-                item.responsible_object = findEntityObject(report, 'item_responsibles', item.responsible);
+            if (item.counterparty && reportOptions.item_counterparties.length) {
+                item.counterparty_object = findEntityObject(reportOptions, 'item_counterparties', item.counterparty);
             }
-            if (item.complex_transaction && report.item_complex_transactions.length) {
-                item.complex_transaction_object = findEntityObject(report, 'item_complex_transactions', item.complex_transaction);
+            if (item.responsible && reportOptions.item_responsibles.length) {
+                item.responsible_object = findEntityObject(reportOptions, 'item_responsibles', item.responsible);
+            }
+            if (item.complex_transaction && reportOptions.item_complex_transactions.length) {
+                item.complex_transaction_object = findEntityObject(reportOptions, 'item_complex_transactions', item.complex_transaction);
             }
 
             if (item.transaction_class) {
                 item.transaction_class_object = findEntityObject({transaction_classes: transactionClassService.getListSync()}, 'transaction_classes', item.transaction_class);
             }
 
-            if (item.portfolio && report.item_portfolios.length) {
-                item.portfolio_object = findEntityObject(report, 'item_portfolios', item.portfolio);
+            if (item.portfolio && reportOptions.item_portfolios.length) {
+                item.portfolio_object = findEntityObject(reportOptions, 'item_portfolios', item.portfolio);
             }
 
-            if (item.transaction_currency && report.item_currencies.length) {
-                item.transaction_currency_object = findEntityObject(report, 'item_currencies', item.transaction_currency);
+            if (item.transaction_currency && reportOptions.item_currencies.length) {
+                item.transaction_currency_object = findEntityObject(reportOptions, 'item_currencies', item.transaction_currency);
             }
-            if (item.settlement_currency && report.item_currencies.length) {
-                item.settlement_currency_object = findEntityObject(report, 'item_currencies', item.settlement_currency);
-            }
-
-            if (item.currency && report.item_currencies.length) {
-                item.currency_object = findEntityObject(report, 'item_currencies', item.currency);
+            if (item.settlement_currency && reportOptions.item_currencies.length) {
+                item.settlement_currency_object = findEntityObject(reportOptions, 'item_currencies', item.settlement_currency);
             }
 
-            if (item.exposure_currency && report.item_currencies.length) {
-                item.exposure_currency_object = findEntityObject(report, 'item_currencies', item.exposure_currency);
+            if (item.currency && reportOptions.item_currencies.length) {
+                item.currency_object = findEntityObject(reportOptions, 'item_currencies', item.currency);
             }
 
-            if (item.pricing_currency && report.item_currencies.length) {
-                item.pricing_currency_object = findEntityObject(report, 'item_currencies', item.pricing_currency);
+            if (item.exposure_currency && reportOptions.item_currencies.length) {
+                item.exposure_currency_object = findEntityObject(reportOptions, 'item_currencies', item.exposure_currency);
             }
 
-            if (item.accrued_currency && report.item_currencies.length) {
-                item.accrued_currency_object = findEntityObject(report, 'item_currencies', item.accrued_currency);
+            if (item.pricing_currency && reportOptions.item_currencies.length) {
+                item.pricing_currency_object = findEntityObject(reportOptions, 'item_currencies', item.pricing_currency);
             }
 
-            //item.pricing_currency_object = findEntityObject(report, 'item_currencies');
-            //item.pricing_currency_history_object = findEntityObject(report, 'item_currencies');
-            //item.report_currency_history_object = findEntityObject(report, 'item_currencies');
+            if (item.accrued_currency && reportOptions.item_currencies.length) {
+                item.accrued_currency_object = findEntityObject(reportOptions, 'item_currencies', item.accrued_currency);
+            }
 
-            if (item.strategy1 && report.item_strategies1.length) {
-                item.strategy1_object = findEntityObject(report, 'item_strategies1', item.strategy1);
+            //item.pricing_currency_object = findEntityObject(reportOptions, 'item_currencies');
+            //item.pricing_currency_history_object = findEntityObject(reportOptions, 'item_currencies');
+            //item.report_currency_history_object = findEntityObject(reportOptions, 'item_currencies');
+
+            if (item.strategy1 && reportOptions.item_strategies1.length) {
+                item.strategy1_object = findEntityObject(reportOptions, 'item_strategies1', item.strategy1);
 
                 console.log('Strategy injected')
 
             }
-            if (item.strategy2  && report.item_strategies2.length) {
-                item.strategy2_object = findEntityObject(report, 'item_strategies2', item.strategy2);
+
+            if (item.strategy2 && reportOptions.item_strategies2.length) {
+                item.strategy2_object = findEntityObject(reportOptions, 'item_strategies2', item.strategy2);
             }
-            if (item.strategy3  && report.item_strategies3.length) {
-                item.strategy3_object = findEntityObject(report, 'item_strategies3', item.strategy3);
+            if (item.strategy3 && reportOptions.item_strategies3.length) {
+                item.strategy3_object = findEntityObject(reportOptions, 'item_strategies3', item.strategy3);
             }
-            if (item.strategy1_cash  && report.item_strategies1.length) {
-                item.strategy1_cash_object = findEntityObject(report, 'item_strategies1', item.strategy1_cash);
+            if (item.strategy1_cash && reportOptions.item_strategies1.length) {
+                item.strategy1_cash_object = findEntityObject(reportOptions, 'item_strategies1', item.strategy1_cash);
             }
-            if (item.strategy1_position  && report.item_strategies1.length) {
-                item.strategy1_position_object = findEntityObject(report, 'item_strategies1', item.strategy1_position);
+            if (item.strategy1_position && reportOptions.item_strategies1.length) {
+                item.strategy1_position_object = findEntityObject(reportOptions, 'item_strategies1', item.strategy1_position);
             }
-            if (item.strategy2_cash  && report.item_strategies2.length) {
-                item.strategy2_cash_object = findEntityObject(report, 'item_strategies2', item.strategy2_cash);
+            if (item.strategy2_cash && reportOptions.item_strategies2.length) {
+                item.strategy2_cash_object = findEntityObject(reportOptions, 'item_strategies2', item.strategy2_cash);
             }
-            if (item.strategy2_position && report.item_strategies2.length) {
-                item.strategy2_position_object = findEntityObject(report, 'item_strategies2', item.strategy2_position);
+            if (item.strategy2_position && reportOptions.item_strategies2.length) {
+                item.strategy2_position_object = findEntityObject(reportOptions, 'item_strategies2', item.strategy2_position);
             }
-            if (item.strategy3_cash && report.item_strategies3.length) {
-                item.strategy3_cash_object = findEntityObject(report, 'item_strategies3', item.strategy3_cash);
+            if (item.strategy3_cash && reportOptions.item_strategies3.length) {
+                item.strategy3_cash_object = findEntityObject(reportOptions, 'item_strategies3', item.strategy3_cash);
             }
-            if (item.strategy3_position && report.item_strategies3.length) {
-                item.strategy3_position_object = findEntityObject(report, 'item_strategies3', item.strategy3_position);
+            if (item.strategy3_position && reportOptions.item_strategies3.length) {
+                item.strategy3_position_object = findEntityObject(reportOptions, 'item_strategies3', item.strategy3_position);
             }
 
             if (item.custom_fields) {
-                item.custom_fields_object = [];
+
+            	item.custom_fields_object = [];
 
                 item.custom_fields.forEach(function (localCustomField) {
-                    report.custom_fields_object.forEach(function (reportCustomField) {
+					reportOptions.custom_fields_object.forEach(function (reportCustomField) {
 
                         if (reportCustomField.id == localCustomField.custom_field) {
 
@@ -214,6 +213,17 @@
                 })
 
             }
+
+            if (entityType === 'balance-report') {
+
+            	item.date = reportOptions.report_date;
+
+            } else if (entityType === 'pl-report') {
+
+            	item.pl_first_date = reportOptions.pl_first_date;
+				item.report_date = reportOptions.report_date;
+
+			}
 
 
         });
@@ -343,7 +353,7 @@
 
             } else {
 
-                if (attribute.value_type === 'field' && attribute.code === 'system_code' && source[attribute.key] && source[attribute.key + '_object']) {
+                if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key] && source[attribute.key + '_object']) {
 
                     result[resultKey + '.name'] = source[attribute.key + '_object'].name
 
@@ -515,9 +525,81 @@
 
     };
 
+    var extendAttributes = function (items, attributeExtensions) {
+
+        if (attributeExtensions) {
+
+            items = items.map(function (item) {
+
+                attributeExtensions.forEach(function (extension) {
+
+                    var contentType
+                    var oppositeContentType;
+                    var base;
+                    var oppositeBase;
+
+                    if (item.item_type === 1) { // instrument extension
+
+                        contentType = 'instruments.instrument';
+                        oppositeContentType = 'currencies.currency';
+                        base = 'instrument';
+                        oppositeBase = 'currency';
+
+                        if (extension.content_type_from === oppositeContentType) {
+
+                            if (extension.key_to) {
+                                item[oppositeBase + '.' + extension.key_from] = item[base + '.' + extension.key_to]
+                            } else {
+
+                                if (extension.value_to) {
+                                    item[oppositeBase + '.' + extension.key_from] = extension.value_to
+                                }
+                            }
+
+                        }
+
+                    }
+
+
+                    if (item.item_type === 2) { // currency extension
+
+                        contentType = 'currencies.currency';
+                        oppositeContentType = 'instruments.instrument';
+                        base = 'currency';
+                        oppositeBase = 'instrument'
+
+                        if (extension.content_type_from === oppositeContentType) {
+
+                            if (extension.key_to) {
+                                item[oppositeBase + '.' + extension.key_from] = item[base + '.' + extension.key_to]
+                            } else {
+
+                                if (extension.value_to) {
+                                    item[oppositeBase + '.' + extension.key_from] = extension.value_to
+                                }
+                            }
+
+                        }
+
+                    }
+
+
+                });
+
+                return item
+
+            })
+
+        }
+
+        return items
+
+    }
+
     module.exports = {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
+        extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents
     }
 

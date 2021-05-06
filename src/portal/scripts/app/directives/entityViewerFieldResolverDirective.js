@@ -43,6 +43,10 @@
                     event: {}
                 };
 
+                scope.inputTextObj = {
+                    value: null
+                };
+
                 var fieldsDataIsLoaded = false;
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
@@ -164,8 +168,8 @@
                 };
 
                 scope.getName = function () {
-                    if (scope.item.options && scope.item.options.fieldName) {
-                        return scope.item.options.fieldName;
+                    if (scope.item.frontOptions && scope.item.frontOptions.fieldName) {
+                        return scope.item.frontOptions.fieldName;
 
                     } else if (scope.item.hasOwnProperty('verbose_name')) {
                         return scope.item.verbose_name;
@@ -180,6 +184,7 @@
                     var result = '';
 
                     var id = scope.entity[scope.fieldKey];
+
                     if (id) {
 
                         var i;
@@ -222,13 +227,17 @@
                 scope.bindListFields = function (field) {
 
                     if (scope.item.options && scope.item.options.fieldsList) {
-                        var resultCaption = '';
+
+                    	var resultCaption = '';
+
                         scope.item.options.fieldsList.forEach(function (item, index) {
-                            if (index + 1 === scope.item.options.fieldsList.length) {
+
+                        	if (index + 1 === scope.item.options.fieldsList.length) {
                                 resultCaption = resultCaption + field[item];
                             } else {
                                 resultCaption = resultCaption + field[item] + ' / ';
                             }
+
                         });
 
                         return resultCaption;
@@ -250,7 +259,7 @@
                     return items.map(function (item) {
                         return {
                             ...item,
-                            name: item.scheme_name
+                            name: item.user_code
                         }
                     })
                 }
@@ -292,7 +301,7 @@
                 };
 
                 //scope.getModelKey = scope.$parent.getModelKey;
-                scope.fieldKey = scope.$parent.fieldKey;
+                scope.fieldKey = scope.$parent.vm.fieldKey;
 
                 if (scope.item.value_entity) {
                     scope.crudEntityType = scope.item.value_entity;
@@ -329,7 +338,7 @@
                                 scope.type = res.type;
                                 scope.fields = res.data;
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'scheme_name'));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
 
                                 scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
@@ -347,7 +356,7 @@
                                 scope.type = res.type;
                                 scope.fields = res.data;
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'scheme_name'));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
 
                                 scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
@@ -373,44 +382,48 @@
                     });
                 };
 
-                scope.$watch('item', function () {
+                var prepareDataForSelector = function () {
 
-                    fieldsDataIsLoaded = false;
+					scope.fields = [];
 
-                    //if (scope.fields.length === 1) { // only for smart search
+					var item_object;
 
-                        scope.fields = [];
+					if (scope.entityType === 'complex-transaction') {
+						item_object = scope.entity[scope.item.name + '_object'];
+					} else {
+						item_object = scope.entity[scope.item.key + '_object'];
+					}
 
-                        var item_object;
+					if (item_object) {
 
-                        if (scope.entityType === 'complex-transaction') {
-                            item_object = scope.entity[scope.item.name + '_object'];
-                        } else {
-                            item_object = scope.entity[scope.item.key + '_object'];
-                        }
-
-                        if (item_object) {
-
-                            if (Array.isArray(item_object)) {
+                            if (Array.isArray(item_object)) { // For multiselector
                                 scope.fields = item_object;
                                 var items = scope.fields.slice(0);
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'scheme_name'));
+                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
 
-                            } else {
-                                scope.fields.push(item_object);
-                                var items = scope.fields.slice(0);
-                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'scheme_name'));
-                            }
+						} else {
+							scope.fields.push(item_object);
+							var items = scope.fields.slice(0);
+							scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
+							scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
+						}
 
-                        }
+					}
 
-                    //}
+					scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-                    scope.inputText = scope.getInputTextForEntitySearch()
+				};
 
-                });
+				scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+
+				scope.$watch('item', function () {
+
+					fieldsDataIsLoaded = false;
+
+					prepareDataForSelector();
+
+				});
 
                 scope.changeHandler = function () {
                     if (scope.itemChange) {
@@ -425,19 +438,16 @@
                         scope.customStyles = {
                             'customInputBackgroundColor': 'background-color: ' + scope.options.backgroundColor + ';'
                         }
+
                     }
 
                     if (scope.item.frontOptions) {
-                        /*if (scope.item.frontOptions.recalculated === 'input' || scope.item.frontOptions.autocalculated) {
-                            scope.ciEventObj.event = {key: 'set_style_preset1'};
 
-                        } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-                            scope.ciEventObj.event = {key: 'set_style_preset2'};
+						if (scope.item.frontOptions.recalculated) {
 
-                        }*/
-                        if (scope.item.frontOptions.recalculated || scope.item.frontOptions.autocalculated) {
-                            scope.ciEventObj.event = {key: 'set_style_preset1'};
-                        }
+							scope.ciEventObj.event = {key: "set_style_preset1"};
+
+						}
 
                     }
 
@@ -458,27 +468,22 @@
                         scope.ciEventObj.event = {key: 'mark_not_valid_fields'};
                     });
 
-                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATED, function () {
+                    scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
-                        if (scope.item && scope.item.frontOptions &&
+                        if (scope.item &&
+							scope.item.frontOptions && scope.item.frontOptions.recalculated &&
                             (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
                             setItemSpecificSettings();
-                            /* if (scope.item.frontOptions.recalculated === 'input') {
-                                scope.ciEventObj.event = {key: 'set_style_preset1'};
-
-                            } else if (scope.item.frontOptions.recalculated === 'linked_inputs') {
-                                scope.ciEventObj.event = {key: 'set_style_preset2'};
-
-                            } */
-                            if (scope.item.frontOptions.recalculated) {
+							prepareDataForSelector();
+                            /* if (scope.item.frontOptions.recalculated) {
 
 								// setTimeout removes delay before applying preset1 to custom input
 								setTimeout(function () {
 									scope.ciEventObj.event = {key: 'set_style_preset1'};
 								}, 50);
 
-                            }
+                            } */
 
                         }
 
@@ -551,7 +556,7 @@
                     }
 
                     scope.fieldValue = {value: scope.entity[scope.fieldKey]};
-                    scope.inputText = scope.getInputTextForEntitySearch()
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
 					scope.modelKeyEntity = scope.getModelKeyEntity();
 

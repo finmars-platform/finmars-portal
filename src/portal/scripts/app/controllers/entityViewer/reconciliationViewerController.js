@@ -101,7 +101,10 @@
 
             vm.getFileUrl = function (id) {
 
-                return baseUrl + 'file-reports/file-report/' + id + '/view/';
+                var prefix = baseUrlService.getMasterUserPrefix();
+                var apiVersion = baseUrlService.getApiVersion();
+
+                return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
             };
 
@@ -460,6 +463,7 @@
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
                 vm.entityViewerDataService.setViewContext('reconciliation_viewer');
+                vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 var components = {
                     columnArea: true,

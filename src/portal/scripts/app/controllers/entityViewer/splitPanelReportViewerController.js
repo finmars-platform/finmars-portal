@@ -261,6 +261,8 @@
                 var dialogController = 'EntityViewerEditDialogController as vm';
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
 
+				locals.openedIn = 'modal'
+
                 if (locals.entityType && locals.entityType === 'complex-transaction') {
                     dialogController = 'ComplexTransactionEditDialogController as vm';
                     dialogTemplateUrl = 'views/entity-viewer/complex-transaction-edit-dialog-view.html';
@@ -285,7 +287,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
                     preserveScope: true,
@@ -853,9 +855,11 @@
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
                 vm.entityViewerDataService.setUseFromAbove(true);
                 vm.entityViewerDataService.setViewContext('split_panel');
+                vm.entityViewerDataService.setRowHeight(36);
 
 
 				var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
@@ -864,6 +868,9 @@
 
                 var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
                 var additions = parentEntityViewerDataService.getAdditions();
+                var member = parentEntityViewerDataService.getCurrentMember();
+
+                vm.entityViewerDataService.setCurrentMember(member)
 
                 var spDefaultLayoutData = {
                     layoutId: additions.layoutData.layoutId,

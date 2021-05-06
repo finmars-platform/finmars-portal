@@ -67,12 +67,12 @@
         vm.deleteScheme = function ($event, item) {
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 targetEvent: $event,
                 locals: {
                     warning: {
                         title: 'Warning!',
-                        description: 'Are you sure to delete ' + item['scheme_name']
+                        description: 'Are you sure to delete ' + item['user_code']
                     }
                 },
                 preserveScope: true,

@@ -172,7 +172,7 @@
             }
 
             return true;
-        }
+        };
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

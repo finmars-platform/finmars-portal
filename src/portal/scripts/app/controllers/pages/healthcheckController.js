@@ -18,6 +18,8 @@
         vm.updateInfo = null;
         vm.memoryInfo = null;
 
+        vm.noInfo = false;
+
         vm.getData = function () {
 
             return new Promise(function (resolve, reject) {
@@ -26,32 +28,84 @@
 
                     vm.healthcheckData = data;
 
+                    vm.healthcheckData = vm.healthcheckData.map(function (service) {
+
+                        if (service.status === 200) {
+
+                            Object.keys(service.data.checks).forEach(function (key) {
+
+                                if (key === 'database:responseTime') {
+
+                                    if (Array.isArray(service.data.checks[key])) {
+
+                                        service.dataBaseConnectionInfo = service.data.checks[key][0]
+
+                                    } else {
+                                        service.dataBaseConnectionInfo = service.data.checks[key]
+                                    }
+
+
+                                }
+
+                                // if (key === 'disk:utilization') {
+                                //
+                                //     service.dataBaseConnectionInfo = service.data.checks[key]
+                                //
+                                // }
+
+                                if (key === 'memory:utilization') {
+
+
+                                    if (Array.isArray(service.data.checks[key])) {
+
+                                        service.memoryInfo = service.data.checks[key][0]
+
+                                    } else {
+                                        service.memoryInfo = service.data.checks[key]
+                                    }
+
+                                }
+
+                                if (key === 'uptime') {
+
+                                    if (Array.isArray(service.data.checks[key])) {
+
+                                        service.uptimeInfo = service.data.checks[key][0]
+
+
+                                    } else {
+                                        service.uptimeInfo = service.data.checks[key]
+                                    }
+
+                                    service.uptimeInfo.hours = Math.floor(service.uptimeInfo.observedValue / 60 / 60)
+
+                                }
+
+                            })
+
+
+                        }
+
+
+                        return service;
+
+                    })
+
+                    vm.noInfo = false;
+
                     console.log('HealthcheckController.vm.healthcheckData', vm.healthcheckData);
-
-                    Object.keys(vm.healthcheckData.checks).forEach(function (key) {
-
-                        var item = vm.healthcheckData.checks[key][0];
-
-                        if (key === 'database:responseTime') {
-                            vm.dataBaseConnectionInfo = item;
-                        }
-
-                        if (key === 'memory:utilization') {
-                            vm.memoryInfo = item;
-                        }
-
-                        if (key === 'uptime') {
-                            vm.updateInfo = item;
-
-                            vm.updateInfo.hours = Math.floor(vm.updateInfo.observedValue / 60 / 60)
-                        }
-
-
-                    });
 
                     vm.readyStatus.data = true;
 
                     resolve();
+
+                    $scope.$apply();
+
+                }).catch(function (error) {
+
+                    console.log('error', error);
+
+                    vm.noInfo = true;
 
                     $scope.$apply();
 
@@ -64,7 +118,13 @@
 
         vm.init = function () {
 
-            vm.getData()
+            if ('__HEALTHCHECK_HOST__') {
+
+                vm.getData()
+
+            } else {
+                vm.noInfo = true;
+            }
 
         };
 
