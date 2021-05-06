@@ -9,6 +9,7 @@
     var localStorageService = require('../../../../core/services/localStorageService');
 
     var usersService = require('../services/usersService');
+    var authorizerService = require('../services/authorizerService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var notificationsService = require('../services/notificationsService');
 
@@ -16,6 +17,7 @@
     var uiService = require('../services/uiService');
     var middlewareService = require('../services/middlewareService');
     var websocketService = require('../services/websocketService');
+    var baseUrlService = require('../services/baseUrlService');
 
     var crossTabEvents = {
         'MASTER_USER_CHANGED': 'MASTER_USER_CHANGED',
@@ -33,7 +35,7 @@
 
         vm.currentGlobalState = 'portal';
         vm.currentMasterUser = '';
-		var member = '';
+        var member = '';
 
         vm.broadcastManager = null;
 
@@ -63,31 +65,32 @@
             vm.readyStatus.masters = false
 
             // return usersService.getMasterList().then(function (data) {
-			return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
 
-				usersService.getMasterListLight().then(function (data) {
+                // usersService.getMasterListLight().then(function (data) {
+                authorizerService.getMasterList().then(function (data) {
 
-					if (data.hasOwnProperty('results')) {
-						vm.masters = data.results
+                    if (data.hasOwnProperty('results')) {
+                        vm.masters = data.results
 
-						if (vm.masters.length) {
-							vm.updateCurrentMasterUser();
-						}
+                        if (vm.masters.length) {
+                            vm.updateCurrentMasterUser();
+                        }
 
-					} else {
-						vm.masters = []
-					}
+                    } else {
+                        vm.masters = []
+                    }
 
-					vm.readyStatus.masters = true
-					$scope.$apply();
+                    vm.readyStatus.masters = true
+                    $scope.$apply();
 
-					resolve();
+                    resolve();
 
-				}).catch(function (error) {
-					reject(error);
-				});
+                }).catch(function (error) {
+                    reject(error);
+                });
 
-			});
+            });
 
         };
 
@@ -152,13 +155,21 @@
 
                 middlewareService.masterUserChanged();
 
-                usersService.setMasterUser(master.id).then(function (value) {
+                authorizerService.setMasterUser(master.id).then(function (data) {
 
-                    $state.go('app.home', null, {reload: 'app'});
+                    if (data.base_api_url) {
+                        baseUrlService.setMasterUserPrefix(data.base_api_url)
+                    }
+
+                    // $state.go('app.home', null, {reload: 'app'});
+
+                    window.location.reload();
 
                     if (vm.broadcastManager) {
                         vm.broadcastManager.postMessage({event: crossTabEvents.MASTER_USER_CHANGED});
                     }
+
+                    getMember()
 
                     vm.getMasterUsersList();
 
@@ -170,7 +181,7 @@
 
                 $mdDialog.show({
                     controller: "WarningDialogController as vm",
-                    templateUrl: "views/warning-dialog-view.html",
+                    templateUrl: "views/dialogs/warning-dialog-view.html",
                     multiple: true,
                     clickOutsideToClose: false,
                     locals: {
@@ -336,7 +347,7 @@
 
                 if (layoutUserCode) {
 
-                    uiService.getListLayout(entityType,{
+                    uiService.getListLayout(entityType, {
                         pageSize: 1000,
                         filters: {
                             user_code: layoutUserCode
@@ -536,7 +547,7 @@
 
             $mdDialog.show({
                 controller: "WarningDialogController as vm",
-                templateUrl: "views/warning-dialog-view.html",
+                templateUrl: "views/dialogs/warning-dialog-view.html",
                 multiple: true,
                 clickOutsideToClose: false,
                 locals: {
@@ -566,7 +577,7 @@
 
                     middlewareService.initLogOut();
 
-                    usersService.logout().then(function (data) {
+                    authorizerService.logout().then(function (data) {
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
 
@@ -576,7 +587,7 @@
                             window.location.reload()
                         }
 
-                        cookiesService.deleteCookie();
+                        cookiesService.deleteCookie('authtoken');
 
                     });
 
@@ -625,7 +636,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         clickOutsideToClose: false,
                         locals: {
@@ -665,9 +676,11 @@
                     if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
 
                         if (ev.dataTransfer.items[0].kind === 'file') {
+
                             if (!shellViewDnDDiv.contains(dragBackdropElem)) {
                                 shellViewDnDDiv.appendChild(dragBackdropElem);
                             }
+
                         }
 
                     }
@@ -686,9 +699,10 @@
                 ev.preventDefault();
             }, false);
 
-            window.addEventListener('drop', function (ev) {
+            dragBackdropElem.addEventListener('drop', function (ev) {
 
                 ev.preventDefault();
+                ev.stopPropagation();
 
                 if (vm.currentGlobalState === 'profile' || vm.currentGlobalState === 'portal') {
 
@@ -704,7 +718,7 @@
 
                                 $mdDialog.show({
                                     controller: 'WarningDialogController as vm',
-                                    templateUrl: 'views/warning-dialog-view.html',
+                                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                                     parent: angular.element(document.body),
                                     targetEvent: ev,
                                     clickOutsideToClose: false,
@@ -735,72 +749,72 @@
         };
 
 
-        vm.getUser = function() {
+        vm.getUser = function () {
 
-        	return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
 
-        		usersService.getMe().then(function (data) {
+                authorizerService.getUser().then(function (data) {
 
-					vm.user = data;
+                    vm.user = data;
 
-					resolve();
+                    resolve();
 
-				}).catch(function (error) {
-					reject(error);
-				});
+                }).catch(function (error) {
+                    reject(error);
+                });
 
-			});
+            });
 
 
         };
 
         var getMember = function () {
 
-        	return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
 
-        		usersService.getMyCurrentMember().then(function (data) {
+                usersService.getMyCurrentMember().then(function (data) {
 
-        			member = data;
+                    member = data;
 
                     websocketService.send({action: "update_user_state", data: {member: member}});
 
-        			resolve(member);
+                    resolve(member);
 
-				}).catch(function (error) {
-				    
-				    console.error(error);
-				    
-					reject(error);
-				});
+                }).catch(function (error) {
 
-			});
+                    console.error(error);
 
-		}
+                    reject(error);
+                });
 
-		var transactionsList = [
-			'app.settings.general.init-configuration', 'app.settings.init-configuration',
-			'app.settings.ecosystem-default-settings', 'app.settings.data-providers', 'app.settings.users-groups',
-			'app.processes'
-		];
+            });
+
+        }
+
+        var transactionsList = [
+            'app.settings.general.init-configuration', 'app.settings.init-configuration',
+            'app.settings.ecosystem-default-settings', 'app.settings.data-providers', 'app.settings.users-groups',
+            'app.processes'
+        ];
 
         function enableAccessHandler($transitions) {
 
             // usersService.getMyCurrentMember().then(function (data) {
 
-                $transitions.onStart({}, function (transition) {
+            $transitions.onStart({}, function (transition) {
 
-                    if (member.is_admin) {
-                        return true
-                    }
+                if (member.is_admin) {
+                    return true
+                }
 
-                    console.log('transition.to().name', transition.to().name);
+                console.log('transition.to().name', transition.to().name);
 
-                    if (transactionsList.includes(transition.to().name)) {
-						return false;
-					}
+                if (transactionsList.includes(transition.to().name)) {
+                    return false;
+                }
 
-                    return true;
-                })
+                return true;
+            })
 
             // })
 
@@ -854,36 +868,49 @@
 
             var getMasterUsersProm = vm.getMasterUsersList();
 
-            var getMemberProm = getMember();
 
-            Promise.allSettled([getUserProm, getMasterUsersProm, getMemberProm]).then(function () {
 
-				localStorageService.setUMuM(vm.user.id, vm.currentMasterUser.id, member.id);
-				enableAccessHandler($transitions); // TODO Run after successful auth
 
-            	if (vm.masters.length) {
+            var promises = []
 
-					vm.getNotifications();
+            promises.push(getUserProm)
+            promises.push(getMasterUsersProm)
 
-					vm.isIdentified = true;
-					console.log("User status: Identified");
+            if (baseUrlService.getMasterUserPrefix()) {
 
-					$scope.$apply();
+                var getMemberProm = getMember();
 
-				} else {
+                promises.push(getMemberProm)
+            }
 
-					if (vm.currentGlobalState !== 'profile') {
-						$state.go('app.profile', {}, {reload: 'app'})
-					}
+            Promise.allSettled(promises).then(function () {
 
-				}
+                localStorageService.setUMuM(vm.user.id, vm.currentMasterUser.id, member.id);
+                enableAccessHandler($transitions); // TODO Run after successful auth
 
-				if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
-					showLayoutName = true;
-					vm.getActiveLayoutName();
-				}
+                if (vm.masters.length) {
 
-			})
+                    // vm.getNotifications();
+
+                    vm.isIdentified = true;
+                    console.log("User status: Identified");
+
+                    $scope.$apply();
+
+                } else {
+
+                    if (vm.currentGlobalState !== 'profile') {
+                        $state.go('app.profile', {}, {reload: 'app'})
+                    }
+
+                }
+
+                if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
+                    showLayoutName = true;
+                    vm.getActiveLayoutName();
+                }
+
+            })
 
             if (window.BroadcastChannel) {
                 vm.initCrossTabBroadcast();
@@ -914,8 +941,12 @@
 
                     console.log("User status: Authenticated");
 
+
+
                     setTimeout(function () {
                         vm.initShell();
+                        window.location.hash = '#!/profile';
+                        window.location.reload();
                     }, 100);
 
                 }
@@ -927,7 +958,7 @@
 
         vm.init = function () {
 
-            usersService.ping().then(function (data) {
+            authorizerService.ping().then(function (data) {
 
                 // console.log('ping data', data);
 
@@ -941,6 +972,14 @@
 
                     vm.isAuthenticated = true;
 
+                    if (!data.current_master_user_id) {
+                        $state.go('app.profile', {}, {})
+                    }
+
+                    if (data.base_api_url) {
+                        baseUrlService.setMasterUserPrefix(data.base_api_url)
+                    }
+
                     console.log("User status: Authenticated");
 
                     $scope.$apply();
@@ -950,12 +989,17 @@
                     }, 100);
                 }
 
-            });
+            }).catch(function(data){
+                if (!data.is_authenticated) {
+                    vm.initLoginDialog();
+                }
+            })
 
 
         };
 
         vm.init();
+
     }
 
 }());

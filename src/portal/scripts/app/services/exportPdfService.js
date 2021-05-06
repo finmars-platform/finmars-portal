@@ -3,27 +3,27 @@
  */
 (function () {
 
-    'use strict';
+	'use strict';
 
-    var generatePdf = function (data) {
+	var generatePdf = function (data) {
 
-        return window.fetch('/services/pdf',
-            {
-                method: 'POST',
-                credentials: 'include',
-                body: JSON.stringify(data),
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return data.blob();
-        })
+		return window.fetch('/services/pdf',
+			{
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify(data),
+				headers: {
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			}).then(function (data) {
+			return data.blob();
+		})
 
-    };
+	};
 
-    module.exports = {
-        generatePdf: generatePdf
-    }
+	module.exports = {
+		generatePdf: generatePdf
+	}
 
 }());

@@ -52,13 +52,11 @@
                     console.log('resizeGridCells.projection', projection);
 
                     var tab;
-                    var projectionTab
 
                     if (scope.tabNumber === 'fixed_area') {
                         tab = layout.data.fixed_area;
                     } else {
                         tab = layout.data.tabs[scope.tabNumber];
-                        projectionTab = projection[scope.tabNumber]
                     }
 
                     var elements = elem.find('.dashboard-cell');
@@ -69,45 +67,62 @@
                     var rowNumber;
                     var columnNumber;
 
-
-                    var accordionRowsIndexes = []
-
-                    console.log('resizeGridCells.tab', tab);
-
-                    if (tab.accordions) {
-                        tab.accordions.forEach(function (item) {
-                            accordionRowsIndexes.push(item.from)
-                        })
-                    }
-
-                    var hiddenRowsIndexes = []
-
-                    if (projectionTab) {
-
-                        projectionTab.accordion_layout.forEach(function (accordion){
-
-                            if (accordion.folded) {
-
-                                accordion.items.forEach(function (item){
-
-                                    hiddenRowsIndexes.push(parseInt(item.row_number, 10))
-
-                                })
-
-                            }
-
-
-                        })
-
-                    }
-
-                    console.log('resizeGridCells.hiddenRowsIndexes', hiddenRowsIndexes);
-
                     var heightOffset;
                     var accordionsBefore = 0;
                     var hiddenRowsBefore = 0;
                     var domElemOffsetTop;
                     var domElemOffsetLeft;
+
+                    var rowsToFold = []
+                    var foldedAccordionsRows = []
+                    var accordionsRows = []
+
+                    var totalRowsCount = tab.layout.rows_count
+
+
+                    var accordions = elem.querySelectorAll('.dashboard-accordion-component')
+
+                    console.log('accordions', accordions);
+
+                    for (var i = 0; i < accordions.length; i = i + 1) {
+
+                        var accordion = accordions[i];
+
+                        accordionsRows.push(parseInt(accordion.dataset.rowNumber, 10))
+
+                        if (accordion.classList.contains('dashboard-accordion-folded')) {
+                            foldedAccordionsRows.push(parseInt(accordion.dataset.rowNumber, 10))
+                        }
+
+                    }
+
+                    console.log('tab', tab);
+                    console.log('foldedAccordionsRows', foldedAccordionsRows);
+                    console.log('accordionsRows', accordionsRows);
+
+                    accordionsRows.forEach(function (accordionRow, index){
+
+                        if (foldedAccordionsRows.indexOf(accordionRow) !== -1) {
+
+                            var to;
+
+                            if (index !== accordionsRows.length - 1) {
+                                to = accordionsRows[index + 1]
+                            } else {
+                                to = totalRowsCount
+                            }
+
+
+                            for (var i = accordionRow + 1; i < to; i = i + 1) {
+                                rowsToFold.push(i)
+                            }
+
+                        }
+
+
+                    })
+
+                    console.log('rowsToFold', rowsToFold);
 
                     for (var i = 0; i < elements.length; i = i + 1) {
 
@@ -134,30 +149,31 @@
 
                         if (layoutElem.cell_type === 'component') {
 
-                            // nothing here yet
+                            if (rowsToFold.indexOf(rowNumber) !== -1) {
+                                domElem.style.display = 'none';
+                            } else {
+                                domElem.style.display = 'block';
+                            }
 
                         }
 
-                        accordionRowsIndexes.forEach(function (indx) {
-                            if (indx <= rowNumber) {
-                                accordionsBefore = accordionsBefore + 1;
-                            }
-                        })
+                        var offset = 0;
 
-                        hiddenRowsIndexes.forEach(function (indx) {
-                            if (indx < rowNumber) {
-                                hiddenRowsBefore = hiddenRowsBefore + 1;
-                            }
-                        })
+                        for (var x = 0; x < rowsToFold.length ; x = x + 1) {
 
-                        heightOffset = (accordionsBefore - hiddenRowsBefore) * scope.cellHeight;
+                            if (rowsToFold[x] < rowNumber) {
+                                offset = offset + 1;
+                            }
+
+                        }
+
 
                         domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
                         domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
 
                         domElem.style.position = 'absolute';
 
-                        domElemOffsetTop =  (rowNumber * scope.cellHeight + heightOffset + scope.tabPaddingTop)
+                        domElemOffsetTop =  (rowNumber * scope.cellHeight + scope.tabPaddingTop - (offset * scope.cellHeight))
                         domElemOffsetLeft =  (columnNumber * scope.cellWidth + scope.tabPaddingLeft)
 
                         domElem.style.top = domElemOffsetTop + 'px';

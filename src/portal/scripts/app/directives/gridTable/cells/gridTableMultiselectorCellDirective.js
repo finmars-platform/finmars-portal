@@ -5,7 +5,7 @@
 	let gtEvents = require('../../../services/gridTableEvents');
 
 	let ChipsListEventService = require("../../../services/eventService");
-	let directivesEvents = require("../../../services/directivesEvents");
+	let directivesEvents = require("../../../services/events/directivesEvents");
 
 	module.exports = function ($mdDialog) {
 		return {
@@ -160,6 +160,19 @@
 					formatDataForChips();
 
 				};
+
+				scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+
+					formatDataForChips();
+
+					scope.chipsListEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
+
+					scope.chipsListEventService.dispatchEvent(
+						directivesEvents.CHIPS_LIST_CHANGED,
+						{chipsList: scope.chipsList, updateScope: false}
+					);
+
+				});
 
 				init();
 

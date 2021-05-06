@@ -3,26 +3,35 @@
 
     module.exports = function () {
 
-        var data = {};
+        var data = {
+			changedUserInputData: null,
+			tooltipsList: [],
+			colorPalettes: [],
+			userInputsToRecalc: null,
+			entityAttributeTypes: [],
 
-        function setChangedUserInputData (uInputData) {
+			tabsWithErrors: null,
+			formErrorsList: null
+		};
+
+        /* function setChangedUserInputData (uInputData) {
             data.changedUserInputData = uInputData;
         }
 
         function getChangedUserInputData () {
             return data.changedUserInputData;
-        }
+        } */
 
         function setTooltipsData (tooltips) {
-            data.tooltipsObj = tooltips;
+            data.tooltipsList = tooltips;
         }
 
         function getTooltipsData () {
-            if (Array.isArray(data.tooltipsObj)) {
-                return data.tooltipsObj
+            if (Array.isArray(data.tooltipsList)) {
+                return data.tooltipsList
             }
 
-            return  [];
+            return [];
         }
 
         function setColorPalettesList (palettesList) {
@@ -30,21 +39,77 @@
         }
 
         function getColorPalettesList () {
-            if (data.colorPalettes) {
-                return data.colorPalettes;
-            } else {
+
+        	if (data.colorPalettes) {
+
+        		return data.colorPalettes;
+
+        	} else {
                 return [];
             }
+
         }
 
+        function setUserInputsToRecalculate (userInputs) {
+        	data.userInputsToRecalc = userInputs
+		}
+
+		function getUserInputsToRecalculate () {
+			return data.userInputsToRecalc;
+		}
+
+		function setEntityAttributeTypes (attributeTypes) {
+			data.entityAttributeTypes = attributeTypes || [];
+		}
+
+		function getEntityAttributeTypes () {
+			return data.entityAttributeTypes;
+		}
+
+        function setRecalculationFunction (fn) {
+            data.recalculate = fn;
+        }
+
+        function getRecalculationFunction () {
+            return data.recalculate;
+        }
+
+        function setTabsWithErrors (tabsWithErrors) {
+			data.tabsWithErrors = tabsWithErrors;
+		}
+
+		function getTabsWithErrors () {
+			return data.tabsWithErrors;
+		}
+
+		function setFormErrorsList (errorsList) {
+			data.formErrorsList = errorsList;
+		}
+
+		function getFormErrorsList () {
+			return data.formErrorsList;
+		}
+
         return {
-            setChangedUserInputData: setChangedUserInputData,
-            getChangedUserInputData: getChangedUserInputData,
+            /*setChangedUserInputData: setChangedUserInputData,
+            getChangedUserInputData: getChangedUserInputData,*/
+			setUserInputsToRecalculate: setUserInputsToRecalculate,
+			getUserInputsToRecalculate: getUserInputsToRecalculate,
+			setEntityAttributeTypes: setEntityAttributeTypes,
+			getEntityAttributeTypes: getEntityAttributeTypes,
 
             setTooltipsData: setTooltipsData,
             getTooltipsData: getTooltipsData,
             setColorPalettesList: setColorPalettesList,
-            getColorPalettesList: getColorPalettesList
+            getColorPalettesList: getColorPalettesList,
+
+            setRecalculationFunction: setRecalculationFunction,
+            getRecalculationFunction: getRecalculationFunction,
+
+			setTabsWithErrors: setTabsWithErrors,
+			getTabsWithErrors: getTabsWithErrors,
+			setFormErrorsList: setFormErrorsList,
+			getFormErrorsList: getFormErrorsList
         }
     }
 

@@ -6,20 +6,20 @@
     'use strict';
 
     var xhrService = require('../../../../core/services/xhrService');
-    var baseUrlService = require('../services/baseUrlService');
-
-    var baseUrl = baseUrlService.resolve();
 
     var getData = function () {
 
-        baseUrl = baseUrl.split('v1/')[0];
+        
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + 'healthcheck/',
+return xhrService.fetch('__HEALTHCHECK_HOST__',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    Accept: 'application/json',
+                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+ Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })

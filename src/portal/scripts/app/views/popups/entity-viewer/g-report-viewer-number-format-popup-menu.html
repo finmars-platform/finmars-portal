@@ -1,0 +1,62 @@
+<div class="popup-menu">
+    <div>
+        <md-button ng-click="popupData.data.activateColumnNumberRenderingPreset(popupData.data.column, 'price')"
+                   class="popup-menu-item">
+<!--            <ng-md-icon icon="visibility_off"
+                        style="visibility: hidden;"></ng-md-icon>-->
+            <span class="material-icons" style="visibility: hidden;">done</span>
+            <span>Price (0)</span>
+        </md-button>
+    </div>
+
+    <div>
+        <md-button ng-click="popupData.data.activateColumnNumberRenderingPreset(popupData.data.column, 'market_value')"
+                   class="popup-menu-item">
+<!--            <ng-md-icon icon="visibility_off"
+                        style="visibility: hidden;"></ng-md-icon>-->
+            <span class="material-icons" style="visibility: hidden;">done</span>
+            <span>Market Value (000'000)</span>
+        </md-button>
+    </div>
+
+    <div>
+        <md-button class="popup-menu-item"
+                   ng-click="popupData.data.activateColumnNumberRenderingPreset(popupData.data.column, 'amount')">
+<!--            <ng-md-icon icon="visibility_off"
+                        style="visibility: hidden;"></ng-md-icon>-->
+            <span class="material-icons" style="visibility: hidden;">done</span>
+            <span>Amount (000'000.00)</span>
+        </md-button>
+    </div>
+
+    <div>
+        <md-button class="popup-menu-item"
+                   ng-click="popupData.data.activateColumnNumberRenderingPreset(popupData.data.column, 'exposure')">
+<!--            <ng-md-icon icon="visibility_off"
+                        style="visibility: hidden;"></ng-md-icon>-->
+            <span class="material-icons" style="visibility: hidden;">done</span>
+            <span>Exposure (0.0%)</span>
+        </md-button>
+    </div>
+
+    <div>
+        <md-button class="popup-menu-item"
+                   ng-click="popupData.data.activateColumnNumberRenderingPreset(popupData.data.column, 'return')">
+<!--            <ng-md-icon icon="visibility_off"
+                        style="visibility: hidden;"></ng-md-icon>-->
+            <span class="material-icons" style="visibility: hidden;">done</span>
+            <span>Return (0.00%)</span>
+        </md-button>
+    </div>
+
+    <div>
+        <md-button class="popup-menu-item"
+                   ng-click="popupData.data.openColumnNumbersRenderingSettings(popupData.data.column, $event)">
+<!--            <ng-md-icon icon="visibility_off"
+                        style="visibility: hidden;"></ng-md-icon>-->
+            <span class="material-icons" style="visibility: hidden;">done</span>
+            <span>Custom</span>
+        </md-button>
+    </div>
+
+</div>

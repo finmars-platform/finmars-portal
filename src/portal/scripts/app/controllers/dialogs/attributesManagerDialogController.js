@@ -251,7 +251,7 @@
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
-                templateUrl: 'views/warning-dialog-view.html',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 clickOutsideToClose: false,
@@ -309,7 +309,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: $event,
                     clickOutsideToClose: false,
@@ -355,7 +355,7 @@
             var responseObj = {status: 'disagree'};
 
             if (attributesWereChanged) {
-                responseObj = {status: 'agree'};
+                responseObj = {status: 'agree', attributeTypes: vm.attrs};
             }
 
             $mdDialog.hide(responseObj);

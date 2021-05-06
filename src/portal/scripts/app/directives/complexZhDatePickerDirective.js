@@ -5,9 +5,11 @@
 
     'use strict';
 
-    var metaService = require('../services/metaService');
-    var expressionService = require('../services/expression.service');
-    var evEvents = require('../services/entityViewerEvents');
+    const metaService = require('../services/metaService');
+	const expressionService = require('../services/expression.service');
+	const evEvents = require('../services/entityViewerEvents');
+
+	const EventService = require('../services/eventService');
 
     module.exports = function ($mdDialog, pickmeup) {
 
@@ -16,103 +18,106 @@
             scope: {
                 displayOptions: '<',
                 callbackMethod: '&',
+				date: '=',
                 datepickerOptions: '=',
-                date: '=',
+				secondDate: '=',
+				secondDatepickerOptions: '=',
                 evDataService: '=',
                 evEventService: '=',
                 attributeDataService: '=',
-                isDisabled: '<'
+                isDisabled: '=',
             },
             templateUrl: 'views/directives/complex-zh-date-picker-view.html',
             link: function (scope, elem, attrs) {
 
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.rangeOfDates = (scope.secondDate !== undefined && !!scope.secondDatepickerOptions);
 
-                var entityType = scope.evDataService.getEntityType();
-                var isReport = metaService.isReport(entityType);
+                const entityType = scope.evDataService.getEntityType();
+				/* const isReport = metaService.isReport(entityType);
 
                 // var input = $(elem).find('.complex-datepicker-input');
-                var input = elem[0].querySelector('.complex-datepicker-input');
+                let input = elem[0].querySelector('.complex-datepicker-input');
 
-                var linkToAboveEventIndex;
-                var attributesFromAbove;
-                var columnKey;
+                let linkToAboveEventIndex; */
+                let attributesFromAbove;
+                let columnKey;
 
-                // TIPS
-                // scope.displayOptions is an object that may contain next properties:
-                // position: side to show datepicker on
-                // defaultDate: show default date in datepicker empty
-                // labelName: name to show in label of input
+				/* OLD COMPLEX DATEPICKER CODE
 
-                scope.availableModes = { // determine whether to hide some of datepicker modes
-                    inception: true
-                };
+				/!* TIPS
+					// scope.displayOptions is an object that may contain next properties:
+					// position: side to show datepicker on
+					// defaultDate: show default date in datepicker empty
+					// labelName: name to show in label of input *!/
 
-                var position = 'right';
-                var defaultDate = false;
+				scope.availableModes = { // determine whether to hide some of datepicker modes
+					inception: true
+				};
 
-                if (scope.displayOptions) {
+				var position = 'right';
+				var defaultDate = false;
 
-                    if (scope.displayOptions.position) {
-                        position = scope.displayOptions.position;
-                    }
+				if (scope.displayOptions) {
 
-                    if (scope.displayOptions.defaultDate) {
-                        defaultDate = scope.displayOptions.defaultDate;
-                    }
+					if (scope.displayOptions.position) {
+						position = scope.displayOptions.position;
+					}
 
-                    if (scope.displayOptions.modes) {
-                        var modesAvailability = scope.displayOptions.modes;
+					if (scope.displayOptions.defaultDate) {
+						defaultDate = scope.displayOptions.defaultDate;
+					}
 
-                        var modesAvailabilityKeys = Object.keys(modesAvailability);
+					if (scope.displayOptions.modes) {
+						var modesAvailability = scope.displayOptions.modes;
 
-                        modesAvailabilityKeys.forEach(function (mode) {
-                            scope.availableModes[mode] = modesAvailability[mode];
-                        })
-                    }
+						var modesAvailabilityKeys = Object.keys(modesAvailability);
 
-                }
+						modesAvailabilityKeys.forEach(function (mode) {
+							scope.availableModes[mode] = modesAvailability[mode];
+						})
+					}
 
-                scope.datepickerActiveModeTitle = '';
+				}
 
-                if (scope.isDisabled) {
+				scope.datepickerActiveModeTitle = '';
 
-                }
+				scope.getDatepickerName = function () {
+					if (scope.displayOptions.labelName) {
+						return scope.displayOptions.labelName + ": " + scope.datepickerActiveModeTitle;
+					} else {
+						return "Date: " +  scope.datepickerActiveModeTitle + " mode";
+					}
+				};
 
-                scope.getDatepickerName = function () {
-                    if (scope.displayOptions.labelName) {
-                        return scope.displayOptions.labelName + ": " + scope.datepickerActiveModeTitle;
-                    } else {
-                        return "Date: " +  scope.datepickerActiveModeTitle + " mode";
-                    }
-                };
+				if (scope.date) {
 
-                if (scope.date) {
+					pickmeup(input, {
+						date: new Date(scope.date),
+						current: new Date(scope.date),
+						position: position,
+						default_date: defaultDate,
+						hide_on_select: true,
+						format: 'Y-m-d'
+					});
 
-                    pickmeup(input, {
-                        date: new Date(scope.date),
-                        current: new Date(scope.date),
-                        position: position,
-                        default_date: defaultDate,
-                        hide_on_select: true,
-                        format: 'Y-m-d'
-                    });
+				} else {
 
-                } else {
+					pickmeup(input, {
+						position: position,
+						default_date: defaultDate,
+						hide_on_select: true,
+						format: 'Y-m-d'
+					});
 
-                    pickmeup(input, {
-                        position: position,
-                        default_date: defaultDate,
-                        hide_on_select: true,
-                        format: 'Y-m-d'
-                    });
+				}
 
-                }
+				input.addEventListener("pickmeup-change", function (event) {
+					scope.date = event.detail.formatted_date;
+					scope.$apply();
+				});
 
-                input.addEventListener("pickmeup-change", function (event) {
-                    scope.date = event.detail.formatted_date;
-                    scope.$apply();
-                });
+				< OLD COMPLEX DATEPICKER CODE > */
 
                 scope.testModelChange = function () {
                     scope.callbackMethod();
@@ -122,80 +127,84 @@
                     scope.datepickerOptions.datepickerMode = mode;
                 };
 
-                var enableTodayMode = function () {
+				/* var enableTodayMode = function () {
 
-                    scope.datepickerActiveModeTitle = 'Today';
-                    scope.datepickerOptions.expression = "now()";
-                    input.setAttribute('disabled', '');
+					scope.datepickerActiveModeTitle = 'Today';
+					scope.datepickerOptions.expression = "now()";
+					input.setAttribute('disabled', '');
 
-                    var today = moment(new Date()).format('YYYY-MM-DD');
-                    scope.date = today;
+					var today = moment(new Date()).format('YYYY-MM-DD');
+					scope.date = today;
 
-                    if (linkToAboveEventIndex) {
-                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
-                        linkToAboveEventIndex = null;
-                        columnKey = null;
-                    }
+					if (linkToAboveEventIndex) {
+						scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+						linkToAboveEventIndex = null;
+						columnKey = null;
+					}
 
-                    setTimeout(function () {
-                        scope.callbackMethod()
-                    }, 500);
+					setTimeout(function () {
+						scope.callbackMethod()
+					}, 500);
 
-                };
+				};
 
-                var enableYesterdayMode = function () {
+				var enableYesterdayMode = function () {
 
-                    scope.datepickerActiveModeTitle = 'Yesterday';
-                    scope.datepickerOptions.expression = "now()-days(1)";
-                    input.setAttribute('disabled', '');
+					scope.datepickerActiveModeTitle = 'Yesterday';
+					scope.datepickerOptions.expression = "now()-days(1)";
+					input.setAttribute('disabled', '');
 
-                    var yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
+					var yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
 
-                    scope.date = yesterday;
+					scope.date = yesterday;
 
-                    if (linkToAboveEventIndex) {
-                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
-                        linkToAboveEventIndex = null;
-                        columnKey = null;
-                    }
+					if (linkToAboveEventIndex) {
+						scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+						linkToAboveEventIndex = null;
+						columnKey = null;
+					}
 
-                    setTimeout(function () {
-                        scope.callbackMethod()
-                    }, 500);
+					setTimeout(function () {
+						scope.callbackMethod()
+					}, 500);
 
-                };
+				};
 
-                var enableDatepickerMode = function () {
-                    scope.datepickerActiveModeTitle = 'Datepicker';
-                    delete scope.datepickerOptions.expression;
+				var enableDatepickerMode = function () {
 
-                    setTimeout(function () {
-                        scope.callbackMethod()
-                    }, 500);
+					scope.datepickerActiveModeTitle = 'Datepicker';
+					delete scope.datepickerOptions.expression;
 
-                    if (scope.isDisabled) {
-                        input.setAttribute('disabled', '');
-                    } else {
-                        input.removeAttribute('disabled');
-                    }
+					setTimeout(function () {
+						scope.callbackMethod()
+					}, 500);
 
-                    if (linkToAboveEventIndex) {
-                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
-                        linkToAboveEventIndex = null;
-                        columnKey = null;
-                    }
-                };
+					if (scope.isDisabled) {
+						input.setAttribute('disabled', '');
+					} else {
+						input.removeAttribute('disabled');
+					}
 
-                var enableExpressionMode = function () {
-                    scope.datepickerActiveModeTitle = 'Custom';
+					if (linkToAboveEventIndex) {
+						scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+						linkToAboveEventIndex = null;
+						columnKey = null;
+					}
 
-                    input.setAttribute('disabled', '');
+				};
 
-                    if (linkToAboveEventIndex) {
-                        scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
-                        linkToAboveEventIndex = null;
-                    }
-                };
+				var enableExpressionMode = function () {
+
+					scope.datepickerActiveModeTitle = 'Custom';
+
+					input.setAttribute('disabled', '');
+
+					if (linkToAboveEventIndex) {
+						scope.evEventService.removeEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, linkToAboveEventIndex);
+						linkToAboveEventIndex = null;
+					}
+
+				};
 
                 scope.openEditExpressionDialog = function ($event) {
 
@@ -252,7 +261,7 @@
 
                                 $mdDialog.show({
                                     controller: 'WarningDialogController as vm',
-                                    templateUrl: 'views/warning-dialog-view.html',
+                                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                                     clickOutsideToClose: false,
                                     locals: {
                                         warning: {
@@ -282,7 +291,7 @@
                         linkToAboveEventIndex = null;
                         columnKey = null;
                     }
-                };
+                }; */
 
                 scope.chooseEntityToUseFromAbove = function ($event) {
 
@@ -323,7 +332,7 @@
 
                 };
 
-                var enableLinkToAboveMode = function () {
+                /* var enableLinkToAboveMode = function () {
 
                     scope.datepickerActiveModeTitle = 'Link To Above';
 
@@ -384,7 +393,133 @@
                             scope.datepickerOptions.datepickerMode = 'datepicker';
 
                     }
-                });
+                }); */
+
+				scope.popupData = {
+					datepickerOptions: JSON.parse(JSON.stringify(scope.datepickerOptions)),
+					date: scope.date,
+					evDataService: scope.evDataService,
+					evEventService: scope.evEventService,
+					attributeDataService: scope.attributeDataService
+				}
+
+				if (scope.rangeOfDates) {
+					scope.popupData.secondDate = scope.secondDate;
+					scope.popupData.secondDatepickerOptions = scope.secondDatepickerOptions;
+				}
+
+				const applyPopupDataToFirstDate = function (date) {
+
+					scope.date = date;
+					scope.popupData.date = date;
+
+					if (scope.popupData.datepickerOptions.datepickerMode === 'datepicker') {
+						delete scope.popupData.datepickerOptions.datepickerMode.expression;
+					}
+
+					scope.datepickerOptions = JSON.parse(JSON.stringify(scope.popupData.datepickerOptions));
+
+				}
+
+				const applyPopupDataToSecondDate = function (date) {
+
+					scope.secondDate = date;
+					scope.popupData.secondDate = date;
+
+					if (scope.popupData.secondDatepickerOptions.datepickerMode === 'datepicker') {
+						delete scope.popupData.secondDatepickerOptions.datepickerMode.expression;
+					}
+
+					scope.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.popupData.secondDatepickerOptions));
+
+				}
+
+				scope.onPopupSave = function () {
+
+					if (scope.rangeOfDates) {
+
+						if (!scope.popupData.date && scope.popupData.secondDate) {
+							scope.popupData.date = scope.popupData.secondDate;
+						}
+
+						if (!scope.popupData.secondDate && scope.popupData.date) {
+							scope.popupData.secondDate = scope.popupData.date;
+						}
+
+						let firstDate, firstOptions, secondDate, secondOptions;
+
+						if (new Date(scope.popupData.date) > new Date(scope.popupData.secondDate)) {
+
+							firstDate = scope.popupData.secondDate;
+							firstOptions = scope.popupData.secondDatepickerOptions;
+
+							secondDate = scope.popupData.date;
+							secondOptions = scope.popupData.datepickerOptions;
+
+						} else { // in case second date later than first, switch them
+
+							firstDate = scope.popupData.date;
+							firstOptions = scope.popupData.datepickerOptions;
+
+							secondDate = scope.popupData.secondDate;
+							secondOptions = scope.popupData.secondDatepickerOptions;
+
+						}
+
+						scope.popupData.datepickerOptions = firstOptions;
+						applyPopupDataToFirstDate(firstDate);
+
+						scope.popupData.secondDatepickerOptions = secondOptions;
+						applyPopupDataToSecondDate(secondDate);
+
+
+					} else {
+
+						/* scope.date = scope.popupData.date;
+
+						if (scope.popupData.datepickerOptions.datepickerMode === 'datepicker') {
+							delete scope.popupData.datepickerOptions.expression;
+						}
+
+						scope.datepickerOptions = JSON.parse(JSON.stringify(scope.popupData.datepickerOptions)); */
+						applyPopupDataToFirstDate(scope.popupData.date);
+
+					}
+
+					setTimeout(() => {
+						if (scope.callbackMethod) scope.callbackMethod();
+					}, 0);
+
+				};
+
+				scope.onPopupCancel = function () {
+
+					scope.popupData.date = scope.date;
+					scope.popupData.datepickerOptions = JSON.parse(JSON.stringify(scope.datepickerOptions));
+
+					if (scope.rangeOfDates) {
+
+						scope.popupData.secondDate = scope.secondDate;
+						scope.popupData.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.secondDatepickerOptions));
+
+					}
+
+				};
+
+				const init = function () {
+
+					scope.popupEventService = new EventService();
+
+					if (!scope.datepickerOptions) scope.datepickerOptions = {};
+
+					if (!scope.datepickerOptions.datepickerMode) scope.datepickerOptions.datepickerMode = 'datepicker';
+
+					scope.datepickerOptions.date = scope.date;
+					if (scope.rangeOfDates) scope.secondDatepickerOptions.date = scope.secondDate;
+
+				};
+
+				init();
 
             }
         }

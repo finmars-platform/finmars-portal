@@ -3,234 +3,323 @@
  */
 (function () {
 
-    'use strict';
+	'use strict';
 
-    var cookieService = require('../../../../../core/services/cookieService');
-    var xhrService = require('../../../../../core/services/xhrService');
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
-    var baseUrlService = require('../../services/baseUrlService');
+	var cookieService = require('../../../../../core/services/cookieService');
+	var xhrService = require('../../../../../core/services/xhrService');
+	var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
+	var baseUrlService = require('../../services/baseUrlService');
 
-    var baseUrl = baseUrlService.resolve();
+	var baseUrl = baseUrlService.resolve();
 
-    var getList = function (options) {
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + 'transactions/complex-transaction/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+	var getList = function (options) {
 
-    var getByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var create = function (transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(transaction)
-            })
-    };
+		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/', options),
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
 
-    var update = function (id, transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(transaction)
-            })
-    };
+	var getByKey = function (id) {
 
-    var updateProperties = function (id, transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/update-properties/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(transaction)
-            })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var updatePropertiesBulk = function (transactions) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/bulk-update-properties/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(transactions)
-            })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/',
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
 
-    var deleteByKey = function (id) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/',
-            {
-                method: 'DELETE',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return new Promise(function (resolve, reject) {
-                resolve({status: 'deleted'});
-            });
-            //return data.json();
-        })
-    };
+	var create = function (transaction) {
 
-    var initRebookComplexTransaction = function (id, transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/rebook/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var rebookComplexTransaction = function (id, transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/rebook/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(transaction)
-            })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/',
+			{
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(transaction)
+			})
+	};
 
+	var update = function (id, transaction) {
 
-    var initRebookPendingComplexTransaction = function (id, transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/rebook-pending/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var rebookPendingComplexTransaction = function (id, transaction) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/' + id + '/rebook-pending/',
-            {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(transaction)
-            })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/',
+			{
+				method: 'PUT',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(transaction)
+			})
+	};
 
-    var deleteBulk = function (data) {
-        return xhrService.fetch(baseUrl + 'transactions/complex-transaction/bulk-delete/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(function (data) {
-                return new Promise(function (resolve, reject) {
-                    resolve({status: 'deleted'});
-                });
-            })
-    };
+	var updateProperties = function (id, transaction) {
 
-    var recalculatePermissionTransaction = function(data){
-        return xhrService.fetch(baseUrl + 'transactions/recalculate-permission-transaction/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-    };
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-    var recalculatePermissionComplexTransaction = function(data){
-        return xhrService.fetch(baseUrl + 'transactions/recalculate-permission-complex-transaction/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-    };
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/update-properties/',
+			{
+				method: 'PUT',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(transaction)
+			})
+	};
 
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
-        initRebookComplexTransaction: initRebookComplexTransaction,
-        rebookComplexTransaction: rebookComplexTransaction,
+	var updatePropertiesBulk = function (transactions) {
 
-        updateProperties: updateProperties,
-        updatePropertiesBulk: updatePropertiesBulk,
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-        initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
-        rebookPendingComplexTransaction: rebookPendingComplexTransaction,
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/bulk-update-properties/',
+			{
+				method: 'PUT',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(transactions)
+			})
+	};
 
-        deleteBulk: deleteBulk,
+	var deleteByKey = function (id) {
 
-        recalculatePermissionTransaction: recalculatePermissionTransaction,
-        recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction
-    }
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/',
+			{
+				method: 'DELETE',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			}).then(function (data) {
+			return new Promise(function (resolve, reject) {
+				resolve({status: 'deleted'});
+			});
+			//return data.json();
+		})
+	};
+
+	var initRebookComplexTransaction = function (id, transaction) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/rebook/',
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
+
+	var rebookComplexTransaction = function (id, transaction) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/rebook/',
+			{
+				method: 'PUT',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(transaction)
+			})
+	};
+
+	var recalculateComplexTransaction = function (id, transaction) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/recalculate/',
+			{
+				method: 'PUT',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(transaction)
+			})
+	}
+
+	var initRebookPendingComplexTransaction = function (id, transaction) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/rebook-pending/',
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
+
+	var rebookPendingComplexTransaction = function (id, transaction) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/' + id + '/rebook-pending/',
+			{
+				method: 'PUT',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(transaction)
+			})
+	};
+
+	var deleteBulk = function (data) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/bulk-delete/',
+			{
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+			.then(function (data) {
+				return new Promise(function (resolve, reject) {
+					resolve({status: 'deleted'});
+				});
+			})
+	};
+
+	var recalculatePermissionTransaction = function (data) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/recalculate-permission-transaction/',
+			{
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+	};
+
+	var recalculatePermissionComplexTransaction = function (data) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/recalculate-permission-complex-transaction/',
+			{
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+	};
+
+	module.exports = {
+		getList: getList,
+		getByKey: getByKey,
+		create: create,
+		update: update,
+		deleteByKey: deleteByKey,
+		initRebookComplexTransaction: initRebookComplexTransaction,
+		rebookComplexTransaction: rebookComplexTransaction,
+		recalculateComplexTransaction: recalculateComplexTransaction,
+
+		updateProperties: updateProperties,
+		updatePropertiesBulk: updatePropertiesBulk,
+
+		initRebookPendingComplexTransaction: initRebookPendingComplexTransaction,
+		rebookPendingComplexTransaction: rebookPendingComplexTransaction,
+
+		deleteBulk: deleteBulk,
+
+		recalculatePermissionTransaction: recalculatePermissionTransaction,
+		recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction
+	}
 
 }());

@@ -57,6 +57,11 @@
             controller: 'ContextMenuLayoutManagerController as vm'
         });
 
+        $stateProvider.state('app.manual-sorting-layout-manager', {
+            url: '/manual-sorting-layouts',
+            templateUrl: 'views/manual-sorting-layout-manager-view.html',
+            controller: 'ManualSortingLayoutManagerController as vm'
+        });
 
         $stateProvider.state('app.home', {
             url: '/',
@@ -180,14 +185,14 @@
                     layoutUserCode: null
                 }
             })
-            .state('app.data.pricing-policy', {
+            /* .state('app.data.pricing-policy', {
                 url: '/pricing-policy',
                 templateUrl: 'views/data/data-pricing-policy-view.html',
                 controller: 'DataPricingPolicyController as vm',
                 params: {
                     layoutUserCode: null
                 }
-            })
+            }) */
             .state('app.data.complex-transaction', {
                 url: '/complex-transactions',
                 templateUrl: 'views/data/data-complex-transaction-view.html',
@@ -598,6 +603,11 @@
                 templateUrl: 'views/pages/layouts-settings-view.html',
                 controller: 'LayoutsSettingsController as vm'
             })
+            .state('app.settings.input-form-layouts', {
+                url: '/input-form-layouts',
+                templateUrl: 'views/pages/input-form-layouts-settings-view.html',
+                controller: 'InputFormLayoutsSettingsController as vm'
+            })
             .state('app.settings.notifications', {
                 url: '/notifications',
                 templateUrl: 'views/settings/profile-settings-view.html',
@@ -648,10 +658,21 @@
                 templateUrl: 'views/pages/entity-tooltip-page-view.html',
                 controller: 'EntityTooltipPageController as vm'
             })
+
+            .state('app.settings.cross-entity-attribute-extensions', {
+                url: '/cross-entity-attribute-extension',
+                templateUrl: 'views/pages/cross-entity-attribute-extension-page-view.html',
+                controller: 'CrossEntityAttributeExtensionPageController as vm'
+            })
             .state('app.settings.color-palettes', {
                 url: '/palettes',
                 templateUrl: 'views/colorPicker/color-palettes-settings-view.html',
-                controller: 'ColorPalettesSettingsController as vm'
+                controller: 'ColorPalettesSettingsController as vm',
+				resolve: {
+                	data: function() { // setting 'data' dependency
+                		return '';
+					}
+				}
             })
             .state('app.settings.import-configuration', {
                 url: '/import-configuration',

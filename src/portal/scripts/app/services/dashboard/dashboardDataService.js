@@ -170,6 +170,14 @@
             return tmpData.actualRvLayouts;
         }
 
+        function setLayoutToOpen (layoutToOpen) {
+            tmpData.layoutToOpen = layoutToOpen;
+        }
+
+        function getLayoutToOpen () {
+            return tmpData.layoutToOpen;
+        }
+
         return {
 
             setData: setData,
@@ -204,7 +212,12 @@
             pushToActualRvLayoutsInCache: pushToActualRvLayoutsInCache,
             getActualRvLayoutsInCache: getActualRvLayoutsInCache,
 
-            getComponentStatusesAll: getComponentStatusesAll
+            getComponentStatusesAll: getComponentStatusesAll,
+
+
+            // REFACTOR change layout from popup
+            setLayoutToOpen: setLayoutToOpen,
+            getLayoutToOpen: getLayoutToOpen
         }
 
     }

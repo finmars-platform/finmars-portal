@@ -49,7 +49,7 @@
                 "value_type": "field",
                 "value_content_type": "instruments.instrumentclass",
                 "value_entity": "instrument-class",
-                "code": "system_code",
+                "code": "user_code",
                 "allow_null": false
             },
             {
@@ -106,7 +106,33 @@
                 "key": "object_permissions",
                 "name": "Object permissions",
                 "value_type": "mc_field"
-            }
+            },
+			{
+				"key": "accrued_currency",
+				"name": "Accrued currency",
+				"value_content_type": "currencies.currency",
+				"value_entity": "currency",
+				"code": "user_code",
+				"value_type": "field"
+			},
+			{
+				"key": "accrued_multiplier",
+				"name": "Accrued multiplier",
+				"value_type": 20
+			},
+			{
+				"key": "payment_size_detail",
+				"name": "Payment size detail",
+				"value_content_type": "instruments.paymentsizedetail",
+				"value_entity": "payment-size-detail",
+				"code": "user_code",
+				"value_type": "field"
+			},
+			{
+				"key": "default_accrued",
+				"name": "Default accrued",
+				"value_type": 20
+			}
         ]
     };
 

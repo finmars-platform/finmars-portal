@@ -16,10 +16,11 @@
             templateUrl: 'views/directives/gridTable/grid-table-cell-view.html',
             link: function (scope, elem, attrs) {
 
-                scope.cellValue = '';
+                // scope.cellValue = '';
 
-                var cellMethods = scope.column.methods || {};
-                var cellsWithPopup = ['text', 'number', 'date', 'expression', 'custom_popup'];
+                var cellMethods;
+                var cellsWithPopup = ['text', 'number', 'date', 'expression', 'customPopup', 'multitypeField'];
+                var sortingSettingsChangedIndex;
 
                 scope.onCellValueChange = function () {
 
@@ -34,7 +35,6 @@
                     };
 
                     if (cellMethods.onChange) {
-
                         cellMethods.onChange(rowData, colData, scope.gtDataService, scope.gtEventService);
                     }
 
@@ -65,7 +65,7 @@
                 }
 
                 scope.cellWithPopup = function () {
-                    return cellsWithPopup.indexOf(scope.column.cellType) > -1;
+                    return cellsWithPopup.includes(scope.column.cellType);
                 };
 
                 var setCellCustomStyles = function () {
@@ -75,7 +75,13 @@
                     classNames.forEach(function (cName) {
 
                         var customStyles = scope.column.styles[cName];
-                        var elemWithStyles = elem[0].querySelector('.' + cName);
+
+                        if (elem[0].classList.contains(cName)) {
+							var elemWithStyles = elem[0];
+
+                        } else {
+							var elemWithStyles = elem[0].querySelector('.' + cName);
+						}
 
                         if (elemWithStyles) {
 
@@ -94,22 +100,25 @@
 
                 var setCellCustomClasses = function () {
 
-                    const cellElem = elem[0].querySelector('.grid-table-cell');
+                	var cellElem = elem[0].querySelector('.grid-table-cell');
+                	var cellClasses = scope.column.classes;
 
-                    if (cellElem) {
+                	if (cellElem) {
 
-                        const classes = scope.column.classes.split(' ');
-                        cellElem.classList.add(...classes);
+						if (typeof cellClasses === 'string') {
+							cellClasses = cellClasses.split(' ');
+						}
 
-                    }
+						cellElem.classList.add(...cellClasses);
 
-                }
+					}
+
+				};
 
                 scope.onChildrenLoadEnd = function () {
 
-                    if (scope.column.styles) {
-                        setCellCustomStyles();
-                    }
+                    if (scope.column.styles) setCellCustomStyles();
+                    if (scope.column.classes) setCellCustomClasses();
 
                     if (scope.column.classes) {
                         setCellCustomClasses();
@@ -131,33 +140,75 @@
                     multiselectorElem.click();
                 };
 
+                /*var removeEventListeners = function () {
+
+				};*/
+
                 var init = function () {
+
+					cellMethods = scope.column.methods || {};
 
                     if (scope.row.order !== 'header' && !scope.cellWithPopup()) { // if no child directive initialized
                         scope.onChildrenLoadEnd();
                     }
 
-                    if (scope.column.settings && scope.column.settings.value) {
+                    /* if (scope.column.settings && scope.column.settings.value) {
                         scope.cellValue = scope.column.settings.value;
-                    }
+                    } */
 
-                    scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
+					/* scope.gtEventService.addEventListener(gtEvents.UPDATE_CELLS_CONTENT, function () {
 
-                        scope.sortingOn = false;
-                        scope.sortRowsReverse = false;
+						if (scope.row && scope.column && scope.row.order !== 'header') {
 
-                        var sortSettings = scope.gtDataService.getSortingSettings();
+							scope.row = scope.gtDataService.getRow(scope.row.order);
+							scope.column = scope.gtDataService.getCell(scope.row.order, scope.column.order);
 
-                        if (sortSettings.column === scope.column.order) {
+						}
 
-                            scope.sortingOn = true
-                            scope.sortRowsReverse = sortSettings.reverse
+					}); */
 
-                        }
+					if (scope.row.order === 'header') {
 
-                    });
+						sortingSettingsChangedIndex = scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
+
+							scope.sortingOn = false;
+							scope.sortRowsReverse = false;
+
+							var sortSettings = scope.gtDataService.getSortingSettings();
+
+							if (sortSettings.column === scope.column.order) {
+
+								scope.sortingOn = true
+								scope.sortRowsReverse = sortSettings.reverse
+
+							}
+
+						});
+
+					}
 
                 };
+
+				if (scope.row.order !== 'header') {
+
+					scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+
+						var row = scope.gtDataService.getRowByKey(scope.row.key);
+						if (row) var cell = row.columns.find(cell => cell.key === scope.column.key);
+
+						if (row && cell) {
+
+							scope.row = row;
+							scope.column = cell;
+
+							scope.gtEventService.removeEventListener(gtEvents.SORTING_SETTINGS_CHANGED, sortingSettingsChangedIndex);
+							init();
+
+						}
+
+					});
+
+				}
 
                 init();
 

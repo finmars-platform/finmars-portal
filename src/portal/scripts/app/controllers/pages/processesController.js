@@ -97,8 +97,8 @@
                 result = 'Entity Import Validation';
 
                 if (item.data) {
-                    if (item.data.scheme_name) {
-                        result = result + ': ' + item.data.scheme_name
+                    if (item.data.user_code) {
+                        result = result + ': ' + item.data.user_code
                     }
 
                     if (item.data.file_name) {
@@ -112,8 +112,8 @@
                 result = 'Entity Import';
 
                 if (item.data) {
-                    if (item.data.scheme_name) {
-                        result = result + ': ' + item.data.scheme_name
+                    if (item.data.user_code) {
+                        result = result + ': ' + item.data.user_code
                     }
 
                     if (item.data.file_name) {
@@ -126,8 +126,8 @@
                 result = 'Transaction Import Validation';
 
                 if (item.data) {
-                    if (item.data.scheme_name) {
-                        result = result + ': ' + item.data.scheme_name
+                    if (item.data.user_code) {
+                        result = result + ': ' + item.data.user_code
                     }
 
                     if (item.data.file_name) {
@@ -140,8 +140,8 @@
                 result = 'Transaction Import';
 
                 if (item.data) {
-                    if (item.data.scheme_name) {
-                        result = result + ': ' + item.data.scheme_name
+                    if (item.data.user_code) {
+                        result = result + ': ' + item.data.user_code
                     }
 
                     if (item.data.file_name) {
@@ -203,7 +203,10 @@
 
         vm.getFileUrl = function (id) {
 
-            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
+            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 

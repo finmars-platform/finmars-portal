@@ -8,6 +8,8 @@
     "use strict";
 
     var getMenu = function () {
+
+
         return window.fetch("portal/content/json/menu.json").then(function (data) {
             return data.json();
         });
@@ -137,38 +139,56 @@
 
     };
 
-    var getValueTypes = function () {
-        return [{
-            "value": 20,
-            "display_name": "Number"
-        }, {
-            "value": 10,
-            "display_name": "String"
-        }, {
-            "value": 40,
-            "display_name": "Date"
-        }, {
-            "value": 30,
-            "display_name": "Classifier"
-        }, {
-            "value": 110,
-            "display_name": "Selector"
-        },{
-            "value": "decoration",
-            "display_name": "Decoration"
-        }, {
-            "value": "field",
-            "display_name": "Field"
-        }, {
-            "value": "mc_field",
-            "display_name": "Multiple choice field"
-        }, {
-            "value": "boolean",
-            "display_name": "Boolean"
-        }, {
-            "value": "float",
-            "display_name": "Float"
-        }
+    var getEntityViewerFormComponentsValueTypes = function () {
+        return [
+        	{
+				"value": 20,
+				"display_name": "Number"
+        	},
+			{
+				"value": 10,
+				"display_name": "String"
+        	},
+			{
+				"value": 40,
+				"display_name": "Date"
+        	},
+			{
+				"value": 30,
+				"display_name": "Classifier"
+        	},
+			{
+				"value": 110,
+				"display_name": "Selector"
+        	},
+			{
+				"value": 120,
+				"display_name": "Button"
+        	},
+			{
+				"value": "decoration",
+				"display_name": "Decoration"
+        	},
+			{
+				"value": "field",
+				"display_name": "Field"
+        	},
+			{
+				"value": "mc_field",
+				"display_name": "Multiple choice field"
+        	},
+			{
+				"value": "boolean",
+				"display_name": "Boolean"
+        	},
+			{
+				"value": "float",
+				"display_name": "Float"
+        	},
+			{
+				"value": "table",
+				"display_name": "Table"
+			}
         ];
     };
 
@@ -200,6 +220,7 @@
                 return [
                     {
                         label: 'Pricing',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/currency/pricing-view.html'
                     }
                     // {
@@ -211,10 +232,12 @@
                 return [
                     {
                         label: 'Accruals',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/accrual-calculation-schedules-view.html'
                     },
                     {
                         label: 'Events',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/events-schedules-tab-view.html'
                     },
                     // {
@@ -223,10 +246,12 @@
                     // },
                     {
                         label: 'Factors',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/factor-schedule-view.html'
                     },
                     {
                         label: 'Pricing',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/pricing-view.html'
                     }
                 ];
@@ -234,7 +259,23 @@
                 return [
                     {
                         label: 'Pricing',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/pricing-view.html'
+                    },
+                    {
+                        label: 'Accruals',
+						type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/accruals-view.html'
+                    },
+                    {
+                        label: 'Events',
+						type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/events-view.html'
+                    },
+                    {
+                        label: 'Layout Settings',
+						type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }
                 ];
             case 'complex-transaction':
@@ -253,17 +294,22 @@
                 return [
                     {
                         label: 'General',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-general-tab-view.html'
                     },
                     {
                         label: 'Inputs',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-inputs-tab-view.html'
                     },
                     {
                         label: 'Actions',
+						type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
                     }
                 ];
+            default:
+                return [];
         }
     };
 
@@ -305,7 +351,7 @@
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
         getRequiredEntityAttrs: getRequiredEntityAttrs,
-        getValueTypes: getValueTypes,
+		getEntityViewerFormComponentsValueTypes: getEntityViewerFormComponentsValueTypes,
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
         getEntitiesWithoutDynAttrsList: getEntitiesWithoutDynAttrsList,
         getEntityTabs: getEntityTabs,

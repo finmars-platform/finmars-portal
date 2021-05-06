@@ -16,11 +16,17 @@
 
 2.1) Build project for local development
 
-`PROJECT_ENV=local API_HOST=http://0.0.0.0:8080 gulp`
+`PROJECT_ENV=local API_HOST=http://0.0.0.0:8080 gulp` - for MAC and Linux
+
+`set PROJECT_ENV=local set API_HOST=http://localhost:8080 set AUTHORIZER_URL=https://dev.finmars.com/authorizer` - for windows
 
 3) Run local Web Server
 
 `npm run server-proxy`
+
+4) How to run tests
+
+`HOST=http://0.0.0.0:8080/ USERNAME=user PASSWORD=pass protractor protractor.config.js`
 
 
 ### Repository structure:

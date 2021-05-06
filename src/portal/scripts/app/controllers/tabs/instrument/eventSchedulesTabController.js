@@ -5,18 +5,19 @@
 
     'use strict';
 
+    var instrumentService = require('../../../services/instrumentService')
     var metaNotificationClassService = require('../../../services/metaNotificationClassService');
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
+
     var GridTableDataService = require('../../../services/gridTableDataService');
     var GridTableEventService = require('../../../services/gridTableEventService');
     var gridTableEvents = require('../../../services/gridTableEvents');
 
     var metaHelper = require('../../../helpers/meta.helper');
     var md5Helper = require('../../../helpers/md5.helper');
-    var GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
-    var EVENT_INIT_OBJECT = {
+    var eventObj = {
         "name": '',
         "description": "",
         "notification_class": '',
@@ -31,7 +32,7 @@
         "event_class": null
     };
 
-    module.exports = function eventSchedulesTabController($scope, $mdDialog) {
+    module.exports = function eventSchedulesTabController($scope, $mdDialog, gridTableHelperService) {
 
         var vm = this;
 
@@ -42,10 +43,10 @@
 
         vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
         vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
-        vm.entityChange = $scope.$parent.vm.entityChange;
+        vm.onEntityChange = $scope.$parent.vm.onEntityChange;
 
         // Victor 06.10.2020 Not used after switching to grid table
-        //var activeItemOriginal = null;
+        // var activeItemOriginal = null;
 
         vm.readyStatus = {notificationClasses: false, eventClasses: false, eventSchedulesReady: false};
 
@@ -127,109 +128,109 @@
         };
 
         // Victor 06.10.2020 Not used after switching to grid table
-        // vm.bindPeriodicity = function (row) {
-        //     var name;
-        //     if (vm.periodicityItems) {
-        //         vm.periodicityItems.forEach(function (item) {
-        //             if (row.periodicity == item.id) {
-        //                 row.periodicity_name = item.name;
-        //                 name = item.name
-        //             }
-        //         });
-        //     }
-        //
-        //     return name;
-        // };
+        /* vm.bindPeriodicity = function (row) {
+            var name;
+            if (vm.periodicityItems) {
+                vm.periodicityItems.forEach(function (item) {
+                    if (row.periodicity == item.id) {
+                        row.periodicity_name = item.name;
+                        name = item.name
+                    }
+                });
+            }
 
-        vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
+            return name;
+        }; */
+
+        vm.newItem = JSON.parse(JSON.stringify(eventObj));
 
         // Victor 01.10.2020 I use EVENT_INIT_OBJECT
-        // vm.newItem = {
-        //     "name": '',
-        //     "description": "",
-        //     "notification_class": '',
-        //     "notify_in_n_days": '',
-        //     "periodicity": '',
-        //     "periodicity_n": '',
-        //     "action_is_sent_to_pending": null,
-        //     "action_is_book_automatic": null,
-        //     "actions": [],
-        //     "effective_date": null,
-        //     "final_date": null,
-        //     "event_class": null
-        // };
+        /* vm.newItem = {
+            "name": '',
+            "description": "",
+            "notification_class": '',
+            "notify_in_n_days": '',
+            "periodicity": '',
+            "periodicity_n": '',
+            "action_is_sent_to_pending": null,
+            "action_is_book_automatic": null,
+            "actions": [],
+            "effective_date": null,
+            "final_date": null,
+            "event_class": null
+        };
 
-        // Victor 06.10.2020 Not used after switching to grid table
+        Victor 06.10.2020 Not used after switching to grid table
 
-        // vm.editItem = function (item) {
-        //     item.editStatus = true;
-        //
-        //     activeItemOriginal = JSON.stringify(item)
-        // };
+        vm.editItem = function (item) {
+            item.editStatus = true;
 
-        // vm.saveItem = function (item) {
-        //
-        //     if (activeItemOriginal !== JSON.stringify(item)) {
-        //         item.is_auto_generated = false;
-        //     }
-        //
-        //     item.editStatus = false;
-        // };
+            activeItemOriginal = JSON.stringify(item)
+        };
 
-        // vm.deleteItem = function (item, index) {
-        //     vm.entity.event_schedules.splice(index, 1);
-        // };
+        vm.saveItem = function (item) {
 
-        // vm.createActions = function ($event, actions) {
-        //     $mdDialog.show({
-        //         controller: 'InstrumentEventActionsDialogController as vm',
-        //         templateUrl: 'views/dialogs/instrument-event-actions-dialog-view.html',
-        //         targetEvent: $event,
-        //         preserveScope: true,
-        //         autoWrap: true,
-        //         multiple: true,
-        //         clickOutsideToClose: false,
-        //         locals: {
-        //             eventActions: actions
-        //         }
-        //     });
-        // };
+            if (activeItemOriginal !== JSON.stringify(item)) {
+                item.is_auto_generated = false;
+            }
 
-        // vm.addRow = function () {
-        //     vm.entity.event_schedules.push({
-        //         "name": vm.newItem.name,
-        //         "description": vm.newItem.description,
-        //         "notification_class": vm.newItem.notification_class,
-        //         "notify_in_n_days": vm.newItem.notify_in_n_days,
-        //         "action_text": vm.newItem.action_text,
-        //         "event_class": vm.newItem.event_class,
-        //         "action_is_sent_to_pending": vm.newItem.action_is_sent_to_pending,
-        //         "action_is_book_automatic": vm.newItem.action_is_book_automatic,
-        //         "actions": vm.newItem.actions,
-        //         "effective_date": vm.newItem.effective_date,
-        //         "final_date": vm.newItem.final_date,
-        //         "periodicity": vm.newItem.periodicity,
-        //         "periodicity_n": vm.newItem.periodicity_n
-        //     });
-        //
-        //     vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
-        //
-        //     // Victor 01.10.2020 I use EVENT_INIT_OBJECT
-        //     // vm.newItem = {
-        //     //     "name": '',
-        //     //     "description": "",
-        //     //     "notification_class": '',
-        //     //     "notify_in_n_days": '',
-        //     //     "periodicity": '',
-        //     //     "periodicity_n": '',
-        //     //     "action_is_sent_to_pending": null,
-        //     //     "action_is_book_automatic": null,
-        //     //     "actions": [],
-        //     //     "effective_date": null,
-        //     //     "final_date": null,
-        //     //     // "event_class": null
-        //     // };
-        // }
+            item.editStatus = false;
+        };
+
+        vm.deleteItem = function (item, index) {
+            vm.entity.event_schedules.splice(index, 1);
+        };
+
+        vm.createActions = function ($event, actions) {
+            $mdDialog.show({
+                controller: 'InstrumentEventActionsDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-actions-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                clickOutsideToClose: false,
+                locals: {
+                    eventActions: actions
+                }
+            });
+        };
+
+        vm.addRow = function () {
+            vm.entity.event_schedules.push({
+                "name": vm.newItem.name,
+                "description": vm.newItem.description,
+                "notification_class": vm.newItem.notification_class,
+                "notify_in_n_days": vm.newItem.notify_in_n_days,
+                "action_text": vm.newItem.action_text,
+                "event_class": vm.newItem.event_class,
+                "action_is_sent_to_pending": vm.newItem.action_is_sent_to_pending,
+                "action_is_book_automatic": vm.newItem.action_is_book_automatic,
+                "actions": vm.newItem.actions,
+                "effective_date": vm.newItem.effective_date,
+                "final_date": vm.newItem.final_date,
+                "periodicity": vm.newItem.periodicity,
+                "periodicity_n": vm.newItem.periodicity_n
+            });
+
+            vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
+
+            // Victor 01.10.2020 I use EVENT_INIT_OBJECT
+            // vm.newItem = {
+            //     "name": '',
+            //     "description": "",
+            //     "notification_class": '',
+            //     "notify_in_n_days": '',
+            //     "periodicity": '',
+            //     "periodicity_n": '',
+            //     "action_is_sent_to_pending": null,
+            //     "action_is_book_automatic": null,
+            //     "actions": [],
+            //     "effective_date": null,
+            //     "final_date": null,
+            //     // "event_class": null
+            // };
+        } */
 
         vm.generateEventInstrument = function($event) {
 
@@ -250,8 +251,8 @@
                         instrument: vm.entity,
                         contextData: vm.contextData
                     }
-
                 }
+
             }).then(function (res) {
 
                 if (res.status === 'agree') {
@@ -282,22 +283,22 @@
 
         vm.openEventEditDialog = function (event) {
 
+        	const attrTypes = vm.evEditorDataService.getEntityAttributeTypes();
+
             return $mdDialog.show({
                 controller: 'SingleInstrumentAddEventToTableDialogController as vm',
                 templateUrl: 'views/dialogs/single-instrument-add-event-to-table-dialog-view.html',
                 parent: angular.element(document.body),
                 // targetEvent: $event,
                 clickOutsideToClose: false,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
                 multiple: true,
                 locals: {
                     data: {
+                    	instrumentAttrTypes: attrTypes,
                         eventClasses: vm.eventClasses,
                         notificationClasses: vm.notificationClasses,
                         periodicityItems: vm.periodicityItems,
-                        event: event
+                        event: JSON.parse(JSON.stringify(event))
                     }
 
                 }
@@ -305,10 +306,59 @@
 
         };
 
-        // Event schedules grid Table
-        var gridTableHelperService = new GridTableHelperService();
 
-        var newRowsKeys = [];
+		//<editor-fold desc="Event grid table">
+		var newRowsKeys = [];
+		var eventsMultitypeFields = instrumentService.getInstrumentEventsMultitypeFieldsData();
+
+		var setGridTableCellsValues = function (rowObj, event) {
+
+			var attrTypes = vm.evEditorDataService.getEntityAttributeTypes();
+
+			var getMultitypeFieldCellValue = key => {
+
+				var valueTypeKey = key + '_value_type';
+
+				if (event.hasOwnProperty(valueTypeKey)) {
+
+					if (event[valueTypeKey] === 70) {
+
+						var selAttrType = attrTypes.find(type => type.user_code === event[key]);
+						return selAttrType.short_name || "";
+
+					} else {
+						return event[key];
+					}
+
+				}
+
+				else { // set value_type property for events created earlier
+
+					var defaultType = eventsMultitypeFields[key].fieldTypesList.find(type => type.isDefault);
+					event[valueTypeKey] = defaultType.value_type;
+
+					return event[key];
+
+				}
+
+			};
+
+			var name = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
+			name.settings.value = event.name;
+
+			var effectiveDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'effective_date');
+			effectiveDate.settings.value = getMultitypeFieldCellValue('effective_date');
+
+			var finalDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'final_date');
+			finalDate.settings.value = getMultitypeFieldCellValue('final_date');
+
+			var isAutoGenerated = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_auto_generated');
+			isAutoGenerated.settings.value = event.is_auto_generated;
+
+			var eventClass = gridTableHelperService.getCellFromRowByKey(rowObj, 'event_class');
+			eventClass.settings.value = vm.bindEventClass(event);
+
+		}
 
         var onEventsTableAddRow = function () {
 
@@ -318,7 +368,7 @@
                     return;
                 }
 
-                vm.newItem = JSON.parse(JSON.stringify(EVENT_INIT_OBJECT));
+                vm.newItem = JSON.parse(JSON.stringify(eventObj));
 
                 var event = res.data.event;
 
@@ -330,20 +380,21 @@
                 var rowObj = metaHelper.recursiveDeepCopy(vm.eventsGridTableData.templateRow, true);
                 rowObj.key = newRowKey;
 
-                var name = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
-                name.settings.value = event.name;
+				/* var name = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
+				name.settings.value = event.name;
 
-                var effectiveDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'effective_date');
-                effectiveDate.settings.value = event.effective_date;
+				var effectiveDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'effective_date');
+				effectiveDate.settings.value = event.effective_date;
 
-                var finalDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'final_date');
-                finalDate.settings.value = event.final_date;
+				var finalDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'final_date');
+				finalDate.settings.value = event.final_date;
 
-                var isAutoGenerated = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_auto_generated');
-                isAutoGenerated.settings.value = event.is_auto_generated;
+				var isAutoGenerated = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_auto_generated');
+				isAutoGenerated.settings.value = event.is_auto_generated;
 
-                var eventClass = gridTableHelperService.getCellFromRowByKey(rowObj, 'event_class');
-                eventClass.settings.value = vm.bindEventClass(event);
+				var eventClass = gridTableHelperService.getCellFromRowByKey(rowObj, 'event_class');
+				eventClass.settings.value = vm.bindEventClass(event); */
+				setGridTableCellsValues(rowObj, event);
 
                 vm.entity.event_schedules.unshift(event);
                 vm.eventsGridTableData.body.unshift(rowObj);
@@ -372,7 +423,7 @@
 
                 var rowObj = vm.eventSchedulesGridTableDataService.getRow(rowData.order);
 
-                var name = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
+                /* var name = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
                 name.settings.value = event.name;
 
                 var effectiveDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'effective_date');
@@ -385,7 +436,10 @@
                 isAutoGenerated.settings.value = event.is_auto_generated;
 
                 var eventClass = gridTableHelperService.getCellFromRowByKey(rowObj, 'event_class');
-                eventClass.settings.value = vm.bindEventClass(event);
+                eventClass.settings.value = vm.bindEventClass(event); */
+				setGridTableCellsValues(rowObj, event);
+
+				vm.entity.event_schedules[rowData.order] = event;
 
             });
 
@@ -493,10 +547,12 @@
             },
             components: {
                 topPanel: {
+					addButton: true,
                     filters: false,
                     columns: false,
                     search: false
-                }
+                },
+				rowCheckboxes: true
             }
 
         }
@@ -525,11 +581,14 @@
 
             // assemble body rows
             vm.entity.event_schedules.forEach(function (event, eventIndex) {
-                rowObj = metaHelper.recursiveDeepCopy(vm.eventsGridTableData.templateRow, true);
-                rowObj.key = event.id;
+
+            	rowObj = metaHelper.recursiveDeepCopy(vm.eventsGridTableData.templateRow, true);
+
+            	rowObj.key = event.id;
+				rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
                 rowObj.order = eventIndex;
 
-                var name = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
+                /* var name = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
                 name.settings.value = event.name;
 
                 var effectiveDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'effective_date');
@@ -542,22 +601,24 @@
                 isAutoGenerated.settings.value = event.is_auto_generated;
 
                 var eventClass = gridTableHelperService.getCellFromRowByKey(rowObj, 'event_class');
-                eventClass.settings.value = vm.bindEventClass(event);
+                eventClass.settings.value = vm.bindEventClass(event); */
+
+				setGridTableCellsValues(rowObj, event);
 
                 vm.eventsGridTableData.body.push(rowObj);
+
             });
             // < assemble body rows >
         };
-        // <Event schedules grid Table>
 
         var initGridTableEvents = function () {
-
             vm.eventSchedulesGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, onEventsTableDeleteRows);
-
         };
+		//</editor-fold>
 
-        vm.init =function () {
-            vm.eventSchedulesGridTableDataService = new GridTableDataService();
+        vm.init = function () {
+
+        	vm.eventSchedulesGridTableDataService = new GridTableDataService();
             vm.eventSchedulesGridTableEventService = new GridTableEventService();
 
             initGridTableEvents();
@@ -569,6 +630,7 @@
             });
 
             vm.eventSchedulesGridTableDataService.setTableData(vm.eventsGridTableData);
+
         };
 
         vm.init();

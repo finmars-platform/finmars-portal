@@ -32,7 +32,7 @@
                 var availableAttrs = vm.attributeDataService.getAllAttributesByEntityType(vm.data.entityType);
             }
 
-        }
+		}
 
         vm.readyStatus = {expressions: false, groups: false};
 

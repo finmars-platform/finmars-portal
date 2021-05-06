@@ -1,0 +1,78 @@
+<div class="fixed-area-popup-content">
+    <div data-ng-if="popupData.fields.name">
+        <text-input
+                label="Name"
+                placeholder-text="Name"
+                model="popupData.fields.name.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+    </div>
+
+    <div data-ng-if="popupData.fields.public_name">
+        <text-input
+                label="Public name"
+                placeholder-text="Public name"
+                model="popupData.fields.public_name.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+    </div>
+
+
+    <div data-ng-if="popupData.fields.short_name &&
+                     popupData.tabColumns < 6 &&
+                     (popupData.tabColumns < 3 ||
+                     popupData.entityType === 'instrument' ||
+                     popupData.entityType === 'account' ||
+                     popupData.entityType === 'instrument-type')">
+        <text-input
+                label="Short name"
+                placeholder-text="Short name"
+                model="popupData.fields.short_name.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+    </div>
+
+    <div data-ng-if="popupData.fields.user_code && (popupData.tabColumns < 6 || popupData.entityType === 'instrument' || popupData.entityType === 'account' || popupData.entityType === 'instrument-type')">
+        <text-input
+                label="User code"
+                placeholder-text="User code"
+                model="popupData.fields.user_code.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+    </div>
+
+    <div data-ng-if="popupData.fields.showByDefault">
+        <dropdown-select label="Show by default"
+                         model="popupData.fields.showByDefault.value"
+                         placeholder-text="Show by default"
+                         menu-options="popupData.fields.showByDefault.options"
+                         small-options="{tooltipText: 'Show by default', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
+                         class="ev-editor-field"></dropdown-select>
+    </div>
+
+    <div data-ng-if="popupData.fields.transaction_details_expr">
+        <text-input
+                label="Transaction details expr"
+                placeholder-text="Transaction details expr"
+                model="popupData.fields.transaction_details_expr.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+    </div>
+
+    <!--            Add dialog have not status field-->
+    <!--    <div data-ng-if="popupData.fields.status && popupData.tabColumns < 6">
+            <dropdown-select label="Status"
+                             model="popupData.fields.status.value"
+                             placeholder-text="System List"
+                             menu-options="popupData.fields.status.options"
+                             small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                             class="ev-editor-field"></dropdown-select>
+        </div>-->
+
+    <div data-ng-if="popupData.fields.type && popupData.tabColumns < 3">
+        <dropdown-select label="{{popupData.fields.type.name}}"
+                         model="popupData.fields.type.value"
+                         placeholder-text="{{popupData.fields.type.name}}"
+                         menu-options="popupData.fields.type.options"
+                         small-options="{tooltipText: '{{popupData.fields.type.name}}', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
+                         class="ev-editor-field"></dropdown-select>
+    </div>
+
+</div>
+
+<div data-ng-include="'views/popups/popup-footer.html'" class="popup-footer"></div>

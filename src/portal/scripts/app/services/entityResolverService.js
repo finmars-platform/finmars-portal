@@ -159,6 +159,8 @@
                 return instrumentService.getListLight(options);
             case 'instrument-type':
                 return instrumentTypeService.getList(options);
+            case 'instrument-class':
+                return instrumentClassService.getList(options);
             case 'transaction-type':
                 return transactionTypeService.getListLight(options);
             case 'strategy-1':
@@ -742,7 +744,7 @@
         update: update,
         deleteByKey: deleteByKey,
         updateBulk: updateBulk,
-        deleteBulk: deleteBulk,
+        deleteBulk: deleteBulk
 
 
     }

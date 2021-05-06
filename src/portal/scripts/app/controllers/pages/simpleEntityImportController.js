@@ -101,7 +101,11 @@
         };
 
         vm.getFileUrl = function (id) {
-            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
+            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
         };
 
         vm.createScheme = function ($event) {

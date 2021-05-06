@@ -107,9 +107,24 @@
 
                 var modelAttributes = modelService.getAttributesByContentType(vm.scheme.content_type);
 
+
+                var deprecated_fields = {
+                    'instruments.instrument': ['price_download_scheme']
+                }
+
+                if (deprecated_fields.hasOwnProperty(vm.scheme.content_type)) {
+
+                    vm.scheme.entity_fields = vm.scheme.entity_fields.filter(function(field) {
+
+                        return deprecated_fields[vm.scheme.content_type].indexOf(field.system_property_key) === -1;
+
+                    })
+
+                }
+
                 vm.scheme.entity_fields.map(function (entityField, entityFieldIndex) {
 
-                    if (entityField.system_property_key) {
+                        if (entityField.system_property_key) {
 
                         modelAttributes.forEach(function (attribute) {
 
@@ -349,7 +364,7 @@
             var scheme = JSON.parse(JSON.stringify(vm.scheme));
 
             delete scheme.id;
-            scheme["scheme_name"] = scheme["scheme_name"] + '_copy';
+            scheme["user_code"] = scheme["user_code"] + '_copy';
 
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
@@ -433,7 +448,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     locals: {
@@ -457,7 +472,7 @@
 
                 csvImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
 
-                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.scheme_name + ' was successfully saved');
+                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully saved');
 
                     vm.processing = false;
 

@@ -530,27 +530,78 @@
                     <div class="side-menu-group-btn-container border-top-none">
                         <h3 class="sms-btn-group-header">Interface</h3>
                         <ul class="side-menu">
-                            <li data-ng-if="vm.accessTable.report_dashboard">
-                                <md-button class="sidemenu-btn"
-                                           ui-sref="app.dashboard-layout-manager">
-                                    <span class="side-nav-title">Dashboard Layouts</span>
-                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
-                                </md-button>
-                            </li>
+<!--                            <li data-ng-if="vm.accessTable.report_dashboard">-->
+<!--                                <md-button class="sidemenu-btn"-->
+<!--                                           ui-sref="app.dashboard-layout-manager">-->
+<!--                                    <span class="side-nav-title">Dashboard Layouts</span>-->
+<!--                                    &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
+<!--                                </md-button>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <md-button class="sidemenu-btn"-->
+<!--                                           ui-sref="app.settings.forms">-->
+<!--                                    <span class="side-nav-title">Forms</span>-->
+<!--                                    &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
+<!--                                </md-button>-->
+<!--                            </li>-->
                             <li>
-                                <md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.forms">
-                                    <span class="side-nav-title">Forms</span>
-                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
-                                </md-button>
+
+                                <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="dataTypes">
+                                    <md-button class="sidemenu-btn dataTypes-sidenav-menu-btn">
+                                        <span class="side-nav-title">Layouts</span>
+                                        <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                    </md-button>
+
+                                    <ul class="sidenav-dropdown-menu dataTypes-dropdown-menu-element ng-hide">
+
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.settings.layouts">
+                                                <span class="side-nav-title">Entity Viewer Layouts</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.dashboard-layout-manager">
+                                                <span class="side-nav-title">Dashboard Layouts</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.settings.input-form-layouts">
+                                                <span class="side-nav-title">Input Form Layouts</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.context-menu-layout-manager">
+                                                <span class="side-nav-title">Context Menu Layouts</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.manual-sorting-layout-manager">
+                                                <span class="side-nav-title">Manual Sorting</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+
                             </li>
-                            <li>
-                                <md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.layouts">
-                                    <span class="side-nav-title">Layouts</span>
-                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
-                                </md-button>
-                            </li>
+
                             <li>
                                 <md-button class="sidemenu-btn"
                                            ui-sref="app.settings.notifications">
@@ -606,14 +657,14 @@
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
                                         </li>
-                                        <li data-ng-if="vm.accessTable.configuration_pricing_policy">
+                                        <!-- <li data-ng-if="vm.accessTable.configuration_pricing_policy">
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.data.pricing-policy">
                                                 <span class="side-nav-title">Pricing Policies</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
-                                        </li>
+                                        </li> -->
                                         <li data-ng-if="vm.accessTable.configuration_user_attributes">
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.settings.entities-custom-attributes">
@@ -829,6 +880,16 @@
                                             </md-button>
                                         </li>
 
+                                        <li>
+                                            <md-button ui-sref-active="active"
+                                                       class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.settings.cross-entity-attribute-extensions">
+                                                <span class="side-nav-title">Reports</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
                                     </ul>
 
                                 </div>
@@ -925,4 +986,4 @@
     </div>
 </md-sidenav>
 
-<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'">Build date: __BUILD_DATE__</div>
+<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.healthcheck">Build date: __BUILD_DATE__</div>

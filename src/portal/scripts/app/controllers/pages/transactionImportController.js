@@ -35,6 +35,8 @@
 
         vm.hasSchemeEditPermission = false;
 
+        vm.subTasksInfo = {}
+
         vm.loadIsAvailable = function () {
             return !vm.readyStatus.processing && vm.config.scheme;
         };
@@ -283,6 +285,8 @@
 
         vm.startImportWithValidation = function ($event) {
 
+            console.log('startImportWithValidation starting validation')
+
             return new Promise(function (resolve, reject) {
 
                 vm.processing = true;
@@ -300,6 +304,9 @@
 
             }).then(function (data) {
 
+                console.log('startImportWithValidation validation finished')
+                console.log('startImportWithValidation validation finished data', data)
+
                 var errorsCount = 0;
 
                 data.error_rows.forEach(function (item) {
@@ -309,6 +316,8 @@
                     }
 
                 });
+
+                console.log('startImportWithValidation validation errorsCount', errorsCount)
 
                 if (errorsCount) {
 
@@ -364,6 +373,8 @@
                         status: vm.config.task_status
                     };
 
+                    console.log('startImportWithValidation starting import')
+
                     vm.startImport($event);
                 }
 
@@ -372,6 +383,8 @@
         }
 
         vm.validate = function (resolve, $event) {
+
+            console.log("Validate")
 
             vm.readyStatus.processing = true;
 
@@ -390,6 +403,7 @@
             importTransactionService.validateImport(formData).then(function (data) {
 
                 vm.validateConfig = data;
+                vm.subTasksInfo = {}
 
                 vm.loaderData = {
                     current: vm.validateConfig.processed_rows,
@@ -401,22 +415,15 @@
                 $scope.$apply();
 
                 if (websocketService.isOnline()) {
+                    
+                    console.log('Websocket Online. Fetching status')
 
                     websocketService.addEventListener('transaction_import_status', function (data) {
 
-                        console.log('simple_import_status.data', data);
+                        console.log('transaction_import_status.data', data);
 
+                        // If parent task is finished
                         if (vm.validateConfig.task_id === data.task_id) {
-
-                            vm.loaderData = {
-                                current: data.processed_rows,
-                                total: data.total_rows,
-                                text: 'Validation Progress:',
-                                status: data.state
-                            };
-
-                            $scope.$apply();
-
                             if (data.state === 'D') {
                                 websocketService.removeEventListener('transaction_import_status');
                                 resolve(data)
@@ -426,12 +433,46 @@
                                     resolve(data);
                                 }
                             }
+                        }
+
+
+                        // Update subtask status
+                        if (vm.validateConfig.task_id === data.parent_task_id) {
+
+                            vm.subTasksInfo[data.task_id] = data
+
+                            var keys = Object.keys(vm.subTasksInfo)
+
+                            var processedRows = 0
+                            var processed
+
+                            keys.forEach(function(task_id){
+
+                                processed = 0
+
+                                if (vm.subTasksInfo[task_id].processed_rows) {
+                                    processed = vm.subTasksInfo[task_id].processed_rows - 1
+                                }
+
+                                processedRows = processedRows + processed
+                            })
+
+                            vm.loaderData = {
+                                current: processedRows,
+                                total: data.parent_total_rows,
+                                text: 'Validation Progress:',
+                                status: vm.validateConfig.state
+                            };
+
+                            $scope.$apply();
 
                         }
 
                     })
 
                 } else {
+
+                    console.log('Websocket is Offline. Falling back to polling')
 
                     if (vm.validateConfig.task_status === 'SUCCESS') {
                         resolve(data)
@@ -480,6 +521,7 @@
             importTransactionService.startImport(formData).then(function (data) {
 
                 vm.config = data;
+                vm.subTasksInfo = {}
 
                 vm.loaderData = {
                     current: vm.config.processed_rows,
@@ -496,15 +538,6 @@
 
                         if (vm.config.task_id === data.task_id) {
 
-                            vm.loaderData = {
-                                current: data.processed_rows,
-                                total: data.total_rows,
-                                text: 'Import Progress:',
-                                status: data.state
-                            };
-
-                            $scope.$apply();
-
                             if (data.state === 'D') {
                                 websocketService.removeEventListener('transaction_import_status');
                                 resolve(data)
@@ -514,6 +547,37 @@
                                     resolve(data);
                                 }
                             }
+
+                        }
+
+                        if (vm.config.task_id === data.parent_task_id) {
+
+                            vm.subTasksInfo[data.task_id] = data
+
+                            var keys = Object.keys(vm.subTasksInfo)
+
+                            var processedRows = 0
+                            var processed
+
+                            keys.forEach(function(task_id){
+
+                                processed = 0
+
+                                if (vm.subTasksInfo[task_id].processed_rows) {
+                                    processed = vm.subTasksInfo[task_id].processed_rows - 1
+                                }
+
+                                processedRows = processedRows + processed
+                            })
+
+                            vm.loaderData = {
+                                current: processedRows,
+                                total: data.parent_total_rows,
+                                text: 'Import Progress:',
+                                status: data.state
+                            };
+
+                            $scope.$apply();
 
                         }
 
@@ -560,7 +624,10 @@
 
         vm.getFileUrl = function(id) {
 
-            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
+            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 

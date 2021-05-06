@@ -223,6 +223,11 @@ bind-field-control {
     padding: 0 10px;
   }
 
+  .bind-field-loader {
+    height: 42px;
+    margin-bottom: 13px;
+  }
+
 }
 
 textarea.bordered {
@@ -394,8 +399,9 @@ md-checkbox.checkbox-bind-field {
       //position: absolute;
       width: 100%;
       //top: 50%;
-      height: 4px;
-      background: #4C334D;
+      height: 2px;
+      //background: #4C334D;
+      background: #e0e0e0;
       display: block;
       margin: 15px 0 30px;
     }
@@ -417,11 +423,12 @@ md-checkbox.checkbox-bind-field {
         position: absolute;
         width: 100%;
         top: 50%;
-        height: 4px;
-        background: #4C334D;
+        height: 2px;
+        background: #e0e0e0;
         display: block;
       }
-      &::before {
+// Victor 2021.02.11 use only after
+/*      &::before {
         content: '';
         position: absolute;
         width: 100%;
@@ -429,7 +436,7 @@ md-checkbox.checkbox-bind-field {
         height: 4px;
         background: #4C334D;
         display: block;
-      }
+      }*/
     }
   }
 }
@@ -477,7 +484,9 @@ md-checkbox.checkbox-bind-field {
   background: #fff;
   z-index: 2;
   padding: 10px;
-  border: 4px solid #4C334D;
+
+  color: #7d7d7d;
+  border: 2px solid #e0e0e0;
 }
 
 .manage-attrs-btn {
@@ -601,4 +610,3 @@ button.ec-manage-row-btn {
     padding: 0 10px;
   }
 }
-

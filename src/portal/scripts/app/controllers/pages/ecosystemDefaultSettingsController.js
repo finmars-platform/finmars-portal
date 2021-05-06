@@ -7,6 +7,7 @@
 
     var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
     var fieldResolverService = require('../../services/fieldResolverService');
+    var usersService = require('../../services/usersService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -91,7 +92,7 @@
 
                 $mdDialog({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     clickOutsideToClose: false,
                     locals: {
                         warning: {
@@ -105,9 +106,43 @@
 
         };
 
+        vm.deleteUsercodeGroup = function ($event, item) {
+
+            usersService.deleteUserCodePrefixByKey(item.id).then(function (data){
+                vm.getUsercodeGroups();
+            })
+
+        }
+
+        vm.createNewUserCodeGroup = function ($event) {
+            
+            usersService.createUsercodePrefix({value: vm.groupPrefix}).then(function (data){
+
+                vm.groupPrefix = '';
+
+                vm.getUsercodeGroups();
+
+            })
+
+        }
+
+        vm.getUsercodeGroups = function () {
+
+            usersService.getUsercodePrefixList().then(function (data){
+
+                vm.usercodeGroups = data.results;
+
+                $scope.$apply();
+
+            })
+
+        }
+
         vm.init = function () {
 
             vm.getList();
+
+            vm.getUsercodeGroups();
 
         };
 

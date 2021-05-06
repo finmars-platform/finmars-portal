@@ -1,6 +1,6 @@
 (function () {
 
-    var functionsItems = [
+    const functionsItems = [
         {
             "name": "Get Transaction Type Input Default",
             "description": "",
@@ -77,8 +77,14 @@
             "name": "Date plus/minus N days",
             "description": "[date]+days([number]) :: [Result: date_after]<br/>[date]-days([number]) :: [Result: date_before]<br/><br/>[Result: date_after, date_before]: Date - date differs from [date] by [number] calendar days<br/><br/>[date]: Date - any date variable, used by user in this expression (eg, transaction_date)<br/>[number]: Number - any number or number variable, used by user in this expression (eg, 1, 2, 3... or number_variable)<br/><br/>Examples:<br/>transaction_date+days(2) - for getting date, which differs from transaction date by 2 days<br/>deposit_date+days(duration) - for getting date, which differs from deposit_date by number of days, which is written in variable with name [duration]<br/>now()-days(10)- for getting date, which differs from current date by 10 days<br/>now()+days(rent_period)- for getting date, which differs from current date by number of days, which is written in variable with name [rent_period]<br/>",
             "groups": "date",
-            "func": "[date]+days([number])"
+            "func": "[date]+days([number])",
         },
+		{
+			"name": "Convert Number to Days",
+			"description": "[date]+days([number]) :: [Result: date_after]<br/>[date]-days([number]) :: [Result: date_before]<br/><br/>[Result: date_after, date_before]: Date - date differs from [date] by [number] calendar days<br/><br/>[date]: Date - any date variable, used by user in this expression (eg, transaction_date)<br/>[number]: Number - any number or number variable, used by user in this expression (eg, 1, 2, 3... or number_variable)<br/><br/>Examples:<br/>transaction_date+days(2) - for getting date, which differs from transaction date by 2 days<br/>deposit_date+days(duration) - for getting date, which differs from deposit_date by number of days, which is written in variable with name [duration]<br/>now()-days(10)- for getting date, which differs from current date by 10 days<br/>now()+days(rent_period)- for getting date, which differs from current date by number of days, which is written in variable with name [rent_period]<br/>",
+			"groups": "date",
+			"func": "days([number])"
+		},
         {
             "name": "Date plus/minus N Work-days",
             "description": "add_workdays([date],[number_workdays]) :: [Result: date_plus_workdays]<br/><br/>[Result: date_plus_workdays]: Date - date differs from [date] by [number_workdays] working days<br/><br/>[date] - any date variable, used by user in this expression (eg, issue_date)<br/>[number_workdays] - any number or number variable, used by user in this expression (eg, 1, 2, 3... or number_variable)<br/><br/>Examples:<br/>add_workdays(now(), 30) - for getting date, which differs from current date by 30 working days<br/>add_workdays(tr_date, 100) - for getting date, which differs from date written in date variable with name [tr_date] by 100 working days<br/>add_workdays(instrument.maturity_date, delay_period) - for getting date, which differs from date in instrument parameter [maturity_date] by number of working days, which is written in variable with name [delay_period]",
@@ -717,8 +723,15 @@
         }
     ];
 
+    const contextVariablesWords = [
+    	"instrument", "portfolio", "account", "strategy1", "strategy2", "strategy3", "position", "currency",
+		"effective_date", "notification_date", "final_date", "maturity_date", "report_date", "report_start_date",
+		"accrued_currency", "pricing_currency", "pricing_policy", "allocation_balance", "allocation_pl"
+	];
+
     module.exports = {
-        functionsItems: functionsItems
+        functionsItems: functionsItems,
+		contextVariablesWords: contextVariablesWords
     }
 
 }());

@@ -9,6 +9,8 @@
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
     var dataProcedureService = require('../../../services/procedures/dataProcedureService');
 
+    const schedulesHelper = require('../../../helpers/schedules.helper');
+
     module.exports = function scheduleEditDialogController($scope, $mdDialog, data) {
 
         var vm = this;
@@ -18,7 +20,9 @@
         vm.readyStatus = {schedule: false, pricingProcedures: false};
 
         vm.days = [];
-        vm.schedule = {};
+        vm.schedule = {
+            procedures: []
+        };
 
         vm.cron = {
             periodicity: 1
@@ -32,7 +36,16 @@
             if (!vm.cron.day) {
                 vm.cron.day = [];
             }
-            vm.cron.day.push(day);
+
+            if (vm.cron.day.indexOf(day) === -1) {
+                vm.cron.day.push(day);
+            } else {
+                vm.cron.day = vm.cron.day.filter(function (day_number){
+                    return day_number !== day
+                })
+            }
+
+
         };
 
         vm.resetCronExpr = function () {
@@ -113,8 +126,11 @@
             vm.schedule.is_enabled = true;
 
             console.log('cron.time', vm.cron.time);
+            console.log('vm.cron.', vm.cron);
             console.log('minutes', minutes);
             console.log('hours', hours);
+
+            vm.cron.periodicity = parseInt(vm.cron.periodicity, 10);
 
             if (vm.cron.periodicity === 1) {
                 console.log(parseInt(minutes) + ' ' + parseInt(hours) + ' * * *');
@@ -122,12 +138,14 @@
             }
             if (vm.cron.periodicity === 2) {
                 //console.log(minutes + ' ' + parseInt(hours) + ' * * ' + vm.cron.day);
-                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' * * ' + vm.cron.day;
+                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' * * ' + vm.cron.day.join(',');
             }
             if (vm.cron.periodicity === 3) {
                 //console.log(minutes + ' ' + parseInt(hours) + ' * ' + vm.cron.month + ' ' + vm.cron.day);
-                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day + ' ' + vm.cron.month + ' *'
+                vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day.join(',') + ' ' + vm.cron.month.join(',') + ' *'
             }
+
+            console.log('vm.schedule', vm.schedule)
 
             scheduleService.update(vm.schedule.id, vm.schedule).then(function (data) {
 
@@ -190,8 +208,6 @@
 
             vm.schedule.procedures.splice($index, 1);
 
-            console.log('vm.schedule.procedures', vm.schedule.procedures);
-
             vm.orderProcedures();
 
         };
@@ -212,12 +228,26 @@
 
             vm.schedule.procedures = vm.schedule.procedures.map(function (item, index) {
 
-                item.order = index + 1;
+                item.order = index;
 
                 return item
             })
 
         };
+
+        vm.dragIconGrabbed = false;
+        vm.dragAndDropInited = false;
+
+        const turnOffDragging = function () {
+            vm.dragIconGrabbed = false;
+        };
+
+        vm.turnOnDragging = function () {
+            vm.dragIconGrabbed = true;
+            document.body.addEventListener('mouseup', turnOffDragging, {once: true});
+        };
+
+        vm.dragAndDrop = schedulesHelper.createDragAndDropObject($scope, vm);
 
         vm.init = function () {
 
@@ -228,7 +258,6 @@
         };
 
         vm.init();
-
 
     }
 

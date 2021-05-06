@@ -3,54 +3,57 @@
  */
 (function () {
 
-  'use strict';
+	'use strict';
 
-  var logService = require('../../../../../../core/services/logService');
+	var uiService = require('../../../services/uiService');
 
-  var uiService = require('../../../services/uiService');
+	module.exports = function ($scope, $mdDialog, options) {
 
-  module.exports = function ($scope, $mdDialog, options) {
+		var vm = this;
 
-    logService.controller('UiLayoutSaveAsDialogController', 'initialized');
+		vm.complexSaveAsLayoutDialog = false;
+		vm.userCodeIsTouched = false;
+		vm.userCodeError = false;
+		vm.label = '';
 
-    var vm = this;
+		var layoutsUserCodes = ["New Layout"];
 
-    vm.complexSaveAsLayoutDialog = false;
-    vm.userCodeIsTouched = false;
-    vm.userCodeError = false;
+		if (options) {
 
-    var layoutsUserCodes = ["New Layout"];
+			vm.label = options.label;
 
-    if (options) {
+		  if (options.complexSaveAsLayoutDialog) {
 
-      if (options.complexSaveAsLayoutDialog) {
+			vm.complexSaveAsLayoutDialog = true;
+			vm.entityType = options.complexSaveAsLayoutDialog.entityType;
 
-        vm.complexSaveAsLayoutDialog = true;
-        vm.entityType = options.complexSaveAsLayoutDialog.entityType;
+			uiService.getListLayout(vm.entityType).then(function (data) {
 
-        uiService.getListLayout(vm.entityType).then(function (data) {
+			  var layouts = data.results;
 
-          var layouts = data.results;
+			  layouts.map(function (layout) {
+				layoutsUserCodes.push(layout.user_code);
+			  });
 
-          layouts.map(function (layout) {
-            layoutsUserCodes.push(layout.user_code);
-          });
+			});
 
-        });
+		  }
+
+		  if (options.layoutName) {
+
+			vm.layoutName = options.layoutName;
+
+      } else {
+
+          vm.layoutName = '';
 
       }
 
-      if (options.layoutName) {
+		  if (options.layoutUserCode) {
+			vm.layoutUserCode = options.layoutUserCode;
+		  }
 
-        vm.layoutName = options.layoutName;
-
-      }
-
-      if (options.layoutUserCode) {
-        vm.layoutUserCode = options.layoutUserCode;
-      }
-
-    }
+		}
 
     vm.cancel = function () {
       $mdDialog.hide({ status: 'disagree' });
@@ -70,7 +73,7 @@
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
-                            templateUrl: 'views/warning-dialog-view.html',
+                            templateUrl: 'views/dialogs/warning-dialog-view.html',
                             parent: angular.element(document.body),
                             targetEvent: $event,
                             clickOutsideToClose: false,

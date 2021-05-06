@@ -52,6 +52,28 @@
         return icons[key] || '';
     }
 
+	/**
+	 *
+	 * @param buttonClasses
+	 * @returns {string}
+	 */
+	var getRowSettings = function (buttonClasses) {
+
+    	var classes = "g-row-color-picker-btn gTableActionBtn";
+
+    	if (buttonClasses) {
+			classes = classes + " " + buttonClasses;
+		}
+
+    	return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
+				'<button class="' + classes + '" data-click-action-type="open_row_color_picker">' +
+					'<span class="material-icons label-icon">label_outline</span>' +
+					'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
+				'</button>' +
+			'</div>';
+
+	};
+
 
     var formatRounding = function (value, column) {
 
@@ -264,6 +286,10 @@
 
         var value = obj[column.key];
 
+        if (value === '#Error') {
+            return value;
+        }
+
         if (value === null || value === undefined || isNaN(value)) {
             value = '';
         }
@@ -369,6 +395,34 @@
 
     };
 
+    var isCellWithProxylineFoldButton = function (evDataService, obj, columnNumber) {
+
+    	var flatList = evDataService.getFlatList();
+
+    	for (var i = obj.___flat_list_index - 1; i >= 0; i = i - 1) {
+
+			if (flatList[i].___type === 'object' || flatList[i].___type === 'subtotal') {
+
+				if (flatList[i].___subtotal_type !== 'proxyline') {
+
+					return false;
+
+				}
+
+			}
+
+			if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
+
+				return true;
+				break;
+
+			}
+
+
+		}
+
+	};
+
     module.exports = {
         isFirstInWholeChain: isFirstInWholeChain,
 
@@ -380,6 +434,8 @@
         getPartiallyVisibleIcon: getPartiallyVisibleIcon, */
         getIconByKey: getIconByKey,
 
+		getRowSettings: getRowSettings,
+
         formatRounding: formatRounding,
         formatNegative: formatNegative,
         formatZero: formatZero,
@@ -387,7 +443,9 @@
 
         isColumnInGroupsList: isColumnInGroupsList,
         isColumnEqualLastGroup: isColumnEqualLastGroup,
-        isColumnAfterGroupsList: isColumnAfterGroupsList
+        isColumnAfterGroupsList: isColumnAfterGroupsList,
+
+		isCellWithProxylineFoldButton: isCellWithProxylineFoldButton
     }
 
 }());

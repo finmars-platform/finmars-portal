@@ -40,16 +40,49 @@
                     return item
                 });
 
+
                 var groupTypes = entityViewerDataService.getGroups();
 
                 items = filterService.filterTableRows(items, regularFilters);
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
+                // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js and filter flatList
+                /*                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+
+                                if (rowTypeFilters) {
+
+                                    items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
+
+                                }*/
+
                 // console.log('groups filters length', items.length);
 
-                if (options.ordering) {
-                    items = sortService.sortItems(items, options.ordering);
+                console.log('objectService.getList.options', options);
+
+                if (options.ordering_mode === 'manual') {
+
+                    var key;
+
+                    if (options.ordering[0] === '-') {
+                        key = options.ordering.split('-')[1];
+                    } else {
+                        key = options.ordering;
+                    }
+
+                    var columnSortData = entityViewerDataService.getColumnSortData(key)
+
+                    if (columnSortData) {
+
+                        items = sortService.sortItemsManual(items, options.ordering, columnSortData);
+
+                    }
+
+                } else {
+
+                    if (options.ordering) {
+                        items = sortService.sortItems(items, options.ordering);
+                    }
                 }
 
                 // console.log('sorted items, ', items);
@@ -60,7 +93,6 @@
                 result.count = 0;
                 result.results = [];
             }
-
 
             resolve(result);
 

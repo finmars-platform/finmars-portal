@@ -23,9 +23,12 @@
         vm.eventsProcessing = false;
         vm.dashboardsListReady = false;
 
-        vm.getFileUrl = function(id) {
+        vm.getFileUrl = function (id) {
 
-            return baseUrl + 'file-reports/file-report/' + id + '/view/';
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
+            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 
@@ -46,7 +49,8 @@
         };
 
         var processEventsPromise = function () {
-            return new Promise(function (resolve, reject) {
+
+        	return new Promise(function (resolve, reject) {
 
                 usersService.getOwnMemberSettings().then(function (data) {
 
@@ -183,11 +187,23 @@
                 });
 
                 // newest at the bottom
-                vm.systemMessages =  vm.systemMessages.reverse();
+                vm.systemMessages = vm.systemMessages.reverse();
 
                 vm.systemMessagesReady = true;
 
                 $scope.$apply();
+
+                setTimeout(function () {
+
+                    var elem = document.querySelector('.homepage-messages-container');
+
+                    if (elem) {
+
+                        elem.scrollTop = elem.scrollHeight;
+
+                    }
+
+                }, 300)
 
             })
 

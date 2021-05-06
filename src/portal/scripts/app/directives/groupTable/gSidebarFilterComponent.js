@@ -805,7 +805,7 @@
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
-                            templateUrl: 'views/warning-dialog-view.html',
+                            templateUrl: 'views/dialogs/warning-dialog-view.html',
                             parent: angular.element(document.body),
                             targetEvent: $event,
                             clickOutsideToClose: false,
@@ -1203,10 +1203,10 @@
                         checkIsLayoutDefault();
                     }
 
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed;
+                    /* var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed; */
+					scope.sideNavCollapsed = true;
 
-                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_EV_UI);
 
                 };
 

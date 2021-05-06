@@ -6,6 +6,10 @@
     'use strict';
 
     var usersService = require('../services/usersService');
+    var authorizerService = require('../services/authorizerService');
+
+    var baseUrlService = require('../services/baseUrlService');
+    var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
 
     module.exports = function ($scope, $state, $mdDialog) {
 
@@ -19,7 +23,7 @@
 
             vm.readyStatus.masterUsers = false;
 
-            usersService.getMasterListLight().then(function (data) {
+            authorizerService.getMasterList().then(function (data) {
                 vm.masters = data.results;
                 vm.readyStatus.masterUsers = true;
                 $scope.$apply();
@@ -33,7 +37,7 @@
 
             var status = 0; // 0 - SENT, 1 - ACCEPTED, 2 - DECLINED
 
-            usersService.getInviteFromMasterUserList(status).then(function (data) {
+            authorizerService.getInviteFromMasterUserList(status).then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;
@@ -91,7 +95,14 @@
 
             // console.log('item', item);
 
-            usersService.setMasterUser(item.id).then(function (value) {
+            authorizerService.setMasterUser(item.id).then(function (data) {
+                
+                console.log('vm.activateDatabase.data', data);
+
+
+                baseUrlService.setMasterUserPrefix(data.base_api_url);
+                portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+
                 $state.go('app.home');
             })
 
@@ -114,7 +125,7 @@
 
                 if (res.status === 'agree') {
 
-                    usersService.leaveMasterUser(item.id).then(function () {
+                    authorizerService.leaveMasterUser(item.id).then(function () {
 
                         vm.getMasterUsersList();
 
@@ -233,7 +244,7 @@
 
             item.status = 2; // Decline code
 
-            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getInvites();
 
@@ -245,11 +256,10 @@
 
             item.status = 1; // Accept code
 
-            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
-                usersService.setMasterUser(item.to_master_user).then(function (value) {
-                    $state.go('app.setup');
-                })
+                vm.getMasterUsersList();
+                vm.getInvites();
 
             })
 
@@ -258,6 +268,7 @@
         vm.init = function () {
             vm.getMasterUsersList();
             vm.getInvites();
+            // vm.readyStatus.invites = true;
         };
 
         vm.init();

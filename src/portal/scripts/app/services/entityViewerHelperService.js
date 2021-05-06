@@ -7,44 +7,45 @@
  */
 (function () {
 
-    let objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    let uiService = require('../services/uiService');
+    const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
+    const uiService = require('../services/uiService');
 
-    var middlewareService = require('../services/middlewareService');
+	const entityResolverService = require('../services/entityResolverService');
+
+	const middlewareService = require('../services/middlewareService');
+
+	const metaHelper = require('../helpers/meta.helper');
 
     'use strict';
 
-    let transformItem = function (item, attrs) {
+    let transformItem = function (entity, attrs) {
 
-        if (item.attributes) {
+        if (entity.attributes) {
 
             let key;
 
-            console.log('transformItem.item', item);
-            console.log('transformItem.attrs', attrs);
-
             attrs.forEach(function (attributeType) {
 
-                item.attributes.forEach(function (attribute) {
+				entity.attributes.forEach(function (attribute) {
 
                     if (attributeType.user_code === attribute.attribute_type_object.user_code) {
 
                         key = attributeType.user_code;
 
                         if (attributeType.value_type === 10){
-                            item[key] = attribute.value_string
+							entity[key] = attribute.value_string
                         }
 
                         if (attributeType.value_type === 20) {
-                            item[key] = attribute.value_float
+							entity[key] = attribute.value_float
                         }
 
                         if (attributeType.value_type === 30) {
-                            item[key] = attribute.classifier
+							entity[key] = attribute.classifier
                         }
 
                         if (attributeType.value_type === 40) {
-                            item[key] = attribute.value_date
+							entity[key] = attribute.value_date
                         }
 
                     }
@@ -154,20 +155,45 @@
             attrTypeToAdd.filters = attrInstance.filters;
         }
 
-        switch (form) {
-            case 'group':
-                attrTypeToAdd.groups = true;
-                break;
-            case 'column':
-                attrTypeToAdd.columns = true;
-                break;
-            case 'filter':
-                attrTypeToAdd.filters = true;
-                break;
-        }
-
         attrTypeToAdd.name = attrInstance.name;
         attrTypeToAdd.value_type = attrInstance.value_type;
+
+        if (attrInstance.layout_name) {
+            attrTypeToAdd.layout_name = attrInstance.layout_name;
+        }
+
+		switch (form) {
+
+			case 'group':
+				attrTypeToAdd.groups = true;
+				break;
+
+			case 'column':
+				attrTypeToAdd.columns = true;
+				break;
+
+			case 'filter':
+
+				attrTypeToAdd.filters = true;
+
+				if (!attrTypeToAdd.options) {
+					attrTypeToAdd.options = {};
+				}
+
+				if (!attrTypeToAdd.options.filter_type) {
+					attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
+				}
+
+				if (!attrTypeToAdd.options.filter_values) {
+					attrTypeToAdd.options.filter_values = [];
+				}
+
+				if (!attrTypeToAdd.options.hasOwnProperty('exclude_empty_cells')) {
+					attrTypeToAdd.options.exclude_empty_cells = false;
+				}
+
+				break;
+		}
 
         return attrTypeToAdd;
 
@@ -238,6 +264,14 @@
 
     };
 
+	/**
+	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+	 * @param {string} userCode
+	 * @param {obj} $mdDialog
+	 * @param {string} viewContext
+	 * @memberOf module:EntityViewerHelperService
+	 * @return {promise}
+	 */
     let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
 
     	return new Promise(function (resolve) {
@@ -295,6 +329,12 @@
 
     };
 
+	/**
+	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+	 * @param {string} viewContext
+	 * @memberOf module:EntityViewerHelperService
+	 * @return {promise}
+	 */
     let getDefaultLayout = function (viewModel, viewContext) {
 
     	return new Promise(function (resolve, reject) {
@@ -323,15 +363,82 @@
 
     };
 
+
+    /**
+     * Get max columns from tabs of Edit Layout
+     * @param {Array} editLayoutTabs
+     * @memberOf module:EntityViewerHelperService
+     * @returns {number}
+     */
+    var getEditLayoutMaxColumns = function (editLayoutTabs) {
+
+    	let maxCols = 0;
+
+		editLayoutTabs.forEach(function (tab) {
+
+			if (tab.layout && tab.layout.columns &&
+				tab.layout.columns > maxCols) {
+
+				maxCols = tab.layout.columns;
+
+			}
+
+		})
+
+		/* const widths = editLayoutTabs
+            .map(tab => tab.layout && tab.layout.columns)
+            .filter(num => Boolean(Number(num)));
+
+        const maxWidth = Math.max(...widths) */
+
+        return maxCols ? maxCols : 6;
+
+    };
+
+    /**
+     * Get big drawer width percentage by fixed area columns
+     * @param {number} columns
+     * @returns {string}
+     */
+    var getBigDrawerWidthPercent = function (columns) {
+
+    	let viewportWidth = window.innerWidth;
+
+    	let widthPercent = 75;
+
+    	switch (columns) {
+            case 5:
+            case 4:
+				widthPercent = 49;
+				break;
+            case 3:
+                widthPercent = 39;
+                break;
+            case 2:
+            case 1:
+				widthPercent = 27;
+				break;
+
+        }
+
+		let drawerWidth = (viewportWidth * widthPercent / 100) + 'px';
+
+    	return drawerWidth;
+
+    }
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
-        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
         getLayoutByUserCode: getLayoutByUserCode,
-        getDefaultLayout: getDefaultLayout
+        getDefaultLayout: getDefaultLayout,
+        getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
+
+        getEditLayoutMaxColumns: getEditLayoutMaxColumns,
+        getBigDrawerWidthPercent: getBigDrawerWidthPercent
     }
 
 }());

@@ -106,12 +106,13 @@
 
             <div data-ng-if="componentData.settings.multiple">
 
-                <two-fields-multiselect data-title="{{item.data.name}}"
-                                        data-items="fields"
-                                        data-model="item.data.store.value"
-                                        data-name-property="short_name"
-                                        data-get-data-method="getDataForMultiselect()"
-                                        data-on-change-callback="valueChanged()"
+                <two-fields-multiselect title="{{customName}}"
+                                        items="fields"
+                                        model="item.data.store.value"
+                                        name-property="short_name"
+                                        selected-items-indication="chips"
+                                        get-data-method="getDataForMultiselect()"
+                                        on-change-callback="valueChanged()"
                                         class="two-fields-multiselect no-error-spacer dashboard-control-multiselect"></two-fields-multiselect>
             </div>
 

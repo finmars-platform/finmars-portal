@@ -6,10 +6,11 @@
 
         'use strict';
 
+        var metaService = require('../../services/metaService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
-        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
+        var usersService = require('../../services/usersService');
 
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
@@ -34,7 +35,7 @@
 
             vm.readyStatus = {
                 attributes: false,
-                layout: false
+                layout: false // changed by rvSharedLogicHelper.onSetLayoutEnd();
             };
 
             var doNotCheckLayoutChanges = false;
@@ -254,6 +255,8 @@
                 var dialogController = 'EntityViewerEditDialogController as vm';
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
 
+                locals.openedIn = 'modal'
+
                 if (locals.entityType && locals.entityType === 'complex-transaction') {
                     dialogController = 'ComplexTransactionEditDialogController as vm';
                     dialogTemplateUrl = 'views/entity-viewer/complex-transaction-edit-dialog-view.html';
@@ -278,7 +281,7 @@
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/warning-dialog-view.html',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
                     targetEvent: activeObject.event,
                     preserveScope: true,
@@ -388,7 +391,7 @@
 
                         currencies.forEach(function (item) {
 
-                            if(item.id === activeObject[currencyKey]) {
+                            if (item.id === activeObject[currencyKey]) {
                                 currencyObj.id = item.id;
                                 currencyObj.name = item.name;
                                 currencyObj.short_name = item.short_name;
@@ -727,9 +730,11 @@
 
                         if (action === 'rebook_transaction') {
 
+                            var complex_transaction_id = activeObject['complex_transaction.id'] || activeObject['complex_transaction']
+
                             var locals = {
                                 entityType: 'complex-transaction',
-                                entityId: activeObject['complex_transaction.id'],
+                                entityId: complex_transaction_id,
                                 data: {}
                             };
 
@@ -930,71 +935,119 @@
 
             	return new Promise(async function (resolve, reject) {
 
-            		vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
-					vm.setFiltersValuesFromQueryParameters();
+                    vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+                    vm.setFiltersValuesFromQueryParameters();
 
-					// var reportOptions = vm.entityViewerDataService.getReportOptions();
-					var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+                    // var reportOptions = vm.entityViewerDataService.getReportOptions();
+                    var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
-					/* var finishSetLayout = function () {
+                    /* var finishSetLayout = function () {
 
-						// REPORT REQUEST STARTS HERE
-						rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                        // REPORT REQUEST STARTS HERE
+                        rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
-						var additions = vm.entityViewerDataService.getAdditions();
-						var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+                        var additions = vm.entityViewerDataService.getAdditions();
+                        var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
 
-						if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
-							vm.entityViewerDataService.setSplitPanelStatus(true);
-						}
+                        if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+                            vm.entityViewerDataService.setSplitPanelStatus(true);
+                        }
 
-						vm.readyStatus.layout = true;
+                        vm.readyStatus.layout = true;
 
-						$scope.$apply();
+                        $scope.$apply();
 
-					} */
+                    } */
 
-					var additions = vm.entityViewerDataService.getAdditions();
-					var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
+                    var additions = vm.entityViewerDataService.getAdditions();
+                    var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
 
-					if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
-						vm.entityViewerDataService.setSplitPanelStatus(true);
-					}
+                    if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
+                        vm.entityViewerDataService.setSplitPanelStatus(true);
+                    }
 
-					// Check if there is need to solve report datepicker expression
-					if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
+                    interfaceLayout.filterArea.width = 0;
 
-						/* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
-						var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
+                    // Check if there is need to solve report datepicker expression
+                    if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-						var dateExprsProms = [];
+                        /* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
+                        var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
 
-						if (firstDateExpr) {
-							calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
-						}
+                        var dateExprsProms = [];
 
-						if (secondDateExpr) {
-							calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
-						}
+                        if (firstDateExpr) {
+                            calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
+                        }
 
-						Promise.all(dateExprsProms).then(function () {
-							onSetLayoutEnd();
+                        if (secondDateExpr) {
+                            calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
+                        }
 
-						}).catch(function () {
-							onSetLayoutEnd();
-						}); */
-						await rvSharedLogicHelper.calculateReportDatesExprs();
-						rvSharedLogicHelper.onSetLayoutEnd();
+                        Promise.all(dateExprsProms).then(function () {
+                            onSetLayoutEnd();
 
-						resolve();
+                        }).catch(function () {
+                            onSetLayoutEnd();
+                        }); */
+                        await rvSharedLogicHelper.calculateReportDatesExprs();
+                        rvSharedLogicHelper.onSetLayoutEnd();
 
-					} else {
-						rvSharedLogicHelper.onSetLayoutEnd();
-					}
+                        var activeColumnSortProm = new Promise(function (sortResolve, sortReject) {
 
-					resolve();
+                            var activeColumnSort = vm.entityViewerDataService.getActiveColumnSort();
 
-				});
+                            console.log('activeColumnSortProm.activeColumnSort', activeColumnSort);
+
+                            if (activeColumnSort && activeColumnSort.manual_sort_layout_user_code) {
+
+                                uiService.getColumnSortDataList({
+                                    filters: {
+                                        user_code: activeColumnSort.manual_sort_layout_user_code
+                                    }
+                                }).then(function (data){
+
+                                    if(data.results.length) {
+
+                                        var layout = data.results[0];
+
+                                        console.log('activeColumnSortProm', layout);
+
+                                        vm.entityViewerDataService.setColumnSortData(activeColumnSort.key, layout.data)
+
+                                    } else {
+
+                                        toastNotificationService.error("Manual Sort is not configured");
+
+                                        activeColumnSort.manual_sort_layout_user_code = null;
+
+                                    }
+
+									sortResolve();
+
+                                })
+
+
+
+                            } else {
+								sortResolve();
+                            }
+
+
+                        })
+
+
+                        Promise.all([activeColumnSortProm]).then(function (){
+                            resolve();
+                        })
+
+                    } else {
+                        rvSharedLogicHelper.onSetLayoutEnd();
+                    }
+
+                    resolve();
+
+                });
 
             };
 
@@ -1012,12 +1065,34 @@
 
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
+                vm.entityViewerDataService.setCurrentMember(vm.currentMember);
                 vm.entityViewerDataService.setVirtualScrollStep(500);
+
+                vm.entityViewerDataService.setRowHeight(36);
 
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
+
+                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+
+                    uiService.getCrossEntityAttributeExtensionList({
+                        filters: {
+                            context_content_type: $scope.$parent.vm.contentType
+                        }
+                    }).then(function (data){
+
+                        console.log('getCrossEntityAttributeExtensionList.data', data);
+
+                        vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+						resolve();
+
+                    }).catch(error => reject(error))
+
+                })
+
                 vm.setEventListeners();
 
                 var layoutUserCode;
@@ -1044,22 +1119,23 @@
                     });
 
                     // vm.getLayoutByUserCode(layoutUserCode);
-					setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+                    setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
                     // vm.getLayoutByUserCode(layoutUserCode);
-					setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
+                    setLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog);
 
                 } else {
                     // vm.getDefaultLayout();
-					setLayoutProm = evHelperService.getDefaultLayout(vm);
+                    setLayoutProm = evHelperService.getDefaultLayout(vm);
                 }
 
-                Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
+                Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
+					metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
 					$scope.$apply();
-				});
+                });
 
             };
 
@@ -1075,12 +1151,28 @@
                     removeTransitionWatcher();
                 });
 
-                vm.getView();
+                vm.getCurrentMember().then(function () {
+
+                    vm.getView();
+
+                })
 
 
             };
 
-            vm.init();
+
+
+            vm.getCurrentMember = function () {
+
+                return usersService.getMyCurrentMember().then(function (data) {
+
+                    vm.currentMember = data;
+
+                    $scope.$apply();
+
+                });
+            };
+
 
             var checkLayoutForChanges = function () { // called on attempt to change or reload page
 
@@ -1089,9 +1181,9 @@
                     if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
-
                         var spChangedLayout = false;
                         var additions = vm.entityViewerDataService.getAdditions();
+
                         if (additions.isOpen) {
                             spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
                         }
@@ -1162,33 +1254,33 @@
                                                     layoutCurrentConfig.name = res.data.layoutName;
                                                 }
 
-												/* When saving is_default: true layout on backend, others become is_default: false
-												uiService.getDefaultListLayout(vm.entityType).then(function (data) {
+                                                /* When saving is_default: true layout on backend, others become is_default: false
+                                                uiService.getDefaultListLayout(vm.entityType).then(function (data) {
 
-													layoutCurrentConfig.is_default = true;
+                                                    layoutCurrentConfig.is_default = true;
 
-													if (data.count > 0 && data.results) {
-														var activeLayout = data.results[0];
-														activeLayout.is_default = false;
+                                                    if (data.count > 0 && data.results) {
+                                                        var activeLayout = data.results[0];
+                                                        activeLayout.is_default = false;
 
-														uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+                                                        uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
 
-															uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-																saveLayoutRes(true);
-															});
+                                                            uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                                saveLayoutRes(true);
+                                                            });
 
-														});
+                                                        });
 
-													} else {
-														uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-															saveLayoutRes(true);
-														});
-													}
+                                                    } else {
+                                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                            saveLayoutRes(true);
+                                                        });
+                                                    }
 
-												});*/
-												uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-													saveLayoutRes(true);
-												});
+                                                });*/
+                                                uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                    saveLayoutRes(true);
+                                                });
 
                                             }
 
@@ -1273,6 +1365,8 @@
                 removeTransitionWatcher();
 
             }
+
+            vm.init();
         }
 
     }()

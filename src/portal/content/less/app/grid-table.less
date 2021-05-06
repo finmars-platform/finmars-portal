@@ -14,7 +14,7 @@
     padding: 8px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, .54);
 
-    &:hover, &.md-button:not([disabled]):hover {
+    &:hover, &.md-button:not([disabled]):hover, &:focus {
       background-color: rgba(240, 90, 34, 0.7);
     }
   }
@@ -27,6 +27,10 @@
     &:hover {
       background-color: rgba(240, 90, 34, 0.15);
     }
+  }
+
+  .grid-table-name {
+    margin: 0;
   }
 
   .grid-table-deletion-row {
@@ -80,7 +84,8 @@
   flex-direction: row;
   height: 48px;
   padding-right: 16px;
-  padding-left: 36px;
+  // padding-left: 36px;
+  padding-left: 5px;
   border-top: 1px solid @borderPale;
   box-sizing: border-box;
   outline: none;
@@ -95,14 +100,49 @@
   }
 }
 
+.grid-table-row-actions-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  height: 100%;
+}
+
 .grid-table-row-checkbox {
-  position: absolute;
-  top: 14px;
-  left: 15px;
-  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 100%;
 
   md-checkbox {
+    width: 20px;
     margin-bottom: 0;
+  }
+}
+
+.grid-table-row-dnd-elem {
+  width: 24px;
+  height: 100%;
+
+  button {
+    height: 22px;
+    width: 24px;
+    padding: 0;
+    background-color: initial;
+    border: none;
+
+    &:hover {
+      opacity: .5;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .material-icons {
+    font-size: 22px;
   }
 }
 
@@ -138,6 +178,14 @@
 
   .gt-header-cell-content {
 
+    .gt-cell-text-container.gt-header-sorting-cell {
+      .gt-cell-text {
+        span {
+          cursor: pointer;
+        }
+      }
+    }
+
     .gt-sorting-icon {
       position: absolute;
       left: -1px;
@@ -148,7 +196,7 @@
 
     .gt-cell-text {
       span {
-        cursor: pointer;
+        // cursor: pointer;
         font-size: 13px;
         color: #666666;
 
@@ -294,15 +342,11 @@
       margin: 0;
       width: 20px;
 
-      .md-icon {
-        border-radius: 100%;
-      }
-
-      &.md-checked.gt-cell-checkbox-readonly[disabled] {
+      /* &.md-checked.gt-cell-checkbox-readonly[disabled] {
         .md-icon {
           background-color: @orange;
         }
-      }
+      } */
 
     }
   }
@@ -323,9 +367,22 @@
     cursor: pointer;
   }
 
-  .gt-multiselector-cell.gt-cell-disabled {
+  /* .gt-multiselector-cell.gt-cell-disabled {
     pointer-events: none;
     cursor: default;
+  } */
+
+  &.gt-cell-disabled {
+
+    .gt-cell-text-container{
+      cursor: default;
+    }
+
+    .gt-multiselector-cell {
+      pointer-events: none;
+      cursor: default;
+    }
+
   }
 
 }
@@ -367,51 +424,32 @@
   z-index: 53;
   top: 0;
   left: 0;
+
+  &.low-z-index-backdrop {
+    z-index: 50;
+  }
 }
 
-.popup-area {
-  position: absolute;
-  min-width: 300px;
-  background-color: #fff;
-  z-index: 54;
-  padding: 16px;
-  box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.3);
-  box-sizing: border-box;
-}
+.grid-table-bordered-rows {
 
-.popup-area-container {
-  position: relative;
-  padding-bottom: 42px;
-}
+  .grid-table-row {
+    border-right: 1px solid @borderPale;
+    border-left: 1px solid @borderPale;
 
-.popup-area-main {
-  margin-bottom: 6px;
-}
-
-.popup-area-footer {
-  position: absolute;
-  width: 100%;
-  height: 42px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  bottom: 0;
-
-  button.md-button:not([disabled]) {
-    min-height: 36px;
-    height: 36px;
-    color: #f05a22;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 700;
-    min-width: 0;
-    padding: 0 12px;
-    margin-bottom: 0;
-
-    &:hover {
-      background-color: rgba(240,90,34,0.2);
+    &:last-child {
+      border-bottom: 1px solid @borderPale;
     }
-
   }
 
 }
+
+.grid-table-cell-right-border {
+  border-right: 1px solid @borderPale;
+}
+
+.grid-table-popup {
+  .custom-input-container {
+    margin-bottom: 13px;
+  }
+}
+

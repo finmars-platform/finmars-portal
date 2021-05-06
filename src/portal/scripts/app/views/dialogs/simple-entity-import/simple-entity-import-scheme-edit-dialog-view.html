@@ -21,8 +21,18 @@
                     <md-card flex="100" class="inm-card-special">
                         <md-card-content layout="column">
                             <md-input-container class="md-block">
-                                <label>Scheme name</label>
-                                <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.scheme_name">
+                                <label>User Code</label>
+                                <input aria-label="scheme user code" type="text" data-ng-model="vm.scheme.user_code">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Name</label>
+                                    <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.name">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Short name</label>
+                                <input aria-label="short name" type="text" data-ng-model="vm.scheme.short_name">
                             </md-input-container>
 
                             <div layout="row">
@@ -54,7 +64,7 @@
                                     <label>Separator</label>
                                     <md-select data-ng-model="vm.scheme.delimiter">
                                         <md-option value=",">Comma (,)</md-option>
-                                        <md-option value=";">Semicolon (;)</md-option>
+                                        <md-option value="">Semicolon (;)</md-option>
                                         <md-option value="\t">Tab</md-option>
                                     </md-select>
                                 </md-input-container>
@@ -222,7 +232,7 @@
                                                                               data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
                                                     <md-button data-ng-click="vm.openMapping($event, item)"
                                                                class="md-raised md-primary import-mapping-small-btn"
-                                                               data-ng-if="item.value_type === 'field'">
+                                                               data-ng-if="item.value_type !== 'empty'">
                                                         <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                     </md-button>
 

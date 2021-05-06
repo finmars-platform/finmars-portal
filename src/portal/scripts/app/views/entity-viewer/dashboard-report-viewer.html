@@ -9,6 +9,7 @@
                              ev-data-service="vm.entityViewerDataService"
                              ev-event-service="vm.entityViewerEventService"
                              sp-exchange-service="vm.splitPanelExchangeService"
+                             hide-filters-block="true"
                 ></group-table>
             </div>
 
@@ -38,13 +39,20 @@
 
                 <div data-ng-if="!vm.grandTotalProcessing" class="dashboard-grand-total-component">
 
-                    <number-input
-                            label="{{vm.componentData.custom_component_name}}"
-                            model="vm.grandTotalValue"
-                            number-format="vm.componentData.settings.number_format"
-                            small-optinos="{noIndicatorBtn: true}"
-                            is-disabled="true"
-                    ></number-input>
+<!--                    <div data-ng-if="vm.grandTotalError" class="text-center">-->
+<!--                        Something went wrong-->
+<!--                    </div>-->
+
+<!--                    <div data-ng-if="!vm.grandTotalError">-->
+
+                        <text-input
+                                label="{{vm.componentData.custom_component_name}}"
+                                model="vm.grandTotalValue"
+                                small-options="{noIndicatorBtn: true}"
+                                is-disabled="true"
+                        ></text-input>
+
+<!--                    </div>-->
 
 <!--                    <div class="grand-total-value" ng-class="{'negative-red': vm.grandTotalNegative}">{{vm.grandTotalValue}}</div>-->
                 </div>
@@ -65,11 +73,20 @@
                                           ev-event-service="vm.entityViewerEventService"></report-viewer-pie-chart>
             </div>
 
-            <div data-ng-if="vm.componentData.type === 'report_viewer_matrix'" class="height-100">
-                <report-viewer-matrix class="height-100 display-block"
-                                      matrix-settings="vm.matrixSettings"
-                                      ev-data-service="vm.entityViewerDataService"
-                                      ev-event-service="vm.entityViewerEventService"></report-viewer-matrix>
+            <div data-ng-if="vm.componentData.type === 'report_viewer_matrix'" class="flex-column height-100 overflow-auto">
+                <div style="flex: 1 0 auto;">
+                    <g-filters hide-filters-block="true"
+                               ev-data-service="vm.entityViewerDataService"
+                               ev-event-service="vm.entityViewerEventService"
+                               attribute-data-service="vm.attributeDataService"></g-filters>
+                </div>
+
+                <div class="flex-0-1-100">
+                    <report-viewer-matrix class="height-100 display-block"
+                                          matrix-settings="vm.matrixSettings"
+                                          ev-data-service="vm.entityViewerDataService"
+                                          ev-event-service="vm.entityViewerEventService"></report-viewer-matrix>
+                </div>
             </div>
 
             <div data-ng-if="vm.componentData.type === 'report_viewer_table_chart'" class="height-100">

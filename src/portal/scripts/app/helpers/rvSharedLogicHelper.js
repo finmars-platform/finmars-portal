@@ -54,6 +54,31 @@
 
 		};
 
+		let putUseFromAboveFiltersFirst = function () { // needed for already existing rv layouts
+
+			let allFilters = viewModel.entityViewerDataService.getFilters();
+			let filters = [];
+
+			let useFromAboveFiters = allFilters.filter(filter => {
+
+				let filterOpts = filter.options || {};
+
+				if (filterOpts.use_from_above && Object.keys(filterOpts.use_from_above).length) {
+					return true;
+				}
+
+				filters.push(filter);
+
+				return false;
+
+			});
+
+			allFilters = useFromAboveFiters.concat(filters);
+
+			viewModel.entityViewerDataService.setFilters(allFilters);
+
+		};
+
         var onSetLayoutEnd = function () {
 
             viewModel.readyStatus.layout = true;
@@ -63,7 +88,8 @@
             var entityType = viewModel.entityViewerDataService.getEntityType();
 
             if (entityType !== 'transaction-report') {
-                pricesCheckerService.check(reportOptions).then(function (data) {
+
+            	pricesCheckerService.check(reportOptions).then(function (data) {
 
                     data.items = data.items.map(function (item) {
 
@@ -78,7 +104,6 @@
                             })
 
                         }
-
 
                         if (item.type === 'fixed_calc' || item.type === 'stl_cur_fx' || item.type === 'missing_instrument_currency_fx_rate') {
 
@@ -102,10 +127,13 @@
 
                     viewModel.entityViewerDataService.setMissingPrices(data);
 
-                    viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END)
+                    viewModel.entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END);
 
                 });
+
             }
+
+			putUseFromAboveFiltersFirst();
 
             $scope.$apply();
 

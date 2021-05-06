@@ -2,11 +2,10 @@
 
     var gtEvents = require('../../services/gridTableEvents');
     var metaHelper = require('../../helpers/meta.helper');
-    var md5Helper = require('../../helpers/md5.helper');
 
     'use strict';
 
-    module.exports = function () {
+    module.exports = function (gridTableHelperService) {
 
         return {
             restrict: 'E',
@@ -23,16 +22,15 @@
                 scope.topPanelComponents = scope.gridTableData.components.topPanel || {};
 
                 // var gridTableSettings = scope.gridTableData.settings || {};
-                var newRowsKeys = [];
                 var tableMethods = scope.gridTableData.tableMethods || {};
 
                 var assembleNewRow = function () {
 
                     var newRow = metaHelper.recursiveDeepCopy(scope.gridTableData.templateRow, true);
-                    var newRowKey = md5Helper.md5('newGridTableRow', newRowsKeys.length);
+                    var newRowKey = gridTableHelperService.getNewRowUniqueKey(scope.gtDataService);
 
-                    newRowsKeys.push(newRowKey);
                     newRow.key = newRowKey;
+					newRow.newRow = true;
 
                     /* var lowestOrder = 0;
                     scope.gridTableData.body.forEach(function (bRow) {
@@ -40,8 +38,6 @@
                     })
 
                     newRow.order = lowestOrder - 1 */
-
-                    // newRow.order = "newRow" + newRowsKeys.length
 
                     return newRow;
 
@@ -80,9 +76,7 @@
 
                     scope.activeRows = [];
 
-                    scope.activeRows = scope.gridTableData.body.filter(function (row) {
-                        return row.isActive;
-                    });
+                    scope.activeRows = scope.gridTableData.body.filter(row => row.isActive);
 
                     if (scope.activeRows.length) {
                         scope.mode = 'rows_deletion';
@@ -93,14 +87,39 @@
 
                 });
 
+				/*var initEventListeners = function () {
+
+					scope.gtEventService.addEventListener(gtEvents.ROW_SELECTION_TOGGLED, function () {
+
+						scope.activeRows = [];
+
+						scope.activeRows = scope.gridTableData.body.filter(row => row.isActive);
+
+						if (scope.activeRows.length) {
+							scope.mode = 'rows_deletion';
+
+						} else {
+							scope.mode = false;
+						}
+
+					});
+
+					scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+
+					});
+
+				};*/
+
                 var init = function () {
 
                     if (tableMethods.addRow) {
-                        scope.addRow = function () {
-                            tableMethods.addRow(scope.gtDataService, scope.gtEventService)
+                        scope.addRow = function ($event) {
+                            tableMethods.addRow(scope.gtDataService, scope.gtEventService, $event)
                         }
 
-                    } /* TODO delete later
+                    }
+
+                    /* TODO delete later
                         else if (gridTableSettings.addRowMode) { // default for cases when row changes after addition
 
                         scope.addRow = function () {
@@ -112,11 +131,11 @@
 
                         }
 
-                    }*/ else {
+                    }*/
+
+					else {
                         scope.addRow = addRow
-
                     }
-
 
                 };
 

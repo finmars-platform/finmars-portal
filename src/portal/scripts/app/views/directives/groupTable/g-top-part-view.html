@@ -1,0 +1,156 @@
+<div class="g-top-part width-100 flex-row fc-space-between flex-i-center">
+    <div class="p-l-24 flex-row">
+
+        <md-button class="g-top-button flex-row"
+                   popup
+                   popup-template-url="'views/popups/entity-viewer/g-layouts-manager-popup-view.html'"
+                   popup-data="popupData"
+                   position-relative-to="element"
+                   open-on="click"
+                   offset-x="-30"
+                   popup-classes="'rounded-border'"
+                   close-on-click-outside="true"
+                   backdrop-classes="'low-z-index-backdrop'"
+                   popup-event-service="evEventService">
+
+            <span class="material-icons">view_quilt</span>
+            <span class="m-l-8">{{layoutName}}</span>
+            <span class="material-icons">arrow_drop_down</span>
+
+        </md-button>
+
+        <md-button ng-if="!isRootEntityViewer"
+                   class="g-filter-area-toggle active margin-0"
+                   data-ng-click="toggleFilterBlock($event)">
+            <div class="flex-column flex-i-center">
+                <span class="material-icons">filter_list</span>
+            </div>
+        </md-button>
+
+    </div>
+
+    <div class="p-r-24 flex-row flex-i-center">
+
+        <md-button  data-ng-if="missingPricesData.items.length" class="missing-prices-warning-button" data-ng-click="openMissingPricesDialog($event)"><span class="material-icons">warning</span> Missing Data ({{missingPricesData.items.length}})</md-button>
+
+        <md-select data-ng-model="reportOptions.cost_method" ng-change="updateReportOptions()" ng-if="entityType != 'transaction-report'">
+            <md-option ng-value="1">AVCO
+            </md-option>
+            <md-option ng-value="2">FIFO
+            </md-option>
+            <!--<md-option ng-value="3">LIFO-->
+            <!--</md-option>-->
+        </md-select>
+
+        <md-input-container ng-if="entityType != 'transaction-report'">
+            <label></label>
+            <md-select ng-model="reportOptions.report_currency"
+                       md-container-class="common-select-container"
+                       md-on-close="searchTerm = ''"
+                       ng-change="updateReportOptions()"
+                       data-ng-disabled="viewContext === 'dashboard'">
+                <md-select-header>
+                    <input data-ng-model="searchTerm"
+                           type="search"
+                           placeholder="Search for a ..."
+                           class="md-text md-select-search-pattern select-input-filter"
+                           ng-keydown="$event.stopPropagation()">
+                </md-select-header>
+
+                <div class="select-options-holder">
+
+                    <md-option ng-repeat="item in currencies | filter:{name: searchTerm}"
+                               ng-value="item.id">
+                        {{item.name}}
+                    </md-option>
+
+                </div>
+
+            </md-select>
+        </md-input-container>
+
+        <!--<div ng-if="entityType === 'balance-report' || entityType === 'pl-report'" class="flex-row">-->
+        <div ng-if="entityType === 'balance-report'" class="flex-row">
+
+            <!-- <div ng-if="entityType === 'pl-report'">
+                <complex-zh-date-picker data-date="reportOptions.pl_first_date"
+                                        data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                        data-display-options="datepickerFromDisplayOptions"
+                                        data-callback-method="updateReportOptions()"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        data-attribute-data-service="attributeDataService">
+                </complex-zh-date-picker>
+            </div> -->
+
+            <div>
+                <complex-zh-date-picker date="reportOptions.report_date"
+                                        datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                        callback-method="updateReportOptions()"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        attribute-data-service="attributeDataService"></complex-zh-date-picker>
+            </div>
+
+        </div>
+
+        <div ng-if="entityType === 'pl-report'" class="flex-row">
+            <div>
+                <complex-zh-date-picker date="reportOptions.pl_first_date"
+                                        datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                        second-date="reportOptions.report_date"
+                                        second-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                        callback-method="updateReportOptions()"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        attribute-data-service="attributeDataService"></complex-zh-date-picker>
+            </div>
+
+            <!-- <div>
+                <complex-zh-date-picker date="reportOptions.report_date"
+                                        datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                        callback-method="updateReportOptions()"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        attribute-data-service="attributeDataService"></complex-zh-date-picker>
+            </div> -->
+        </div>
+
+        <div ng-if="entityType === 'transaction-report'" class="flex-row">
+
+            <div>
+                <complex-zh-date-picker date="reportOptions.begin_date"
+                                        datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                        second-date="reportOptions.end_date"
+                                        second-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                        display-options="datepickerFromDisplayOptions"
+                                        callback-method="updateReportOptions()"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        attribute-data-service="attributeDataService">
+                </complex-zh-date-picker>
+            </div>
+
+            <!--<div>
+                <complex-zh-date-picker data-date="reportOptions.end_date"
+                                        data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                        data-display-options="datepickerToDisplayOptions"
+                                        data-callback-method="updateReportOptions()"
+                                        ev-data-service="evDataService"
+                                        ev-event-service="evEventService"
+                                        data-attribute-data-service="attributeDataService">
+                </complex-zh-date-picker>
+            </div>-->
+
+        </div>
+
+        <md-button class="md-icon-button" ng-click="onSettingsClick()">
+            <div class="flex-row flex-c-center flex-i-center">
+                <ng-md-icon icon="settings" size="20">
+                    <md-tooltip md-direction="top">Settings</md-tooltip>
+                </ng-md-icon>
+            </div>
+
+        </md-button>
+    </div>
+</div>

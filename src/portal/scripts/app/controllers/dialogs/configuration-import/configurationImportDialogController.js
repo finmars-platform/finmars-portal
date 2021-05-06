@@ -54,61 +54,60 @@
                     loop1:
                         for (g = 0; g < groups.length; g++) {
 
-                            loop2:
-                                for (e = 0; e < groups[g].entities.length; e++) {
+                            for (e = 0; e < groups[g].entities.length; e++) {
 
-                                    if (groups[g].entities[e] === parent.entity) {
+                                if (groups[g].entities[e] === parent.entity) {
 
-                                        if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
+                                    if (!groups[g].firstElementExist) { // If a file first in the group, attach to it group name to display
 
-                                            if (renderedFirstLevelGroups.indexOf(groups[g].firstLevelGroup) === -1) {
-                                                parent.first_level_header__ = groups[g].firstLevelGroup;
-                                                renderedFirstLevelGroups.push(groups[g].firstLevelGroup);
-                                            }
-
-                                            parent.first_item__ = groups[g].name;
-                                            groups[g].firstElementExist = true;
-
+                                        if (renderedFirstLevelGroups.indexOf(groups[g].firstLevelGroup) === -1) {
+                                            parent.first_level_header__ = groups[g].firstLevelGroup;
+                                            renderedFirstLevelGroups.push(groups[g].firstLevelGroup);
                                         }
 
-                                        parent.order__ = g; // Set a group order position
+                                        parent.first_item__ = groups[g].name;
+                                        groups[g].firstElementExist = true;
 
-                                        // Divide children into subgroups
-                                        if (parent.entity === "ui.listlayout" ||
-                                            parent.entity === "ui.reportlayout") {
-                                            var subGroupsList = groups[g].subGroups[parent.entity];
-
-                                            var children = parent.content;
-
-                                            children.forEach(function (child) {
-
-                                                for (s = 0; s < subGroupsList.length; s++) {
-
-                                                    if (child.content_type === subGroupsList[s].content_type) {
-
-                                                        if (!subGroupsList[s].firstElementExist) {
-                                                            child.first_item__ = subGroupsList[s].name;
-                                                            subGroupsList[s].firstElementExist = true;
-                                                        }
-
-                                                        child.order__ = s;
-                                                    }
-
-                                                }
-
-                                            });
-
-                                        } else if (parent.entity === "transactions.transactiontype") {
-
-                                            vm.groupByProperty(parent.content, '___group__user_code');
-
-                                        }
-                                        // < Divide children into subgroups >
-
-                                        break loop1;
                                     }
 
+                                    parent.order__ = g; // Set a group order position
+
+                                    // Divide children into subgroups
+                                    if (parent.entity === "ui.listlayout" ||
+                                        parent.entity === "ui.reportlayout") {
+                                        var subGroupsList = groups[g].subGroups[parent.entity];
+
+                                        var children = parent.content;
+
+                                        children.forEach(function (child) {
+
+                                            for (s = 0; s < subGroupsList.length; s++) {
+
+                                                if (child.content_type === subGroupsList[s].content_type) {
+
+                                                    if (!subGroupsList[s].firstElementExist) {
+                                                        child.first_item__ = subGroupsList[s].name;
+                                                        subGroupsList[s].firstElementExist = true;
+                                                    }
+
+                                                    child.order__ = s;
+                                                }
+
+                                            }
+
+                                        });
+
+                                    } else if (parent.entity === "transactions.transactiontype") {
+
+                                        vm.groupByProperty(parent.content, '___group__user_code');
+
+                                    }
+                                    // < Divide children into subgroups >
+
+                                    break loop1;
                                 }
+
+                            }
                         }
                     // < Assign group to file >
                 });
@@ -283,6 +282,8 @@
                     return 'Context Menu Layout';
                 case 'ui.bookmark':
                     return "Bookmarks";
+                case 'ui.columnsortdata':
+                    return 'Column Sort Data';
                 case 'reference_tables.referencetable':
                     return "Reference Tables";
                 case 'csv_import.csvimportscheme':
@@ -355,16 +356,16 @@
             if (item.hasOwnProperty('user_code')) {
                 var result = item.user_code;
 
-                if (item.hasOwnProperty('scheme_name')) { // integrations.instrumentdownloadscheme
-                    result = item.scheme_name;
+                if (item.hasOwnProperty('user_code')) { // integrations.instrumentdownloadscheme
+                    result = item.user_code;
                 }
 
                 return result;
             }
 
             // integrations.pricedownloadscheme, integrations.complextransactionimportscheme,
-            if (item.hasOwnProperty('scheme_name')) {
-                return item.scheme_name;
+            if (item.hasOwnProperty('user_code')) {
+                return item.user_code;
             }
 
             if (item.hasOwnProperty('name')) {
@@ -685,7 +686,7 @@
                         return false
                     }
 
-                    if (child.hasOwnProperty('scheme_name') && child.scheme_name === '-') {
+                    if (child.hasOwnProperty('user_code') && child.user_code === '-') {
                         return false
                     }
 
@@ -699,14 +700,14 @@
                         vm[mappingGroups[i].groupKey].push(parent);
                         break;
                     }
-                    ;
+
 
                     if (i === mappingGroups.length - 1) {
                         vm.systemElements.push(parent);
                     }
-                    ;
+
                 }
-                ;
+
 
             });
 
@@ -1037,9 +1038,9 @@
 
                             duplicateDataEntity.content.forEach(function (duplicateDataItem) {
 
-                                if (item.hasOwnProperty('scheme_name') && duplicateDataItem.hasOwnProperty('scheme_name')) {
+                                if (item.hasOwnProperty('user_code') && duplicateDataItem.hasOwnProperty('user_code')) {
 
-                                    if (item.scheme_name === duplicateDataItem.scheme_name) {
+                                    if (item.user_code === duplicateDataItem.user_code) {
                                         item.is_duplicate = duplicateDataItem.is_duplicate;
                                     }
 

@@ -63,9 +63,9 @@
                     }
 
                 }
-            };
+            }
 
-        };
+        }
 
         return resultArr.join('&');
 

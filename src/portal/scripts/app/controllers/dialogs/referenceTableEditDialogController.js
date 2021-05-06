@@ -97,7 +97,7 @@
                 var drake = this.dragula;
 
                 drake.on('drag', function () {
-                    document.addEventListener('wheel', scrollHelper.DnDWheelScroll);
+					scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('drop', function (elem, target, source, nextSiblings) {
@@ -111,7 +111,7 @@
                     var rowToInsert = vm.referenceTable.rows[draggedRowOrder];
                     vm.referenceTable.rows.splice(draggedRowOrder, 1);
 
-                    if (siblingRowOrder) {
+                    if (siblingRowOrder !== null) {
 
                         for (var i = 0; i < vm.referenceTable.rows.length; i++) {
                             if (vm.referenceTable.rows[i].order === siblingRowOrder) {
@@ -130,10 +130,12 @@
                         vm.referenceTable.rows[i].order = i;
                     }
 
+                    $scope.$apply();
+
                 });
 
                 drake.on('dragend', function (elem) {
-                    document.removeEventListener('wheel', scrollHelper.DnDWheelScroll);
+                    scrollHelper.disableDnDWheelScroll();
                 });
             },
 
@@ -219,7 +221,8 @@
         };
 
         var init = function () {
-            setTimeout(function () {
+
+        	setTimeout(function () {
                 var DnDScrollElem = document.querySelector('.dndScrollableElem');
                 scrollHelper.setDnDScrollElem(DnDScrollElem);
             }, 500);

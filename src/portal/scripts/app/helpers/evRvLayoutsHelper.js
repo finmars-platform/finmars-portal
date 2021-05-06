@@ -79,8 +79,19 @@
 
     };
 
+    const saveRowTypeFiltersToLocalStorage = function (entityViewerDataService) {
+
+        const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+
+        if (rowTypeFilters) {
+            localStorage.setItem("row_type_filters", JSON.stringify(rowTypeFilters))
+        }
+
+    };
 
     let saveLayoutList = function (entityViewerDataService, isReport) {
+
+        saveRowTypeFiltersToLocalStorage(entityViewerDataService);
 
     	var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(isReport);
 
@@ -88,11 +99,10 @@
 
 			uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (updatedLayoutData) {
 
-				let listLayout = entityViewerDataService.getListLayout();
-				listLayout.modified = updatedLayoutData.modified
+                let listLayout = updatedLayoutData;
 
-				entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
-				entityViewerDataService.setListLayout(listLayout);
+                entityViewerDataService.setListLayout(listLayout);
+                entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
 
 				toastNotificationService.success("Success. Page was saved.");
 
