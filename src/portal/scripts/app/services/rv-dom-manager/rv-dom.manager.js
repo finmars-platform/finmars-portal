@@ -1022,7 +1022,6 @@
                     createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
                 } else {
-                    console.log('#108 ttypes', ttypes)
                     createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
                 }
 
@@ -2067,7 +2066,6 @@
 							createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
 						} else {
-                            console.log('#108 ttypes', ttypes)
 							createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 						}
 
@@ -2201,7 +2199,7 @@
         initEventDelegation: initEventDelegation,
         addScrollListener: addScrollListener,
         createPopupMenu: createPopupMenu,
-        // initContextMenuEventDelegation: initContextMenuEventDelegation,
+        // initContextMenuEventDelegation: initContextMenuEventDelegation, // context menu listener transferred to initEventDelegation
 		clearDropdowns: clearDropdowns,
         calculateTotalHeight: calculateTotalHeight,
         //calculateContentWrapHeight: calculateContentWrapHeight,
