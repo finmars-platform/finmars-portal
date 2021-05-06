@@ -161,9 +161,9 @@
 
 				Object.keys(cachedLayouts).forEach(layoutId => {
 
-					if (cachedLayouts[layoutId].content_type === layout.content_type) {
-						cachedLayouts[layoutId].is_default = false;
-					}
+                    if (cachedLayouts[layoutId].content_type === layout.content_type) {
+                        cachedLayouts[layoutId].is_default = false;
+                    }
 
 				});
 

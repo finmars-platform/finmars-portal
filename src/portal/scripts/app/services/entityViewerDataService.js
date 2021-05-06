@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var stringHelper = require('../helpers/stringHelper');
+	var stringHelper = require('../helpers/stringHelper');
     var metaHelper = require('../helpers/meta.helper');
 
     var getDefaultInterfaceLayout = function () {
@@ -99,7 +99,7 @@
         });
 
     };
-
+	/** @module entityViewerDataService */
     module.exports = function () {
 
         var data = {
@@ -146,7 +146,7 @@
                 step: 60, // rows to render
                 direction: null
             },
-            viewContext: '',
+            viewContext: '', // can be: reconciliation_viewer, dashboard, entity_viewer, reconciliation_viewer, split_panel
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
@@ -163,6 +163,7 @@
             activeObjectsCount: 0,
             dataLoadEnded: false,
             markedSubtotals: {},
+			rowSettings: {},
             missingCustomFields: {
                 forFilters: [],
                 forColumns: [],
@@ -192,7 +193,8 @@
         }
 
         function toggleRightSidebar (collapse) {
-            var interfaceLayout = getInterfaceLayout();
+
+        	var interfaceLayout = getInterfaceLayout();
 
             if (collapse || interfaceLayout.filterArea.width === 239) {
 
@@ -207,6 +209,7 @@
             }
 
             setInterfaceLayout(interfaceLayout);
+
         }
 
         function setRootEntityViewer(isRootEntityViewer) {
@@ -555,7 +558,8 @@
 
             });
 
-            return result
+            return result;
+
         }
 
         function getData(hashId) {
@@ -756,7 +760,6 @@
         function getLastActivatedRow() {
             return data.lastActivatedRow;
         }
-
 
         function setActiveObject(obj) {
             data.activeObject = obj
@@ -1006,6 +1009,7 @@
 
             emptyUseFromAboveFilters(listLayout.data.filters);
 
+            listLayout.data.rowSettings = getRowSettings();
             listLayout.data.additions = getAdditions();
 
             var interfaceLayout = getInterfaceLayout();
@@ -1057,7 +1061,9 @@
                 delete listLayout.data.reportOptions.item_currencies;
                 delete listLayout.data.reportOptions.item_accounts;
 
-            } else {
+            }
+
+            else {
 
                 listLayout.data.pagination = getPagination();
                 listLayout.data.ev_options = getEntityViewerOptions();
@@ -1162,14 +1168,39 @@
 
             setListLayout(listLayout);
 
-            data.columns.forEach(function (column) {
+            const setActiveColumn = async (column) => {
 
                 if (column.options && column.options.sort) {
 
-                    setActiveColumnSort(column);
+                    if (column.groups) {
+                        setActiveGroupTypeSort(column);
+                    } else {
+                        setActiveColumnSort(column);
+                    }
+
+                    if (column.options.sort_mode === 'manual') {
+
+                        const {results} = await uiService.getColumnSortDataList({
+                            filters: {
+                                user_code: column.manual_sort_layout_user_code
+                            }
+                        });
+
+                        if (results.length) {
+
+                            const layout = results[0];
+                            setColumnSortData(column.key, layout.data);
+
+                        }
+
+                    }
+
                 }
 
-            });
+            };
+
+            data.columns.forEach(setActiveColumn);
+            data.groups.forEach(setActiveColumn);
 
             listLayout.data.components = {
 				filterArea: true,
@@ -1393,8 +1424,16 @@
                 return data.columnSortData[key];
             }
 
-            return null
+            return null;
         }
+
+		function setRowSettings (rowSettings) {
+			data.rowSettings = rowSettings;
+		}
+
+        function getRowSettings () {
+			return data.rowSettings || {};
+		}
 
         function setMissingCustomFields(options) {
 
@@ -1541,6 +1580,8 @@
 
             setActiveColumnSort: setActiveColumnSort,
             getActiveColumnSort: getActiveColumnSort,
+			setColumnSortData: setColumnSortData,
+			getColumnSortData: getColumnSortData,
 
             setActiveGroupTypeSort: setActiveGroupTypeSort,
             getActiveGroupTypeSort: getActiveGroupTypeSort,
@@ -1642,8 +1683,8 @@
             setCrossEntityAttributeExtensions: setCrossEntityAttributeExtensions,
             getCrossEntityAttributeExtensions: getCrossEntityAttributeExtensions,
 
-            setColumnSortData: setColumnSortData,
-            getColumnSortData: getColumnSortData,
+			setRowSettings: setRowSettings,
+			getRowSettings: getRowSettings,
 
             setMissingCustomFields: setMissingCustomFields,
             getMissingCustomFields: getMissingCustomFields,

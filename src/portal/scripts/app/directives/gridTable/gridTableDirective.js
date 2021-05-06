@@ -1,6 +1,6 @@
 (function () {
 
-    var gtEvents = require('../../services/gridTableEvents');
+    const gtEvents = require('../../services/gridTableEvents');
 
     'use strict';
 
@@ -16,10 +16,10 @@
             link: function (scope, elem, attrs) {
 
                 scope.allRowsAreActive = false;
+				scope.gridTableData = scope.gtDataService.getTableData();
 
-                scope.gridTableData = scope.gtDataService.getTableData();
-                scope.sortByCol = false
-                scope.sortRowsReverse = false
+                scope.sortByCol = false;
+                scope.sortRowsReverse = false;
 
                 scope.setSortByCol = function (colOrder) {
 
@@ -42,7 +42,6 @@
 
                         } else {
                             return row.columns[scope.sortByCol].settings.value;
-
                         }
 
                     }
@@ -78,6 +77,39 @@
 
                 }
 
+                scope.changeRowOrder = function (rowOrder, changeDirection) {
+
+                	let anotherRowOrder = rowOrder - 1;
+
+                	if (changeDirection === 'down') anotherRowOrder = rowOrder + 1;
+
+                	const anotherRow = scope.gtDataService.getRow(anotherRowOrder);
+
+                	if (anotherRow) {
+
+                		const row = scope.gtDataService.getRow(rowOrder);
+
+						scope.gridTableData.body[rowOrder] = JSON.parse(angular.toJson(anotherRow));
+						scope.gridTableData.body[rowOrder].order = rowOrder;
+
+						scope.gridTableData.body[anotherRowOrder] = JSON.parse(angular.toJson(row));
+						scope.gridTableData.body[anotherRowOrder].order = anotherRowOrder;
+
+						if (row.methods && row.methods.onOrderChange) {
+
+							var rowData = {
+								key: row.key,
+								order: row.order
+							};
+
+							row.methods.onOrderChange(rowData, scope.gtDataService, scope.gtEventService);
+
+						}
+
+					}
+
+				};
+
                 /*scope.acceptNewRow = function (rowKey) {
 
                     var newRow = scope.getRowByKey(rowKey);
@@ -108,8 +140,7 @@
                     };
 
                     row.methods.onClick(rowData, scope.gtDataService, scope.gtEventService);
-                }
-
+                };
 
                 scope.gtEventService.addEventListener(gtEvents.SORTING_SETTINGS_CHANGED, function () {
 

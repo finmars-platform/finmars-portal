@@ -31,6 +31,7 @@
 				// scope.smallOptions probable properties
 					// tooltipText: custom tolltip text
 					// notNull: turn on error mode if field is not filled
+					// noIndicatorBtn: whether to show button at the right part of input
 
 				var inputContainer = elem[0].querySelector(".dateInputContainer");
 				var inputElem = elem[0].querySelector(".dateInputElem");
@@ -45,13 +46,10 @@
 
 					scope.tooltipText = scope.smallOptions.tooltipText;
 
-					if (scope.smallOptions.position) {
-						position = scope.position;
-					}
+					if (scope.smallOptions.position) position = scope.position;
+					if (scope.smallOptions.defaultDate) defaultDate = scope.defaultDate;
 
-					if (scope.smallOptions.defaultDate) {
-						defaultDate = scope.defaultDate;
-					}
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
 
 				}
 
@@ -81,10 +79,31 @@
 
 				};
 
-				scope.onDateChange = function () {
+				var onChangeIndex;
 
-					scope.error = "";
+				scope.onDateChange = function () {
+					// scope.error = "";
+					var error = "",
+						model,
+						valueIsValid;
 					stylePreset = "";
+
+					var onChangeEnd = function () {
+
+						clearTimeout(onChangeIndex);
+
+						onChangeIndex = setTimeout(() => {
+
+							scope.valueIsValid = valueIsValid;
+							scope.error = error;
+
+							scope.$apply();
+
+							if (scope.onChangeCallback) scope.onChangeCallback();
+
+						}, onChangeDelay);
+
+					};
 
 					if (scope.dateValue) {
 
@@ -92,43 +111,48 @@
 
 							if (moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
 
-								scope.valueIsValid = true;
-								scope.model = JSON.parse(JSON.stringify(scope.dateValue));
+								valueIsValid = true;
+								model = JSON.parse(JSON.stringify(scope.dateValue));
 
 							} else {
 
-								scope.valueIsValid = false;
-								scope.error ="Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
-								scope.model = null;
+								valueIsValid = false;
+								error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
+								model = null;
 
 							}
 
-							if (scope.onChangeCallback) {
+							/* if (scope.onChangeCallback) {
 
 								setTimeout(function () {
 									scope.onChangeCallback();
 								}, 0);
 
-							}
+							} */
+							scope.model = model;
+							onChangeEnd();
 
 						}
 
-					} else if (scope.dateValue !== scope.model) {
+					}
 
-						scope.valueIsValid = false;
+					else if (scope.dateValue !== scope.model) {
+
+						valueIsValid = false;
 						scope.model = null;
 
 						if (scope.smallOptions && scope.smallOptions.notNull) {
-							scope.error = "Field should not be null";
+							error = "Field should not be null";
 						}
 
-						if (scope.onChangeCallback) {
+						onChangeEnd();
+						/* if (scope.onChangeCallback) {
 
 							setTimeout(function () {
 								scope.onChangeCallback();
 							}, 0);
 
-						}
+						} */
 
 					}
 
@@ -272,9 +296,7 @@
 					});
 
 					inputElem.addEventListener("pickmeup-show", function (event) {
-						if (doNotShowDatepicker) {
-							event.preventDefault();
-						}
+						if (doNotShowDatepicker) event.preventDefault();
 					});
 
 					inputElem.addEventListener("pickmeup-change", function (event) {
@@ -282,11 +304,12 @@
 						scope.dateValue = event.detail.formatted_date;
 						scope.$apply();
 
-						clearTimeout(pickmeupChangeTimeout);
+						/* clearTimeout(pickmeupChangeTimeout);
 
 						pickmeupChangeTimeout = setTimeout(function () {
 							scope.onDateChange();
-						}, onChangeDelay);
+						}, onChangeDelay); */
+						scope.onDateChange();
 
 					});
 
