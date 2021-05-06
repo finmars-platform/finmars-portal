@@ -904,6 +904,12 @@
 
 							break;
 
+                        case 'open_context_menu':
+
+                            event.stopPropagation();
+
+                            break;
+
 						/* TO DELETE: 2021-01-17
 						case 'open_subtotal_position_options':
 

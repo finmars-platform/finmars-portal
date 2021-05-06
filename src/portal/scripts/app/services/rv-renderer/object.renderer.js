@@ -500,7 +500,7 @@
 
 		rowSelection = '<div class="g-row-selection"><div class="' + rowSelectionBtnClasses + '">' + rowSelectionBtnContent + '</div></div>';
 
-        var rowSettings = renderHelper.getRowSettings();
+        var rowSettings = renderHelper.getRowSettings('', 'object');
 
         if (markedReportRows.hasOwnProperty(obj.id)) {
             classList.push('g-row-marked-' + markedReportRows[obj.id].color)
