@@ -123,16 +123,18 @@
 
             };
 
-/*            const duplicateEntity = async function (entity) {
+            /* const duplicateEntity = async function (entity) {
 
-                var editLayout = await uiService.getDefaultEditLayout(vm.entityType);
+                var editLayout = await uiService.getEditLayoutByKey(vm.entityType);
                 var bigDrawerWidth;
                 var fixedAreaColumns;
 
                 if (editLayout.results.length) {
 
                     var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
-                    fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                    if (vm.entityType !== 'instrument-type') {
+                        fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                    }
 
                     bigDrawerWidth = evHelperService.getBigDrawerWidth(fixedAreaColumns);
 
@@ -154,9 +156,9 @@
 
                 }).then(res => {});
 
-            };*/
+            };
 
-/*            let postEditionActions = function (res, activeObject) {
+            const postEditionActions = function (res, activeObject) {
 
             	vm.entityViewerDataService.setActiveObjectAction(null);
 				vm.entityViewerDataService.setActiveObjectActionData(null);
@@ -179,7 +181,7 @@
 
 				}
 
-			};*/
+			}; */
 
             var editEntity = async function (entitytype, activeObject) {
 
@@ -386,15 +388,138 @@
 
 					default:
 
-                        editLayout = await uiService.getDefaultEditLayout(vm.entityType);
-					    evHelperService.openEntityViewerEditDrawer(
-					        vm.entityViewerDataService,
-                            vm.entityViewerEventService,
-                            editLayout,
-                            $bigDrawer,
-                            entitytype,
-                            activeObject.id
-                        );
+						// editLayout = await uiService.getDefaultEditLayout(vm.entityType);
+						if (entitytype === 'instrument') {
+							editLayout = await instrumentService.getEditLayoutBasedOnUserCodes(activeObject.instrument_type_object.instrument_form_layouts);
+
+						} else {
+							editLayout = await uiService.getDefaultEditLayout(entitytype);
+						}
+
+						evHelperService.openEntityViewerEditDrawer(
+							vm.entityViewerDataService,
+							vm.entityViewerEventService,
+							editLayout,
+							$bigDrawer,
+							entitytype,
+							activeObject.id
+						);
+
+						/* var editLayout;
+
+						if (entitytype === 'instrument') {
+							editLayout = await instrumentService.getEditLayoutBasedOnUserCodes(activeObject.instrument_type_object.instrument_form_layouts);
+
+						} else {
+							editLayout = await uiService.getDefaultEditLayout(entitytype);
+						}
+
+						// editLayout = await uiService.getDefaultEditLayout(entitytype);
+
+						var bigDrawerWidthPercent;
+						var fixedAreaColumns = 6;
+
+						if (editLayout.results.length) {
+
+							var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
+
+                            if (entitytype !== 'instrument-type') {
+                                fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                            }
+
+							bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
+
+							$bigDrawer.show({
+								controller: 'EntityViewerEditDialogController as vm',
+								templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+								addResizeButton: true,
+								drawerWidth: bigDrawerWidthPercent,
+								locals: {
+									entityType: entitytype,
+									entityId: activeObject.id,
+									data: {
+										openedIn: 'big-drawer',
+										editLayout: editLayout
+									}
+								}
+
+							}).then((res) => {
+
+								postEditionActions(res, activeObject);
+
+							});
+
+						} else {
+							console.error("edit layout for edit entity viewer was not found");
+						} */
+
+						/* $mdDialog.show({
+							controller: 'EntityViewerEditDialogController as vm',
+							templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
+							parent: angular.element(document.body),
+							targetEvent: activeObject.event,
+							//clickOutsideToClose: false,
+							locals: {
+								entityType: entitytype,
+								entityId: activeObject.id,
+								data: {}
+							}
+						}).then(function (res) {
+
+							vm.entityViewerDataService.setActiveObjectAction(null);
+							vm.entityViewerDataService.setActiveObjectActionData(null);
+
+							if (res && res.res === 'agree') {
+
+								if (res.data.action === 'delete') {
+
+									var objects = vm.entityViewerDataService.getObjects();
+
+									objects.forEach(function (obj) {
+
+										if (activeObject.id === obj.id) {
+
+											var parent = vm.entityViewerDataService.getData(obj.___parentId);
+
+											parent.results = parent.results.filter(function (resultItem) {
+												return resultItem.id !== activeObject.id
+											});
+
+											vm.entityViewerDataService.setData(parent)
+
+										}
+
+									});
+
+									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+								} else {
+
+									var objects = vm.entityViewerDataService.getObjects();
+
+									objects.forEach(function (obj) {
+
+										if (res.data.id === obj.id) {
+
+											Object.keys(res.data).forEach(function (key) {
+
+												obj[key] = res.data[key]
+
+											});
+
+											vm.entityViewerDataService.setObject(obj);
+
+										}
+
+									});
+
+									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+								}
+
+							}
+
+						}); */
+
 						break;
 
 				}
@@ -1167,5 +1292,4 @@
             }
         }
 
-    }()
-);
+}());

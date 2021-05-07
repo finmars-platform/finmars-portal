@@ -108,7 +108,7 @@
                 }*/
 
                 drawerWrap.appendChild(drawerContainer);
-                ctrl = $controller(drawerOptions.controller, locals);
+				ctrl = $controller(drawerOptions.controller, locals);
 
                 $(drawerContainer).html(tpl);
                 $(drawerContainer).children().data('$ngControllerController', ctrl);

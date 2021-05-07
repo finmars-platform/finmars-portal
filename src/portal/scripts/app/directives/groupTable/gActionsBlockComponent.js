@@ -333,6 +333,7 @@
 				scope.addEntity = async function (ev) {
 
                     let editLayout, entity = {};
+
 					switch (scope.entityType) {
 
 						case 'transaction-type':
@@ -346,40 +347,10 @@
                                 scope.entityType,
                                 entity
                             );
+
 							break;
 
 						case 'complex-transaction':
-
-							/* $mdDialog.show({
-                                controller: 'ComplexTransactionAddDialogController as vm',
-                                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: ev,
-                                locals: {
-                                    entityType: scope.entityType,
-                                    entity: {},
-                                    data: {}
-                                }
-                            }).then(function (res) {
-
-                                if (res && res.res === 'agree') {
-                                    scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
-                                }
-
-                            }) */
-
-/*							$bigDrawer.show({
-								controller: 'ComplexTransactionAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/complex-transaction-add-drawer-view.html',
-								locals: {
-									entityType: scope.entityType,
-									entity: {},
-									data: {
-										openedIn: 'big-drawer'
-									}
-								}
-
-							}).then(res => evHelperService.postAdditionActions(scope, $bigDrawer, res));*/
 
                             editLayout = await uiService.getDefaultEditLayout(scope.entityType);
 
@@ -405,6 +376,7 @@
                                 scope.entityType,
                                 entity
                             );
+
                             break;
 
 					}

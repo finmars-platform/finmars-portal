@@ -9,7 +9,7 @@
 
     var usersGroupService = require('../../services/usersGroupService');
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
 
     var gridHelperService = require('../../services/gridHelperService');
@@ -270,19 +270,7 @@
 
         vm.transactionUserFields = {};
 
-        vm.getTransactionUserFields = function () {
-
-            return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
-
-                data.results.forEach(function (field) {
-
-                    vm.transactionUserFields[field.key] = field.name;
-
-                })
-
-            })
-
-        };
+        vm.getTransactionUserFields = ttypeEditorSlHelper.getTransactionUserFields;
 
         vm.getAttributeTypes = function () {
 

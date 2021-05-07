@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
@@ -16,7 +16,7 @@
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
 
-    var EntityViewerEditorEventService = require("../../services/ev-editor/entityViewerEditorEventService");
+    var EntityViewerEditorEventService = require("../../services/eventService");
     var EntityViewerEditorDataService = require("../../services/ev-editor/entityViewerEditorDataService");
 
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
@@ -90,8 +90,8 @@
 
             dataConstructorLayout = JSON.parse(JSON.stringify(transactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
-            vm.userInputs = [];
-            transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
+            // vm.userInputs = [];
+			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
 
             inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
@@ -255,7 +255,7 @@
 
                     fieldResult = {};
 
-                    if (field && field.type === 'field') {
+                    if (field && field.type !== 'empty') {
 
                         if (field.attribute_class === 'attr') {
 
@@ -522,7 +522,7 @@
         vm.checkFieldRender = function (tab, row, field) {
 
             if (field.row === row) {
-                if (field.type === 'field') {
+                if (field.type !== 'empty') {
                     return true;
                 } else {
 
@@ -534,7 +534,7 @@
 
                     itemsInRow.forEach(function (item) {
 
-                        if (item.type === 'field' && item.colspan > 1) {
+                        if (item.type !== 'empty' && item.colspan > 1) {
                             var columnsToSpan = item.column + item.colspan - 1;
 
                             for (var i = item.column; i <= columnsToSpan; i = i + 1) {
