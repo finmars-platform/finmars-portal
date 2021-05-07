@@ -369,14 +369,14 @@ app.controller('ListLayoutExportDialogController', ['$scope', '$mdDialog', 'data
 app.controller(
     'TransactionTypeAddDialogController',
     [
-        '$scope', '$mdDialog', '$state', 'entityType', 'entity',
+        '$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entity', 'data',
         require('./app/controllers/entityViewer/transactionTypeAddDialogController')
     ]
 );
 app.controller(
     'TransactionTypeEditDialogController',
     [
-        '$scope', '$mdDialog', '$state', 'entityType', 'entityId',
+        '$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data',
         require('./app/controllers/entityViewer/transactionTypeEditDialogController')
     ]
 );
