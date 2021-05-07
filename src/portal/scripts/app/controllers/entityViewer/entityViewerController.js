@@ -24,6 +24,8 @@
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
         var middlewareService = require('../../services/middlewareService');
 
+        var transactionTypeService = require('../../services/transactionTypeService');
+
 
         module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer) {
 
@@ -75,7 +77,7 @@
             //
             // });
 
-            var updateTableAfterEntitiesDeletion = function (deletedEntitiesIds) {
+            /*var updateTableAfterEntitiesDeletion = function (deletedEntitiesIds) {
 
                 var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
                 var objects = vm.entityViewerDataService.getObjects();
@@ -113,7 +115,7 @@
 
                 vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-            };
+            };*/
 
             var initTransitionHooks = function () {
 
@@ -121,11 +123,11 @@
 
             };
 
-            const duplicateEntity = async function (entity) {
+            /* const duplicateEntity = async function (entity) {
 
                 var editLayout = await uiService.getEditLayoutByKey(vm.entityType);
-                var bigDrawerWidthPercent;
-                var fixedAreaColumns = 6;
+                var bigDrawerWidth;
+                var fixedAreaColumns;
 
                 if (editLayout.results.length) {
 
@@ -134,7 +136,7 @@
                         fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
                     }
 
-                    bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
+                    bigDrawerWidth = evHelperService.getBigDrawerWidth(fixedAreaColumns);
 
                 }
 
@@ -142,7 +144,7 @@
                     controller: 'EntityViewerAddDialogController as vm',
                     templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
                     addResizeButton: true,
-                    drawerWidth: bigDrawerWidthPercent,
+                    drawerWidth: bigDrawerWidth,
                     locals: {
                         entityType: vm.entityType,
                         entity: entity,
@@ -165,7 +167,7 @@
 
 					if (res.data.action === 'delete') {
 
-						updateTableAfterEntitiesDeletion([activeObject.id]);
+                        evHelperService.updateTableAfterEntitiesDeletion(vm, [activeObject.id]);
 
 					} else if (res.data.action === 'copy') {
 
@@ -173,30 +175,13 @@
 
                     } else {
 
-						var objects = vm.entityViewerDataService.getObjects();
+					    evHelperService.updateEntityInsideTable(vm);
 
-						objects.forEach(function (obj) {
-
-							if (res.data.id === obj.id) {
-
-								Object.keys(res.data).forEach(function (key) {
-
-									obj[key] = res.data[key]
-
-								});
-
-								vm.entityViewerDataService.setObject(obj);
-
-							}
-
-						});
-
-						vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 					}
 
 				}
 
-			};
+			}; */
 
             var editEntity = async function (entitytype, activeObject) {
 
@@ -216,166 +201,39 @@
 					'transaction',
 					'complex-transaction'
 				]; */
-
+                let editLayout;
 				switch (entitytype) {
-
 					case 'transaction-type':
-
-						$mdDialog.show({
-							controller: 'TransactionTypeEditDialogController as vm',
-							templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
-							parent: angular.element(document.body),
-							targetEvent: activeObject.event,
-							//clickOutsideToClose: false,
-							locals: {
-								entityType: entitytype,
-								entityId: activeObject.id,
-								openedIn: 'dialog'
-							}
-						}).then(function (res) {
-
-							vm.entityViewerDataService.setActiveObjectAction(null);
-							vm.entityViewerDataService.setActiveObjectActionData(null);
-
-							if (res && res.res === 'agree') {
-
-								if (res.data.action === 'delete') {
-
-									var objects = vm.entityViewerDataService.getObjects();
-
-									objects.forEach(function (obj) {
-
-										if (activeObject.id === obj.id) {
-
-											var parent = vm.entityViewerDataService.getData(obj.___parentId);
-
-											parent.results = parent.results.filter(function (resultItem) {
-												return resultItem.id !== activeObject.id
-											});
-
-											vm.entityViewerDataService.setData(parent)
-
-										}
-
-									});
-
-									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-									updateTableAfterEntitiesDeletion([activeObject.id]);
-
-								} else {
-
-									console.log('res', res);
-
-									var objects = vm.entityViewerDataService.getObjects();
-
-									objects.forEach(function (obj) {
-
-										if (res.data.id === obj.id) {
-
-											Object.keys(res.data).forEach(function (key) {
-
-												obj[key] = res.data[key]
-
-											});
-
-											vm.entityViewerDataService.setObject(obj);
-
-										}
-
-									});
-
-									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-								}
-
-							}
-						});
-
+                        editLayout = await uiService.getDefaultEditLayout(vm.entityType);
+                        evHelperService.openTTypeEditDrawer(
+                            vm.entityViewerDataService,
+                            vm.entityViewerEventService,
+                            editLayout,
+                            $bigDrawer,
+                            entitytype,
+                            activeObject.id
+                        );
 						break;
 
 					case 'complex-transaction':
 
-						/* $mdDialog.show({
-							controller: 'ComplexTransactionEditDialogController as vm',
-							templateUrl: 'views/entity-viewer/complex-transaction-edit-dialog-view.html',
-							parent: angular.element(document.body),
-							targetEvent: activeObject.event,
-							//clickOutsideToClose: false,
-							locals: {
-								entityType: entitytype,
-								entityId: activeObject.id,
-								data: {}
-							}
-						}).then(function (res) {
+                        const ttypeId = activeObject.transaction_type_object.id;
+                        editLayout = await transactionTypeService.getByKey(ttypeId).then(res => {
 
-							vm.entityViewerDataService.setActiveObjectAction(null);
-							vm.entityViewerDataService.setActiveObjectActionData(null);
+                            return {results: [res.book_transaction_layout]};
 
-							if (res && res.res === 'agree') {
+                        });
 
-								if (res.data.action === 'delete') {
+                        evHelperService.openComplexTransactionEditDrawer(
+                            vm.entityViewerDataService,
+                            vm.entityViewerEventService,
+                            editLayout,
+                            $bigDrawer,
+                            entitytype,
+                            activeObject.id
+                        );
 
-									var objects = vm.entityViewerDataService.getObjects();
-
-									objects.forEach(function (obj) {
-
-										if (activeObject.id === obj.id) {
-
-											var parent = vm.entityViewerDataService.getData(obj.___parentId);
-
-											parent.results = parent.results.filter(function (resultItem) {
-												return resultItem.id !== activeObject.id
-											});
-
-											vm.entityViewerDataService.setData(parent)
-
-										}
-
-									});
-
-									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-								} else {
-
-									var objects = vm.entityViewerDataService.getObjects();
-
-									objects.forEach(function (obj) {
-
-										if (res.data.complex_transaction.id === obj.id) {
-
-											Object.keys(res.data.complex_transaction).forEach(function (key) {
-
-												obj[key] = res.data.complex_transaction[key]
-
-											});
-
-											vm.entityViewerDataService.setObject(obj);
-
-										}
-
-									});
-
-									vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-								}
-
-							} else if (res && res.status === 'disagree' && res.data.updateRowIcon) {
-
-								var tIsLocked = res.data.updateRowIcon.is_locked;
-								var tIsCanceled = res.data.updateRowIcon.is_canceled;
-								var activeObject = vm.entityViewerDataService.getActiveObject();
-								var transactionObj = vm.entityViewerDataService.getObject(activeObject.___id, activeObject.___parentId);
-
-								transactionObj.is_locked = tIsLocked;
-								transactionObj.is_canceled = tIsCanceled;
-								vm.entityViewerDataService.setObject(transactionObj);
-
-								vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
-							}
-
-						});*/
-
-						$bigDrawer.show({
+/*						$bigDrawer.show({
 							controller: 'ComplexTransactionEditDialogController as vm',
 							templateUrl: 'views/entity-viewer/complex-transaction-edit-drawer-view.html',
 							locals: {
@@ -395,7 +253,7 @@
 
 								if (res.data.action === 'delete') {
 
-									updateTableAfterEntitiesDeletion([activeObject.id]);
+                                    evHelperService.updateTableAfterEntitiesDeletion(vm, [activeObject.id]);
 
 								} else {
 
@@ -436,7 +294,7 @@
 								vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
 							}
 
-						});
+						});*/
 
 						break;
 
@@ -530,7 +388,24 @@
 
 					default:
 
-						var editLayout;
+						// editLayout = await uiService.getDefaultEditLayout(vm.entityType);
+						if (entitytype === 'instrument') {
+							editLayout = await instrumentService.getEditLayoutBasedOnUserCodes(activeObject.instrument_type_object.instrument_form_layouts);
+
+						} else {
+							editLayout = await uiService.getDefaultEditLayout(entitytype);
+						}
+
+						evHelperService.openEntityViewerEditDrawer(
+							vm.entityViewerDataService,
+							vm.entityViewerEventService,
+							editLayout,
+							$bigDrawer,
+							entitytype,
+							activeObject.id
+						);
+
+						/* var editLayout;
 
 						if (entitytype === 'instrument') {
 							editLayout = await instrumentService.getEditLayoutBasedOnUserCodes(activeObject.instrument_type_object.instrument_form_layouts);
@@ -576,7 +451,8 @@
 
 						} else {
 							console.error("edit layout for edit entity viewer was not found");
-						}
+						} */
+
 						/* $mdDialog.show({
 							controller: 'EntityViewerEditDialogController as vm',
 							templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
@@ -863,7 +739,7 @@
 
                                     if (res.status === 'agree') {
 
-                                        updateTableAfterEntitiesDeletion(res.data.ids);
+                                        evHelperService.updateTableAfterEntitiesDeletion(vm, res.data.ids);
 
                                     }
                                 });
@@ -952,6 +828,8 @@
             };
 
             vm.setLayout = function (layoutData) {
+
+                vm.layoutId = layoutData.id
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
                 vm.setFiltersValuesFromQueryParameters();
@@ -1143,7 +1021,7 @@
                     // vm.getLayoutByUserCode(layoutUserCode);
                     evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
-                } else if ($stateParams.layoutUserCode) {
+                } else if ($stateParams.layoutUsesrCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
                     // vm.getLayoutByUserCode(layoutUserCode);
