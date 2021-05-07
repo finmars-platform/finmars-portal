@@ -8,7 +8,7 @@
 (function () {
 
     const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-	const uiService = require('../services/uiService');
+    const uiService = require('../services/uiService');
 
 	const entityResolverService = require('../services/entityResolverService');
 
@@ -19,37 +19,34 @@
 
     'use strict';
 
-    let transformItem = function (item, attrs) {
+    let transformItem = function (entity, attrs) {
 
-        if (item.attributes) {
+        if (entity.attributes) {
 
             let key;
 
-            console.log('transformItem.item', item);
-            console.log('transformItem.attrs', attrs);
-
             attrs.forEach(function (attributeType) {
 
-                item.attributes.forEach(function (attribute) {
+				entity.attributes.forEach(function (attribute) {
 
                     if (attributeType.user_code === attribute.attribute_type_object.user_code) {
 
                         key = attributeType.user_code;
 
                         if (attributeType.value_type === 10){
-                            item[key] = attribute.value_string
+							entity[key] = attribute.value_string
                         }
 
                         if (attributeType.value_type === 20) {
-                            item[key] = attribute.value_float
+							entity[key] = attribute.value_float
                         }
 
                         if (attributeType.value_type === 30) {
-                            item[key] = attribute.classifier
+							entity[key] = attribute.classifier
                         }
 
                         if (attributeType.value_type === 40) {
-                            item[key] = attribute.value_date
+							entity[key] = attribute.value_date
                         }
 
                     }
@@ -397,7 +394,7 @@
 
         return maxCols ? maxCols : 6;
 
-    }
+    };
 
     /**
      * Get big drawer width percentage by fixed area columns
@@ -486,14 +483,17 @@
 
     };
 
-    var getBigDrawerOptions = function (layout) {
+    var getBigDrawerOptions = function (layout, entityType) {
 
         var fixedAreaColumns = 6;
 
         if (layout.results.length) {
 
             var tabs = Array.isArray(layout.results[0].data) ? layout.results[0].data : layout.results[0].data.tabs;
-            fixedAreaColumns = getEditLayoutMaxColumns(tabs);
+
+			if (entityType !== 'instrument-type') {
+				fixedAreaColumns = getEditLayoutMaxColumns(tabs);
+			}
 
         }
 
@@ -1145,7 +1145,7 @@
 
 }).then(postAddEntityFn); */
 
-        var bigDrawerOptions = getBigDrawerOptions(layout);
+        var bigDrawerOptions = getBigDrawerOptions(layout, entityType);
 
         $bigDrawer.show({
             controller: 'EntityViewerAddDialogController as vm',
@@ -1175,11 +1175,11 @@
         eventService,
         layout,
         $bigDrawer,
-        entitytype,
+		entityType,
         entityId
     ) {
 
-        var bigDrawerOptions = getBigDrawerOptions(layout);
+        var bigDrawerOptions = getBigDrawerOptions(layout, entityType);
 
         /* $mdDialog.show({
             controller: 'EntityViewerEditDialogController as vm',
@@ -1188,7 +1188,7 @@
             targetEvent: activeObject.event,
             //clickOutsideToClose: false,
             locals: {
-                entityType: entitytype,
+                entityType: entityType,
                 entityId: activeObject.id,
                 data: {}
             }
@@ -1253,7 +1253,7 @@
             addResizeButton: true,
             drawerWidth: bigDrawerOptions.width,
             locals: {
-                entityType: entitytype,
+                entityType: entityType,
                 entityId: entityId,
                 data: {
                     openedIn: 'big-drawer',
@@ -1342,7 +1342,6 @@
         getDefaultLayout: getDefaultLayout,
         getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
 
-        getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
         getBigDrawerWidth: getBigDrawerWidth,
 

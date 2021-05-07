@@ -133,18 +133,18 @@
 
     };
 
-    var clearObjectActiveState = function (evDataService, evEventService) {
+    /* var clearObjectActiveState = function (evDataService, evEventService) {
 
         var objects = evDataService.getObjects();
 
         objects.forEach(function (item) {
             item.___is_activated = false;
-            item.___is_last_selected = false;
+            item.___is_last_activated = false;
 
             evDataService.setObject(item);
         });
 
-    };
+    }; */
 
     var clearGroupActiveState = function (evDataService, evEventService) {
 
@@ -250,7 +250,7 @@
             console.log('activated_ids', activated_ids);
 
             clearGroupActiveState(evDataService, evEventService);
-            clearObjectActiveState(evDataService, evEventService);
+            evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
             list.forEach(function (object) {
 
@@ -360,7 +360,7 @@
                 }
 
                 clearGroupActiveState(evDataService, evEventService);
-                clearObjectActiveState(evDataService, evEventService);
+				evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
                 if (group) {
                     group.___is_activated = !state;
@@ -391,7 +391,7 @@
             obj.___is_activated = !obj.___is_activated;
 
             if (!obj.___is_activated) {
-                obj.___is_last_selected = false;
+                obj.___is_last_activated = false;
             }
 
             evDataService.setObject(obj);
@@ -405,14 +405,14 @@
 
         } else if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
 
-            clearObjectActiveState(evDataService, evEventService);
+            evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
             obj.___is_activated = !obj.___is_activated;
-            obj.___is_last_selected = !obj.___is_last_selected;
+            obj.___is_last_activated = !obj.___is_last_activated;
 
             evDataService.setObject(obj);
 
-            if (obj.___is_last_selected || obj.___is_activated) {
+            if (obj.___is_last_activated || obj.___is_activated) {
 
                 obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
 
@@ -595,67 +595,325 @@
 
     };
 
+	var clearContextMenuRow = function (evDataService) {
+
+		var objects = evDataService.getObjects();
+
+		var contextMenuItem = objects.find(obj => obj.___context_menu_is_opened);
+
+		if (contextMenuItem) {
+
+			contextMenuItem.___context_menu_is_opened = false;
+			evDataService.setObject(contextMenuItem);
+
+		}
+
+	};
+
+	var clearRowWithContextMenu = function (evDataService, evEventService, redrawTable) {
+
+		clearContextMenuRow(evDataService);
+		if (redrawTable) evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+	};
+
+	var popupsToClear = [];
+
     var clearDropdowns = function () {
 
         var dropdowns = document.querySelectorAll('.ev-dropdown');
 
-        for (var i = 0; i < dropdowns.length; i = i + 1) {
+        /* for (var i = 0; i < dropdowns.length; i = i + 1) {
             dropdowns[i].remove();
-        }
+        } */
+		dropdowns.forEach(dropdown => {
+			// remove popup after animation
+			if (!popupsToClear.includes(dropdown.id)) {
+
+				dropdown.classList.add("fade-out");
+
+				popupsToClear.push(dropdown.id);
+				var dropdownIndex = popupsToClear.length - 1;
+
+				setTimeout(function () {
+
+					dropdown.parentElement.removeChild(dropdown);
+					popupsToClear.splice(dropdownIndex, 1);
+
+				}, 200); // duration of animation
+
+			}
+
+		});
+
+		//<editor-fold desc="Remove dropdown related listeners">
+		for (const prop in eventListenerFn2Args) {
+			eventListenerFn2Args[prop] = null;
+		}
+		window.removeEventListener('click', executeContextMenuAction);
+
+		clearDropdownsAndRowsArgs.evDataService = null;
+		clearDropdownsAndRowsArgs.evEventService = null;
+		window.removeEventListener('contextmenu', callClearDropdownsAndRows);
+		//</editor-fold>
+		/*window.removeEventListener('click', executeContextMenuAction);
+		window.removeEventListener('click', executeSubtotalContextMenuAction);
+
+		clearDropdownsAndRowsArgs.evDataService = null;
+		clearDropdownsAndRowsArgs.evEventService = null;
+		window.removeEventListener('contextmenu', callClearDropdownsAndRows);*/
+
 
     };
 
-    var addEventListenerForContextMenu = function (contextMenuElem, evDataService, evEventService) {
+	var clearDropdownsAndRows = function (evDataService, evEventService, redrawTable) {
 
-        function sendContextMenuActionToActiveObj(event) {
-            var objectId = event.target.dataset.objectId;
-            var parentGroupHashId = event.target.dataset.parentGroupHashId;
-            var dropdownAction = event.target.dataset.evDropdownAction;
+		clearRowWithContextMenu(evDataService, evEventService, redrawTable);
+		clearDropdowns();
 
-            var dropdownActionData = {};
+	};
 
-            if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
-                dropdownActionData.id = event.target.dataset.evDropdownActionDataId
-            }
+	/** Used to pass data into callClearDropdownsAndRows inside event listener */
+	var clearDropdownsAndRowsArgs = {
+		evDataService: null,
+		evEventService: null
+	}
+	/**
+	 * Used to call clearDropdownsAndRows() with arguments inside event listeners
+	 */
+	var callClearDropdownsAndRows = function () {
+		clearDropdownsAndRows(clearDropdownsAndRowsArgs.evDataService, clearDropdownsAndRowsArgs.evEventService, true);
+	};
 
-            if (objectId && dropdownAction && parentGroupHashId) {
+	/**
+	 * transfer data into event listener callback executeContextMenuAction() or executeSubtotalContextMenuAction()
+	 *
+	 * @type {Object} eventListenerFn2Args
+	 * eventListenerFn2Args.evDataService {Object|null}
+	 * eventListenerFn2Args.evEventService {Object|null}
+	 */
+	var eventListenerFn2Args = {
+		evDataService: null,
+		evEventService: null
+	}
 
-                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+	function executeContextMenuAction(event) {
 
-                if (!obj) {
-                    obj = {}
-                }
+		var objectId = event.target.dataset.objectId;
+		var parentGroupHashId = event.target.dataset.parentGroupHashId;
+		var dropdownAction = event.target.dataset.evDropdownAction;
 
-                obj.event = event;
+		var evDataService = eventListenerFn2Args.evDataService;
+		var evEventService = eventListenerFn2Args.evEventService;
 
-                console.log('dropdownActionData', dropdownActionData);
+		var dropdownActionData = {};
 
-                evDataService.setActiveObject(obj);
-                evDataService.setActiveObjectAction(dropdownAction);
-                evDataService.setActiveObjectActionData(dropdownActionData);
+		if (dropdownAction === 'toggle_row') {
 
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+			var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-                clearDropdowns();
+			if (obj.___is_activated) {
 
-            } else {
+				obj.___is_activated = false;
+				obj.___is_last_activated = false;
 
-                if (!event.target.classList.contains('ev-dropdown-option')) {
-                    clearDropdowns();
-                }
+				evDataService.setActiveObject(null);
+				evDataService.setLastActivatedRow(null);
 
-            }
-        }
+			} else {
 
-        window.addEventListener('click', sendContextMenuActionToActiveObj, {once: true});
+				// clearObjectActiveState(evDataService);
+				evDataHelper.clearLastActiveObject(evDataService);
+
+				obj.___is_activated = true;
+				obj.___is_last_activated = true;
+
+				evDataService.setActiveObject(obj);
+				evDataService.setLastActivatedRow(obj);
+
+			}
+
+			evDataService.setObject(obj);
+
+			clearDropdownsAndRows(evDataService, evEventService, true);
+
+		}
+
+		else {
+
+			if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
+				dropdownActionData.id = event.target.dataset.evDropdownActionDataId
+			}
+
+			if (objectId && dropdownAction && parentGroupHashId) {
+
+				var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+				if (!obj) {
+					obj = {}
+				}
+
+				obj.event = event;
+
+				console.log('dropdownActionData', dropdownActionData);
+
+				evDataService.setActiveObject(obj);
+				evDataService.setActiveObjectAction(dropdownAction);
+				evDataService.setActiveObjectActionData(dropdownActionData);
+
+				evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+				clearDropdownsAndRows(evDataService, evEventService, true);
+
+			}
+
+		}
+
+		if (!event.target.classList.contains('ev-dropdown-option')) {
+			clearDropdownsAndRows(evDataService, evEventService, true);
+		}
+
+		for (const prop in eventListenerFn2Args) {
+			eventListenerFn2Args[prop] = null;
+		}
+
+	}
+
+    var addEventListenerForContextMenu = function (evDataService, evEventService) {
+
+		eventListenerFn2Args.evDataService = evDataService;
+		eventListenerFn2Args.evEventService = evEventService;
+        window.addEventListener('click', executeContextMenuAction);
+
+		clearDropdownsAndRowsArgs.evDataService = evDataService;
+		clearDropdownsAndRowsArgs.evEventService = evEventService;
+		window.addEventListener('contextmenu', callClearDropdownsAndRows);
 
     };
+
+	var generateContextMenu = function (obj, objectId, parentGroupHashId, evDataService) {
+
+		var viewContext = evDataService.getViewContext();
+		var entityType = evDataService.getEntityType();
+
+		var innerHTMLString = '<div class="ev-dropdown-container">';
+
+		var toggleRowName = obj.___is_activated ? 'Unselect row' : 'Select row';
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option"' +
+			' data-ev-dropdown-action="toggle_row"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">' + toggleRowName + '</div>';
+
+		if (viewContext === 'reconciliation_viewer') {
+
+			innerHTMLString = innerHTMLString +
+				'<div class="ev-dropdown-option"' +
+				' data-ev-dropdown-action="recon_view_bank_file_line"' +
+				' data-object-id="' + objectId + '"' +
+				' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>';
+
+			innerHTMLString = innerHTMLString +
+				'<div class="ev-dropdown-option"' +
+				' data-ev-dropdown-action="recon_book_selected"' +
+				' data-object-id="' + objectId + '"' +
+				' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>';
+
+			innerHTMLString = innerHTMLString +
+				'<div class="ev-dropdown-option"' +
+				' data-ev-dropdown-action="recon_hide"' +
+				' data-object-id="' + objectId + '"' +
+				' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>';
+
+		}
+		else {
+
+			innerHTMLString = innerHTMLString +
+				'<div class="ev-dropdown-option"' +
+				' data-ev-dropdown-action="edit"' +
+				' data-object-id="' + objectId + '"' +
+				' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>';
+
+			if(!obj.is_deleted) {
+				innerHTMLString = innerHTMLString +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="delete"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+			}
+
+
+			if (entityType === 'price-history') {
+
+				innerHTMLString = innerHTMLString +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="edit_instrument"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>';
+
+			}
+
+			if (entityType === 'complex-transaction') {
+
+				innerHTMLString = innerHTMLString +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="lock_transaction"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Lock Transaction</div>' +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="unlock_transaction"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Unlock Transaction</div>' +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="ignore_transaction"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Ignore Transaction</div>' +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="activate_transaction"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
+			}
+
+			if (entityType === 'instrument') {
+
+				innerHTMLString = innerHTMLString +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="deactivate_instrument"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Deactivate</div>' +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="activate_instrument"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Activate</div>';
+			}
+
+
+			if (['complex-transaction', 'price-history', 'currency-history'].indexOf(entityType) === -1) {
+
+				if (obj.is_deleted) {
+
+					innerHTMLString = innerHTMLString +
+						'<div class="ev-dropdown-option"' +
+						' data-ev-dropdown-action="restore_deleted"' +
+						' data-object-id="' + objectId + '"' +
+						' data-parent-group-hash-id="' + parentGroupHashId + '">Restore</div>';
+				}
+			}
+
+		}
+
+		innerHTMLString = innerHTMLString + '</div>';
+
+		return innerHTMLString;
+
+	};
 
     var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
-        var entityType = evDataService.getEntityType();
+        // var entityType = evDataService.getEntityType();
 
-        clearDropdowns();
+        clearDropdownsAndRows(evDataService, evEventService);
 
         /*var dropdownWidth = 320;
         var dropdownOptionHeight = 24;
@@ -676,121 +934,26 @@
         popup.style.cssText = menuPosition;
         popup.style.position = 'absolute';*/
 
-        var popup = evDataHelper.preparePopupMenu(objectId, parentGroupHashId, evDataService, false);
-
+        var popup = evDataHelper.prepareRowAndGetPopupMenu(objectId, parentGroupHashId, evDataService, false);
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-        var innerHTMLString = '';
-        var viewContext = evDataService.getViewContext();
+        // var innerHTMLString = '';
+        // var viewContext = evDataService.getViewContext();
 
-        if (viewContext === 'reconciliation_viewer') {
+		if (obj) {
 
-            innerHTMLString = '<div class="ev-dropdown-container">' +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="recon_view_bank_file_line"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>';
+			popup.innerHTML = generateContextMenu(obj, objectId, parentGroupHashId, evDataService);
 
-            innerHTMLString = innerHTMLString + '<div>' +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="recon_book_selected"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>';
+			evDataHelper.calculateMenuPosition(popup, menuPosition);
 
-            innerHTMLString = innerHTMLString + '<div>' +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="recon_hide"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>';
+			document.body.appendChild(popup);
 
-            innerHTMLString = innerHTMLString + '</div>';
+			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        } else {
+			addEventListenerForContextMenu(evDataService, evEventService);
 
-            innerHTMLString = '<div class="ev-dropdown-container">' +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="edit"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>';
+		}
 
-            if(!obj.is_deleted) {
-                innerHTMLString = innerHTMLString +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="delete"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
-            }
-
-
-            if (entityType === 'price-history') {
-
-                innerHTMLString = innerHTMLString + '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="edit_instrument"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>';
-
-            }
-
-            if (entityType === 'complex-transaction') {
-
-                innerHTMLString = innerHTMLString +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="lock_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Lock Transaction</div>' +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="unlock_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Unlock Transaction</div>' +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="ignore_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Ignore Transaction</div>' +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="activate_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
-            }
-
-            if (entityType === 'instrument') {
-
-                innerHTMLString = innerHTMLString +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="deactivate_instrument"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Deactivate</div>' +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="activate_instrument"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate</div>';
-            }
-
-
-            if (['complex-transaction', 'price-history', 'currency-history'].indexOf(entityType) === -1) {
-
-                if (obj.is_deleted) {
-
-                    innerHTMLString = innerHTMLString +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="restore_deleted"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Restore</div>';
-                }
-            }
-
-            innerHTMLString = innerHTMLString + '</div>';
-
-        }
-
-        popup.innerHTML = innerHTMLString;
-
-        evDataHelper.calculateMenuPosition(popup, menuPosition);
-
-        document.body.appendChild(popup);
-
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-        addEventListenerForContextMenu(popup, evDataService, evEventService);
 
     };
 
@@ -800,7 +963,7 @@
 
         if (!metaService.isReport(entityType)) {
 
-            /* function sendContextMenuActionToActiveObj(event) {
+            /* function executeContextMenuAction(event) {
 
                 var objectId = event.target.dataset.objectId;
                 var parentGroupHashId = event.target.dataset.parentGroupHashId;
@@ -874,9 +1037,9 @@
 
             }, false);
 
-            window.addEventListener('contextmenu', function () {
+            /* window.addEventListener('contextmenu', function () {
                 clearDropdowns();
-            });
+            }); */
 
             /* window.addEventListener('click', function (event) {
 
