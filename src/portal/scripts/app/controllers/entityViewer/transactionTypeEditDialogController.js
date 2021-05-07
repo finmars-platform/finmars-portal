@@ -42,7 +42,7 @@
 
         var vm = this;
 
-        var ttypeEditorSlHelper = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
+        var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.entityType = entityType;
         vm.entityId = entityId;
@@ -298,7 +298,7 @@
 
         vm.transactionUserFields = {};
 
-        vm.getTransactionUserFields = ttypeEditorSlHelper.getTransactionUserFields;
+        vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
 
         vm.getItem = function () {
 
@@ -308,7 +308,7 @@
 
                     vm.entity = data;
 
-                    ttypeEditorSlHelper.updateInputFunctions();
+                    sharedLogic.updateInputFunctions();
                     /* vm.expressionData.groups[0] = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
@@ -477,55 +477,8 @@
 
             updatedEntity.object_permissions = [];
 
-            if (vm.groups) {
-                vm.groups.forEach(function (group) {
-
-                    if (group.objectPermissions && group.objectPermissions.manage === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "manage_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.change === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "change_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.view === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "view_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                });
-            }
-
-
-            updatedEntity.inputs.forEach(function (input) {
-
-                if (input.settings) {
-
-                	if (input.settings.linked_inputs_names) {
-						input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
-					}
-
-                	if (input.settings.recalc_on_change_linked_inputs) {
-						input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.join(',')
-					}
-
-                }
-
-            });
-
-            return updatedEntity
-
+			// code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
+			return sharedLogic.updateEntityBeforeSave(updatedEntity);
 
         };
 
@@ -784,11 +737,11 @@
                 /* var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
 
-                var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(entityToSave.actions);
-				var inputsErrors = ttypeEditorSlHelper.validateInputs(entityToSave.inputs);
+                var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
+				var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
 				actionsErrors = actionsErrors.concat(inputsErrors);
 
-                var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(entityToSave);
+                var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
                 if (actionsErrors.length || entityErrors.length) {
 
@@ -819,6 +772,7 @@
                         console.log('data', data);
                         //originalEntity = JSON.parse(angular.toJson(vm.entity));
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
+                        vm.entity.object_permissions = data.object_permissions;
 
                         vm.processing = false;
                         $scope.$apply();
@@ -1064,9 +1018,9 @@
             $scope.$apply();
         };
 
-        vm.contextProperties = ttypeEditorSlHelper.getContextProperties();
+        vm.contextProperties = sharedLogic.getContextProperties();
         vm.relationItems = {};
-        vm.valueTypes = ttypeEditorSlHelper.getValueTypes();
+        vm.valueTypes = sharedLogic.getValueTypes();
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
         /* vm.bindValueType = function (row) { // TODO delete
@@ -1120,7 +1074,7 @@
 
         }; */
 
-        vm.resolveRelation = ttypeEditorSlHelper.resolveRelation;
+        vm.resolveRelation = sharedLogic.resolveRelation;
 
         vm.resolveDefaultValue = function (item) {
 
@@ -2702,7 +2656,7 @@
             vm.inputsGridTableDataService = new GridTableDataService();
             vm.inputsGridTableEventService = new GridTableEventService();
 
-            ttypeEditorSlHelper.initGridTableEvents();
+            sharedLogic.initGridTableEvents();
 
             ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
@@ -2710,19 +2664,19 @@
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();
-            var getRefTablesPromise = ttypeEditorSlHelper.getReferenceTables();
+            var getRefTablesPromise = sharedLogic.getReferenceTables();
 
             vm.getTransactionTypeGroups();
             vm.getPortfolios();
             vm.getInstrumentTypes();
 
-            var getInputTemplPromise = ttypeEditorSlHelper.getInputTemplates();
+            var getInputTemplPromise = sharedLogic.getInputTemplates();
             vm.getFieldTemplates();
             vm.getActionTemplates();
 
             Promise.all([getItemPromise, getAttrsPromise, getRefTablesPromise, getInputTemplPromise]).then(function () {
 
-                ttypeEditorSlHelper.initAfterMainDataLoaded();
+                sharedLogic.initAfterMainDataLoaded();
                 vm.readyStatus.inputs = true;
 
             });
