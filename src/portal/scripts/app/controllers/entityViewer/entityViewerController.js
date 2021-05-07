@@ -713,7 +713,7 @@
 
                                     if (res.status === 'agree') {
 
-                                        updateTableAfterEntitiesDeletion(res.data.ids);
+										evHelperService.updateTableAfterEntitiesDeletion(res.data.ids);
 
                                     }
                                 });
