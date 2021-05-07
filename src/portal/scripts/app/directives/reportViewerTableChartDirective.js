@@ -32,6 +32,13 @@
 
                 scope.viewContext = scope.evDataService.getViewContext();
 
+                scope.availableTitleColumnAttrs = scope.tableChartSettings.available_title_column_keys || [];
+                if (scope.availableTitleColumnAttrs.length) scope.availableTitleColumnAttrs = JSON.parse(angular.toJson(scope.availableTitleColumnAttrs));
+
+                scope.availableValueColumnAttrs = scope.tableChartSettings.available_value_column_keys || [];
+                if (scope.availableValueColumnAttrs.length) scope.availableValueColumnAttrs = JSON.parse(angular.toJson(scope.availableValueColumnAttrs));
+
+
                 scope.toggleSort = function (sortKey) {
 
                     if (scope.sortKey === sortKey) {
@@ -291,6 +298,49 @@
                     scope.evDataService.setActiveObject(activeObject);
                     scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
+                };
+
+                var formatAttrsForSelector = function (attrsList, selectedAttrKey) {
+
+                    return attrsList.map(attr => {
+
+                        return {
+                            name: attr.layout_name || attr.attribute_data.name,
+                            id: attr.attribute_data.key,
+                            isActive: attr.attribute_data.key === selectedAttrKey
+                        };
+
+                    });
+
+                };
+
+                var onAttrsOptionSelect = function (option, key, _$popup) {
+
+                    if (option.id !== scope.tableChartSettings[key]) {
+
+                        scope.tableChartSettings[key] = option.id;
+                        scope.createTable();
+
+                        scope.evEventService.dispatchEvent(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED);
+
+                    }
+
+                    _$popup.cancel();
+
+                };
+
+                scope.titleColumnSelectorData = {
+                    options: formatAttrsForSelector(scope.availableTitleColumnAttrs, scope.tableChartSettings.title_column),
+                    selectOption: function (option, _$popup) {
+                        onAttrsOptionSelect(option, 'title_column', _$popup);
+                    }
+                };
+
+                scope.valueColumnSelectorData = {
+                    options: formatAttrsForSelector(scope.availableValueColumnAttrs, scope.tableChartSettings.value_column),
+                    selectOption: function (option, _$popup) {
+                        onAttrsOptionSelect(option, 'value_column', _$popup);
+                    }
                 };
 
                 scope.init = function () {
