@@ -1877,6 +1877,9 @@
                         title_column_name: vm.componentData.settings.title_column_name,
                         value_column_name: vm.componentData.settings.value_column_name,
 
+                        available_title_column_keys: vm.componentData.user_settings.available_title_column_keys,
+                        available_value_column_keys: vm.componentData.user_settings.available_value_column_keys,
+
                         number_format: vm.componentData.settings.number_format
                     };
                 }
