@@ -217,19 +217,22 @@
 
 					case 'complex-transaction':
 
-                        const ttypeId = activeObject.transaction_type_object.id;
-                        editLayout = await transactionTypeService.getByKey(ttypeId).then(res => {
+						/* // Waiting for transaction type to load add big delay
 
-                            return {results: [res.book_transaction_layout]};
+						const ttypeId = activeObject.transaction_type_object.id;
 
-                        });
+						try {
+							const transactionType = await transactionTypeService.getByKey(ttypeId);
+							editLayout = {results: [transactionType.book_transaction_layout]};
+
+						} catch (error) {
+							console.error('editEntity() transactionType with id: ' + ttypeId + ' not found');
+						} */
 
                         evHelperService.openComplexTransactionEditDrawer(
                             vm.entityViewerDataService,
                             vm.entityViewerEventService,
-                            editLayout,
                             $bigDrawer,
-                            entitytype,
                             activeObject.id
                         );
 
@@ -710,7 +713,7 @@
 
                                     if (res.status === 'agree') {
 
-                                        updateTableAfterEntitiesDeletion(res.data.ids);
+										evHelperService.updateTableAfterEntitiesDeletion(res.data.ids);
 
                                     }
                                 });

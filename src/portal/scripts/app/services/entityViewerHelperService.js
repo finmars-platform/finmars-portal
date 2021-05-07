@@ -804,14 +804,15 @@
         });
     };
 
-    var openComplexTransactionEditDrawer = function (
-        dataService,
-        eventService,
-        layout,
-        $bigDrawer,
-        entitytype,
-        entityId
-    ) {
+	/**
+	 *
+	 * @param dataService {Object} - entityViewerDataService
+	 * @param eventService {Object} - entityViewerEventService
+	 * @param $bigDrawer {Object} - bigDrawer module
+	 * @param entityId {number} - complex transaction id
+	 * @param layout {Object=} - layout of form
+	 */
+    var openComplexTransactionEditDrawer = function (dataService, eventService, $bigDrawer, entityId, layout) {
 
 /* $mdDialog.show({
             controller: 'ComplexTransactionEditDialogController as vm',
@@ -901,7 +902,7 @@
             addResizeButton: false,
             drawerWidth: bigDrawerWidth,
             locals: {
-                entityType: entitytype,
+                entityType: 'complex-transaction',
                 entityId: entityId,
                 data: {
                     openedIn: 'big-drawer',
