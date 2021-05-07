@@ -704,7 +704,8 @@
 							) {
 
 								let filterData = {
-									id: filter.key
+									id: filter.key,
+                                    isActive: filterOpts.enabled
 								};
 
 								const filterName = filter.layout_name ? filter.layout_name : filter.name;

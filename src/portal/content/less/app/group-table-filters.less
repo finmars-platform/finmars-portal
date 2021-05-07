@@ -265,6 +265,20 @@ md-checkbox.g-filter-options-checkbox {
     margin-bottom: 9px;
     cursor: pointer;
 
+    // Victor 2021.03.26 #85 only active filters must be orange
+    &.active {
+
+      background-color: rgba(240, 90, 34, 0.1);
+      color: @orange;
+
+      &:hover {
+        background-color: @orange;
+        color: #fff;
+      }
+      // <Victor 2021.03.26 #85 only active filters must be orange>
+
+    }
+
     .chip-list-content {
       display: flex;
       flex-direction: row;
@@ -301,13 +315,15 @@ md-checkbox.g-filter-options-checkbox {
     .chip-div {
       padding-top: 9px;
       padding-bottom: 9px;
-      background-color: rgba(240, 90, 34, 0.1);
+
+      // Victor 2021.03.26 #85 only active filters must be orange
+/*      background-color: rgba(240, 90, 34, 0.1);
       color: @orange;
 
       &:hover {
         background-color: @orange;
         color: #fff;
-      }
+      }*/
     }
 
   }
