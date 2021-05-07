@@ -84,8 +84,6 @@
 
                 let locals = Object.assign(defaultLocals, drawerOptions.locals);
 
-
-
                 /* let viewportWidth = window.innerWidth;
                 let drawerWidth = (viewportWidth - sidenavWidth) * 0.9;
                 let drawerHeight = window.innerHeight; */
