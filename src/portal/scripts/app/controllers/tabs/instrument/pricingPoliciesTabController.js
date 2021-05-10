@@ -75,8 +75,9 @@
                             value: null,
                         },
                         styles: {
-                            'grid-table-cell': {'width': '115px'}
-                        }
+                            'grid-table-cell-elem': {'width': '10%'}
+                        },
+                        classes: 'pricing-policy'
                     },
                     {
                         key: 'pricing_scheme',
@@ -89,8 +90,9 @@
                             selectorOptions: [],
                         },
                         styles: {
-                            'grid-table-cell': {'width': '144px'}
-                        }
+                            'grid-table-cell-elem': {'width': '30%'}
+                        },
+                        classes: 'pricing-scheme'
                     },
                     {
                         key: 'pricing_scheme_clarification',
@@ -102,9 +104,9 @@
                             value: null
                         },
                         styles: {
-                            'grid-table-cell': {'width': '210px'}
+                            'grid-table-cell-elem': {'width': '30%'}
                         },
-                        classes: 'gt-cell-plain-text'
+                        classes: 'pricing-scheme-clarification gt-cell-plain-text'
                     },
 /*                    {
                         key: 'edit_default_parameters',
@@ -161,8 +163,9 @@
                             }
                         },
                         styles: {
-                            'grid-table-cell': {'width': '180px'}
-                        }
+                            'grid-table-cell-elem': {'width': '30%'}
+                        },
+                        classes: 'edit-default-parameters'
                     },
                 ],
                 methods: {
@@ -203,8 +206,9 @@
                     order: column.order,
                     sorting: true,
                     styles: {
-                        'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
-                    }
+                        'grid-table-cell-elem': {'width': column.styles['grid-table-cell-elem'].width}
+                    },
+                    classes: column.classes
                 };
 
                 return headerData;
@@ -223,11 +227,15 @@
                 pricingPolicy.settings.value = policy.pricing_policy_object.name;
 
                 const pricingScheme = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_scheme');
-                pricingScheme.settings.value = policy.pricing_scheme_object.id;
+                if (policy.pricing_scheme_object) {
+                    pricingScheme.settings.value = policy.pricing_scheme_object.id;
+                }
                 pricingScheme.settings.selectorOptions = vm.instrumentPricingSchemes;
 
                 const pricingSchemeClarification = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_scheme_clarification');
-                pricingSchemeClarification.settings.value = policy.pricing_scheme_object.notes_for_users;
+                if (policy.pricing_scheme_object) {
+                    pricingSchemeClarification.settings.value = policy.pricing_scheme_object.notes_for_users;
+                }
 
                 const defaultParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'edit_default_parameters');
                 defaultParameters.settings.popupSettings.data.item = policy;
