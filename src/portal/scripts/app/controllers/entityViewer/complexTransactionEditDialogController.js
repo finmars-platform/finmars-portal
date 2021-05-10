@@ -476,15 +476,21 @@
             });
         };
 
-        vm.copy = function ($event) {
+        vm.copy = function (windowType) {
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
+
+            if (windowType === 'big_drawer') {
+
+                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType, isCopy: true}};
+                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+            }
 
             $mdDialog.show({
                 controller: 'ComplexTransactionAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: $event,
                 locals: {
                     entityType: vm.entityType,
                     entity: entity,
