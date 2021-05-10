@@ -71,8 +71,8 @@
                     var dashboardComponents = scope.dashboardDataService.getComponents();
 
                     $mdDialog.show({
-                        controller: 'DashboardReportViewerMatrixComponentSettingsDialogController as vm',
-                        templateUrl: 'views/dialogs/dashboard/component-settings/dashboard-report-viewer-matrix-component-settings-dialog-view.html',
+                        controller: 'DashboardReportViewerTableChartComponentSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/dashboard/component-settings/dashboard-report-viewer-table-chart-component-settings-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         autoWrap: true,
