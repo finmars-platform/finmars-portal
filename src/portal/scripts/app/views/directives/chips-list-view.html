@@ -7,6 +7,7 @@
          ng-init="$last && onLastChipInit()">
 
         <div class="chip-div chipDivElem"
+             data-ng-class="{active: chip.isActive}"
              ng-click="onChipClickMethod(chip, $event)">
 
             <span data-ng-if="chip.error_data" class="material-icons error">error</span>

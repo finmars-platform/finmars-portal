@@ -35,14 +35,14 @@
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
-    // var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $state, entityType, entityId)
+    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data)
     {
 
         var vm = this;
 
-        var ttypeEditorSlHelper = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
+        var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.entityType = entityType;
         vm.entityId = entityId;
@@ -87,6 +87,7 @@
         vm.referenceTables = [];
         vm.inputsForMultiselector = [];
 
+        vm.openedIn = data.openedIn;
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -210,7 +211,8 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+            //$mdDialog.hide({status: 'disagree'});
         };
 
         vm.manageAttrs = function (ev) {
@@ -234,7 +236,7 @@
             });
         };
 
-        vm.copy = function ($event) {
+        vm.copy = function (windowType) {
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
@@ -243,18 +245,26 @@
 
             console.log('copy entity', entity);
 
+            if (windowType === 'big_drawer') {
+
+                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType}};
+                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+            }
+
             $mdDialog.show({
                 controller: 'TransactionTypeAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: $event,
+                // targetEvent: $event,
                 locals: {
                     entityType: vm.entityType,
                     entity: entity
                 }
             });
 
-            $mdDialog.hide();
+            // $mdDialog.hide();
+            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
 
         };
 
@@ -288,7 +298,7 @@
 
         vm.transactionUserFields = {};
 
-        vm.getTransactionUserFields = ttypeEditorSlHelper.getTransactionUserFields;
+        vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
 
         vm.getItem = function () {
 
@@ -298,7 +308,7 @@
 
                     vm.entity = data;
 
-                    ttypeEditorSlHelper.updateInputFunctions();
+                    sharedLogic.updateInputFunctions();
                     /* vm.expressionData.groups[0] = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
@@ -467,55 +477,8 @@
 
             updatedEntity.object_permissions = [];
 
-            if (vm.groups) {
-                vm.groups.forEach(function (group) {
-
-                    if (group.objectPermissions && group.objectPermissions.manage === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "manage_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.change === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "change_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.view === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "view_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                });
-            }
-
-
-            updatedEntity.inputs.forEach(function (input) {
-
-                if (input.settings) {
-
-                	if (input.settings.linked_inputs_names) {
-						input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
-					}
-
-                	if (input.settings.recalc_on_change_linked_inputs) {
-						input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.join(',')
-					}
-
-                }
-
-            });
-
-            return updatedEntity
-
+			// code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
+			return sharedLogic.updateEntityBeforeSave(updatedEntity);
 
         };
 
@@ -774,11 +737,11 @@
                 /* var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
 
-                var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(entityToSave.actions);
-				var inputsErrors = ttypeEditorSlHelper.validateInputs(entityToSave.inputs);
+                var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
+				var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
 				actionsErrors = actionsErrors.concat(inputsErrors);
 
-                var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(entityToSave);
+                var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
                 if (actionsErrors.length || entityErrors.length) {
 
@@ -809,6 +772,7 @@
                         console.log('data', data);
                         //originalEntity = JSON.parse(angular.toJson(vm.entity));
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
+                        vm.entity.object_permissions = data.object_permissions;
 
                         vm.processing = false;
                         $scope.$apply();
@@ -848,7 +812,9 @@
         vm.saveAndExit = function () {
 
             vm.save().then(function (data) {
-                $mdDialog.hide({res: 'agree', data: data});
+                // $mdDialog.hide({res: 'agree', data: data});
+                let responseObj = {res: 'agree', data: data};
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
         };
@@ -1052,9 +1018,9 @@
             $scope.$apply();
         };
 
-        vm.contextProperties = ttypeEditorSlHelper.getContextProperties();
+        vm.contextProperties = sharedLogic.getContextProperties();
         vm.relationItems = {};
-        vm.valueTypes = ttypeEditorSlHelper.getValueTypes();
+        vm.valueTypes = sharedLogic.getValueTypes();
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
         /* vm.bindValueType = function (row) { // TODO delete
@@ -1108,7 +1074,7 @@
 
         }; */
 
-        vm.resolveRelation = ttypeEditorSlHelper.resolveRelation;
+        vm.resolveRelation = sharedLogic.resolveRelation;
 
         vm.resolveDefaultValue = function (item) {
 
@@ -1346,7 +1312,9 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+                    // $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
+                    let responseObj = {res: 'agree', data: {action: 'delete'}};
+                    metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
                 }
 
             })
@@ -2688,7 +2656,7 @@
             vm.inputsGridTableDataService = new GridTableDataService();
             vm.inputsGridTableEventService = new GridTableEventService();
 
-            ttypeEditorSlHelper.initGridTableEvents();
+            sharedLogic.initGridTableEvents();
 
             ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
@@ -2696,19 +2664,19 @@
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();
-            var getRefTablesPromise = ttypeEditorSlHelper.getReferenceTables();
+            var getRefTablesPromise = sharedLogic.getReferenceTables();
 
             vm.getTransactionTypeGroups();
             vm.getPortfolios();
             vm.getInstrumentTypes();
 
-            var getInputTemplPromise = ttypeEditorSlHelper.getInputTemplates();
+            var getInputTemplPromise = sharedLogic.getInputTemplates();
             vm.getFieldTemplates();
             vm.getActionTemplates();
 
             Promise.all([getItemPromise, getAttrsPromise, getRefTablesPromise, getInputTemplPromise]).then(function () {
 
-                ttypeEditorSlHelper.initAfterMainDataLoaded();
+                sharedLogic.initAfterMainDataLoaded();
                 vm.readyStatus.inputs = true;
 
             });
