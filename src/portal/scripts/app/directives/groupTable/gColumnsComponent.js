@@ -34,6 +34,8 @@
                 scope.groups = scope.evDataService.getGroups();
                 evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
 
+                scope.entityType = scope.evDataService.getEntityType();
+
                 const setFiltersLayoutNames = () => {
 
                     const filters = scope.evDataService.getFilters();
@@ -62,12 +64,63 @@
                     return ['market_value', 'market_value_percent', 'exposure', 'exposure_percent'].some(excludedKey => column.key === excludedKey);
                 }
 
+                // Victor 2021.03.29 #88 fix bug with deleted custom fields
+                let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+
+                function collectMissingCustomFieldsErrors(columns, groups) {
+
+                    const errors =[];
+
+                    columns.concat(groups).forEach(column => {
+
+                        if (column.key.startsWith('custom_fields')) {
+
+                            const customField = customFields.find( field => column.key === `custom_fields.${field.user_code}`);
+
+                            if (customField) {
+
+                                column.error_data = null;
+
+                            } else {
+
+                            	const description = `The ${column.groups ? 'group' : 'column'} does not exist in the Configuration`
+
+                                column.error_data = {
+                                	code: 10,
+                                    description: description
+                                };
+
+                                const error = {
+                                    key: column.key,
+                                    description: description
+                                };
+
+                                errors.push(error);
+                            }
+
+                        }
+
+                    })
+
+                    const missingCustomFields = [];
+                    errors.forEach(error => {
+                        if (!missingCustomFields.find(field => field.key === error.key)) {
+
+                            missingCustomFields.push(error);
+
+                        }
+                    });
+
+                    scope.evDataService.setMissingCustomFields({forColumns: missingCustomFields});
+                }
+                // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
+
                 // Victor 2020.12.11 scope.notGroupingColumns should update on any scope.columns or scope.groups change (if not dispatched evEvents.COLUMNS_CHANGE)
                 scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
 
                 setFiltersLayoutNames();
-
-                scope.entityType = scope.evDataService.getEntityType();
 
                 scope.components = scope.evDataService.getComponents();
                 scope.downloadedItemsCount = null;
@@ -664,6 +717,7 @@
                                 scope.evDataService.setActiveColumnSort(column);
 
                                 scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                                collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
 
                                 scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -708,6 +762,7 @@
                         scope.evDataService.setColumns(columns);
 
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
 
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -1248,6 +1303,7 @@
 
                     scope.evDataService.setColumns(scope.columns);
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                    collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
 
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
@@ -1842,6 +1898,13 @@
 
                 const initEventListeners = function () {
 
+                    // Victor 2021.03.29 #88 fix bug with deleted custom fields
+                    scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                        customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                        collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
+                    })
+                    // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
                         updateGroupTypeIds();
@@ -1856,6 +1919,7 @@
                         evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
 
 						scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
 						// setFiltersLayoutNames();
 						var foldedGroup = scope.groups.find(group => group.report_settings && group.report_settings.is_level_folded);
 
@@ -1879,6 +1943,7 @@
                         makePopupDataForColumns(scope.columns);
 
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                         setFiltersLayoutNames()
 
 					});
@@ -1887,7 +1952,8 @@
 
 						scope.groups = scope.evDataService.getGroups();
 						evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
-						// scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+						scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                        collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
 
 						setFiltersLayoutNames()
 
@@ -1919,6 +1985,7 @@
                     makePopupDataForColumns(scope.columns);
 
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                    collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                     setFiltersLayoutNames();
 
                     evDataHelper.updateColumnsIds(scope.evDataService);

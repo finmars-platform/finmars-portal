@@ -237,6 +237,60 @@
 
         };
 
+        const updateEntityBeforeSave = function (entity) {
+
+        	if (viewModel.groups) {
+
+				viewModel.groups.forEach(function (group) {
+
+					if (group.objectPermissions && group.objectPermissions.manage === true) {
+						entity.object_permissions.push({
+							member: null,
+							group: group.id,
+							permission: "manage_" + viewModel.entityType.split('-').join('')
+						})
+					}
+
+					if (group.objectPermissions && group.objectPermissions.change === true) {
+						entity.object_permissions.push({
+							member: null,
+							group: group.id,
+							permission: "change_" + viewModel.entityType.split('-').join('')
+						})
+					}
+
+					if (group.objectPermissions && group.objectPermissions.view === true) {
+						entity.object_permissions.push({
+							member: null,
+							group: group.id,
+							permission: "view_" + viewModel.entityType.split('-').join('')
+						})
+					}
+
+				});
+
+			}
+
+			entity.inputs.forEach(function (input) {
+
+				if (input.settings) {
+
+					if (input.settings.linked_inputs_names) {
+						input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+					}
+
+					if (input.settings.recalc_on_change_linked_inputs) {
+						input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.join(',')
+					}
+
+				}
+
+			});
+
+        	return entity;
+
+		};
+
 		//<editor-fold desc="TRANSACTION VALIDATION">
 		const hasInputInExprs = function (inputs, expr, namesOnly) {
 
@@ -1296,6 +1350,7 @@
             getReferenceTables: getReferenceTables,
             getInputTemplates: getInputTemplates,
 
+			updateEntityBeforeSave: updateEntityBeforeSave,
             resolveRelation: resolveRelation,
             checkActionsForEmptyFields: checkActionsForEmptyFields,
             checkEntityForEmptyFields: checkEntityForEmptyFields,
