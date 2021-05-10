@@ -7,24 +7,25 @@
 
             <div ng-if="viewContext === 'dashboard'"
                  class="axis-attr-selector-btns-holder axisAttrSelectorBtnsHolder">
-                <button popup
+                <button ng-if="canChangeAbscissaAttr"
+                        popup
                         popup-template-url="'views/popups/selector-popup-view.html'"
                         popup-data="abscissaSelectorData"
                         position-relative-to="element"
                         relative-popup-x="left"
+                        relative-popup-y="top"
                         open-on="click"
                         close-on-click-outside="true"
-                        ng-disabled="!availableAbscissaAttrs.length"
                         class="flex-row flex-center axis-attr-selector-btn abscissa"><span class="material-icons">chevron_right</span></button>
 
-                <button popup
+                <button ng-if="canChangeOrdinateAttr"
+                        popup
                         popup-template-url="'views/popups/selector-popup-view.html'"
                         popup-data="ordinateSelectorData"
                         position-relative-to="element"
                         relative-popup-y="top"
                         open-on="click"
                         close-on-click-outside="true"
-                        ng-disabled="!availableOrdinateAttrs.length"
                         class="flex-row flex-center axis-attr-selector-btn ordinate"><span class="material-icons">expand_more</span></button>
             </div>
 

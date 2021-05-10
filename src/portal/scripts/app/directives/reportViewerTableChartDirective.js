@@ -38,6 +38,8 @@
                 scope.availableValueColumnAttrs = scope.tableChartSettings.available_value_column_keys || [];
                 if (scope.availableValueColumnAttrs.length) scope.availableValueColumnAttrs = JSON.parse(angular.toJson(scope.availableValueColumnAttrs));
 
+				scope.canChangeTitleColumnAttr = false;
+				scope.canChangeValueColumnAttr = false;
 
                 scope.toggleSort = function (sortKey) {
 
@@ -314,34 +316,57 @@
 
                 };
 
-                var onAttrsOptionSelect = function (option, key, _$popup) {
+                var onAttrsOptionSelect = function (option, optionsList, key, _$popup) {
+
+					_$popup.cancel();
 
                     if (option.id !== scope.tableChartSettings[key]) {
 
                         scope.tableChartSettings[key] = option.id;
                         scope.createTable();
 
+						var activeOption = optionsList.find(sOption => sOption.isActive);
+						if (activeOption) activeOption.isActive = false;
+
+						option.isActive = true;
+
                         scope.evEventService.dispatchEvent(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED);
 
                     }
-
-                    _$popup.cancel();
 
                 };
 
                 scope.titleColumnSelectorData = {
                     options: formatAttrsForSelector(scope.availableTitleColumnAttrs, scope.tableChartSettings.title_column),
                     selectOption: function (option, _$popup) {
-                        onAttrsOptionSelect(option, 'title_column', _$popup);
+                        onAttrsOptionSelect(option, scope.titleColumnSelectorData.options, 'title_column', _$popup);
                     }
                 };
 
                 scope.valueColumnSelectorData = {
                     options: formatAttrsForSelector(scope.availableValueColumnAttrs, scope.tableChartSettings.value_column),
                     selectOption: function (option, _$popup) {
-                        onAttrsOptionSelect(option, 'value_column', _$popup);
+                        onAttrsOptionSelect(option, scope.valueColumnSelectorData.options, 'value_column', _$popup);
                     }
                 };
+
+				var canChangeColumnAttr = function (availableAttrsList, colAttrKey) {
+
+					if (availableAttrsList.length) {
+
+						if (availableAttrsList.length === 1) {
+							// One different attribute is available for column
+							return availableAttrsList[0].attribute_data.key !== colAttrKey;
+
+						} else {
+							return true;
+						}
+
+					}
+
+					return false;
+
+				};
 
                 scope.init = function () {
 
@@ -375,6 +400,9 @@
                         scope.createTable();
 
                     });
+
+					scope.canChangeTitleColumnAttr = canChangeColumnAttr(scope.availableTitleColumnAttrs, scope.tableChartSettings.title_column);
+					scope.canChangeValueColumnAttr = canChangeColumnAttr(scope.availableValueColumnAttrs, scope.tableChartSettings.value_column);
 
                 };
 
