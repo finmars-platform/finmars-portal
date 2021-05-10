@@ -238,11 +238,18 @@
 
         else if (columnNumber > obj.___level - 1) {
 
-            const isHideSubtotal = column.report_settings && column.report_settings.subtotal_formula_id && column.report_settings.hide_subtotal;
-            const isGrandTotal = obj.___level === 0
-            const isHideGrandTotal =  column.report_settings && column.report_settings.subtotal_formula_id && column.report_settings.hide_grandtotal;
+        	var showTotal;
+        	var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id;
+            var isNotGrandTotal = obj.___level !== 0;
 
-            if (!isGrandTotal && !isHideSubtotal || isGrandTotal && !isHideGrandTotal) {
+			if (isNotGrandTotal) {
+				showTotal = totalCalculationOn && !column.report_settings.hide_subtotal;
+
+			} else { // for grand total
+				showTotal = totalCalculationOn && !column.report_settings.hide_grandtotal;
+			}
+
+            if (showTotal) { // for subtotals
 
                 if (obj.hasOwnProperty(column.key)) {
 

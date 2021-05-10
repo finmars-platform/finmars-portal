@@ -34,18 +34,25 @@
                 scope.reportOptions = scope.evDataService.getReportOptions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
-                scope.layoutName = '';
+                scope.layoutData = {
+                	name: ''
+				};
 
-                scope.layout = scope.evDataService.getListLayout()
-                if (scope.layout && scope.layout.name) {
-                    scope.layoutName = scope.layout.name;
-                }
+				let listLayout = scope.evDataService.getListLayout();
+
+				if (listLayout && listLayout.name) {
+					scope.layoutData.name = listLayout.name;
+				}
 
                 scope.popupData = {
                     entityType: scope.entityType,
                     evDataService: scope.evDataService,
-                    evEventService: scope.evEventService
+                    evEventService: scope.evEventService,
                 }
+
+				scope.saveLayoutList = function () {
+					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+				};
 
                 scope.openMissingPricesDialog = function($event) {
 
@@ -244,8 +251,12 @@
                 var initEventListeners =function () {
 
                     scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
-                        const listLayout = scope.evDataService.getListLayout();
-                        scope.layoutName = listLayout.name;
+
+                    	listLayout = scope.evDataService.getListLayout();
+						console.log("testing LAYOUT_NAME_CHANGE new listLayout", listLayout);
+						if (listLayout && listLayout.name) {
+							scope.layoutData.name = listLayout.name;
+						}
 
                     });
 

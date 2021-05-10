@@ -445,10 +445,6 @@
 
                             }
 
-
-
-
-
                         }
 
                     })
@@ -588,9 +584,9 @@
 
                                         }
 
-                                        layoutsSavePromises.push(saveLayoutChanges);
-
                                     });
+
+									layoutsSavePromises.push(saveLayoutChanges);
                                 }
 
                                 Promise.all(layoutsSavePromises).then(function () {
