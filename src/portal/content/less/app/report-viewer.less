@@ -73,7 +73,7 @@
 
     &.selected {
 
-      background: rgba(205, 136, 99, .4);
+      // background: rgba(205, 136, 99, .4);
 
       .g-row-selection {
         background: #ffeee8;
@@ -185,7 +185,7 @@
   .g-row {
 
     &.selected {
-      background: #ffeee8;
+      // background: #ffeee8;
 
       .g-row-selection {
         fill: #4C334D;
@@ -197,8 +197,7 @@
     }
 
     &.last-selected, &.context-menu-opened {
-      background: #e4c1b5;
-
+      // background: #e4c1b5;
       .g-row-selection {
         fill: #4C334D;
 
@@ -206,6 +205,16 @@
           fill: #000
         }
       }
+    }
+
+    &.last-selected {
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+      z-index: 1;
+    }
+
+    &.context-menu-opened {
+      outline: 1px solid @orange;
+      z-index: 1;
     }
 
     .g-grand-total-first-cell {
