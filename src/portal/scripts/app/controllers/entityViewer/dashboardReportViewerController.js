@@ -1141,21 +1141,32 @@
 
 				});
 
-				if (vm.componentData.type === 'report_viewer_grand_total') {
+				switch (vm.componentData.type) {
+					case 'report_viewer_grand_total':
 
-					vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-						vm.updateGrandTotalComponent();
-					})
+						vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+							vm.updateGrandTotalComponent();
+						})
 
-				}
+						break;
 
-				if (vm.componentData.type === 'report_viewer_matrix') {
+					case 'report_viewer_matrix':
 
-					vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
-						vm.componentData.settings.abscissa = vm.matrixSettings.abscissa;
-						vm.componentData.settings.ordinate = vm.matrixSettings.ordinate;
-					});
+						vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
+							vm.componentData.settings.abscissa = vm.matrixSettings.abscissa;
+							vm.componentData.settings.ordinate = vm.matrixSettings.ordinate;
+						});
 
+						break;
+
+					case 'report_viewer_table_chart':
+
+						vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
+							vm.componentData.settings.title_column = vm.tableChartSettings.title_column;
+							vm.componentData.settings.value_column = vm.tableChartSettings.value_column;
+						});
+
+						break;
 				}
 
 				if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
