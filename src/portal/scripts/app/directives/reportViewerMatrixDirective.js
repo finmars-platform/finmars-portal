@@ -15,8 +15,7 @@
             scope: {
                 matrixSettings: '=',
                 evDataService: '=',
-                evEventService: '=',
-
+                evEventService: '='
             },
             templateUrl: 'views/directives/report-viewer-matrix-view.html',
             link: function (scope, elem, attr) {
@@ -26,6 +25,7 @@
                 // console.log('Report Viewer Matrix Component', scope);
 
                 scope.processing = true;
+                scope.matrixCreationInProgress = false;
 
                 scope.viewContext = scope.evDataService.getViewContext();
                 scope.dashboardFilterCollapsed = true;
@@ -42,7 +42,10 @@
                     scope.emptyLinesHidingType = scope.matrixSettings.hide_empty_lines;
                 }
 
-                var cellWidth = 0;
+                scope.canChangeAbscissaAttr = false;
+				scope.canChangeOrdinateAttr = false;
+
+				var cellWidth = 0;
 
                 var matrixWrap, matrixHolder;
                 var bodyScrollElem;
@@ -430,6 +433,9 @@
                     }
 
                     scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
+					scope.matrixCreationInProgress = true;
+					window.removeEventListener('resize', scope.alignGrid);
+
                     getValuesForMatrix();
 
                     if (scope.emptyLinesHidingType) {
@@ -470,6 +476,9 @@
                         scope.$apply();
 
                         initMatrixMethods();
+
+						scope.matrixCreationInProgress = false;
+						window.addEventListener('resize', scope.alignGrid);
 
                     }, 100)
 
@@ -570,7 +579,6 @@
 
                     } else {
                         scope.emptyLinesHidingType = hideType;
-
                     }
 
                     scope.processing = false;
@@ -579,24 +587,31 @@
 
                 };
 
+				//<editor-fold desc="Popup-selector of attributes for axises">
 				/**
 				 *
 				 * @param option {{id: string, name: string, isActive: boolean}}
+				 * @param optionsList {Array.<Object>}
 				 * @param axisProp {String} - can be 'abscissa' or 'ordinate'
 				 * @param _$popup {Object} - data from popup
 				 */
-				var onAxisAttrsOptionSelect = function (option, axisProp, _$popup) {
+				var onAxisAttrsOptionSelect = function (option, optionsList, axisProp, _$popup) {
+
+					_$popup.cancel();
 
 					if (option.id !== scope.matrixSettings[axisProp]) {
 
 						scope.matrixSettings[axisProp] = option.id;
 						scope.createMatrix();
 
+						var activeOption = optionsList.find(sOption => sOption.isActive);
+						if (activeOption) activeOption.isActive = false;
+
+						option.isActive = true;
+
 						scope.evEventService.dispatchEvent(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED);
 
 					}
-
-					_$popup.cancel();
 
 				};
 
@@ -617,16 +632,36 @@
                 scope.abscissaSelectorData = {
                 	options: formatAttrsForSelector(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa),
 					selectOption: function (option, _$popup) {
-						onAxisAttrsOptionSelect(option, 'abscissa', _$popup);
+                		onAxisAttrsOptionSelect(option, scope.abscissaSelectorData.options, 'abscissa', _$popup);
 					}
 				};
 
 				scope.ordinateSelectorData = {
 					options: formatAttrsForSelector(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate),
 					selectOption: function (option, _$popup) {
-						onAxisAttrsOptionSelect(option, 'ordinate', _$popup);
+						onAxisAttrsOptionSelect(option, scope.ordinateSelectorData.options, 'ordinate', _$popup);
 					}
 				};
+
+				var canChangeAxisAttr = function (availableAttrsList, axisAttrKey) {
+
+					if (availableAttrsList.length) {
+
+						if (availableAttrsList.length === 1) {
+
+							// One different attribute is available for axis
+							return availableAttrsList[0].attribute_data.key !== axisAttrKey;
+
+						} else {
+							return true;
+						}
+
+					}
+
+					return false;
+
+				};
+				//</editor-fold desc="Popup-selector of attributes for axises">
 
                 scope.init = function () {
 
@@ -664,7 +699,19 @@
 					}
 					//</editor-fold>
 
-                    window.addEventListener('resize', scope.alignGrid);
+					/* if (scope.availableAbscissaAttrs.length) {
+
+						if (scope.availableAbscissaAttrs.length === 1 &&
+							scope.availableAbscissaAttrs[0].attribute_data.key !== scope.matrixSettings.abscissa) {
+
+							scope.canChangeAbscissaAttr = true
+
+						}
+
+					} */
+					scope.canChangeAbscissaAttr = canChangeAxisAttr(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa);
+					scope.canChangeOrdinateAttr = canChangeAxisAttr(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate);
+                    // window.addEventListener('resize', scope.alignGrid);
 
                 };
 

@@ -5,6 +5,8 @@
 
     'use strict';
 
+    // TO DELETE: after making report viewer and entity viewer use new interface
+
     var evEvents = require('../../services/entityViewerEvents');
 
     module.exports = function () {
