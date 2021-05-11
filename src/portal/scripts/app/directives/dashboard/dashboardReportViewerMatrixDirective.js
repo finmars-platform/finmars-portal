@@ -39,14 +39,16 @@
                 var componentData;
 
                 if (scope.item && scope.item.data) {
-                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                	componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                     if (componentData.custom_component_name) {
                         scope.customName = componentData.custom_component_name;
                     }
+
                 }
 
-                var componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+                // componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                 scope.vm = {
                     tabNumber: scope.tabNumber,
@@ -206,6 +208,7 @@
 
                     }
 
+					//<editor-fold desc="Dashboard component events">
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
 
                         if (scope.item && scope.item.data) {
@@ -236,7 +239,12 @@
 
                         });
 
-                    })
+                    });
+
+					scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
+
+					});
+					//</editor-fold>
 
                 };
 

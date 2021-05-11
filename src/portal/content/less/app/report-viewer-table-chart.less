@@ -6,6 +6,44 @@
     flex-direction: column;
   }
 
+  .attr-selector-btns-holder {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+
+    .attr-selector-btn {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background-color: #fff;
+      padding: 0;
+      border: 1px solid @borderPale;
+      border-radius: 100%;
+
+      &[disabled] {
+        opacity: .5;
+      }
+
+      &.abscissa {
+        top: 50%;
+        transform: translateY(-50%);
+        right: -9px;
+      }
+
+      &.ordinate {
+        bottom: -9px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      span.material-icons {
+        color: @gray;
+        font-size: 18px;
+      }
+    }
+
+  }
 
 
   .rv-table-chart-row {
@@ -18,6 +56,11 @@
     display: flex;
     border-bottom: 1px solid rgba(224, 224, 224, 1);
     display: flex;
+
+    &:hover {
+      cursor: pointer;
+      opacity: .9;
+    }
   }
 
   .rv-table-chart-border-right {
@@ -57,9 +100,11 @@
   }
   .rv-table-chart-table-cell-column-title {
     min-width: 400px;
+    position: relative;
   }
   .rv-table-chart-table-cell-column-value {
     min-width: 400px;
+    position: relative;
   }
 
   .rv-table-chart-table-line-bar {
@@ -74,6 +119,7 @@
   .rv-table-chart-table-line-bar.rv-table-chart-table-line-bar-negative {
     background: rgba(240, 90, 34, 1);
     padding-left: 0;
+    float: right;
   }
 
   .rv-table-chart-table-line-bar-title {

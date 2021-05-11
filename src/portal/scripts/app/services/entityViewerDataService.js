@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var stringHelper = require('../helpers/stringHelper');
+	var stringHelper = require('../helpers/stringHelper');
     var metaHelper = require('../helpers/meta.helper');
 
     var getDefaultInterfaceLayout = function () {
@@ -99,7 +99,7 @@
         });
 
     };
-
+	/** @module entityViewerDataService */
     module.exports = function () {
 
         var data = {
@@ -146,7 +146,7 @@
                 step: 60, // rows to render
                 direction: null
             },
-            viewContext: '',
+            viewContext: '', // can be: reconciliation_viewer, dashboard, entity_viewer, reconciliation_viewer, split_panel
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
@@ -163,7 +163,11 @@
             activeObjectsCount: 0,
             dataLoadEnded: false,
             markedSubtotals: {},
-			rowSettings: {}
+			rowSettings: {},
+            missingCustomFields: {
+                forFilters: [],
+                forColumns: [],
+            }
         };
 
         var dashboardData = {
@@ -554,7 +558,8 @@
 
             });
 
-            return result
+            return result;
+
         }
 
         function getData(hashId) {
@@ -755,7 +760,6 @@
         function getLastActivatedRow() {
             return data.lastActivatedRow;
         }
-
 
         function setActiveObject(obj) {
             data.activeObject = obj
@@ -1164,14 +1168,39 @@
 
             setListLayout(listLayout);
 
-            data.columns.forEach(function (column) {
+            const setActiveColumn = async (column) => {
 
                 if (column.options && column.options.sort) {
 
-                    setActiveColumnSort(column);
+                    if (column.groups) {
+                        setActiveGroupTypeSort(column);
+                    } else {
+                        setActiveColumnSort(column);
+                    }
+
+                    if (column.options.sort_mode === 'manual') {
+
+                        const {results} = await uiService.getColumnSortDataList({
+                            filters: {
+                                user_code: column.manual_sort_layout_user_code
+                            }
+                        });
+
+                        if (results.length) {
+
+                            const layout = results[0];
+                            setColumnSortData(column.key, layout.data);
+
+                        }
+
+                    }
+
                 }
 
-            });
+            };
+
+            data.columns.forEach(setActiveColumn);
+            data.groups.forEach(setActiveColumn);
 
             listLayout.data.components = {
 				filterArea: true,
@@ -1406,6 +1435,28 @@
 			return data.rowSettings || {};
 		}
 
+        function setMissingCustomFields(options) {
+
+            if (!options) {
+                data.missingCustomFields = {
+                    forFilters: [],
+                    forColumns: [],
+                };
+            }
+
+            if (options.forFilters) {
+                data.missingCustomFields.forFilters = options.forFilters;
+            }
+
+            if (options.forColumns) {
+                data.missingCustomFields.forColumns = options.forColumns;
+            }
+        }
+
+        function getMissingCustomFields() {
+            return data.missingCustomFields;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1634,6 +1685,9 @@
 
 			setRowSettings: setRowSettings,
 			getRowSettings: getRowSettings,
+
+            setMissingCustomFields: setMissingCustomFields,
+            getMissingCustomFields: getMissingCustomFields,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

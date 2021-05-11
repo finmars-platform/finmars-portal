@@ -9,6 +9,7 @@
                              ev-data-service="vm.entityViewerDataService"
                              ev-event-service="vm.entityViewerEventService"
                              sp-exchange-service="vm.splitPanelExchangeService"
+                             hide-filters-block="true"
                 ></group-table>
             </div>
 
@@ -74,7 +75,8 @@
 
             <div data-ng-if="vm.componentData.type === 'report_viewer_matrix'" class="flex-column height-100 overflow-auto">
                 <div style="flex: 1 0 auto;">
-                    <g-filters ev-data-service="vm.entityViewerDataService"
+                    <g-filters hide-filters-block="true"
+                               ev-data-service="vm.entityViewerDataService"
                                ev-event-service="vm.entityViewerEventService"
                                attribute-data-service="vm.attributeDataService"></g-filters>
                 </div>

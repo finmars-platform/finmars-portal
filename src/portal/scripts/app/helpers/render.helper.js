@@ -52,6 +52,11 @@
         return icons[key] || '';
     }
 
+	/**
+	 *
+	 * @param buttonClasses
+	 * @returns {string}
+	 */
     var getRowSettings = function (buttonClasses, color) {
 
         const icon = ['red', 'yellow', 'green'].includes(color) ? 'label' : 'label_outline';
