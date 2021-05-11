@@ -1,8 +1,10 @@
 <div data-ng-if="isReport" class="settings-btn">
+
     <div data-ng-if="column.value_type == 20">
         <md-menu>
             <md-button aria-label="numeric column settings"
                        class="md-icon-button column-btns"
+                       ng-disabled="column.error_data"
                        ng-click="$mdMenu.open($event)">
                 <ng-md-icon icon="settings"></ng-md-icon>
             </md-button>
@@ -279,6 +281,7 @@
         <md-menu>
             <md-button aria-label="column settings"
                        class="md-icon-button column-btns"
+                       ng-disabled="column.error_data"
                        ng-click="$mdMenu.open($event)">
                 <ng-md-icon icon="settings"></ng-md-icon>
             </md-button>
@@ -314,6 +317,7 @@
     <md-menu>
         <md-button aria-label="column settings"
                    class="md-icon-button column-btns"
+                   ng-disabled="column.error_data"
                    ng-click="$mdMenu.open($event)">
             <ng-md-icon icon="settings"></ng-md-icon>
         </md-button>

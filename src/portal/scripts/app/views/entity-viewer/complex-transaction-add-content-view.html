@@ -122,7 +122,7 @@
                                 ev-editor-data-service="vm.evEditorDataService"
                                 ev-editor-event-service="vm.evEditorEventService"
                                 item="vm.fixedAreaAttributesLayout[row][field.column]"
-                                entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
+                                entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                     </div>
                 </div>
             </div>
@@ -130,7 +130,7 @@
             <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
                 <md-tab data-ng-repeat="tab in vm.tabs track by tab.name">
                     <md-tab-label>
-                        <div class="tab-name-elem" data-tab-name="{{tab.name | lowercase}}">
+                        <div class="tab-name-elem evFormUserTabName" data-tab-name="{{tab.name | lowercase}}">
                             <span>{{tab.name}}</span>
                         </div>
                     </md-tab-label>
@@ -154,7 +154,7 @@
                                             ev-editor-data-service="vm.evEditorDataService"
                                             ev-editor-event-service="vm.evEditorEventService"
                                             item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
-                                            entity-change="vm.onFieldChange(fieldKey)"></bind-field-control>
+                                            entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                                 </div>
                             </div>
                         </md-content>

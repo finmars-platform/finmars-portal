@@ -47,6 +47,23 @@
                     evEventService: scope.evEventService
                 }
 
+                scope.openMissingPricesDialog = function($event) {
+
+                    $mdDialog.show({
+                        controller: 'ReportPriceCheckerDialogController as vm',
+                        templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            data: {
+                                missingPricesData: scope.missingPricesData,
+                                evDataService: scope.evDataService
+                            }
+                        }
+                    })
+
+                };
+
                 scope.toggleFilterBlock = function ($event) {
 
 					const elem = $event.currentTarget;
@@ -139,7 +156,7 @@
 
                     scope.datepickerToDisplayOptions = {position: 'left'};
 
-                    if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
+                    /* if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
 
                         if (scope.entityType === 'transaction-report') {
                             scope.datepickerFromDisplayOptions = {
@@ -155,7 +172,7 @@
                                 inception: false
                             }
                         }
-                    }
+                    } */
                     /* < preparing data for complexZhDatePickerDirective > */
 
                 };
@@ -232,9 +249,19 @@
 
                     });
 
+                    scope.evEventService.addEventListener(evEvents.MISSING_PRICES_LOAD_END, function () {
+
+                        scope.missingPricesData = scope.evDataService.getMissingPrices()
+
+
+                    });
+
                 };
 
                 var init = async function () {
+
+                    scope.missingPricesData = scope.evDataService.getMissingPrices()
+
                     initEventListeners();
                 };
 

@@ -32,6 +32,15 @@
 
                 scope.viewContext = scope.evDataService.getViewContext();
 
+                scope.availableTitleColumnAttrs = scope.tableChartSettings.available_title_column_keys || [];
+                if (scope.availableTitleColumnAttrs.length) scope.availableTitleColumnAttrs = JSON.parse(angular.toJson(scope.availableTitleColumnAttrs));
+
+                scope.availableValueColumnAttrs = scope.tableChartSettings.available_value_column_keys || [];
+                if (scope.availableValueColumnAttrs.length) scope.availableValueColumnAttrs = JSON.parse(angular.toJson(scope.availableValueColumnAttrs));
+
+				scope.canChangeTitleColumnAttr = false;
+				scope.canChangeValueColumnAttr = false;
+
                 scope.toggleSort = function (sortKey) {
 
                     if (scope.sortKey === sortKey) {
@@ -134,6 +143,33 @@
                     return Math.floor(Math.random() * (max - min + 1) + min);
                 }
 
+                scope.formatValue = function (val, number_format) {
+
+                    var result = val;
+
+                    if (number_format && (val || val === 0)) {
+
+                        result = renderHelper.formatValue(
+                            {
+                                value: val
+                            },
+                            {
+                                key: 'value',
+                                report_settings: number_format
+                            }
+                        );
+
+                    }
+
+                    if (!result && result !== 0) {
+                        return '';
+                    }
+
+                    return result;
+
+                };
+
+
                 scope.createTable = function () {
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
@@ -142,6 +178,18 @@
                     });
 
                     scope.items = scope.getUniqueValues(itemList, scope.tableChartSettings.title_column, scope.tableChartSettings.value_column)
+
+
+                    scope.items = scope.items.map(function (item) {
+
+                        if (item.total === null || item.total === undefined || isNaN(item.total)) {
+                            item.total = 0;
+                        }
+
+                        item.total_formated = scope.formatValue(item.total, scope.tableChartSettings.number_format)
+
+                        return item
+                    })
 
                     console.log('createTable.tableChartSettings', scope.tableChartSettings);
                     console.log('createTable.items', scope.items);
@@ -181,13 +229,15 @@
 
                             item.graph_value = Math.ceil(item.total / (positiveTotal / 100))
 
-                        } else {
+                        } else if (item.total < 0) {
 
                             item.graph_value = Math.ceil(Math.abs(item.total) / (negativeTotal / 100))
                             item.is_negative = true;
 
                             scope.hasNegativeValues = true;
 
+                        } else {
+                            item.graph_value = 0;
                         }
 
                         return item;
@@ -239,6 +289,85 @@
 
                 }
 
+                scope.rowClick = function ($event, item) {
+
+                    var activeObject = {};
+
+                    activeObject[scope.tableChartSettings.title_column] = item.key;
+
+                    console.log('activeObject', activeObject);
+
+                    scope.evDataService.setActiveObject(activeObject);
+                    scope.evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+                };
+
+                var formatAttrsForSelector = function (attrsList, selectedAttrKey) {
+
+                    return attrsList.map(attr => {
+
+                        return {
+                            name: attr.layout_name || attr.attribute_data.name,
+                            id: attr.attribute_data.key,
+                            isActive: attr.attribute_data.key === selectedAttrKey
+                        };
+
+                    });
+
+                };
+
+                var onAttrsOptionSelect = function (option, optionsList, key, _$popup) {
+
+					_$popup.cancel();
+
+                    if (option.id !== scope.tableChartSettings[key]) {
+
+                        scope.tableChartSettings[key] = option.id;
+                        scope.createTable();
+
+						var activeOption = optionsList.find(sOption => sOption.isActive);
+						if (activeOption) activeOption.isActive = false;
+
+						option.isActive = true;
+
+                        scope.evEventService.dispatchEvent(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED);
+
+                    }
+
+                };
+
+                scope.titleColumnSelectorData = {
+                    options: formatAttrsForSelector(scope.availableTitleColumnAttrs, scope.tableChartSettings.title_column),
+                    selectOption: function (option, _$popup) {
+                        onAttrsOptionSelect(option, scope.titleColumnSelectorData.options, 'title_column', _$popup);
+                    }
+                };
+
+                scope.valueColumnSelectorData = {
+                    options: formatAttrsForSelector(scope.availableValueColumnAttrs, scope.tableChartSettings.value_column),
+                    selectOption: function (option, _$popup) {
+                        onAttrsOptionSelect(option, scope.valueColumnSelectorData.options, 'value_column', _$popup);
+                    }
+                };
+
+				var canChangeColumnAttr = function (availableAttrsList, colAttrKey) {
+
+					if (availableAttrsList.length) {
+
+						if (availableAttrsList.length === 1) {
+							// One different attribute is available for column
+							return availableAttrsList[0].attribute_data.key !== colAttrKey;
+
+						} else {
+							return true;
+						}
+
+					}
+
+					return false;
+
+				};
+
                 scope.init = function () {
 
                     scope.evDataService.setActiveObject({});
@@ -271,6 +400,9 @@
                         scope.createTable();
 
                     });
+
+					scope.canChangeTitleColumnAttr = canChangeColumnAttr(scope.availableTitleColumnAttrs, scope.tableChartSettings.title_column);
+					scope.canChangeValueColumnAttr = canChangeColumnAttr(scope.availableValueColumnAttrs, scope.tableChartSettings.value_column);
 
                 };
 

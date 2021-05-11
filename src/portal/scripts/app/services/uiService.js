@@ -31,26 +31,53 @@
         return uiRepository.getPortalInterfaceAccess();
     };
 
-    // If there is actual layout in cache, resolve it. Otherwise resolve layout from server.
+	const getCachedLayoutObj = (cacheResponse) => {
+		if (!cacheResponse || cacheResponse.hasOwnProperty('id')) {
+			return cacheResponse;
+
+		} else { // default layout returns inside results
+			return cacheResponse.results[0];
+		}
+	};
+
+	const getOnRejectCallback = (onRejectCallback, reject, cachedLayout) => {
+
+		if (onRejectCallback) {
+
+			return function (error) {
+
+				let errorMessage = "Layout ping error";
+				if (cachedLayout) errorMessage = "Id of layout to ping: " + cachedLayout.id;
+
+				console.error(errorMessage, error);
+				onRejectCallback();
+
+			}
+
+		} else {
+
+			return function (error) {
+				if (cachedLayout) error.___custom_message = "id of layout to get: " + cachedLayout.id;
+				reject(error);
+			};
+
+		}
+
+	}
+
+	/**
+	 * If there is actual layout in cache, return it. Otherwise resolve layout from server
+	 *
+	 * @param cachedLayoutResponse {*} - data about particular layout inside local storage
+	 * @param fetchLayoutFn {Function} - get layout, in case there is not one in local storage
+	 * @param resolve {Function} - resolve function of parent promise
+	 * @param reject {Function} - reject function of parent promise
+	 * @param onRejectFn {Function} - execute on layout ping reject
+	 */
 	const resolveLayoutByKey = function (cachedLayoutResponse, fetchLayoutFn, resolve, reject, onRejectFn) {
 
-        let cachedLayout;
-
-        if (!cachedLayoutResponse || cachedLayoutResponse.hasOwnProperty('id')) {
-            cachedLayout = cachedLayoutResponse;
-
-        } else { // default layout returns inside results
-            cachedLayout = cachedLayoutResponse.results[0];
-        }
-
-		let onErrorResponse;
-
-        if (onRejectFn) {
-			onErrorResponse = onRejectFn;
-
-        } else {
-			onErrorResponse = (error) => reject(error);
-		}
+        const cachedLayout = getCachedLayoutObj(cachedLayoutResponse);
+		const onErrorResponse = getOnRejectCallback(onRejectFn, reject, cachedLayout);
 
         if (cachedLayout) {
 
@@ -137,9 +164,9 @@
 
         return new Promise (function (resolve, reject) {
 
-            let cachedLayout = localStorageService.getCachedLayout(key);
+            const cachedLayout = localStorageService.getCachedLayout(key);
 
-            let fetchDefaultLayout = function () {
+            const fetchDefaultLayout = function () {
 
                 uiRepository.getListLayoutByKey(key).then(function (layoutData) {
 
@@ -228,40 +255,79 @@
         return uiRepository.getListLayoutTemplate();
     };
 
+	/**
+	 * If there is actual default layout in cache, return it. Otherwise fetch layout from server.
+	 *
+	 * @param cachedLayoutResponse {*} - data about particular layout inside local storage
+	 * @param fetchLayoutCallback {Function} - callback to fetch layout from server if default layout in local storage does not fit
+	 * @param resolve - resolve function of parent promise
+	 * @param reject - reject function of parent promise
+	 */
+	const resolveDefaultListLayout = function (cachedLayoutResponse, fetchLayoutCallback, resolve, reject) {
+
+		const cachedLayout = getCachedLayoutObj(cachedLayoutResponse);
+		const onPingRejectCallback = getOnRejectCallback(fetchLayoutCallback, reject, cachedLayout);
+
+		if (cachedLayout) {
+
+			uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
+
+				if (pingData && pingData.is_default && isCachedLayoutActual(cachedLayout, pingData)) {
+					resolve(cachedLayoutResponse);
+
+				} else {
+					fetchLayoutCallback();
+				}
+
+			}).catch(onPingRejectCallback);
+
+		} else {
+			fetchLayoutCallback();
+		}
+
+	};
+
 	const getDefaultListLayout = function (entityType) {
 
-        // console.trace();
         return new Promise (function (resolve, reject) {
 
-            var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-            let cachedLayout = localStorageService.getDefaultLayout(contentType);
-            let cachedLayoutRes = {results: [cachedLayout]};
+            const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+            const cachedLayout = localStorageService.getDefaultLayout(contentType);
+            const cachedLayoutRes = {results: [cachedLayout]};
 
-            let fetchDefaultLayout = function () {
+			/*uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
 
-                uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+				if (isCachedLayoutActual(cachedLayout, pingData) && pingData.isDefault) {
 
-                    let defaultLayout = defaultLayoutData.results[0];
+				}
 
-                    if (defaultLayout) {
-                        localStorageService.cacheDefaultLayout(defaultLayout);
+			});*/
+			const fetchDefaultListLayout = function () {
 
-                    } else {
+				uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
 
-                    	defaultLayout = uiRepository.getListLayoutTemplate();
-                        defaultLayoutData = {results: defaultLayout};
+					let defaultLayout = defaultLayoutData.results[0];
 
-                    }
+					if (defaultLayout) {
+						localStorageService.cacheDefaultLayout(defaultLayout);
 
-                    resolve(defaultLayoutData);
+					} else {
 
-                }).catch(function (error) {
-                    reject(error);
-                });
+						defaultLayout = uiRepository.getListLayoutTemplate();
+						defaultLayoutData = {results: defaultLayout};
 
-            };
+					}
 
-            resolveLayoutByKey(cachedLayoutRes, fetchDefaultLayout, resolve, reject, fetchDefaultLayout);
+					resolve(defaultLayoutData);
+
+				}).catch(error => {
+					error.___custom_message = "Failed to load default layout for entity type: " + entityType;
+					reject(error);
+				});
+
+			};
+
+			resolveDefaultListLayout(cachedLayoutRes, fetchDefaultListLayout, resolve, reject);
 
         });
 
@@ -345,9 +411,13 @@
 		// return uiRepository.getDefaultEditLayout(entityType);
 	};
 
-	const getEditLayoutByKey = function (id) {
+    let getEditLayoutByKey = function (id) {
         return uiRepository.getEditLayoutByKey(id);
     };
+
+	let getEditLayoutByUserCode = function (entityType, userCode) {
+		return uiRepository.getEditLayoutByUserCode(entityType, userCode);
+	};
 
     const createEditLayout = function (entity, ui) {
 
@@ -623,7 +693,8 @@
 
         getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
-		getEditLayoutByKey: getEditLayoutByKey,
+        getEditLayoutByKey: getEditLayoutByKey,
+		getEditLayoutByUserCode: getEditLayoutByUserCode,
         createEditLayout: createEditLayout,
         updateEditLayout: updateEditLayout,
 
