@@ -69,6 +69,18 @@
 				let dynamicAttrs = [];
 				let attrsWithoutFilters = ['notes'];
 
+                // Victor 2021.05.12 #111 multi rows selection
+				const selectedRowsActionBlockElement = elem[0].querySelector('.active-rows-actions');
+
+                scope.closeSelectedRowsActions = function () {
+                    selectedRowsActionBlockElement.classList.add('display-none');
+                };
+
+                const openSelectedRowsActions = function () {
+                    selectedRowsActionBlockElement.classList.remove('display-none');
+                }
+                // <Victor 2021.05.12 #111 multi rows selection>
+
                 // Victor 2021.03.29 #88 fix bug with deleted custom fields
                 let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
                 // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
@@ -833,6 +845,23 @@
                         formatFiltersForChips();
                     })
                     // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
+                    // Victor 2021.05.12 #111 multi rows selection
+                    scope.evEventService.addEventListener(evEvents.ROW_ACTIVATION_CHANGE, function () {
+                        const lastActivatedRow = scope.evDataService.getLastActivatedRow();
+                        console.log('#111 ROW_ACTIVATION_CHANGE', lastActivatedRow);
+                        if (!lastActivatedRow) {
+                            scope.closeSelectedRowsActions();
+                        } else {
+                            openSelectedRowsActions();
+                            const flatList = scope.evDataService.getFlatList();
+                            const parent = scope.evDataService.getData(lastActivatedRow.___parentId);
+
+                            console.log('#111 parent', JSON.parse(JSON.stringify(parent)));
+                            console.log('#111 flatList', JSON.parse(JSON.stringify(flatList)));
+                        }
+                    })
+                    // <Victor 2021.05.12 #111 multi rows selection>
 
                 	scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, calculateFilterChipsContainerWidth);
 

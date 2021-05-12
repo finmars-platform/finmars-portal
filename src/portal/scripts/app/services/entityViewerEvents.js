@@ -84,5 +84,6 @@ module.exports = {
 	//</editor-fold>
 
     'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END',
+    'ROW_ACTIVATION_CHANGE': 'ROW_ACTIVATION_CHANGE'
 
 };

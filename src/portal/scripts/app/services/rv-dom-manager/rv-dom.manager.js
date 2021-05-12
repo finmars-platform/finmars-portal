@@ -608,6 +608,7 @@
 
         }
 
+        evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
     };
 
@@ -659,7 +660,7 @@
 
         }
 
-
+        evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
     };
 
     var updateDataFromCellEdit = function (obj, column, evDataService, evEventService) {

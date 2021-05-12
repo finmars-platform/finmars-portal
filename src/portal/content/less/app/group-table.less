@@ -1047,6 +1047,38 @@
 
   }
 
+  .active-rows-actions {
+    /* display: none; */
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 66px;
+    color: #fff;
+    background-color: @rv-active-color;
+    z-index: 1;
+
+    .active-row-actions-wrapper {
+      height: 33px;
+      display: flex;
+
+      .close-button {
+          color: #fff;
+      }
+
+      .selected-rows-count {
+        width: 115px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid #fff;
+      }
+    }
+  }
+
   .column-to-filters-drop-area {
     left: 0;
     width: 85%;
