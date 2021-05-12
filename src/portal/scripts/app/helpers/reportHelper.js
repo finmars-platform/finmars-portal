@@ -596,11 +596,46 @@
 
     }
 
+    var reportOptionsTemporaryPropsList = [
+    	'items',
+		'item_complex_transactions',
+		'item_counterparties',
+		'item_responsibles',
+		'item_strategies3',
+		'item_strategies2',
+		'item_strategies1',
+		'item_portfolios',
+		'item_instruments',
+		'item_instrument_pricings',
+		'item_instrument_accruals',
+		'item_currency_fx_rates',
+		'item_currencies',
+		'item_accounts',
+		'custom_fields',
+		'custom_fields_object',
+	];
+
+    /**
+	 * Delete temporary properties from report options.
+	 * @param reportOptions {Object}
+	 * @return reportOptions {Object}
+	 */
+    var cleanReportOptionsFromTmpProps = function (reportOptions) {
+
+		reportOptionsTemporaryPropsList.forEach(propName => {
+			delete reportOptions[propName]
+		});
+
+    	return reportOptions;
+
+	};
+
     module.exports = {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
         extendAttributes: extendAttributes,
-        calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents
+        calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents,
+		cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps
     }
 
 }());

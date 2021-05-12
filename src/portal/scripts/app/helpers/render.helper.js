@@ -404,20 +404,14 @@
 			if (flatList[i].___type === 'object' || flatList[i].___type === 'subtotal') {
 
 				if (flatList[i].___subtotal_type !== 'proxyline') {
-
 					return false;
-
 				}
 
 			}
 
 			if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
-
 				return true;
-				break;
-
 			}
-
 
 		}
 
