@@ -668,6 +668,7 @@
                     scope.evDataService.setAllData(dataList);
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
                     console.timeEnd('Selecting all rows');
 
