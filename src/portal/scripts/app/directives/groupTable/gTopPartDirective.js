@@ -253,7 +253,7 @@
                     scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
 
                     	listLayout = scope.evDataService.getListLayout();
-						console.log("testing LAYOUT_NAME_CHANGE new listLayout", listLayout);
+
 						if (listLayout && listLayout.name) {
 							scope.layoutData.name = listLayout.name;
 						}

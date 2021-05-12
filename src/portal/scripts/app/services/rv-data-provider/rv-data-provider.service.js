@@ -139,7 +139,7 @@
         var reportOptions = entityViewerDataService.getReportOptions();
 
 		//<editor-fold desc="Delete report options items">
-		delete reportOptions.items;
+		/* delete reportOptions.items;
         delete reportOptions.custom_fields;
         delete reportOptions.custom_fields_object;
         delete reportOptions.item_complex_transactions;
@@ -154,7 +154,8 @@
         delete reportOptions.item_instrument_accruals;
         delete reportOptions.item_currency_fx_rates;
         delete reportOptions.item_currencies;
-        delete reportOptions.item_accounts;
+        delete reportOptions.item_accounts; */
+		reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
 		//</editor-fold>
 
         reportOptions.task_id = null;

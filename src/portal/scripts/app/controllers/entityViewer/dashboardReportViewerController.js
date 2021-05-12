@@ -2031,8 +2031,8 @@
 
                                 vm.entityViewerDataService.setComponents(evComponents);
 
-                                // set dashboard columns list for small rv table
-                                if (vm.userSettings && vm.userSettings.columns) {
+								//<editor-fold desc="Set dashboard columns list for small rv table">
+								if (vm.userSettings && vm.userSettings.columns) {
 
                                     if (fillInModeEnabled) {
 
@@ -2040,7 +2040,6 @@
                                         var columns = listLayout.data.columns;
 
                                     }
-
                                     else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
@@ -2053,16 +2052,16 @@
 											groupColumns = layoutColumns.slice(0, layoutGroups.length)
 										}
 
-                                        layoutColumns.forEach(function(layoutColumn, lColIndex) {
+                                        layoutColumns.forEach(layoutColumn => {
 
-                                        	var groupColumnIndex = layoutGroups.findIndex(function (group) {
-												return group.key === layoutColumn.key;
-											});
+                                        	var groupColumn = layoutGroups.find(group => group.key === layoutColumn.key);
 
-                                        	if (groupColumnIndex > -1) { // remove groups column
-												columns.splice(lColIndex, 1);
+                                        	if (groupColumn) { // remove groups column
+
+                                        		var groupColIndex = columns.findIndex(column => column.key === layoutColumn.key);
+												if (groupColIndex > -1) columns.splice(groupColIndex, 1);
+
 											}
-
                                         	else {
 
                                         		var column = columns.find(function(itemColumn){
@@ -2084,7 +2083,8 @@
 									vm.entityViewerDataService.setColumns(columns);
 
                                 }
-                                // < set dashboard columns list for small rv table >
+								//</editor-fold desc="Set dashboard columns list for small rv table">
+
                             }
 
                             vm.initDashboardExchange();

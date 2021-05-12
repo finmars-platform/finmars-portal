@@ -60,7 +60,9 @@
 
                         scope.groupPrefixes = data.results;
 
-                        scope.selectedGroupPrefix = scope.groupPrefixes[0].value;
+                        if (scope.groupPrefixes && scope.groupPrefixes.length) {
+                        	scope.selectedGroupPrefix = scope.groupPrefixes[0].value;
+						}
 
                         scope.$apply();
 

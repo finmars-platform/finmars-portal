@@ -82,11 +82,8 @@
 					let allAttrsList;
 
 					if (scope.viewContext === 'reconciliation_viewer') {
-
 						allAttrsList = scope.attributeDataService.getReconciliationAttributes();
-
 					}
-
 					else {
 
 						switch (scope.entityType) {

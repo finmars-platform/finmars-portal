@@ -38,7 +38,7 @@
                 layout: false // changed by rvSharedLogicHelper.onSetLayoutEnd();
             };
 
-            var doNotCheckLayoutChanges = false;
+            // var doNotCheckLayoutChanges = false;
 
             // Functions for context menu
 
@@ -1073,6 +1073,8 @@
 
                 vm.entityViewerDataService.setRowHeight(36);
 
+				vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
+
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
 
@@ -1142,12 +1144,12 @@
             vm.init = function () {
 
                 middlewareService.onMasterUserChanged(function () {
-                    doNotCheckLayoutChanges = true;
+					vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
                 middlewareService.onLogOut(function () {
-                    doNotCheckLayoutChanges = true;
+					vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
@@ -1178,7 +1180,9 @@
 
                 return new Promise(function (resolve, reject) {
 
-                    if (!doNotCheckLayoutChanges) {
+                	var checkForLayoutChanges = vm.entityViewerDataService.isLayoutChangesLossWarningNeeded();
+
+                    if (checkForLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                         var spChangedLayout = false;
@@ -1312,8 +1316,10 @@
                         }
 
                     } else {
-                        removeTransitionWatcher();
+
+                    	removeTransitionWatcher();
                         resolve(true);
+
                     }
 
                 });

@@ -73,14 +73,24 @@
                         skipHide: true,
                         multiple: true
                     }).then(function (res) {
-                        if (res.status === 'agree') {
+
+                    	if (res.status === 'agree') {
+
+                    		const listLayout = scope.evDataService.getListLayout();
 
                             uiService.deleteListLayoutByKey(scope.layout.id).then(async function (data) {
 
-                                scope.layouts = await getLayouts();
+                            	if (listLayout.id === scope.layout.id) {
 
-                                scope.$apply();
+                            		scope.evDataService.setLayoutChangesLossWarningState(false);
+                            		$state.reload();
+
+								} else {
+									scope.layouts = await getLayouts();
+								}
+
                             });
+
                         }
                     })
                 };
@@ -355,10 +365,15 @@
 
                                     scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
                                     middlewareService.setNewEntityViewerLayoutName(listLayout.name);
-                                    uiService.createListLayout(scope.entityType, listLayout).then(function (data){
-                                        $state.transitionTo($state.current, {layoutUserCode: listLayout.user_code});
-                                    })
 
+									scope.$apply(); // needed to update layout name inside gTopPartDirective
+
+									uiService.createListLayout(scope.entityType, listLayout).then(() => {
+										toastNotificationService.success("Layout was successfully created");
+									});
+                                    /*uiService.createListLayout(scope.entityType, listLayout).then(function (data){
+                                        $state.transitionTo($state.current, {layoutUserCode: listLayout.user_code});
+                                    })*/
 
                                 };
 
@@ -404,7 +419,8 @@
 
                                     });
 
-                                } else { // For transaction report
+                                }
+                                else { // For transaction report
 
                                     reportOptions.date_field = null;
 
@@ -424,7 +440,8 @@
 
                                 }
 
-                            } else {
+                            }
+                            else {
 
                                 // scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport});
                                 // scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
@@ -439,11 +456,19 @@
 
                                 middlewareService.setNewEntityViewerLayoutName(listLayout.name);
                                 scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
-                                uiService.createListLayout(scope.entityType, listLayout).then(function (data){
+
+								scope.$apply(); // needed to update layout name inside gTopPartDirective
+
+								uiService.createListLayout(scope.entityType, listLayout).then(() => {
+									toastNotificationService.success("Layout was successfully created");
+								});
+                                /* uiService.createListLayout(scope.entityType, listLayout).then(function (data){
                                     $state.transitionTo($state.current, {layoutUserCode: listLayout.user_code});
-                                })
+                                }) */
 
                             }
+
+							scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                         }
 
@@ -452,8 +477,6 @@
                 };
 
                 scope.createNewLayout = function () {
-
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     /*var activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
                     var layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);*/
