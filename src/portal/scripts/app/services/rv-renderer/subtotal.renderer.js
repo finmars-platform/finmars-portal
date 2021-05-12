@@ -243,9 +243,9 @@
 
         else if (columnNumber > obj.___level - 1) {
 
-        	var showTotal;
-        	var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id;
-            var isNotGrandTotal = obj.___level !== 0;
+			var showTotal;
+			var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id;
+			var isNotGrandTotal = obj.___level !== 0;
 
 			if (isNotGrandTotal) {
 				showTotal = totalCalculationOn && !column.report_settings.hide_subtotal;
@@ -254,19 +254,19 @@
 				showTotal = totalCalculationOn && !column.report_settings.hide_grandtotal;
 			}
 
-            if (showTotal) { // for subtotals
+			if (showTotal) { // for subtotals
 
-                if (obj.hasOwnProperty(column.key)) {
+				if (obj.hasOwnProperty(column.key)) {
 
-                    result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
-                    result.numeric_result = obj[column.key];
-                    result.raw_text_result = renderHelper.formatValue(obj, column);
+					result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
+					result.numeric_result = obj[column.key];
+					result.raw_text_result = renderHelper.formatValue(obj, column);
 
-                } else {
-                    result = getDynamicAttributeValue(obj, column);
-                }
+				} else {
+					result = getDynamicAttributeValue(obj, column);
+				}
 
-            }
+			}
 
         }
 
