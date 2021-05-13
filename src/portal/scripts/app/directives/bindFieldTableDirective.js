@@ -167,12 +167,18 @@
 
 					const instrTypeAccrualsProm = new Promise ((res, rej) => {
 
-						instrumentTypeService.getByKey(scope.entity.instrument_type).then(instrTypeData => {
+						if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
 
-							scope.accrualsShemes = instrTypeData.accruals || [];
+							instrumentTypeService.getByKey(scope.entity.instrument_type).then(instrTypeData => {
+
+								scope.accrualsShemes = instrTypeData.accruals || [];
+								res();
+
+							}).catch(error => rej(error));
+
+						} else {
 							res();
-
-						}).catch(error => rej(error));
+						}
 
 					});
 

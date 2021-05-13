@@ -146,7 +146,7 @@
                 step: 60, // rows to render
                 direction: null
             },
-            viewContext: '',
+            viewContext: '', // can be: reconciliation_viewer, dashboard, entity_viewer, reconciliation_viewer, split_panel
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
@@ -163,7 +163,11 @@
             activeObjectsCount: 0,
             dataLoadEnded: false,
             markedSubtotals: {},
-			rowSettings: {}
+			rowSettings: {},
+            missingCustomFields: {
+                forFilters: [],
+                forColumns: [],
+            }
         };
 
         var dashboardData = {
@@ -1431,6 +1435,28 @@
 			return data.rowSettings || {};
 		}
 
+        function setMissingCustomFields(options) {
+
+            if (!options) {
+                data.missingCustomFields = {
+                    forFilters: [],
+                    forColumns: [],
+                };
+            }
+
+            if (options.forFilters) {
+                data.missingCustomFields.forFilters = options.forFilters;
+            }
+
+            if (options.forColumns) {
+                data.missingCustomFields.forColumns = options.forColumns;
+            }
+        }
+
+        function getMissingCustomFields() {
+            return data.missingCustomFields;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1659,6 +1685,9 @@
 
 			setRowSettings: setRowSettings,
 			getRowSettings: getRowSettings,
+
+            setMissingCustomFields: setMissingCustomFields,
+            getMissingCustomFields: getMissingCustomFields,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

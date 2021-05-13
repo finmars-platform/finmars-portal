@@ -13,6 +13,7 @@
 
     <div data-ng-if="!popupData.data.columnHasCorrespondingGroup(popupData.data.column.key)">
         <md-button data-ng-click="popupData.data.addColumnEntityToGrouping(popupData.data.column)"
+                   ng-disabled="popupData.data.column.error_data"
                    class="popup-menu-item">
             <span class="material-icons" style="visibility: hidden;">done</span>
             <span>Add to grouping</span>
@@ -30,7 +31,7 @@
     </div>
 
     <div>
-        <md-button data-ng-disabled="!popupData.data.checkForFilteringBySameAttr(popupData.data.column.key)"
+        <md-button data-ng-disabled="!popupData.data.checkForFilteringBySameAttr(popupData.data.column.key) || popupData.data.column.error_data"
                    data-ng-click="popupData.data.addFiltersWithColAttr(popupData.data.column)"
                    class="popup-menu-item">
             <span class="material-icons" style="visibility: hidden;">done</span>

@@ -366,9 +366,9 @@
             viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
             $scope.$apply();
-            const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(6);
+            const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(6);
 
-            $bigDrawer.setWidth(bigDrawerWidthPercent);
+            $bigDrawer.setWidth(bigDrawerWidth);
 
             bigDrawerResizeButton.classList.add('display-none');
             bigDrawerResizeButton.classList.remove('display-block');
@@ -666,8 +666,8 @@
                     viewModel.fixedAreaPopup.tabColumns = columns;
                     viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(viewModel.fixedAreaPopup.tabColumns, viewModel.entityType);
 
-                    const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(viewModel.fixedAreaPopup.tabColumns);
-                    $bigDrawer.setWidth(bigDrawerWidthPercent);
+                    const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(viewModel.fixedAreaPopup.tabColumns);
+                    $bigDrawer.setWidth(bigDrawerWidth);
 
                     if (viewModel.fixedAreaPopup.tabColumns !== 6) {
 

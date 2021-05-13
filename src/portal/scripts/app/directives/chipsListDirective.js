@@ -113,6 +113,10 @@
 				};
 
 				scope.getTooltipContent = chipData => {
+					if (chipData.error_data) {
+						return chipData.error_data.description;
+					}
+
 					if (chipData.hasOwnProperty('tooltipContent')) {
 						return chipData.tooltipContent;
 					}
