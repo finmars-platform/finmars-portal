@@ -2,16 +2,19 @@
      data-ng-class="{'open-filters': isFiltersOpened}">
 
     <div class="active-rows-actions display-none">
+
         <div class="active-row-actions-wrapper">
-            <div class="selected-rows-count">
-                <span>1</span>
-                <span>selected</span>
-            </div>
-            <div clas="active-row-actions-container"></div>
-            <button class="close-button" data-ng-click="closeSelectedRowsActions()">
-                <span class="material-icons">close</span>
-            </button>
+                <div class="selected-rows-count">
+                    <span>{{selectedRowsCount}}</span>
+                    <span>selected</span>
+                </div>
+                <div clas="active-row-actions-container"></div>
         </div>
+
+        <button class="close-button" data-ng-click="closeSelectedRowsActions()">
+            <span class="material-icons">close</span>
+        </button>
+
     </div>
 
     <div class="g-filters-holder width-100 flex-row fc-space-between flex-i-start">
