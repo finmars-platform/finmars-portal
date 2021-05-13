@@ -1845,6 +1845,12 @@
                     })
                     // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
+                    // Victor 2021.05.12 #111 multi rows selection
+                    scope.evEventService.addEventListener(evEvents.ROW_ACTIVATION_CHANGE, function () {
+                        scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
+                    })
+                    // Victor 2021.05.12 #111 multi rows selection
+
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
                         updateGroupTypeIds();

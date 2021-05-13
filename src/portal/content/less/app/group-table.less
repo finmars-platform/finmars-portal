@@ -1048,16 +1048,16 @@
   }
 
   .active-rows-actions {
-    /* display: none; */
     position: absolute;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     left: 0;
     bottom: 0;
     right: 0;
     height: 66px;
     color: #fff;
+    font-size: 16px;
     background-color: @rv-active-color;
     z-index: 1;
 
@@ -1065,17 +1065,22 @@
       height: 33px;
       display: flex;
 
-      .close-button {
-          color: #fff;
-      }
-
       .selected-rows-count {
         width: 115px;
         display: flex;
         justify-content: center;
         align-items: center;
         border-right: 1px solid #fff;
+
+        span:first-child {
+          margin-right: 5px;
+        }
       }
+    }
+
+    .close-button {
+      color: #fff;
+      margin-right: 505px;
     }
   }
 
