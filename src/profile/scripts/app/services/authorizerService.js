@@ -293,6 +293,32 @@
 
     };
 
+    var exportToBackup = function (masterUserId) {
+
+        return window.fetch(authorizerUrl + '/master-user-export/'+ masterUserId + '/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken')
+            }
+        })
+
+    };
+
+    var createMasterUserFromBackup = function (data){
+        return window.fetch(authorizerUrl + '/master-user-create-from-backup/', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('authtoken')
+            },
+            body: data
+        })
+    }
+
+
     module.exports = {
 
         getByKey: getByKey,
@@ -314,7 +340,10 @@
         deleteMasterUser: deleteMasterUser,
 
 
-        copyMasterUser: copyMasterUser
+        copyMasterUser: copyMasterUser,
+
+        exportToBackup: exportToBackup,
+        createMasterUserFromBackup: createMasterUserFromBackup
     }
 
 }());

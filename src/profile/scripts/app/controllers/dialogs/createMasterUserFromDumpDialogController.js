@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 08.06.2016.
+ * Created by szhitenev on 13.05.2021.
  */
 (function () {
 
@@ -20,7 +20,12 @@
 
         vm.agree = function ($event) {
 
-            authorizerService.createMasterUser({name: vm.name}).then(function (data) {
+            var formData = new FormData();
+
+            formData.append('name', vm.name);
+            formData.append('file', vm.file);
+
+            authorizerService.createMasterUserFromBackup(formData).then(function (data) {
 
                 console.log('data success', data);
 
