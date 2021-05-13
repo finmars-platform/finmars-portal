@@ -220,9 +220,17 @@
 
                 });
 
+            } else {
+
+                $state.go('app.home');
+
             }
 
         };
+
+        vm.goToHomepage = function () {
+            $state.go('app.home');
+        }
 
         vm.getCurrentGlobalState = function () {
 

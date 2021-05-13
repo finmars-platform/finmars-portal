@@ -78,10 +78,11 @@ module.exports = {
     'RECON_TOGGLE_MATCH_EDITOR': 'RECON_TOGGLE_MATCH_EDITOR',
     // < Trigger Entity Viewer methods from Split Panel >
 
-    // Event for dashboard
-    'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR',
+	//<editor-fold desc="When inside dashboard events">
+	'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR',
     'MISSING_PRICES_LOAD_END_TO_DASHBOARD': 'MISSING_PRICES_LOAD_END_TO_DASHBOARD',
-    // < Event for dashboard >
+	'DASHBOARD_COMPONENT_DATA_CHANGED': 'DASHBOARD_COMPONENT_DATA_CHANGED',
+	//</editor-fold>
 
     'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END',
 
