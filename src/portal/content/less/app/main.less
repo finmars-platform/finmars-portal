@@ -3405,3 +3405,33 @@ button.missing-prices-warning-button.md-button {
   right: 0;
   bottom: 0;
 }
+
+.selector-button-popup {
+  position: relative;
+  display: inline-block;
+
+  .selector-button-popup-btn {
+    height: 24px;
+    max-width: 100%;
+    padding: 2px 24px 2px 4px;
+    font-size: 14px;
+    overflow: hidden;
+    color: @gray;
+    text-overflow: ellipsis;
+
+    &:not([disabled]):hover {
+      color: #000;
+    }
+  }
+
+  .selected-option-name {
+    white-space: nowrap;
+  }
+
+  .arrow_downward-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+}
