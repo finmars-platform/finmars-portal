@@ -27,7 +27,11 @@
                 item.instrument_object.pricing_policies.forEach(function (policy) {
 
                     if (policy.pricing_policy === vm.reportOptions.pricing_policy) {
-                        item.pricing_user_code = policy.pricing_scheme_object.name;
+
+                        if (policy.pricing_scheme_object) {
+                            item.pricing_user_code = policy.pricing_scheme_object.name;
+                        }
+                        
                         item.pricing_scheme = policy.pricing_scheme;
                     }
 
@@ -39,7 +43,7 @@
 
         };
 
-        vm.viewPositions = function($event, item) {
+        vm.viewPositions = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'ViewMissingPriceHistoryViewPositionsDialogController as vm',
@@ -58,7 +62,7 @@
 
         };
 
-        vm.viewInstrument = function($event, item) {
+        vm.viewInstrument = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'EntityViewerEditDialogController as vm',
@@ -75,7 +79,7 @@
 
         };
 
-        vm.addPriceHistory = function($event, item) {
+        vm.addPriceHistory = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
