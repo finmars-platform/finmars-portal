@@ -2,6 +2,7 @@
     <md-menu>
         <md-button aria-label="view constructor groups settings"
                    class="md-icon-button"
+                   ng-disabled="group.error_data"
                    ng-click="openGroupSettings($mdOpenMenu, $event)">
             <ng-md-icon icon="settings"></ng-md-icon>
         </md-button>
@@ -75,6 +76,7 @@
     <md-menu>
         <md-button aria-label="ev groups settings"
                    class="md-icon-button"
+                   ng-disabled="group.error_data"
                    ng-click="openGroupSettings($mdOpenMenu, $event)">
             <ng-md-icon icon="settings"></ng-md-icon>
         </md-button>

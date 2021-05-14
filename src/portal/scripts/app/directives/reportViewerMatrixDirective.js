@@ -94,21 +94,19 @@
                     var rowsCount = scope.rows.length + 2; // add header and footer rows
                     var columnsCount = scope.columns.length + 2; // add left and right fixed columns
 
-                    var minWidth = 100;
-
                     // var minHeight = 20;
 
                     // var matrixHolderMinHeight = elem[0].querySelector('.report-viewer-matrix').clientHeight;
-					var matrixHolderMinHeight = 144; // equal to 3 rows
 
                     cellWidth = Math.floor(elemWidth / columnsCount);
-                    //var cellHeight = Math.floor(elemHeight / rowsCount);
-                    // var cellHeight = 25;
                     var cellHeight = 48;
+
+					var minWidth = 100;
+                    var matrixHolderMinHeight = cellHeight * 3; // equal to 3 rows
 
                     if (scope.matrixSettings.auto_scaling) {
 
-                        minWidth = 2;
+                        minWidth = 46;
 
                         var elemHeight = elem.height();
                         var cellHeight = Math.floor(elemHeight / rowsCount);
@@ -137,6 +135,7 @@
                     // because of children with absolute positioning, elem below requires manual width setting
                     rvMatrixLeftCol.style.width = cellWidth + 'px';
 
+                    var matrixWrapHeight = matrixWrap.clientHeight;
                     var matrixMaxWidth = columnsCount * cellWidth;
                     var matrixMaxHeight = rowsCount * cellHeight;
 
@@ -150,7 +149,8 @@
                     var matrixProbableHeight = rowsCount * cellHeight;
 
                     var matrixVCAvailableWidth = matrixWrap.clientWidth - cellWidth;
-                    var matrixVCAvailableHeight = matrixWrap.clientHeight - cellHeight;
+                    var matrixVCAvailableHeight = matrixWrapHeight - cellHeight;
+
                     // whether matrix has scrolls
                     if (matrixVCAvailableWidth < matrixVCContainerWidth) {
 
@@ -167,10 +167,16 @@
                         matrixHolder.classList.remove('has-y-scroll');
                     }
 
-                    if (matrixProbableHeight < matrixWrap.clientHeight) {
+                    if (matrixProbableHeight < matrixWrapHeight) {
                         matrixHolder.style.height = matrixProbableHeight + 'px';
-                    } else {
-                        matrixHolder.style.height = matrixHolderMinHeight + 'px';
+                    }
+                    else {
+
+                    	var canFitRowsNumber = matrixWrapHeight / cellHeight;
+                    	var matrixHolderHeight = canFitRowsNumber * cellHeight;
+
+						matrixHolder.style.height = matrixHolderHeight + 'px';
+
                     }
 
                     rvMatrixValueRowsHolder.style.width = matrixVCContainerWidth + 'px';
