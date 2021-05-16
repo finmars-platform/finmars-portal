@@ -1155,6 +1155,7 @@
 						vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
 							vm.componentData.settings.abscissa = vm.matrixSettings.abscissa;
 							vm.componentData.settings.ordinate = vm.matrixSettings.ordinate;
+							vm.componentData.settings.value_key = vm.matrixSettings.value_key;
 						});
 
 						break;
@@ -1868,6 +1869,7 @@
                         value_key: vm.componentData.settings.value_key,
 						available_abscissa_keys: vm.componentData.user_settings.available_abscissa_keys,
 						available_ordinate_keys: vm.componentData.user_settings.available_ordinate_keys,
+						available_value_keys: vm.componentData.user_settings.available_value_keys,
 
 						number_format: vm.componentData.settings.number_format,
 						subtotal_formula_id: vm.componentData.settings.subtotal_formula_id,
