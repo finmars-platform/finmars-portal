@@ -902,7 +902,10 @@
 
     };
 
-    var initEventDelegation = function (elem, evDataService, evEventService) {
+    var initEventDelegation = async function (elem, evDataService, evEventService) {
+
+        const ttypes = await getAllTTypes();
+        const contextMenu = await getContextMenu();
 
         elem.addEventListener('click', function (event) {
 
@@ -965,6 +968,16 @@
 
 							break;
 
+                        case 'open_context_menu':
+                            const objectId = clickData.___id;
+                            const parentGroupHashId = clickData.___parentId;
+                            const contextMenuPosition = {positionX: event.pageX, positionY: event.pageY};
+
+                            event.stopPropagation();
+                            createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition)
+
+                            break;
+
 						/* TO DELETE: 2021-01-17
 						case 'open_subtotal_position_options':
 
@@ -1017,7 +1030,67 @@
 
             }
 
-        })
+        });
+
+        elem.addEventListener('contextmenu', function (ev) {
+
+            var objectId;
+            var parentGroupHashId;
+            /** @type {{type: string, subType: string=}|null} */
+            var subtotalData = null;
+
+            if (ev.target.offsetParent.classList.contains('ev-viewport')) {
+
+                objectId = ev.target.dataset.objectId;
+                parentGroupHashId = ev.target.dataset.parentGroupHashId;
+
+            } else {
+
+                var gRowElem = ev.target.closest('.g-row');
+
+                if (gRowElem) {
+
+                    objectId = gRowElem.dataset.objectId;
+                    parentGroupHashId = gRowElem.dataset.parentGroupHashId;
+
+                    var subtotalType = gRowElem.dataset.subtotalType;
+                    if (subtotalType) {
+
+                        subtotalData = {type: subtotalType};
+
+                        if (subtotalType === 'arealine') subtotalData.subType = gRowElem.dataset.subtotalSubtype;
+
+                    }
+
+                    /*if (gRowElem.dataset.subtotalType) {
+
+                        subtotalType = gRowElem.dataset.subtotalType;
+
+                    }*/
+
+                }
+
+            }
+
+            if (objectId) {
+
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
+
+                if (subtotalData) {
+                    createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+
+                } else {
+                    createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                }
+
+                return false;
+
+            }
+
+        }, false);
 
     };
 
@@ -1924,84 +1997,86 @@
 
         });
 
-    }
+    };
 
-    var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
+    var getContextMenu = async function () {
 
-        var contextMenu = {};
-        var ttypes = null;
+        let contextMenu;
 
-        getAllTTypes().then(function (data) {
+        const contextMenuData = await uiService.getContextMenuLayoutList();
 
-            uiService.getContextMenuLayoutList().then(function (contextMenuData) {
+        if (contextMenuData.results.length) {
 
-                //var contextMenu = {};
+            var contextMenuLayout = contextMenuData.results[0];
+            contextMenu = contextMenuLayout.data.menu
 
-                if (contextMenuData.results.length) {
-
-                    var contextMenuLayout = contextMenuData.results[0];
-                    contextMenu = contextMenuLayout.data.menu
-
-                }
-                else {
-                    contextMenu = {
-                        root: {
-                            items: [
-                                {
-                                    name: 'Edit Instrument',
-                                    action: 'edit_instrument'
-                                },
-                                {
-                                    name: 'Edit Account',
-                                    action: 'edit_account'
-                                },
-                                {
-                                    name: 'Edit Portfolio',
-                                    action: 'edit_portfolio'
-                                },
-                                {
-                                    name: 'Edit Price',
-                                    action: 'edit_price'
-                                },
-                                {
-                                    name: 'Edit FX Rate',
-                                    action: 'edit_fx_rate'
-                                },
-                                {
-                                    name: 'Edit Pricing FX Rate',
-                                    action: 'edit_pricing_currency'
-                                },
-                                {
-                                    name: 'Edit Accrued FX Rate',
-                                    action: 'edit_accrued_currency'
-                                },
-                                {
-                                    name: 'Edit Currency',
-                                    action: 'edit_currency'
-                                },
-                                {
-                                    name: 'Open Book Manager',
-                                    action: 'book_transaction'
-                                }
-                            ]
+        }
+        else {
+            contextMenu = {
+                root: {
+                    items: [
+                        {
+                            name: 'Edit Instrument',
+                            action: 'edit_instrument'
+                        },
+                        {
+                            name: 'Edit Account',
+                            action: 'edit_account'
+                        },
+                        {
+                            name: 'Edit Portfolio',
+                            action: 'edit_portfolio'
+                        },
+                        {
+                            name: 'Edit Price',
+                            action: 'edit_price'
+                        },
+                        {
+                            name: 'Edit FX Rate',
+                            action: 'edit_fx_rate'
+                        },
+                        {
+                            name: 'Edit Pricing FX Rate',
+                            action: 'edit_pricing_currency'
+                        },
+                        {
+                            name: 'Edit Accrued FX Rate',
+                            action: 'edit_accrued_currency'
+                        },
+                        {
+                            name: 'Edit Currency',
+                            action: 'edit_currency'
+                        },
+                        {
+                            name: 'Open Book Manager',
+                            action: 'book_transaction'
                         }
-                    };
+                    ]
                 }
+            };
+        }
 
-                const selectRowMenuItem = { // required item in first position
-                	name: 'Select/Unselect row',
-                	action: 'toggle_row'
-                };
+        const selectRowMenuItem = { // required item in first position
+            name: 'Select/Unselect row',
+            action: 'toggle_row'
+        };
 
-                contextMenu.root.items.unshift(selectRowMenuItem)
+        contextMenu.root.items.unshift(selectRowMenuItem);
 
-                ttypes = data;
+        return contextMenu;
 
-                elem.addEventListener('contextmenu', function (ev) {
+    };
+
+/*    var initContextMenuEventDelegation = async function (elem, evDataService, evEventService) {
+
+        const contextMenu = await getContextMenu();
+        const ttypes = await getAllTTypes();
+
+        elem.addEventListener('contextmenu', function (ev) {
 
                     var objectId;
                     var parentGroupHashId;
-                    /** @type {{type: string, subType: string=}|null} */
+                    /!** @type {{type: string, subType: string=}|null} *!/
                     var subtotalData = null;
 
                     if (ev.target.offsetParent.classList.contains('ev-viewport')) {
@@ -2027,11 +2102,11 @@
 
 							}
 
-                            /*if (gRowElem.dataset.subtotalType) {
+                            /!*if (gRowElem.dataset.subtotalType) {
 
 								subtotalType = gRowElem.dataset.subtotalType;
 
-                            }*/
+                            }*!/
 
                         }
 
@@ -2046,20 +2121,6 @@
                         ev.preventDefault();
                         ev.stopPropagation();
 
-                        /*if (isSubtotal) { // TODO Victor 2021.02.02 I need to know items for subtotals context menu
-                            return false;
-                        }
-
-                        else {
-
-                        	// var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
-							var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
-
-							createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
-
-							return false;
-
-						}*/
 						var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
 						if (subtotalData) {
@@ -2075,59 +2136,7 @@
 
                 }, false);
 
-                /*window.addEventListener('click', function (event) {
-
-                    if (!event.target.classList.contains('viewer-table-toggle-contextmenu-btn')) {
-
-                        var objectId = event.target.dataset.objectId;
-                        var parentGroupHashId = event.target.dataset.parentGroupHashId;
-                        var dropdownAction = event.target.dataset.evDropdownAction;
-
-                        var dropdownActionData = {};
-
-                        console.log('event.target.dataset', event.target.dataset);
-
-                        if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
-                            dropdownActionData.id = event.target.dataset.evDropdownActionDataId
-                        }
-
-                        if (objectId && dropdownAction && parentGroupHashId) {
-
-                            var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-                            if (!obj) {
-                                obj = {}
-                            }
-
-                            obj.event = event;
-
-                            console.log('dropdownActionData', dropdownActionData);
-
-                            evDataService.setActiveObject(obj);
-                            evDataService.setActiveObjectAction(dropdownAction);
-                            evDataService.setActiveObjectActionData(dropdownActionData);
-
-                            evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
-                            clearDropdowns();
-
-                        } else {
-
-                            if (!event.target.classList.contains('ev-dropdown-option')) {
-                                clearDropdowns();
-                            }
-
-                        }
-
-                    }
-
-
-                });*/
-
-            });
-        })
-
-    };
+    };*/
 
 	var addEventListenersForPopupMenuOptions = function (popupMenuElem, optionClickCallback) {
 
@@ -2251,7 +2260,7 @@
         initEventDelegation: initEventDelegation,
         addScrollListener: addScrollListener,
         createPopupMenu: createPopupMenu,
-        initContextMenuEventDelegation: initContextMenuEventDelegation,
+        // initContextMenuEventDelegation: initContextMenuEventDelegation, // context menu listener transferred to initEventDelegation
 		clearDropdowns: clearDropdowns,
         calculateTotalHeight: calculateTotalHeight,
         //calculateContentWrapHeight: calculateContentWrapHeight,

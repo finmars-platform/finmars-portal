@@ -38,12 +38,16 @@
                 scope.availableOrdinateAttrs = scope.matrixSettings.available_ordinate_keys || [];
                 if (scope.availableOrdinateAttrs.length) scope.availableOrdinateAttrs = JSON.parse(angular.toJson(scope.availableOrdinateAttrs));
 
+                scope.availableValueAttrs = scope.matrixSettings.available_value_keys || [];
+				if (scope.availableValueAttrs.length) scope.availableValueAttrs = JSON.parse(angular.toJson(scope.availableValueAttrs));
+
                 if (scope.matrixSettings.hide_empty_lines) {
                     scope.emptyLinesHidingType = scope.matrixSettings.hide_empty_lines;
                 }
 
                 scope.canChangeAbscissaAttr = false;
 				scope.canChangeOrdinateAttr = false;
+				scope.canChangeValueAttr = false;
 
 				var cellWidth = 0;
 
@@ -608,6 +612,8 @@
 					if (option.id !== scope.matrixSettings[axisProp]) {
 
 						scope.matrixSettings[axisProp] = option.id;
+						if (axisProp === 'value_key') scope.matrixValueAttrName = option.name;
+
 						scope.createMatrix();
 
 						var activeOption = optionsList.find(sOption => sOption.isActive);
@@ -635,20 +641,6 @@
 
 				};
 
-                scope.abscissaSelectorData = {
-                	options: formatAttrsForSelector(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa),
-					selectOption: function (option, _$popup) {
-                		onAxisAttrsOptionSelect(option, scope.abscissaSelectorData.options, 'abscissa', _$popup);
-					}
-				};
-
-				scope.ordinateSelectorData = {
-					options: formatAttrsForSelector(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate),
-					selectOption: function (option, _$popup) {
-						onAxisAttrsOptionSelect(option, scope.ordinateSelectorData.options, 'ordinate', _$popup);
-					}
-				};
-
 				var canChangeAxisAttr = function (availableAttrsList, axisAttrKey) {
 
 					if (availableAttrsList.length) {
@@ -667,6 +659,37 @@
 					return false;
 
 				};
+
+				var initAxisAttrsSelectors = function () {
+
+					scope.abscissaSelectorData = {
+						options: formatAttrsForSelector(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa),
+						selectOption: function (option, _$popup) {
+							onAxisAttrsOptionSelect(option, scope.abscissaSelectorData.options, 'abscissa', _$popup);
+						}
+					};
+
+					scope.ordinateSelectorData = {
+						options: formatAttrsForSelector(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate),
+						selectOption: function (option, _$popup) {
+							onAxisAttrsOptionSelect(option, scope.ordinateSelectorData.options, 'ordinate', _$popup);
+						}
+					};
+
+					scope.valueSelectorData = {
+						options: formatAttrsForSelector(scope.availableValueAttrs, scope.matrixSettings.value_key),
+						selectOption: function (option, _$popup) {
+							onAxisAttrsOptionSelect(option, scope.valueSelectorData.options, 'value_key', _$popup);
+						}
+					};
+
+					var activeValueAttr = scope.availableValueAttrs.find(attr => {
+						return attr.attribute_data.key === scope.matrixSettings.value_key;
+					});
+
+					scope.matrixValueAttrName = activeValueAttr.layout_name || activeValueAttr.attribute_data.name;
+
+				};
 				//</editor-fold desc="Popup-selector of attributes for axises">
 
                 scope.init = function () {
@@ -675,6 +698,8 @@
 
                     // scope.top_left_title = scope.matrixSettings.top_left_title;
                     scope.styles = scope.matrixSettings.styles;
+
+					initAxisAttrsSelectors();
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
@@ -717,6 +742,7 @@
 					} */
 					scope.canChangeAbscissaAttr = canChangeAxisAttr(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa);
 					scope.canChangeOrdinateAttr = canChangeAxisAttr(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate);
+					scope.canChangeValueAttr = canChangeAxisAttr(scope.availableValueAttrs, scope.matrixSettings.value_key);
                     // window.addEventListener('resize', scope.alignGrid);
 
                 };

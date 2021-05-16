@@ -31,11 +31,33 @@
 
             <div class="report-viewer-matrix-row rv-matrix-header" flex="noshrink">
 
-                <div class="report-viewer-matrix-column-header-cell report-viewer-empty-header-cell text-{{styles.cell.text_align}} rvMatrixCell"
-                     title="{{getTopLeftTitle()}}">
-                    <!--<span data-ng-if="!top_left_title" title="-">-</span>
-                    <span data-ng-if="top_left_title" title="{{top_left_title}}">{{top_left_title}}</span>-->
-                    <span data-ng-bind="getTopLeftTitle()">-</span>
+                <!--<div class="report-viewer-matrix-column-header-cell report-viewer-empty-header-cell text-{{styles.cell.text_align}} rvMatrixCell"
+                     title="{{getTopLeftTitle()}}">-->
+                <div class="report-viewer-matrix-column-header-cell report-viewer-empty-header-cell text-{{styles.cell.text_align}} rvMatrixCell">
+
+                    <div ng-if="canChangeValueAttr"
+                         class="selector-button-popup">
+
+                        <button popup
+                                popup-template-url="'views/popups/selector-popup-view.html'"
+                                popup-data="valueSelectorData"
+                                position-relative-to="element"
+                                open-on="click"
+                                close-on-click-outside="true"
+                                class="selector-button-popup-btn"
+                                title="{{matrixValueAttrName}}">
+
+                            <span class="selected-option-name" ng-bind="matrixValueAttrName"></span>
+                            <span class="arrow_downward-icon material-icons">arrow_drop_down</span>
+
+                        </button>
+                    </div>
+
+                    <div ng-if="!canChangeValueAttr"
+                         ng-bind="matrixValueAttrName"
+                         class="report-viewer-matrix-value-name"
+                         title="{{matrixValueAttrName}}"></div>
+                    <!-- <span data-ng-bind="getTopLeftTitle()">-</span>
 
                     <md-menu>
                         <md-button class="matrix-settings-button"
@@ -235,7 +257,7 @@
                             </md-menu-item>
 
                         </md-menu-content>
-                    </md-menu>
+                    </md-menu>-->
                 </div>
 
                 <div class="rvm-header-row-holder">
