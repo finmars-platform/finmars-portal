@@ -33,6 +33,8 @@
                 contentWrapElement: '=',
 				workareaWrapElement: '=',
                 hideFiltersBlock: '=',
+                hideUseFromAboveFilters: '=',
+
             },
 			templateUrl: 'views/directives/groupTable/g-filters-view.html',
             link: function (scope, elem, attrs) {
@@ -50,7 +52,7 @@
 				scope.fpBackClasses = "z-index-48"
 				scope.fpClasses = "z-index-49"
 
-				scope.showUseFromAboveFilters = !scope.hideFiltersBlock;
+				scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
 
 				scope.readyStatus = {
 					filters: false
@@ -538,7 +540,8 @@
 				// <editor-fold desc="Chips filters">
 				scope.toggleUseFromAboveFilters = function () {
 
-                	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters
+                	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters;
+                	scope.evEventService.dispatchEvent(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
 					formatFiltersForChips();
 
                 	setTimeout(() => {

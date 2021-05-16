@@ -17,7 +17,8 @@
                 evDataService: '=',
                 evEventService: '=',
                 spExchangeService: '=',
-                hideFiltersBlock: '='
+                hideFiltersBlock: '=',
+                hideUseFromAboveFilters: '=',
             },
 			templateUrl: 'views/directives/groupTable/g-table-component-view.html',
             link: function (scope, elem, attrs) {
