@@ -15,6 +15,19 @@
                     {{tableChartSettings.title_column_name}}
                 </span>
 
+                <div class="attr-selector-btns-holder axisAttrSelectorBtnsHolder">
+
+                    <button popup
+                            popup-template-url="'views/popups/selector-popup-view.html'"
+                            popup-data="titleColumnSelectorData"
+                            position-relative-to="element"
+                            relative-popup-y="top"
+                            open-on="click"
+                            close-on-click-outside="true"
+                            ng-disabled="!canChangeTitleColumnAttr"
+                            class="flex-row flex-center attr-selector-btn ordinate"><span class="material-icons">expand_more</span></button>
+                </div>
+
             </div>
 
             <div class="rv-table-chart-table-cell rv-table-chart-table-cell-column-value">
@@ -26,6 +39,19 @@
 
                     {{tableChartSettings.value_column_name}}
                 </span>
+
+                <div class="attr-selector-btns-holder axisAttrSelectorBtnsHolder">
+
+                    <button popup
+                            popup-template-url="'views/popups/selector-popup-view.html'"
+                            popup-data="valueColumnSelectorData"
+                            position-relative-to="element"
+                            relative-popup-y="top"
+                            open-on="click"
+                            close-on-click-outside="true"
+                            ng-disabled="!canChangeValueColumnAttr"
+                            class="flex-row flex-center attr-selector-btn ordinate"><span class="material-icons">expand_more</span></button>
+                </div>
 
             </div>
 
@@ -45,7 +71,7 @@
         </div>
 
         <div class="rv-table-chart-row-holder">
-            <div data-ng-repeat="item in items" class="rv-table-chart-row">
+            <div data-ng-repeat="item in items" class="rv-table-chart-row" data-ng-click="rowClick($event, item)">
 
                 <div class="rv-table-chart-table-cell rv-table-chart-table-cell-column-title rv-table-chart-border-right">
 
@@ -55,7 +81,7 @@
 
                 <div class="rv-table-chart-table-cell rv-table-chart-table-cell-column-value">
 
-                    {{item.total}}
+                    {{item.total_formated}}
 
                 </div>
 

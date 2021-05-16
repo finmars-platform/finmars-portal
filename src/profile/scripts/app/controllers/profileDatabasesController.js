@@ -11,6 +11,9 @@
     var baseUrlService = require('../services/baseUrlService');
     var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
 
+    var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
+
     module.exports = function ($scope, $state, $mdDialog) {
 
         var vm = this;
@@ -37,7 +40,7 @@
 
             var status = 0; // 0 - SENT, 1 - ACCEPTED, 2 - DECLINED
 
-            usersService.getInviteFromMasterUserList(status).then(function (data) {
+            authorizerService.getInviteFromMasterUserList(status).then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;
@@ -96,7 +99,7 @@
             // console.log('item', item);
 
             authorizerService.setMasterUser(item.id).then(function (data) {
-                
+
                 console.log('vm.activateDatabase.data', data);
 
 
@@ -107,6 +110,62 @@
             })
 
         };
+
+        vm.createDatabaseFromBackup = function ($event) {
+            console.log("Create Database");
+
+            $mdDialog.show({
+                controller: 'CreateMasterUserFromDumpDialogController as vm',
+                templateUrl: 'views/dialogs/create-master-user-from-dump-dialog-view.html',
+                parent: angular.element(document.body),
+                locals: {
+                    data: {
+                    }
+                },
+                targetEvent: $event
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getMasterUsersList();
+                }
+
+            })
+        }
+
+        vm.exportMasterUserBackup = function ($event, item) {
+            authorizerService.exportToBackup(item.id).then(function (data) {
+
+                if (data.status !== 200) {
+                    throw Error("Something went wrong")
+                }
+
+                return data.blob()
+            }).then(function (blob) {
+
+                console.log('blob ', blob);
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                // the filename you want
+
+                var name = item.name.split(' ').join('_');
+                var date = new Date().toISOString().split('T')[0];
+                date = date.split('-').join('_');
+
+                a.download = name + '_' + date + '_backup.sql';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.parentNode.removeChild(a);
+
+            }).catch(function (data) {
+                console.log("data?", data);
+
+                toastNotificationService.error("Something went wrong. Please, try again later")
+            })
+        }
 
         vm.leaveMasterUser = function ($event, item) {
 
@@ -125,7 +184,7 @@
 
                 if (res.status === 'agree') {
 
-                    usersService.leaveMasterUser(item.id).then(function () {
+                    authorizerService.leaveMasterUser(item.id).then(function () {
 
                         vm.getMasterUsersList();
 
@@ -244,7 +303,7 @@
 
             item.status = 2; // Decline code
 
-            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getInvites();
 
@@ -256,11 +315,10 @@
 
             item.status = 1; // Accept code
 
-            usersService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
-                usersService.setMasterUser(item.to_master_user).then(function (value) {
-                    $state.go('app.setup');
-                })
+                vm.getMasterUsersList();
+                vm.getInvites();
 
             })
 
@@ -268,8 +326,8 @@
 
         vm.init = function () {
             vm.getMasterUsersList();
-            // vm.getInvites();
-            vm.readyStatus.invites = true;
+            vm.getInvites();
+            // vm.readyStatus.invites = true;
         };
 
         vm.init();

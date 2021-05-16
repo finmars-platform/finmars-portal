@@ -6,11 +6,11 @@
     'use strict';
 
     var metaService = require('../services/metaService');
-    var layoutService = require('../services/layoutService');
+    var layoutService = require('../services/entity-data-constructor/layoutService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, entityDataConstructorService) {
         return {
-            restrict: 'AE',
+            restrict: 'E',
             scope: {
                 tab: '=',
                 row: '<',
@@ -21,6 +21,7 @@
             templateUrl: 'views/directives/layout-constructor-field-view.html',
             link: function (scope, elem, attr) {
 
+            	var entityDataConstructorVm = scope.$parent.vm;
                 var choices = metaService.getTypeCaptions();
 
                 scope.item = {
@@ -42,11 +43,11 @@
 
                 scope.fieldType = null;
                 scope.editMode = false;
-                scope.entityType = scope.$parent.vm.entityType;
+                scope.entityType = entityDataConstructorVm.entityType;
 
-                scope.attrs = scope.$parent.vm.attrs || [];
-                scope.entityAttrs = scope.$parent.vm.entityAttrs || [];
-                scope.userInputs = scope.$parent.vm.userInputs || [];
+                scope.attrs = entityDataConstructorVm.attrs || [];
+                scope.entityAttrs = entityDataConstructorVm.entityAttrs || [];
+                scope.userInputs = entityDataConstructorVm.userInputs || [];
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -58,12 +59,13 @@
                 scope.entityAttrs.forEach(function (entityAttr) {
                     entityAttrsKeys.push(entityAttr.key);
                 });
+
                 var layoutAttrsKeys = [];
                 scope.layoutAttrs.forEach(function (layoutAttr) {
                     layoutAttrsKeys.push(layoutAttr.key);
                 });
 
-                var tabs = scope.$parent.vm.tabs;
+                var tabs = entityDataConstructorVm.tabs;
 
                 function findItem() {
 
@@ -82,11 +84,12 @@
                     }
 
                     if (scope.item.attribute && scope.item.attribute.value_type !== "decoration") {
-                        if (scope.item.editable === false) {
+						scope.item.editable = scope.item.editable !== false;
+                    	/*if () {
                             scope.item.editable = false;
                         } else {
                             scope.item.editable = true;
-                        }
+                        }*/
                     }
 
                     if (!scope.item.options) {
@@ -136,6 +139,7 @@
                         for (l = 0; l < scope.layoutAttrs.length; l = l + 1) {
                             if (scope.layoutAttrs[l].name === scope.item.name) {
                                 scope.item.attribute = scope.layoutAttrs[l];
+                                break;
                             }
                         }
                     }
@@ -244,73 +248,143 @@
                         scope.backgroundColor.color = {};
                     }
 
-                    scope.$parent.vm.updateDrakeContainers();
+					entityDataConstructorVm.updateDrakeContainers();
 
                 };
 
-                scope.toggleEditMode = function () {
-                    var i;
-                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
-                        scope.tab.layout.fields[i].editMode = false;
-                    }
+                var toggleGeneralEditMode = function () {
 
-                    scope.item.editMode = true;
-                };
+                	var i;
+					for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
+						scope.tab.layout.fields[i].editMode = false;
+					}
+
+					scope.item.editMode = true;
+
+				};
+
+                var openEditModeInDialog = function ($event) {
+
+                	$mdDialog.show({
+						controller: 'EvFormInstrumentAccrualsSettingsDialogController as vm',
+						templateUrl: 'views/dialogs/ev-form-instrument-accruals-settings-dialog-view.html',
+						targetEvent: $event,
+						multiple: true,
+						locals: {
+							data: {label: scope.item.options.label, tableData: scope.item.options.tableData}
+						}
+
+                	}).then(res => {
+
+                		if (res.status === 'agree') {
+
+                			scope.item.options.label = res.data.label;
+							scope.item.options.tableData = res.data.tableData;
+
+							scope.saveField();
+
+						}
+
+					});
+
+				};
 
                 scope.saveField = function () {
 
-                    var i;
-                    for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
+					// if attribute occupies whole row,
+					var column = scope.item.column;
+					var colspan = scope.item.colspan;
 
-                        if (scope.tab.layout.fields[i].row === scope.item.row &&
-                            scope.tab.layout.fields[i].column === scope.item.column) {
+					if (scope.item.occupiesWholeRow) {
+						column = 1; // move attribute to the start of row
+						colspan = scope.tab.layout.columns;
+					}
 
-                            if (layoutAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
-                                scope.tab.layout.fields[i].attribute_class = 'decorationAttr';
+					var i;
+					for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
 
-                            } else if (entityAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
-                                scope.tab.layout.fields[i].attribute_class = 'entityAttr';
+						if (scope.tab.layout.fields[i].row === scope.item.row &&
+							scope.tab.layout.fields[i].column === column) {
 
-                            } else if (scope.item.attribute.id) {
-                                scope.tab.layout.fields[i].attribute_class = 'attr';
-                                scope.tab.layout.fields[i].id = scope.item.attribute.id;
+							/* if (scope.item.attribute.frontOptions &&
+								scope.item.attribute.frontOptions.attribute_class) {
 
-                            } else {
-                                scope.tab.layout.fields[i].attribute_class = 'userInput';
-                            }
+								scope.tab.layout.fields[i].attribute_class = scope.item.attribute.frontOptions.attribute_class;
 
-                            if (scope.item.options) {
-                                scope.tab.layout.fields[i].options = scope.item.options;
-                            }
+							} else if (layoutAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
+								scope.tab.layout.fields[i].attribute_class = 'decorationAttr';
 
+							} else if (entityAttrsKeys.indexOf(scope.item.attribute.key) !== -1) {
+								scope.tab.layout.fields[i].attribute_class = 'entityAttr';
 
-                            scope.tab.layout.fields[i].name = scope.item.attribute.name;
-                            scope.tab.layout.fields[i].type = 'field';
-                            scope.tab.layout.fields[i].colspan = scope.item.colspan;
-                            scope.tab.layout.fields[i].attribute = scope.item.attribute;
+							} else if (scope.item.attribute.id) {
 
-                            if (scope.item.editable !== false) { // its important
-                                scope.tab.layout.fields[i].editable = true
-                            } else {
-                                scope.tab.layout.fields[i].editable = false
-                            }
+								scope.tab.layout.fields[i].attribute_class = 'attr';
+								scope.tab.layout.fields[i].id = scope.item.attribute.id;
 
-                            if (scope.fieldUsesBackgroundColor) {
-                                scope.tab.layout.fields[i].backgroundColor = scope.backgroundColor.color;
-                            } else {
-                                scope.tab.layout.fields[i].backgroundColor = null;
-                            }
+							} */
+							scope.tab.layout.fields[i].attribute_class = entityDataConstructorVm.getAttributeClass(scope.item);
 
-                            if (scope.tab.layout.fields[i].row === scope.tab.layout.rows) {
-                                addRow();
-                            }
-                        }
-                    }
+							if (scope.item.options) {
+								scope.tab.layout.fields[i].options = JSON.parse(JSON.stringify(scope.item.options));
+							}
 
-                    scope.item.editMode = false;
+							var attributeData = JSON.parse(JSON.stringify(scope.item.attribute));
+							delete attributeData.frontOptions;
 
-                    scope.$parent.vm.createFieldsTree();
-                    scope.$parent.vm.syncItems();
+							scope.tab.layout.fields[i].name = scope.item.attribute.name;
+							scope.tab.layout.fields[i].type = scope.item.type;
+							scope.tab.layout.fields[i].colspan = colspan;
+							scope.tab.layout.fields[i].attribute = attributeData;
+							scope.tab.layout.fields[i].occupiesWholeRow = scope.item.occupiesWholeRow;
+
+							scope.tab.layout.fields[i].editable = scope.item.editable !== false;
+
+							scope.tab.layout.fields[i].backgroundColor = null;
+
+							if (scope.fieldUsesBackgroundColor) {
+								scope.tab.layout.fields[i].backgroundColor = scope.backgroundColor.color;
+							}
+
+							/* if (scope.item.hasOwnProperty("settings")) {
+
+								var settings = scope.item.settings;
+
+								if (settings && typeof settings === 'object') {
+									settings = JSON.parse(angular.toJson(settings));
+								}
+
+								scope.tab.layout.fields[i].settings = settings;
+
+							} */
+
+							if (scope.tab.layout.fields[i].row === scope.tab.layout.rows) {
+								addRow();
+							}
+
+							break;
+
+						}
+
+					}
+
+					// After moving whole row attribute to first column, empty socket where it was originally dropped
+					if (scope.item.occupiesWholeRow && scope.item.column !== 1) {
+
+						scope.item = {
+							colspan: 1,
+							column: scope.item.column,
+							editMode: false,
+							row: scope.item.row,
+							type: "empty"
+						}
+
+					}
+
+					scope.item.editMode = false;
+
+					entityDataConstructorVm.createFieldsTree();
+					entityDataConstructorVm.syncItems();
 
                 };
 
@@ -323,7 +397,7 @@
 
                         for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                             if (scope.tab.layout.fields[i].row == r) {
-                                if (scope.tab.layout.fields[i].type === 'field') {
+                                if (scope.tab.layout.fields[i].type !== 'empty') {
                                     columnsIsEmpty = false;
                                     break rowsLoop;
                                 }
@@ -391,11 +465,26 @@
                 /*scope.changeModel = function (item) {
                     scope.item.attribute = item;
                 };*/
+				var resetSocketData = function (field) {
+
+					field.id = null;
+					field.key = null;
+					field.attribute = null;
+					field.attribute_class = null;
+					field.disabled = false;
+					field.colspan = 1;
+					field.name = '';
+					field.type = 'empty';
+
+					delete field.backgroundColor;
+					delete field.occupiesWholeRow;
+					delete field.options;
+
+				};
 
                 scope.deleteField = function () {
 
-                    var i;
-                    scope.item.id = null;
+					/* scope.item.id = null;
                     scope.item.key = null;
                     scope.item.attribute = null;
                     scope.item.attribute_class = null;
@@ -403,11 +492,15 @@
                     scope.item.options = null;
                     scope.item.editable = null;
                     scope.item.colspan = 1;
+					delete scope.item.occupiesWholeRow; */
+					resetSocketData(scope.item);
 
+					/* var i;
                     for (i = 0; i < scope.tab.layout.fields.length; i = i + 1) {
                         if (scope.tab.layout.fields[i].row === scope.item.row) {
                             if (scope.tab.layout.fields[i].column === scope.item.column) {
-                                scope.tab.layout.fields[i].id = null;
+
+                            	/!* scope.tab.layout.fields[i].id = null;
                                 scope.tab.layout.fields[i].key = null;
                                 scope.tab.layout.fields[i].attribute = null;
                                 scope.tab.layout.fields[i].attribute_class = null;
@@ -417,62 +510,125 @@
                                 scope.tab.layout.fields[i].name = '';
                                 scope.tab.layout.fields[i].backgroundColor = null;
                                 scope.tab.layout.fields[i].type = 'empty';
+                                delete scope.tab.layout.fields[i].occupiesWholeRow; *!/
+
+								resetSocketData(scope.tab.layout.fields[i]);
                                 findEmptyRows();
+
                                 break;
+
                             }
                         }
-                    }
+                    } */
+					var itemFieldIndex = scope.tab.layout.fields.findIndex(field => {
+						return field.row === scope.item.row && field.column === scope.item.column;
+					});
+
+					resetSocketData(scope.tab.layout.fields[itemFieldIndex]);
 
                     scope.fieldUsesBackgroundColor = false;
                     //scope.fieldBackgroundColor = '#000000';
                     scope.backgroundColor.color = {};
 
-                    scope.$parent.vm.createFieldsTree();
-                    scope.$parent.vm.syncItems();
+					entityDataConstructorVm.createFieldsTree();
+					entityDataConstructorVm.syncItems();
                 };
 
                 scope.findAttrsLeft = function () {
 
-                    scope.attrs.forEach(function (attr) {
+                	/* scope.attrs.forEach(function (attr) {
                         attr.disabled = false;
                         tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
-                                if (item.type === 'field') {
+                                if (item.type !== 'empty') {
                                     if (attr.user_code === item.attribute.user_code) {
                                         attr.disabled = true;
                                     }
                                 }
                             })
                         })
-                    });
+                	}); */
+					var isAttrDisabled = function (attr, keyProp) {
 
-                    scope.entityAttrs.forEach(function (entityAttr) {
+						var rowIsNotEmpty = !entityDataConstructorVm.isRowEmpty(scope.tab.tabOrder, scope.row, scope.tab.layout.columns);
+						var attrOccupiesWholeRow = !!(attr.frontOptions && attr.frontOptions.occupiesWholeRow);
+
+						if (rowIsNotEmpty && attrOccupiesWholeRow) {
+							return true;
+						}
+
+						loop: for (var tab of tabs) {
+							for (var field of tab.layout.fields) {
+								if (field.type !== 'empty' && attr[keyProp] === field.attribute[keyProp]) {
+									return true;
+								}
+							}
+						}
+
+						return false;
+
+					};
+
+					scope.attrs.forEach(function (attr) {
+						attr.disabled = isAttrDisabled(attr, 'user_code');
+					});
+
+                    /* scope.entityAttrs.forEach(function (entityAttr) {
                         entityAttr.disabled = false;
                         tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
-                                if (item.type === 'field') {
+                                if (item.type !== 'empty') {
                                     if (entityAttr.key === item.attribute.key) {
                                         entityAttr.disabled = true;
                                     }
                                 }
                             })
                         })
-                    });
+                    }); */
 
-                    scope.userInputs.forEach(function (userInput) {
+					scope.entityAttrs.forEach(function (entityAttr) {
+						entityAttr.disabled = isAttrDisabled(entityAttr, 'key');
+					});
+
+                    /* scope.userInputs.forEach(function (userInput) {
                         userInput.disabled = false;
                         tabs.forEach(function (tab) {
                             tab.layout.fields.forEach(function (item) {
-                                if (item.type === 'field') {
+                                if (item.type !== 'empty') {
                                     if (userInput.key === item.attribute.key) {
                                         userInput.disabled = true;
                                     }
                                 }
                             })
                         })
-                    });
+                    }); */
+
+					scope.userInputs.forEach(function (userInput) {
+						userInput.disabled = isAttrDisabled(userInput, 'key');
+					});
 
                 };
+
+                scope.onAttributeSelect = function () {
+
+                	scope.item.type = (scope.item.attribute.value_type === 'table') ? 'table' : 'field';
+					scope.item.occupiesWholeRow = false;
+
+					if (scope.item.type === 'table') {
+
+						var defaultSettings = entityDataConstructorVm.getTableDefaultSettings(scope.item.attribute.key);
+
+						if (defaultSettings) {
+							scope.item.options = {...scope.item.options.options, ...defaultSettings};
+						}
+
+					}
+
+					if (scope.item.attribute.frontOptions && scope.item.attribute.frontOptions.occupiesWholeRow) {
+						scope.item.occupiesWholeRow = true;
+					}
+
+				};
 
                 scope.bindAttrName = function (item) {
 
@@ -524,12 +680,12 @@
                     return false;
                 };
 
-                /*scope.copyFromValue = function (attr) {
+                /* scope.copyFromValue = function (attr) {
                     if (attr.id) {
                         return JSON.stringify({id: attr.id});
                     }
                     return JSON.stringify({key: attr.key});
-                };*/
+                }; */
 
                 scope.findStringAttributes = function () {
                     var b, a, e;
@@ -640,9 +796,9 @@
 
                 };
 
-                /*scope.setFieldBackgroundColor = function (color) {
+                /* scope.setFieldBackgroundColor = function (color) {
                     scope.fieldBackgroundColor = color;
-                };*/
+                }; */
 
                 scope.hasEditablesToggle = function () {
                     if ((scope.entityType == 'transaction-type' || scope.entityType == 'complex-transaction') &&
@@ -679,17 +835,26 @@
 
                 scope.onPalettesChange = function () {
                     scope.palettesList = scope.palettesObj.palettesList;
-                    scope.$parent.vm.palettesList = scope.palettesList;
+					entityDataConstructorVm.palettesList = scope.palettesList;
                 }
 
                 scope.$watch('tabFieldsTree', function () {
 
                     if (scope.tabFieldsTree) {
-                        findItem();
+
+                    	findItem();
+
+						if (scope.item.type === 'table') {
+							scope.toggleEditMode = openEditModeInDialog;
+
+						} else {
+							scope.toggleEditMode = toggleGeneralEditMode;
+						}
 
                         setTimeout(function () { // set min height to prevent row disappearance on card drag
                             setCardContainerMinHeight();
                         }, 100);
+
                     }
 
                 });

@@ -36,10 +36,10 @@
                 evEventService: '=',
             },
             link: function (scope) {
-                scope.layout = scope.evDataService.getListLayout()
-                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-
                 scope.isReport = metaService.isReport(scope.entityType);
+
+                scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 let splitPanelLayoutId = null;
@@ -58,7 +58,7 @@
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
-                        templateUrl: 'views/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: ev,
                         clickOutsideToClose: false,
@@ -132,18 +132,16 @@
 
                             targetLayout.is_default = true;
 
-                            uiService.updateListLayout(targetLayout.id, targetLayout).then(function (data) {
+                            uiService.updateListLayout(targetLayout.id, targetLayout).then(function (updatedLayoutData) {
 
                                 // needed to update is_default on front-end
-                                const listLayout = scope.evDataService.getListLayout();
+                                const listLayout = updatedLayoutData;
                                 const activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
 
                                 if (listLayout.id === targetLayout.id) { // if active layout made default
 
                                     listLayout.is_default = true
-                                    listLayout.modified = data.modified
                                     activeLayoutConfig.is_default = true
-                                    // activeLayoutConfig.is_default = true
 
                                 } else {
 
@@ -156,6 +154,8 @@
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
 
                                 scope.evEventService.dispatchEvent(evEvents.DEFAULT_LAYOUT_CHANGE);
+
+                                toastNotificationService.success("Success. Layout made by default");
 
                                 scope.$apply();
 
@@ -921,31 +921,27 @@
                         if (res.status === 'agree') {
 
                             layoutData.name = res.data.name;
-                            //layout.name = res.data.name;
                             layoutData.user_code = res.data.user_code;
-                            //layout.user_code = res.data.user_code;
 
-                            uiService.updateListLayout(layoutData.id, layoutData).then(function (data) {
+                            uiService.updateListLayout(layoutData.id, layoutData).then(function (updatedLayoutData) {
 
-                                const listLayout = scope.evDataService.getListLayout();
+                                const listLayout = updatedLayoutData;
 
-                                if (listLayout.id && listLayout.id === data.id) {
+                                scope.evDataService.setListLayout(listLayout);
+                                scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
-                                    listLayout.name = data.name;
-                                    listLayout.modified = data.name;
-                                    scope.evDataService.setListLayout(listLayout);
-
-                                    if (isRootEntityViewer) {
-                                        middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
-                                    } else {
-                                        middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
-                                    }
-
-                                    scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
-
-                                    scope.$apply()
-
+                                if (isRootEntityViewer) {
+                                    middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
+                                } else {
+                                    middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
                                 }
+
+                                scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+
+                                toastNotificationService.success("Success. Layout has been renamed.");
+
+                                scope.$apply()
+
 
                             });
 

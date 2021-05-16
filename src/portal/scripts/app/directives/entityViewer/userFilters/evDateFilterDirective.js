@@ -41,31 +41,6 @@
                         }
                     });
 
-                    // ---------------- For Testing -----------------
-                    /*scope.columnRowsContent = [
-                        new Date('2019-05-20'),
-                        new Date('2019-05-23'),
-                        new Date('2019-05-01'),
-                        new Date('2019-05-05'),
-                        new Date('2019-05-13'),
-                        new Date('2019-02-21'),
-                        new Date('2019-02-28'),
-                        new Date('2019-02-20'),
-                        new Date('2019-03-24'),
-                        new Date('2019-03-11'),
-                        new Date('2018-11-20'),
-                        new Date('2018-11-11'),
-                        new Date('2018-11-18'),
-                        new Date('2018-06-21'),
-                        new Date('2018-06-22'),
-                        new Date('2018-06-23'),
-                        new Date('2018-06-24'),
-                        new Date('2016-05-20'),
-                        new Date('2016-05-21'),
-                        new Date('2016-05-22'),
-                        new Date('2016-05-23')
-                    ];*/
-
                     scope.$apply();
                 };
 

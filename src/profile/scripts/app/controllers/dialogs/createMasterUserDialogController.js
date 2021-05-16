@@ -6,6 +6,7 @@
     'use strict';
 
     var usersService = require('../../services/usersService');
+    var authorizerService = require('../../services/authorizerService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -19,7 +20,7 @@
 
         vm.agree = function ($event) {
 
-            usersService.createMasterUser({name: vm.name}).then(function (data) {
+            authorizerService.createMasterUser({name: vm.name}).then(function (data) {
 
                 console.log('data success', data);
 
