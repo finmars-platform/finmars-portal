@@ -1646,6 +1646,10 @@
 
 				});
 
+                vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
+                })
+
 			};
 
             vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
