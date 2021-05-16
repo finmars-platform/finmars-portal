@@ -1,5 +1,6 @@
 (function() {
 	'use strict';
+	// TO DELETE: probably deprecated
 
 	var logService = require('../../../../../core/services/logService');
 
