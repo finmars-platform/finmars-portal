@@ -12,7 +12,8 @@
 
             <div class="flex-row fi-start">
                 <md-button class="small-button-icon dashboard-comp-h-btn g-filter-area-toggle"
-                           ng-click="toggleFilterBlock($event)">
+                           data-ng-class="{'active': showFiltersArea}"
+                           ng-click="toggleFilterBlock()">
 
                     <span class="material-icons">filter_list</span>
                     <md-tooltip data-md-direction="top">Toggle filter area</md-tooltip>

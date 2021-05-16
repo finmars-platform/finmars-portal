@@ -32,6 +32,8 @@
 
     var exportExcelService = require('../../services/exportExcelService');
 
+    var transactionTypeService = require('../../services/transactionTypeService');
+
 
     module.exports = function ($mdDialog, $state, $bigDrawer) {
         return {
@@ -256,75 +258,6 @@
                     }
                 };
 
-                scope.insertObjectAfterCreateHandler = function (resultItem) {
-
-                    var groups = scope.evDataService.getDataAsList();
-                    var requestParameters = scope.evDataService.getAllRequestParameters();
-                    var requestParametersKeys = Object.keys(requestParameters);
-
-                    var matchedRequestParameter;
-
-                    for (var i = 0; i < requestParametersKeys.length; i = i + 1) {
-
-                        var key = requestParametersKeys[i];
-
-                        var match = true;
-
-                        var filter_types = requestParameters[key].body.groups_types.map(function (item) {
-                            return item.key
-                        });
-
-                        var filter_values = requestParameters[key].body.groups_values;
-
-                        if (filter_values.length) {
-                            filter_values.forEach(function (value, index) {
-
-                                if (resultItem[filter_types[index]] !== value) {
-                                    match = false
-                                }
-
-
-                            })
-                        } else {
-
-                            if (filter_types.length) {
-                                match = false;
-                            }
-                        }
-
-                        if (match) {
-                            matchedRequestParameter = requestParameters[key];
-                            break;
-                        }
-
-                    }
-
-                    if (matchedRequestParameter) {
-
-                        groups.forEach(function (group) {
-
-                            if (group.___id === matchedRequestParameter.id) {
-
-                                var exampleItem = group.results[0]; // copying of ___type, ___parentId and etc fields
-
-                                var result = Object.assign({}, exampleItem, resultItem);
-
-                                result.___id = evRvCommonHelper.getId(result);
-                                var beforeControlRowIndex = group.results.length - 1;
-
-                                group.results.splice(beforeControlRowIndex, 0, result);
-
-                            }
-
-
-                        })
-
-                    }
-
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                };
-
                 scope.getEntityNameByState = function () {
 
                     switch ($state.current.name) {
@@ -399,113 +332,52 @@
 
 				scope.addEntity = async function (ev) {
 
-					var postAddEntityFn = function (res) {
-						if (res && res.res === 'agree') {
-							scope.insertObjectAfterCreateHandler(res.data);
-                            // Victor 2021.02.15 Save button on ADD Entity
-/*							if (res.data.action === 'edit') {
-
-                            }*/
-						}
-					};
+                    let editLayout, entity = {};
 
 					switch (scope.entityType) {
 
 						case 'transaction-type':
 
-							$mdDialog.show({
-								controller: 'TransactionTypeAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-								parent: angular.element(document.body),
-								targetEvent: ev,
-								locals: {
-									entityType: scope.entityType,
-									entity: {}
-								}
-
-							}).then(postAddEntityFn);
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openTTypeAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
 
 							break;
 
 						case 'complex-transaction':
 
-							/* $mdDialog.show({
-                                controller: 'ComplexTransactionAddDialogController as vm',
-                                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: ev,
-                                locals: {
-                                    entityType: scope.entityType,
-                                    entity: {},
-                                    data: {}
-                                }
-                            }).then(function (res) {
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
 
-                                if (res && res.res === 'agree') {
-                                    scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
-                                }
-
-                            }) */
-
-							$bigDrawer.show({
-								controller: 'ComplexTransactionAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/complex-transaction-add-drawer-view.html',
-								locals: {
-									entityType: scope.entityType,
-									entity: {},
-									data: {
-										openedIn: 'big-drawer'
-									}
-								}
-
-							}).then(function (res) {
-
-								if (res && res.res === 'agree') {
-									scope.insertObjectAfterCreateHandler(res.data.complex_transaction);
-								}
-
-							});
+                            evHelperService.openComplexTransactionAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
 
 							break;
 
 						default:
 
-							/* $mdDialog.show({
-								controller: 'EntityViewerAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-								parent: angular.element(document.body),
-								targetEvent: ev,
-								locals: {
-									entityType: scope.entityType,
-									entity: {},
-									data: {
-										openedIn: 'modal-dialog'
-									}
-								}
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openEntityViewerAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
 
-							}).then(postAddEntityFn); */
-
-                            var fixedAreaColumns = 6;
-                            if (scope.entityType !== 'instrument-type') {
-                                fixedAreaColumns = 1;
-                            }
-
-                            var bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
-
-							$bigDrawer.show({
-								controller: 'EntityViewerAddDialogController as vm',
-								templateUrl: 'views/entity-viewer/entity-viewer-universal-add-drawer-view.html',
-                                addResizeButton: true,
-								drawerWidth: bigDrawerWidthPercent,
-								locals: {
-									entityType: scope.entityType,
-									entity: {},
-									data: {
-										openedIn: 'big-drawer'
-									}
-								}
-
-							}).then(postAddEntityFn);
+                            break;
 
 					}
 

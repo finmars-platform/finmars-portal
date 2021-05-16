@@ -186,7 +186,7 @@
         </div>
 
         <div>
-            <md-button class="md-raised m-r-24" ng-click="vm.copy()"
+            <md-button class="md-raised m-r-24" ng-click="vm.copy('big_drawer')"
                        ng-disabled="!vm.checkReadyStatus() || vm.entity.is_canceled || !vm.hasEditPermission || vm.processing" >
                 Make a copy
             </md-button>
@@ -198,7 +198,7 @@
 
             <md-button class="md-raised" data-ng-if="vm.entity.status == 2"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
-                       ng-click="vm.rebookAsPending()">
+                       ng-click="vm.bookAsPending()">
                 Rebook as pending
             </md-button>
             <md-button class="md-raised"

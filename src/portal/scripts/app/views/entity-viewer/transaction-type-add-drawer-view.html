@@ -1,21 +1,8 @@
-<md-dialog aria-label="transaction type edit"
-           class="entity-editor-dialog draggable-dialog dialog-actions-bottom ttypeEditorElemToDrag"
-           drag-dialog
-           style="height: 100%">
-    <md-toolbar>
-        <div data-ng-if="vm.checkReadyStatus()"
-             class="md-toolbar-tools"
-             data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
-            <is-draggable-sign></is-draggable-sign>
+<div class="big-drawer-content universal-editor">
+    <div class="big-drawer-header">
+        <div>
 
-            <h2 data-ng-if="vm.hasEditPermission">Edit Transaction type</h2>
-            <h2 data-ng-if="!vm.hasEditPermission">View Transaction type</h2>
-            <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">
-                <ng-md-icon icon="lock" size="24">
-                        <md-tooltip md-direction="bottom">You don't have permission to edit this form</md-tooltip>
-                </ng-md-icon>
-            </span>
-
+            <h2 class="big-drawer-header-h">Add Transaction type</h2>
             <div data-ng-if="vm.processing" layout="row" class="m-l-16">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
                     <progress-circular diameter="20"></progress-circular>
@@ -24,11 +11,27 @@
             </div>
 
         </div>
-    </md-toolbar>
-    <md-dialog-content style="height: 100%">
+    </div>
 
-        <div style="min-width: 1450px">
-            <div data-ng-if="vm.checkReadyStatus()">
+    <div class="big-drawer-main">
+
+        <div data-ng-if="vm.checkReadyStatus()">
+
+            <div data-ng-if="!vm.entity.type" style="padding-top: 64px">
+
+                <h3 class="text-center">Please Select Type</h3>
+
+                <md-input-container class="md-block" style="height: 64px; width: 400px; margin: 24px auto;">
+                    <label>Type</label>
+                    <md-select data-ng-model="vm.entity.type">
+                        <md-option ng-value="1">Transaction</md-option>
+                        <md-option ng-value="2">Procedure</md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+            <div data-ng-if="vm.entity.type">
 
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
@@ -87,14 +90,15 @@
                         </md-tab-body>
                     </md-tab>
 
-                    <md-tab data-ng-if="vm.checkPermissions() && vm.canManagePermissions">
+                    <md-tab data-ng-if="vm.canManagePermissions">
                         <md-tab-label>
                             <span class="colored-tab">Permissions</span>
                         </md-tab-label>
                         <md-tab-body>
                             <md-content class="md-padding p-t-26">
                                 <md-content class="md-padding">
-                                    <div>
+                                    <div data-ng-if="vm.readyStatus.permissions">
+
                                         <h3>Group permissions</h3>
 
                                         <div>
@@ -102,12 +106,15 @@
                                                 <div layout="row" layout-align="space-between center"
                                                      class="permissions-table-header">
                                                     <div>
-                                                        <div class="permissions-columns">Group name</div>
+                                                        <div class="permissions-columns">Group name
+                                                        </div>
                                                     </div>
-                                                    <div layout="row" class="permissions-checkbox-holder"
+                                                    <div layout="row"
+                                                         class="permissions-checkbox-holder"
                                                          flex="30"
                                                          layout-align="space-between center">
-                                                        <div class="permissions-columns" flex="33">Delegate
+                                                        <div class="permissions-columns" flex="33">
+                                                            Delegate
                                                             <ng-md-icon class="tooltip-inline-block"
                                                                         icon="info"
                                                                         size="20"
@@ -156,7 +163,8 @@
                                                     <div>
                                                         <p> {{ group.name }} </p>
                                                     </div>
-                                                    <div layout="row" class="permissions-checkbox-holder"
+                                                    <div layout="row"
+                                                         class="permissions-checkbox-holder"
                                                          flex="30"
                                                          layout-align="space-between center">
                                                         <div flex="33" layout="center center">
@@ -180,12 +188,6 @@
                                             </div>
                                         </div>
 
-                                        <div>
-                                            <md-button ng-click="vm.recalculatePermissions()" class="md-raised">
-                                                Save and Recalculate Complex Transaction Permissions
-                                            </md-button>
-                                        </div>
-
                                     </div>
                                     <div data-ng-if="!vm.readyStatus.permissions">
                                         <div layout="row" layout-sm="column" layout-align="space-around"
@@ -200,6 +202,7 @@
                         </md-tab-body>
                     </md-tab>
 
+
                     <md-tab>
                         <md-tab-lable>
                             <span class="grey-tab">Reconciliation</span>
@@ -212,60 +215,64 @@
                     </md-tab>
 
                 </md-tabs>
+
             </div>
-            <div data-ng-if="!vm.checkReadyStatus()">
-                <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
-                    <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
-                    <progress-circular diameter="100"></progress-circular>
-                </div>
+
+        </div>
+        <div data-ng-if="!vm.checkReadyStatus()">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                <progress-circular diameter="100"></progress-circular>
             </div>
         </div>
 
-    </md-dialog-content>
+    </div>
 
-    <md-dialog-actions layout="row" layout-align="space-between center">
+    <div class="big-drawer-footer big-drawer-actions flex-row fc-space-between">
+
         <div layout="row">
-            <md-button ng-click="vm.editLayout($event)"
-                       class="md-raised md-primary"
-                       ng-disabled="!vm.checkReadyStatus() || vm.processing">
-                Edit transaction form
-            </md-button>
-
-            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
-                Manage attributes
-            </md-button>
-
-            <md-button
-                    ng-click="vm.delete($event)" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}"
-                    class="md-raised md-warn">
-                Delete
+            <md-button class="link-button" ng-click="vm.cancel()">
+                <span>Cancel</span>
             </md-button>
         </div>
 
         <div style="margin-right: 10px;">
-            <md-button class="md-raised m-r-24" ng-click="vm.copy()"
-                       ng-disabled="!vm.checkReadyStatus()" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
-                Make a copy
+            <md-menu md-position-mode="target-right target">
+
+                <md-button class="outline-button" ng-click="$mdOpenMenu($event)">
+                    <div class="flex-row flex-c-center">
+                        <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>
+                    </div>
+                </md-button>
+
+                <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
+
+                    <md-menu-item>
+                        <md-button ng-click="vm.manageAttrs($event)">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="list" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Manage Attributes</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                </md-menu-content>
+            </md-menu>
+
+            <md-button class="outline-button"
+                       ng-disabled="vm.processing || !vm.entity.type"
+                       ng-click="vm.saveAndExit('edit')">
+                Create
             </md-button>
-            <md-button class="md-raised" ng-click="vm.cancel()">
-                Cancel
-            </md-button>
-            <md-button class="md-raised m-r-24"
-                       ng-click="vm.save()"
-                       ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}"
-                       style="margin-left:20px;">
-                Save
-            </md-button>
-            <md-button class="md-raised"
+
+            <md-button ng-disabled="vm.processing || !vm.entity.type"
                        ng-click="vm.saveAndExit()"
-                       ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
-                Save and Exit
+                       class="m-r-24 primary-button">
+                Create and Exit
             </md-button>
+
         </div>
 
-        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
-                               data-elem-to-resize="vm.dialogElemToResize"
-                               data-on-resize-callback="vm.rearrangeMdDialogActions()"
-                               class="dialog-window-resizer_type1"></dialog-window-resizer>
-    </md-dialog-actions>
-</md-dialog>
+    </div>
+</div>
