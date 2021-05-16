@@ -9,7 +9,7 @@
 
     var usersGroupService = require('../../services/usersGroupService');
 
-    var layoutService = require('../../services/layoutService');
+    var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
 
     var gridHelperService = require('../../services/gridHelperService');
@@ -28,6 +28,8 @@
 
     var uiService = require('../../services/uiService');
 
+    var metaHelper = require('../../helpers/meta.helper');
+
     var GridTableDataService = require('../../services/gridTableDataService');
     var GridTableEventService = require('../../services/gridTableEventService');
 
@@ -36,11 +38,11 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $state, entityType, entity) {
+    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data) {
 
         var vm = this;
 
-        var ttypeEditorSlHelper = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
+        var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.readyStatus = {content: false, entity: true, permissions: true, inputs: false};
         vm.entityType = entityType;
@@ -88,6 +90,8 @@
         vm.inputsToDelete = [];
         vm.referenceTables = [];
         vm.inputsForMultiselector = [];
+
+        vm.openedIn = data.openedIn;
 
         var ecosystemDefaultData = {};
 
@@ -208,7 +212,8 @@
         };
 
         vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+            // $mdDialog.hide({status: 'disagree'});
+            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         /*vm.editLayout = function (ev) {
@@ -265,7 +270,7 @@
 
         vm.transactionUserFields = {};
 
-        vm.getTransactionUserFields = ttypeEditorSlHelper.getTransactionUserFields;
+        vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
 
         vm.getAttributeTypes = function () {
 
@@ -291,60 +296,25 @@
 
         vm.range = gridHelperService.range;
 
-        vm.updateEntityBeforeSave = function () {
+        vm.updateEntityBeforeSave = function (entity) {
 
             if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
-                vm.entity.attributes = [];
+				entity.attributes = [];
 
                 vm.attrs.forEach(function (attributeType) {
 
-                    var value = vm.entity[attributeType.user_code];
+                    var value = entity[attributeType.user_code];
 
-                    vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
-
-                });
-            }
-
-            vm.entity.object_permissions = [];
-
-            if (vm.groups) {
-                vm.groups.forEach(function (group) {
-
-                    if (group.objectPermissions && group.objectPermissions.manage === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "manage_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.change === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "change_" + vm.entityType.split('-').join('')
-                        })
-                    }
-                    if (group.objectPermissions && group.objectPermissions.view === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "view_" + vm.entityType.split('-').join('')
-                        })
-                    }
+					entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
 
                 });
             }
 
-            vm.entity.inputs.forEach(function (input) {
+			entity.object_permissions = [];
 
-                if (input.settings && Array.isArray(input.settings.linked_inputs_names)) {
-                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
-                }
-
-            });
-
+            // code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
+			return sharedLogic.updateEntityBeforeSave(entity);
 
         };
 
@@ -735,16 +705,16 @@
 
             return new Promise(function (resolve, reject) {
 
-                vm.updateEntityBeforeSave();
+                vm.entity = vm.updateEntityBeforeSave(vm.entity);
 
                 /*var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
 
-                var actionsErrors = ttypeEditorSlHelper.checkActionsForEmptyFields(vm.entity.actions);
-				var inputsErrors = ttypeEditorSlHelper.validateInputs(vm.entity.inputs);
+                var actionsErrors = sharedLogic.checkActionsForEmptyFields(vm.entity.actions);
+				var inputsErrors = sharedLogic.validateInputs(vm.entity.inputs);
 				actionsErrors = actionsErrors.concat(inputsErrors);
 
-                var entityErrors = ttypeEditorSlHelper.checkEntityForEmptyFields(vm.entity);
+                var entityErrors = sharedLogic.checkEntityForEmptyFields(vm.entity);
 
                 console.log('vm.entity before save', vm.entity);
 
@@ -773,7 +743,7 @@
 
                     vm.processing = true;
 
-                    transactionTypeService.create(vm.entity).then(function (data) {
+                    transactionTypeService.create(vm.entity).then(function (responseData) {
 
                         toastNotificationService.success("Transaction Type " + " " + vm.entity.name + ' was successfully created');
 
@@ -788,6 +758,8 @@
 
                         }
 
+						vm.entity.object_permissions = responseData.object_permissions;
+
                         console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
 
                         if (vm.entity.book_transaction_layout) {
@@ -796,17 +768,16 @@
 
                             $scope.$apply();
 
-
-                            resolve();
+                            // resolve(resolve(responseData));
+							resolve(responseData);
 
                         } else {
-
-                            createDefaultEditLayout(data).then(function () {
+                            createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 
                                 $scope.$apply();
 
-                                resolve();
+                                resolve(responseData);
                             });
                         }
 
@@ -837,12 +808,29 @@
 
         };
 
-        vm.saveAndExit = function ($event) {
+        vm.saveAndExit = function (action) {
 
-            vm.save().then(function (data) {
+            vm.save().then(function (responseData) {
 
-                $mdDialog.hide({res: 'agree', data: data});
+                let responseObj = {status: 'disagree'};
 
+                if (action === 'edit') {
+
+                    vm.entity = {...vm.entity, ...responseData};
+                    vm.entity.$_isValid = true;
+
+                    responseObj = {
+                        res: 'agree',
+                        data: {
+                            action: 'edit',
+                            entityType: vm.entityType,
+                            entity: vm.entity
+                        }
+                    };
+                }
+
+                //$mdDialog.hide({res: 'agree', data: data});
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
         };
@@ -1014,9 +1002,9 @@
             ]
 
         };*/
-        vm.contextProperties = ttypeEditorSlHelper.getContextProperties();
+        vm.contextProperties = sharedLogic.getContextProperties();
         vm.relationItems = {};
-        vm.valueTypes = ttypeEditorSlHelper.getValueTypes();
+        vm.valueTypes = sharedLogic.getValueTypes();
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
         vm.bindValueType = function (row) {
@@ -1079,7 +1067,7 @@
         vm.editItem = function (item) {
             item.editStatus = true;
         };*/
-        vm.resolveRelation = ttypeEditorSlHelper.resolveRelation;
+        vm.resolveRelation = sharedLogic.resolveRelation;
 
         vm.updateInputFunctions = function () {
 
@@ -1116,7 +1104,7 @@
 
         vm.saveItem = function (item) {
 
-            ttypeEditorSlHelper.updateInputFunctions();
+            sharedLogic.updateInputFunctions();
 
             item.editStatus = false;
         };
@@ -2349,7 +2337,7 @@
             vm.inputsGridTableDataService = new GridTableDataService();
             vm.inputsGridTableEventService = new GridTableEventService();
 
-            ttypeEditorSlHelper.initGridTableEvents();
+            sharedLogic.initGridTableEvents();
 
             ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
@@ -2358,7 +2346,7 @@
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();
             var permissionProm = vm.loadPermissions();
-            var getRefTablesPromise = ttypeEditorSlHelper.getReferenceTables();
+            var getRefTablesPromise = sharedLogic.getReferenceTables();
 
             vm.getTransactionTypeGroups();
             vm.getPortfolios();
@@ -2366,11 +2354,11 @@
             // vm.getTags();
 
             // vm.getInputTemplates();
-            var getInputTemplPromise = ttypeEditorSlHelper.getInputTemplates();
+            var getInputTemplPromise = sharedLogic.getInputTemplates();
             vm.getFieldTemplates();
             vm.getActionTemplates();
 
-            ttypeEditorSlHelper.updateInputFunctions();
+            sharedLogic.updateInputFunctions();
 
             var allDataPromises = [
                 attrsProm,
@@ -2382,7 +2370,7 @@
 
             Promise.all(allDataPromises).then(function () {
 
-                ttypeEditorSlHelper.initAfterMainDataLoaded();
+                sharedLogic.initAfterMainDataLoaded();
 
                 vm.readyStatus.entity = true;
                 vm.readyStatus.inputs = true;

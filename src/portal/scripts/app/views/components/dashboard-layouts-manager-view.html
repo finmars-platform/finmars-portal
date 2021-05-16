@@ -72,12 +72,17 @@
 
     <div class="layout-menu-item"
          data-ng-class="{'default-layout': layout.is_default}"
-         data-ng-click="setAsDefault(layout)"
+         data-ng-click="setAsDefault()"
          data-ng-disabled="layout.is_default">
 
         <span class="material-icons">home</span>
         <span>Make default</span>
 
+    </div>
+
+    <div class="layout-menu-item" data-ng-click="editDashboardLayout()">
+        <span class="material-icons">edit</span>
+        <span>Edit Dashboard Layout</span>
     </div>
 
     <md-menu-divider></md-menu-divider>

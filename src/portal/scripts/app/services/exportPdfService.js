@@ -3,32 +3,27 @@
  */
 (function () {
 
-    'use strict';
+	'use strict';
 
-    var generatePdf = function (data) {
+	var generatePdf = function (data) {
 
+		return window.fetch('/services/pdf',
+			{
+				method: 'POST',
+				credentials: 'include',
+				body: JSON.stringify(data),
+				headers: {
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			}).then(function (data) {
+			return data.blob();
+		})
 
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+	};
 
-return window.fetch('/services/pdf',
-            {
-                method: 'POST',
-                credentials: 'include',
-                body: JSON.stringify(data),
-                headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            }).then(function (data) {
-            return data.blob();
-        })
-
-    };
-
-    module.exports = {
-        generatePdf: generatePdf
-    }
+	module.exports = {
+		generatePdf: generatePdf
+	}
 
 }());

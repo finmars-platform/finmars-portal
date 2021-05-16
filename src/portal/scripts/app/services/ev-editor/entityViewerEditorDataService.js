@@ -7,7 +7,11 @@
 			changedUserInputData: null,
 			tooltipsList: [],
 			colorPalettes: [],
-			userInputsToRecalc: null
+			userInputsToRecalc: null,
+			entityAttributeTypes: [],
+
+			tabsWithErrors: null,
+			formErrorsList: null
 		};
 
         /* function setChangedUserInputData (uInputData) {
@@ -54,6 +58,14 @@
 			return data.userInputsToRecalc;
 		}
 
+		function setEntityAttributeTypes (attributeTypes) {
+			data.entityAttributeTypes = attributeTypes || [];
+		}
+
+		function getEntityAttributeTypes () {
+			return data.entityAttributeTypes;
+		}
+
         function setRecalculationFunction (fn) {
             data.recalculate = fn;
         }
@@ -62,11 +74,29 @@
             return data.recalculate;
         }
 
+        function setTabsWithErrors (tabsWithErrors) {
+			data.tabsWithErrors = tabsWithErrors;
+		}
+
+		function getTabsWithErrors () {
+			return data.tabsWithErrors;
+		}
+
+		function setFormErrorsList (errorsList) {
+			data.formErrorsList = errorsList;
+		}
+
+		function getFormErrorsList () {
+			return data.formErrorsList;
+		}
+
         return {
             /*setChangedUserInputData: setChangedUserInputData,
             getChangedUserInputData: getChangedUserInputData,*/
 			setUserInputsToRecalculate: setUserInputsToRecalculate,
 			getUserInputsToRecalculate: getUserInputsToRecalculate,
+			setEntityAttributeTypes: setEntityAttributeTypes,
+			getEntityAttributeTypes: getEntityAttributeTypes,
 
             setTooltipsData: setTooltipsData,
             getTooltipsData: getTooltipsData,
@@ -74,7 +104,12 @@
             getColorPalettesList: getColorPalettesList,
 
             setRecalculationFunction: setRecalculationFunction,
-            getRecalculationFunction: getRecalculationFunction
+            getRecalculationFunction: getRecalculationFunction,
+
+			setTabsWithErrors: setTabsWithErrors,
+			getTabsWithErrors: getTabsWithErrors,
+			setFormErrorsList: setFormErrorsList,
+			getFormErrorsList: getFormErrorsList
         }
     }
 

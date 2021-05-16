@@ -481,20 +481,24 @@
         var rowHeight = evDataService.getRowHeight();
 
         var rowSelection;
+		var rowSelectionBtnContent = '';
+		var rowSelectionBtnClasses = 'g-row-selection-button';
 
-        if (obj.___is_last_selected) {
+		if (obj.___is_last_activated || obj.___is_activated) {
 
-            classList.push('last-selected');
-            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
+			var className = obj.___is_last_activated ? 'last-selected': 'selected';
+            classList.push(className);
 
-        } else if (obj.___is_activated) {
+			rowSelectionBtnClasses += ' checked';
+			rowSelectionBtnContent = checkIcon;
 
-            classList.push('selected');
-            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
-
-        } else {
-            rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
         }
+
+		if (obj.___context_menu_is_opened) {
+			classList.push('context-menu-opened');
+		}
+
+		rowSelection = '<div class="g-row-selection"><div class="' + rowSelectionBtnClasses + '">' + rowSelectionBtnContent + '</div></div>';
 
         var rowSettings = renderHelper.getRowSettings();
 

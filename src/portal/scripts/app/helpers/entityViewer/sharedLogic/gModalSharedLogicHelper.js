@@ -4,7 +4,8 @@
 
 
     module.exports = function (viewModel, $scope, $mdDialog) {
-        const vm = viewModel;
+
+    	const vm = viewModel;
 
         let groups, columns, filters;
 
@@ -26,11 +27,16 @@
 
         };
 
-        var separateSelectedAttrs = function (attributes, attrsVmKey) {
+        /**
+		 *
+		 * @param attributes {Array.<Object>} - array of attributes. Can be balanceAttrs, portfolioDynamicAttrs, custom etc
+		 * @param attrsVmKey {string}
+		 */
+		var separateSelectedAttrs = function (attributes, attrsVmKey) {
 
-            for (var i = 0; i < attributes.length; i++) {
+            for (let i = 0; i < attributes.length; i++) {
 
-                var attribute = JSON.parse(angular.toJson(attributes[i]));
+                const attribute = JSON.parse(angular.toJson(attributes[i]));
                 attribute['attrsVmKey'] = attrsVmKey;
 
                 if (attribute.groups) {
@@ -56,7 +62,7 @@
 
             return anotherGroups.some(key => {
 
-                    return areasGroups[key].find(attr => attr.key === attrKey);
+            	return areasGroups[key].find(attr => attr.key === attrKey);
 
             });
 
@@ -89,9 +95,17 @@
 
         }
 
-        var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
+		/**
+		 * Order used in report viewer table attributes the same as they are ordered inside the table.
+		 * Recently unselected attributes at the end of their last groups (groups, columns, filters).
+		 *
+		 * @param insideTable {Array.<Object>} - groups, columns or filters from report viewer
+		 * @param selectedAttrs {Array.<Object>} - attributes used as groups, columns or filters of report viewer
+		 * @param groupType {string} - can be 'groups', 'columns', 'filters'
+		 * @returns {Array} - selected attributes organized as in report viewer layout
+		 */
+        var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) {
 
-            // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
             let selectedAttrsObj = {};
             let inactiveAttrs = [];
 
@@ -108,9 +122,31 @@
 
             });
 
-            let orderedAttrs = insideTable.map(function (attr) {
+            let orderedAttrs = [];
 
-                return selectedAttrsObj[attr.key];
+            insideTable.forEach(attr => {
+
+				const selectedAttrData = selectedAttrsObj[attr.key]
+
+            	if (selectedAttrData) {
+            		orderedAttrs.push(selectedAttrData);
+
+            	} else { // Report viewer layout can use unavailable attribute (e.g. deleted user attribute)
+
+					const groupName = groupType.slice(0, -1);
+
+            		const unavailableAttrData = {
+						key: attr.key,
+						name: attr.layout_name || attr.name,
+						[groupType]: true,
+						error_data: {
+							descriptions: "The " + groupName + " does not exist in the Configuration"
+						}
+					};
+
+					orderedAttrs.push(unavailableAttrData);
+
+				}
 
             });
 
@@ -120,8 +156,14 @@
 
         };
 
-        var getSelectedAttrs = function (attributes, attrGroups) {
-            groups = attrGroups.groups;
+		/**
+		 *
+		 * @param attributesVmKeysList {Array.<string>} - 'instrumentAttrs', 'portfolioDynamicAttrs', 'custom' etc.
+		 * @param attrGroups {{groups: Array.<Object>, columns: Array.<Object>, filters: Array.<Object>}} - contains report viewer's groups, columns, filters
+		 */
+		var getSelectedAttrs = function (attributesVmKeysList, attrGroups) {
+
+        	groups = attrGroups.groups;
             columns = attrGroups.columns;
             filters = attrGroups.filters;
 
@@ -130,7 +172,7 @@
             selectedColumns = vm.selectedColumns;
             selectedFilters = vm.selectedFilters;
 
-            attributes.forEach(attribute => separateSelectedAttrs(vm[attribute], attribute))
+			attributesVmKeysList.forEach(attributeKey => separateSelectedAttrs(vm[attributeKey], attributeKey))
 
             // Order selected as they are inside the table
             vm.selectedGroups = organizeSelectedAttrs(groups, selectedGroups, 'groups');

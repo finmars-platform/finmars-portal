@@ -1,10 +1,14 @@
 (function () {
 
+	const metaService = require('../../../services/metaService');
     const uiService = require('../../../services/uiService');
+	const entityResolverService = require('../../../services/entityResolverService');
     const entityViewerHelperService = require('../../../services/entityViewerHelperService');
 
+    const instrumentService = require('../../../services/instrumentService');
     const attributeTypeService = require('../../../services/attributeTypeService');
     const instrumentTypeService = require('../../../services/instrumentTypeService');
+    const fieldResolverService = require('../../../services/fieldResolverService');
 
     const entityEditorHelper = require('../../../helpers/entity-editor.helper');
 
@@ -18,6 +22,13 @@
 
         let bigDrawerResizeButton;
 
+        const readyStatusObj = {permissions: false, entity: false, layout: false};
+        const typeSelectorValueEntities = {
+        	'instrument': 'instrument-type',
+			'account': 'account-type',
+			'instrument-type': 'instrument-class'
+        };
+
         const getFixedAreaPopup = function () {
             return {
                 fields: {
@@ -30,17 +41,24 @@
             };
         };
 
-        const entityTabsMenuTplt = '<div class="ev-editor-tabs-popup-content popup-menu">' +
-            '<md-button ng-repeat="tab in popupData.viewModel.entityTabs" class="entity-tabs-menu-option popup-menu-option" ng-class="popupData.viewModel.getTabBtnClasses(tab)" ng-click="popupData.viewModel.activeTab = tab">' +
-            '<span>{{tab.label}}</span>' +
-            '<div ng-if="popupData.viewModel.tabWithErrors(tab)" class="tab-option-error-icon">' +
-            '<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
-            '</div>' +
-            '</md-button>' +
-            '<md-button ng-if="popupData.viewModel.canManagePermissions" class="entity-tabs-menu-option popup-menu-option" ng-class="{\'active-tab-button\': popupData.viewModel.activeTab === \'permissions\'}" ng-click="popupData.viewModel.activeTab = \'permissions\'">' +
-            '<span>Permissions</span>' +
-            '</md-button>' +
+		//<editor-fold desc="entityTabsMenuTplt">
+		const entityTabsMenuTplt =
+			'<div class="ev-editor-tabs-popup-content popup-menu">' +
+				'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
+						   'class="entity-tabs-menu-option popup-menu-option" ' +
+						   'ng-class="popupData.viewModel.sharedLogic.getTabBtnClasses(tab)" ' +
+						   'ng-click="popupData.viewModel.activeTab = tab">' +
+					'<span>{{tab.label}}</span>' +
+					'<div ng-if="popupData.viewModel.sharedLogic.isTabWithErrors(tab)" class="tab-option-error-icon">' +
+						'<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
+					'</div>' +
+				'</md-button>' +
+
+				'<md-button ng-if="popupData.viewModel.canManagePermissions" class="entity-tabs-menu-option popup-menu-option" ng-class="{\'active-tab-button\': popupData.viewModel.activeTab === \'permissions\'}" ng-click="popupData.viewModel.activeTab = \'permissions\'">' +
+					'<span>Permissions</span>' +
+				'</md-button>' +
             '</div>';
+		//</editor-fold>
 
         const getEditFormFieldsInFixedArea = function () {
 
@@ -64,7 +82,8 @@
         };
 
         const getAddFormFieldsInFixedArea = function () {
-            const fieldsInFixedArea = [];
+
+        	const fieldsInFixedArea = [];
 
             if (viewModel.fixedAreaPopup.tabColumns > 2) {
 
@@ -96,9 +115,27 @@
             return fieldsInFixedArea;
         }
 
-        const onPopupSaveCallback = function () {
+        const onPopupSaveCallback = async function () {
 
             const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
+
+			if (viewModel.entityType === 'instrument') {
+
+				if (viewModel.fixedAreaPopup.fields.type.value !== viewModel.entity.instrument_type) {
+
+					viewModel.entity.instrument_type = viewModel.fixedAreaPopup.fields.type.value;
+					// const showByDefaultValue = viewModel.showByDefault;
+					const formLayoutData = await getAndFormatUserTabs();
+
+					viewModel.tabs = formLayoutData.tabs;
+					viewModel.attributesLayout = formLayoutData.attributesLayout;
+					$scope.$apply();
+					// set 'show by default' that user saved in popup after it was changed by getAndFormatUserTabs()
+					// viewModel.showByDefault = showByDefaultValue;
+
+				}
+
+			}
 
             viewModel.keysOfFixedFieldsAttrs.forEach(key => {
 
@@ -137,70 +174,157 @@
             viewModel.fixedAreaPopup.fields = JSON.parse(JSON.stringify(viewModel.originalFixedAreaPopupFields));
         };
 
-        const fixFieldsLayoutWithMissingSockets = function () {
+        const fixFieldsLayoutWithMissingSockets = function (tabs) {
 
-            let socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(viewModel.tabs, viewModel.dataConstructorLayout);
+            let socketsHasBeenAddedToTabs = entityEditorHelper.fixCustomTabs(tabs, viewModel.dataConstructorLayout);
 
+            /* CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR
             if (viewModel.fixedArea && viewModel.fixedArea.isActive) {
                 var socketsHasBeenAddedToFixedArea = entityEditorHelper.fixCustomTabs(viewModel.fixedArea, viewModel.dataConstructorLayout);
             }
+            < CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR >
+            */
 
-            if (socketsHasBeenAddedToTabs || socketsHasBeenAddedToFixedArea) {
+            if (socketsHasBeenAddedToTabs) {
                 viewModel.dcLayoutHasBeenFixed = true;
             }
 
         };
 
-        const mapAttributesToLayoutFields = function () {
+        const mapAttributesToLayoutFields = tabs => {
 
-            let attributes = {
-                entityAttrs: viewModel.entityAttrs,
+        	const entityAttrs = JSON.parse(JSON.stringify(viewModel.entityAttrs));
+
+        	if (viewModel.entityType === 'instrument') {
+
+        		entityAttrs.push({
+					name: 'Accruals table',
+					key: 'accrual_calculation_schedules',
+					value_type: 'table',
+				});
+
+			}
+
+            const attributes = {
+                entityAttrs: entityAttrs,
                 dynamicAttrs: viewModel.attributeTypes,
                 layoutAttrs: viewModel.layoutAttrs
             };
 
-            let attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(viewModel.tabs, attributes, viewModel.dataConstructorLayout, true);
+            const attributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(tabs, attributes, viewModel.dataConstructorLayout, true);
 
-            viewModel.attributesLayout = attributesLayoutData.attributesLayout;
+            // viewModel.attributesLayout = attributesLayoutData.attributesLayout;
+			const attributesLayout = attributesLayoutData.attributesLayout;
 
-            if (viewModel.fixedArea && viewModel.fixedArea.isActive) {
-                var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(viewModel.fixedArea, attributes, viewModel.dataConstructorLayout, true);
+            /* CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR
+			if (viewModel.fixedArea && viewModel.fixedArea.isActive) {
+				var fixedAreaAttributesLayoutData = entityEditorHelper.generateAttributesFromLayoutFields(viewModel.fixedArea, attributes, viewModel.dataConstructorLayout, true);
 
-                viewModel.fixedAreaAttributesLayout = fixedAreaAttributesLayoutData.attributesLayout;
-            }
+				viewModel.fixedAreaAttributesLayout = fixedAreaAttributesLayoutData.attributesLayout;
+			}
+            < CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR >
+            */
 
-            if (attributesLayoutData.dcLayoutHasBeenFixed || (fixedAreaAttributesLayoutData && fixedAreaAttributesLayoutData.dcLayoutHasBeenFixed)) {
+            if (attributesLayoutData.dcLayoutHasBeenFixed) {
                 viewModel.dcLayoutHasBeenFixed = true;
             }
 
+            return attributesLayout;
+
         };
 
-        const mapAttributesAndFixFieldsLayout = function () {
+        const mapAttributesAndFixFieldsLayout = function (tabs) {
 
             viewModel.dcLayoutHasBeenFixed = false;
 
-            fixFieldsLayoutWithMissingSockets();
-            mapAttributesToLayoutFields();
+            fixFieldsLayoutWithMissingSockets(tabs);
+            return mapAttributesToLayoutFields(tabs);
 
         };
 
-        const getAttributeTypes = function () {
-            return attributeTypeService.getList(viewModel.entityType, {pageSize: 1000}).then(function (data) {
+        const getAttributeTypes = function () { // dynamic attributes
+
+        	return new Promise((res, rej) => {
+
+        		const options = {page: 1, pageSize: 1000};
+
+        		metaService.loadDataFromAllPages(attributeTypeService.getList, [viewModel.entityType, options]).then(attrTypeData => {
+
+        			viewModel.attributeTypes = attrTypeData;
+					res();
+
+				}).catch(error => rej(error));
+
+			});
+
+        	/* return attributeTypeService.getList(viewModel.entityType, {pageSize: 1000}).then(data => {
                 viewModel.attributeTypes = data.results;
-            });
+            }); */
+
         };
 
         const checkReadyStatus = () => {
 
             let readyStatus = true;
 
-            Object.keys(viewModel.readyStatus).forEach(key => readyStatus = readyStatus && viewModel.readyStatus[key]);
+            Object.keys(viewModel.readyStatus).forEach(key => { // checking that all properties of viewModel.readyStatus have value true
+            	readyStatus = readyStatus && viewModel.readyStatus[key];
+			});
 
             return readyStatus;
 
         };
 
-        const applyInstrumentUserFieldsAliases = function () {
+        const bindFlex = (tab, field) => {
+
+        	if (field.occupiesWholeRow) {
+        		return 100;
+			}
+
+			var flexUnit = 100 / tab.layout.columns;
+			return Math.floor(field.colspan * flexUnit);
+
+		};
+
+		const checkFieldRender = function (tab, row, field) {
+
+			if (field.row === row) {
+
+				if (field.type !== 'empty') {
+					return true;
+				} else {
+
+					var spannedCols = [];
+					var itemsInRow = tab.layout.fields.filter(function (item) {
+						return item.row === row
+					});
+
+					itemsInRow.forEach(function (item) {
+
+						if (item.type !== 'empty' && item.colspan > 1) {
+							var columnsToSpan = item.column + item.colspan - 1;
+
+							for (var i = item.column; i <= columnsToSpan; i = i + 1) {
+								spannedCols.push(i);
+							}
+
+						}
+
+					});
+
+					if (spannedCols.indexOf(field.column) !== -1) {
+						return false
+					}
+
+					return true;
+				}
+			}
+
+			return false;
+
+		};
+
+        const applyInstrumentUserFieldsAliases = function (tabs) {
 
             return new Promise((resolve, reject) => {
 
@@ -208,7 +332,7 @@
 
                     data.results.forEach(function (userField) {
 
-                        viewModel.tabs.forEach(function (tab) {
+						tabs.forEach(function (tab) {
 
                             tab.layout.fields.forEach(function (field) {
 
@@ -237,13 +361,14 @@
         };
 
         const onBigDrawerResizeButtonClick = function () {
-            viewModel.fixedAreaPopup.tabColumns = 6;
+
+        	viewModel.fixedAreaPopup.tabColumns = 6;
             viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
             $scope.$apply();
-            const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(6);
+            const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(6);
 
-            $bigDrawer.setWidth(bigDrawerWidthPercent);
+            $bigDrawer.setWidth(bigDrawerWidth);
 
             bigDrawerResizeButton.classList.add('display-none');
             bigDrawerResizeButton.classList.remove('display-block');
@@ -273,7 +398,7 @@
             let result = viewModel.showByDefaultOptions;
 
             if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
-                result = result.filter(option => option.id !== 'short_name')
+                result = result.filter(option => option.id !== 'short_name');
             }
 
             if (columns > 5) {
@@ -281,7 +406,7 @@
                 if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
                     result = result.filter(option => option.id !== 'short_name');
                 } else {
-                    result = result.filter(option => option.id !== 'user_code')
+                    result = result.filter(option => option.id !== 'user_code');
                 }
 
             }
@@ -290,19 +415,52 @@
 
         };
 
-        const resolveEditLayout = async function (viewModel) {
+		/**
+		 *
+		 * @param entityType - entitType of relation selector (e.g. instrument type selector for instrument)
+		 * @returns {Promise<unknown>} - returns array of entities on resolve and error object on reject
+		 */
+		const getTypeSelectorOptions = function (entityType) {
 
-            if (viewModel.entityType === 'instrument') {
+        	return new Promise((res, rej) => {
 
-                if (viewModel.entity.instrument_type) {
+        		entityResolverService.getListLight(entityType).then(typesData => {
 
-                    return instrumentTypeService.getByKey(viewModel.entity.instrument_type).then(function (data) {
+					const options = Array.isArray(typesData) ? typesData : typesData.results;
+
+					viewModel.typeSelectorOptions = options;
+
+					res();
+
+				}).catch(error => {
+					console.error("getFieldsForFixedAreaPopup error", error);
+					rej(error);
+				});
+
+			});
+
+		};
+
+        const resolveEditLayout = function () {
+
+            if (viewModel.entityType === 'instrument' &&
+				viewModel.entity.instrument_type || viewModel.entity.instrument_type === 0) {
+
+				const activeInstrType = viewModel.typeSelectorOptions.find(instrType => {
+					return instrType.id === viewModel.entity.instrument_type;
+				});
+
+				if (activeInstrType) return instrumentService.getEditLayoutBasedOnUserCodes(activeInstrType.instrument_form_layouts);
+
+                /* if (viewModel.entity.instrument_type) {
+
+                     return instrumentTypeService.getByKey(viewModel.entity.instrument_type).then(function (data) {
 
                         if (data.instrument_form_layouts) {
 
                             return new Promise(function (resolve, reject) {
 
-                                var layouts = data.instrument_form_layouts.split(',')
+                                var layouts = data.instrument_form_layouts.split(',');
 
                                 console.log('Resolving Edit Layout. Layouts', layouts)
 
@@ -343,7 +501,7 @@
 
                                 })
 
-                            })
+                            });
 
                         } else {
                             return uiService.getDefaultEditLayout(viewModel.entityType);
@@ -352,87 +510,164 @@
 
                 } else {
                     return uiService.getDefaultEditLayout(viewModel.entityType);
-                }
+                } */
 
-
-            } else {
-                return uiService.getDefaultEditLayout(viewModel.entityType);
             }
+
+			return uiService.getDefaultEditLayout(viewModel.entityType);
 
         }
 
-        /**
-         *
-         * @param editorType: string - indicates whether function called from entityViewerEditDialogController.js or entityViewerAddDialogController.js
-         */
-        const getFormLayout = async function (editorType, formLayoutFromAbove) {
+        const getUserTabsAndFixedAreaData = formLayoutFromAbove => {
 
-            let editLayout;
-            let gotEditLayout = true;
+        	return new Promise(async resolve => {
 
-            if (formLayoutFromAbove) {
-                editLayout = formLayoutFromAbove;
+        		let editLayout;
+				let gotEditLayout = true;
+				let tabs = [];
 
-            } else {
+				if (formLayoutFromAbove) {
+					editLayout = formLayoutFromAbove;
 
-                try {
-                    editLayout = await resolveEditLayout(viewModel);
+				} else {
 
-                } catch (error) {
+					try {
+						editLayout = await resolveEditLayout();
 
-                    сonsole.error('resolveEditLayout error', error)
+					} catch (error) {
+						console.error('resolveEditLayout error', error);
+						gotEditLayout = false;
+					}
 
-                    gotEditLayout = false;
-                }
+				}
 
-            }
+				if (gotEditLayout &&
+					editLayout.results.length && editLayout.results[0].data) {
 
-            if (gotEditLayout &&
-                editLayout.results.length && editLayout.results[0].data) {
+					viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
 
-                viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
+					if (Array.isArray(editLayout.results[0].data)) {
+						tabs = editLayout.results[0].data;
+					}
+					else {
 
-                if (Array.isArray(editLayout.results[0].data)) {
+						// viewModel.tabs = editLayout.results[0].data.tabs
+						tabs = editLayout.results[0].data.tabs;
+						/** @type {{showByDefault: string=}} - Received by getUserTabsAndFixedAreaData() */
+						viewModel.fixedArea = editLayout.results[0].data.fixedArea;
 
-                    viewModel.tabs = editLayout.results[0].data
+					}
 
-                } else {
+				}
 
-                    viewModel.tabs = editLayout.results[0].data.tabs
-                    viewModel.fixedArea = editLayout.results[0].data.fixedArea
+				/* else {
+					// viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
+					tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
+					viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
+				} */
 
-                }
+				/* if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
 
-            } else {
+					viewModel.tabs.forEach((tab, index) => tab.tabOrder = index);
 
-                viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
-                viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
+				} */
+				if (tabs.length && !tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
 
-            }
+					tabs.forEach((tab, index) => tab.tabOrder = index);
 
-            if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
-                viewModel.tabs.forEach(function (tab, index) {
-                    tab.tabOrder = index;
-                });
-            }
+				}
+
+				resolve(tabs);
+
+			});
+
+		};
+
+        const getAndFormatUserTabs = async function () {
+
+			viewModel.readyStatus.layout = false;
+
+			const tabs = await getUserTabsAndFixedAreaData();
+
+			if (viewModel.entityType === 'instrument') await applyInstrumentUserFieldsAliases(tabs);
+
+        	entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+
+			if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
+
+				viewModel.showByDefault = viewModel.fixedArea.showByDefault;
+				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
+
+			}
+
+			const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
+
+			viewModel.readyStatus.layout = true;
+
+			// $scope.$apply();
+			return {tabs: tabs, attributesLayout: attributesLayout};
+
+		};
+
+        const manageAttributeTypes = function (ev) {
+
+        	$mdDialog.show({
+				controller: 'AttributesManagerDialogController as vm',
+				templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+				targetEvent: ev,
+				multiple: true,
+				locals: {
+					data: {
+						entityType: viewModel.entityType
+					}
+				}
+
+			}).then(res => {
+
+				if (res.status === 'agree') {
+
+					viewModel.attributeTypes = res.attributeTypes;
+					viewModel.evEditorDataService.setEntityAttributeTypes(viewModel.attributeTypes);
+
+					viewModel.evEditorEventService.dispatchEvent(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE);
+
+				}
+
+			});
+
+		};
+
+        const getFormLayout = async formLayoutFromAbove => {
+
+			const hasRelationSelectorInFixedArea = typeSelectorValueEntities.hasOwnProperty(viewModel.entityType);
+
+			if (hasRelationSelectorInFixedArea) {
+				const valueEntity = typeSelectorValueEntities[viewModel.entityType];
+				await getTypeSelectorOptions(valueEntity);
+			}
+
+			const tabs = await getUserTabsAndFixedAreaData(formLayoutFromAbove);
 
             if (viewModel.openedIn === 'big-drawer') {
 
-                // Victor 2020.11.20 #59 Fixed area popup
+                // viewModel.fixedArea received by getUserTabsAndFixedAreaData()
                 if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
                     viewModel.showByDefault = viewModel.fixedArea.showByDefault;
                     viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
                 }
 
-                const columns = entityViewerHelperService.getEditLayoutMaxColumns(viewModel.tabs);
+                // Instrument-type always open in max big drawer window
+                let columns = entityViewerHelperService.getEditLayoutMaxColumns(tabs);
+
+                if (viewModel.entityType === 'instrument-type') columns = 6;
 
                 if (viewModel.fixedAreaPopup.tabColumns !== columns) {
 
                     viewModel.fixedAreaPopup.tabColumns = columns;
                     viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(viewModel.fixedAreaPopup.tabColumns, viewModel.entityType);
 
-                    const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(viewModel.fixedAreaPopup.tabColumns);
-                    $bigDrawer.setWidth(bigDrawerWidthPercent);
+                    const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(viewModel.fixedAreaPopup.tabColumns);
+                    $bigDrawer.setWidth(bigDrawerWidth);
 
                     if (viewModel.fixedAreaPopup.tabColumns !== 6) {
 
@@ -455,65 +690,151 @@
                 viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
             }
 
-            getAttributeTypes().then(async function () {
+			const promises = [getAttributeTypes()];
 
-                entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+			if (viewModel.entityType === 'instrument') promises.push(applyInstrumentUserFieldsAliases(tabs));
 
-                viewModel.getEntityPricingSchemes();
+			return new Promise(resolve => {
 
-                if (viewModel.entityType === 'instrument') {
-                    await applyInstrumentUserFieldsAliases();
-                }
+				Promise.allSettled(promises).then(async function () {
 
-                mapAttributesAndFixFieldsLayout();
+					entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
 
-                if (editorType === 'addition') {
+					viewModel.getEntityPricingSchemes();
 
-                    viewModel.readyStatus.content = true;
-                    viewModel.readyStatus.entity = true;
+					const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
 
-                } else {
-                    viewModel.readyStatus.layout = true;
-                    viewModel.readyStatus.attributeTypes = true;
-                }
+					const fixedAreaData = getFieldsForFixedAreaPopup(formLayoutFromAbove);
 
-                $scope.$apply();
+					viewModel.readyStatus.layout = true;
+					viewModel.readyStatus.entity = true;
 
-            });
+					resolve({
+						fixedAreaData: fixedAreaData,
+						tabs: tabs,
+						attributeTypes: viewModel.attributeTypes,
+						attributesLayout: attributesLayout
+					});
+
+				});
+
+			});
 
         };
 
-        const processTabsErrors = function (errors, tabsWithErrors, errorFieldsList, $event) {
+		const getFieldsForFixedAreaPopup = function () {
 
-            const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+			// return new Promise(function (resolve, reject) {
+
+				const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc, key) => {
+
+					const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
+
+					if (!attr) {
+						return acc;
+					}
+
+					const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
+					const field = {
+						[fieldKey]: {name: attr.name, value: viewModel.entity[key]}
+					};
+
+					if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
+						field[fieldKey].value_entity = attr.value_entity;
+					}
+
+					return {...acc, ...field};
+
+				}, {});
+
+				fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
+				fields.showByDefault = {key: 'Show by default', value: viewModel.showByDefault, options: viewModel.showByDefaultOptions}
+
+				if (fields.hasOwnProperty('type')) {
+					// get options for 'type' or 'instrument type' fields
+					/* entityResolverService.getListLight(fields.type.value_entity).then((data) => {
+
+						const options = Array.isArray(data) ? data : data.results;
+
+						fields.type.options = options;
+						viewModel.typeSelectorOptions = options;
+
+						resolve(fields);
+
+					}).catch(error => {
+						console.error("getFieldsForFixedAreaPopup error", error);
+						reject(error);
+					}); */
+
+					// < get options for 'type' or 'instrument type' fields >
+
+					fields.type.options = viewModel.typeSelectorOptions;
+
+				} /* else {
+					resolve(fields);
+				} */
+
+			// });
+				return fields;
+		};
+
+		/**
+		 * Highlight errors on the form
+		 *
+		 * @param errors {Array.<Object>} - data for dialog with validator results
+		 * @param $event
+		 */
+        const processTabsErrors = function (errors, $event) {
+
+			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
             errors.forEach(function (errorObj) {
 
                 if (errorObj.locationData &&
-                    errorObj.locationData.type === 'tab') {
+                    ['user_tab', 'system_tab'].includes(errorObj.locationData.type)) {
 
                     const tabName = errorObj.locationData.name.toLowerCase();
+					const tabType = errorObj.locationData.type; // system_tab || user_tab
 
-                    const selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
-                    const tabNameElem = document.querySelector(selectorString);
+					let tabIsNotMarked = false;
 
-                    if (tabNameElem) {
-                        tabNameElem.classList.add('error-tab');
+					const tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+					const formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
 
-                    } else {
-                        entityTabsMenuBtn.classList.add('error-tab');
-                    }
+					if (!tabsWithErrors[tabType].hasOwnProperty(tabName)) {
 
-                    if (!tabsWithErrors.hasOwnProperty(tabName)) {
-                        tabsWithErrors[tabName] = [errorObj.key];
+						tabsWithErrors[tabType][tabName] = [errorObj.key];
+						tabIsNotMarked = true;
 
-                    } else if (tabsWithErrors[tabName].includes(errorObj.key)) {
+					} else if (!tabsWithErrors[tabType][tabName].includes(errorObj.key)) {
 
-                        tabsWithErrors[tabName].push(errorObj.key);
+						tabsWithErrors[tabType][tabName].push(errorObj.key);
+						tabIsNotMarked = true;
 
-                    }
+					}
 
-                    errorFieldsList.push(errorObj.key);
+					if (tabIsNotMarked) {
+
+						if (!formErrorsList.includes(errorObj.key)) { // component can be in multiple tabs (e.g. maturity_date) but formErrorsList should contain only one key
+
+							formErrorsList.push(errorObj.key);
+
+						}
+
+						if (tabType === 'user_tab') {
+
+							const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
+							const tabNameElem = document.querySelector(selectorString);
+
+							if (tabNameElem) tabNameElem.classList.add('error-tab');
+
+						}
+
+						else if (tabType === 'system_tab') {
+							entityTabsMenuBtn.classList.add('error-tab');
+						}
+
+					}
 
                 }
 
@@ -535,7 +856,7 @@
 
         };
 
-        const onSuccessfulEntitySave = function (responseData, isAutoExitAfterSave) {
+        /* const onSuccessfulEntitySave = function (responseData, isAutoExitAfterSave) {
 
             viewModel.processing = false;
 
@@ -560,21 +881,84 @@
 
             }
 
+        }; */
+
+        const getDailyPricingModelFields = async function () {
+
+            const {data}  = await fieldResolverService.getFields('payment_size_detail', {
+                entityType: 'instrument',
+                key: 'payment_size_detail'
+            });
+            const dailyPricingModelFields = metaHelper.textWithDashSort(data);
+
+            return dailyPricingModelFields;
+
+        };
+
+        const getCurrencyFields = async function () {
+            const {data} = await fieldResolverService.getFields('accrued_currency', {
+                entityType: 'instrument',
+                key: 'accrued_currency'
+            });
+            const currencyFields = metaHelper.textWithDashSort(data);
+
+            return currencyFields;
         }
+
+		const typeSelectorChangeFns = {
+			'instrument': getAndFormatUserTabs
+		};
+
+        const isTabWithErrors = (tab) => {
+
+        	const tabName = tab.label.toLowerCase();
+			const tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+
+			return tabsWithErrors[tab.type].hasOwnProperty(tabName);
+
+		};
+
+        const getTabBtnClasses = function (tab) {
+
+			var result = [];
+
+			if (viewModel.activeTab.label === tab.label) {
+				result.push('active-tab-button');
+			}
+
+			if (isTabWithErrors(tab)) {
+				result.push('error-menu-option');
+			}
+
+			return result;
+
+		};
 
         return {
 
+			readyStatusObj: readyStatusObj,
+
             getFixedAreaPopup: getFixedAreaPopup,
             entityTabsMenuTplt: entityTabsMenuTplt,
-
             onPopupSaveCallback: onPopupSaveCallback,
             onFixedAreaPopupCancel: onFixedAreaPopupCancel,
+			typeSelectorChangeFns: typeSelectorChangeFns,
 
             checkReadyStatus: checkReadyStatus,
+			bindFlex: bindFlex,
+			checkFieldRender: checkFieldRender,
+			manageAttributeTypes: manageAttributeTypes,
             getFormLayout: getFormLayout,
+			// getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
             onEditorStart: onEditorStart,
 
-            processTabsErrors: processTabsErrors
+            processTabsErrors: processTabsErrors,
+
+            getDailyPricingModelFields: getDailyPricingModelFields,
+            getCurrencyFields: getCurrencyFields,
+
+			isTabWithErrors: isTabWithErrors,
+			getTabBtnClasses: getTabBtnClasses
 
         }
 
