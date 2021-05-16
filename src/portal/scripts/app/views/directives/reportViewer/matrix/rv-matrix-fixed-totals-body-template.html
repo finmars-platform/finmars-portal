@@ -30,7 +30,7 @@
          data-ng-class="{'active': activeItem == 'total', 'negative-red': checkNegative(totals.total)}">
         {{formatValue(totals.total)}}
     </div>-->
-    <div class="report-viewer-matrix-cell rv-matrix-rb-cell text-{{styles.cell.text_align}} rvMatrixCell"
+    <div class="report-viewer-matrix-cell rv-matrix-rb-cell report-viewer-matrix-cell-total text-{{styles.cell.text_align}} rvMatrixCell"
          title="{{grandtotal}}"
          data-ng-click="totalClick($event)"
          data-ng-class="{'active': activeItem == 'total', 'negative-red': checkNegative(grandtotal)}">
@@ -42,7 +42,7 @@
     <div class="rvm-fixed-col-holder">
         <div class="rv-matrix-part-to-scroll scrollableMatrixBodyColumn">
             <div data-ng-repeat="row in matrix track by row.index"
-                 class="report-viewer-matrix-cell report-viewer-matrix-cell-total rv-matrix-colored-cell text-{{styles.cell.text_align}} rvMatrixCell"
+                 class="report-viewer-matrix-cell rv-matrix-colored-cell text-{{styles.cell.text_align}} rvMatrixCell"
                  title="{{row.row_name}}"
                  data-ng-click="singleRowTotalClick($event, row.index)"
                  data-ng-class="{'active': activeItem == 'row_total:' + row.index}">
@@ -58,7 +58,7 @@
     <div class="position-relative rvMatrixValueRowsHolder">
         <div data-ng-repeat="row in matrix track by row.index" class="report-viewer-matrix-row rvMatrixRow">
 
-            <div class="report-viewer-matrix-cell rvMatrixCell text-{{styles.cell.text_align}}"
+            <div class="report-viewer-matrix-cell text-{{styles.cell.text_align}} rvMatrixCell"
                  data-ng-repeat="item in row.items track by item.index"
                  title="{{item.data.value}}"
                  data-ng-click="cellClick($event, row.index, item.index)"

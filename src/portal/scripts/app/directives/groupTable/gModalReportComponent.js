@@ -54,7 +54,6 @@
             'pricing_currency.notes', 'pricing_currency.reference_for_pricing', 'pricing_currency.daily_pricing_model.name', 'pricing_currency.default_fx_rate', 'currency.name',
             'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.reference_for_pricing', 'currency.daily_pricing_model.name', 'currency.default_fx_rate', 'pricing_currency_fx_rate'
 
-
         ];
 
         var performanceAttrsComp = [

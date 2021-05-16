@@ -23,6 +23,8 @@
 
         vm.missingHistoricalFxRates = []; // transaction rates
 
+        vm.missingCustomFields = [];
+
         vm.downloadPriceHistoryCSV = function (event) {
 
             var columns = [
@@ -130,7 +132,35 @@
 
         };
 
+        vm.viewMissingCustomFields = function ($event) {
+
+            $mdDialog.show({
+                controller: 'ViewMissingCustomFieldsDialogController as vm',
+                templateUrl: 'views/dialogs/report-missing-prices/view-missing-custom-fields-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                multiple: true,
+                locals: {
+                    data: {
+                        missingCustomFields: vm.missingCustomFields,
+                        // evDataService: vm.evDataService
+                    }
+                }
+            })
+
+        }
+
         vm.init = function () {
+
+            // Victor 2021.03.29 #88 fix bug with deleted custom fields
+            const missingCustomFields = vm.evDataService.getMissingCustomFields();
+            const missingCustomFieldsForColumns = missingCustomFields.forColumns;
+            const missingCustomFieldsForFilters = missingCustomFields.forFilters;
+
+            vm.missingCustomFields = missingCustomFieldsForColumns.concat(missingCustomFieldsForFilters.filter(field => {
+                return !missingCustomFieldsForColumns.find(it => it.key === field.key)
+            }))
+            // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
             vm.missingHistoryPrices = vm.data.missingPricesData.items.filter(function (item) {
                 return ['missing_principal_pricing_history', 'missing_accrued_pricing_history'].indexOf(item.type) !== -1;

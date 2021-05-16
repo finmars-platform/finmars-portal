@@ -91,7 +91,7 @@
 
                 };
 
-                scope.setAsDefault = (targetLayout) => {
+                scope.setAsDefault = () => {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
@@ -104,6 +104,11 @@
 
                     });
 
+                };
+
+                scope.editDashboardLayout = () => {
+                    const url = $state.href('app.dashboard-constructor', {id: scope.layout.id});
+                    window.open(url, '_blank');
                 };
 
                 scope.saveLayoutList = function () {

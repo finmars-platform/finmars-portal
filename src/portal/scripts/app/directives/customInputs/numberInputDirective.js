@@ -37,13 +37,12 @@
                     // dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
                 if (scope.smallOptions) {
-                    scope.onlyPositive = scope.smallOptions.onlyPositive
 
-                    scope.tooltipText = scope.smallOptions.tooltipText
+                	scope.onlyPositive = scope.smallOptions.onlyPositive;
+                    scope.tooltipText = scope.smallOptions.tooltipText;
+                    scope.dialogParent = scope.smallOptions.dialogParent;
+                    scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
 
-                    scope.dialogParent = scope.smallOptions.dialogParent
-
-                    scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
                 }
 
                 var inputContainer = elem[0].querySelector('.numberInputContainer');
@@ -73,84 +72,97 @@
                     return classes;
                 };
 
+				var onChangeIndex;
+
                 scope.onValueChange = function () {
 
-                    scope.setedFromOutside = false;
+                	clearTimeout(onChangeIndex);
 
-                    scope.error = '';
-                    stylePreset = '';
-                    scope.valueIsValid = false;
+					scope.setedFromOutside = false;
+					scope.valueIsValid = false;
 
-                    var changedValue = scope.numberToShow;
+					// scope.error = '';
+					var error = '';
+					var modelValue = '';
+					var changedValue = scope.numberToShow;
+					stylePreset = '';
 
-                    if (changedValue === '') {
+					if (changedValue === '') {
 
-                        scope.model = null;
+						modelValue = null;
 
-                        if (scope.smallOptions && scope.smallOptions.notNull) {
-                            scope.error = 'Field should not be null';
-                        }
+						if (scope.smallOptions && scope.smallOptions.notNull) {
+							error = 'Field should not be null';
+						}
 
-                        if (scope.smallOptions && scope.smallOptions.onlyPositive) {
-                            scope.error = 'Field should have positive number';
-                        }
+						if (scope.smallOptions && scope.smallOptions.onlyPositive) {
+							error = 'Field should have positive number';
+						}
 
-                    } else if (!isNaN(changedValue) &&
-                               changedValue !== null) {
+					}
 
-                        if (Number.isInteger(changedValue)) {
-                            changedValue = parseInt(changedValue);
-                        } else {
-                            changedValue = parseFloat(changedValue);
-                        }
+					else if (!isNaN(changedValue) &&
+						changedValue !== null) {
 
-                        // negative numbers processing
+						changedValue = Number.isInteger(changedValue) ? parseInt(changedValue) : parseFloat(changedValue);
 
-                        if (changedValue < 0) {
+						// negative numbers processing
 
-                            if (scope.numberFormat && scope.numberFormat.negative_color_format_id === 1) {
-                                inputElem.classList.add('red-text');
-                            }
+						if (changedValue < 0) {
 
-                            if (scope.onlyPositive) {
+							if (scope.numberFormat && scope.numberFormat.negative_color_format_id === 1) {
+								inputElem.classList.add('red-text');
+							}
 
-                                scope.error = 'Field should have positive number';
-                                scope.model = null;
+							if (scope.onlyPositive) {
 
-                            } else {
+								error = 'Field should have positive number';
+								modelValue = null;
 
-                                scope.model = JSON.parse(JSON.stringify(changedValue));
+							} else {
+								modelValue = JSON.parse(JSON.stringify(changedValue));
+							}
 
-                            }
+						}
 
-                        } else {
+						else {
 
-                            inputContainer.classList.remove('custom-input-error');
-                            inputElem.classList.remove('red-text');
-                            scope.model = JSON.parse(JSON.stringify(changedValue));
+							inputContainer.classList.remove('custom-input-error');
+							inputElem.classList.remove('red-text');
+							modelValue = JSON.parse(JSON.stringify(changedValue));
 
-                        }
-                        // < negative numbers processing >
+						}
+						// < negative numbers processing >
 
-                    } else {
+					}
 
-                        scope.error = 'Invalid character used';
-                        scope.model = null;
+					else {
+						error = 'Invalid character used';
+						modelValue = null;
+					}
 
-                    }
+					scope.model = modelValue;
 
-                    if ((scope.model || scope.model === 0) && !scope.error) {
-                        scope.valueIsValid = true;
-                    }
+					/* if (scope.onChangeCallback) {
+						setTimeout(function () {
+							scope.onChangeCallback();
+						}, 0);
+					} */
+					onChangeIndex = setTimeout(() => {
 
-                    if (scope.onChangeCallback) {
+						scope.error = error;
 
-                        setTimeout(function () {
-                            scope.onChangeCallback();
-                        }, 0);
+						if ((scope.model || scope.model === 0) && !scope.error) {
+							scope.valueIsValid = true;
+						}
 
-                    }
-                }
+						scope.$apply();
+
+						if (scope.onChangeCallback) scope.onChangeCallback();
+
+					}, 500);
+
+                };
 
                 var applyNumberFormatToInput = function () {
 
@@ -166,7 +178,7 @@
 
                     }
 
-                }
+                };
 
                 scope.openCalculatorDialog = function ($event) {
 

@@ -238,19 +238,30 @@
 
         else if (columnNumber > obj.___level - 1) {
 
-            if (column.report_settings && column.report_settings.subtotal_formula_id && !column.report_settings.hide_subtotal) {
+			var showTotal;
+			var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id;
+			var isNotGrandTotal = obj.___level !== 0;
 
-                if (obj.hasOwnProperty(column.key)) {
+			if (isNotGrandTotal) {
+				showTotal = totalCalculationOn && !column.report_settings.hide_subtotal;
 
-                	result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
-                    result.numeric_result = obj[column.key];
-                    result.raw_text_result = renderHelper.formatValue(obj, column);
+			} else { // for grand total
+				showTotal = totalCalculationOn && !column.report_settings.hide_grandtotal;
+			}
 
-                } else {
-                    result = getDynamicAttributeValue(obj, column);
-                }
+			if (showTotal) { // for subtotals
 
-            }
+				if (obj.hasOwnProperty(column.key)) {
+
+					result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
+					result.numeric_result = obj[column.key];
+					result.raw_text_result = renderHelper.formatValue(obj, column);
+
+				} else {
+					result = getDynamicAttributeValue(obj, column);
+				}
+
+			}
 
         }
 
@@ -422,6 +433,7 @@
         }
 
         var is_activated = false;
+        var contextMenuIsOpened = false;
         var subtotal_type;
 
         if (obj.___subtotal_subtype) {
@@ -432,11 +444,17 @@
 
         if (subtotal_type === 'line') {
             is_activated = parent.___is_line_subtotal_activated
-        }
 
-        if (subtotal_type === 'area') {
+        } else if (subtotal_type === 'area') {
             is_activated = parent.___is_area_subtotal_activated
         }
+
+		if (subtotal_type === 'line') {
+			contextMenuIsOpened = parent.___line_subtotal_context_menu_is_opened;
+
+		} else if (subtotal_type === 'area') {
+			contextMenuIsOpened = parent.___area_subtotal_context_menu_is_opened;
+		}
 
 		var grandTotalCell = '';
         var rowSelection;
@@ -466,6 +484,10 @@
 
 			} else {
 				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
+			}
+
+			if (contextMenuIsOpened) {
+				rowClassList.push('context-menu-opened');
 			}
 
 			rowSettings = renderHelper.getRowSettings();

@@ -45,8 +45,8 @@
 				offsetY: '@', // add offset to the top
 
 				onCancel: '&?',
-				onSaveCallback: '&?',
-				onPopupClose: '='
+				onSave: '&?',
+				onPopupClose: '&?'
 
             },
             link: function (scope, elem, attrs) {
@@ -72,7 +72,11 @@
 
 				if (scope.popupClasses) {
 
-					const classes = scope.popupClasses.split(' ');
+					let classes = scope.popupClasses;
+
+					if (typeof scope.popupClasses === 'string') {
+						classes = scope.popupClasses.split(' ');
+					}
 
 					popupElem.classList.add(...classes);
 
@@ -90,9 +94,11 @@
 
 					if (scope.positionRelativeTo === 'element') {
 
-						if (!coords) { // better for rendering performance to declare it once
+/*						if (!coords) { // better for rendering performance to declare it once
 							coords = elem[0].getBoundingClientRect();
-						}
+						}*/
+
+						coords = elem[0].getBoundingClientRect();
 
 						if (scope.popupWidth === 'element') {
 
@@ -112,9 +118,9 @@
 
 					else if (scope.positionRelativeTo === 'mouse' && event) {
 
-						if (!positionX) { positionX = event.clientX; }
+						if (!positionX) positionX = event.clientX;
 
-						if (!positionY) { positionY = positionY = event.clientY; }
+						if (!positionY) positionY = positionY = event.clientY;
 
 					}
 
@@ -277,6 +283,10 @@
 						scope.onPopupClose();
 					}
 
+					if (scope.onPopupClose) {
+						scope.onPopupClose();
+					}
+
 				}
 
                 /* scope.onBackdropClick = function () {
@@ -343,8 +353,8 @@
 
 				scope.save = function () {
 
-					if (scope.onSaveCallback) {
-						scope.onSaveCallback();
+					if (scope.onSave) {
+						scope.onSave();
 					}
 
 					if (scope.popupEventService) {
@@ -376,6 +386,10 @@
 
 				scope.init = function () {
 
+					scope._$popup = {
+						cancel: scope.cancel
+					}
+
 					if (scope.openOn) {
 
 						const {event, handler} = getOpenEvent(scope.openOn);
@@ -384,7 +398,7 @@
 
 					}
 
-/*					if (scope.closeOnClickOutside) {
+					/* if (scope.closeOnClickOutside) {
 						popupBackdropElem.addEventListener("click", removePopUp);
 					}
 
@@ -393,7 +407,7 @@
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
 						popupBackdropElem.addEventListener('mouseenter', removePopUp);
 
-					}*/
+					} */
 
 					if (scope.popupEventService) {
 
