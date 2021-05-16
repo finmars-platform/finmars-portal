@@ -544,7 +544,7 @@
                             rvDomManager.calculateScroll(elements, scope.evDataService);
 
                             rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-                            rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                            // rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
 
                             rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
