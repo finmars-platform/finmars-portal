@@ -63,6 +63,10 @@
                         report_settings: {},
                         filter_links: [],
 						active_object: null
+                    },
+                    filters: {
+                        show_filters_area: false,
+                        show_use_from_above_filters: false,
                     }
                 },
                 user_settings: {}

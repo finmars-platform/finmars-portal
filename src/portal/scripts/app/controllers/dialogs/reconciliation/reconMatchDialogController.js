@@ -74,8 +74,6 @@
 
             return new Promise(function (resolve, reject) {
 
-                // console.trace();
-
                 var newField = Object.assign({}, field);
 
                 delete newField.id;

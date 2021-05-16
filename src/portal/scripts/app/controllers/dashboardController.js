@@ -287,7 +287,6 @@
 
         };
 
-        // Deprecated
         vm.saveDashboardLayout = function ($event) {
 
             uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
@@ -480,7 +479,7 @@
 
                     vm.dashboardDataService.setComponentStatus(compId, dashboardComponentStatuses.ERROR);
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    throw "id of defective dashboard component " + compId;
+                    // throw "id of defective dashboard component " + compId;
 
                 }
 

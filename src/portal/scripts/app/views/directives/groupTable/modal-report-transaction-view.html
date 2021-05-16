@@ -44,7 +44,8 @@
                                          data-ng-repeat="item in vm.selectedGroups | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"
-                                         data-vm-key="{{item.attrsVmKey}}">
+                                         data-vm-key="{{item.attrsVmKey}}"
+                                         ng-class="{'itemWithError': item.error_data}">
 
                                         <div flex="90"
                                              layout="row">
@@ -74,8 +75,11 @@
                                             <div class="g-modal-draggable-card">
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
-                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                                    </md-tooltip>
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
                                             </div>
                                         </div>
@@ -105,7 +109,8 @@
                                          data-ng-repeat="item in vm.selectedColumns | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"
-                                         data-vm-key="{{item.attrsVmKey}}">
+                                         data-vm-key="{{item.attrsVmKey}}"
+                                         ng-class="{'itemWithError': item.error_data}">
 
                                         <div flex="90"
                                              layout="row">
@@ -136,8 +141,11 @@
                                             <div class="g-modal-draggable-card">
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
-                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                                    </md-tooltip>
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
                                             </div>
                                         </div>
@@ -168,7 +176,8 @@
                                          data-ng-repeat="item in vm.selectedFilters | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"
-                                         data-vm-key="{{item.attrsVmKey}}">
+                                         data-vm-key="{{item.attrsVmKey}}"
+                                         ng-class="{'itemWithError': item.error_data}">
 
                                         <div flex="90" layout="row">
                                             <div class="view-constructor-checkboxes-container"
@@ -197,8 +206,11 @@
                                             <div class="g-modal-draggable-card">
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
-                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                                    </md-tooltip>
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
                                             </div>
                                         </div>

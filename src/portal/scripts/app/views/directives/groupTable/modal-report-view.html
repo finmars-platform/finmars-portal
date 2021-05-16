@@ -48,29 +48,33 @@
                                          data-ng-repeat="item in vm.selectedGroups | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"
-                                         data-vm-key="{{item.attrsVmKey}}">
+                                         data-vm-key="{{item.attrsVmKey}}"
+                                         ng-class="{'itemWithError': item.error_data}">
 
                                         <div flex="90" layout="row">
                                             <div class="view-constructor-checkboxes-container"
                                                  layout="row"
                                                  layout-align="start center">
                                                 <md-checkbox ng-model="item.columns"
-                                                             aria-label="user attributes for columns"
                                                              aria="columns"
-                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
+                                                             ng-disabled="item.error_data"
+                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
+                                                             aria-label="user attributes for columns">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.groups"
-                                                             aria-label="user attributes for groups"
                                                              aria="groups"
+                                                             ng-disabled="item.error_data"
+                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              class="md-g-green"
-                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
+                                                             aria-label="user attributes for groups">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.filters"
-                                                             aria-label="user attributes for filters"
                                                              aria="filters"
-                                                             class="md-primary"
+                                                             ng-disabled="item.error_data"
                                                              ng-style="vm.checkAreaAccessibility(item, 'filter') ? {'visibility': 'hidden'} : {}"
-                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)">
+                                                             data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
+                                                             class="md-primary"
+                                                             aria-label="user attributes for filters">
                                                 </md-checkbox>
                                             </div>
 
@@ -78,8 +82,11 @@
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
                                                 </md-card>
-                                                <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                                </md-tooltip>
+                                                <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                    <span class="material-icons tooltip-error-icon">error</span>
+                                                    <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                </span>
                                             </div>
                                         </div>
 
@@ -108,7 +115,8 @@
                                          data-ng-repeat="item in vm.selectedColumns | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"
-                                         data-vm-key="{{item.attrsVmKey}}">
+                                         data-vm-key="{{item.attrsVmKey}}"
+                                         ng-class="{'itemWithError': item.error_data}">
 
                                         <div flex="90" layout="row">
                                             <div class="view-constructor-checkboxes-container"
@@ -116,30 +124,37 @@
                                                  layout-align="start center">
                                                 <md-checkbox ng-model="item.columns"
                                                              aria="columns"
+                                                             ng-disabled="item.error_data"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              aria-label="user attributes for columns">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.groups"
                                                              aria="groups"
-                                                             class="md-g-green"
+                                                             ng-disabled="item.error_data"
                                                              ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
+                                                             class="md-g-green"
                                                              aria-label="user attributes for groups">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.filters"
                                                              aria="filters"
-                                                             class="md-primary"
+                                                             ng-disabled="item.error_data"
                                                              ng-style="vm.checkAreaAccessibility(item, 'filter') ? {'visibility': 'hidden'} : {}"
                                                              ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
+                                                             class="md-primary"
                                                              aria-label="user attributes for filters">
                                                 </md-checkbox>
                                             </div>
 
                                             <div class="g-modal-draggable-card">
-                                                <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                                <md-card class="modal-dialog-card"
+                                                         data-key-identifier="{{item.key}}">
                                                     {{item.name}}
-                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                                    </md-tooltip>
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
                                             </div>
                                         </div>
@@ -165,11 +180,12 @@
                                 </div>
 
                                 <div class="vc-selected-attrs-holder vcSelectedFilters">
-                                    <div class="g-checkbox-row vcSelectedFilterItem"
-                                         data-ng-repeat="item in vm.selectedFilters | filter: {name: selectedAttrSearchTerms} as results track by item.key"
+                                    <div data-ng-repeat="item in vm.selectedFilters | filter: {name: selectedAttrSearchTerms} as results track by item.key"
                                          layout="row"
                                          data-attribute-key="{{item.key}}"
-                                         data-vm-key="{{item.attrsVmKey}}">
+                                         data-vm-key="{{item.attrsVmKey}}"
+                                         class="g-checkbox-row vcSelectedFilterItem"
+                                         ng-class="{'itemWithError': item.error_data}">
 
                                         <div flex="90" layout="row">
                                             <div class="view-constructor-checkboxes-container"
@@ -177,20 +193,23 @@
                                                  layout-align="start center">
                                                 <md-checkbox ng-model="item.columns"
                                                              aria="columns"
+                                                             ng-disabled="item.error_data"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              aria-label="user attributes for columns">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.groups"
                                                              aria="groups"
-                                                             class="md-g-green"
+                                                             ng-disabled="item.error_data"
                                                              ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
+                                                             class="md-g-green"
                                                              aria-label="user attributes for groups">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.filters"
                                                              aria="filters"
-                                                             class="md-primary"
+                                                             ng-disabled="item.error_data"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
+                                                             class="md-primary"
                                                              aria-label="user attributes for filters">
                                                 </md-checkbox>
                                             </div>
@@ -198,8 +217,11 @@
                                             <div class="g-modal-draggable-card">
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
-                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
-                                                    </md-tooltip>
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
                                             </div>
                                         </div>

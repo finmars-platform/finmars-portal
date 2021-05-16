@@ -335,6 +335,17 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 			getRequestParams)
 	};
 
+	var getEditLayoutByUserCode = function (entityType, userCode) {
+
+		var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?content_type=' + contentType + '&user_code=' + userCode,
+			getRequestParams2);
+
+	};
+
 	var createEditLayout = function (ui) {
 
 
@@ -1182,6 +1193,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		getListEditLayout: getListEditLayout,
 		getDefaultEditLayout: getDefaultEditLayout,
 		getEditLayoutByKey: getEditLayoutByKey,
+		getEditLayoutByUserCode: getEditLayoutByUserCode,
 		createEditLayout: createEditLayout,
 		updateEditLayout: updateEditLayout,
 		deleteEditLayoutByKey: deleteEditLayoutByKey,

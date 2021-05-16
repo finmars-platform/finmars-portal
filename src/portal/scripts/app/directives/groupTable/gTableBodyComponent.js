@@ -405,6 +405,9 @@
                     if (isReport) {
                         contentElem.style.opacity = '0.7';
                     }
+
+                    scope.evDataService.setDataLoadStatus(false);
+
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -421,6 +424,8 @@
                         scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
                     }
+
+					scope.evDataService.setDataLoadStatus(true);
 
                 });
 
@@ -511,7 +516,7 @@
 							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE after removing sidebar
 
 							interfaceLayout.filterArea.collapsed = true;
-							interfaceLayout.filterArea.width = 74;
+							interfaceLayout.filterArea.width = 0;
 
 						}
 

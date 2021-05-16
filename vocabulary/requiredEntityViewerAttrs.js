@@ -7,7 +7,7 @@
     var instrumentAttrs = ['name', 'maturity_date'];
     var pricesAttrs = ['instrument', 'accrued_price', 'principal_price', 'pricing_policy'];
     var currenciesAttrs = ['currency', 'pricing_policy', 'fx_rate'];
-    var instrumentTypeAttrs = ['name', 'instrument_class'];
+    var instrumentTypeAttrs = ['name', 'user_code', 'instrument_class', 'accrued_currency', 'accrued_multiplier', 'payment_size_detail', 'default_accrued'];
 
     module.exports = {
         requiredAttrs: requiredAttrs,

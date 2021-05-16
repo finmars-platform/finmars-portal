@@ -56,10 +56,15 @@
         Save
     </md-button>
 -->
+    <md-button class="outline-button"
+               ng-disabled="!vm.formIsValid || vm.processing"
+               ng-click="vm.save($event, false)">
+        Create
+    </md-button>
 
     <md-button class="m-r-24 primary-button"
                data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
                ng-click="vm.save($event, true)">
-        Save and Exit
+        Create and Exit
     </md-button>
 </div>

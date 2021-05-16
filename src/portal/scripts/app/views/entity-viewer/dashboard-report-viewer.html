@@ -9,6 +9,8 @@
                              ev-data-service="vm.entityViewerDataService"
                              ev-event-service="vm.entityViewerEventService"
                              sp-exchange-service="vm.splitPanelExchangeService"
+                             hide-filters-block="!showFiltersArea"
+                             hide-use-from-above-filters="!showUseFromAboveFilters"
                 ></group-table>
             </div>
 
@@ -76,7 +78,9 @@
                 <div style="flex: 1 0 auto;">
                     <g-filters ev-data-service="vm.entityViewerDataService"
                                ev-event-service="vm.entityViewerEventService"
-                               attribute-data-service="vm.attributeDataService"></g-filters>
+                               attribute-data-service="vm.attributeDataService"
+                               hide-filters-block="!showFiltersArea"
+                               hide-use-from-above-filters="!showUseFromAboveFilters"></g-filters>
                 </div>
 
                 <div class="flex-0-1-100">

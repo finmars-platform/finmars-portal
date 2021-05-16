@@ -1,19 +1,19 @@
 (function () {
 
-    let referenceTableService = require('../../../services/referenceTablesService');
+    const referenceTableService = require('../../../services/referenceTablesService');
 
-    let metaHelper = require('../../meta.helper');
+	const metaHelper = require('../../meta.helper');
 
-    let uiService = require('../../../services/uiService');
-    let gridTableEvents = require('../../../services/gridTableEvents');
+	const uiService = require('../../../services/uiService');
+	const gridTableEvents = require('../../../services/gridTableEvents');
 
-    let GridTableHelperService = require('../../gridTableHelperService');
-    let helpExpressionsService = require('../../../services/helpExpressionsService');
+	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
+	const helpExpressionsService = require('../../../services/helpExpressionsService');
 
     'use strict';
     module.exports = function (viewModel, $scope, $mdDialog) {
 
-        const gridTableHelperService = new GridTableHelperService();
+    	const gridTableHelperService = new GridTableHelperService();
 
         var valueTypes = [
             {
@@ -236,6 +236,60 @@
             });
 
         };
+
+        const updateEntityBeforeSave = function (entity) {
+
+        	if (viewModel.groups) {
+
+				viewModel.groups.forEach(function (group) {
+
+					if (group.objectPermissions && group.objectPermissions.manage === true) {
+						entity.object_permissions.push({
+							member: null,
+							group: group.id,
+							permission: "manage_" + viewModel.entityType.split('-').join('')
+						})
+					}
+
+					if (group.objectPermissions && group.objectPermissions.change === true) {
+						entity.object_permissions.push({
+							member: null,
+							group: group.id,
+							permission: "change_" + viewModel.entityType.split('-').join('')
+						})
+					}
+
+					if (group.objectPermissions && group.objectPermissions.view === true) {
+						entity.object_permissions.push({
+							member: null,
+							group: group.id,
+							permission: "view_" + viewModel.entityType.split('-').join('')
+						})
+					}
+
+				});
+
+			}
+
+			entity.inputs.forEach(function (input) {
+
+				if (input.settings) {
+
+					if (input.settings.linked_inputs_names) {
+						input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+					}
+
+					if (input.settings.recalc_on_change_linked_inputs) {
+						input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.join(',')
+					}
+
+				}
+
+			});
+
+        	return entity;
+
+		};
 
 		//<editor-fold desc="TRANSACTION VALIDATION">
 		const hasInputInExprs = function (inputs, expr, namesOnly) {
@@ -1135,10 +1189,12 @@
             },
             components: {
                 topPanel: {
+					addButton: true,
                     filters: false,
                     columns: false,
                     search: false
-                }
+                },
+				rowCheckboxes: true
             }
         }
 
@@ -1146,8 +1202,8 @@
 
             var rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
-            // assemble header columns
-            var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
+			//<editor-fold desc="Assemble header columns">
+			var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
 
             viewModel.inputsGridTableData.header.columns = rowObj.columns.map(function (column) {
 
@@ -1162,15 +1218,16 @@
                 }
 
             });
-            // < assemble header columns >
+			//</editor-fold>
 
             // assemble body rows
             viewModel.entity.inputs.forEach(function (input, index) {
 
                 rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
-                rowObj.order = index
-                rowObj.key = input.name
+                rowObj.order = index;
+                rowObj.key = input.name;
+				rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
 
                 // name
                 rowObj.columns[0].settings.value = input.name
@@ -1293,6 +1350,7 @@
             getReferenceTables: getReferenceTables,
             getInputTemplates: getInputTemplates,
 
+			updateEntityBeforeSave: updateEntityBeforeSave,
             resolveRelation: resolveRelation,
             checkActionsForEmptyFields: checkActionsForEmptyFields,
             checkEntityForEmptyFields: checkEntityForEmptyFields,
