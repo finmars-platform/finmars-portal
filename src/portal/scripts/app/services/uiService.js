@@ -287,6 +287,24 @@
 
 	};
 
+	const applyDefaultSettingsToLayoutTemplate = function (layoutTemplate) {
+	    const reportOptions = {
+            "account_mode": 1,
+            "calculationGroup": "portfolio",
+            "cost_method": 1,
+            "report_date" : new Date().toISOString().slice(0, 10),
+            "portfolio_mode": 1,
+            "strategy1_mode": 0,
+            "strategy2_mode": 0,
+            "strategy3_mode": 0,
+            "table_font_size": "small",
+        };
+
+	    layoutTemplate[0].data.reportOptions = reportOptions;
+
+	    return layoutTemplate;
+    }
+
 	const getDefaultListLayout = function (entityType) {
 
         return new Promise (function (resolve, reject) {
@@ -314,6 +332,7 @@
 					} else {
 
 						defaultLayout = uiRepository.getListLayoutTemplate();
+						defaultLayout = applyDefaultSettingsToLayoutTemplate(defaultLayout);
 						defaultLayoutData = {results: defaultLayout};
 
 					}
