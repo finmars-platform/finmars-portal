@@ -160,7 +160,7 @@
         return uiRepository.getListLayoutDefault(options);
     }; */
 
-	const getListLayoutByKey = function (key) {
+	const getListLayoutByKey = key => {
 
         return new Promise (function (resolve, reject) {
 
@@ -188,6 +188,30 @@
 
         // return uiRepository.getListLayoutByKey(key);
     };
+
+	/**
+	 *
+	 * @memberOf module:uiService
+	 * @param entityType {string}
+	 * @param userCode {string} - user code of layout
+	 * @returns {Promise<any>}
+	 */
+	const getListLayoutByUserCode = (entityType, userCode) => {
+
+		const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+
+		return getListLayout(
+			null,
+			{
+				pageSize: 1000,
+				filters: {
+					content_type: contentType,
+					user_code: userCode
+				}
+			}
+		);
+
+	}
 
 	const createListLayout = function (entity, ui) {
 
@@ -671,7 +695,7 @@
         });
 
     };
-
+	/** @module uiService */
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -684,6 +708,7 @@
         getListLayoutLight: getListLayoutLight,
         // getListLayoutDefault: getListLayoutDefault,
         getListLayoutByKey: getListLayoutByKey,
+		getListLayoutByUserCode: getListLayoutByUserCode,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
 

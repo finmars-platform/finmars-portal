@@ -244,11 +244,12 @@
         else if (columnNumber > obj.___level - 1) {
 
 			var showTotal;
-			var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id;
+			var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id; // if subtotal_formula_id === 0, it means no formula has been chosen
 			var isNotGrandTotal = obj.___level !== 0;
 
 			if (isNotGrandTotal) {
-				showTotal = totalCalculationOn && !column.report_settings.hide_subtotal;
+				// showTotal = totalCalculationOn && !column.report_settings.hide_subtotal;
+				showTotal = totalCalculationOn;
 
 			} else { // for grand total
 				showTotal = totalCalculationOn && !column.report_settings.hide_grandtotal;

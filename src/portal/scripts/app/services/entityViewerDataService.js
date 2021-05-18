@@ -169,7 +169,8 @@
                 forFilters: [],
                 forColumns: [],
             },
-			warnAboutLayoutChangesLoss: true
+			warnAboutLayoutChangesLoss: true,
+			isNewLayout: false // does layout exist on server
         };
 
         var dashboardData = {
@@ -916,6 +917,14 @@
             return data.listLayout;
         }
 
+		function setIsNewLayoutState (state) {
+			data.isNewLayout = state;
+		}
+
+		function isLayoutNew () {
+			return data.isNewLayout;
+		}
+
         function setActiveLayoutConfiguration(options) {
 
             if (options && options.layoutConfig) {
@@ -1640,6 +1649,8 @@
 
             setListLayout: setListLayout,
             getListLayout: getListLayout,
+			setIsNewLayoutState: setIsNewLayoutState,
+			isLayoutNew: isLayoutNew,
             getActiveLayoutConfiguration: getActiveLayoutConfiguration,
             setActiveLayoutConfiguration: setActiveLayoutConfiguration,
             getLayoutCurrentConfiguration: getLayoutCurrentConfiguration,

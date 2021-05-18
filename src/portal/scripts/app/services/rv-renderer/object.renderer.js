@@ -248,7 +248,8 @@
 
             } else {
 
-                if (column.report_settings && !column.report_settings.hide_subtotal) {
+                // if (column.report_settings && !column.report_settings.hide_subtotal) {
+				if (column.report_settings) {
 
                     var subtotal;
 

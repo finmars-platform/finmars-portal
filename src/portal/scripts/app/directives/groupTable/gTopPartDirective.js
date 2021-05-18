@@ -50,8 +50,17 @@
                     evEventService: scope.evEventService,
                 }
 
-				scope.saveLayoutList = function () {
-					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+				scope.saveLayoutList = function ($event) {
+
+					var isNewLayout = scope.evDataService.isLayoutNew();
+
+					if (isNewLayout) {
+						evRvLayoutsHelper.saveAsLayoutList(scope.evDataService, scope.evEventService, scope.isReport, $mdDialog, scope.entityType, $event);
+
+					} else {
+						evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+					}
+
 				};
 
                 scope.openMissingPricesDialog = function($event) {
@@ -134,9 +143,7 @@
                 };
 
                 scope.onSettingsClick = function ($event) {
-
                     return scope.isReport ? openReportSettings($event) : openEntityViewerSettings($event);
-
                 };
 
                 var prepareReportLayoutOptions = function () {
