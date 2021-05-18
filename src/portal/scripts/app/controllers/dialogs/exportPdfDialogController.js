@@ -8,6 +8,7 @@
     var evEvents = require('../../services/entityViewerEvents');
 
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
+    var reportHelper = require('../../helpers/reportHelper');
 
     module.exports = function ($scope, $mdDialog, evDataService, evEventService, data) {
 
@@ -126,7 +127,7 @@
 
             vm.settings.data.reportOptions = JSON.parse(JSON.stringify(evDataService.getReportOptions()));
 
-            delete vm.settings.data.reportOptions.items;
+            /*delete vm.settings.data.reportOptions.items;
             delete vm.settings.data.reportOptions.item_complex_transactions;
             delete vm.settings.data.reportOptions.item_counterparties;
             delete vm.settings.data.reportOptions.item_responsibles;
@@ -139,7 +140,8 @@
             delete vm.settings.data.reportOptions.item_instrument_accruals;
             delete vm.settings.data.reportOptions.item_currency_fx_rates;
             delete vm.settings.data.reportOptions.item_currencies;
-            delete vm.settings.data.reportOptions.item_accounts;
+            delete vm.settings.data.reportOptions.item_accounts;*/
+			vm.settings.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(vm.settings.data.reportOptions);
 
             var elem = {};
 
