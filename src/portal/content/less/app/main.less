@@ -3230,7 +3230,9 @@ button.md-raised.md-warn.md-button {
 
       color: @g-top-part-color;
 
-      cursor: pointer;
+      &:not([disabled]) {
+        cursor: pointer;
+      }
 
       &.default-layout {
         opacity: 0.5;

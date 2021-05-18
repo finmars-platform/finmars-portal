@@ -1135,7 +1135,7 @@
                 }
 
                 Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
-					metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
+                	metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
 					$scope.$apply();
                 });
 

@@ -231,7 +231,7 @@
                         changeColumnTextAlign: scope.changeColumnTextAlign,
                         checkColTextAlign: scope.checkColTextAlign,
                         removeGroup: scope.removeGroup,
-                        reportHideSubtotal: scope.reportHideSubtotal,
+                        // reportHideSubtotal: scope.reportHideSubtotal,
 						reportHideGrandTotal: scope.reportHideGrandTotal,
                         isSubtotalWeightedShouldBeExcluded: scope.isSubtotalWeightedShouldBeExcluded,
 
@@ -1426,12 +1426,12 @@
 
                 }
 
-                scope.reportHideSubtotal = function (column) {
+                /* scope.reportHideSubtotal = function (column) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
                     hideSubtotalForColumn('hide_subtotal', column)
 
-                };
+                }; */
 
                 scope.reportHideGrandTotal = function (column) {
 
