@@ -334,7 +334,6 @@
         const getEcosystemDefaultPricingPolicies = async () => {
             if (!ecosystemDefaultData) {
                 ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
-                console.log('#109 ecosystemDefaultData', ecosystemDefaultData)
             }
             vm.pricingPolicies.push(ecosystemDefaultData.pricing_policy_object);
             vm.reportOptions.pricing_policy = ecosystemDefaultData.pricing_policy_object.id;
