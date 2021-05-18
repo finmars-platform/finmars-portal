@@ -841,9 +841,8 @@
     width: @gRvRowSettingsWidth;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding: 0 12px;
     border-right: @gCellBorder;
     transition: width 100ms linear;
 
@@ -853,6 +852,23 @@
       overflow: hidden;
       border-right: none;
     } */
+
+    .context-menu-btn-wrapper {
+      margin-left: 6px;
+      .context-menu-btn {
+        display: flex;
+        align-items: center;
+        border-radius: 50%;
+        color: #B2B2B2;
+        font-size: 24px;
+        padding: 0;
+
+        &:hover {
+          color: @gray;
+          background-color: @g-table-header-background-color;
+        }
+      }
+    }
   }
 
   .g-row-color-picker-btn {
@@ -981,6 +997,18 @@
       md-select-value {
         border-bottom: none;
       }
+    }
+
+    .g-top-part-left {
+
+      .g-top-button.small-button-icon {
+        padding: 0 6px;
+
+        &:hover:not([disabled]) {
+          background-color: rgba(158,158,158,0.2);
+        }
+      }
+
     }
 
   }
@@ -1158,10 +1186,9 @@
     }
 
     .g-cell-button {
-      margin: 0;
+      margin: 0 0 0 1px;
       padding: 0;
 
-      min-width: auto;
       min-height: auto;
 
       &.md-button {
@@ -1675,13 +1702,16 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
   height: 24px;
   font-size: 14px;
   white-space: nowrap;
+  border-right: 1px solid #ddd;
   box-sizing: border-box;
 
-  &:last-child {
+  /*&:last-child {
     border-right: 1px solid #ddd;
     margin-right: 2px;
-  }
+  }*/
 }
+
+
 
 .g-column-content {
   padding: 4px 21px 4px 8px;
