@@ -152,7 +152,7 @@
 
             orderedAttrs = orderedAttrs.concat(inactiveAttrs);
 
-            return orderedAttrs;
+            return orderedAttrs.filter(attr => !!attr); // filter undefined items
 
         };
 

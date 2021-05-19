@@ -55,9 +55,10 @@
 	/**
 	 *
 	 * @param buttonClasses
+     * @param rowType {string} can be 'object', 'subtotal', 'blankLine'
 	 * @returns {string}
 	 */
-	var getRowSettings = function (buttonClasses) {
+	var getRowSettings = function (buttonClasses, rowType) {
 
     	var classes = "g-row-color-picker-btn gTableActionBtn";
 
@@ -65,12 +66,17 @@
 			classes = classes + " " + buttonClasses;
 		}
 
-    	return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
-				'<button class="' + classes + '" data-click-action-type="open_row_color_picker">' +
-					'<span class="material-icons label-icon">label_outline</span>' +
-					'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
-				'</button>' +
-			'</div>';
+    	const contextMenuBtnTemplate = rowType === 'object'
+            ? `<button class="context-menu-btn gTableActionBtn" data-click-action-type="open_context_menu"><span class="material-icons">more_vert</span></button>`
+            : ``;
+
+        return `<div class="g-row-settings g-row-settings-table gRowSettings">
+            <div class="context-menu-btn-wrapper">${contextMenuBtnTemplate}</div>
+            <button class="${classes}" data-click-action-type="open_row_color_picker">
+                <span class="material-icons label-icon">label_outline</span>
+                <span class="material-icons arrow-icon">arrow_drop_down</span>
+            </button>
+        </div>`;
 
 	};
 
@@ -404,20 +410,14 @@
 			if (flatList[i].___type === 'object' || flatList[i].___type === 'subtotal') {
 
 				if (flatList[i].___subtotal_type !== 'proxyline') {
-
 					return false;
-
 				}
 
 			}
 
 			if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
-
 				return true;
-				break;
-
 			}
-
 
 		}
 
