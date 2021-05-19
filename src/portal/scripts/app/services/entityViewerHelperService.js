@@ -266,24 +266,26 @@
     };
 
 	/**
+	 * Try to get layout by user code and use it. If no layout with such user code was found, get default layout.
+	 * @memberOf module:EntityViewerHelperService
+	 *
 	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
 	 * @param {string} userCode
 	 * @param {obj} $mdDialog
 	 * @param {string} viewContext
-	 * @memberOf module:EntityViewerHelperService
-	 * @return {promise}
+	 * @return {Promise<any>}
 	 */
     let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
 
     	return new Promise(function (resolve) {
-
-    		uiService.getListLayout(viewModel.entityType, {
+    		/* uiService.getListLayout(viewModel.entityType, {
 				pageSize: 1000,
 				filters: {
 					user_code: userCode
 				}
 
-			}).then(async function (activeLayoutData) {
+			}) */
+			uiService.getListLayoutByUserCode(viewModel.entityType, userCode).then(async function (activeLayoutData) {
 
 				let activeLayout = null;
 
@@ -294,7 +296,6 @@
 				if (activeLayout) {
 
 					await viewModel.setLayout(activeLayout);
-
 					resolve();
 
 				} else {
@@ -314,6 +315,7 @@
 								description: "Layout " + name + " is not found. Switching back to Default Layout."
 							}
 						}
+
 					}).then(async function (value) {
 
 						await getDefaultLayout(viewModel, viewContext);

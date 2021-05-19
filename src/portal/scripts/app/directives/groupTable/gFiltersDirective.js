@@ -33,6 +33,8 @@
                 contentWrapElement: '=',
 				workareaWrapElement: '=',
                 hideFiltersBlock: '=',
+                hideUseFromAboveFilters: '=',
+
             },
 			templateUrl: 'views/directives/groupTable/g-filters-view.html',
             link: function (scope, elem, attrs) {
@@ -50,7 +52,7 @@
 				scope.fpBackClasses = "z-index-48"
 				scope.fpClasses = "z-index-49"
 
-				scope.showUseFromAboveFilters = !scope.hideFiltersBlock;
+				scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
 
 				scope.readyStatus = {
 					filters: false
@@ -82,11 +84,8 @@
 					let allAttrsList;
 
 					if (scope.viewContext === 'reconciliation_viewer') {
-
 						allAttrsList = scope.attributeDataService.getReconciliationAttributes();
-
 					}
-
 					else {
 
 						switch (scope.entityType) {
@@ -538,7 +537,8 @@
 				// <editor-fold desc="Chips filters">
 				scope.toggleUseFromAboveFilters = function () {
 
-                	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters
+                	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters;
+                	scope.evEventService.dispatchEvent(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
 					formatFiltersForChips();
 
                 	setTimeout(() => {
@@ -636,7 +636,7 @@
 
 					useFromAboveFilters = scope.filters.filter((filter, index) => {
 
-						if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
+						if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
 
 							filter.filtersListIndex = index;
 							return true;
