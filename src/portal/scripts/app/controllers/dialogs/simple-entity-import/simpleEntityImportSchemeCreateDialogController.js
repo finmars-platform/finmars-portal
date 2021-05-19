@@ -545,6 +545,44 @@
             });
         };
 
+        vm.openCalcFieldFxBtnExprBuilder = function (item, $event) {
+            importSchemesMethodsService.openCalcFieldFxBtnExprBuilder(item, vm, $event);
+        }
+
+        vm.onCalculatedFieldNameBlur = function (item) {
+            importSchemesMethodsService.onTTypeCalcFielNamedBlur(item);
+        }
+
+        vm.getCalcFieldFxBtnClasses = function (item) {
+            return importSchemesMethodsService.getCalcFieldFxBtnClasses(item);
+        }
+
+        vm.removeCalculatedField = function (item, $index) {
+            vm.scheme.calculated_inputs.splice($index, 1);
+        };
+
+        vm.addCalculatedField = function(){
+
+            var fieldsLength = vm.scheme.calculated_inputs.length;
+            var lastFieldNumber;
+            var nextFieldNumber;
+            if (fieldsLength === 0) {
+                nextFieldNumber = 1;
+            } else {
+                lastFieldNumber = parseInt(vm.scheme.calculated_inputs[fieldsLength - 1].column);
+                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
+                    lastFieldNumber = 0
+                }
+                nextFieldNumber = lastFieldNumber + 1;
+            }
+
+            vm.scheme.calculated_inputs.push({
+                name: '',
+                column: nextFieldNumber
+            })
+
+        };
+
         vm.init = function(){
 
             if (data && data.hasOwnProperty('scheme')) {
