@@ -1545,6 +1545,79 @@
 
         // Instrument Type Layout Settings tab end
 
+        // Instrument Type Exposure tab start
+
+        vm.instrumentTypeInstrumentsSelectorOptions = []
+        vm.instrumentTypeCurrenciesSelectorOptions = []
+
+        vm.getDataForInstrumentTypeTabs = function () {
+
+            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentTypeInstrumentsSelectorOptions = data.results.map(function (item){
+                    return {
+                        id: item.user_code,
+                        name: item.name
+                    }
+                })
+
+            })
+
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentTypeCurrenciesSelectorOptions = data.results.map(function (item){
+                    return {
+                        id: item.user_code,
+                        name: item.name
+                    }
+                })
+
+            })
+
+
+        }
+
+
+        vm.exposureCalculationModelSelectorOptions = [
+            {id: 1, name: "Market Value"},
+            {id: 2, name: "Price exposure"},
+            {id: 3, name: "Delta adjusted price exposure"},
+            {id: 4, name: "Underlying long short exposure net"},
+            {id: 5, name: "Underlying long short exposure split"},
+        ];
+
+        vm.longUnderlyingExposureSelectorOptions = [
+            {id: 1, name: "Zero"},
+            {id: 2, name: "Long Underlying Instrument Price Exposure"},
+            {id: 3, name: "Long Underlying Instrument Price Delta"},
+            {id: 4, name: "Long Underlying Currency FX Rate Exposure"},
+            {id: 5, name: "Long Underlying Currency FX Rate Delta-adjusted Exposure"},
+        ]
+
+        vm.shortUnderlyingExposureSelectorOptions = [
+            {id: 1, name: "Zero"},
+            {id: 2, name: "Short Underlying Instrument Price Exposure"},
+            {id: 3, name: "Short Underlying Instrument Price Delta"},
+            {id: 4, name: "Short Underlying Currency FX Rate Exposure"},
+            {id: 5, name: "Short Underlying Currency FX Rate Delta-adjusted Exposure"},
+        ]
+        vm.positionReportingSelectorOptions = [
+            {
+                id: 1,
+                name: 'Direct Position'
+            },
+            {
+                id: 2,
+                name: 'Factor-adjusted Position'
+            },
+            {
+                id: 3,
+                name: 'Do not show'
+            }
+        ]
+
+        // Instrument Type Exposure tab end
+
         vm.instrumentTypeChange = function ($event) {
 
             console.log('instrumentTypeChange', vm.entity)
@@ -1620,6 +1693,8 @@
                     $scope.$apply()
 
                 })
+
+                vm.getDataForInstrumentTypeTabs();
 
             }
 

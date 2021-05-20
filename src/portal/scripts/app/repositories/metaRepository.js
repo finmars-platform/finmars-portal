@@ -273,6 +273,11 @@
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
                     },
                     {
+                        label: 'Exposure',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/exposure-view.html'
+                    },
+                    {
                         label: 'Layout Settings',
 						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
