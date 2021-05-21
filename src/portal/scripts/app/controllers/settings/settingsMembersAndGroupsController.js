@@ -4,10 +4,10 @@
 
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
     var usersService = require('../../services/usersService');
 
-    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog) {
+    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog, authorizerService) {
 
         var vm = this;
 

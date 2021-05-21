@@ -9,7 +9,7 @@
     var localStorageService = require('../../../../core/services/localStorageService');
 
     var usersService = require('../services/usersService');
-    var authorizerService = require('../services/authorizerService');
+    // var authorizerService = require('../../../../shell/scripts/app/services/authorizerService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var notificationsService = require('../services/notificationsService');
 

@@ -1,6 +1,8 @@
 /**
  * Created by mevstratov on 24.06.2019.
  */
+import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
+
 (function () {
 
     'use strict';
@@ -11,7 +13,7 @@
     var baseUrlService = require('../../services/baseUrlService');
     var usersService = require('../../services/usersService');
 
-    var websocketService = require('../../services/websocketService');
+    // var websocketService = require('../../services/websocketService');
 
     var baseUrl = baseUrlService.resolve();
 

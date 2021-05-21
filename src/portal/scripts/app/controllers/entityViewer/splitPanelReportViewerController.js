@@ -19,16 +19,9 @@
         var AttributeDataService = require('../../services/attributeDataService');
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function (
-            $scope,
-            $mdDialog,
-            $transitions,
-            parentEntityViewerDataService,
-            parentEntityViewerEventService,
-            splitPanelExchangeService
-        ) {
+        module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
             var vm = this;
 
@@ -932,9 +925,9 @@
 
                     uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
 
-                        if (spLayoutData) {
+                        /* if (spLayoutData) {
                             middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
-                        }
+                        } */
 
                         vm.setLayout(spLayoutData);
 

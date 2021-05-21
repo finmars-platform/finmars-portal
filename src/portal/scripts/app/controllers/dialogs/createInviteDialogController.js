@@ -3,9 +3,9 @@
     'use strict';
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, authorizerService) {
 
         var vm = this;
 

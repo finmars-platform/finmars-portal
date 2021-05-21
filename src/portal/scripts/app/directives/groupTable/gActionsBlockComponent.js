@@ -12,7 +12,7 @@
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
-    var middlewareService = require('../../services/middlewareService');
+    // var middlewareService = require('../../services/middlewareService');
 
     var uiService = require('../../services/uiService');
     var usersService = require('../../services/usersService');
@@ -477,7 +477,7 @@
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
-                        middlewareService.setNewSplitPanelLayoutName(false);
+                        // middlewareService.setNewSplitPanelLayoutName(false);
 
                         clearAdditions();
 
@@ -1111,7 +1111,7 @@
 
                                 if (res.data.layoutUserCode) {
 
-                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                    // middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                                     $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
 
                                 } else {
@@ -1120,7 +1120,7 @@
                                 }
 
                             } else {
-                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                // middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
 
                                 scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
                                 scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
@@ -1183,7 +1183,7 @@
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                    middlewareService.setNewSplitPanelLayoutName(false);
+                    // middlewareService.setNewSplitPanelLayoutName(false);
                     clearAdditions();
 
                     if (scope.isReport) {
@@ -1222,7 +1222,7 @@
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                            middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
+                            // middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
                             scope.$apply(); // needed to update Report settings area in right sidebar and layout name
                             scope.isNewLayout = true;
 
@@ -1295,7 +1295,7 @@
                         scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport});
                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
+                        // middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
@@ -1608,7 +1608,7 @@
 
                 var applyLayout = function (layout) {
 
-                    if (scope.isRootEntityViewer) {
+                    /*if (scope.isRootEntityViewer) {
 
                         middlewareService.setNewEntityViewerLayoutName(layout.name);
 
@@ -1616,7 +1616,12 @@
                         scope.evDataService.setSplitPanelDefaultLayout(layout.id);
                         scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                         middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active split panel layout name in the toolbar
-                    }
+                    }*/
+
+                    if (!scope.isRootEntityViewer) {
+						scope.evDataService.setSplitPanelDefaultLayout(layout.id);
+						scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+					}
 
                     scope.evDataService.setListLayout(layout);
                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
@@ -1897,7 +1902,7 @@
                                 interfaceLayout.splitPanel.height = 0;
 
                                 scope.evDataService.setInterfaceLayout(interfaceLayout);
-                                middlewareService.setNewSplitPanelLayoutName(false);
+                                // middlewareService.setNewSplitPanelLayoutName(false);
 
                             } else {
 

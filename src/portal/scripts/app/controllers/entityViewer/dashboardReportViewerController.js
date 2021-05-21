@@ -23,7 +23,7 @@
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
         var expressionService = require('../../services/expression.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
         var rvDataHelper = require('../../helpers/rv-data.helper');
 
@@ -1975,7 +1975,7 @@
 
             vm.getView = function () {
 
-                //middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false;
 

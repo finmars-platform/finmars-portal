@@ -22,12 +22,12 @@
         var AttributeDataService = require('../../services/attributeDataService');
 
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
         var transactionTypeService = require('../../services/transactionTypeService');
 
 
-        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer) {
+        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService) {
 
             var vm = this;
 
@@ -975,7 +975,7 @@
 
             vm.getView = function () {
 
-                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false;
 

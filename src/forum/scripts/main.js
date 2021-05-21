@@ -5,7 +5,7 @@
 
 (function () {
 
-    var app = angular.module('forum', []);
+    var app = angular.module('finmars.forum', []);
 
     app.config(['$stateProvider', require('./app/router.js')]);
 

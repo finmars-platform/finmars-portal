@@ -2,13 +2,14 @@
  * Created by szhitenev on 30.03.2021.
  */
 
-(function () {
+// (function () {
 
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
     var xhrService = require('../../../../core/services/xhrService');
-    var baseUrlService = require('../services/baseUrlService');
+    // var baseUrlService = require('../services/baseUrlService');
+import baseUrlService from '../services/baseUrlService';
 
     var authorizerUrl = baseUrlService.getAuthorizerUrl();
 
@@ -622,7 +623,8 @@
         })
     };
 
-    module.exports = {
+    // module.exports = {
+	export default {
         tokenLogin: tokenLogin,
         login: login,
         logout: logout,
@@ -671,4 +673,4 @@
 
     }
 
-}());
+// }());

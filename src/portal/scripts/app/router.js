@@ -3,17 +3,17 @@
  */
 (function () {
 
-    module.exports = function ($stateProvider, $urlRouterProvider) {
+    module.exports = function ($stateProvider) {
 
-        $urlRouterProvider.otherwise('/');
+        // $urlRouterProvider.otherwise('/');
 
-        $stateProvider.state('app', {
+        /* $stateProvider.state('app', {
             url: '',
             abstract: true,
             templateUrl: 'views/shell-view.html',
             controller: 'ShellController as vm'
-        });
-
+        }); */
+		console.log("testing portal router initialized");
         $stateProvider.state('app.healthcheck', {
             url: '/healthcheck',
             templateUrl: 'views/pages/healthcheck-view.html',

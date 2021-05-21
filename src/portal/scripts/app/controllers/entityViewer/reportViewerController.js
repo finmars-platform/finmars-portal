@@ -25,9 +25,9 @@
         var pricesCheckerService = require('../../services/reports/pricesCheckerService');
 
         var expressionService = require('../../services/expression.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $stateParams, $transitions) {
+        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, middlewareService) {
 
             var vm = this;
 
@@ -1054,7 +1054,7 @@
             // called inside entityViewerHelperService
             vm.getView = function () {
 
-                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false; // switched to true by rvSharedLogicHelper.onSetLayoutEnd()
 

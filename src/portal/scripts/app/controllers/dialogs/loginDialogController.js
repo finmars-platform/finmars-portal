@@ -6,11 +6,11 @@
     'use strict';
 
     var usersService = require('../../services/usersService');
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
     var cookieService = require('../../../../../core/services/cookieService');
 
 
-    module.exports = function LoginDialogController($scope, $mdDialog, data){
+    module.exports = function LoginDialogController($scope, $mdDialog, data, authorizerService){
 
         var vm = this;
 
