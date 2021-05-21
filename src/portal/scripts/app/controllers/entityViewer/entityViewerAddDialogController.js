@@ -1618,6 +1618,27 @@
 
         // Instrument Type Exposure tab end
 
+        // Instrument tab Exposure start
+
+        vm.getDataForInstrumentTabs = function () {
+
+            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentInstrumentsSelectorOptions = data.results
+
+            })
+
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentCurrenciesSelectorOptions = data.results
+
+            })
+
+
+        }
+
+        // Instrument tab Exposure end
+
         vm.instrumentTypeChange = function ($event) {
 
             console.log('instrumentTypeChange', vm.entity)
@@ -1696,6 +1717,10 @@
 
                 vm.getDataForInstrumentTypeTabs();
 
+            }
+
+            if (vm.entityType === 'instrument') {
+                vm.getDataForInstrumentTabs();
             }
 
             setTimeout(function () {
