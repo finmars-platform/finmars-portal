@@ -5,30 +5,30 @@
 
 (function () {
 
-    var app = angular.module('profile', []);
+    let profile = angular.module('finmars.profile', []);
 
-    app.config(['$stateProvider', require('./app/router.js')]);
+	profile.config(['$stateProvider', require('./app/router.js')]);
 
-    app.run(function () {
+	/* profile.run(function () {
 
-    });
+    });*/
 
-    app.controller('NewDatabaseController', ['$scope', '$state', require('./app/controllers/newDatabaseController')]);
-    app.controller('ProfileController', ['$scope', require('./app/controllers/profileController')]);
-    app.controller('ProfileSettingsController', ['$scope', require('./app/controllers/profileSettingsController')]);
-    app.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', require('./app/controllers/profileDatabasesController')]);
-    app.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createMasterUserDialogController')]);
-    app.controller('CreateMasterUserFromDumpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createMasterUserFromDumpDialogController')]);
-    app.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', '$state', 'data', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
+    profile.controller('NewDatabaseController', ['$scope', '$state', require('./app/controllers/newDatabaseController')]);
+    profile.controller('ProfileController', ['$scope', require('./app/controllers/profileController')]);
+    profile.controller('ProfileSettingsController', ['$scope', require('./app/controllers/profileSettingsController')]);
+    profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', require('./app/controllers/profileDatabasesController')]);
+    profile.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createMasterUserDialogController')]);
+    profile.controller('CreateMasterUserFromDumpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createMasterUserFromDumpDialogController')]);
+    profile.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', '$state', 'data', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
 
-    app.controller('SecuritySettingsController', ['$scope', '$mdDialog', require('./app/controllers/securitySettingsController')]);
-    app.controller('TwoFactorSetupDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoFactorSetupDialogController')]);
+    profile.controller('SecuritySettingsController', ['$scope', '$mdDialog', require('./app/controllers/securitySettingsController')]);
+    profile.controller('TwoFactorSetupDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoFactorSetupDialogController')]);
 
-    app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/createMasterUserDialogController')]);
-    app.controller('ProfileInfoDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/infoDialogController')]);
-    app.controller('DeleteMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/deleteMasterUserDialogController')]);
-    app.controller('RenameMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameMasterUserDialogController')]);
+    profile.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/createMasterUserDialogController')]);
+    profile.controller('ProfileInfoDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/infoDialogController')]);
+    profile.controller('DeleteMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/deleteMasterUserDialogController')]);
+    profile.controller('RenameMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameMasterUserDialogController')]);
 
     // require('./templates.min.js');
 
-}());
+})();

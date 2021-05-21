@@ -5,28 +5,30 @@
 
     'use strict';
 
-    var gulp = require('gulp');
-    var uglify = require('gulp-uglify');
+    const gulp = require('gulp');
+    /* var uglify = require('gulp-uglify');
     var concat = require('gulp-concat');
     var less = require('gulp-less');
     var postcss = require('gulp-postcss');
     var rename = require('gulp-rename');
     var htmlmin = require('gulp-htmlmin');
-    var ngHtml2Js = require('gulp-ng-html2js');
+    var ngHtml2Js = require('gulp-ng-html2js'); */
 
     //js
-    var plumber = require('gulp-plumber');
+    /* var plumber = require('gulp-plumber');
     var preprocess = require('gulp-preprocess');
     var source = require('vinyl-source-stream');
     var buffer = require('vinyl-buffer');
-    var browserify = require('browserify');
+    var browserify = require('browserify'); */
+
+    var commonTasks = require('./common');
 
     var appName = 'profile';
 
-    function profileHtmlToJs () {
+    /* function profileHtmlToJs () {
         // console.log('Executing task index-HTML-templateCache...');
 
-        var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
+        var pathToHtml = ['src/' + appName + '/scripts/app/!**!/!*.html'];
 
         return gulp.src(pathToHtml)
             .pipe(htmlmin({collapseWhitespace: true}))
@@ -41,11 +43,16 @@
             .pipe(uglify())
             .pipe(gulp.dest('src/' + appName + '/scripts/'))
 			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
-    }
+    } */
+	function profileHtmlToJs () {
+		var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
+		var angularModuleName = 'finmars.' + appName;
+		return commonTasks.htmlToJs(pathToHtml, appName, angularModuleName);
+	}
 
-    gulp.task(appName + '-HTML-to-JS', function () {
-        return profileHtmlToJs();
-    });
+    gulp.task(appName + '-HTML-to-JS', () => {
+    	return profileHtmlToJs();
+	});
 
     module.exports = {
 		profileHtmlToJs: profileHtmlToJs

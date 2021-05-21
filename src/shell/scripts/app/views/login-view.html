@@ -1,0 +1,42 @@
+<div class="auth-page flex-center">
+    <div ng-if="!vm.processing" class="auth-form">
+
+        <h2>Authentication</h2>
+
+        <div class="p-r-24">
+
+            <md-input-container class="width-100">
+                <label for="">Username</label>
+                <input type="text" class="auth-username" data-ng-model="vm.username" data-ng-change="vm.error = false">
+            </md-input-container>
+
+        </div>
+
+        <div class="p-r-24">
+            <md-input-container class="width-100">
+                <label for="">Password</label>
+                <input type="password" class="auth-password" data-ng-model="vm.password" data-ng-change="vm.error = false">
+            </md-input-container>
+        </div>
+
+        <div data-ng-if="vm.error" class="m-t-8 m-b-8" style="padding: 0 10px;">
+
+            <div class="color-danger">The username or password that you have entered is incorrect.</div>
+
+        </div>
+
+        <div class="flex-row flex-c-center">
+            <md-button class="md-raised md-primary" ng-click="vm.logIn">SIGN IN</md-button>
+        </div>
+
+    </div>
+
+    <div data-ng-if="vm.processing">
+
+        <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="50"></progress-circular>
+        </div>
+
+    </div>
+
+</div>

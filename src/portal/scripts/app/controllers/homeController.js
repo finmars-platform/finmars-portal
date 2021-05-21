@@ -16,7 +16,7 @@
     module.exports = function ($scope, $state, $mdDialog) {
 
         var vm = this;
-
+		console.log("testing home controller initialized");
         vm.masters = [];
         vm.systemMessages = [];
         vm.currentMasterUser = null;

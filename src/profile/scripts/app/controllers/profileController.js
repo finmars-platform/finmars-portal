@@ -7,6 +7,10 @@
 
     module.exports = function($scope) {
 
-    }
+    	let vm = this;
 
-}());
+		vm.currentMasterUser = null;
+
+    };
+
+})();

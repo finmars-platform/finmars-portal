@@ -2,8 +2,6 @@
 
     'use strict';
 
-    const middlewareService = require('../services/middlewareService');
-    const evEvents = require("../services/entityViewerEvents");
     const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
     const popupEvents = require('../services/events/popupEvents');
     const dashboardEvents = require('../services/dashboard/dashboardEvents');

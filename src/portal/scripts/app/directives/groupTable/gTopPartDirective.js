@@ -9,12 +9,6 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
-    var middlewareService = require('../../services/middlewareService');
-
-    var uiService = require('../../services/uiService');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
     var currencyService = require('../../services/currencyService');
 
     module.exports = function ($mdDialog, $state,) {
