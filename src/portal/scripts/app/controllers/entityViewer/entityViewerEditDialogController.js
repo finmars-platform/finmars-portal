@@ -1600,7 +1600,7 @@
 
         };
 
-        vm.pricingSchemeChange = function ($event, item) {
+        vm.pricingSchemeChange = function (item) {
 
             item.pricing_scheme_object = null;
             item.default_value = null;

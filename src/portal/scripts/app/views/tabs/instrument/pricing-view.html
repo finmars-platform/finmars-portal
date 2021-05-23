@@ -136,7 +136,7 @@
 
                 <md-input-container class="m-t-16">
                     <md-select data-ng-model="item.pricing_scheme"
-                               data-ng-change="vm.pricingSchemeChange($event, item)">
+                               data-ng-change="vm.pricingSchemeChange(item)">
                         <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.instrumentPricingSchemes">
                             {{scheme.name}}
                         </md-option>
@@ -227,10 +227,14 @@
 
 
     </table>-->
+    <div ng-if="vm.readyStatus">
+        <grid-table class="instrument-events-grid-table" data-gt-data-service="vm.pricingPoliciesGridTableDataService"
+                    data-gt-event-service="vm.pricingPoliciesGridTableEventService">
+        </grid-table>
+    </div>
 
-    <grid-table class="instrument-events-grid-table" data-gt-data-service="vm.pricingPoliciesGridTableDataService"
-                data-gt-event-service="vm.pricingPoliciesGridTableEventService">
-    </grid-table>
-
+    <div ng-if="!vm.readyStatus" class="flex-row flex-c-center width-100" style="height: 100px;">
+        <progress-circular diameter="100"></progress-circular>
+    </div>
 
 </div>

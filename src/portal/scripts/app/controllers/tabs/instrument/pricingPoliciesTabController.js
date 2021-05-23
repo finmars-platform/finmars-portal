@@ -41,12 +41,14 @@
         const gridTableHelperService = new GridTableHelperService();
 
         vm.entity = $scope.$parent.vm.entity;
+        vm.readyStatus = false;
         console.log('#71 vm.entity', vm.entity)
         vm.currencies = $scope.$parent.vm.currencies;
         vm.pricingConditions = $scope.$parent.vm.pricingConditions;
         vm.instrumentPricingSchemes = null;
-        vm.attributeTypesByValueTypes = $scope.$parent.vm.attributeTypesByValueTypes;
 
+        vm.attributeTypesByValueTypes = $scope.$parent.vm.attributeTypesByValueTypes;
+		vm.pricingSchemeChange = $scope.$parent.vm.pricingSchemeChange;
 
         vm.contextData = $scope.$parent.vm.contextData;
         vm.entityType = 'instrument';
@@ -55,6 +57,34 @@
         vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
         vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
         vm.entityChange = $scope.$parent.vm.entityChange;
+
+		const pricingDefaultValueFieldTypes = {
+			fieldTypesList: [
+				{
+					'model': "",
+					'fieldType': 'textInput',
+					'isDefault': true,
+					'isActive': false,
+					'sign': '<div class="multitype-field-type-letter type-with-constant">T</div>',
+					'value_type': 10,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+					}
+				},
+				{
+					'model': null,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': false,
+					'sign': '<div class="multitype-field-type-letter">L</div>',
+					'value_type': 70,
+					'fieldData': {
+						'menuOptions': [],
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+					}
+				}
+			]
+		};
 
         vm.pricingPoliciesGridTableData = {
             header: {
@@ -67,7 +97,6 @@
                 columns: [
                     {
                         key: 'pricing_policy',
-                        objPath: ['pricing_policy'],
                         columnName: 'Pricing Policy',
                         order: 0,
                         cellType: 'readonly_text',
@@ -81,7 +110,7 @@
                     },
                     {
                         key: 'pricing_scheme',
-                        objPath: ['pricing_scheme'],
+                        objPath: ['pricing_scheme_object', 'id'],
                         columnName: 'Pricing Scheme',
                         order: 1,
                         cellType: 'selector',
@@ -96,7 +125,7 @@
                     },
                     {
                         key: 'pricing_scheme_clarification',
-                        objPath: ['pricing_scheme_clarification'],
+						objPath: ['pricing_scheme_object', 'notes_for_users'],
                         columnName: 'Pricing Scheme Clarification',
                         order: 2,
                         cellType: 'readonly_text',
@@ -124,43 +153,20 @@
                     },*/
                     {
                         key: 'edit_default_parameters',
-                        objPath: ['edit_default_parameters'],
+                        objPath: ['default_value'],
                         columnName: 'Edit Default Parameters',
-                        order: 4,
-                        cellType: 'custom_popup',
+                        order: 3,
+                        cellType: 'multitypeField',
                         settings: {
                             value: null,
-                            cellText: '',
-                            closeOnMouseOut: false,
-                            popupSettings: {
-                                contentHtml: {
-                                    main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-pricing-edit-default-parameters-view.html'\"></div>"
-                                },
-                                data: {}
-/*                                fieldsData: [
-                                    {selectorOptions: vm.periodicityItems},
-                                    {selectorOptions: vm.accrualModels}
-                                ]*/
-                            }
-                        },
-                        methods: {
-                            onChange: function (rowData, colData, gtDataService, gtEventService) {
-                                console.log('#71 onChange', rowData, colData)
-
-/*                                var periodicityCell = gtDataService.getCellByKey(rowData.order, 'periodicity');
-
-                                for (var i = 0; i < vm.periodicityItems.length; i++) {
-
-                                    if (vm.periodicityItems[i].id === periodicityCell.settings.value[2]) {
-
-                                        periodicityCell.settings.cellText = vm.periodicityItems[i].name
-                                        break;
-
-                                    }
-
-                                }*/
-
-                            }
+							fieldTypesData: []
+							/* closeOnMouseOut: false,
+							popupSettings: {
+								contentHtml: {
+									main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-pricing-edit-default-parameters-view.html'\"></div>"
+								},
+								data: {}
+							} */
                         },
                         styles: {
                             'grid-table-cell-elem': {'width': '30%'}
@@ -173,16 +179,10 @@
                 },
                 styles: {'grid-table-row': {'cursor': 'pointer'}}
             },
-            tableMethods: {
+
+			tableMethods: {
                 addRow: '' //onEventsTableAddRow
             },
-/*            components: {
-                topPanel: {
-                    filters: false,
-                    columns: false,
-                    search: false
-                }
-            }*/
 
             components: {
                 topPanel: false,
@@ -193,7 +193,22 @@
 
         }
 
-        var formatDataForEventsGridTable = function () {
+        var getOptionsForPPDefaultValueSel = function (typesList, pricingPolicy) {
+
+        	if (pricingPolicy.pricing_scheme_object &&
+				pricingPolicy.pricing_scheme_object.type_settings &&
+				pricingPolicy.pricing_scheme_object.type_settings.value_type) {
+
+				const selectorType = typesList.find(type => type.fieldType === 'dropdownSelect');
+				selectorType.fieldData.menuOptions = vm.attributeTypesByValueTypes[pricingPolicy.pricing_scheme_object.type_settings.value_type];
+
+			}
+
+        	return typesList;
+
+		};
+
+        var formatDataForPricingGridTable = function () {
 
             // assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
@@ -218,7 +233,8 @@
 
             // assemble body rows
             vm.entity.pricing_policies.forEach(function (policy, policyIndex) {
-                rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
+
+            	rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
                 console.log('#71 rowObj', rowObj)
                 rowObj.key = policy.id;
                 rowObj.order = policyIndex;
@@ -230,6 +246,7 @@
                 if (policy.pricing_scheme_object) {
                     pricingScheme.settings.value = policy.pricing_scheme_object.id;
                 }
+
                 pricingScheme.settings.selectorOptions = vm.instrumentPricingSchemes;
 
                 const pricingSchemeClarification = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_scheme_clarification');
@@ -237,32 +254,103 @@
                     pricingSchemeClarification.settings.value = policy.pricing_scheme_object.notes_for_users;
                 }
 
-                const defaultParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'edit_default_parameters');
-                defaultParameters.settings.popupSettings.data.item = policy;
 
-/*                const parameterClarification = gridTableHelperService.getCellFromRowByKey(rowObj, 'parameter_clarification');
-                parameterClarification.settings.value = policy.pricing_scheme_object.notes_for_parameter;*/
+				//<editor-fold desc="Default parameters column">
+				let defaultParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'edit_default_parameters');
+                let typesList = JSON.parse(JSON.stringify(pricingDefaultValueFieldTypes.fieldTypesList));
+
+                let defaultValue;
+				let fieldValueType = 70;
+
+                if (policy.default_value) {
+					defaultValue = policy.default_value;
+					fieldValueType = 10;
+
+                } else {
+
+                	defaultValue = policy.attribute_key;
+
+					/* if (policy.pricing_scheme_object &&
+						policy.pricing_scheme_object.type_settings &&
+						policy.pricing_scheme_object.type_settings.value_type) {
+
+						const selectorType = typesList.find(type => type.fieldType === 'dropdownSelect');
+						selectorType.fieldData.menuOptions = vm.attributeTypesByValueTypes[policy.pricing_scheme_object.type_settings.value_type];
+
+					} */
+					typesList = getOptionsForPPDefaultValueSel(typesList, policy);
 
 
-                //
-                // var finalDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_scheme_clarification');
-                // finalDate.settings.value = policy.pricing_scheme_clarification;
-                //
-                // var isAutoGenerated = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_auto_generated');
-                // isAutoGenerated.settings.value = policy.is_auto_generated;
-                //
-                // var eventClass = gridTableHelperService.getCellFromRowByKey(rowObj, 'event_class');
-                // eventClass.settings.value = vm.bindEventClass(policy);
+				}
+
+                const cellData = gridTableHelperService.getMultitypeFieldDataForCell(typesList, defaultParameters, defaultValue, fieldValueType);
+                defaultParameters = cellData.cell;
+
+                gridTableHelperService.setCellInsideRow(rowObj, defaultParameters);
+				//</editor-fold>
+                // defaultParameters.settings.popupSettings.data.item = policy;
+
+				/* const parameterClarification = gridTableHelperService.getCellFromRowByKey(rowObj, 'parameter_clarification');
+                parameterClarification.settings.value = policy.pricing_scheme_object.notes_for_parameter;
+
+                var finalDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_scheme_clarification');
+                finalDate.settings.value = policy.pricing_scheme_clarification;
+
+                var isAutoGenerated = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_auto_generated');
+                isAutoGenerated.settings.value = policy.is_auto_generated;
+
+                var eventClass = gridTableHelperService.getCellFromRowByKey(rowObj, 'event_class');
+                eventClass.settings.value = vm.bindEventClass(policy); */
 
                 vm.pricingPoliciesGridTableData.body.push(rowObj);
             });
             // < assemble body rows >
+
         };
         // <Event schedules grid Table>
 
         var initGridTableEvents = function () {
 
             // vm.eventSchedulesGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, onEventsTableDeleteRows);
+			vm.pricingPoliciesGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, argObj => {
+
+				const row = argObj.row;
+				const column = argObj.column
+
+				if (column.key === 'edit_default_parameters') { // for cell with multitypeField
+
+					const cell = vm.pricingPoliciesGridTableDataService.getCell(row.order, column.order);
+					const activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+
+					const matchingProp = activeType.value_type === 10 ? 'default_value' : 'attribute_key';
+					const propToClear = activeType.value_type === 10 ? 'attribute_key' : 'default_value';
+
+					vm.entity.pricing_policies[row.order][matchingProp] = cell.settings.value;
+					vm.entity.pricing_policies[row.order][propToClear] = null;
+
+				} else { // 'pricing_policy' cell
+
+					vm.pricingSchemeChange(vm.entity.pricing_policies[row.order]);
+					const changedPolicy = vm.entity.pricing_policies[row.order];
+
+					let pricingSchemeClarCell = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'pricing_scheme_clarification');
+					pricingSchemeClarCell.settings.value = null;
+
+					if (changedPolicy.pricing_scheme_object && changedPolicy.pricing_scheme_object.notes_for_users) {
+						pricingSchemeClarCell.settings.value = changedPolicy.pricing_scheme_object.notes_for_users;
+					}
+
+					const defaultValueCell = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'edit_default_parameters');
+					defaultValueCell.settings.value = null;
+					defaultValueCell.settings.cellText = '';
+
+					// defaultValueCell.settings.fieldTypesData.forEach(type => type.model = null);
+					defaultValueCell.fieldTypesData = getOptionsForPPDefaultValueSel(defaultValueCell.fieldTypesData, changedPolicy);
+
+					// gridTableHelperService.onGridTableCellChange(vm.entity.pricing_policies, vm.pricingPoliciesGridTableDataService, row.order, column.order);
+				}
+
+			});
 
         };
 
@@ -320,19 +408,19 @@
                 10: [
                     {
                         name: 'Reference For Pricing',
-                        user_code: 'reference_for_pricing'
+                        id: 'reference_for_pricing'
                     }
                 ],
                 20: [
                     {
                         name: 'Default Price',
-                        user_code: 'default_price'
+						id: 'default_price'
                     }
                 ],
                 40: [
                     {
                         name: 'Maturity Date',
-                        user_code: 'maturity_date'
+						id: 'maturity_date'
                     }
                 ]
 
@@ -344,7 +432,7 @@
 
                 return {
                     name: item.name,
-                    user_code: 'attributes.' + item.user_code
+                    id: 'attributes.' + item.id
                 }
 
             }));
@@ -355,7 +443,7 @@
 
                 return {
                     name: item.name,
-                    user_code: 'attributes.' + item.user_code
+					id: 'attributes.' + item.id
                 }
 
             }));
@@ -366,14 +454,14 @@
 
                 return {
                     name: item.name,
-                    user_code: 'attributes.' + item.user_code
+					id: 'attributes.' + item.id
                 }
 
             }));
 
         };
 
-        const getInstrumentPricingSchemes = instrumentPricingSchemeService.getList().then((data) => {
+        const getInstrumentPricingSchemes = instrumentPricingSchemeService.getList().then(data => {
             vm.instrumentPricingSchemes =  data.results;
         });
 
@@ -395,21 +483,23 @@
         };
 
         vm.init = function () {
-            vm.pricingPoliciesGridTableDataService = new GridTableDataService();
+
+        	vm.pricingPoliciesGridTableDataService = new GridTableDataService();
             vm.pricingPoliciesGridTableEventService = new GridTableEventService();
 
             initGridTableEvents();
 
             Promise.all([getInstrumentPricingSchemes, getAttributeTypes]).then(function () {
 
-                formatDataForEventsGridTable();
+				formatDataForPricingGridTable();
                 generateInstrumentAttributeTypesByValueTypes();
+
+				vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData);
+				vm.readyStatus = true;
 
             });
 
             console.log('#71 vm.pricingPoliciesGridTableData', vm.pricingPoliciesGridTableData)
-
-            vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData);
 
         };
 
