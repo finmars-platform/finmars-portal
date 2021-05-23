@@ -269,7 +269,25 @@
 					var posY = e.pageY;
 
 					if (scope.column.cellType === 'multitypeField') {
+
+						// Sync cell.settings.value and active.model in case cell.settings.value was changed by script
+						var activeType = scope.column.settings.fieldTypesData.find(type => type.isActive);
+						if (!activeType) activeType = scope.column.settings.fieldTypesData.find(type => type.isDefault);
+
+						if (activeType) {
+
+							if (scope.column.hasOwnProperty("objPaths")) {
+								activeType.model = scope.column.settings.value[0];
+
+							} else {
+								activeType.model = scope.column.settings.value;
+							}
+
+						}
+						// < Sync cell.settings.value and active.model in case cell.settings.value was changed by script >
+
 						scope.fieldTypesData = JSON.parse(JSON.stringify(scope.column.settings.fieldTypesData));
+
 					}
 
 					else {

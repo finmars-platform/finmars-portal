@@ -49,7 +49,7 @@
 		 *
 		 * @return {{cell: Object, valueType: Number}} - returns changed cell data and current value_type of multitype field in case it does not set
 		 */
-		const getMultitypeFieldDataForCell = function (fieldTypesList, cell, value, valueType) {
+		const getMultitypeFieldDataForCell = (fieldTypesList, cell, value, valueType) => {
 
 			fieldTypesList = JSON.parse(JSON.stringify(fieldTypesList));
 			valueType = multitypeFieldService.setActiveTypeByValueType(fieldTypesList, value, valueType);
@@ -69,7 +69,7 @@
 			if (activeType.fieldType === 'dropdownSelect') {
 
 				const selOption = activeType.fieldData.menuOptions.find(option => option.id === value);
-				cell.settings.cellText = selOption.name;
+				if (selOption) cell.settings.cellText = selOption.name;
 
 			}
 
