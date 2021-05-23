@@ -5,7 +5,7 @@
 
         <div layotu="column">
 
-            <div layout="row">
+            <div layout="row" class="m-b-13">
 
                 <dropdown-select class="p-r-8" label="Pricing Currency"
                                  model="vm.entity.pricing_currency"
@@ -16,7 +16,6 @@
                                  style="width: 306px">
                 </dropdown-select>
 <!--                on-change-callback="vm.entityChange()"-->
-
 <!--                <dropdown-select class="p-r-8" label="Co-directional exposure currency"
                                  model="vm.entity.co_directional_exposure_currency"
                                  placeholder-text="Co-directional exposure currency"
@@ -32,7 +31,6 @@
                                  small-options="{tooltipText: 'Counter-directional exposure currency'}"
                                  style="width: 200px;">
                 </dropdown-select>-->
-
 
                 <number-input class="p-r-8"
                               label="Pricing Multiplier"
@@ -58,9 +56,7 @@
 
             </div>
 
-            <div layout="row">
-
-
+            <div layout="row" class="m-b-13">
 
                 <text-input class="p-r-8"
                             model="vm.entity.reference_for_pricing"
@@ -69,17 +65,12 @@
                             style="width: 306px;">
                 </text-input>
 
-                <md-button class="md-raised md-primary" data-ng-if="vm.entity.id"
+                <md-button data-ng-if="vm.entity.id"
+                           class="md-raised md-primary m-t-0 m-b-0"
                            data-ng-click="vm.runPricingInstrument($event)">Run Pricing
                 </md-button>
 
             </div>
-
-        </div>
-
-        <div>
-
-
 
         </div>
 
