@@ -18,6 +18,7 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
+                itemName: '=',
                 onChangeCallback: '&?',
                 // Victor 2020.10.23 Next fields setting up classifiers properties
                 classifierAttr: '=',
@@ -207,6 +208,13 @@
                             scope.model = +res.data.item;
                             console.log('scope.model', scope.model)
                             getTree();
+                            setTimeout(function () {
+
+                                if (scope.onChangeCallback) {
+                                    scope.onChangeCallback();
+                                }
+
+                            }, 0);
                         }
                     });
                 };
