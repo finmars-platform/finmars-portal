@@ -1,0 +1,59 @@
+<div data-ng-controller="InstrumentTypeUserAttributesTabController as vm" class="user-attributes">
+    <table>
+        <thead>
+            <tr class="attribute-row">
+                <td class="attribute-name">Attribute</td>
+                <td class="default-value">Default value</td>
+                <td></td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="attr in vm.attrs">
+                <td class="attribute-name">{{attr.name}}</td>
+                <td class="default-value">
+                    <div data-ng-if="attr.value_type === 10">
+                        <text-input model="attr.value"
+                                    placeholder-text="{{attr.name}}"
+                                    on-change-callback="vm.attrChange()"
+                                    is-disabled="attr.___instrumentTypeAttr"
+                                    small-options="{readonly: attr.___instrumentTypeAttr}"></text-input>
+
+                    </div>
+                    <div data-ng-if="attr.value_type === 20">
+                        <number-input class=""
+                                      model="attr.value"
+                                      on-change-callback="vm.attrChange()"
+                                      is-disabled="attr.___instrumentTypeAttr"
+                                      style="width: 200px;"></number-input>
+                    </div>
+                    <div data-ng-if="attr.value_type === 30">
+                        <classifier-select placeholder-text="{{attr.name}}"
+                                           model="attr.value"
+                                           classifier-attr="attr"
+                                           classifier-value="attr.value"
+                                           entity-type="attr.___instrumentTypeAttr ? 'instrument-type' : 'instrument'"
+                                           is-disabled="attr.___instrumentTypeAttr"
+                                           item-name="attr.___classifierName"
+                                           on-change-callback="vm.attrChange()"
+                        ></classifier-select>
+
+                    </div>
+                    <div data-ng-if="attr.value_type === 40">
+                        <date-input model="attr.value"
+                                    small-options="{noIndicatorBtn: true}"
+                                    on-change-callback="vm.attrChange()"></date-input>
+
+                    </div>
+
+                </td>
+                <td>
+                    <button data-ng-if="attr.___instrumentTypeAttr">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
