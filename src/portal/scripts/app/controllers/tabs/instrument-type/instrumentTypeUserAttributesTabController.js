@@ -133,7 +133,8 @@
                     }
 
                     return result;
-                })
+                });
+
         };
 
         const getUniqueConcatAttrs = (instrumentAttrs, instrumentTypeAttrs) => {
