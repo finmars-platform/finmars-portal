@@ -906,7 +906,7 @@
                         const allData = scope.evDataService.getDataAsList();
                         scope.selectedRowsCount = countSelectedRows(allData);
 
-                        if (scope.selectedRowsCount > 0) {
+                        if (scope.selectedRowsCount > 1) {
 
                             selectedRowsActionBlockElement.classList.remove('display-none');
                             setTimeout(() => scope.$apply());
