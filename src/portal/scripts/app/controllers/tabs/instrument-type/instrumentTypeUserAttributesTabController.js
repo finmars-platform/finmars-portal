@@ -5,6 +5,7 @@
     'use strict';
 
     const attributeTypeService = require('../../../services/attributeTypeService');
+    const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
     module.exports = function instrumentTypeUserAttributesTabController ($scope, $mdDialog) {
 
@@ -20,6 +21,87 @@
         if (!vm.entity.instrument_attributes) {
             vm.entity.instrument_attributes = []
         }
+
+        vm.readyStatus = {
+            attrs: false
+        };
+
+        const getList = () => {
+            vm.readyStatus.attrs = false;
+
+            const instrumentAttributesPromise = attributeTypeService.getList('instrument', {pageSize: 1000}).then((data) => {
+                return data.results;
+            });
+
+            const instrumentTypeAttributesPromise = attributeTypeService.getList( vm.entityType, {pageSize: 1000}).then((data) => {
+                return data.results;
+            });
+
+            Promise.all([instrumentAttributesPromise, instrumentTypeAttributesPromise]).then(([instrumentAttrs, instrumentTypeAttrs]) => {
+
+                vm.attrs = getUniqueConcatAttrs(instrumentAttrs, instrumentTypeAttrs);
+                vm.attrs = mapAttrsFromEntity(vm.attrs, vm.entity.instrument_attributes);
+                vm.readyStatus.attrs = true;
+
+                $scope.$apply();
+
+            })
+        }
+
+        vm.deleteAttr = function (ev, item) {
+
+            var description = 'Are you sure to delete attribute ' + item.name + ' ?';
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: description
+                    }
+                },
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.readyStatus.attrs = false;
+
+                    attributeTypeService.deleteByKey(vm.entityType, item.id).then(function (data) {
+
+                        if (data.status === 'conflict') {
+
+                            $mdDialog.show({
+                                controller: 'InfoDialogController as vm',
+                                templateUrl: 'views/info-dialog-view.html',
+                                parent: angular.element(document.body),
+                                targetEvent: ev,
+                                clickOutsideToClose: false,
+                                multiple: true,
+                                locals: {
+                                    info: {
+                                        title: 'Notification',
+                                        description: "You can not delete attributed that already in use"
+                                    }
+                                }
+                            })
+
+                        } else {
+
+                            getList();
+
+                        }
+
+                    });
+
+                }
+
+            });
+        };
 
         vm.attrChange = function () {
 
@@ -53,14 +135,6 @@
                     return result;
                 })
         };
-
-        const instrumentAttributesPromise = attributeTypeService.getList('instrument', {pageSize: 1000}).then((data) => {
-            return data.results;
-        });
-
-        const instrumentTypeAttributesPromise = attributeTypeService.getList( vm.entityType, {pageSize: 1000}).then((data) => {
-            return data.results;
-        });
 
         const getUniqueConcatAttrs = (instrumentAttrs, instrumentTypeAttrs) => {
 
@@ -129,13 +203,14 @@
         };
 
         const init = function () {
-            Promise.all([instrumentAttributesPromise, instrumentTypeAttributesPromise]).then(([instrumentAttrs, instrumentTypeAttrs]) => {
 
-                vm.attrs = getUniqueConcatAttrs(instrumentAttrs, instrumentTypeAttrs);
-                vm.attrs = mapAttrsFromEntity(vm.attrs, vm.entity.instrument_attributes);
+            getList();
+
+            vm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {
+
+                getList();
 
             })
-
         }
 
         init();
