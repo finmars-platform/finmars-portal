@@ -205,9 +205,13 @@
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
+
                             scope.model = +res.data.item;
+                            scope.itemName = res.data.name;
+                            scope.inputText = res.data.name;
                             console.log('scope.model', scope.model)
                             getTree();
+
                             setTimeout(function () {
 
                                 if (scope.onChangeCallback) {
@@ -215,6 +219,7 @@
                                 }
 
                             }, 0);
+
                         }
                     });
                 };

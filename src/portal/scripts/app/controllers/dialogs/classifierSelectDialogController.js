@@ -147,9 +147,9 @@
                 vm.dialogElemToResize = document.querySelector('.classifierSelectorElemToDrag');
             }, 100);
 
-            var item = $('#js-tree-select-wrapper').jstree(true).get_selected();
+            var item = $('#js-tree-select-wrapper').jstree(true).get_selected(true);
             console.log('ite---------------m', item);
-            $mdDialog.hide({status: 'agree', data: {item: item[0]}});
+            $mdDialog.hide({status: 'agree', data: {item: item[0].id, name: item[0].text}});
         };
 
         vm.cancel = function () {
