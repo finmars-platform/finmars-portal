@@ -1,5 +1,7 @@
 <div data-ng-controller="InstrumentTypeUserAttributesTabController as vm" class="user-attributes">
-    <table>
+
+    <div data-ng-if="vm.readyStatus.attrs">
+        <table>
         <thead>
             <tr class="attribute-row">
                 <td class="attribute-name">Attribute</td>
@@ -48,12 +50,19 @@
 
                 </td>
                 <td>
-                    <button data-ng-if="attr.___instrumentTypeAttr">
+                    <button data-ng-if="attr.___instrumentTypeAttr" data-ng-click="vm.deleteAttr($event, attr)">
                         <span class="material-icons">delete</span>
                     </button>
                 </td>
             </tr>
         </tbody>
     </table>
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.attrs">
+        <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
 
 </div>
