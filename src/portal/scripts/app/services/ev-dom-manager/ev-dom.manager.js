@@ -1303,6 +1303,10 @@
     };
 
     module.exports = {
+
+        requestGroups: requestGroups,
+        requestObjects: requestObjects,
+
         initEventDelegation: initEventDelegation,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         createPopupMenu: createPopupMenu,

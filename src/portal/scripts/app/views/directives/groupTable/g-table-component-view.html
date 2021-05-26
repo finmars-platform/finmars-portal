@@ -43,7 +43,7 @@
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
 
-                <div ng-if="isReport && components.topPart">
+                <div ng-if="components.topPart">
                     <g-top-part ev-data-service="evDataService"
                                 ev-event-service="evEventService"
                                 attribute-data-service="attributeDataService"
@@ -51,7 +51,7 @@
                     </g-top-part>
                 </div>
 
-                <div ng-if="isReport && components.filterArea">
+                <div ng-if="components.filterArea">
                     <g-filters ev-data-service="evDataService"
                                ev-event-service="evEventService"
                                attribute-data-service="attributeDataService"
@@ -62,13 +62,21 @@
                     </g-filters>
                 </div>
 
-                <div class="g-grouping-section"
-                     data-ng-if="components.groupingArea && viewType !== 'matrix'">
-                    <group-grouping ev-data-service="evDataService"
-                                    ev-event-service="evEventService"
-                                    attribute-data-service="attributeDataService"
-                                    content-wrap-element="contentWrapElem"></group-grouping>
+                <div ng-if="!isReport" class="g-ev-left-panel-holder">
+                    <g-ev-left-panel ev-data-service="evDataService"
+                                ev-event-service="evEventService"
+                                attribute-data-service="attributeDataService"
+                                sp-exchange-service="spExchangeService">
+                    </g-ev-left-panel>
                 </div>
+
+<!--                <div class="g-grouping-section"-->
+<!--                     data-ng-if="components.groupingArea && viewType !== 'matrix'">-->
+<!--                    <group-grouping ev-data-service="evDataService"-->
+<!--                                    ev-event-service="evEventService"-->
+<!--                                    attribute-data-service="attributeDataService"-->
+<!--                                    content-wrap-element="contentWrapElem"></group-grouping>-->
+<!--                </div>-->
 
                 <div ng-if="readyToRenderTable" class="g-table-section">
                     <div>
@@ -83,14 +91,14 @@
                                     ></group-columns>
                                 </div>
 
-                                <md-button data-ng-if="!isReport && !isInsideDashboard && viewType !== 'matrix'"
-                                           class="toggle-group-column-area-btn"
-                                           ng-click="toggleGroupAndColumnArea()">
-                                    <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"
-                                                icon="keyboard_arrow_up"></ng-md-icon>
-                                    <ng-md-icon ng-hide="!groupingAndColumnAreaCollapsed"
-                                                icon="keyboard_arrow_down"></ng-md-icon>
-                                </md-button>
+<!--                                <md-button data-ng-if="!isReport && !isInsideDashboard && viewType !== 'matrix'"-->
+<!--                                           class="toggle-group-column-area-btn"-->
+<!--                                           ng-click="toggleGroupAndColumnArea()">-->
+<!--                                    <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"-->
+<!--                                                icon="keyboard_arrow_up"></ng-md-icon>-->
+<!--                                    <ng-md-icon ng-hide="!groupingAndColumnAreaCollapsed"-->
+<!--                                                icon="keyboard_arrow_down"></ng-md-icon>-->
+<!--                                </md-button>-->
                             </div>
 
                             <group-table-body data-ng-if="viewType == 'report_viewer'"

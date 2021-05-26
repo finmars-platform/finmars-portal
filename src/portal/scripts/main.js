@@ -718,6 +718,8 @@ app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog
 
 // New report viewer interface
 app.directive('gTopPart', ['$mdDialog', '$state', require('./app/directives/groupTable/gTopPartDirective')]);
+app.directive('gEvLeftPanel', ['$mdDialog', '$state', require('./app/directives/groupTable/gEvLeftPanelDirective')]);
+app.directive('gEvLeftPanelTreeElem', ['$mdDialog', '$state', require('./app/directives/groupTable/gEvLeftPanelTreeElemDirective')]);
 app.directive('gFilters', ['$mdDialog', require('./app/directives/groupTable/gFiltersDirective')]);
 
 // GROUP TABLE END

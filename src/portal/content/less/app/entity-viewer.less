@@ -253,7 +253,7 @@
 
   .ev-progressbar-holder {
     height: 4px;
-    background: #4C334D;
+    background: #e0e0e0;
   }
 
   .proxyline {
@@ -425,4 +425,215 @@
       border-top: 1px solid rgba(158, 158, 158, 0.18);
     }
   }
+}
+
+
+// Report Material Design Interface Start
+
+.entity-viewer-holder {
+
+  .g-table-section {
+    width: calc(100% - 230px);
+  }
+
+  .g-ev-left-panel-holder {
+    width: 230px;
+    background: rgb(250, 250, 250);
+    height: 100%;
+    float: left;
+  }
+
+  .g-filters-holder {
+    float: none;
+  }
+
+  .ev-left-panel-tree-elem {
+    .ev-left-panel-tree-elem-name {
+      margin-left: 4px;
+      font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 14px;
+      letter-spacing: normal;
+      color: #333333;
+
+      &.selected-group {
+        color: #F05A22;
+      }
+    }
+  }
+
+  .g-wrapper {
+
+    .g-row {
+      position: absolute;
+    }
+
+    .ev-content {
+      position: relative;
+
+      .g-row {
+        height: 36px;
+      }
+
+      .g-cell {
+        border-bottom: 1px solid;
+        border-color: @gCellBroderColor;
+        height: 36px;
+        font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        color: #666666;
+        line-height: 36px;
+        padding: 0 15px;
+      }
+
+      .g-row-selection {
+        height: @gRowHeight;
+        width: @gRowSelectionWidth;
+        border-bottom: @gCellBorder;
+        border-right: @gCellBorder;
+        box-sizing: border-box;
+      }
+
+      .g-row-selection-button {
+        width: 17px;
+        height: 17px;
+        min-width: 17px;
+        font-size: 15px;
+        line-height: 13px;
+        border: 2px solid @borderPale;
+        border-radius: 3px;
+        box-sizing: border-box;
+        background: rgba(0,0,0,.01960784);
+        margin: 4px auto 0;
+        cursor: pointer;
+
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        &.checked {
+          background-color: @orange;
+          border-color: @orange;
+
+          svg {
+            position: relative;
+            width: 19px;
+            height: 19px;
+            bottom: 4px;
+            right: 3px;
+            fill: #fff;
+          }
+        }
+
+      }
+
+      .ev-fold-button {
+        width: 17px;
+        height: 17px;
+        min-width: 17px;
+        font-size: 15px;
+        line-height: 13px;
+        border: 2px solid #747474;
+        border-radius: 3px;
+        margin-top: 9px;
+        margin-right: 8px;
+        box-sizing: border-box;
+        background: rgba(0,0,0,.01960784);
+      }
+
+    }
+
+    .report-bg-level-1 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-bg-level-2 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-bg-level-3 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-bg-level-4 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-bg-level-5 {
+      background: rgba(0, 0, 0, 0.0196078431372549);
+    }
+
+    .report-grand-total-bg {
+      background: #fff;
+
+      font-family: 'Roboto-Bold', 'Roboto Bold', 'Roboto', sans-serif;
+      font-weight: 700;
+      font-style: normal;
+      text-align: left;
+
+      font-size: 13px;
+      color: #666666;
+
+    }
+
+  }
+
+  .g-cell { // have to be here for table font size change to work
+    font-size: 13px;
+  }
+
+}
+
+// Inside dashboard START
+
+.dashboard-component:not(.dashboard-component-filled-in) {
+
+  .g-filter-settings-big-left-btn {
+    display: none;
+  }
+
+  .g-filter-left-part {
+    flex-basis: 52px;
+  }
+
+  .icon-buttons {
+    display: none;
+  }
+
+}
+
+// Inside dashboard END
+
+// Must be at the bottom
+.entity-viewer-holder {
+  .g-wrapper {
+    .g-row {
+
+      .border-right-transparent {
+        border-right: transparent;
+      }
+
+      .border-bottom-transparent {
+        border-bottom: transparent;
+      }
+
+    }
+  }
+}
+
+
+.column-manual-sort-icon {
+  width: 10px;
+  color: #f05a22;
+  display: inline-block;
+  //margin: 0 4px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 8px;
+  border: 1px solid #f05a22;
+  border-radius: 50%;
+  padding: 2px;
 }

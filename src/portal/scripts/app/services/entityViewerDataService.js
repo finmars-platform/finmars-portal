@@ -1498,6 +1498,17 @@
 
 		}
 
+        // MATERIAL DESIGN ENTITY VIEWER LOGIC
+
+        function setSelectedGroups(groups) {
+		    data.selectedGroups = groups
+        }
+
+        function getSelectedGroups(){
+            return data.selectedGroups || [];
+        }
+
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1739,7 +1750,10 @@
                 getColumnsTextAlign: getColumnsTextAlign,
                 setReportDateFromDashboardProp: setReportDateFromDashboardProp,
                 isReportDateFromDashboard: isReportDateFromDashboard
-            }
+            },
+
+            getSelectedGroups: getSelectedGroups,
+            setSelectedGroups: setSelectedGroups
 
         }
     }
