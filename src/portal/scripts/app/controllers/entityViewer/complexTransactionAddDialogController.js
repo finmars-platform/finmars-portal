@@ -562,7 +562,8 @@
 
                     }
 
-                }); */
+                });
+
 				sharedLogicHelper.processTabsErrors(errors, vm.tabsWithErrors, vm.errorFieldsList);
 
                 vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
@@ -577,9 +578,11 @@
                             errorsList: errors
                         }
                     }
-                })
+                }) */
 
-            }
+				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
+
+			}
 
             else {
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);

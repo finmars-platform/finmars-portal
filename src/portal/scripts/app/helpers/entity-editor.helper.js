@@ -2,6 +2,7 @@
 
     var metaService = require('../services/metaService');
     var evHelperService = require('../services/entityViewerHelperService');
+	var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 
     'use strict';
 
@@ -1042,10 +1043,94 @@
     };
 
 	/**
+	 * Highlight errors on the form
+	 *
+	 * @param errors {Array.<Object>} - data for dialog with validator results
+	 * @param evEditorDataService {Object} - entityViewerEditorDataService
+	 * @param evEditorEventService {Object} - entityViewerEditorEventService
+	 * @param $mdDialog {Object}
+	 * @param $event {Object} - event object
+	 */
+	const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event) {
+
+		const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+
+		let tabsWithErrors = evEditorDataService.getTabsWithErrors();
+		let formErrorsList = evEditorDataService.getFormErrorsList();
+
+		errors.forEach(function (errorObj) {
+
+			if (errorObj.locationData &&
+				['user_tab', 'system_tab'].includes(errorObj.locationData.type)) {
+
+				const tabName = errorObj.locationData.name.toLowerCase();
+				const tabType = errorObj.locationData.type; // system_tab || user_tab
+
+				let tabIsNotMarked = false;
+
+				if (!tabsWithErrors[tabType].hasOwnProperty(tabName)) {
+
+					tabsWithErrors[tabType][tabName] = [errorObj.key];
+					tabIsNotMarked = true;
+
+				} else if (!tabsWithErrors[tabType][tabName].includes(errorObj.key)) {
+
+					tabsWithErrors[tabType][tabName].push(errorObj.key);
+					tabIsNotMarked = true;
+
+				}
+
+				if (tabIsNotMarked) {
+
+					if (!formErrorsList.includes(errorObj.key)) { // component can be in multiple tabs (e.g. maturity_date) but formErrorsList should contain only one key
+
+						formErrorsList.push(errorObj.key);
+
+					}
+
+					if (tabType === 'user_tab') {
+
+						const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
+						const tabNameElem = document.querySelector(selectorString);
+
+						if (tabNameElem) tabNameElem.classList.add('error-tab');
+
+					}
+
+					else if (tabType === 'system_tab') {
+						entityTabsMenuBtn.classList.add('error-tab');
+					}
+
+				}
+
+			}
+
+		});
+
+		evEditorDataService.setTabsWithErrors(tabsWithErrors);
+		evEditorDataService.setFormErrorsList(formErrorsList);
+
+		evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
+
+		$mdDialog.show({
+			controller: 'EvAddEditValidationDialogController as vm',
+			templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+			targetEvent: $event,
+			multiple: true,
+			locals: {
+				data: {
+					errorsList: errors
+				}
+			}
+		});
+
+	};
+
+	/**
 	 *
 	 * @param errorKey {string} - name of property inside entity object
 	 * @param formErrorsList {Array.<string>} - list of error keys
-	 * @param tabsWithErrors {{entity_tab: Object, user_tab: Object}} - map of tabs with errors
+	 * @param tabsWithErrors {{system_tab: Object, user_tab: Object}} - map of tabs with errors
 	 */
     var clearEntityFormError = function (errorKey, formErrorsList, tabsWithErrors) {
 
@@ -1081,16 +1166,13 @@
 							if (tabNameElem) tabNameElem.classList.remove('error-tab');
 
 						}
-
 						else if (tabType === 'system_tab' && !Object.keys(tabs).length) {
 
 							const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
 							entityTabsMenuBtn.classList.remove('error-tab');
 
-
 						}
-
 
 					}
 
@@ -1138,7 +1220,6 @@
 				} else if (entityType === 'instrument-type' && errorKey === 'events') {
 					// validateInstrumentTypeEvents(entity, errors);
 				}
-
 				else { // validate component-field
 
 					var eAttrsToCheck = [];
@@ -1194,13 +1275,10 @@
 				}
 
 				if (!errors.length) { // if no errors left, remove marking from tab
-
 					clearEntityFormError(errorKey, formErrorsList, tabsWithErrors);
-
 				}
 
 			}
-
             else { // register error when it appears inside of tab with errors
 
                 var fieldLocation = getLocationOfAttribute(errorKey, tabs, [], entityType);
@@ -1259,6 +1337,9 @@
             }
 
         }
+
+		evEditorDataService.setFormErrorsList(formErrorsList);
+		evEditorDataService.setTabsWithErrors(tabsWithErrors);
 
     };
 
@@ -1643,6 +1724,7 @@
         validateEntityFields: validateEntityFields,
         validateComplexTransaction: validateComplexTransaction,
 		validateEntity: validateEntity,
+		processTabsErrors: processTabsErrors,
 
         checkTabsForErrorFields: checkTabsForErrorFields,
 
