@@ -6,10 +6,9 @@
     'use strict';
 
     var twoFactorService = require('../../services/twoFactorServce');
-    var usersService = require('../../services/usersService');
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, data, authorizerService) {
 
         var vm = this;
 
@@ -86,7 +85,7 @@
 
         vm.getUser = function () {
 
-            authorizerService.getByKey(0).then(function (data) {
+            authorizerService.getUserByKey(0).then(function (data) {
                 vm.user = data;
 
                 vm.generateToken();

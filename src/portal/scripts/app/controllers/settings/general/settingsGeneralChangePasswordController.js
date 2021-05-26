@@ -3,18 +3,14 @@
  */
 (function () {
 
-    var logService = require('../../../../../../core/services/logService');
-
     var timeZonesService = require('../../../services/timeZonesService');
 
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('SettingsGeneralChangePassowrdController', 'initialized');
+    module.exports = function ($scope, $mdDialog, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.readyStatus = {processing: false, finished: false};
 
         vm.timeZones = timeZonesService.getList();

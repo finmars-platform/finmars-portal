@@ -1,3 +1,7 @@
+'use strict';
+
+window.base_api_url = '';
+
 const resolve = () => {
 
 	if ('__PROJECT_ENV__') {
@@ -13,9 +17,7 @@ const resolve = () => {
 };
 
 const getAuthorizerUrl = () => {
-
 	return '__AUTHORIZER_URL__'
-
 }
 
 const setMasterUserPrefix = function (_prefix) {

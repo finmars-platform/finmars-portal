@@ -8,7 +8,7 @@
     var fieldResolverService = require('../../services/fieldResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -37,11 +37,11 @@
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data)
+    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data, usersService)
     {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.entityType = entityType;

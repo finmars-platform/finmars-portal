@@ -3,18 +3,14 @@
  */
 (function () {
 
-    var logService = require('../../../../../../core/services/logService');
-
     var timeZonesService = require('../../../services/timeZonesService');
 
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
 
-    module.exports = function ($scope) {
-
-        logService.controller('SettingsGeneralProfileController', 'initialized');
+    module.exports = function ($scope, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.readyStatus = {member: false};
 
         vm.timeZones = timeZonesService.getList();

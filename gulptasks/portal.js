@@ -9,18 +9,18 @@
     var uglify = require('gulp-uglify');
     // var stripDebug = require('gulp-strip-debug');
     var concat = require('gulp-concat');
-    // var minifyCSS = require('gulp-minify-css');
-    var minifyHTML = require('gulp-minify-html');
-    /* var less = require('gulp-less');
-    var postcss = require('gulp-postcss');
-    var autoprefixer = require('autoprefixer');
-    var rename = require('gulp-rename'); */
+	/* var minifyCSS = require('gulp-minify-css');
+	var minifyHTML = require('gulp-minify-html');
+	var less = require('gulp-less');
+	var postcss = require('gulp-postcss');
+	var autoprefixer = require('autoprefixer');
+	var rename = require('gulp-rename'); */
     var livereload = require('gulp-livereload');
     var htmlmin = require('gulp-htmlmin');
     var ngHtml2Js = require('gulp-ng-html2js');
     /* var gulpif = require('gulp-if');
     var minimist = require('minimist'); */
-    var replace = require('gulp-replace');
+	var replace = require('gulp-replace');
 
     //js
     /* var plumber = require('gulp-plumber');
@@ -29,10 +29,9 @@
     var buffer = require('vinyl-buffer');
     var browserify = require('browserify'); */
 
-    var commonTasks = require('./common');
-    var shellTasks = require('./shell');
-    var forumTasks = require('./forum');
-    var profileTasks = require('./profile');
+    var commonTasks = require('./common.js');
+    // var forumTasks = require('./forum');
+    // var profileTasks = require('./profile.js');
 
     /* var PROJECT_ENV = process.env.PROJECT_ENV || 'local';
     var API_HOST = process.env.API_HOST || 'http://0.0.0.0:8000';
@@ -40,32 +39,14 @@
     var WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
     var HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || ''; */
 
-    var appName = 'portal';
-
-    gulp.task('shell-js-min', function () {
-    	return shellTasks.minAllScripts();
-	});
+    var appName = 'portal'; // in case of change, also change 'portal-less-to-css-min' inside of others gulptasks (shell.js, profile.js)
 
     gulp.task(appName + '-less-to-css-min', function () {
-
-        var pathToLess = ['src/' + appName + '/content/less/imports.less'];
-
-        /* return gulp.src(pathToLess)
-            .pipe(less())
-            .on('error', function (err) {
-                console.error('Error in Browserify: \n', err.message);
-                this.emit('end');
-            })
-            .pipe(plumber())
-            .pipe(postcss([autoprefixer({browsers: ['last 2 versions']})]))
-            .pipe(minifyCSS())
-            .pipe(rename('main.min.css'))
-            .pipe(gulp.dest('dist/' + appName + '/content/css/')); */
+		var pathToLess = ['src/' + appName + '/content/less/imports.less'];
 		return commonTasks.lessToCssMin(pathToLess, appName);
-
     });
 
-    /*gulp.task(appName + '-html-min', function () {
+    /* gulp.task(appName + '-html-min', function () {
 
         var pathToHTML = ['src/!*.html'];
 
@@ -74,7 +55,10 @@
             .pipe(minifyHTML())
             .pipe(gulp.dest('dist/'));
 
-    });*/
+    }); */
+	gulp.task('main-html-min', function () {
+		return commonTasks.mainHtmlMin();
+	});
 
     gulp.task(appName + '-json-min', function () {
 
@@ -84,6 +68,15 @@
             .pipe(gulp.dest('dist/' + appName + '/content/json/'));
 
     });
+
+	function left_pad(num) {
+
+		if (parseInt(num, 10) < 10) {
+			return '0' + num
+		}
+
+		return num;
+	}
 
     gulp.task(appName + '-HTML-to-JS', function () { // gulp tasks portal-HTML-to-JS
 
@@ -116,22 +109,13 @@
 			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
     });
 
-    gulp.task('portal-forum-HTML-to-JS', function () {
+    /* gulp.task('portal-forum-HTML-to-JS', function () {
         return forumTasks.forumHtmlToJs();
     });
 
     gulp.task('portal-profile-HTML-to-JS', function () {
         return profileTasks.profileHtmlToJs();
-    });
-
-    function left_pad(num) {
-
-        if (parseInt(num, 10) < 10) {
-            return '0' + num
-        }
-
-        return num;
-    }
+    }); */
 
     // gulp.task(appName + '-js-min', gulp.series(appName + '-HTML-to-JS', function () {
 	/* JavaScript minification starts from shell
@@ -197,8 +181,9 @@
 
     }); */
 
-    // gulp.task(appName + '-js-min-All', gulp.series(appName + '-HTML-to-JS', appName + '-js-min'));
-	gulp.task(appName + '-html-js-min', gulp.series(appName + '-HTML-to-JS', 'shell-js-min'));
+	gulp.task('js-min', function () {
+		return commonTasks.minAllScripts();
+	});
 
     gulp.task(appName + '-img-copy', function () {
 
@@ -219,25 +204,30 @@
     });
 
     gulp.task(appName + '-watch-All', function () {
-        /* livereload.listen();
-        gulp.watch('src/' + appName + '/!**!/!*.less', gulp.series(appName + '-less-to-css-min'));
-        gulp.watch('src/' + appName + '/!**!/!*.js', gulp.series(appName + '-js-min'));
-        gulp.watch('src/' + appName + '/!**!/!*.html', gulp.series(appName + '-HTML-to-JS'));
-        gulp.watch('src/index.html', gulp.series(appName + '-html-min')); */
-		return commonTasks.initWatcher(appName);
-    });
 
-    gulp.task('forum-watch-All', function () {
+    	livereload.listen();
+
         gulp.watch('src/' + appName + '/**/*.less', gulp.series(appName + '-less-to-css-min'));
-        gulp.watch('src/forum/**/*.js', gulp.series(appName + '-js-min'));
-        gulp.watch('src/forum/**/*.html', gulp.series('portal-forum-HTML-to-JS', appName + '-js-min'));
+        gulp.watch(['src/' + appName + '/**/*.js', '!src/' + appName + '/**/templates.min.js'], gulp.series('js-min'));
+        gulp.watch('src/' + appName + '/**/*.html', gulp.series(appName + '-HTML-to-JS'));
+        gulp.watch('src/index.html', gulp.series('main-html-min'));
+
     });
 
-    gulp.task(appName + '-min-All', gulp.parallel(
+    /* gulp.task('forum-watch-All', function () {
+        gulp.watch('src/' + appName + '/!**!/!*.less', gulp.series(appName + '-less-to-css-min'));
+        gulp.watch('src/forum/!**!/!*.js', gulp.series(appName + '-js-min'));
+        gulp.watch('src/forum/!**!/!*.html', gulp.series('portal-forum-HTML-to-JS', appName + '-js-min'));
+    }); */
+
+     gulp.task(appName + '-min-All', gulp.parallel(
         // appName + '-html-min',
+		'main-html-min',
         // appName + '-HTML-to-JS',
 		// appName + '-js-min-All',
-		appName + '-html-js-min',
+		// appName + '-html-js-min',
+		// gulp.series(appName + '-HTML-to-JS', 'js-min'),
+		appName + '-HTML-to-JS',
         appName + '-less-to-css-min',
         // appName + '-js-min',
         appName + '-json-min',

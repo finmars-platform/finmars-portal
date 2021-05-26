@@ -8,7 +8,7 @@
     var entityResolverService = require('../../services/entityResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -44,14 +44,13 @@
         {id: 'user_code', name: 'User Code'},
     ];
 
-    module.exports = function entityViewerAddDialogController(
-        $scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
-    ) {
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, usersService) {
 
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
 
         var vm = this;
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+		console.log("testing usersService injection", usersService);
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 

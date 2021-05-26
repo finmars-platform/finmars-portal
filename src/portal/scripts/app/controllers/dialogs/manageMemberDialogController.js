@@ -5,9 +5,9 @@
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
 
-    var userService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog, memberId) {
+    module.exports = function ($scope, $mdDialog, memberId, usersService) {
 
         var vm = this;
 
@@ -24,7 +24,7 @@
 
         vm.getData = function () {
 
-            userService.getCurrentMasterUser().then(function (data) {
+			usersService.getCurrentMasterUser().then(function (data) {
 
                 vm.master_user = data;
 
@@ -62,8 +62,7 @@
 
                 });
 
-
-            })
+            });
 
         };
 

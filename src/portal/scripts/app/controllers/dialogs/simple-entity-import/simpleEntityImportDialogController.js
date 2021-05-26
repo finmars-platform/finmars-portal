@@ -12,14 +12,14 @@
 
 
     var baseUrlService = require('../../../services/baseUrlService');
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function simpleEntityImportDialogController($scope, $mdDialog, data) {
+    module.exports = function simpleEntityImportDialogController($scope, $mdDialog, data, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.readyStatus = {
             schemes: false,
             processing: false,

@@ -1511,7 +1511,7 @@ mdp-time-picker.custom-time-picker {
 md-toolbar.header {
   position: relative;
   z-index: 98;
-  padding-left: 160px;
+  // padding-left: 160px;
   //background-color: #4c334d;
   //background-color: #000;
   background: #f2f2f2;
@@ -1519,6 +1519,14 @@ md-toolbar.header {
   height: 52px;
   max-height: 52px;
   box-sizing: border-box;
+}
+
+.portal-header {
+
+  md-toolbar.header {
+    padding-left: 160px;
+  }
+
 }
 
 @media screen and (max-width: 740px) {
@@ -3450,6 +3458,38 @@ button.missing-prices-warning-button.md-button {
     position: absolute;
     top: 0;
     right: 0;
+  }
+
+}
+
+.auth-page {
+
+  .auth-form {
+    width: 300px;
+    height: 260px;
+    box-shadow: 0 7px 8px -4px rgba(0, 0, 0, .2), 0 13px 19px 2px rgba(0, 0, 0, .14), 0 5px 24px 4px rgba(0, 0, 0, .12);
+
+    .auth-form-header {
+      height: 64px;
+      padding: 20px 16px;
+      color: @gray;
+      box-sizing: border-box;
+
+      h3 {
+        padding: 0;
+        margin: 0;
+        font-size: 20px;
+      }
+    }
+
+    .auth-form-content {
+      padding: 0 24px;
+      margin-top: 24px;
+    }
+
+    .auth-form-footer {
+      padding-bottom: 12px;
+    }
   }
 
 }

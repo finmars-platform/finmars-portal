@@ -8,19 +8,16 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
     var pricingPolicyService = require('../../../services/pricingPolicyService');
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
 
     var fieldResolverService = require('../../../services/fieldResolverService');
 
-    module.exports = function ($scope) {
-
-        logService.controller('ManualPricingFormulasTabController', 'initialized');
+    module.exports = function ($scope, usersService) {
 
         var vm = this;
-
-        vm.readyStatus = {content: false};
+		console.log("testing usersService injection", usersService);
+		vm.readyStatus = {content: false};
 
         vm.entity = $scope.$parent.vm.entity;
 

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-(function () {
+export default (function () {
 
     var app = angular.module('finmars.forum', []);
 
@@ -20,8 +20,8 @@
     app.controller('ForumThreadGroupDialogController', ['$scope', '$mdDialog', require('./app/controllers/forumThreadGroupDialogController')])
     app.controller('ForumThreadListDialogController', ['$scope', '$mdDialog', require('./app/controllers/forumThreadListDialogController')]);
     app.controller('ForumWriteMessageDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/forumWriteMessageDialogController')]);
-    app.controller('EditThreadDialogController', ['$scope', '$mdDialog', 'threadId', require('./app/controllers/dialogs/editThreadDialogController')]);
-    app.controller('EditThreadsGroupsDialogController', ['$scope', '$mdDialog', 'threadsGroupId', require('./app/controllers/dialogs/editThreadsGroupsDialogController')]);
+    app.controller('EditThreadDialogController', ['$scope', '$mdDialog', 'threadId', 'usersService', require('./app/controllers/dialogs/editThreadDialogController')]);
+    app.controller('EditThreadsGroupsDialogController', ['$scope', '$mdDialog', 'threadsGroupId', 'usersService', require('./app/controllers/dialogs/editThreadsGroupsDialogController')]);
 
     app.directive('hideByTags', [require('./app/directives/hideByTagsDirective')]);
     app.directive('bindForumQuote', [require('./app/directives/bindForumQuoteDirective')]);
@@ -50,4 +50,4 @@
         };
     });
 
-}());
+})();

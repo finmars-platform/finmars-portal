@@ -1,5 +1,8 @@
 /**
  * Created by szhitenev on 15.06.2016.
+ *
+ * Deprecated. Use shell/scripts/app/services/xhrService.js instead
+ *
  */
 
 (function () {
@@ -89,5 +92,4 @@
         fetch: fetch
     }
 
-
-}());
+})();

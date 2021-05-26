@@ -6,7 +6,6 @@
     'use strict';
 
     var systemService = require('../services/systemService');
-    var usersService = require('../services/usersService');
     var authorizerService = require('../services/authorizerService');
 
     // TODO resolve service from profile module

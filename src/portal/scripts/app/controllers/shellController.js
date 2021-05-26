@@ -8,7 +8,7 @@
     var cookiesService = require('../../../../core/services/cookieService');
     var localStorageService = require('../../../../core/services/localStorageService');
 
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
     // var authorizerService = require('../../../../shell/scripts/app/services/authorizerService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var notificationsService = require('../services/notificationsService');
@@ -24,7 +24,7 @@
         'LOGOUT': 'LOGOUT'
     };
 
-    module.exports = function ($scope, $state, $stateParams, $rootScope, $mdDialog, $transitions) {
+    module.exports = function ($scope, $state, $stateParams, $rootScope, $mdDialog, $transitions, authorizerService, usersService) {
 
         var vm = this;
 
@@ -172,7 +172,6 @@
                     getMember()
 
                     vm.getMasterUsersList();
-
 
                 });
             };

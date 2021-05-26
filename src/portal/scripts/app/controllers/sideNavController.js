@@ -6,12 +6,13 @@
     'use strict';
 
     var metaService = require('../services/metaService');
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
     var uiService = require('../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, $transition) {
+    module.exports = function ($scope, $mdDialog, $transition, usersService) {
 
         var vm = this;
+		console.log("testing usersService injection", usersService);
         vm.sections = [];
 
         vm.readyStatus = {

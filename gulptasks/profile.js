@@ -6,6 +6,7 @@
     'use strict';
 
     const gulp = require('gulp');
+    const livereload = require('gulp-livereload');
     /* var uglify = require('gulp-uglify');
     var concat = require('gulp-concat');
     var less = require('gulp-less');
@@ -21,10 +22,9 @@
     var buffer = require('vinyl-buffer');
     var browserify = require('browserify'); */
 
-    var commonTasks = require('./common');
+    var commonTasks = require('./common.js');
 
     var appName = 'profile';
-
     /* function profileHtmlToJs () {
         // console.log('Executing task index-HTML-templateCache...');
 
@@ -44,19 +44,33 @@
             .pipe(gulp.dest('src/' + appName + '/scripts/'))
 			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
     } */
-	function profileHtmlToJs () {
-		var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
-		var angularModuleName = 'finmars.' + appName;
-		return commonTasks.htmlToJs(pathToHtml, appName, angularModuleName);
-	}
-
-    gulp.task(appName + '-HTML-to-JS', () => {
-    	return profileHtmlToJs();
+	gulp.task('portal-less-to-css-min', function () {
+		var pathToLess = ['src/portal/content/less/imports.less'];
+		return commonTasks.lessToCssMin(pathToLess, appName);
 	});
 
-    module.exports = {
-		profileHtmlToJs: profileHtmlToJs
-    }
+    gulp.task(appName + '-HTML-to-JS', () => {
 
-}());
+    	var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
+		var angularModuleName = 'finmars.' + appName;
+
+		return commonTasks.htmlToJs(pathToHtml, appName, angularModuleName);
+
+	});
+
+	gulp.task('js-min', function () {
+		return commonTasks.minAllScripts();
+	});
+
+	gulp.task(appName + '-watch-All', () => {
+
+		livereload.listen();
+
+		gulp.watch('src/portal/**/*.less', gulp.series('portal-less-to-css-min'));
+		gulp.watch('src/' + appName + '/**/*.js', gulp.series('js-min'));
+		gulp.watch('src/' + appName + '/**/*.html', gulp.series(appName + '-HTML-to-JS'));
+
+	});
+
+})();
 

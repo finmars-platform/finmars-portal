@@ -7,18 +7,18 @@
 
     var metaContentTypesService = require('../../../services/metaContentTypesService');
     var metaService = require('../../../services/metaService');
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
     var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
     var usersGroupService = require('../../../services/usersGroupService');
     var configurationImportService = require('../../../services/configuration-import/configurationImportService');
     var mappingsImportService = require('../../../services/mappings-import/mappingsImportService');
 
-    module.exports = function configurationImportDialogController($scope, $mdDialog, data) {
+    module.exports = function configurationImportDialogController($scope, $mdDialog, data, usersService) {
 
         console.log("file", data.file);
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.file = data.file;
         vm.rawFile = data.rawFile;
 
