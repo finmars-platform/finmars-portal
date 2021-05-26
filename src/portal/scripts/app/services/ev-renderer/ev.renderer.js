@@ -33,9 +33,9 @@
                 case 'placeholder_object':
                     renderedRow = placeholderRender.render(evDataService, item, columns);
                     break;
-                case 'group':
-                    renderedRow = groupRender.render(evDataService, item, groups);
-                    break;
+                // case 'group':
+                //     renderedRow = groupRender.render(evDataService, item, groups);
+                //     break;
                 case 'object':
                     renderedRow = objectRender.render(evDataService, item, columns, currentMember, viewContext, verticalAdditions);
                     break;

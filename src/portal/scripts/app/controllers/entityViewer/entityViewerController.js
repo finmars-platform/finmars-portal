@@ -992,6 +992,8 @@
                 vm.entityViewerDataService.setCurrentMember(vm.currentMember);
                 vm.entityViewerDataService.setVirtualScrollStep(500);
 
+                vm.entityViewerDataService.setRowHeight(36);
+
                 vm.downloadAttributes();
 
                 vm.entityViewerDataService.setRootEntityViewer(true);

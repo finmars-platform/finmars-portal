@@ -833,46 +833,46 @@
 
         var menuElemRect = menuElem.getBoundingClientRect();
         // "-24" to create more space between mouse and popup borders
-		var popupTop = menuElemRect.top - 24;
+        var popupTop = menuElemRect.top - 24;
         popup.style.left = (menuElemRect.left - 24) + "px"
 
-		var bodyHeight = document.body.clientHeight;
+        var bodyHeight = document.body.clientHeight;
 
         if (bodyHeight < popupTop + popupHeight) {
 
             popup.style.bottom = 0;
 
         } else {
-			popup.style.top = popupTop + 'px'
-		}
+            popup.style.top = popupTop + 'px'
+        }
 
     };
 
     var customizePopup = function (popup, objectId) {
 
-    	popup.id = 'dropdown-' + objectId;
-		popup.classList.add('ev-dropdown', 'fade-in', 'evDropdown');
+        popup.id = 'dropdown-' + objectId;
+        popup.classList.add('ev-dropdown', 'fade-in', 'evDropdown');
 
-		popup.style.position = 'absolute';
+        popup.style.position = 'absolute';
 
-		return popup;
+        return popup;
 
-	};
+    };
 
-	/**
-	 * Change row before opening context menu for it
-	 *
-	 * @param objectId {number} - id of row of ev / rv table
-	 * @param parentGroupHashId {number} - id of parent group of row of ev / rv table
-	 * @param evDataService {Object} - entityViewerDataService
-	 * @param isReport {Boolean}
-	 * @returns {HTMLDivElement} - HTML element for context menu of row
-	 */
+    /**
+     * Change row before opening context menu for it
+     *
+     * @param objectId {number} - id of row of ev / rv table
+     * @param parentGroupHashId {number} - id of parent group of row of ev / rv table
+     * @param evDataService {Object} - entityViewerDataService
+     * @param isReport {Boolean}
+     * @returns {HTMLDivElement} - HTML element for context menu of row
+     */
     var prepareRowAndGetPopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
 
         var popup = document.createElement('div');
-		// Victor 2021.02.01 #75 On right mouse click row don't need selected
-		/* if (isReport) {
+        // Victor 2021.02.01 #75 On right mouse click row don't need selected
+        /* if (isReport) {
 
             var objects = evDataService.getObjects();
 
@@ -886,19 +886,19 @@
 
         }*/
 
-		var obj = getObject(objectId, parentGroupHashId, evDataService);
+        var obj = getObject(objectId, parentGroupHashId, evDataService);
 
-		if (obj) {
+        if (obj) {
 
-			// obj.___is_activated = true;
-			obj.___context_menu_is_opened = true;
-			/*if (isReport) {
-				obj.___context_menu_opened = true;
-			}*/
+            // obj.___is_activated = true;
+            obj.___context_menu_is_opened = true;
+            /*if (isReport) {
+                obj.___context_menu_opened = true;
+            }*/
 
-			evDataService.setObject(obj);
+            evDataService.setObject(obj);
 
-		}
+        }
 
         popup = customizePopup(popup);
 
@@ -906,19 +906,19 @@
 
     };
 
-	/**
-	 *
-	 * @param subtotalId {number}
-	 * @param type {string} - type or subtype of subtotal. Can be 'line' or 'area'
-	 * @param parentGroupHashId {number}
-	 * @param evDataService {Object}
-	 * @returns {HTMLDivElement} - html for context menu popup
-	 */
-	var prepareSubtotalAndGetPopupMenu = function (subtotalId, type, parentGroupHashId, evDataService) {
+    /**
+     *
+     * @param subtotalId {number}
+     * @param type {string} - type or subtype of subtotal. Can be 'line' or 'area'
+     * @param parentGroupHashId {number}
+     * @param evDataService {Object}
+     * @returns {HTMLDivElement} - html for context menu popup
+     */
+    var prepareSubtotalAndGetPopupMenu = function (subtotalId, type, parentGroupHashId, evDataService) {
 
-		var popup = document.createElement('div');
-		// Victor 2021.02.01 #75 On right mouse click row don't need selected
-		/* if (isReport) {
+        var popup = document.createElement('div');
+        // Victor 2021.02.01 #75 On right mouse click row don't need selected
+        /* if (isReport) {
 
             var objects = evDataService.getObjects();
 
@@ -932,40 +932,40 @@
 
         }*/
 
-		var parent = Object.assign({}, evDataService.getData(parentGroupHashId));
-		// var subtotalType = obj.___subtotal_subtype ? obj.___subtotal_subtype : obj.___subtotal_type;
+        var parent = Object.assign({}, evDataService.getData(parentGroupHashId));
+        // var subtotalType = obj.___subtotal_subtype ? obj.___subtotal_subtype : obj.___subtotal_type;
 
-		if (type === 'area') {
-			parent.___area_subtotal_context_menu_is_opened = true;
+        if (type === 'area') {
+            parent.___area_subtotal_context_menu_is_opened = true;
 
-		} else if (type === 'line') {
-			parent.___line_subtotal_context_menu_is_opened = true;
-		}
+        } else if (type === 'line') {
+            parent.___line_subtotal_context_menu_is_opened = true;
+        }
 
-		evDataService.setData(parent);
+        evDataService.setData(parent);
 
-		popup = customizePopup(popup, subtotalId);
+        popup = customizePopup(popup, subtotalId);
 
-		return popup;
+        return popup;
 
-	};
+    };
 
     var preparePopupMenuType2 = function (objectId, classesList) {
 
-    	var popup = document.createElement('div');
+        var popup = document.createElement('div');
 
-		popup.id = 'dropdown-' + objectId;
+        popup.id = 'dropdown-' + objectId;
 
-		classesList = classesList || [];
-		classesList = classesList.concat(["fade-in", "evDropdown"]);
+        classesList = classesList || [];
+        classesList = classesList.concat(["fade-in", "evDropdown"]);
 
-		popup.classList.add(...classesList);
+        popup.classList.add(...classesList);
 
-		popup.style.position = 'absolute';
+        popup.style.position = 'absolute';
 
-		return popup;
+        return popup;
 
-	};
+    };
 
     var separateNotGroupingColumns = function (columns, groups) {
 
@@ -1011,31 +1011,75 @@
 
     var clearLastActiveObject = function (evDataService) {
 
-    	var objects = evDataService.getObjects();
+        var objects = evDataService.getObjects();
 
-		objects.forEach(function (item) {
+        objects.forEach(function (item) {
 
-			item.___is_last_activated = false;
-			evDataService.setObject(item);
+            item.___is_last_activated = false;
+            evDataService.setObject(item);
 
-		});
+        });
 
-	};
+    };
 
-	var clearObjectActiveState = function (evDataService) {
+    var clearObjectActiveState = function (evDataService) {
 
-		var objects = evDataService.getObjects();
+        var objects = evDataService.getObjects();
 
-		objects.forEach(function (item) {
+        objects.forEach(function (item) {
 
-			item.___is_activated = false;
-			item.___is_last_activated = false;
+            item.___is_activated = false;
+            item.___is_last_activated = false;
 
-			evDataService.setObject(item);
+            evDataService.setObject(item);
 
-		});
+        });
 
-	};
+    };
+
+    // MATERIAL DESIGN ENTITY VIEWER LOGIC
+
+    var getObjectsFromSelectedGroups = function (evDataService) {
+
+        var result = [];
+
+        var selectedGroups = evDataService.getSelectedGroups();
+
+        console.log('selectedGroups', selectedGroups);
+
+        selectedGroups.forEach(function (group){
+
+            var data = evDataService.getData(group.___id)
+
+            data.results.forEach(function (item){
+
+                if (item.___type === 'object') {
+                    result.push(item);
+                }
+
+            })
+
+        })
+
+        return result;
+
+    }
+
+    var getGroupsAsTree = function (evDataService) {
+
+        var data = JSON.parse(JSON.stringify(evDataService.getData()));
+        var rootGroup = JSON.parse(JSON.stringify(evDataService.getRootGroupData()));
+
+        var tree = utilsHelper.convertToTree(data, rootGroup);
+
+        console.log('getFlatStructure.data', data);
+        console.log('getFlatStructure.rootGroup', rootGroup);
+        console.log('getFlatStructure.tree', tree);
+
+
+        return tree;
+
+    };
 
     module.exports = {
 
@@ -1068,12 +1112,12 @@
 
         calculatePageFromOffset: calculatePageFromOffset,
 
-		prepareRowAndGetPopupMenu: prepareRowAndGetPopupMenu,
-		prepareSubtotalAndGetPopupMenu: prepareSubtotalAndGetPopupMenu,
+        prepareRowAndGetPopupMenu: prepareRowAndGetPopupMenu,
+        prepareSubtotalAndGetPopupMenu: prepareSubtotalAndGetPopupMenu,
 
-		preparePopupMenuType2: preparePopupMenuType2,
+        preparePopupMenuType2: preparePopupMenuType2,
         calculateMenuPosition: calculateMenuPosition,
-		calculateStaticMenuPosition: calculateStaticMenuPosition,
+        calculateStaticMenuPosition: calculateStaticMenuPosition,
 
         setDefaultGroups: setDefaultGroups,
         setDefaultObjects: setDefaultObjects,
@@ -1089,8 +1133,12 @@
         separateNotGroupingColumns: separateNotGroupingColumns,
         importGroupsStylesFromColumns: importGroupsStylesFromColumns,
 
-		clearLastActiveObject: clearLastActiveObject,
-		clearObjectActiveState: clearObjectActiveState
+        clearLastActiveObject: clearLastActiveObject,
+        clearObjectActiveState: clearObjectActiveState,
+
+
+        getObjectsFromSelectedGroups: getObjectsFromSelectedGroups,
+        getGroupsAsTree: getGroupsAsTree
     }
 
 
