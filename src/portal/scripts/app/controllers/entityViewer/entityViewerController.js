@@ -10,7 +10,7 @@
         var evEvents = require('../../services/entityViewerEvents');
         var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
-        var usersService = require('../../services/usersService');
+        // var usersService = require('../../services/usersService');
 
         var complexTransactionService = require('../../services/transaction/complexTransactionService');
         var instrumentService = require('../../services/instrumentService');
@@ -27,10 +27,10 @@
         var transactionTypeService = require('../../services/transactionTypeService');
 
 
-        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService) {
+        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService) {
 
             var vm = this;
-
+			console.log("testing usersService injection", usersService);
             var doNotCheckLayoutChanges = false;
 
             vm.readyStatus = {
@@ -1076,7 +1076,8 @@
                 });
             };
 
-            var checkLayoutForChanges = function () { // called on attempt to change or reload page
+            var checkLayoutForChanges = function (transition) { // called on attempt to change or reload page
+            	console.log("testing checkLayoutForChanges1", transition, transition.from(), transition.to(), transition.params('to'), );
 
                 return new Promise(function (resolve, reject) {
 

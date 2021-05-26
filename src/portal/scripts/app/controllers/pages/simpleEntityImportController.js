@@ -14,17 +14,17 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
 
     var baseUrlService = require('../../services/baseUrlService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     // var websocketService = require('../../services/websocketService');
 
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function simpleEntityImportController($scope, $mdDialog) {
+    module.exports = function simpleEntityImportController($scope, $mdDialog, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.readyStatus = {
             schemes: false,
             processing: false

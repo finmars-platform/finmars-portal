@@ -5,7 +5,7 @@
 
 'use strict';
 
-export default function middlewareService () {
+export default function () {
 
 	let data = {
 		newEntityViewerLayoutName: false,

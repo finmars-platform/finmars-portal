@@ -1,32 +1,36 @@
-<div class="auth-page flex-center">
+<div class="auth-page height-100 flex-column flex-center">
     <div ng-if="!vm.processing" class="auth-form">
 
-        <h2>Authentication</h2>
+        <div class="auth-form-header">
+            <h3 class="p-r-16 p-l-16">Authentication</h3>
+        </div>
 
-        <div class="p-r-24">
+        <div class="auth-form-content">
 
-            <md-input-container class="width-100">
-                <label for="">Username</label>
-                <input type="text" class="auth-username" data-ng-model="vm.username" data-ng-change="vm.error = false">
-            </md-input-container>
+            <div>
+
+                <md-input-container class="width-100 margin-0">
+                    <label for="">Username</label>
+                    <input type="text" class="auth-username" data-ng-model="vm.username">
+                </md-input-container>
+
+            </div>
+
+            <div>
+                <md-input-container class="width-100 margin-0">
+                    <label for="">Password</label>
+                    <input type="password" class="auth-password" data-ng-model="vm.password">
+                </md-input-container>
+            </div>
+
+            <!--<div data-ng-if="vm.error" class="m-t-8 m-b-8">
+                <div class="color-danger">The username or password that you have entered is incorrect.</div>
+            </div>-->
 
         </div>
 
-        <div class="p-r-24">
-            <md-input-container class="width-100">
-                <label for="">Password</label>
-                <input type="password" class="auth-password" data-ng-model="vm.password" data-ng-change="vm.error = false">
-            </md-input-container>
-        </div>
-
-        <div data-ng-if="vm.error" class="m-t-8 m-b-8" style="padding: 0 10px;">
-
-            <div class="color-danger">The username or password that you have entered is incorrect.</div>
-
-        </div>
-
-        <div class="flex-row flex-c-center">
-            <md-button class="md-raised md-primary" ng-click="vm.logIn">SIGN IN</md-button>
+        <div class="auth-form-footer flex-row flex-c-center">
+            <md-button class="md-raised md-primary" ng-click="vm.logIn($event)">SIGN IN</md-button>
         </div>
 
     </div>

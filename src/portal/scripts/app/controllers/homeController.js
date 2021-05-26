@@ -6,17 +6,18 @@
     'use strict';
 
     var afterLoginEventsService = require('../services/afterLoginEventsService');
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
     var uiService = require('../services/uiService');
 
     var systemMessageService = require('../services/systemMessageService');
     var baseUrlService = require('../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function ($scope, $state, $mdDialog) {
+    module.exports = function ($scope, $state, $mdDialog, usersService) {
 
         var vm = this;
 		console.log("testing home controller initialized");
+		console.log("testing usersService injection", usersService);
         vm.masters = [];
         vm.systemMessages = [];
         vm.currentMasterUser = null;

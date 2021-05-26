@@ -5,10 +5,6 @@
 
     'use strict';
 
-    var timeZonesService = require('../../services/timeZonesService');
-
-    var usersService = require('../../services/usersService');
-
     module.exports = function ($scope, $state) {
 
         var vm = this;

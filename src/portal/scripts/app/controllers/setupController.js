@@ -6,15 +6,15 @@
     'use strict';
 
     var uiService = require('../services/uiService');
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
     var usersGroupService = require('../services/usersGroupService');
 
     var backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $state) {
+    module.exports = function ($scope, $state, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.readyStatus = {content: false, member: false, groups: false};
 
         vm.currentStep = 1;

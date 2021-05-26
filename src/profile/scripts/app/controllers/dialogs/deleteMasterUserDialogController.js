@@ -5,11 +5,9 @@
 
     'use strict';
 
-    var usersService = require('../../services/usersService');
     var authorizerService = require('../../services/authorizerService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
 
     module.exports = function ($scope, $mdDialog, data) {
 

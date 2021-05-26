@@ -15,7 +15,7 @@
     // var middlewareService = require('../../services/middlewareService');
 
     var uiService = require('../../services/uiService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var convertReportHelper = require('../../helpers/converters/convertReportHelper');
     var reportCopyHelper = require('../../helpers/reportCopyHelper');
@@ -38,7 +38,7 @@
 	//</editor-fold>
 
 
-    module.exports = function ($mdDialog, $state, $bigDrawer) {
+    module.exports = function ($mdDialog, $state, $bigDrawer, usersService) {
         return {
             restrict: 'AE',
             scope: {

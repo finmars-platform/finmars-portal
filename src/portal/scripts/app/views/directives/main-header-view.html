@@ -1,0 +1,69 @@
+<md-toolbar class="header">
+
+    <div layout="columns" class="toolbar-wrapper">
+
+        <div class="md-toolbar-tools flex-row flex-basis-60 fc-start fi-center"></div>
+
+        <div class="md-toolbar-tools flex-row flex-basis-40 fc-end fi-center">
+
+            <div class="header-misc" layout="row">
+
+                <a ng-if="currentMasterUser"
+                   class="md-button header-help-btn"
+                   ui-sref="app.home">
+                    <ng-md-icon icon="home" size="24">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Homepage</md-tooltip>
+                    </ng-md-icon>
+                </a>
+
+                <div class="header-masteruser">
+                    <md-menu>
+                        <md-button class="md-button header-account-btn"
+                                   ng-click="$mdOpenMenu($event)"
+                                   aria-label="Account button">
+                                        <span ng-if="scope.currentMasterUser"
+                                              class="header-masteruser-name"
+                                              data-ng-bind="scope.currentMasterUser.name"></span>
+                        </md-button>
+
+                        <md-menu-content>
+                            <md-menu-item data-ng-repeat="master in masters">
+                                <md-button data-ng-click="selectMaster(master)"
+                                           aria-label="Select master">
+                                    <span ng-class="{'text-bold': master.is_current}">{{master.name}}</span>
+                                    <!--<span data-ng-if="master.is_current"><b>{{master.name}}</b></span>
+                                    <span data-ng-if="!master.is_current">{{master.name}}</span>-->
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+
+                </div>
+
+
+                <div class="header-profile">
+                    <md-menu>
+                        <md-button class="md-button header-account-btn" aria-label="Account button"
+                                   ng-click="$mdOpenMenu($event)">
+                            <ng-md-icon icon="account_box" size="24"></ng-md-icon>
+                            <span class="header-profile-name"
+                                  data-ng-bind="userName"></span>
+                        </md-button>
+                        <md-menu-content>
+                            <md-menu-item style="border-bottom: 1px solid #ddd;">
+                                <md-button data-ui-sref="app.profile">
+                                    <b>Profile</b>
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button data-ng-click="logOutMethod()">Log Out</md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</md-toolbar>

@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var usersService = require('../../services/usersService');
     var authorizerService = require('../../services/authorizerService');
 
     module.exports = function ($scope, $mdDialog, data) {

@@ -5,12 +5,12 @@
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
     // var authorizerService = require('../../services/authorizerService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
-    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog, authorizerService) {
+    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog, authorizerService, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.members = [];
         vm.groups = [];
 

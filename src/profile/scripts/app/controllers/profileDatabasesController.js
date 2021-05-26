@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
     var authorizerService = require('../services/authorizerService');
 
     var baseUrlService = require('../services/baseUrlService');
@@ -13,8 +13,7 @@
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
-
-    module.exports = function ($scope, $state, $mdDialog) {
+    module.exports = function ($scope, $state, $mdDialog, usersService) {
 
         var vm = this;
 
@@ -107,7 +106,7 @@
                 portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
                 $state.go('app.home');
-            })
+            });
 
         };
 

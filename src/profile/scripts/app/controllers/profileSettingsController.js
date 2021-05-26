@@ -4,11 +4,9 @@
 (function () {
 
     var timeZonesService = require('../services/timeZonesService');
+    // var authorizerService = require('../services/authorizerService');
 
-    var usersService = require('../services/usersService');
-    var authorizerService = require('../services/authorizerService');
-
-    module.exports = function ($scope) {
+    module.exports = function ($scope, authorizerService) {
 
         var vm = this;
 
@@ -16,10 +14,13 @@
 
         vm.timeZones = timeZonesService.getList();
 
-        authorizerService.getByKey(0).then(function (data) {
-            vm.user = data;
+        authorizerService.getUserByKey(0).then(function (data) {
+
+        	vm.user = data;
             vm.readyStatus.user = true;
+
             $scope.$apply();
+
         });
 
         vm.save = function () {

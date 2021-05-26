@@ -3,13 +3,10 @@
  */
 (function () {
 
-    var timeZonesService = require('../services/timeZonesService');
-
-    var usersService = require('../services/usersService');
-    var authorizerService = require('../services/authorizerService');
+    // var authorizerService = require('../services/authorizerService');
     var twoFactorService = require('../services/twoFactorServce');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, authorizerService) {
 
         var vm = this;
 
@@ -18,7 +15,7 @@
 
         vm.getUser = function () {
 
-            authorizerService.getByKey(0).then(function (data) {
+            authorizerService.getUserByKey(0).then(function (data) {
                 vm.user = data;
                 vm.readyStatus.user = true;
                 $scope.$apply();

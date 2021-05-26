@@ -22,7 +22,7 @@
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var tagService = require('../../services/tagService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
 
@@ -38,10 +38,10 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data) {
+    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.readyStatus = {content: false, entity: true, permissions: true, inputs: false};

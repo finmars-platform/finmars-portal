@@ -11,16 +11,16 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
     var importTransactionService = require('../../services/import/importTransactionService');
 
     var baseUrlService = require('../../services/baseUrlService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     // var websocketService = require('../../services/websocketService');
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function transactionImportController($scope, $mdDialog) {
+    module.exports = function transactionImportController($scope, $mdDialog, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.fileLocal = null;
 
         vm.readyStatus = {

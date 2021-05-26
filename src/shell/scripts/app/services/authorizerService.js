@@ -3,150 +3,185 @@
  */
 // (function () {
 
-    'use strict';
+'use strict';
 
-    import authorizerRepository from '../repositories/authorizerRepository.js';
+import authorizerRepository from '../repositories/authorizerRepository.js';
+/** @module authorizerService */
+export default function (globalDataService) {
 
-    export default function authorizerService () {
+	const login = function (login, password) {
+		return authorizerRepository.login(login, password);
+	};
 
-    	const login = function (login, password) {
-			return authorizerRepository.login(login, password);
-		};
-
-		const tokenLogin = function (login, password) {
-			return authorizerRepository.tokenLogin(login, password);
-		};
-
-
-
-		const logout = function () {
-			return authorizerRepository.logout();
-		};
+	const tokenLogin = function (login, password) {
+		return authorizerRepository.tokenLogin(login, password);
+	};
 
 
-		const getUser = function () {
-			return authorizerRepository.getUser();
+	const logout = function () {
+		return authorizerRepository.logout();
+	};
 
-		};
+	const getUser = function () {
 
-		const ping = function () {
-			return authorizerRepository.ping();
-		};
+		return new Promise ((resolve, reject) => {
 
+			const user = globalDataService.getUser();
 
+			if (user) resolve(user);
 
-		const getList = function () {
-			return authorizerRepository.getList();
-		};
+			authorizerRepository.getUser().then(userData => {
 
-		const getByKey = function (id) {
-			return authorizerRepository.getByKey(id)
-		};
+				globalDataService.setUser(userData);
+				resolve(userData);
 
+			}).catch(error => {
+				globalDataService.setUser(null);
+				reject(error);
+			});
 
+		});
 
+	};
 
-
-		const update = function (id, user) {
-			return authorizerRepository.update(id, user);
-		};
-
-		const patch = function (id, user) {
-			return authorizerRepository.patch(id, user);
-		};
-
-		const deleteByKey = function (id) {
-			return authorizerRepository.deleteByKey(id);
-		};
+	const ping = function () {
+		return authorizerRepository.ping();
+	};
 
 
+	const getUsersList = function () {
+		return authorizerRepository.getUsersList();
+	};
 
-		const createMasterUser = function (user) {
-			return authorizerRepository.createMasterUser(user);
-		};
+	const getUserByKey = function (id) {
+		return authorizerRepository.getUserByKey(id)
+	};
 
-		const getMasterList = function () {
-			return authorizerRepository.getMasterList();
-		};
+	/**
+	 * Updates user.
+	 *
+	 * @memberOf module:authorizerService
+	 *
+	 * @param id {number} - id of user
+	 * @param user {Object} - user data
+	 * @returns {Promise<any>}
+	 */
+	const update = function (id, user) {
+		return authorizerRepository.update(id, user);
+	};
 
-		const getMasterByKey = function (id) {
-			return authorizerRepository.getMasterByKey(id)
-		};
+	/**
+	 * Updates properties of user object.
+	 *
+	 * @memberOf module:authorizerService
+	 *
+	 * @param id {number} - id of user
+	 * @param user {Object} - user data
+	 * @returns {Promise<any>}
+	 */
+	const patchUser = function (id, user) {
+		return authorizerRepository.patch(id, user);
+	};
 
-		const updateMaster = function (id, user) {
-			return authorizerRepository.updateMaster(id, user);
-		};
+	const deleteByKey = function (id) {
+		return authorizerRepository.deleteByKey(id);
+	};
 
 
+	const createMasterUser = function (user) {
+		return authorizerRepository.createMasterUser(user);
+	};
 
-		const setMasterUser = function (id) {
+	const getMasterList = function () {
+		return authorizerRepository.getMasterList();
+	};
 
-			return authorizerRepository.setMasterUser(id);
-			/*
+	const getMasterByKey = function (id) {
+		return authorizerRepository.getMasterByKey(id)
+	};
+
+	const getCurrentMasterUser = function () {
+		return globalDataService.getMasterUser();
+	};
+
+	const updateMaster = function (id, user) {
+
+		return new Promise()
+		return authorizerRepository.updateMaster(id, user);
+	};
+
+	const setMasterUser = function (id) {
+		// return authorizerRepository.setMasterUser(id);
+		return new Promise((resolve, reject) => {
+
 			authorizerRepository.setMasterUser(id).then(function (masterUserData) {
 
-				globalDatabaseService.setMasterUser(masterUserData);
+				globalDataService.setMasterUser(masterUserData);
 
-				getUserPromise().then(memberData => {
+				globalDataService.setMember(null);
+
+				resolve(masterUserData);
+				/* getUserPromise().then(memberData => {
 					globalDatabaseService.setMember(memberData);
 				});
 
 				getMemberPromise().then(memberData => {
 					globalDatabaseService.setMember(memberData);
-				});
+				}); */
 
-			});
-			 */
-		};
+			}).catch(error => reject(error));
 
+		});
 
+	};
 
-		const getMasterListLight = function () {
-			return authorizerRepository.getMasterListLight();
-		};
+	const getMasterListLight = function () {
+		return authorizerRepository.getMasterListLight();
+	};
 
-		const inviteUser = function (data) {
-			return authorizerRepository.inviteUser(data);
-		};
+	const inviteUser = function (data) {
+		return authorizerRepository.inviteUser(data);
+	};
 
-		const getInvitesList = function(options){
-			return authorizerRepository.getInvitesList(options);
-		};
+	const getInvitesList = function(options){
+		return authorizerRepository.getInvitesList(options);
+	};
 
-		const deleteInviteByKey = function(id) {
-			return authorizerRepository.deleteInviteByKey(id)
-		};
+	const deleteInviteByKey = function(id) {
+		return authorizerRepository.deleteInviteByKey(id)
+	};
 
-		return {
-			tokenLogin: tokenLogin,
-			login: login,
-			logout: logout,
+	return {
+		tokenLogin: tokenLogin,
+		login: login,
+		logout: logout,
 
-			getUser: getUser,
+		getUser: getUser,
 
-			ping: ping,
+		ping: ping,
 
-			getList: getList,
-			getByKey: getByKey,
+		getUsersList: getUsersList,
+		getUserByKey: getUserByKey,
 
-			update: update,
-			patch: patch,
-			deleteByKey: deleteByKey,
+		update: update,
+		patchUser: patchUser,
+		deleteByKey: deleteByKey,
 
-			createMasterUser: createMasterUser,
-			getMasterList: getMasterList,
-			getMasterListLight: getMasterListLight,
-			getMasterByKey: getMasterByKey,
-			updateMaster: updateMaster,
+		createMasterUser: createMasterUser,
+		getMasterList: getMasterList,
+		getMasterListLight: getMasterListLight,
+		getMasterByKey: getMasterByKey,
+		getCurrentMasterUser: getCurrentMasterUser,
+		updateMaster: updateMaster,
 
-			setMasterUser: setMasterUser,
+		setMasterUser: setMasterUser,
 
-			inviteUser: inviteUser,
-			getInvitesList: getInvitesList,
-			deleteInviteByKey: deleteInviteByKey
-
-		}
+		inviteUser: inviteUser,
+		getInvitesList: getInvitesList,
+		deleteInviteByKey: deleteInviteByKey
 
 	}
+
+};
 
 // })();

@@ -5,20 +5,16 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
-
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
     var usersGroupService = require('../../services/usersGroupService');
 
     var metaService = require('../../services/metaService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
-    module.exports = function ($scope, $mdDialog, data) {
-
-        logService.controller('AttributesAddDialogManagerController', 'initialized');
+    module.exports = function ($scope, $mdDialog, data, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.entityType = data.entityType;
 
         vm.attribute = {name: '', 'value_type': ''};

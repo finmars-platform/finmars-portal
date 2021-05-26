@@ -5,15 +5,15 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    // var logService = require('../../../../../core/services/logService');
 
     var timeZonesService = require('../../services/timeZonesService');
 
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog) {
-        logService.controller('ActionsNotificationsSettingsDialogController', 'initialized');
-
+    module.exports = function ($scope, $mdDialog, usersService) {
+        // logService.controller('ActionsNotificationsSettingsDialogController', 'initialized');
+		console.log("testing usersService injection", usersService);
         var vm = this;
 
         vm.readyStatus = {member: false};

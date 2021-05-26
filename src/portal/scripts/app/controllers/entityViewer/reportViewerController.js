@@ -10,7 +10,7 @@
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
         var evHelperService = require('../../services/entityViewerHelperService');
-        var usersService = require('../../services/usersService');
+        // var usersService = require('../../services/usersService');
 
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
@@ -27,10 +27,10 @@
         var expressionService = require('../../services/expression.service');
         // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, middlewareService) {
+        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, middlewareService, usersService) {
 
             var vm = this;
-
+			console.log("testing usersService injection", usersService);
             var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {

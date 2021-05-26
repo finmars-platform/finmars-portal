@@ -9,12 +9,12 @@
     var entityResolverService = require('../../services/entityResolverService');
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
     var evEvents = require('../../services/entityViewerEvents');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
-    module.exports = function entityViewerPermissionEditorController($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+    module.exports = function entityViewerPermissionEditorController($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, usersService) {
 
         var vm = this;
-
+		console.log("testing usersService injection", usersService);
         vm.readyStatus = {content: false};
 
         vm.processing = false;

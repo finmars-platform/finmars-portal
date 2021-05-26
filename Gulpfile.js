@@ -21,7 +21,7 @@
     var HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
     var AUTHORIZER_URL = process.env.AUTHORIZER_URL || 'http://0.0.0.0:8083/authorizer';
 
-    gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All'));
+    gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All', 'shell-min-All'));
 
     gulp.task('doc-clean', function () {
         return gulp.src(['./docs'], {read: false, allowEmpty: true })
@@ -61,4 +61,4 @@
 
     });
 
-}());
+})();

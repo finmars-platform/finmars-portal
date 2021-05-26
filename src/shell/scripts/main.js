@@ -6,15 +6,28 @@
 
 // fixes angular module import error
 require('../../forum/scripts/main.js');
-require('../../profile/scripts/main.js');
-require('../../portal/scripts/main.js');
+// require('../../profile/scripts/main.js');
+import profile from '../../profile/scripts/main.js';
+// require('../../portal/scripts/main.js');
+import portal from '../../portal/scripts/main.js';
+
+
+import router from './app/router.js';
 
 import websocketService from './app/services/websocketService.js';
 
+import cookieService from './app/services/cookieService.js';
+import toastNotificationService from './app/services/toastNotificationService.js';
+import errorService from './app/services/errorService.js';
+import xhrService from './app/services/xhrService.js';
+import broadcastChannelService from "./app/services/broadcastChannelService.js";
+
+import globalDataService from "./app/services/globalDataService.js";
 import authorizerService from "./app/services/authorizerService.js";
 import middlewareService from "./app/services/middlewareService.js";
+import usersService from './app/services/usersService.js';
 
-import shellController from "./app/controllers/shellController";
+import shellController from "./app/controllers/shellController.js";
 
 const app = angular.module('finmars', [
 	'ngAria',
@@ -30,9 +43,8 @@ const app = angular.module('finmars', [
 	'finmars.forum'
 ]);
 
-app.service('authorizerService', [authorizerService]);
-
-app.config(['$stateProvider', '$urlServiceProvider', require('./app/router.js')]);
+// app.config(['$stateProvider', '$urlServiceProvider', require('./app/router.js')]);
+app.config(['$stateProvider', '$urlServiceProvider', router]);
 app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
 	$mdDateLocaleProvider.formatDate = date => {
 		return moment(date).format('YYYY-MM-DD');
@@ -105,6 +117,15 @@ app.run([function () {
 }]);
 //</editor-fold>
 
-app.service('middlewareService', [middlewareService]);
+app.service('cookieService', [cookieService]);
+app.service('toastNotificationService', [toastNotificationService]);
+app.service('errorService', ['toastNotificationService', errorService]);
+app.service('xhrService', [xhrService]);
+app.service('broadcastChannelService', [broadcastChannelService]);
 
-app.controller('ShellController', ['$scope', '$state', '$transitions', '$mdDialog', 'middlewareService', 'authorizerService', shellController]);
+app.service('globalDataService', [globalDataService]);
+app.service('authorizerService', ['globalDataService', authorizerService]);
+app.service('middlewareService', [middlewareService]);
+app.service('usersService', ['globalDataService', usersService]);
+
+app.controller('ShellController', ['$scope', '$state', '$transitions', '$mdDialog', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', shellController]);
