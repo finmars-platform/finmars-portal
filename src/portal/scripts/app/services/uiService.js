@@ -7,6 +7,7 @@
 
 	const metaContentTypesService = require('./metaContentTypesService');
 	const localStorageService = require('../../../../core/services/localStorageService');
+    const ecosystemDefaultService = require('./ecosystemDefaultService');
 
 	const uiRepository = require('../repositories/uiRepository');
 
@@ -287,7 +288,10 @@
 
 	};
 
-	const applyDefaultSettingsToLayoutTemplate = function (layoutTemplate) {
+
+	const applyDefaultSettingsToLayoutTemplate = async function (layoutTemplate) {
+        const ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+
 	    const reportOptions = {
             "account_mode": 1,
             "calculationGroup": "portfolio",
@@ -298,6 +302,7 @@
             "strategy2_mode": 0,
             "strategy3_mode": 0,
             "table_font_size": "small",
+            "pricing_policy": ecosystemDefaultData.pricing_policy,
         };
 
 	    layoutTemplate[0].data.reportOptions = reportOptions;
@@ -322,7 +327,7 @@
 			});*/
 			const fetchDefaultListLayout = function () {
 
-				uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+				uiRepository.getDefaultListLayout(entityType).then(async function (defaultLayoutData) {
 
 					let defaultLayout = defaultLayoutData.results[0];
 
@@ -332,7 +337,7 @@
 					} else {
 
 						defaultLayout = uiRepository.getListLayoutTemplate();
-						defaultLayout = applyDefaultSettingsToLayoutTemplate(defaultLayout);
+						defaultLayout = await applyDefaultSettingsToLayoutTemplate(defaultLayout);
 						defaultLayoutData = {results: defaultLayout};
 
 					}
