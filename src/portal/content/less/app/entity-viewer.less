@@ -298,9 +298,9 @@
   display: block;
   height: @popupMenuOptionHeight;
   cursor: pointer;
-  border-right: 1px solid rgba(158,158,158,.2);
+  border-right: 1px solid rgba(158, 158, 158, .2);
   border-bottom: 1px solid rgba(158, 158, 158, 0.2);
-  border-left: 1px solid rgba(158,158,158,.2);
+  border-left: 1px solid rgba(158, 158, 158, .2);
   padding: 8px 0 0 24px;
   text-decoration: none;
   color: #000;
@@ -371,6 +371,7 @@
   }
 
 }
+
 /***** < Popup menu > *****/
 
 .control-error-message {
@@ -386,6 +387,7 @@
       position: absolute;
       width: 100%;
     }
+
     .placeholder-row {
       position: absolute;
     }
@@ -441,10 +443,26 @@
     background: rgb(250, 250, 250);
     height: 100%;
     float: left;
+    position: relative;
+    box-sizing: border-box;
   }
 
   .g-filters-holder {
     float: none;
+  }
+
+  .ev-left-panel-footer-section {
+    height: 40px;
+    background-color: rgba(255, 255, 255, 1);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(224, 224, 224, 1);
+    padding-top: 8px;
+    box-sizing: border-box;
+    padding-left: 16px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
   }
 
   .ev-left-panel-tree-elem {
@@ -456,11 +474,30 @@
       font-size: 14px;
       letter-spacing: normal;
       color: #333333;
+      line-height: 33px;
+
+
+    }
+
+    .ev-left-panel-tree-elem-line {
+      height: 33px;
 
       &.selected-group {
-        color: #F05A22;
+        background: rgba(240, 90, 34, 0.117647058823529);
+
+        .ev-left-panel-tree-elem-name {
+          color: #F05A22;
+        }
       }
+
     }
+
+
+
+    .ev-left-panel-tree-elem {
+      padding-left: 20px;
+    }
+
   }
 
   .g-wrapper {
@@ -505,7 +542,7 @@
         border: 2px solid @borderPale;
         border-radius: 3px;
         box-sizing: border-box;
-        background: rgba(0,0,0,.01960784);
+        background: rgba(0, 0, 0, .01960784);
         margin: 4px auto 0;
         cursor: pointer;
 
@@ -541,7 +578,7 @@
         margin-top: 9px;
         margin-right: 8px;
         box-sizing: border-box;
-        background: rgba(0,0,0,.01960784);
+        background: rgba(0, 0, 0, .01960784);
       }
 
     }

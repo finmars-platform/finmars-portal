@@ -332,6 +332,8 @@
 
         result = result + rowSelection;
 
+        console.log('render.columns', columns);
+
         columns.forEach(function (column, columnIndex) {
 
 			var columnNumber = columnIndex + 1;

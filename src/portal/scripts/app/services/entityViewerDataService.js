@@ -1508,6 +1508,14 @@
             return data.selectedGroups || [];
         }
 
+        function setSelectedGroupsMultiselectState(state) {
+            data.selectedGroupsMultiselectState = state
+        }
+
+        function getSelectedGroupsMultiselectState(){
+            return data.selectedGroupsMultiselectState;
+        }
+
 
         return {
 
@@ -1742,6 +1750,9 @@
 
             setMissingCustomFields: setMissingCustomFields,
             getMissingCustomFields: getMissingCustomFields,
+
+            setSelectedGroupsMultiselectState: setSelectedGroupsMultiselectState,
+            getSelectedGroupsMultiselectState: getSelectedGroupsMultiselectState,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,
