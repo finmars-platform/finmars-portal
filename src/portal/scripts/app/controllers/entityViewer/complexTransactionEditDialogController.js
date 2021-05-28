@@ -75,8 +75,8 @@
         vm.baseTransactions = [];
         vm.reconFields = [];
 
-		vm.tabsWithErrors = {};
-		vm.errorFieldsList = [];
+		// vm.tabsWithErrors = {};
+		// vm.errorFieldsList = [];
 		vm.inputsWithCalculations = null;
 
 		vm.openedIn = data.openedIn;
@@ -1084,36 +1084,37 @@
 
             if (errors.length) {
 
-                vm.tabsWithErrors = {};
+				/* vm.tabsWithErrors = {};
 
-                /* errors.forEach(function (errorObj) {
+				errors.forEach(function (errorObj) {
 
-                    if (errorObj.locationData &&
-                        errorObj.locationData.type === 'tab') {
+					if (errorObj.locationData &&
+						errorObj.locationData.type === 'tab') {
 
-                        var tabName = errorObj.locationData.name.toLowerCase();
+						var tabName = errorObj.locationData.name.toLowerCase();
 
-                        var selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
+						var selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
 
-                        var tabNameElem = document.querySelector(selectorString);
-                        tabNameElem.classList.add('error-tab');
+						var tabNameElem = document.querySelector(selectorString);
+						tabNameElem.classList.add('error-tab');
 
-                        if (!vm.tabsWithErrors.hasOwnProperty(tabName)) {
-                            vm.tabsWithErrors[tabName] = [errorObj.key];
+						if (!vm.tabsWithErrors.hasOwnProperty(tabName)) {
+							vm.tabsWithErrors[tabName] = [errorObj.key];
 
-                        } else if (vm.tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+						} else if (vm.tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
 							vm.tabsWithErrors[tabName].push(errorObj.key);
 
-                        }
+						}
 
-                        vm.errorFieldsList.push(errorObj.key);
+						vm.errorFieldsList.push(errorObj.key);
 
-                    }
+					}
 
-                }); */
-				sharedLogicHelper.processTabsErrors(errors, vm.tabsWithErrors, vm.errorFieldsList);
+				}); */
+				// sharedLogicHelper.processTabsErrors(errors);
+				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
-                vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
+                /* vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
                 $mdDialog.show({
                     controller: 'EvAddEditValidationDialogController as vm',
@@ -1125,7 +1126,7 @@
                             errorsList: errors
                         }
                     }
-                })
+                }) */
 
             }
 
@@ -1153,8 +1154,6 @@
                 result.calculate = true;
 
                 vm.processing = true;
-
-                console.log('#64 result', result);
 
             	new Promise(function (resolve, reject) {
 
