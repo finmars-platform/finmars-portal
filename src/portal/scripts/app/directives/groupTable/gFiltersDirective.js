@@ -20,10 +20,11 @@
 	const reportCopyHelper = require('../../helpers/reportCopyHelper');
 
 	const exportExcelService = require('../../services/exportExcelService');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
 	const EventService = require('../../services/eventService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, $state, $bigDrawer) {
         return {
             restrict: 'E',
             scope: {
@@ -954,6 +955,149 @@
 					});
 
 				};
+
+                // EV section start
+
+                scope.evAddEntity = async function (ev) {
+
+                    let editLayout, entity = {};
+
+                    switch (scope.entityType) {
+
+                        case 'transaction-type':
+
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openTTypeAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
+
+                            break;
+
+                        case 'complex-transaction':
+
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+
+                            evHelperService.openComplexTransactionAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
+
+                            break;
+
+                        default:
+
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openEntityViewerAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
+
+                            break;
+
+                    }
+
+                };
+
+                scope.evGetEntityNameByState = function () {
+
+                    switch ($state.current.name) {
+                        case 'app.data.portfolio':
+                            return "PORTFOLIO";
+                            break;
+                        case 'app.data.account':
+                            return "ACCOUNT";
+                            break;
+                        case 'app.data.counterparty':
+                            return "COUNTERPARTY";
+                            break;
+                        case 'app.data.counterparty-group':
+                            return "COUNTERPARTY GROUP";
+                            break;
+                        case 'app.data.responsible':
+                            return "RESPONSIBLE";
+                            break;
+                        case 'app.data.responsible-group':
+                            return "RESPONSIBLE GROUP";
+                            break;
+                        case 'app.data.instrument':
+                            return "INSTRUMENT";
+                            break;
+                        case 'app.data.transaction':
+                            return "TRANSACTION";
+                            break;
+                        case 'app.data.price-history':
+                            return "PRICE HISTORY";
+                            break;
+                        case 'app.data.currency-history':
+                            return "CURRENCY HISTORY";
+                            break;
+                        case 'app.data.strategy':
+                            return "STRATEGY";
+                            break;
+                        case 'app.data.strategy-subgroup':
+                            return "STRATEGY SUBGROUP";
+                            break;
+                        case 'app.data.strategy-group':
+                            return "STRATEGY GROUP";
+                            break;
+                        case 'app.data.account-type':
+                            return "ACCOUNT TYPES";
+                            break;
+                        case 'app.data.instrument-type':
+                            return "INSTRUMENT TYPES";
+                            break;
+                        /* case 'app.data.pricing-policy':
+                            return "PRICING POLICY";
+                            break; */
+                        case 'app.data.transaction-type':
+                            return "TRANSACTION TYPE";
+                            break;
+                        case 'app.data.transaction-type-group':
+                            return "TRANSACTION TYPE GROUP";
+                            break;
+                        case 'app.data.currency':
+                            return "CURRENCY";
+                            break;
+                        case 'app.data.complex-transaction':
+                            return "TRANSACTION";
+                            break;
+                        case 'app.data.tag':
+                            return "TAG";
+                            break;
+                        default:
+                            return "ENTITIY";
+                            break;
+                    }
+                };
+
+
+                scope.evApplyFilters = function () {
+
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
+
+                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                };
+
+                // EV section end
 
 				let init = function () {
 

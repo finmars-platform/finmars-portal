@@ -5,17 +5,60 @@
         <div class="flex-row flex-i-start">
 
             <div class="g-filter-left-part gFiltersLeftPart">
-                <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
-                           ng-click="calculateReport()">
-                    <span class="material-icons">refresh</span>
-                    <md-tooltip md-direction="top">Calculate</md-tooltip>
-                </md-button>
 
-                <md-button class="g-toggle-use-from-above-filters md-icon-button chain-button"
-                           ng-class="{'g-use-from-above-filters-hidden': !showUseFromAboveFilters}"
-                           data-ng-click="toggleUseFromAboveFilters()">
-                    <span class="material-icons">link</span>
-                </md-button>
+                <div data-ng-if="isReport" layout="row">
+
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                               ng-click="calculateReport()">
+                        <span class="material-icons">refresh</span>
+                        <md-tooltip md-direction="top">Calculate</md-tooltip>
+                    </md-button>
+
+                    <md-button class="g-toggle-use-from-above-filters md-icon-button chain-button"
+                               ng-class="{'g-use-from-above-filters-hidden': !showUseFromAboveFilters}"
+                               data-ng-click="toggleUseFromAboveFilters()">
+                        <span class="material-icons">link</span>
+                    </md-button>
+                </div>
+                <div data-ng-if="!isReport"  layout="row">
+
+                    <md-menu>
+                        <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                                   data-ng-click="$mdOpenMenu($event)">
+                            <span class="material-icons">add</span>
+                            <md-tooltip md-direction="top">Add</md-tooltip>
+                        </md-button>
+                        <md-menu-content width="4">
+
+                            <md-menu-item>
+                                <md-button data-ng-click="evApplyFilters()"
+                                           class="g-settings-option-btn">
+
+                                    <span>Refresh Database Filters</span>
+
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+
+                                <md-button data-ng-click="evAddEntity($event)"
+                                           class="g-settings-option-btn">
+
+                                    <span>Add {{evGetEntityNameByState()}}</span>
+
+                                </md-button>
+
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+
+                    <md-button class="g-toggle-use-from-above-filters md-icon-button chain-button"
+                               ng-class="{'g-use-from-above-filters-hidden': !showUseFromAboveFilters}"
+                               data-ng-click="toggleUseFromAboveFilters()">
+                        <span class="material-icons">link</span>
+                    </md-button>
+
+                </div>
+
             </div>
 
             <div class="gFiltersContainerWidth">
@@ -60,8 +103,10 @@
                         <md-button data-ng-click="toggleSplitPanel($event, 'balance-report')"
                                    class="g-settings-option-btn">
 
-                            <span class="material-icons" data-ng-show="currentAdditions.type === 'balance-report'">done</span>
-                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'balance-report'" style="visibility: hidden;">done</span>
+                            <span class="material-icons"
+                                  data-ng-show="currentAdditions.type === 'balance-report'">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'balance-report'"
+                                  style="visibility: hidden;">done</span>
 
                             <span>Open Balance Report view panel</span>
 
@@ -72,8 +117,10 @@
                         <md-button data-ng-click="toggleSplitPanel($event, 'pl-report')"
                                    class="g-settings-option-btn">
 
-                            <span class="material-icons" data-ng-show="currentAdditions.type === 'pl-report'">done</span>
-                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'pl-report'" style="visibility: hidden;">done</span>
+                            <span class="material-icons"
+                                  data-ng-show="currentAdditions.type === 'pl-report'">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'pl-report'"
+                                  style="visibility: hidden;">done</span>
 
                             <span>Open P&L Report view panel</span>
 
@@ -85,7 +132,8 @@
                                    class="g-settings-option-btn">
 
                             <span class="material-icons" data-ng-show="currentAdditions.type === 'transaction-report'">done</span>
-                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'transaction-report'" style="visibility: hidden;">done</span>
+                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'transaction-report'"
+                                  style="visibility: hidden;">done</span>
 
                             <span>Open Transaction Report view panel</span>
 
@@ -94,7 +142,7 @@
                 </md-menu-content>
             </md-menu>
 
-            <md-menu class="full-width"  data-ng-if="isRootEntityViewer">
+            <md-menu class="full-width" data-ng-if="isRootEntityViewer && isReport">
                 <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
                     <div class="flex-column flex-i-center">
                         <span class="material-icons">view_module</span>
@@ -107,7 +155,8 @@
                         <md-button data-ng-click="toggleMatrix($event)" class="g-settings-option-btn">
 
                             <span class="material-icons" data-ng-show="viewContext === 'matrix'">done</span>
-                            <span class="material-icons" data-ng-show="viewContext !== 'matrix'" style="visibility: hidden;">done</span>
+                            <span class="material-icons" data-ng-show="viewContext !== 'matrix'"
+                                  style="visibility: hidden;">done</span>
 
                             <span>Open Matrix</span>
                         </md-button>
@@ -165,17 +214,19 @@
                 </md-button>
 
                 <md-menu-content width="4">
+
                     <md-menu-item>
-                        <md-button  data-ng-click="openViewConstructor($event)" class="g-settings-option-btn">
+                        <md-button data-ng-click="openViewConstructor($event)" class="g-settings-option-btn">
                             <span>View Constructor</span>
                         </md-button>
                     </md-menu-item>
 
-                    <md-menu-item>
+                    <md-menu-item data-ng-if="isReport">
                         <md-button data-ng-click="openCustomFieldsManager()" class="g-settings-option-btn">
                             <span>Custom Columns</span>
                         </md-button>
                     </md-menu-item>
+
                 </md-menu-content>
             </md-menu>
 
