@@ -1151,11 +1151,13 @@
 
         var viewportHeight;
 
-        if (components.sidebar) {
-            viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
-        } else {
-            viewportWidth = contentWrapElemWidth;
-        }
+        // if (components.sidebar) {
+        //     viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
+        // } else {
+        //     viewportWidth = contentWrapElemWidth;
+        // }
+
+        viewportWidth = contentWrapElemWidth;
 
         viewportWidth = viewportWidth - 230; // new left sidear, todo move to interfacelayout width
 

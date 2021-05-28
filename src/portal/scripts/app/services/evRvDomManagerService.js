@@ -46,14 +46,16 @@
             var components = evDataService.getComponents();
             var contentWrapWidth = contentWrapElement.clientWidth;
 
-            if (components.sidebar) {
+            // if (components.sidebar) {
+            //
+            //     var interfaceLayout = evDataService.getInterfaceLayout();
+            //     workareaWrapElement.style.width = (contentWrapWidth - interfaceLayout.filterArea.width) + 'px'
+            //
+            // } else {
+            //     workareaWrapElement.style.width = contentWrapWidth + 'px'
+            // }
 
-                var interfaceLayout = evDataService.getInterfaceLayout();
-                workareaWrapElement.style.width = (contentWrapWidth - interfaceLayout.filterArea.width) + 'px'
-
-            } else {
-                workareaWrapElement.style.width = contentWrapWidth + 'px'
-            }
+            workareaWrapElement.style.width = contentWrapWidth + 'px'
 
         }
 
