@@ -173,7 +173,7 @@
 
                     // var flatList = evDataHelper.getFlatStructure(scope.evDataService);
                     var flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
-                    flatList.shift(); // remove root group
+                    // flatList.shift(); // remove root group
 
                     flatList = flatList.map(function (item, i) {
                         item.___flat_list_index = i;

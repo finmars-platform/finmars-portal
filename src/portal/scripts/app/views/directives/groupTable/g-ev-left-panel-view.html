@@ -1,10 +1,19 @@
 <div>
-    Left panel here
 
     <div>
 
         <g-ev-left-panel-tree-elem item="tree" ev-data-service="evDataService"
-                                        ev-event-service="evEventService"></g-ev-left-panel-tree-elem>
+                                   ev-event-service="evEventService"></g-ev-left-panel-tree-elem>
+
+    </div>
+
+    <div class="ev-left-panel-footer-section">
+
+        <md-checkbox data-ng-click="toggleMultiselect($event)" data-ng-checked="multiselectIsActive" tabindex="0"
+                     type="checkbox"
+                     role="checkbox" aria-checked="false" class="">
+                Multiselect
+        </md-checkbox>
 
     </div>
 

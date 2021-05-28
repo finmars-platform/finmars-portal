@@ -1157,6 +1157,8 @@
             viewportWidth = contentWrapElemWidth;
         }
 
+        viewportWidth = viewportWidth - 230; // new left sidear, todo move to interfacelayout width
+
         viewportTop = interfaceLayout.progressBar.height;
 
         if (components.columnArea) {

@@ -1,9 +1,9 @@
 <div data-ng-if="item.___type === 'group'" class="ev-left-panel-tree-elem">
 
-    <div data-ng-if="item.___parentId" layout="row">
-        <div data-ng-if="item.___is_open" data-ng-click="unfoldGroup($event)">+</div>
-        <div data-ng-if="!item.___is_open" data-ng-click="foldGroup($event)">-</div>
-        <div data-ng-click="toggleGroupSelection($event)" data-ng-class="{'selected-group': item.___is_selected}" class="ev-left-panel-tree-elem-name"> {{item.___group_name}}</div>
+    <div data-ng-if="item.___parentId" layout="row" class="ev-left-panel-tree-elem-line" data-ng-class="{'selected-group': item.___is_selected}">
+        <div data-ng-if="!item.___is_open && !isLastLevel" data-ng-click="unfoldGroup($event)"><span class="material-icons">expand_more</span></div>
+        <div data-ng-if="item.___is_open && !isLastLevel" data-ng-click="foldGroup($event)"><span class="material-icons" >expand_less</span></div>
+        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}}</div>
     </div>
 
     <div data-ng-if="item.___is_open">

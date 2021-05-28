@@ -1044,22 +1044,38 @@
         var result = [];
 
         var selectedGroups = evDataService.getSelectedGroups();
+        var multiselectState = evDataService.getSelectedGroupsMultiselectState();
 
-        console.log('selectedGroups', selectedGroups);
+        console.log('getObjectsFromSelectedGroups.selectedGroups', selectedGroups);
 
-        selectedGroups.forEach(function (group){
+        selectedGroups.forEach(function (group) {
 
-            var data = evDataService.getData(group.___id)
+            var rawData = evDataService.getData(group.___id)
 
-            data.results.forEach(function (item){
+            if (rawData) {
+                var data = JSON.parse(JSON.stringify(rawData));
 
-                if (item.___type === 'object') {
-                    result.push(item);
-                }
+                console.log('getObjectsFromSelectedGroups.data', data);
 
-            })
+
+                data.results.forEach(function (item) {
+
+                    if (item.___type === 'object') {
+                        result.push(item);
+                    } else if (item.___type === 'placeholder_object') {
+                        result.push(item);
+                    } else if (item.___type === 'control') {
+                        if (!multiselectState) {
+                            result.push(item);
+                        }
+                    }
+
+                })
+            }
 
         })
+
+        console.log('getObjectsFromSelectedGroups.result', result)
 
         return result;
 
