@@ -4,6 +4,8 @@
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
     var authorizerService = require('../../services/authorizerService');
+    var baseUrlService = require('../../services/baseUrlService');
+    var cookieService = require('../../../../../core/services/cookieService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -15,6 +17,37 @@
         vm.assignedGroupsList = [];
 
         vm.readyStatus = {content: false};
+
+        vm.usernameError = false;
+
+        vm.checkUniqueness = function ($event){
+
+            var authorizerUrl = baseUrlService.getAuthorizerUrl();
+
+            return window.fetch(authorizerUrl + '/user-check-existence/?username=' + vm.username, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+                return data.json();
+            }).then(function (data){
+
+                if (data.exist) {
+                    vm.usernameError = false
+                } else {
+                    vm.usernameError = true;
+                }
+                
+                $scope.$apply();
+
+            })
+
+
+        }
 
         vm.agree = function ($event) {
 
