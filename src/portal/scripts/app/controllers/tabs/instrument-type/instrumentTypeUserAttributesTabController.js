@@ -27,25 +27,21 @@
         };
 
         const getList = () => {
+
             vm.readyStatus.attrs = false;
 
-            const instrumentAttributesPromise = attributeTypeService.getList('instrument', {pageSize: 1000}).then((data) => {
-                return data.results;
-            });
+            attributeTypeService.getList('instrument', {pageSize: 1000}).then((data) => {
 
-            const instrumentTypeAttributesPromise = attributeTypeService.getList( vm.entityType, {pageSize: 1000}).then((data) => {
-                return data.results;
-            });
+                const instrumentAttrs = data.results;
 
-            Promise.all([instrumentAttributesPromise, instrumentTypeAttributesPromise]).then(([instrumentAttrs, instrumentTypeAttrs]) => {
+                vm.attrs = mapAttrsFromEntity(instrumentAttrs, vm.entity.instrument_attributes);
 
-                vm.attrs = getUniqueConcatAttrs(instrumentAttrs, instrumentTypeAttrs);
-                vm.attrs = mapAttrsFromEntity(vm.attrs, vm.entity.instrument_attributes);
                 vm.readyStatus.attrs = true;
 
                 $scope.$apply();
 
-            })
+            });
+
         }
 
         vm.deleteAttr = function (ev, item) {
@@ -69,34 +65,10 @@
 
                 if (res.status === 'agree') {
 
-                    vm.readyStatus.attrs = false;
+                    const deletedItemIndex = vm.entity.instrument_attributes.findIndex(attr => attr.id === item.id);
+                    vm.entity.instrument_attributes.splice(deletedItemIndex, 1);
 
-                    attributeTypeService.deleteByKey(vm.entityType, item.id).then(function (data) {
-
-                        if (data.status === 'conflict') {
-
-                            $mdDialog.show({
-                                controller: 'InfoDialogController as vm',
-                                templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
-                                targetEvent: ev,
-                                clickOutsideToClose: false,
-                                multiple: true,
-                                locals: {
-                                    info: {
-                                        title: 'Notification',
-                                        description: "You can not delete attributed that already in use"
-                                    }
-                                }
-                            })
-
-                        } else {
-
-                            getList();
-
-                        }
-
-                    });
+                    getList();
 
                 }
 
@@ -137,33 +109,6 @@
 
         };
 
-        const getUniqueConcatAttrs = (instrumentAttrs, instrumentTypeAttrs) => {
-
-            const uniqueInstrumentTypeAttrs = instrumentTypeAttrs
-                .filter((instrumentTypeAttr) => {
-
-                    return !instrumentAttrs.find((instrumentAttr) => {
-
-                        return instrumentAttr.user_code === instrumentTypeAttr.user_code
-
-                    });
-
-                })
-                .map((attr) => {
-                    attr.___instrumentTypeAttr = true;
-                    return attr;
-                });
-
-            return instrumentAttrs
-                .concat(uniqueInstrumentTypeAttrs)
-                .sort((a, b) => {
-
-                    return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
-
-                });
-
-        };
-
         const getAttrValue = (entityAttr) => {
             switch (entityAttr.value_type) {
                 case 10:
@@ -181,26 +126,32 @@
 
         const mapAttrsFromEntity = (attrs, entityAttrs) => {
 
-            const entityAttrsAsObject = {};
-            entityAttrs.forEach(attr => {
-                entityAttrsAsObject[attr.attribute_type_user_code] = attr
-            });
+            const deletedAttrs = [];
 
-            return attrs.map(attr => {
+            entityAttrs.forEach(entityAttr => {
+                const user_code = entityAttr.attribute_type_user_code;
+                const attr = attrs.find(attr => attr.user_code === user_code);
+                const value = getAttrValue(entityAttr);
 
-                const entityAttr = entityAttrsAsObject[attr.user_code];
-                if (entityAttr) {
+                const additionalProps = {
+                    value,
+                    ___classifierName: entityAttr.value_type === 30 ? value : null,
+                };
 
-                    attr.value = getAttrValue(entityAttr);
-
-                    if (attr.value_type === 30) { //classifier
-                        attr.___classifierName = attr.value;
-                    }
-
+                if (attr) {
+                    Object.assign(attr, additionalProps);
+                } else {
+                    deletedAttrs.push({user_code, name: user_code, ...entityAttr, ...additionalProps, ___isDisabled: true});
                 }
-
-                return attr;
             })
+
+            return attrs
+                .concat(deletedAttrs)
+                .sort((a, b) => {
+
+                return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1
+
+            });
         };
 
         const init = function () {

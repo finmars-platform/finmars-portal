@@ -18,24 +18,24 @@
                         <text-input model="attr.value"
                                     placeholder-text="{{attr.name}}"
                                     on-change-callback="vm.attrChange()"
-                                    is-disabled="attr.___instrumentTypeAttr"
-                                    small-options="{readonly: attr.___instrumentTypeAttr}"></text-input>
+                                    is-disabled="attr.___isDisabled"
+                                    small-options="{readonly: attr.___isDisabled}"></text-input>
 
                     </div>
                     <div data-ng-if="attr.value_type === 20">
                         <number-input class=""
                                       model="attr.value"
                                       on-change-callback="vm.attrChange()"
-                                      is-disabled="attr.___instrumentTypeAttr"
+                                      is-disabled="attr.___isDisabled"
                                       style="width: 200px;"></number-input>
                     </div>
                     <div data-ng-if="attr.value_type === 30">
                         <classifier-select placeholder-text="{{attr.name}}"
                                            model="attr.value"
-                                           classifier-attr="attr"
+                                           classifier-attr="!attr.___isDisabled ? attr : null"
                                            classifier-value="attr.value"
-                                           entity-type="attr.___instrumentTypeAttr ? 'instrument-type' : 'instrument'"
-                                           is-disabled="attr.___instrumentTypeAttr"
+                                           entity-type="'instrument'"
+                                           is-disabled="attr.___isDisabled"
                                            item-name="attr.___classifierName"
                                            on-change-callback="vm.attrChange()"
                         ></classifier-select>
@@ -44,13 +44,14 @@
                     <div data-ng-if="attr.value_type === 40">
                         <date-input model="attr.value"
                                     small-options="{noIndicatorBtn: true}"
+                                    is-disabled="attr.___isDisabled"
                                     on-change-callback="vm.attrChange()"></date-input>
 
                     </div>
 
                 </td>
                 <td>
-                    <button data-ng-if="attr.___instrumentTypeAttr" data-ng-click="vm.deleteAttr($event, attr)">
+                    <button data-ng-if="attr.___isDisabled" data-ng-click="vm.deleteAttr($event, attr)">
                         <span class="material-icons">delete</span>
                     </button>
                 </td>
