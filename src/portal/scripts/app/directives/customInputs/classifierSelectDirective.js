@@ -391,7 +391,9 @@
                 }
 
                 var init = function () {
-                    getTree();
+                    if (scope.classifierAttr && scope.classifierAttr.id) {
+                        getTree();
+                    }
 
                     initScopeWatchers();
 
