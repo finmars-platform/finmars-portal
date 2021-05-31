@@ -158,11 +158,6 @@
 
             getList();
 
-            vm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {
-
-                getList();
-
-            })
         }
 
         init();
