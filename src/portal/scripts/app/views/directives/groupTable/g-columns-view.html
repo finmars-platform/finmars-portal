@@ -6,182 +6,182 @@
             <md-checkbox data-ng-click="selectAllRows()" data-ng-checked="isAllSelected"></md-checkbox>
         </div>
 
-        <div data-ng-if="isReport" class="g-cell-rows-settings">
+<!--        <div data-ng-if="isReport" class="g-cell-rows-settings">-->
 
-            <div class="g-cell g-row-settings">
-                <md-button ng-if="!isReport"
-                           class="g-cell-button"
-                           data-ng-class="{'selected': isAllStarsSelected}"
-                           data-ng-Click="isAllStarsSelected = !isAllStarsSelected">
-                    <div class="flex-row flex-i-center">
-                        <ng-md-icon data-ng-if="!isAllStarsSelected" icon="star_border" size="25" class="flex-row"></ng-md-icon>
-                        <ng-md-icon data-ng-if="isAllStarsSelected" icon="star" size="25" class="flex-row"></ng-md-icon>
-                    </div>
-                </md-button>
+<!--            <div class="g-cell g-row-settings">-->
+<!--                <md-button ng-if="!isReport"-->
+<!--                           class="g-cell-button"-->
+<!--                           data-ng-class="{'selected': isAllStarsSelected}"-->
+<!--                           data-ng-Click="isAllStarsSelected = !isAllStarsSelected">-->
+<!--                    <div class="flex-row flex-i-center">-->
+<!--                        <ng-md-icon data-ng-if="!isAllStarsSelected" icon="star_border" size="25" class="flex-row"></ng-md-icon>-->
+<!--                        <ng-md-icon data-ng-if="isAllStarsSelected" icon="star" size="25" class="flex-row"></ng-md-icon>-->
+<!--                    </div>-->
+<!--                </md-button>-->
 
-                <md-menu>
-                    <md-button class="g-cell-button g-row-color-picker-btn"
-                               data-ng-class="rowFilterColor"
-                               data-ng-click="$mdOpenMenu($event)">
-                        <span class="material-icons label-icon" data-ng-if="rowFilterColor === 'none'">label_outline</span>
-                        <span class="material-icons" data-ng-if="rowFilterColor !== 'none'">label</span>
-                        <span class="material-icons arrow-icon">arrow_drop_down</span>
-                    </md-button>
+<!--                <md-menu>-->
+<!--                    <md-button class="g-cell-button g-row-color-picker-btn"-->
+<!--                               data-ng-class="rowFilterColor"-->
+<!--                               data-ng-click="$mdOpenMenu($event)">-->
+<!--                        <span class="material-icons label-icon" data-ng-if="rowFilterColor === 'none'">label_outline</span>-->
+<!--                        <span class="material-icons" data-ng-if="rowFilterColor !== 'none'">label</span>-->
+<!--                        <span class="material-icons arrow-icon">arrow_drop_down</span>-->
+<!--                    </md-button>-->
 
-                    <md-menu-content class="g-row-color-picker-content"
-                                     width="2"
-                                     ng-mouseleave="$mdMenu.close()">
-                        <md-menu-item>
-                            <md-button class="g-cell-button g-row-color-picker-option" data-ng-click="changeRowFilterColor('none')">
-                                <span class="material-icons">label_outline</span>
-                            </md-button>
-                        </md-menu-item>
+<!--                    <md-menu-content class="g-row-color-picker-content"-->
+<!--                                     width="2"-->
+<!--                                     ng-mouseleave="$mdMenu.close()">-->
+<!--                        <md-menu-item>-->
+<!--                            <md-button class="g-cell-button g-row-color-picker-option" data-ng-click="changeRowFilterColor('none')">-->
+<!--                                <span class="material-icons">label_outline</span>-->
+<!--                            </md-button>-->
+<!--                        </md-menu-item>-->
 
-                        <md-menu-item>
-                            <md-button class="g-cell-button g-row-color-picker-option red"  data-ng-click="changeRowFilterColor('red')">
-                                <span class="material-icons">label</span>
-                            </md-button>
-                        </md-menu-item>
+<!--                        <md-menu-item>-->
+<!--                            <md-button class="g-cell-button g-row-color-picker-option red"  data-ng-click="changeRowFilterColor('red')">-->
+<!--                                <span class="material-icons">label</span>-->
+<!--                            </md-button>-->
+<!--                        </md-menu-item>-->
 
-                        <md-menu-item>
-                            <md-button class="g-cell-button g-row-color-picker-option yellow"  data-ng-click="changeRowFilterColor('yellow')">
-                                <span class="material-icons">label</span>
-                            </md-button>
-                        </md-menu-item>
+<!--                        <md-menu-item>-->
+<!--                            <md-button class="g-cell-button g-row-color-picker-option yellow"  data-ng-click="changeRowFilterColor('yellow')">-->
+<!--                                <span class="material-icons">label</span>-->
+<!--                            </md-button>-->
+<!--                        </md-menu-item>-->
 
-                        <md-menu-item>
-                            <md-button class="g-cell-button g-row-color-picker-option green"  data-ng-click="changeRowFilterColor('green')">
-                                <span class="material-icons">label</span>
-                            </md-button>
-                        </md-menu-item>
+<!--                        <md-menu-item>-->
+<!--                            <md-button class="g-cell-button g-row-color-picker-option green"  data-ng-click="changeRowFilterColor('green')">-->
+<!--                                <span class="material-icons">label</span>-->
+<!--                            </md-button>-->
+<!--                        </md-menu-item>-->
 
-                    </md-menu-content>
-                </md-menu>
-            </div>
+<!--                    </md-menu-content>-->
+<!--                </md-menu>-->
+<!--            </div>-->
 
-            <md-button class="favorite-toggle" data-ng-click="rowFiltersToggle()">
-                <div class="flex-row flex-i-center height-100">
-                    <!--                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>-->
-                    <span ng-hide="hideRowSettings" class="material-icons f-s-16">keyboard_arrow_left</span>
-                    <span ng-hide="!hideRowSettings" class="material-icons f-s-16">keyboard_arrow_right</span>
-                </div>
-            </md-button>
-        </div>
+<!--            <md-button class="favorite-toggle" data-ng-click="rowFiltersToggle()">-->
+<!--                <div class="flex-row flex-i-center height-100">-->
+<!--                    &lt;!&ndash;                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>&ndash;&gt;-->
+<!--                    <span ng-hide="hideRowSettings" class="material-icons f-s-16">keyboard_arrow_left</span>-->
+<!--                    <span ng-hide="!hideRowSettings" class="material-icons f-s-16">keyboard_arrow_right</span>-->
+<!--                </div>-->
+<!--            </md-button>-->
+<!--        </div>-->
 
-        <div class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
+<!--        <div class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">-->
 
-            <div class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"
-                 ng-repeat="column in groups track by column.key"
-                 ng-hide="column.isHidden"
-                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
-                 ng-style="column.style"
-                 data-column-id="{{column.___group_type_id}}"
-                 data-attr-key="{{column.key}}"
-                 draggable="{{groupsAreaDraggable}}"
+<!--            <div class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"-->
+<!--                 ng-repeat="column in groups track by column.key"-->
+<!--                 ng-hide="column.isHidden"-->
+<!--                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"-->
+<!--                 ng-style="column.style"-->
+<!--                 data-column-id="{{column.___group_type_id}}"-->
+<!--                 data-attr-key="{{column.key}}"-->
+<!--                 draggable="{{groupsAreaDraggable}}"-->
 
-                 popup
-                 popup-id="{{column.key}}"
-                 popup-template-url="{{getPopupMenuTemplate(column)}}"
-                 position-relative-to="mouse"
-                 open-on="right_click"
-                 close-on-click-outside="true"
-                 prevent-default="'true'"
-                 on-save-callback=""
-                 popup-data="columnsPopupsData[column.key]"
-                 offset-x="-10"
-                 offset-y="-10"
-                 popup-classes="getPopupMenuClasses(column)"
-                 backdrop-classes="'low-z-index-backdrop'"
-                 on-popup-close="onSubtotalTypeSelectCancel()"
-                 popup-event-service="evEventService">
+<!--                 popup-->
+<!--                 popup-id="{{column.key}}"-->
+<!--                 popup-template-url="{{getPopupMenuTemplate(column)}}"-->
+<!--                 position-relative-to="mouse"-->
+<!--                 open-on="right_click"-->
+<!--                 close-on-click-outside="true"-->
+<!--                 prevent-default="'true'"-->
+<!--                 on-save-callback=""-->
+<!--                 popup-data="columnsPopupsData[column.key]"-->
+<!--                 offset-x="-10"-->
+<!--                 offset-y="-10"-->
+<!--                 popup-classes="getPopupMenuClasses(column)"-->
+<!--                 backdrop-classes="'low-z-index-backdrop'"-->
+<!--                 on-popup-close="onSubtotalTypeSelectCancel()"-->
+<!--                 popup-event-service="evEventService">-->
 
-                <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
-                    <span ng-bind="column.name"></span>
-                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                    <span data-ng-if="column.error_data">{{column.error_data.description}}</span>
-                </md-tooltip>
+<!--                <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">-->
+<!--                    <span ng-bind="column.name"></span>-->
+<!--                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>-->
+<!--                    <span data-ng-if="column.error_data">{{column.error_data.description}}</span>-->
+<!--                </md-tooltip>-->
 
-                <div class="g-cell g-table-header-cell g-table-header-group-cell">
+<!--                <div class="g-cell g-table-header-cell g-table-header-group-cell">-->
 
-                    <div ng-if="column.report_settings.is_level_folded"
-                         class="g-cell-button"
-                         ng-click="unfoldLevel(column, $index)">
-                        <span class="material-icons">add</span>
-                    </div>
+<!--                    <div ng-if="column.report_settings.is_level_folded"-->
+<!--                         class="g-cell-button"-->
+<!--                         ng-click="unfoldLevel(column, $index)">-->
+<!--                        <span class="material-icons">add</span>-->
+<!--                    </div>-->
 
-                    <div ng-if="!column.report_settings.is_level_folded"
-                         class="g-cell-button"
-                         ng-click="foldLevel(column, $index)">
-                        <span class="material-icons">remove</span>
-                    </div>
+<!--                    <div ng-if="!column.report_settings.is_level_folded"-->
+<!--                         class="g-cell-button"-->
+<!--                         ng-click="foldLevel(column, $index)">-->
+<!--                        <span class="material-icons">remove</span>-->
+<!--                    </div>-->
 
-                    <span data-ng-if="column.error_data" class="material-icons error">error</span>
+<!--                    <span data-ng-if="column.error_data" class="material-icons error">error</span>-->
 
-                    <div class="g-group-button">
-                        <!--<div class="g-group-button flex-row"
-                                   data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">-->
+<!--                    <div class="g-group-button">-->
+<!--                        &lt;!&ndash;<div class="g-group-button flex-row"-->
+<!--                                   data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">&ndash;&gt;-->
 
-                        <div  class="column-name-wrapper">
+<!--                        <div  class="column-name-wrapper">-->
 
-                            <div class="flex-row flex-i-center name-block"
-                                 data-ng-click="showArrowDown($event)"
-                                 popup
-                                 popup-id="{{column.key}}"
-                                 popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
-                                 popup-data="{column: column, changeSortMode: changeSortMode}"
-                                 position-relative-to="element"
-                                 relative-popup-x="left"
-                                 open-on="click"
-                                 close-on-click-outside="true"
-                                 popup-classes="'column-sort-popup'"
-                                 on-popup-close="hideArrowDown()"
-                                 popup-event-service="evEventService">
+<!--                            <div class="flex-row flex-i-center name-block"-->
+<!--                                 data-ng-click="showArrowDown($event)"-->
+<!--                                 popup-->
+<!--                                 popup-id="{{column.key}}"-->
+<!--                                 popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"-->
+<!--                                 popup-data="{column: column, changeSortMode: changeSortMode}"-->
+<!--                                 position-relative-to="element"-->
+<!--                                 relative-popup-x="left"-->
+<!--                                 open-on="click"-->
+<!--                                 close-on-click-outside="true"-->
+<!--                                 popup-classes="'column-sort-popup'"-->
+<!--                                 on-popup-close="hideArrowDown()"-->
+<!--                                 popup-event-service="evEventService">-->
 
-                                <div ng-if="!column.layout_name">
-                                    <span ng-bind="column.name"></span>
-                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                                </div>
+<!--                                <div ng-if="!column.layout_name">-->
+<!--                                    <span ng-bind="column.name"></span>-->
+<!--                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>-->
+<!--                                </div>-->
 
-                                <div ng-if="column.layout_name">
-                                    <span ng-bind="column.layout_name"></span>
-                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                                </div>
+<!--                                <div ng-if="column.layout_name">-->
+<!--                                    <span ng-bind="column.layout_name"></span>-->
+<!--                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>-->
+<!--                                </div>-->
 
-                                <span class="material-icons arrow-down">arrow_drop_down</span>
+<!--                                <span class="material-icons arrow-down">arrow_drop_down</span>-->
 
-                                <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
-                                    m
-                                    <md-tooltip md-direction="top">
-                                       Manual Sorting Activated
-                                    </md-tooltip>
-                                </span>
+<!--                                <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">-->
+<!--                                    m-->
+<!--                                    <md-tooltip md-direction="top">-->
+<!--                                       Manual Sorting Activated-->
+<!--                                    </md-tooltip>-->
+<!--                                </span>-->
 
-                            </div>
+<!--                            </div>-->
 
-                            <div class="sort" data-ng-click="changeSortDirection(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
+<!--                            <div class="sort" data-ng-click="changeSortDirection(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">-->
 
-                                <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>
-                                <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
+<!--                                <span data-ng-show="column.options.sort === 'DESC'" class="material-icons gt-sorting-icon">arrow_upward</span>-->
+<!--                                <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>-->
 
-                            </div>
+<!--                            </div>-->
 
-                        </div>
+<!--                        </div>-->
 
-                    </div>
+<!--                    </div>-->
 
-                </div>
+<!--                </div>-->
 
-                <div class="resize-slider"
-                     data-group-column-resizer
-                     ev-data-service="evDataService"
-                     ev-event-service="evEventService"></div>
+<!--                <div class="resize-slider"-->
+<!--                     data-group-column-resizer-->
+<!--                     ev-data-service="evDataService"-->
+<!--                     ev-event-service="evEventService"></div>-->
 
-                <div class="g-table-header-drop gDraggableHeadArea"
-                     data-attr-key="{{column.key}}"></div>
+<!--                <div class="g-table-header-drop gDraggableHeadArea"-->
+<!--                     data-attr-key="{{column.key}}"></div>-->
 
-            </div>
+<!--            </div>-->
 
-        </div>
+<!--        </div>-->
 
         <div class="flex-row width-100 g-cols-holder gColumnsHolder gcAreaDnD">
 
