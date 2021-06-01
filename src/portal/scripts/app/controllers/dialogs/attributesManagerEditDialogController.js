@@ -18,7 +18,7 @@
         logService.controller('AttributesAddDialogManagerController', 'initialized');
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.readyStatus = {attribute: false, permissions: false};
 
         vm.entityType = data.entityType;

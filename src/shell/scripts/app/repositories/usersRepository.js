@@ -6,11 +6,17 @@
 
 'use strict';
 
+import ToastNotificationService from "../services/toastNotificationService";
+const toastNotificationService = new ToastNotificationService();
+
+import ErrorService from "../services/errorService";
+const errorService = new ErrorService(toastNotificationService);
+
 import CookieService from '../services/cookieService';
 const cookieService = new CookieService();
 
 import XhrService from '../services/xhrService';
-const xhrService = new XhrService();
+const xhrService = new XhrService(errorService);
 
 import baseUrlService from '../services/baseUrlService';
 
@@ -19,6 +25,7 @@ import baseUrlService from '../services/baseUrlService';
 	// var baseUrlService = require('../services/baseUrlService');
 
 const baseUrl = baseUrlService.resolve();
+// const authorizerUrl = baseUrlService.getAuthorizerUrl();
 
 /* var handleError = function (methodName) {
 	console.log('Method: ' + methodName + '. Cannot get data from server');
@@ -92,7 +99,7 @@ const protectedPing = function () {
 	})
 };
 
-const getList = function () {
+/* const getList = function () {
 
 	const prefix = baseUrlService.getMasterUserPrefix();
 	const apiVersion = baseUrlService.getApiVersion();
@@ -139,16 +146,11 @@ const getMe = function () {
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
-	})
+	});
 };
+const getCurrentUser = function () {
 
-const getMyCurrentMember = function () {
-
-	const baseUrl = baseUrlService.resolve();
-	const prefix = baseUrlService.getMasterUserPrefix();
-	const apiVersion = baseUrlService.getApiVersion();
-
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/0/', {
+	return xhrService.fetch(authorizerUrl + '/user/0/', {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -156,41 +158,8 @@ const getMyCurrentMember = function () {
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
-	})
-};
+	});
 
-const getCurrentMasterUser = function () {
-
-	const prefix = baseUrlService.getMasterUserPrefix();
-	const apiVersion = baseUrlService.getApiVersion();
-
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/get-current-master-user/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
-};
-
-const changePassword = function (id, user) {
-
-	const prefix = baseUrlService.getMasterUserPrefix();
-	const apiVersion = baseUrlService.getApiVersion();
-
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/' + id + '/set-password/', {
-		method: 'PUT',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(user)
-	})
 };
 
 var update = function (id, user) {
@@ -380,9 +349,26 @@ var setMasterUser = function (id) {
 			'Content-type': 'application/json'
 		}
 	})
+}; */
+
+const getMyCurrentMember = function () {
+
+	const baseUrl = baseUrlService.resolve();
+	const prefix = baseUrlService.getMasterUserPrefix();
+	const apiVersion = baseUrlService.getApiVersion();
+
+	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/0/', {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	})
 };
 
-var getMemberList = function () {
+const getMemberList = function () {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -398,7 +384,7 @@ var getMemberList = function () {
 	})
 };
 
-var getMemberByKey = function (id) {
+const getMemberByKey = function (id) {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -414,7 +400,7 @@ var getMemberByKey = function (id) {
 	})
 };
 
-var updateMember = function (id, user) {
+const updateMember = function (id, user) {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -431,7 +417,7 @@ var updateMember = function (id, user) {
 	})
 };
 
-var patchMember = function (id, user) {
+const patchMember = function (id, user) {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -448,7 +434,7 @@ var patchMember = function (id, user) {
 	})
 };
 
-var deleteMemberByKey = function (id) {
+const deleteMemberByKey = function (id) {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -464,7 +450,7 @@ var deleteMemberByKey = function (id) {
 	})
 };
 
-var getGroupList = function () {
+const getGroupList = function () {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -480,7 +466,7 @@ var getGroupList = function () {
 	})
 };
 
-var getOwnMemberSettings = function () {
+const getOwnMemberSettings = function () {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -496,7 +482,7 @@ var getOwnMemberSettings = function () {
 	})
 };
 
-var updateOwnMemberSettings = function (id, member) {
+const updateOwnMemberSettings = function (id, member) {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -514,8 +500,8 @@ var updateOwnMemberSettings = function (id, member) {
 	})
 };
 
-
-var getUsercodePrefixList = function () {
+// TODO: move request for usercode prefixes to separate repository
+const getUsercodePrefixList = function () {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -532,7 +518,7 @@ var getUsercodePrefixList = function () {
 		})
 };
 
-var createUsercodePrefix = function (item) {
+const createUsercodePrefix = function (item) {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -551,7 +537,7 @@ var createUsercodePrefix = function (item) {
 		})
 };
 
-var deleteUserCodePrefixByKey = function (id) {
+const deleteUserCodePrefixByKey = function (id) {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -580,11 +566,11 @@ export default {
 	ping: ping,
 	protectedPing: protectedPing,
 
-	getList: getList,
+	/* getList: getList,
 	getByKey: getByKey,
 	getMe: getMe,
-	getMyCurrentMember: getMyCurrentMember,
-	changePassword: changePassword,
+	getCurrentUser: getCurrentUser,
+
 	update: update,
 	patch: patch,
 	deleteByKey: deleteByKey,
@@ -597,8 +583,9 @@ export default {
 	updateMaster: updateMaster,
 	patchMaster: patchMaster,
 	deleteMasterByKey: deleteMasterByKey,
-	setMasterUser: setMasterUser,
+	setMasterUser: setMasterUser, */
 
+	getMyCurrentMember: getMyCurrentMember,
 	getMemberList: getMemberList,
 	getMemberByKey: getMemberByKey,
 	updateMember: updateMember,

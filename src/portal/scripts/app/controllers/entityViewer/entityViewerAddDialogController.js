@@ -44,12 +44,12 @@
         {id: 'user_code', name: 'User Code'},
     ];
 
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, usersService) {
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, authorizerService, usersService) {
 
         console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
 		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
@@ -463,7 +463,7 @@
 
         vm.getCurrentMasterUser = function () {
 
-            return usersService.getCurrentMasterUser().then(function (data) {
+            return authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;

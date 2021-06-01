@@ -13,7 +13,7 @@
 
     module.exports = function ($scope, $mdDialog, usersService) {
         // logService.controller('ActionsNotificationsSettingsDialogController', 'initialized');
-		console.log("testing usersService injection", usersService);
+
         var vm = this;
 
         vm.readyStatus = {member: false};

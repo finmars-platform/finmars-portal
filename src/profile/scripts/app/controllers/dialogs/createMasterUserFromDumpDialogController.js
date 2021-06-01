@@ -5,9 +5,9 @@
 
     'use strict';
 
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, data, profileAuthorizerService) {
 
         console.log('data', data);
 
@@ -24,7 +24,7 @@
             formData.append('name', vm.name);
             formData.append('file', vm.file);
 
-            authorizerService.createMasterUserFromBackup(formData).then(function (data) {
+			profileAuthorizerService.createMasterUserFromBackup(formData).then(function (data) {
 
                 console.log('data success', data);
 

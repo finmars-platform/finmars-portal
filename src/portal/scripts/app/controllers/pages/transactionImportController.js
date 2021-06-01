@@ -20,7 +20,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
     module.exports = function transactionImportController($scope, $mdDialog, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.fileLocal = null;
 
         vm.readyStatus = {

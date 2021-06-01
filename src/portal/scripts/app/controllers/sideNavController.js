@@ -12,7 +12,7 @@
     module.exports = function ($scope, $mdDialog, $transition, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.sections = [];
 
         vm.readyStatus = {

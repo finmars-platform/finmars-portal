@@ -1,9 +1,10 @@
 @import "./mixins.less";
+@sidenavWidth: 160px;
+@collapsedSidenavWidth: 65px;
 
 body {
   font-family: 'Roboto-Regular', 'Roboto', sans-serif;
 }
-
 
 h2 {
   font-weight: 400;
@@ -73,11 +74,20 @@ md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolb
   color: #747474;
 }
 
-.header {
-
+md-toolbar.header {
+  position: relative;
+  // z-index: 98;
+  // padding-left: 160px;
+  //background-color: #4c334d;
+  //background-color: #000;
+  z-index: 51;
+  background: #f2f2f2;
+  min-height: 53px;
+  height: 53px;
+  max-height: 53px;
+  border-bottom: 1px solid @borderPale;
+  box-sizing: border-box;
   color: #747474;
-  min-height: 52px;
-  height: 52px;
 
   .md-toolbar-tools {
     min-height: 52px;
@@ -100,14 +110,20 @@ md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolb
   }
 
   .toolbar-wrapper {
-    height: 53px; // 1px for border;
+    // height: 53px; // 1px for border;
+    height: 100%;
     color: #747474;
     fill: #747474;
-    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    // border-bottom: 1px solid rgba(224, 224, 224, 1);
   }
 
 }
 
+.portal-header {
+  md-toolbar.header {
+    padding-left: @sidenavWidth;
+  }
+}
 
 .md-toolbar-tools-bottom {
   font-size: small;
@@ -301,10 +317,11 @@ md-sidenav {
 
 .sidenav-wrapper {
   position: absolute;
-  width: 160px;
+  width: @sidenavWidth;
   height: 100%;
+  top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 51;
 
   span.side-nav-title {
     position: relative;
@@ -535,12 +552,6 @@ md-backdrop.md-select-backdrop {
   }
 }
 
-.warning-dialog {
-  .warning-text {
-    padding: 0 20px;
-  }
-}
-
 .success-dialog {
   .success-text {
     padding: 0 20px;
@@ -591,7 +602,7 @@ md-backdrop.md-select-backdrop {
 
 .space-for-sidenav {
   //padding-left: 200px;
-  padding-left: 160px;
+  padding-left: @sidenavWidth;
 }
 
 .unreaded-notifications-number {
@@ -963,7 +974,7 @@ md-menu-bar.header-logout-menu {
   overflow: visible;
   position: absolute;
   top: 0;
-  left: 160px;
+  left: @sidenavWidth;
   z-index: 0;
   //background-color: #3b283b;
   background-color: #000;
@@ -1028,10 +1039,10 @@ md-menu-bar.header-logout-menu {
 }
 
 .sidenav-collapsed {
-  /* New sidemenu styles */
 
+  //<editor-fold desc="New sidemenu styles">
   .space-for-sidenav {
-    padding-left: 65px;
+    padding-left: @collapsedSidenavWidth;
   }
 
   .g-table-dial {
@@ -1047,7 +1058,7 @@ md-menu-bar.header-logout-menu {
   }
 
   .sidenav-wrapper {
-    width: 65px;
+    width: @collapsedSidenavWidth;
   }
 
   .side-nav-btn-resize-holder {
@@ -1056,7 +1067,7 @@ md-menu-bar.header-logout-menu {
   }
 
   .side-menu-settings-container {
-    left: 65px;
+    left: @collapsedSidenavWidth;
   }
 
   .md-button.md-raised.expand-sidenav-btn {
@@ -1073,7 +1084,7 @@ md-menu-bar.header-logout-menu {
   }
 
   .sidenav-wrapper {
-    width: 65px;
+    width: @collapsedSidenavWidth;
     position: absolute;
     height: 100%;
     left: 0;
@@ -1088,10 +1099,12 @@ md-menu-bar.header-logout-menu {
     display: none;
   }
 
-  /* < New sidemenu styles > */
+  .portal-header md-toolbar.header {
+    padding-left: @collapsedSidenavWidth;
+  }
+  //</editor-fold>
 
-  /* Old sidemenu styles */
-
+  //<editor-fold desc="Old sidemenu styles">
   /*.sidenav-wrapper {
     width: 55px;
     position: absolute;
@@ -1113,8 +1126,7 @@ md-menu-bar.header-logout-menu {
   .g-table-dial {
     left: 70px;
   }*/
-
-  /* < Old sidemenu styles > */
+  //</editor-fold>
 }
 
 .separate-side-menu {
@@ -1508,26 +1520,17 @@ mdp-time-picker.custom-time-picker {
   line-height: 1;
 }
 
-md-toolbar.header {
+/* md-toolbar.header {
   position: relative;
   z-index: 98;
   // padding-left: 160px;
-  //background-color: #4c334d;
-  //background-color: #000;
   background: #f2f2f2;
   min-height: 52px;
   height: 52px;
   max-height: 52px;
+  border-bottom: 1px solid @borderPale;
   box-sizing: border-box;
-}
-
-.portal-header {
-
-  md-toolbar.header {
-    padding-left: 160px;
-  }
-
-}
+} */
 
 @media screen and (max-width: 740px) {
   .header-buttons {

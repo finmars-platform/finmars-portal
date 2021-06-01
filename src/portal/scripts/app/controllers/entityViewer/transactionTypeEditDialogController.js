@@ -41,7 +41,7 @@
     {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.entityType = entityType;
@@ -220,7 +220,7 @@
             if (vm.fromEntityType) {
                 entityType = {entityType: vm.entityType, from: vm.fromEntityType};
             }
-            $state.go('app.attributesManager', entityType);
+            $state.go('app.portal.attributesManager', entityType);
             $mdDialog.hide();*/
 
             $mdDialog.show({
@@ -367,7 +367,7 @@
                     console.log('vm.relationItems', vm.relationItems)
 
                     /*vm.editLayout = function () {
-                        $state.go('app.data-constructor', {
+                        $state.go('app.portal.data-constructor', {
                             entityType: 'complex-transaction',
                             from: vm.entityType,
                             instanceId: data.id
@@ -376,7 +376,7 @@
                     };*/
 
                     /* vm.manageAttrs = function () {
-                        $state.go('app.attributesManager', {
+                        $state.go('app.portal.attributesManager', {
                             entityType: 'transaction-type',
                             from: vm.entityType,
                             instanceId: data.id

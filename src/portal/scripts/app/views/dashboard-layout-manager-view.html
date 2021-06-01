@@ -5,7 +5,7 @@
     <div data-ng-if="vm.readyStatus.data" class="p-24">
 
         <div>
-            <md-button class="md-raised md-primary" data-ui-sref="app.dashboard-constructor({id: 'new'})">Add New Layout
+            <md-button class="md-raised md-primary" data-ui-sref="app.portal.dashboard-constructor({id: 'new'})">Add New Layout
             </md-button>
         </div>
 
@@ -15,7 +15,7 @@
 
                 {{item.name}}
 
-                <md-button class="md-raised" data-ui-sref="app.dashboard-constructor({id: item.id})">Edit</md-button>
+                <md-button class="md-raised" data-ui-sref="app.portal.dashboard-constructor({id: item.id})">Edit</md-button>
                 <md-button class="md-raised md-warn" data-ng-click="vm.deleteItem($event, item)">Delete</md-button>
 
             </div>

@@ -36,21 +36,12 @@ export default function (globalDataService) {
     const getByKey = function (id) {
         return usersRepository.getByKey(id)
     };
-	/**
-	 * Gets current user.
-	 *
-	 * @memberOf module:usersService
-	 * @returns {Promise<Object>} - data of current user
-	 */
-    const getMe = function () {
+
+    /* const getMe = function () {
 
     	return new Promise ((resolve, reject) => {
 
-			const user = globalDataService.getUser();
-
-			if (user) resolve(user);
-
-			usersRepository.getUser().then(userData => {
+			usersRepository.getMe().then(userData => {
 
 				globalDataService.setUser(userData);
 				resolve(userData);
@@ -62,16 +53,84 @@ export default function (globalDataService) {
         // return usersRepository.getMe();
     };
 
-    const getMyCurrentMember = function () {
+	const update = function (id, user) {
+		return usersRepository.update(id, user);
+	};
+
+	const patch = function (id, user) {
+		return usersRepository.patch(id, user);
+	};
+
+	const deleteByKey = function (id) {
+		return usersRepository.deleteByKey(id);
+	};
+
+	const getCurrentMasterUser = function () {
+		return usersRepository.getCurrentMasterUser();
+	};
+
+	const createMasterUser = function (user) {
+		return usersRepository.createMasterUser(user);
+	};
+
+	const getMasterList = function () {
+		return usersRepository.getMasterList();
+	};
+
+	const getMasterByKey = function (id) {
+		return usersRepository.getMasterByKey(id)
+	};
+
+	const updateMaster = function (id, user) {
+		return usersRepository.updateMaster(id, user);
+	};
+
+	const patchMaster = function (id, user) {
+		return usersRepository.patchMaster(id, user);
+	};
+
+	const deleteMasterByKey = function (id) {
+		return usersRepository.deleteMasterByKey(id);
+	};
+
+	const setMasterUser = function (id) {
+		return usersRepository.setMasterUser(id);
+	};
+
+	const getMasterListLight = function () {
+			return usersRepository.getMasterListLight();
+	}; */
+	const getMyCurrentMember = function () {
+
+		return new Promise((resolve, reject) => {
+
+			usersRepository.getMyCurrentMember().then(memberData => {
+
+				globalDataService.setMember(memberData);
+				resolve(memberData);
+
+			}).catch(error => reject(error));
+
+		});
+
+	};
+
+    const getMemberList = function () {
+        return usersRepository.getMemberList();
+    };
+
+    const getMemberByKey = function (id) {
+        return usersRepository.getMemberByKey(id)
+    };
+
+    const updateMember = function (id, member) {
 
     	return new Promise((resolve, reject) => {
 
-    		const member = globalDataService.getMember();
-    		if (member) resolve(member);
+			usersRepository.updateMember(id, member).then(updatedMember => {
 
-    		usersRepository.getMyCurrentMember().then(memberData => {
-    			globalDataService.setMember(memberData);
-				resolve(memberData);
+				globalDataService.setMember(updatedMember);
+				resolve(updatedMember);
 
 			}).catch(error => reject(error));
 
@@ -79,82 +138,43 @@ export default function (globalDataService) {
 
     };
 
-    const changePassword = function (id, user) {
-        return usersRepository.changePassword(id, user);
-    };
+    const patchMember = function (id, member) {
 
-    const update = function (id, user) {
-        return usersRepository.update(id, user);
-    };
+		return new Promise((resolve, reject) => {
 
-    const patch = function (id, user) {
-        return usersRepository.patch(id, user);
-    };
+			usersRepository.patchMember(id, member).then(patchedMember => {
 
-    const deleteByKey = function (id) {
-        return usersRepository.deleteByKey(id);
-    };
+				globalDataService.setMember(patchedMember);
+				resolve(patchedMember);
 
-    const getCurrentMasterUser = function () {
-        return usersRepository.getCurrentMasterUser();
-    };
-    
-    const createMasterUser = function (user) {
-        return usersRepository.createMasterUser(user);
-    };
+			}).catch(error => reject(error));
 
-    const getMasterList = function () {
-        return usersRepository.getMasterList();
-    };
+		});
 
-    const getMasterByKey = function (id) {
-        return usersRepository.getMasterByKey(id)
-    };
-
-    const updateMaster = function (id, user) {
-        return usersRepository.updateMaster(id, user);
-    };
-
-    const patchMaster = function (id, user) {
-        return usersRepository.patchMaster(id, user);
-    };
-
-    const deleteMasterByKey = function (id) {
-        return usersRepository.deleteMasterByKey(id);
-    };
-
-    const setMasterUser = function (id) {
-        return usersRepository.setMasterUser(id);
-    };
-
-
-    const getMemberList = function () {
-        return usersRepository.getMemberList();
-    };
-
-    const getMasterListLight = function () {
-        return usersRepository.getMasterListLight();
-    };
-
-    const getMemberByKey = function (id) {
-        return usersRepository.getMemberByKey(id)
-    };
-
-    const updateMember = function (id, user) {
-        return usersRepository.updateMember(id, user);
-    };
-
-    const patchMember = function (id, user) {
-        return usersRepository.patchMember(id, user);
     };
 
     const deleteMemberByKey = function (id) {
-        return usersRepository.deleteMemberByKey(id);
+
+    	return new Promise((resolve, reject) => {
+
+			usersRepository.deleteMemberByKey(id).then(() => {
+
+				const currentMember = globalDataService.getMember();
+				const currentMemberIsDeleted = currentMember && currentMember.id === id;
+
+				if (currentMemberIsDeleted) globalDataService.setMember(null);
+
+				resolve('member is deleted');
+
+			}).catch(error => reject(error));
+
+		})
+
     };
 
-    const getGroupList = function () {
+    /* const getGroupList = function () {
         return usersRepository.getGroupList();
-    };
+    }; */
 
     const getOwnMemberSettings = function () {
         return usersRepository.getOwnMemberSettings();
@@ -164,7 +184,7 @@ export default function (globalDataService) {
         return usersRepository.updateOwnMemberSettings(id, member);
     };
 
-
+	// TODO: move operations with usercode prefixes to separate service
     const getUsercodePrefixList = function () {
         return usersRepository.getUsercodePrefixList();
     };
@@ -186,9 +206,9 @@ export default function (globalDataService) {
 
 		getList: getList,
 		getByKey: getByKey,
-		getMe: getMe,
-		getMyCurrentMember: getMyCurrentMember,
-		changePassword: changePassword,
+		/* getMe: getMe,
+		getCurrentUser: getCurrentUser,
+
 		update: update,
 		patch: patch,
 		deleteByKey: deleteByKey,
@@ -202,15 +222,16 @@ export default function (globalDataService) {
 		updateMaster: updateMaster,
 		patchMaster: patchMaster,
 		deleteMasterByKey: deleteMasterByKey,
-		setMasterUser: setMasterUser,
+		setMasterUser: setMasterUser, */
 
+		getMyCurrentMember: getMyCurrentMember,
 		getMemberList: getMemberList,
 		getMemberByKey: getMemberByKey,
 		updateMember: updateMember,
 		patchMember: patchMember,
 		deleteMemberByKey: deleteMemberByKey,
 
-		getGroupList: getGroupList,
+		// getGroupList: getGroupList,
 
 		getOwnMemberSettings: getOwnMemberSettings,
 		updateOwnMemberSettings: updateOwnMemberSettings,

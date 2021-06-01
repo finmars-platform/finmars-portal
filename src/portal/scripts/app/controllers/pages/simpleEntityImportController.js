@@ -24,7 +24,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
     module.exports = function simpleEntityImportController($scope, $mdDialog, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.readyStatus = {
             schemes: false,
             processing: false

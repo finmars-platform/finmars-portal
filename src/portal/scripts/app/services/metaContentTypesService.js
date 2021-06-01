@@ -78,9 +78,9 @@
 
         console.log('stateName', stateName, stateParams);
 
-        if (stateName.indexOf('app.data') !== -1 || stateName.indexOf('app.reports') !== -1) {
+        if (stateName.indexOf('app.portal.data') !== -1 || stateName.indexOf('app.portal.reports') !== -1) {
 
-            if (stateName === 'app.data.strategy') {
+            if (stateName === 'app.portal.data.strategy') {
                 result = 'strategy-' + stateParams;
             } else {
                 result = stateName.split('.')[2];
@@ -88,7 +88,7 @@
 
         }
 
-        if (stateName == 'app.dashboard') {
+        if (stateName == 'app.portal.dashboard') {
             result = stateName.split('.')[1];
         }
 

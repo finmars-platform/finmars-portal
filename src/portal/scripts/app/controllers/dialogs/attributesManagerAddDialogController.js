@@ -14,7 +14,7 @@
     module.exports = function ($scope, $mdDialog, data, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.entityType = data.entityType;
 
         vm.attribute = {name: '', 'value_type': ''};

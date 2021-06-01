@@ -1,5 +1,8 @@
 /**
  * Created by szhitenev on 04.05.2016.
+ *
+ * Deprecated. 'app' state now uses shell/.../shellController.js
+ *
  */
 (function () {
 
@@ -68,7 +71,7 @@
             return new Promise(function (resolve, reject) {
 
                 // usersService.getMasterListLight().then(function (data) {
-                authorizerService.getMasterList().then(function (data) {
+                authorizerService.getMasterUsersList().then(function (data) {
 
                     if (data.hasOwnProperty('results')) {
                         vm.masters = data.results
@@ -120,7 +123,7 @@
                 if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
                     middlewareService.masterUserChanged();
 
-                    $state.go('app.home');
+                    $state.go('app.portal.home');
                     vm.getMasterUsersList();
                 }
 
@@ -155,13 +158,13 @@
 
                 middlewareService.masterUserChanged();
 
-                authorizerService.setMasterUser(master.id).then(function (data) {
+                authorizerService.setCurrentMasterUser(master.id).then(function (data) {
 
                     if (data.base_api_url) {
                         baseUrlService.setMasterUserPrefix(data.base_api_url)
                     }
 
-                    // $state.go('app.home', null, {reload: 'app'});
+                    // $state.go('app.portal.home', null, {reload: 'app'});
 
                     window.location.reload();
 
@@ -221,23 +224,23 @@
 
             } else {
 
-                $state.go('app.home');
+                $state.go('app.portal.home');
 
             }
 
         };
 
         vm.goToHomepage = function () {
-            $state.go('app.home');
+            $state.go('app.portal.home');
         }
 
         vm.getCurrentGlobalState = function () {
 
-            if ($state.current.name.indexOf('app.profile') !== -1) {
+            if ($state.current.name.indexOf('app.portal.profile') !== -1) {
                 return 'profile'
             }
 
-            if ($state.current.name.indexOf('app.setup') !== -1) {
+            if ($state.current.name.indexOf('app.portal.setup') !== -1) {
                 return 'setup';
             }
 
@@ -273,7 +276,7 @@
                 pageStateParams.strategyNumber = transition.params().strategyNumber;
                 pageStateParams.layoutUserCode = transition.params().layoutUserCode;
 
-                if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport(pageStateName)) {
+                if (pageStateName.indexOf('app.portal.data.') !== -1 || vm.isReport(pageStateName)) {
 
                     showLayoutName = true;
                     vm.activeLayoutName = null;
@@ -298,7 +301,7 @@
                 middlewareService.setNewSplitPanelLayoutName(false);
                 var from = transition.from();
 
-                if (from.name === 'app.profile') {
+                if (from.name === 'app.portal.profile') {
                     vm.getMasterUsersList();
                 }
 
@@ -478,19 +481,19 @@
             }
 
             switch (stateName) {
-                case 'app.reports.balance-report':
+                case 'app.portal.reports.balance-report':
                     return true;
                     break;
-                case 'app.reports.pl-report':
+                case 'app.portal.reports.pl-report':
                     return true;
                     break;
-                case 'app.reports.transaction-report':
+                case 'app.portal.reports.transaction-report':
                     return true;
                     break;
-                case 'app.reports.cash-flow-projection-report':
+                case 'app.portal.reports.cash-flow-projection-report':
                     return true;
                     break;
-                case 'app.reports.performance-report':
+                case 'app.portal.reports.performance-report':
                     return true;
                     break;
                 default:
@@ -544,7 +547,7 @@
             middlewareService.setNewSplitPanelLayoutName(false);
             var from = transition.from();
 
-            if (from.name === 'app.profile') {
+            if (from.name === 'app.portal.profile') {
                 vm.getMasterUsersList();
             }
 
@@ -760,7 +763,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                authorizerService.getUser().then(function (data) {
+                usersService.getUser().then(function (data) {
 
                     vm.user = data;
 
@@ -799,9 +802,9 @@
         }
 
         var transactionsList = [
-            'app.settings.general.init-configuration', 'app.settings.init-configuration',
-            'app.settings.ecosystem-default-settings', 'app.settings.data-providers', 'app.settings.users-groups',
-            'app.processes'
+            'app.portal.settings.general.init-configuration', 'app.portal.settings.init-configuration',
+            'app.portal.settings.ecosystem-default-settings', 'app.portal.settings.data-providers', 'app.portal.settings.users-groups',
+            'app.portal.processes'
         ];
 
         function enableAccessHandler($transitions) {
@@ -907,12 +910,12 @@
                 } else {
 
                     if (vm.currentGlobalState !== 'profile') {
-                        $state.go('app.profile', {}, {reload: 'app'})
+                        $state.go('app.portal.profile', {}, {reload: 'app'})
                     }
 
                 }
 
-                if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
+                if (pageStateName.indexOf('app.portal.data.') !== -1 || vm.isReport()) {
                     showLayoutName = true;
                     vm.getActiveLayoutName();
                 }
@@ -980,7 +983,7 @@
                     vm.isAuthenticated = true;
 
                     if (!data.current_master_user_id) {
-                        $state.go('app.profile', {}, {})
+                        $state.go('app.portal.profile', {}, {})
                     }
 
                     if (data.base_api_url) {

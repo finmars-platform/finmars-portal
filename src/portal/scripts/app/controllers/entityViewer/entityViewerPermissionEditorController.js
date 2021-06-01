@@ -14,7 +14,7 @@
     module.exports = function entityViewerPermissionEditorController($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.readyStatus = {content: false};
 
         vm.processing = false;

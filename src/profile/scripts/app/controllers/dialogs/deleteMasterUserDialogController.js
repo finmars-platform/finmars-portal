@@ -5,11 +5,11 @@
 
     'use strict';
 
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    // var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, data, toastNotificationService, profileAuthorizerService, commonDialogsService) {
 
         var vm = this;
 
@@ -18,12 +18,12 @@
         vm.masterUser = data.masterUser;
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function ($event) {
 
-            $mdDialog.show({
+            /*$mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
@@ -38,13 +38,22 @@
                 skipHide: true,
                 multiple: true,
                 targetEvent: $event
-            }).then(function (res) {
+
+            })*/
+			const warningLocals = {
+				warning: {
+					title: 'Confirmation',
+					description: 'Database ' + vm.masterUser.name + ' is going to be deleted.'
+				}
+			};
+
+			commonDialogsService.warning(warningLocals, {targetEvent: $event}).then(function (res) {
 
                 if (res.status === 'agree') {
 
                     vm.processing = true;
 
-                    authorizerService.deleteMasterUser(vm.masterUser.id).then(function () {
+					profileAuthorizerService.deleteMasterUserByKey(vm.masterUser.id).then(function () {
 
                         vm.processing = false;
 
@@ -62,8 +71,7 @@
                     })
                 }
 
-            })
-
+            });
 
         };
     }

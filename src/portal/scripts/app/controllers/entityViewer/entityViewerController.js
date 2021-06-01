@@ -30,7 +30,7 @@
         module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService) {
 
             var vm = this;
-			console.log("testing usersService injection", usersService);
+
             var doNotCheckLayoutChanges = false;
 
             vm.readyStatus = {
@@ -39,22 +39,22 @@
             };
 
             var listOfStatesWithLayout = [
-                'app.data.portfolio',
-                'app.data.account',
-                'app.data.account-type',
-                'app.data.counterparty',
-                'app.data.responsible',
-                'app.data.instrument',
-                'app.data.instrument-type',
-                // 'app.data.pricing-policy',
-                'app.data.complex-transaction',
-                'app.data.transaction',
-                'app.data.transaction-type',
-                'app.data.currency-history',
-                'app.data.price-history',
-                'app.data.currency',
-                'app.data.strategy-group',
-                'app.data.strategy'
+                'app.portal.data.portfolio',
+                'app.portal.data.account',
+                'app.portal.data.account-type',
+                'app.portal.data.counterparty',
+                'app.portal.data.responsible',
+                'app.portal.data.instrument',
+                'app.portal.data.instrument-type',
+                // 'app.portal.data.pricing-policy',
+                'app.portal.data.complex-transaction',
+                'app.portal.data.transaction',
+                'app.portal.data.transaction-type',
+                'app.portal.data.currency-history',
+                'app.portal.data.price-history',
+                'app.portal.data.currency',
+                'app.portal.data.strategy-group',
+                'app.portal.data.strategy'
             ];
 
             vm.stateWithLayout = false;
@@ -1077,7 +1077,6 @@
             };
 
             var checkLayoutForChanges = function (transition) { // called on attempt to change or reload page
-            	console.log("testing checkLayoutForChanges1", transition, transition.from(), transition.to(), transition.params('to'), );
 
                 return new Promise(function (resolve, reject) {
 

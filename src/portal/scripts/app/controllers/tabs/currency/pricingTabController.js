@@ -13,10 +13,10 @@
 
     var fieldResolverService = require('../../../services/fieldResolverService');
 
-    module.exports = function ($scope, usersService) {
+    module.exports = function ($scope, authorizerService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
 		vm.readyStatus = {content: false};
 
         vm.entity = $scope.$parent.vm.entity;
@@ -177,7 +177,7 @@
 
         vm.setSystemCurrency = function () {
 
-            usersService.getCurrentMasterUser().then(function (data) {
+			authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.system_currency = data.system_currency;
                 vm.systemCurrencyFields.push(data.system_currency_object);

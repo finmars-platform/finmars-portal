@@ -18,7 +18,7 @@
         console.log("file", data.file);
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.file = data.file;
         vm.rawFile = data.rawFile;
 

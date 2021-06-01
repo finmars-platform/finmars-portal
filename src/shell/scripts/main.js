@@ -7,27 +7,35 @@
 // fixes angular module import error
 require('../../forum/scripts/main.js');
 // require('../../profile/scripts/main.js');
+
 import profile from '../../profile/scripts/main.js';
+
 // require('../../portal/scripts/main.js');
+
 import portal from '../../portal/scripts/main.js';
 
 
-import router from './app/router.js';
+import router from "./app/router.js";
 
-import websocketService from './app/services/websocketService.js';
+import websocketService from "./app/services/websocketService";
 
-import cookieService from './app/services/cookieService.js';
-import toastNotificationService from './app/services/toastNotificationService.js';
-import errorService from './app/services/errorService.js';
-import xhrService from './app/services/xhrService.js';
+import cookieService from "./app/services/cookieService.js";
+// import localStorageService from "./app/services/localStorageService";
+import toastNotificationService from "./app/services/toastNotificationService.js";
+import errorService from "./app/services/errorService.js";
+import xhrService from "./app/services/xhrService.js";
 import broadcastChannelService from "./app/services/broadcastChannelService.js";
-
 import globalDataService from "./app/services/globalDataService.js";
 import authorizerService from "./app/services/authorizerService.js";
 import middlewareService from "./app/services/middlewareService.js";
-import usersService from './app/services/usersService.js';
+import usersService from "./app/services/usersService.js";
+
+import commonDialogsService from "./app/services/commonDialogsService.js";
 
 import shellController from "./app/controllers/shellController.js";
+import warningDialogController from "./app/controllers/dialogs/warningDialogController.js";
+
+import dndFilesOnPageDirective from "./app/directives/dndFilesOnPageDirective.js";
 
 const app = angular.module('finmars', [
 	'ngAria',
@@ -118,14 +126,20 @@ app.run([function () {
 //</editor-fold>
 
 app.service('cookieService', [cookieService]);
+// app.service('localStorageService', ['globalDataService', localStorageService]);
 app.service('toastNotificationService', [toastNotificationService]);
 app.service('errorService', ['toastNotificationService', errorService]);
-app.service('xhrService', [xhrService]);
+app.service('xhrService', ['errorService', xhrService]);
 app.service('broadcastChannelService', [broadcastChannelService]);
-
 app.service('globalDataService', [globalDataService]);
 app.service('authorizerService', ['globalDataService', authorizerService]);
 app.service('middlewareService', [middlewareService]);
 app.service('usersService', ['globalDataService', usersService]);
 
-app.controller('ShellController', ['$scope', '$state', '$transitions', '$mdDialog', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', shellController]);
+app.service('commonDialogsService', ['$mdDialog', commonDialogsService]);
+
+app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlService', '$mdDialog', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', shellController]);
+
+app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', warningDialogController]);
+
+app.directive('dndFilesOnPage', ['$state', 'commonDialogsService', dndFilesOnPageDirective]);

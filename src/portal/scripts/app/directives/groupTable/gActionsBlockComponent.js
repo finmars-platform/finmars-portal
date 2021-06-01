@@ -58,7 +58,7 @@
                 //scope.isLayoutDefault = false;
 
                 scope.hasCreatePermission = false;
-                scope.isBaseTransaction = $state.current.name === 'app.data.transaction'; // Victor 2021.01.06 #72 remove ADD TRANSACTION button
+                scope.isBaseTransaction = $state.current.name === 'app.portal.data.transaction'; // Victor 2021.01.06 #72 remove ADD TRANSACTION button
 
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
@@ -264,67 +264,67 @@
                 scope.getEntityNameByState = function () {
 
                     switch ($state.current.name) {
-                        case 'app.data.portfolio':
+                        case 'app.portal.data.portfolio':
                             return "PORTFOLIO";
                             break;
-                        case 'app.data.account':
+                        case 'app.portal.data.account':
                             return "ACCOUNT";
                             break;
-                        case 'app.data.counterparty':
+                        case 'app.portal.data.counterparty':
                             return "COUNTERPARTY";
                             break;
-                        case 'app.data.counterparty-group':
+                        case 'app.portal.data.counterparty-group':
                             return "COUNTERPARTY GROUP";
                             break;
-                        case 'app.data.responsible':
+                        case 'app.portal.data.responsible':
                             return "RESPONSIBLE";
                             break;
-                        case 'app.data.responsible-group':
+                        case 'app.portal.data.responsible-group':
                             return "RESPONSIBLE GROUP";
                             break;
-                        case 'app.data.instrument':
+                        case 'app.portal.data.instrument':
                             return "INSTRUMENT";
                             break;
-                        case 'app.data.transaction':
+                        case 'app.portal.data.transaction':
                             return "TRANSACTION";
                             break;
-                        case 'app.data.price-history':
+                        case 'app.portal.data.price-history':
                             return "PRICE HISTORY";
                             break;
-                        case 'app.data.currency-history':
+                        case 'app.portal.data.currency-history':
                             return "CURRENCY HISTORY";
                             break;
-                        case 'app.data.strategy':
+                        case 'app.portal.data.strategy':
                             return "STRATEGY";
                             break;
-                        case 'app.data.strategy-subgroup':
+                        case 'app.portal.data.strategy-subgroup':
                             return "STRATEGY SUBGROUP";
                             break;
-                        case 'app.data.strategy-group':
+                        case 'app.portal.data.strategy-group':
                             return "STRATEGY GROUP";
                             break;
-                        case 'app.data.account-type':
+                        case 'app.portal.data.account-type':
                             return "ACCOUNT TYPES";
                             break;
-                        case 'app.data.instrument-type':
+                        case 'app.portal.data.instrument-type':
                             return "INSTRUMENT TYPES";
                             break;
-                        /* case 'app.data.pricing-policy':
+                        /* case 'app.portal.data.pricing-policy':
                             return "PRICING POLICY";
                             break; */
-                        case 'app.data.transaction-type':
+                        case 'app.portal.data.transaction-type':
                             return "TRANSACTION TYPE";
                             break;
-                        case 'app.data.transaction-type-group':
+                        case 'app.portal.data.transaction-type-group':
                             return "TRANSACTION TYPE GROUP";
                             break;
-                        case 'app.data.currency':
+                        case 'app.portal.data.currency':
                             return "CURRENCY";
                             break;
-                        case 'app.data.complex-transaction':
+                        case 'app.portal.data.complex-transaction':
                             return "TRANSACTION";
                             break;
-                        case 'app.data.tag':
+                        case 'app.portal.data.tag':
                             return "TAG";
                             break;
                         default:
@@ -1863,13 +1863,13 @@
                     var currentState;
                     switch (scope.entityType) {
                         case 'balance-report':
-                            currentState = 'app.reports.balance-report';
+                            currentState = 'app.portal.reports.balance-report';
                             break;
                         case 'balance-report':
-                            currentState = 'app.reports.pl-report';
+                            currentState = 'app.portal.reports.pl-report';
                             break;
                         case 'balance-report':
-                            currentState = 'app.reports.transaction-report';
+                            currentState = 'app.portal.reports.transaction-report';
                             break;
                     }
 

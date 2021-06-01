@@ -5,10 +5,10 @@
 
     'use strict';
 
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function copyMasterUserDialogController($scope, $mdDialog, $state, data) {
+    module.exports = function copyMasterUserDialogController($scope, $mdDialog, $state, data, profileAuthorizerService) {
 
         console.log('data', data);
 
@@ -19,7 +19,7 @@
         vm.processing = false;
 
         vm.cancel = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function ($event) {
@@ -27,11 +27,12 @@
             vm.processing = true;
 
 
-            authorizerService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id})
+			profileAuthorizerService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id})
 
             setTimeout(function (){
 
                 toastNotificationService.info("Copy of Database  " + vm.name + ' is currently processing');
+				$mdDialog.hide({status: 'agree'});
 
                 $state.go('app.profile', {}, {reload: 'app'});
 
@@ -39,7 +40,7 @@
 
 
 
-            // authorizerService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id}).then(function (data) {
+            // profileAuthorizerService.copyMasterUser({name: vm.name, reference_master_user: vm.referenceMasterUser.id}).then(function (data) {
             //
             //     console.log('data success', data);
             //

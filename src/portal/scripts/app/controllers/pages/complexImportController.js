@@ -16,7 +16,7 @@
     module.exports = function complexImportController($scope, $mdDialog, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.config = {
             delimiter: ','
         };

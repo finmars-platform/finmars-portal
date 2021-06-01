@@ -31,7 +31,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data, usersService) {
-		console.log("testing usersService injection", usersService);
+
         var vm = this;
 		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
@@ -460,7 +460,7 @@
             if (vm.fromEntityType) {
                 entityType = {entityType: vm.entityType, from: vm.fromEntityType};
             }
-            $state.go('app.attributesManager', entityType);
+            $state.go('app.portal.attributesManager', entityType);
             $mdDialog.hide();*/
 
             $mdDialog.show({
@@ -823,7 +823,7 @@
                     };
 
                     /*vm.manageAttrs = function () {
-                        $state.go('app.attributesManager', {
+                        $state.go('app.portal.attributesManager', {
                             entityType: vm.entityType,
                             from: vm.entityType,
                             instanceId: vm.transactionTypeId
