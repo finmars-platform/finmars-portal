@@ -22,7 +22,7 @@
                 item: '=',
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
-				console.log("testing usersService injection", usersService);
+
                 scope.prefixType = 1;
                 scope.selectedGroupPrefix = null;
                 scope.usercode = '';

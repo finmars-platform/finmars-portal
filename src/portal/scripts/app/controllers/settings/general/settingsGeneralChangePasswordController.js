@@ -7,10 +7,10 @@
 
     // var usersService = require('../../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog, usersService) {
+    module.exports = function ($scope, $mdDialog, authorizerService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.readyStatus = {processing: false, finished: false};
 
         vm.timeZones = timeZonesService.getList();
@@ -18,7 +18,7 @@
         vm.save = function ($event) {
             vm.readyStatus.processing = true;
             vm.readyStatus.finished = false;
-            usersService.changePassword(0, vm.data).then(function (data) {
+			authorizerService.changePassword(0, vm.data).then(function (data) {
 
                 vm.readyStatus.processing = false;
 

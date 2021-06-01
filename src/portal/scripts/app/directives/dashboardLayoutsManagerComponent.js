@@ -38,7 +38,7 @@
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    $state.go('app.dashboard-constructor', {
+                    $state.go('app.portal.dashboard-constructor', {
                         id: 'new'
                     })
 
@@ -105,7 +105,7 @@
                 };
 
                 scope.editDashboardLayout = () => {
-                    const url = $state.href('app.dashboard-constructor', {id: scope.layout.id});
+                    const url = $state.href('app.portal.dashboard-constructor', {id: scope.layout.id});
                     window.open(url, '_blank');
                 };
 

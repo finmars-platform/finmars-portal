@@ -30,7 +30,7 @@
         module.exports = function ($scope, $mdDialog, $stateParams, $transitions, middlewareService, usersService) {
 
             var vm = this;
-			console.log("testing usersService injection", usersService);
+
             var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {

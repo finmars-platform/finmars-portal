@@ -41,7 +41,7 @@
     module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.readyStatus = {content: false, entity: true, permissions: true, inputs: false};
@@ -252,7 +252,7 @@
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: vm.entityType, from: vm.entityType};
             }
-            $state.go('app.attributesManager', entityAddress);
+            $state.go('app.portal.attributesManager', entityAddress);
             $mdDialog.hide();*/
 
             $mdDialog.show({

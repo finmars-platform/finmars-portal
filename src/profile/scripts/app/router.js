@@ -5,12 +5,15 @@
 
     // module.exports = function ($stateProvider) {
 export default function ($stateProvider) {
-	console.log("testing profile router");
+
 	$stateProvider.state('app.profile', {
 		url: '/profile',
 		templateUrl: 'views/profile-view.html',
 		// abstract: true,
-		controller: 'ProfileController as vm'
+		controller: 'ProfileController as vm',
+		params: {
+
+		}
 	});
 
 	$stateProvider.state('app.new-database', {

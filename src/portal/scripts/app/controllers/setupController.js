@@ -14,7 +14,7 @@
     module.exports = function ($scope, $state, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.readyStatus = {content: false, member: false, groups: false};
 
         vm.currentStep = 1;
@@ -56,7 +56,7 @@
 
                 setTimeout(function () {
 
-                    $state.go('app.home');
+                    $state.go('app.portal.home');
 
                 }, 1000)
 
@@ -166,7 +166,7 @@
 
             }).then(function (value) {
 
-                $state.go('app.home');
+                $state.go('app.portal.home');
 
             })
 

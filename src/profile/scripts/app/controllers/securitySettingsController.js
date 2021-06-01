@@ -4,29 +4,34 @@
 (function () {
 
     // var authorizerService = require('../services/authorizerService');
-    var twoFactorService = require('../services/twoFactorServce');
+    const twoFactorService = require('../services/twoFactorServce');
 
-    module.exports = function ($scope, $mdDialog, authorizerService) {
+    module.exports = function ($scope, $mdDialog, authorizerService, globalDataService, commonDialogsService) {
 
-        var vm = this;
+        let vm = this;
 
-        vm.readyStatus = {user: false};
+        // vm.readyStatus = {user: false};
 
+        let user;
+        vm.twoFactorVerification = false;
 
-        vm.getUser = function () {
+        /* vm.getUser = function () {
 
-            authorizerService.getUserByKey(0).then(function (data) {
+			authorizerService.getUserByKey(0).then(function (data) {
                 vm.user = data;
                 vm.readyStatus.user = true;
                 $scope.$apply();
             });
 
 
-        };
+        }; */
 
-        vm.updateUser = function () {
+        vm.updateUser = function (twoFactorVerificationState) {
 
-            authorizerService.update(0, vm.user).then(function () {
+			user = globalDataService.getUser();
+        	user.two_factor_verification = twoFactorVerificationState;
+
+			authorizerService.updateUser(user.id, user).then(function () {
                 $scope.$apply();
             })
 
@@ -45,7 +50,7 @@
 
         vm.revokeTwoFactor = function ($event, item) {
 
-            $mdDialog.show({
+            /* $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
@@ -60,7 +65,16 @@
                 autoWrap: true,
                 skipHide: true,
                 targetEvent: $event
-            }).then(function (res) {
+            }) */
+
+			const locals = {
+				warning: {
+					title: 'Warning!',
+					description: "Are you sure you want to revoke linked device?"
+				}
+			};
+
+			commonDialogsService.warning(locals, {targetEvent: $event}).then(function (res) {
 
                 if (res.status === 'agree') {
 
@@ -99,7 +113,9 @@
 
         vm.init = function () {
 
-            vm.getUser();
+            // vm.getUser();
+			user = globalDataService.getUser();
+			vm.twoFactorVerification = !!user.two_factor_verification;
 
             vm.getTwoFactors();
 

@@ -6,18 +6,30 @@
 
 'use strict';
 
-var cookieService = require('../../../../core/services/cookieService');
+/* var cookieService = require('../../../../core/services/cookieService');
 var xhrService = require('../../../../core/services/xhrService');
-// var baseUrlService = require('../services/baseUrlService');
+var baseUrlService = require('../services/baseUrlService'); */
+import ToastNotificationService from "../services/toastNotificationService";
+const toastNotificationService = new ToastNotificationService();
+
+import ErrorService from "../services/errorService";
+const errorService = new ErrorService(toastNotificationService);
+
+import CookieService from '../services/cookieService.js';
+const cookieService = new CookieService();
+
+import XhrService from '../services/xhrService.js';
+const xhrService = new XhrService(errorService);
+
 import baseUrlService from '../services/baseUrlService';
 
-var authorizerUrl = baseUrlService.getAuthorizerUrl();
+const authorizerUrl = baseUrlService.getAuthorizerUrl();
 
 /* var handleError = function (methodName) {
 	console.log('Method: ' + methodName + '. Cannot get data from server');
 }; */
 
-var login = function (login, password) {
+const login = function (login, password) {
 
 	return xhrService.fetch(authorizerUrl + '/login/', {
 		method: 'POST',
@@ -31,10 +43,7 @@ var login = function (login, password) {
 	})
 };
 
-var tokenLogin = function (login, password) {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const tokenLogin = function (login, password) {
 
 	return xhrService.fetch(authorizerUrl + '/token-auth/', {
 		method: 'POST',
@@ -48,11 +57,7 @@ var tokenLogin = function (login, password) {
 	})
 };
 
-
-var logout = function () {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const logout = function () {
 
 	return xhrService.fetch(authorizerUrl + '/logout/', {
 		method: 'POST',
@@ -67,10 +72,23 @@ var logout = function () {
 	})
 };
 
-var ping = function () {
+const changePassword = function (id, user) {
 
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+	return xhrService.fetch(authorizerUrl + '/user/' + id + '/set-password/', {
+		method: 'PUT',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		},
+		body: JSON.stringify(user)
+	})
+};
+
+
+const ping = function () {
 
 	return xhrService.fetch(authorizerUrl + '/ping/', {
 		method: 'GET',
@@ -83,10 +101,7 @@ var ping = function () {
 	})
 };
 
-var protectedPing = function () {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const protectedPing = function () {
 
 	return xhrService.fetch(authorizerUrl + '/protected-ping/', {
 		method: 'GET',
@@ -99,7 +114,7 @@ var protectedPing = function () {
 	})
 };
 
-var getUsersList = function () {
+/* var getUsersList = function () {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -161,12 +176,115 @@ var getMyCurrentMember = function () {
 			'Content-type': 'application/json'
 		}
 	})
+}; */
+
+//<editor-fold desc="User">
+const getMe = function () {
+
+	/* const baseUrl = baseUrlService.resolve();
+
+	const prefix = baseUrlService.getMasterUserPrefix();
+	const apiVersion = baseUrlService.getApiVersion();
+
+	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/0/', {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	}); */
+
+	return xhrService.fetch(authorizerUrl + '/user/0/', {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	})
+
+	/* return xhrService.fetch(authorizerUrl + '/user/get-me/', {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	}) */
+
 };
 
-var getCurrentMasterUser = function () {
+const getUserByKey = function (id) {
 
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+	return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	})
+
+}
+
+const updateUser = function (id, user) {
+
+	return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
+		method: 'PUT',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		},
+		body: JSON.stringify(user)
+	})
+
+};
+
+const patchUser = function (id, user) {
+
+	return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
+		method: 'PATCH',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		},
+		body: JSON.stringify(user)
+	})
+
+};
+
+const deleteUserByKey = function (id) {
+
+	return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
+		method: 'DELETE',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	})
+
+};
+//</editor-fold>
+
+//<editor-fold desc="Master user">
+const getCurrentMasterUser = function () {
 
 	return xhrService.fetch(authorizerUrl + '/get-current-master-user', {
 		method: 'GET',
@@ -179,25 +297,7 @@ var getCurrentMasterUser = function () {
 	})
 };
 
-var changePassword = function (id, user) {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
-
-	return xhrService.fetch(authorizerUrl + '/user/' + id + '/set-password/', {
-		method: 'PUT',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(user)
-	})
-};
-
-var update = function (id, user) {
+/* var update = function (id, user) {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -246,12 +346,9 @@ var deleteByKey = function (id) {
 			'Content-type': 'application/json'
 		}
 	})
-};
+}; */
 
-var createMasterUser = function (user) {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const createMasterUser = function (user) {
 
 	return xhrService.fetch(authorizerUrl + '/master-user/', {
 		method: 'POST',
@@ -265,10 +362,7 @@ var createMasterUser = function (user) {
 	})
 };
 
-var getMasterListLight = function () {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const getMasterUsersListLight = function () {
 
 	return xhrService.fetch(authorizerUrl + '/master-user-light/', {
 		method: 'GET',
@@ -281,10 +375,7 @@ var getMasterListLight = function () {
 	})
 };
 
-var getMasterList = function () {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const getMasterUsersList = function () {
 
 	return xhrService.fetch(authorizerUrl + '/master-user/', {
 		method: 'GET',
@@ -297,10 +388,7 @@ var getMasterList = function () {
 	})
 };
 
-var getMasterByKey = function (id) {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const getMasterUserByKey = function (id) {
 
 	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
 		method: 'GET',
@@ -313,10 +401,7 @@ var getMasterByKey = function (id) {
 	})
 };
 
-var updateMaster = function (id, user) {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const updateMasterUser = function (id, user) {
 
 	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
 		method: 'PUT',
@@ -331,10 +416,7 @@ var updateMaster = function (id, user) {
 	})
 };
 
-var patchMaster = function (id, user) {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const patchMasterUser = function (id, user) {
 
 	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
 		method: 'PATCH',
@@ -349,10 +431,7 @@ var patchMaster = function (id, user) {
 	})
 };
 
-var deleteMasterByKey = function (id) {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const deleteMasterUserByKey = function (id) {
 
 	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
 		method: 'DELETE',
@@ -366,10 +445,7 @@ var deleteMasterByKey = function (id) {
 	})
 };
 
-var setMasterUser = function (id) {
-
-	var prefix = baseUrlService.getMasterUserPrefix();
-	var apiVersion = baseUrlService.getApiVersion();
+const setCurrentMasterUser = function (id) {
 
 	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/set-current/', {
 		method: 'PATCH',
@@ -382,8 +458,9 @@ var setMasterUser = function (id) {
 		}
 	})
 };
+//</editor-fold>
 
-var getMemberList = function () {
+/* var getMemberList = function () {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -571,9 +648,9 @@ var deleteUserCodePrefixByKey = function (id) {
 		});
 		//return data.json();
 	})
-};
+}; */
 
-var inviteUser = function (data) {
+const inviteUser = function (data) {
 
 	return xhrService.fetch(authorizerUrl + '/create-invite-to-user/', {
 		method: 'POST',
@@ -589,7 +666,7 @@ var inviteUser = function (data) {
 
 };
 
-var getInvitesList = function (options) {
+const getInvitesList = function (options) {
 
 	return xhrService.fetch(authorizerUrl + '/invite-to-user/',
 		{
@@ -604,7 +681,7 @@ var getInvitesList = function (options) {
 
 };
 
-var deleteInviteByKey = function (id) {
+const deleteInviteByKey = function (id) {
 
 	return xhrService.fetch(authorizerUrl + '/invite-to-user/' + id + '/',
 		{
@@ -632,26 +709,31 @@ export default {
 	ping: ping,
 	protectedPing: protectedPing,
 
-	getUsersList: getUsersList,
+	/* getUsersList: getUsersList,
 	getUserByKey: getUserByKey,
 	getUser: getUser,
-	getMyCurrentMember: getMyCurrentMember,
+	getMyCurrentMember: getMyCurrentMember, */
 	changePassword: changePassword,
-	update: update,
+	/* update: update,
 	patchUser: patchUser,
-	deleteByKey: deleteByKey,
+	deleteByKey: deleteByKey, */
+	getMe: getMe,
+	getUserByKey: getUserByKey,
+	updateUser: updateUser,
+	patchUser: patchUser,
+	deleteUserByKey: deleteUserByKey,
 
 	getCurrentMasterUser: getCurrentMasterUser,
 	createMasterUser: createMasterUser,
-	getMasterList: getMasterList,
-	getMasterListLight: getMasterListLight,
-	getMasterByKey: getMasterByKey,
-	updateMaster: updateMaster,
-	patchMaster: patchMaster,
-	deleteMasterByKey: deleteMasterByKey,
-	setMasterUser: setMasterUser,
+	getMasterUsersList: getMasterUsersList,
+	getMasterUsersListLight: getMasterUsersListLight,
+	getMasterUserByKey: getMasterUserByKey,
+	updateMasterUser: updateMasterUser,
+	patchMasterUser: patchMasterUser,
+	deleteMasterUserByKey: deleteMasterUserByKey,
+	setCurrentMasterUser: setCurrentMasterUser,
 
-	getMemberList: getMemberList,
+	/* getMemberList: getMemberList,
 	getMemberByKey: getMemberByKey,
 	updateMember: updateMember,
 	patchMember: patchMember,
@@ -665,7 +747,7 @@ export default {
 
 	getUsercodePrefixList: getUsercodePrefixList,
 	createUsercodePrefix: createUsercodePrefix,
-	deleteUserCodePrefixByKey: deleteUserCodePrefixByKey,
+	deleteUserCodePrefixByKey: deleteUserCodePrefixByKey, */
 
 	inviteUser: inviteUser,
 	getInvitesList: getInvitesList,

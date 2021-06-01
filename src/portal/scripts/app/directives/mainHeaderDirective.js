@@ -1,50 +1,55 @@
 'use strict';
 
 // const cookieService = require('../../../../core/services/cookieService');
-import websocketService from "../../../../shell/scripts/app/services/websocketService";
+import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents.js";
+import baseUrlService from "../../../../shell/scripts/app/services/baseUrlService.js";
 
-export default function ($mdDialog, cookiesService, broadcastChannelService, middlewareService, authorizerService, usersService) {
+export default function ($mdDialog, $state, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService) {
 
 	return {
 		restrict: 'E',
-		scope: {},
+		scope: {
+			openedInside: '@' // ('profile', 'portal')
+		},
 		templateUrl: 'views/directives/main-header-view.html',
 		link: function (scope, elem, attrs) {
-			console.log("testing mainHeaderDirective");
+
+			if (!scope.openedInside) throw new Error("mainHeaderDirective: openedInside does not set");
 			// let user;
+			scope.currentMasterUser = globalDataService.getMasterUser();
 			scope.userName = '';
 
-			let member;
+			const mdContent = document.querySelector('md-content');
 
 			const updateCurrentMasterUser = function () {
 
-				scope.currentMasterUser = scope.auth;
+				scope.currentMasterUser = globalDataService.getMasterUser();
 
 				if (scope.currentMasterUser) {
 					websocketService.send({action: "update_user_state", data: {master_user: scope.currentMasterUser}});
 				}
-				console.log("testing updateCurrentMasterUser", scope.currentMasterUser);
+
 			};
 
-			const getMastersList = function () {
+			const getMasterUsersList = function () {
 
 				// return usersService.getMasterList().then(function (data) {
 				return new Promise(function (resolve, reject) {
 
 					// usersService.getMasterListLight().then(function (data) {
-					authorizerService.getMasterList().then(function (data) {
+					authorizerService.getMasterUsersList().then(function (data) {
 
 						if (data.hasOwnProperty('results')) {
 
-							scope.masters = data.results;
+							scope.masterUsers = data.results;
 
-							if (scope.masters.length) {
+							if (scope.masterUsers.length) {
 								updateCurrentMasterUser();
 							}
 
 						} else {
-							scope.masters = []
+							scope.masterUsers = []
 						}
 
 						scope.$apply();
@@ -55,6 +60,42 @@ export default function ($mdDialog, cookiesService, broadcastChannelService, mid
 						reject(error);
 					});
 
+				});
+
+			};
+
+			scope.toggleBookmarksPanel = function () {
+
+				mdContent.classList.add('overflow-hidden');
+
+				scope.showBookmarks = !scope.showBookmarks;
+
+				setTimeout(function () {
+					mdContent.classList.remove('overflow-hidden');
+				}, 100);
+
+			};
+
+			scope.openHelp = function ($event) {
+
+				var urlPieces = $state.current.url.split('/');
+				var destinationUrl = urlPieces[urlPieces.length - 1].replace('-', '_');
+
+				var helpPageUrl = destinationUrl + '.html';
+
+				$mdDialog.show({
+					controller: 'HelpDialogController as vm',
+					templateUrl: 'views/dialogs/help-dialog-view.html',
+					targetEvent: $event,
+					locals: {
+						data: {
+							helpPageUrl: helpPageUrl
+						}
+					},
+					multiple: true,
+					preserveScope: true,
+					autoWrap: true,
+					skipHide: true
 				});
 
 			};
@@ -94,7 +135,7 @@ export default function ($mdDialog, cookiesService, broadcastChannelService, mid
 						middlewareService.initLogOut();
 
 						authorizerService.logout().then(function (data) {
-							console.log('Logged out');
+
 							sessionStorage.removeItem('afterLoginEvents');
 
 							if (window.location.pathname !== '/') {
@@ -112,7 +153,7 @@ export default function ($mdDialog, cookiesService, broadcastChannelService, mid
 				});
 			};
 
-			const getMember = function () {
+			/* const getMember = function () {
 
 				return new Promise(function (resolve, reject) {
 
@@ -131,7 +172,7 @@ export default function ($mdDialog, cookiesService, broadcastChannelService, mid
 
 				});
 
-			};
+			}; */
 
 			scope.selectMaster = function (master) {
 
@@ -140,13 +181,13 @@ export default function ($mdDialog, cookiesService, broadcastChannelService, mid
 
 					middlewareService.masterUserChanged();
 
-					authorizerService.setMasterUser(master.id).then(function (data) {
+					authorizerService.setCurrentMasterUser(master.id).then(function (data) {
 
 						if (data.base_api_url) {
 							baseUrlService.setMasterUserPrefix(data.base_api_url)
 						}
 
-						// $state.go('app.home', null, {reload: 'app'});
+						// $state.go('app.portal.home', null, {reload: 'app'});
 
 						window.location.reload();
 
@@ -154,9 +195,7 @@ export default function ($mdDialog, cookiesService, broadcastChannelService, mid
 							broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
 						}
 
-						getMember()
-
-						getMastersList();
+						getMasterUsersList();
 
 					});
 				};
@@ -206,7 +245,7 @@ export default function ($mdDialog, cookiesService, broadcastChannelService, mid
 
 				} else {
 
-					$state.go('app.home');
+					$state.go('app.portal.home');
 
 				}
 
@@ -214,13 +253,12 @@ export default function ($mdDialog, cookiesService, broadcastChannelService, mid
 
 			const init = async function () {
 
-				Promise.all([usersService.getMe(), getMastersList(), getMember()]).then(resData => {
+				const user = globalDataService.getUser();
+				scope.userName = user.username;
 
-					const user = resData[0];
-					scope.userName = user.username;
-
+				// Promise.all([usersService.getUser(), getMasterUsersList()]).then(resData => {
+				getMasterUsersList().then(resData => {
 					scope.$apply();
-
 				});
 
 			};

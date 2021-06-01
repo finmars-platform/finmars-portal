@@ -6,12 +6,12 @@
     'use strict';
 
     var systemService = require('../services/systemService');
-    var authorizerService = require('../services/authorizerService');
+    // var authorizerService = require('../services/authorizerService');
 
     // TODO resolve service from profile module
     var backendConfigurationImportService = require('../services/backendConfigurationImportService')
 
-    module.exports = function ($scope, $state) {
+    module.exports = function ($scope, $state, profileAuthorizerService) {
 
         var vm = this;
 
@@ -65,7 +65,7 @@
 
             vm.processingCheckName = true;
 
-            authorizerService.checkMasterUserUniqueness(vm.name).then(function (data) {
+			profileAuthorizerService.checkMasterUserUniqueness(vm.name).then(function (data) {
 
                 console.log('data', data);
 
@@ -95,10 +95,10 @@
                 db_password: vm.db_password,
             }
 
-            authorizerService.createMasterUser(options).then(function (data) {
+			profileAuthorizerService.createMasterUser(options).then(function (data) {
 
 
-                // authorizerService.setMasterUser(data.id).then(function (value) {
+                // authorizerService.setCurrentMasterUser(data.id).then(function (value) {
                 //
                 //     if (vm.activeConfig === 'custom') {
                 //
@@ -167,7 +167,7 @@
 
             }).then(function (data) {
 
-                $state.go('app.home', {}, {reload: 'app'});
+                $state.go('app.portal.home', {}, {reload: 'app'});
 
             })
 

@@ -8,31 +8,94 @@
 
             <div class="header-misc" layout="row">
 
-                <a ng-if="currentMasterUser"
-                   class="md-button header-help-btn"
-                   ui-sref="app.home">
-                    <ng-md-icon icon="home" size="24">
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Homepage</md-tooltip>
-                    </ng-md-icon>
-                </a>
+                <div ng-if="openedInside === 'profile'">
 
-                <div class="header-masteruser">
-                    <md-menu>
+                    <a ng-if="currentMasterUser"
+                       class="md-button header-help-btn"
+                       ui-sref="app.portal.home">
+                        <ng-md-icon icon="home" size="24">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Homepage</md-tooltip>
+                        </ng-md-icon>
+                    </a>
+
+                </div>
+
+                <div ng-if="openedInside === 'portal'">
+
+                    <md-button class="md-button header-cloud-layout-btn"
+                               data-ui-sref="app.portal.processes">
+                        <ng-md-icon icon="cloud_download" size="24">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Open Active
+                                Processes
+                            </md-tooltip>
+                        </ng-md-icon>
+                    </md-button>
+
+                    <md-button class="md-button toggle-bookmarks-panel-btn header-cloud-layout-btn"
+                               data-ng-click="toggleBookmarksPanel()">
+                        <ng-md-icon icon="bookmark" size="24">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Open bookmark
+                                panel
+                            </md-tooltip>
+                        </ng-md-icon>
+                    </md-button>
+
+                    <md-button class="md-button header-help-btn"
+                               data-ng-click="openHelp($event)"
+                               aria-label="Notifications">
+                        <ng-md-icon icon="help" size="24">
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu
+                            </md-tooltip>
+                        </ng-md-icon>
+                    </md-button>
+
+                    <md-button style="margin-left: 0"
+                               data-ui-sref="app.portal.system.notifications({notificationsListType: 'unreaded'})"
+                               aria-label="Notifications">
+                        <ng-md-icon icon="flag"></ng-md-icon>
+                        <span data-ng-show="vm.unreadedNotificationsAmount"
+                              data-ng-if="vm.unreadedNotificationsAmount <= 99 "
+                              class="unreaded-notifications-number">
+                                                    {{vm.unreadedNotificationsAmount}}
+                                                </span>
+                        <span data-ng-show="vm.unreadedNotificationsAmount"
+                              data-ng-if="vm.unreadedNotificationsAmount > 99 "
+                              class="unreaded-notifications-number">
+                                                    99+
+                                                </span>
+                    </md-button>
+
+                    <md-button style="margin-left: 0"
+                               data-ui-sref="app.portal.system-messages"
+                               aria-label="System Messages">
+                        <ng-md-icon icon="email"></ng-md-icon>
+                    </md-button>
+
+                </div>
+
+                <div ng-if="currentMasterUser"
+                     class="header-masteruser">
+
+                    <div ng-if="openedInside === 'profile'"
+                         class="header-masteruser-name flex-column fc-center height-100"
+                         ng-bind="currentMasterUser.name"></div>
+
+                    <md-menu ng-if="openedInside === 'portal'">
                         <md-button class="md-button header-account-btn"
                                    ng-click="$mdOpenMenu($event)"
                                    aria-label="Account button">
-                                        <span ng-if="scope.currentMasterUser"
-                                              class="header-masteruser-name"
-                                              data-ng-bind="scope.currentMasterUser.name"></span>
+                            <span class="header-masteruser-name"
+                                  data-ng-bind="currentMasterUser.name"></span>
                         </md-button>
 
                         <md-menu-content>
-                            <md-menu-item data-ng-repeat="master in masters">
-                                <md-button data-ng-click="selectMaster(master)"
+                            <md-menu-item data-ng-repeat="masterUser in masterUsers">
+                                <md-button data-ng-click="selectMaster(masterUser)"
                                            aria-label="Select master">
-                                    <span ng-class="{'text-bold': master.is_current}">{{master.name}}</span>
-                                    <!--<span data-ng-if="master.is_current"><b>{{master.name}}</b></span>
-                                    <span data-ng-if="!master.is_current">{{master.name}}</span>-->
+                                    <!-- <span ng-class="{'text-bold': master.is_current}">{{master.name}}</span>
+                                    &lt;!&ndash;<span data-ng-if="master.is_current"><b>{{master.name}}</b></span>
+                                    <span data-ng-if="!master.is_current">{{master.name}}</span>&ndash;&gt; -->
+                                    <span ng-class="{'text-bold': masterUser.is_current}" ng-bind="masterUser.name"></span>
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>
@@ -51,9 +114,7 @@
                         </md-button>
                         <md-menu-content>
                             <md-menu-item style="border-bottom: 1px solid #ddd;">
-                                <md-button data-ui-sref="app.profile">
-                                    <b>Profile</b>
-                                </md-button>
+                                <md-button data-ui-sref="app.profile">Profile</md-button>
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button data-ng-click="logOutMethod()">Log Out</md-button>
@@ -65,5 +126,52 @@
 
         </div>
     </div>
+
+    <!--<editor-fold desc="Bookmarks">-->
+    <div data-ng-controller="BookmarksController as vm"
+         layout="row"
+         class="bookmarks-list-container"
+         data-ng-if="showBookmarks">
+
+        <div class="bookmarks-list" layout="row" layout-align="space-between center">
+            <div layout="row" class="bookmarks-container">
+                <div data-ng-repeat="item in vm.items track by item.id">
+                    <div data-ng-if="item.children.length" layout="row"
+                         layout-align="start start">
+                        <md-menu>
+                            <!-- Trigger element is a md-button with an icon -->
+
+                            <md-button ng-click="$mdMenu.open($event)"
+                                       aria-label="Open sample menu"
+                                       class="bookmark-menu-btn">
+                                {{item.name}}
+                            </md-button>
+                            <md-menu-content>
+                                <md-menu-item data-ng-repeat="subItem in item.children">
+                                    <md-button data-ng-click="vm.goToState(subItem)">
+                                        {{subItem.name}}
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </div>
+                    <div data-ng-if="!item.children.length">
+                        <md-button class="bookmark-a-btn"
+                                   data-ng-click="vm.goToState(item)">{{item.name}}
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+
+            <div layout="row">
+                <md-button class="md-button header-cloud-layout-btn"
+                           data-ng-click="vm.openSettings($event)">
+                    <ng-md-icon icon="settings" size="36"></ng-md-icon>
+                </md-button>
+            </div>
+        </div>
+
+    </div>
+    <!--</editor-fold>-->
 
 </md-toolbar>

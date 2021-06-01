@@ -184,104 +184,104 @@
             result = 'Forum';
         }
 
-        if ($state.current.name.indexOf('app.settings') !== -1) {
+        if ($state.current.name.indexOf('app.portal.settings') !== -1) {
             result = 'Settings';
         }
 
         switch ($state.current.name) {
-            case 'app.dashboard':
+            case 'app.portal.dashboard':
                 result = "Dashboard";
                 break;
-            case 'app.data.portfolio':
+            case 'app.portal.data.portfolio':
                 result = "Portfolio";
                 break;
-            case 'app.data.account':
+            case 'app.portal.data.account':
                 result = "Account";
                 break;
-            case 'app.data.counterparty':
+            case 'app.portal.data.counterparty':
                 result = "Counterparty";
                 break;
-            case 'app.data.counterparty-group':
+            case 'app.portal.data.counterparty-group':
                 result = "Counterparty group";
                 break;
-            case 'app.data.responsible':
+            case 'app.portal.data.responsible':
                 result = "Responsible";
                 break;
-            case 'app.data.responsible-group':
+            case 'app.portal.data.responsible-group':
                 result = "Responsible group";
                 break;
-            case 'app.data.instrument':
+            case 'app.portal.data.instrument':
                 result = "Instrument";
                 break;
-            case 'app.data.transaction':
+            case 'app.portal.data.transaction':
                 result = "Transaction";
                 break;
-            case 'app.data.price-history':
+            case 'app.portal.data.price-history':
                 result = "Price history";
                 break;
-            case 'app.data.currency-history':
+            case 'app.portal.data.currency-history':
                 result = "Currency history";
                 break;
-            case 'app.data.strategy':
+            case 'app.portal.data.strategy':
                 result = "Strategy";
                 break;
-            case 'app.data.strategy-subgroup':
+            case 'app.portal.data.strategy-subgroup':
                 result = "Strategy subgroup";
                 break;
-            case 'app.data.strategy-group':
+            case 'app.portal.data.strategy-group':
                 result = "Strategy group";
                 break;
-            case 'app.data.account-type':
+            case 'app.portal.data.account-type':
                 result = "Account types";
                 break;
-            case 'app.data.instrument-type':
+            case 'app.portal.data.instrument-type':
                 result = "Instrument types";
                 break;
-            /* case 'app.data.pricing-policy':
+            /* case 'app.portal.data.pricing-policy':
                 result = "Pricing policy";
                 break; */
-            case 'app.data.transaction-type':
+            case 'app.portal.data.transaction-type':
                 result = "Transaction type";
                 break;
-            case 'app.data.transaction-type-group':
+            case 'app.portal.data.transaction-type-group':
                 result = "Transaction type groups";
                 break;
-            case 'app.data.currency':
+            case 'app.portal.data.currency':
                 result = "Currency";
                 break;
-            case 'app.data.complex-transaction':
+            case 'app.portal.data.complex-transaction':
                 result = "Transaction";
                 break;
-            case 'app.data.tag':
+            case 'app.portal.data.tag':
                 result = "Tags";
                 break;
-            case 'app.reports.balance-report':
+            case 'app.portal.reports.balance-report':
                 result = "Balance report";
                 break;
-            case 'app.reports.pl-report':
+            case 'app.portal.reports.pl-report':
                 result = "P&L report";
                 break;
-            case 'app.reports.transaction-report':
+            case 'app.portal.reports.transaction-report':
                 result = "Transaction report";
                 break;
-            case 'app.reports.cash-flow-projection-report':
+            case 'app.portal.reports.cash-flow-projection-report':
                 result = "Cash flow projection report";
                 break;
-            case 'app.reports.performance-report':
+            case 'app.portal.reports.performance-report':
                 result = "Performance report";
                 break;
-            case 'app.actions':
+            case 'app.portal.actions':
                 result = 'Actions';
                 break;
-            case 'app.system.notifications':
+            case 'app.portal.system.notifications':
                 break;
-            case 'app.system.transactions':
+            case 'app.portal.system.transactions':
                 result = 'Audit transactions';
                 break;
-            case 'app.system.instruments':
+            case 'app.portal.system.instruments':
                 result = 'Audit instruments';
                 break;
-            case 'app.settings.users-groups':
+            case 'app.portal.settings.users-groups':
                 result = 'Users & Groups';
                 break;
             default:
@@ -304,175 +304,175 @@
         } else {
 
             switch ($state.current.name) {
-                case 'app.home':
+                case 'app.portal.home':
                     name = 'HOME PAGE';
                     break;
 
-                case 'app.reports.balance-report':
+                case 'app.portal.reports.balance-report':
                     name = 'REPORT > BALANCE';
                     break;
-                case 'app.reports.pl-report':
+                case 'app.portal.reports.pl-report':
                     name = 'REPORT > P&L';
                     break;
-                case 'app.reports.transaction-report':
+                case 'app.portal.reports.transaction-report':
                     name = 'REPORT > TRANSACTION';
                     break;
-                case 'app.reports.check-for-events':
+                case 'app.portal.reports.check-for-events':
                     name = 'REPORT > EVENTS';
                     break;
-                case 'app.data.portfolio':
+                case 'app.portal.data.portfolio':
                     name = "DATA > PORTFOLIOS";
                     break;
-                case 'app.data.account':
+                case 'app.portal.data.account':
                     name = "DATA > ACCOUNTS";
                     break;
-                case 'app.data.instrument':
+                case 'app.portal.data.instrument':
                     name = "DATA > INSTRUMENTS";
                     break;
-                case 'app.data.counterparty':
+                case 'app.portal.data.counterparty':
                     name = "DATA > COUNTERPARTIES";
                     break;
-                case 'app.data.responsible':
+                case 'app.portal.data.responsible':
                     name = "DATA > RESPONSIBLES";
                     break;
-                case 'app.data.currency':
+                case 'app.portal.data.currency':
                     name = "DATA > CURRENCIES";
                     break;
-                case 'app.data.strategy':
+                case 'app.portal.data.strategy':
                     name = "DATA > STRATEGIES";
                     break;
 
-                case 'app.data.complex-transaction':
+                case 'app.portal.data.complex-transaction':
                     name = "TRANSACTIONS > TRANSACTIONS";
                     break;
-                case 'app.data.price-history':
+                case 'app.portal.data.price-history':
                     name = "VALUATIONS > PRICES";
                     break;
-                case 'app.data.currency-history':
+                case 'app.portal.data.currency-history':
                     name = "VALUATIONS > FX RATES";
                     break;
 
-                case 'app.import.simple-entity':
+                case 'app.portal.import.simple-entity':
                     name = 'IMPORT > DATA';
                     break;
-                case 'app.import.transaction':
+                case 'app.portal.import.transaction':
                     name = 'IMPORT > TRANSACTIONS';
                     break;
-                case 'app.import.complex-import':
+                case 'app.portal.import.complex-import':
                     name = 'IMPORT > DATA AND TRANSACTIONS';
                     break;
-                case 'app.import.instrument':
+                case 'app.portal.import.instrument':
                     name = 'IMPORT > INSTRUMENT';
                     break;
-                case 'app.import.prices':
+                case 'app.portal.import.prices':
                     name = 'IMPORT > PRICES/FX';
                     break;
-                case 'app.import.mapping-tables':
+                case 'app.portal.import.mapping-tables':
                     name = 'IMPORT > MAPPING TABLES';
                     break;
 
-                case 'app.system.instruments':
+                case 'app.portal.system.instruments':
                     name = 'JOURNAL > INSTRUMENTS AUDIT';
                     break;
-                case 'app.system.transactions':
+                case 'app.portal.system.transactions':
                     name = 'JOURNAL > TRANSACTIONS AUDIT';
                     break;
-                case 'app.data.transaction':
+                case 'app.portal.data.transaction':
                     name = 'TRANSACTIONS > BASE TRANSACTIONS';
                     break;
 
-                case 'app.developer-panel':
+                case 'app.portal.developer-panel':
                     name = 'DEVELOPER PANEL';
                     break;
-                case 'app.dashboard':
+                case 'app.portal.dashboard':
                     name = 'DASHBOARD';
                     break;
-                case 'app.dashboard-constructor':
+                case 'app.portal.dashboard-constructor':
                     name = 'DASHBOARD CONSTRUCTOR';
                     break;
 
-                case 'app.dashboard-layout-manager':
+                case 'app.portal.dashboard-layout-manager':
                     name = 'SETTINGS > DASHBOARD LAYOUTS';
                     break;
-                case 'app.settings.forms':
+                case 'app.portal.settings.forms':
                     name = 'SETTINGS > FORMS';
                     break;
-                case 'app.settings.layouts':
+                case 'app.portal.settings.layouts':
                     name = 'SETTINGS > LAYOUTS';
                     break;
-                case 'app.settings.notifications':
+                case 'app.portal.settings.notifications':
                     name = 'SETTINGS > NOTIFICATIONS';
                     break;
-                case 'app.settings.interface-access':
+                case 'app.portal.settings.interface-access':
                     name = 'SETTINGS > INTERFACE COMPLEXITY';
                     break;
 
-                case 'app.data.account-type':
+                case 'app.portal.data.account-type':
                     name = 'SETTINGS > DATA TYPES > ACCOUNT TYPES';
                     break;
-                case 'app.data.instrument-type':
+                case 'app.portal.data.instrument-type':
                     name = 'SETTINGS > DATA TYPES > INSTRUMENT TYPES';
                     break;
-                case 'app.data.transaction-type':
+                case 'app.portal.data.transaction-type':
                     name = 'SETTINGS > DATA TYPES > TRANSACTION TYPES';
                     break;
-                /* case 'app.data.pricing-policy':
+                /* case 'app.portal.data.pricing-policy':
                     name = 'SETTINGS > DATA TYPES > PRICING TYPES';
                     break; */
-                case 'app.settings.entities-custom-attributes':
+                case 'app.portal.settings.entities-custom-attributes':
                     name = 'SETTINGS > DATA TYPES > USER ATTRIBUTES';
                     break;
-                case 'app.import.reference-tables':
+                case 'app.portal.import.reference-tables':
                     name = 'SETTINGS > DATA TYPES > REFERENCE TABLE';
                     break;
-                case 'app.template-layout-manager':
+                case 'app.portal.template-layout-manager':
                     name = 'SETTINGS > DATA TYPES > TEMPLATES';
                     break;
 
-                case 'app.settings.price-download-scheme':
+                case 'app.portal.settings.price-download-scheme':
                     name = 'SETTINGS > IMPORT FROM PROVIDERS > PRICE SCHEMES';
                     break;
-                case 'app.settings.instrument-import':
+                case 'app.portal.settings.instrument-import':
                     name = 'SETTINGS > IMPORT FROM PROVIDERS > INSTRUMENT IMPORT';
                     break;
-                case 'app.settings.simple-entity-import':
+                case 'app.portal.settings.simple-entity-import':
                     name = 'SETTINGS > IMPORT FROM FILES > DATA IMPORT';
                     break;
-                case 'app.settings.transaction-import':
+                case 'app.portal.settings.transaction-import':
                     name = 'SETTINGS > IMPORT FROM FILES > TRANSACTION IMPORT';
                     break;
-                case 'app.settings.complex-import':
+                case 'app.portal.settings.complex-import':
                     name = 'SETTINGS > IMPORT FROM FILES > COMPLEX IMPORT';
                     break;
 
-                case 'app.settings.template-fields':
+                case 'app.portal.settings.template-fields':
                     name = 'SETTINGS > ALIASES';
                     break;
-                case 'app.settings.import-configuration':
+                case 'app.portal.settings.import-configuration':
                     name = 'SETTINGS > CONFIGURATION > IMPORT';
                     break;
-                case 'app.settings.export-configuration':
+                case 'app.portal.settings.export-configuration':
                     name = 'SETTINGS > CONFIGURATION > EXPORT';
                     break;
-                case 'app.settings.data-providers':
+                case 'app.portal.settings.data-providers':
                     name = 'SETTINGS > DATA PROVIDERS';
                     break;
-                case 'app.settings.data-providers-config':
+                case 'app.portal.settings.data-providers-config':
                     name = 'SETTINGS > DATA PROVIDERS';
                     break;
-                case 'app.settings.init-configuration':
+                case 'app.portal.settings.init-configuration':
                     name = 'SETTINGS > NEW USER SETUP';
                     break;
-                case 'app.settings.users-groups':
+                case 'app.portal.settings.users-groups':
                     name = 'SETTINGS > PERMISSIONS';
                     break;
-                case 'app.settings.ecosystem-default-settings':
+                case 'app.portal.settings.ecosystem-default-settings':
                     name = 'SETTINGS > DEFAULT SETTINGS';
                     break;
-                case 'app.processes':
+                case 'app.portal.processes':
                     name = 'SETTINGS > ACTIVE PROCESSES';
                     break;
-                case 'app.schedules':
+                case 'app.portal.schedules':
                     name = 'SETTINGS > PRICING > SCHEDULES';
                     break;
             }

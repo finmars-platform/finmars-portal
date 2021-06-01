@@ -11,10 +11,10 @@
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
 
-export default function ($scope, $state, $transitions, $mdDialog, cookieService, broadcastChannelService, middlewareService, authorizerService) {
+export default function ($scope, $state, $transitions, $urlService, $mdDialog, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService) {
 
 	let vm = this;
-	console.log("testing shellController init");
+
 	// vm.isAuthenticated = false; // check if logged in or not
 	let isAuthenticated = false;
 	vm.isAuthenticated = isAuthenticated;
@@ -22,7 +22,7 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 
 	// let finmarsBroadcastChannel = new BroadcastChannel('finmars_broadcast');
 	// vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
-	console.log("testing shellController vm.isAuthenticationPage1", vm.isAuthenticationPage, isAuthenticated);
+
 	let readyStatus = false;
 
 	let transitionFromState = '';
@@ -31,19 +31,35 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 
 		if (vm.isAuthenticationPage) return !isAuthenticated;
 
-		// return vm.readyStatus.masters && vm.isAuthenticated;
+		// return vm.readyStatus.masterUsers && vm.isAuthenticated;
 		return isAuthenticated && readyStatus;
 
 	}
 
+	const onLogInSuccess = function (authorizationToken) {
+
+		if (authorizationToken) cookieService.setCookie('authtoken', authorizationToken);
+
+		authorizerService.getMe().then(activeUser => {
+
+			globalDataService.setUser(activeUser);
+
+			isAuthenticated = true;
+			vm.isAuthenticated = isAuthenticated;
+
+			readyStatus = true;
+
+			$state.go('app.profile', {}, {});
+
+		});
+
+	}
 	/** Used inside shell/.../login-view.html */
 	vm.logIn = function ($event) {
 		// vm.username, vm.password setted inside login-view.html
 		authorizerService.tokenLogin(vm.username, vm.password).then(function (data) {
 
 			console.log('authorizerService.login.data', data);
-
-			if (data.token) cookieService.setCookie('authtoken', data.token);
 
 			if (data.two_factor_check) {
 
@@ -59,38 +75,24 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 
 				})
 				.then(res => {
-
-					if (res.status === 'agree') {
-
-						isAuthenticated = true;
-						vm.isAuthenticated = isAuthenticated;
-
-						$state.go('app.profile', {}, {});
-
-					}
-
+					if (res.status === 'agree') onLogInSuccess(data.token);
 				});
 
 			} else {
-				console.log("testing transitionFromState", transitionFromState);
-				isAuthenticated = true;
-				vm.isAuthenticated = isAuthenticated;
-
-				$state.go('app.profile', {}, {});
-
+				onLogInSuccess(data.token);
 			}
 
 		}).catch(error => {
-			console.log("testing login error", error);
+			console.error(error);
 		});
 
 	};
 
 	const getUser = function () {
 
-		/* return new Promise(function (resolve, reject) {
+		return new Promise(function (resolve, reject) {
 
-			authorizerService.getUser().then(function (userData) {
+			authorizerService.getMe().then(function (userData) {
 
 				vm.user = userData;
 				resolve();
@@ -99,23 +101,37 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 				reject(error);
 			});
 
-		}); */
-		return authorizerService.getUser();
+		});
+		// return authorizerService.getMe();
 
 	};
 
 	const initTransitionListener = function () {
 
 		$transitions.onBefore({}, function (transition) {
-			console.log("testing transition onStart", transition.from().name);
-			$mdDialog.hide();
+
+			const resetUrlAfterAbortion = function () {
+
+				let fromUrl = $state.href($state.current.name, {}, {relative: true});
+				fromUrl = fromUrl.slice(2); // remove #! part
+				$urlService.url(fromUrl, true);
+
+			};
 
 			if (isAuthenticated) {
-				console.log("testing not authenticated user transition aborted");
-				if (transition.to().name === 'app.authentication') transition.abort();
+
+				if (transition.to().name === 'app.authentication') {
+
+					resetUrlAfterAbortion();
+					return false;
+
+				}
 
 			} else if (transition.to().name !== 'app.authentication') {
-				transition.abort();
+
+				resetUrlAfterAbortion();
+				return false;
+				// transition.abort();
 			}
 
 		});
@@ -200,7 +216,7 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 
 				middlewareService.initLogOut();
 
-				usersService.logout().then(function (data) {
+				authorizerService.logout().then(function (data) {
 
 					sessionStorage.removeItem('afterLoginEvents');
 
@@ -210,7 +226,7 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 						window.location.reload()
 					}
 
-					cookieService.deleteCookie();
+					cookieService.deleteCookie('authtoken');
 
 				});
 
@@ -226,7 +242,7 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 	const init = function () {
 
 		initTransitionListener();
-		console.log("testing broadcast", broadcastChannelService.isAvailable);
+
 		if (broadcastChannelService.isAvailable) {
 			initCrossTabBroadcast();
 		}
@@ -234,32 +250,47 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 		authorizerService.ping().then(function (data) {
 
 			// console.log('ping data', data);
-			console.log("testing shellController ping ", data);
+
 			if (!data.is_authenticated) {
 
 				// vm.initLoginDialog();
 				isAuthenticated = false;
 				vm.isAuthenticated = isAuthenticated;
-				console.log("testing shellController isAuthenticated 1", isAuthenticated);
+
 				$state.go('app.authentication');
 
 			} else {
 
+				if (data.base_api_url) {
+					baseUrlService.setMasterUserPrefix(data.base_api_url);
+				}
+
 				isAuthenticated = true;
 				vm.isAuthenticated = isAuthenticated;
-				console.log("testing shellController isAuthenticated 2", isAuthenticated);
-				if (!data.current_master_user_id) {
-					console.log("testing ecosystem not chosen", isAuthenticated);
+
+				if (data.current_master_user_id) {
+
+					globalDataService.setCurrentMasterUserStatus(true);
+
+					if (vm.isAuthenticationPage) {
+						$state.go('app.portal.home');
+					}
+
+				} else {
+
+					globalDataService.setCurrentMasterUserStatus(false);
+
+					if ($state.current.name !== 'app.profile') $state.go('app.profile', {}, {});
+
+				}
+
+				/* if (!data.current_master_user_id && $state.current.name !== 'app.profile') {
+
 					$state.go('app.profile', {}, {});
 
 				} else if (vm.isAuthenticationPage) {
-					console.log("testing ecosystem chosen1", isAuthenticated);
-					$state.go('app.home');
-				}
-
-				if (data.base_api_url) {
-					baseUrlService.setMasterUserPrefix(data.base_api_url)
-				}
+					$state.go('app.portal.home');
+				} */
 				console.log("User status: Authenticated");
 
 				getUser().then(() => {
@@ -270,12 +301,9 @@ export default function ($scope, $state, $transitions, $mdDialog, cookieService,
 				});
 
 			}
-			console.log("testing shellController isAuthenticated 3", isAuthenticated);
+
 		}).catch(error => {
-			console.log("testing shellController isAuthenticated 4", error);
-			if (!error.is_authenticated) {
-				$state.go('app.authentication');
-			}
+			if (!error.is_authenticated) $state.go('app.authentication');
 		})
 
 	};

@@ -14,7 +14,7 @@
         var vm = this;
 
         vm.goToState = function(entity){
-            $state.go('app.data-constructor', {entityType: entity});
+            $state.go('app.portal.data-constructor', {entityType: entity});
         }
 
     };

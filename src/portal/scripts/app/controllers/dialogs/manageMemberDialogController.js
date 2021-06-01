@@ -7,7 +7,7 @@
 
     // var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog, memberId, usersService) {
+    module.exports = function ($scope, $mdDialog, memberId, authorizerService) {
 
         var vm = this;
 
@@ -24,7 +24,7 @@
 
         vm.getData = function () {
 
-			usersService.getCurrentMasterUser().then(function (data) {
+			authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.master_user = data;
 

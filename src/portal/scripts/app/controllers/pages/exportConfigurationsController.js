@@ -14,7 +14,7 @@
     module.exports = function ($scope, $mdDialog, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.activeTab = 'configuration';
 
         vm.readyStatus = {content: false, layouts: false};

@@ -45,7 +45,7 @@
 		livereload.listen();
 
 		gulp.watch('src/portal/**/*.less', gulp.series('portal-less-to-css-min'));
-		gulp.watch('src/' + appName + '/**/*.js', gulp.series('js-min'));
+		gulp.watch(['src/' + appName + '/**/*.js', '!src/' + appName + '/**/templates.min.js'], gulp.series('js-min'));
 		gulp.watch('src/' + appName + '/**/*.html', gulp.series(appName + '-HTML-to-JS'));
 		gulp.watch('src/index.html', gulp.series('common-main-html-min'));
 

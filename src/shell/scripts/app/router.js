@@ -7,7 +7,7 @@
 
 	// module.exports = function ($stateProvider, $urlServiceProvider) {
 export default function ($stateProvider, $urlServiceProvider) {
-	console.log("testing shell router intitialized");
+
 	$urlServiceProvider.rules.otherwise('/');
 
 	$stateProvider.state('app', {

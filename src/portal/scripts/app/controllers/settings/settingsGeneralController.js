@@ -12,7 +12,7 @@
         $scope.$state = $state;
 
         vm.checkProviders = function () {
-            return $state.includes('app.settings.general.data-providers') || $state.includes('app.settings.general.data-providers-config')
+            return $state.includes('app.portal.settings.general.data-providers') || $state.includes('app.portal.settings.general.data-providers-config')
         }
 
 

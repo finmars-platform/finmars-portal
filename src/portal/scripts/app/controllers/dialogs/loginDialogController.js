@@ -1,5 +1,8 @@
 /**
  * Created by szhitenev on 20.07.2020.
+ *
+ * Deprecated with creation of separate page of authentication 'app.authentication'.
+ *
  */
 (function(){
 

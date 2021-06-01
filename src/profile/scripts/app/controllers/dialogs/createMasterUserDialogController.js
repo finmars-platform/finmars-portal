@@ -5,9 +5,9 @@
 
     'use strict';
 
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, data, profileAuthorizerService) {
 
         console.log('data', data);
 
@@ -19,7 +19,7 @@
 
         vm.agree = function ($event) {
 
-            authorizerService.createMasterUser({name: vm.name}).then(function (data) {
+			profileAuthorizerService.createMasterUser({name: vm.name}).then(function (data) {
 
                 console.log('data success', data);
 

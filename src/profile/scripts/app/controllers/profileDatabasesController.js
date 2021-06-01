@@ -6,14 +6,14 @@
     'use strict';
 
     // var usersService = require('../services/usersService');
-    var authorizerService = require('../services/authorizerService');
+    // var authorizerService = require('../services/authorizerService');
 
     var baseUrlService = require('../services/baseUrlService');
     var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $state, $mdDialog, usersService) {
+    module.exports = function ($scope, $state, $mdDialog, profileAuthorizerService, commonDialogsService) {
 
         var vm = this;
 
@@ -25,8 +25,8 @@
 
             vm.readyStatus.masterUsers = false;
 
-            authorizerService.getMasterList().then(function (data) {
-                vm.masters = data.results;
+			profileAuthorizerService.getMasterUsersList().then(function (data) {
+                vm.masterUsers = data.results;
                 vm.readyStatus.masterUsers = true;
                 $scope.$apply();
             });
@@ -39,7 +39,7 @@
 
             var status = 0; // 0 - SENT, 1 - ACCEPTED, 2 - DECLINED
 
-            authorizerService.getInviteFromMasterUserList(status).then(function (data) {
+			profileAuthorizerService.getInviteFromMasterUserList(status).then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;
@@ -97,15 +97,13 @@
 
             // console.log('item', item);
 
-            authorizerService.setMasterUser(item.id).then(function (data) {
-
-                console.log('vm.activateDatabase.data', data);
-
+			profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
 
                 baseUrlService.setMasterUserPrefix(data.base_api_url);
                 portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                $state.go('app.home');
+                $state.go('app.portal.home');
+
             });
 
         };
@@ -132,14 +130,16 @@
         }
 
         vm.exportMasterUserBackup = function ($event, item) {
-            authorizerService.exportToBackup(item.id).then(function (data) {
+
+        	profileAuthorizerService.exportToBackup(item.id).then(function (data) {
 
                 if (data.status !== 200) {
                     throw Error("Something went wrong")
                 }
 
                 return data.blob()
-            }).then(function (blob) {
+
+			}).then(function (blob) {
 
                 console.log('blob ', blob);
 
@@ -163,12 +163,13 @@
                 console.log("data?", data);
 
                 toastNotificationService.error("Something went wrong. Please, try again later")
-            })
-        }
+            });
+
+        };
 
         vm.leaveMasterUser = function ($event, item) {
 
-            $mdDialog.show({
+            /* $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
@@ -179,11 +180,19 @@
                     }
                 },
                 targetEvent: $event
-            }).then(function (res) {
+            }) */
+			const locals = {
+				warning: {
+					title: 'Warning!',
+					description: "Are you sure to leave from " + item.name + ' database?'
+				}
+			};
+
+			commonDialogsService.warning(locals, {targetEvent: $event}).then(res => {
 
                 if (res.status === 'agree') {
 
-                    authorizerService.leaveMasterUser(item.id).then(function () {
+					profileAuthorizerService.leaveMasterUser(item.id).then(function () {
 
                         vm.getMasterUsersList();
 
@@ -208,11 +217,14 @@
                     }
                 },
                 targetEvent: $event
-            }).then(function (value) {
 
-                $state.go('app.profile', {}, {reload: 'app'})
+            }).then(res => {
 
-            })
+            	if (res.status === 'agree') {
+					$state.go('app.profile', {}, {reload: 'app'})
+				}
+
+            });
 
 
         };
@@ -229,7 +241,9 @@
                     }
                 },
                 targetEvent: $event
-            }).then(function (res) {
+            });
+			/* Master user copy starts inside CopyMasterUserDialogController
+			.then(function (res) {
 
                 if (res.status === 'agree') {
 
@@ -244,7 +258,7 @@
 
                 }
 
-            })
+            }) */
 
         };
 
@@ -252,12 +266,11 @@
 
             vm.getTaskInfo()
 
-
         };
 
         vm.getTaskInfo = function () {
 
-            usersService.copyMasterUser(vm.copyMasterUserTask).then(function (data) {
+			profileAuthorizerService.copyMasterUser(vm.copyMasterUserTask).then(function (data) {
 
                 vm.copyMasterUserTask = data;
 
@@ -287,7 +300,7 @@
 
             item.description = item.description_tmp;
 
-            usersService.updateMaster(item.id, item).then(function (data) {
+			profileAuthorizerService.updateMasterUser(item.id, item).then(function (data) {
 
                 item.description_tmp = '';
                 item.descriptionEdit = false;
@@ -302,7 +315,7 @@
 
             item.status = 2; // Decline code
 
-            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+			profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getInvites();
 
@@ -314,7 +327,7 @@
 
             item.status = 1; // Accept code
 
-            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+			profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getMasterUsersList();
                 vm.getInvites();

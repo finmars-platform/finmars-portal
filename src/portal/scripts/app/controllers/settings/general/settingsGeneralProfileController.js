@@ -10,7 +10,7 @@
     module.exports = function ($scope, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.readyStatus = {member: false};
 
         vm.timeZones = timeZonesService.getList();

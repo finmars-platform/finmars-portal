@@ -8,16 +8,19 @@
     var twoFactorService = require('../../services/twoFactorServce');
     // var authorizerService = require('../../services/authorizerService');
 
-    module.exports = function ($scope, $mdDialog, data, authorizerService) {
+    module.exports = function ($scope, $mdDialog, data, globalDataService) {
 
         var vm = this;
 
+        vm.readyStatus = false;
         vm.currentStep = 1;
         vm.codeIsValid = false;
         vm.provisioning_uri = null;
         vm.token_id = null;
         vm.securityCode = null;
         vm.isShowAuthenticatorApps = false;
+
+        let user;
 
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});
@@ -35,7 +38,6 @@
 
             document.querySelector('.code-holder').append(qr.image)
 
-
         };
 
 
@@ -49,6 +51,8 @@
 
                 vm.generateQrCode();
 
+                vm.readyStatus = true;
+
                 $scope.$apply();
 
             })
@@ -59,9 +63,11 @@
 
             if (vm.securityCode && vm.securityCode.length === 6) {
 
+				user = globalDataService.getUser();
+
                 twoFactorService.validateCode({
                     code: vm.securityCode,
-                    username: vm.user.username
+                    username: user.username
                 }).then(function (data) {
 
                     vm.codeIsValid = data.match;
@@ -83,9 +89,9 @@
 
         };
 
-        vm.getUser = function () {
+        /* vm.getUser = function () {
 
-            authorizerService.getUserByKey(0).then(function (data) {
+			 authorizerService.getUserByKey(0).then(function (data) {
                 vm.user = data;
 
                 vm.generateToken();
@@ -94,13 +100,15 @@
             });
 
 
-        };
+        }; */
 
 
         vm.init = function () {
 
-            vm.getUser();
-
+			vm.readyStatus = false;
+            // vm.getUser();
+			user = globalDataService.getUser();
+			vm.generateToken();
 
         };
 

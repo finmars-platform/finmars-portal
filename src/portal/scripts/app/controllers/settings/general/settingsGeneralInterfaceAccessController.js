@@ -10,7 +10,7 @@
     module.exports = function ($scope, $state, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.readyStatus = {member: false};
 
         vm.timeZones = timeZonesService.getList();
@@ -24,7 +24,7 @@
         vm.save = function () {
             usersService.updateOwnMemberSettings(vm.member.id, vm.member).then(function () {
 
-                $state.go('app.settings.interface-access', null, { reload: 'app' });
+                $state.go('app.portal.settings.interface-access', null, { reload: 'app' });
 
                 $scope.$apply();
             })

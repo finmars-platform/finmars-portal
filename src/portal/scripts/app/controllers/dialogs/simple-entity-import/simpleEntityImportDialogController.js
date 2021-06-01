@@ -19,7 +19,7 @@
     module.exports = function simpleEntityImportDialogController($scope, $mdDialog, data, usersService) {
 
         var vm = this;
-		console.log("testing usersService injection", usersService);
+
         vm.readyStatus = {
             schemes: false,
             processing: false,
