@@ -1157,9 +1157,11 @@
         //     viewportWidth = contentWrapElemWidth;
         // }
 
+        console.log("Calculate scroll", interfaceLayout.evLeftPanel.width);
+
         viewportWidth = contentWrapElemWidth;
 
-        viewportWidth = viewportWidth - 230; // new left sidear, todo move to interfacelayout width
+        viewportWidth = viewportWidth - interfaceLayout.evLeftPanel.width;
 
         viewportTop = interfaceLayout.progressBar.height;
 

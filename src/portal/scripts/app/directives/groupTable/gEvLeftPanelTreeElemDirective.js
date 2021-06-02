@@ -98,15 +98,14 @@
 
                 var init = async function () {
 
-                    if (scope.item.___parentId) {
-                        var parents = evRvCommonHelper.getParents(scope.item.___parentId, scope.evDataService);
-                        var groups = scope.evDataService.getGroups();
 
-                        if (parents.length === groups.length) {
+                    var groups = scope.evDataService.getGroups();
 
-                            scope.isLastLevel = true;
-                        }
+                    if (scope.item.___level === groups.length) {
+
+                        scope.isLastLevel = true;
                     }
+
 
                 };
 

@@ -44,7 +44,7 @@
         var filters = vm.entityViewerDataService.getFilters();
         var groups = vm.entityViewerDataService.getGroups();
 
-		var scrollHelper;
+        var scrollHelper;
 
         vm.attrsList = [];
 
@@ -117,17 +117,17 @@
 
                         if (item.key.indexOf("user_text_") !== -1) {
 
-                        	vm.userTextFields.push(item);
+                            vm.userTextFields.push(item);
                             return false;
 
                         } else if (item.key.indexOf("user_number_") !== -1) {
 
-                        	vm.userNumberFields.push(item);
+                            vm.userNumberFields.push(item);
                             return false;
 
                         } else if (item.key.indexOf("user_date_") !== -1) {
 
-                        	vm.userDateFields.push(item);
+                            vm.userDateFields.push(item);
                             return false;
 
                         }
@@ -389,67 +389,71 @@
         var selectedColumns = [];
         var selectedFilters = [];
 
-		var isAttrInsideOfAnotherGroup = function (attrKey, groupType) {
+        var isAttrInsideOfAnotherGroup = function (attrKey, groupType) {
 
-			let group1, group2;
+            let group1, group2;
 
-			switch (groupType) {
-				case 'groups':
-					group1 = columns;
-					group2 = filters;
-					break;
+            switch (groupType) {
+                case 'groups':
+                    group1 = columns;
+                    group2 = filters;
+                    break;
 
-				case 'columns':
-					group1 = groups;
-					group2 = filters;
-					break;
+                case 'columns':
+                    group1 = groups;
+                    group2 = filters;
+                    break;
 
-				case 'filters':
-					group1 = groups;
-					group2 = columns;
-					break;
-			}
+                case 'filters':
+                    group1 = groups;
+                    group2 = columns;
+                    break;
+            }
 
-			let attrIndex = group1.findIndex(attr => {return attr.key === attrKey});
+            let attrIndex = group1.findIndex(attr => {
+                return attr.key === attrKey
+            });
 
-			if (attrIndex < 0) {
-				attrIndex = group2.findIndex(attr => {return attr.key === attrKey});
-			}
+            if (attrIndex < 0) {
+                attrIndex = group2.findIndex(attr => {
+                    return attr.key === attrKey
+                });
+            }
 
-			return attrIndex > -1;
+            return attrIndex > -1;
 
-		}
+        }
 
-		var updateSelectedAttr = function (attr, selectedAttrs) {
+        var updateSelectedAttr = function (attr, selectedAttrs) {
 
-			const existingAttrIndex = selectedAttrs.findIndex(selAttr => attr.key === selAttr.key);
+            const existingAttrIndex = selectedAttrs.findIndex(selAttr => attr.key === selAttr.key);
 
-			if (existingAttrIndex < 0) {
-				selectedAttrs.push(attr);
-			} else {
-				selectedAttrs[existingAttrIndex] = attr
-			}
+            if (existingAttrIndex < 0) {
+                selectedAttrs.push(attr);
+            } else {
+                selectedAttrs[existingAttrIndex] = attr
+            }
 
-		};
+        };
 
         var separateSelectedAttrs = function (attributes, attrsVmKey) {
 
             for (var i = 0; i < attributes.length; i++) {
 
-            	var attribute = JSON.parse(angular.toJson(attributes[i]));
+                var attribute = JSON.parse(angular.toJson(attributes[i]));
                 attribute['attrsVmKey'] = attrsVmKey; // used inside HTML for vm.onSelectedAttrsChange()
 
                 // attrsVmKey used in vm.updateAttrs and selectedDnD
                 if (attribute.columns) {
-					updateSelectedAttr(attribute, selectedColumns);
+                    updateSelectedAttr(attribute, selectedColumns);
 
                 } else if (attribute.groups) {
-					updateSelectedAttr(attribute, selectedGroups);
+                    updateSelectedAttr(attribute, selectedGroups);
 
                 }
 
                 if (attribute.filters) {
-					updateSelectedAttr(attribute, selectedFilters);
+                    updateSelectedAttr(attribute, selectedFilters);
                 }
 
             }
@@ -459,29 +463,33 @@
         var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
 
             // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
-			let selectedAttrsObj = {};
+            let selectedAttrsObj = {};
             let inactiveAttrs = [];
 
             selectedAttrs.forEach((attr) => {
 
-                if (attr[groupType]) {
-					selectedAttrsObj[attr.key] = attr
+                if (attr) {
 
-                } else if (!isAttrInsideOfAnotherGroup(attr.key, groupType)) {
+                    if (attr[groupType]) {
+                        selectedAttrsObj[attr.key] = attr
 
-					inactiveAttrs.push(attr);
+                    } else if (!isAttrInsideOfAnotherGroup(attr.key, groupType)) {
 
-				}
+                        inactiveAttrs.push(attr);
+
+                    }
+
+                }
 
             });
 
-			let orderedAttrs = insideTable.map(function (attr) {
+            let orderedAttrs = insideTable.map(function (attr) {
 
-				return selectedAttrsObj[attr.key];
+                return selectedAttrsObj[attr.key];
 
-			});
+            });
 
-			orderedAttrs = orderedAttrs.concat(inactiveAttrs);
+            orderedAttrs = orderedAttrs.concat(inactiveAttrs);
 
             return orderedAttrs;
 
@@ -505,9 +513,9 @@
             separateSelectedAttrs(vm.userDateFields, 'userDateFields');
 
             // Order selected as they are inside the table
-			vm.selectedGroups = organizeSelectedAttrs(groups, selectedGroups, 'groups');
-			vm.selectedColumns = organizeSelectedAttrs(columns, selectedColumns, 'columns');
-			vm.selectedFilters = organizeSelectedAttrs(filters, selectedFilters, 'filters');
+            vm.selectedGroups = organizeSelectedAttrs(groups, selectedGroups, 'groups');
+            vm.selectedColumns = organizeSelectedAttrs(columns, selectedColumns, 'columns');
+            vm.selectedFilters = organizeSelectedAttrs(filters, selectedFilters, 'filters');
 
         };
 
@@ -563,7 +571,7 @@
                         for (i = 0; i < columns.length; i = i + 1) {
                             if (columns[i].key === identifier) {
                                 exist = true;
-								existedAttrGroup = 'column';
+                                existedAttrGroup = 'column';
                             }
                             /*if (columns[i].name === name) {
                                 exist = true;
@@ -579,7 +587,7 @@
                             }*/
                             if (groups[i].key === identifier) {
                                 exist = true;
-								existedAttrGroup = 'group';
+                                existedAttrGroup = 'group';
                             }
                         }
                     }
@@ -593,7 +601,7 @@
 
                             if (filters[i].key === identifier) {
                                 exist = true;
-								existedAttrGroup = 'filter';
+                                existedAttrGroup = 'filter';
                             }
                         }
                     }
@@ -679,8 +687,8 @@
                         var errorMessage = 'Item should be unique';
 
                         if (existedAttrGroup) {
-							errorMessage = 'There is already such ' + existedAttrGroup + ' in Filter Area';
-						}
+                            errorMessage = 'There is already such ' + existedAttrGroup + ' in Filter Area';
+                        }
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
@@ -849,39 +857,39 @@
                                         GCFItems = filters;
 
                                         updateGCFMethod = function () {
-                                        	vm.entityViewerDataService.setFilters(GCFItems);
+                                            vm.entityViewerDataService.setFilters(GCFItems);
                                         };
 
                                         break;
                                 }
 
                                 var attrData = JSON.parse(JSON.stringify(vm[attrsVmKey][i]));
-								var insertAttr = true;
+                                var insertAttr = true;
 
                                 if (nextSibling) {
-									var nextSiblingKey = nextSibling.dataset.attributeKey;
-								}
+                                    var nextSiblingKey = nextSibling.dataset.attributeKey;
+                                }
 
                                 attributeChanged = true;
 
-								for (var a = 0; a < GCFItems.length; a++) { // search for the same attr
+                                for (var a = 0; a < GCFItems.length; a++) { // search for the same attr
 
-								 	if (GCFItems[a].key === attributeKey) {
+                                    if (GCFItems[a].key === attributeKey) {
 
-										GCFItems[a].groups = attrData.groups
-										GCFItems[a].columns = attrData.columns
-										GCFItems[a].groups = attrData.groups
+                                        GCFItems[a].groups = attrData.groups
+                                        GCFItems[a].columns = attrData.columns
+                                        GCFItems[a].groups = attrData.groups
 
-										if (nextSiblingKey === attributeKey) { // attr already in right place
+                                        if (nextSiblingKey === attributeKey) { // attr already in right place
 
-											insertAttr = false;
+                                            insertAttr = false;
 
-										} else { // remove attribute before inserting it into another index
+                                        } else { // remove attribute before inserting it into another index
 
-											attrData = JSON.parse(JSON.stringify(GCFItems[a]));
-											GCFItems.splice(a, 1);
+                                            attrData = JSON.parse(JSON.stringify(GCFItems[a]));
+                                            GCFItems.splice(a, 1);
 
-										}
+                                        }
 
                                         break;
                                     }
@@ -890,28 +898,28 @@
 
                                 if (insertAttr) {
 
-                                	if (nextSibling) {
+                                    if (nextSibling) {
 
-                                		for (var a = 0; a < GCFItems.length; a++) {
+                                        for (var a = 0; a < GCFItems.length; a++) {
 
-                                			var GCFElem = GCFItems[a];
+                                            var GCFElem = GCFItems[a];
 
-											if (GCFElem.key === nextSiblingKey) {
+                                            if (GCFElem.key === nextSiblingKey) {
 
-												GCFItems.splice(a, 0, attrData);
-												break;
+                                                GCFItems.splice(a, 0, attrData);
+                                                break;
 
-											}
+                                            }
 
-										}
+                                        }
 
-									} else {
-										GCFItems.push(attrData);
-									}
+                                    } else {
+                                        GCFItems.push(attrData);
+                                    }
 
                                 }
 
-								updateGCFMethod();
+                                updateGCFMethod();
 
                                 break;
                             }
@@ -1031,7 +1039,7 @@
 
                 drake.on('dragend', function () {
 
-                	if (sourceContainer) {
+                    if (sourceContainer) {
                         sourceContainer.classList.remove('dragged-out-card-space');
                     }
 
@@ -1482,12 +1490,12 @@
 
         vm.initDnd = function () {
 
-        	setTimeout(function () {
+            setTimeout(function () {
 
-        		var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
-        		scrollHelper.setDnDScrollElem(DnDScrollElem);
+                var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
+                scrollHelper.setDnDScrollElem(DnDScrollElem);
 
-        		viewConstructorDnD.init();
+                viewConstructorDnD.init();
                 selectedDnD.init();
 
             }, 500);
@@ -1508,7 +1516,7 @@
 
         var init = function () {
 
-			scrollHelper = new ScrollHelper();
+            scrollHelper = new ScrollHelper();
 
             vm.getAttributes();
 

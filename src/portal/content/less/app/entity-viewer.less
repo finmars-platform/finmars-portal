@@ -435,7 +435,7 @@
 .entity-viewer-holder {
 
   .g-table-section {
-    width: calc(100% - 230px);
+    //width: calc(100% - 230px);
   }
 
   .g-ev-left-panel-holder {
@@ -445,6 +445,18 @@
     float: left;
     position: relative;
     box-sizing: border-box;
+    border-top: 1px solid rgb(224, 224, 224);
+    overflow: hidden;
+  }
+
+  .ev-left-panel-slider {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    cursor: ew-resize;
+    width: 2px;
+    background: rgb(224, 224, 224);
   }
 
   .g-filters-holder {
@@ -481,6 +493,7 @@
 
     .ev-left-panel-tree-elem-line {
       height: 33px;
+      white-space: nowrap;
 
       &.selected-group {
         background: rgba(240, 90, 34, 0.117647058823529);

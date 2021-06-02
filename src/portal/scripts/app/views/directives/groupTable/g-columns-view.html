@@ -186,7 +186,7 @@
         <div class="flex-row width-100 g-cols-holder gColumnsHolder gcAreaDnD">
 
             <div class="g-table-header-cell-wrapper gColumnElem gDraggableHead gcAreaDnD"
-                 ng-repeat="column in notGroupingColumns track by column.key"
+                 ng-repeat="column in columns track by column.key"
                  ng-hide="column.isHidden"
                  ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
                  ng-style="column.style"

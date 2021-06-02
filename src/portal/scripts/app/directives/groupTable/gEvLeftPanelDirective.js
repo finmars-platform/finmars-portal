@@ -56,7 +56,7 @@
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                        scope.resize()
+                        scope.resize();
 
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
@@ -67,7 +67,7 @@
 
                     scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-                        scope.resize()
+                        scope.resize();
 
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
@@ -79,7 +79,7 @@
 
                     scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                        scope.resize()
+                        scope.resize();
 
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
@@ -90,7 +90,6 @@
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
-                        scope.resize()
 
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
@@ -101,8 +100,6 @@
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-                        scope.resize()
-
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
                             scope.$apply();
@@ -112,7 +109,6 @@
 
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-                        scope.resize()
 
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
@@ -131,6 +127,61 @@
 
                     }, 100)
 
+                    window.addEventListener('resize', function () {
+                        scope.resize();
+                    });
+
+                    var slider = document.querySelector('.evLeftPanelSlider')
+
+                    var leftPanel = document.querySelector('.g-ev-left-panel-holder')
+                    var parentSection = leftPanel.parentElement
+                    var tableSection = document.querySelector('.g-table-section')
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    var resultWidth;
+
+
+
+
+
+                    slider.addEventListener('mousedown', function (event) {
+
+                        console.log('mousedown event', event)
+
+                        var clientX = event.clientX;
+                        var clientY = event.clientY;
+
+                        var originalWidth = interfaceLayout.evLeftPanel.width
+
+                        $(window).bind('mousemove',function sliderMouseMove (event) {
+
+                            var diffX = event.clientX - clientX;
+                            // var diffY = clientY + event.clientY
+
+                            if (originalWidth + diffX >= document.body.clientWidth) {
+                                resultWidth = document.body.clientWidth;
+                            } else if (originalWidth + diffX <= 33) {
+                                resultWidth = 33;
+                            } else {
+                                resultWidth = originalWidth + diffX
+                            }
+
+                            interfaceLayout.evLeftPanel.width = resultWidth;
+                            leftPanel.style.width = resultWidth + 'px';
+                            tableSection.style.width = parentSection.clientWidth - resultWidth + 'px'
+
+                            scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                        } )
+
+                    })
+
+                    $(window).bind('mouseup', function () {
+
+                        $(window).unbind('mousemove')
+                    })
 
 
                 };
