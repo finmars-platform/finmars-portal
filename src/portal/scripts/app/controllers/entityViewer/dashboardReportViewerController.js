@@ -392,554 +392,6 @@
 
             };
 
-            vm.setEventListeners = function () {
-
-                vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
-
-                    rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                });
-
-                vm.entityViewerEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
-
-                    rvDataProviderService.sortObjects(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                });
-
-                vm.entityViewerEventService.addEventListener(evEvents.GROUP_TYPE_SORT_CHANGE, function () {
-
-                    rvDataProviderService.sortGroupType(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                });
-
-                vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
-
-                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                });
-
-                vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
-
-					  vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-
-                    vm.entityViewerDataService.setDataLoadStatus(false);
-
-                    if (!fillInModeEnabled) {
-
-                        vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.PROCESSING);
-                        vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                    }
-
-                });
-
-                vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
-                    vm.entityViewerDataService.setDataLoadStatus(true);
-
-                    if (!fillInModeEnabled) {
-                        vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
-                        vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    }
-
-                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
-
-                });
-
-                vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
-
-                    var columns = vm.entityViewerDataService.getColumns();
-                    vm.dashboardComponentDataService.setViewerTableColumns(columns);
-                    //vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
-
-                });
-
-                if (vm.componentData.type === 'report_viewer_grand_total') {
-
-                    vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                        vm.updateGrandTotalComponent();
-                    })
-
-                }
-
-                if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
-
-                    vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-
-                        console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', vm.componentData.type);
-                        console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', gotActiveObjectFromLinkedDashboardComp);
-
-                        var activeObject = vm.entityViewerDataService.getActiveObject();
-
-                        if (!gotActiveObjectFromLinkedDashboardComp) {
-
-                            var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
-                            var compsKeys = Object.keys(componentsOutputs);
-
-                            if (compsKeys.length > 0) {
-
-                                compsKeys.forEach(function (compKey) {
-
-                                    if (componentsOutputs[compKey]) {
-
-                                        componentsOutputs[compKey].changedLast = false;
-
-                                    }
-
-                                });
-
-                                vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
-
-                            }
-
-                            var compOutputData = {
-                                changedLast: true,
-                                deleteOnChange: true,
-                                data: activeObject
-                            };
-
-                            vm.dashboardDataService.setComponentOutput(vm.componentData.id, compOutputData);
-
-                            vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id);
-
-                            /*if (vm.componentData.settings.auto_refresh) {
-                                vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
-                            }*/
-                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE);
-
-                        } else {
-                            gotActiveObjectFromLinkedDashboardComp = false; // reset variable indicator
-                        }
-
-                        if (vm.componentData.type === 'report_viewer_grand_total') {
-                            vm.updateGrandTotalComponent();
-                        }
-
-                    });
-
-                }
-
-                if (fillInModeEnabled) {
-
-                    if (vm.componentData.type === 'report_viewer' ||
-                        vm.componentData.type === 'report_viewer_split_panel') {
-
-                        vm.entityViewerEventService.addEventListener(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR, function () {
-                            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.OPEN_COMPONENT_EDITOR);
-                        });
-
-                    }
-
-                } else {
-
-                    vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
-
-                        var columns = vm.entityViewerDataService.getColumns();
-
-                        if (vm.componentData.type === 'report_viewer' ||
-                            vm.componentData.type === 'report_viewer_split_panel') {
-                            vm.userSettings.columns = JSON.parse(angular.toJson(columns));
-                        }
-
-
-                    });
-
-                    vm.entityViewerEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
-
-                        var columns = vm.entityViewerDataService.getColumns();
-
-                        if (vm.componentData.type === 'report_viewer' ||
-                            vm.componentData.type === 'report_viewer_split_panel') {
-                            vm.userSettings.columns = JSON.parse(angular.toJson(columns));
-                        }
-
-                    });
-                }
-
-                vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-
-                    var activeObject = vm.entityViewerDataService.getActiveObject();
-                    var action = vm.entityViewerDataService.getActiveObjectAction();
-                    var actionData = vm.entityViewerDataService.getActiveObjectActionData();
-                    var reportOptions = vm.entityViewerDataService.getReportOptions();
-
-                    var currencies = reportOptions.item_currencies;
-
-                    var getCurrencyObject = function (currencyKey) {
-                        var currencyObj = {};
-
-                        currencies.forEach(function (item) {
-
-                            if (item.id === activeObject[currencyKey]) {
-
-                                currencyObj.id = item.id;
-                                currencyObj.name = item.name;
-                                currencyObj.short_name = item.short_name;
-                                currencyObj.user_code = item.user_code;
-
-                            }
-
-                        });
-
-                        return currencyObj;
-                    };
-
-                    console.log('activeObject', activeObject);
-                    console.log('actionData', actionData);
-                    console.log('action', action);
-
-                    var contextData = getContextData(reportOptions, activeObject);
-
-                    if (activeObject) {
-
-                        if (action === 'edit_instrument') {
-
-                            var locals = {
-                                entityType: 'instrument',
-                                entityId: activeObject['instrument.id'],
-                                data: {
-                                    contextData: contextData
-                                }
-                            };
-
-                            editEntity(activeObject, locals);
-
-                        }
-
-                        if (action === 'edit_account') {
-
-                            var locals = {
-                                entityType: 'account',
-                                entityId: activeObject['account.id'],
-                                data: {
-                                    contextData: contextData
-                                }
-                            };
-
-                            editEntity(activeObject, locals);
-
-                        }
-
-                        if (action === 'edit_portfolio') {
-
-                            var locals = {
-                                entityType: 'portfolio',
-                                entityId: activeObject['portfolio.id'],
-                                data: {
-                                    contextData: contextData
-                                }
-                            };
-
-                            editEntity(activeObject, locals);
-
-                        }
-
-                        if (action === 'edit_currency') {
-
-                            var locals = {
-                                entityType: 'currency',
-                                entityId: activeObject['currency.id'],
-                                data: {
-                                    contextData: contextData
-                                }
-                            };
-
-                            editEntity(activeObject, locals);
-
-                        }
-
-                        if (action === 'edit_pricing_currency') {
-
-                            var locals = {
-                                entityType: 'currency',
-                                entityId: activeObject['instrument.pricing_currency.id'],
-                                data: {
-                                    contextData: contextData
-                                }
-                            };
-
-                            editEntity(activeObject, locals);
-
-                        }
-
-                        if (action === 'edit_accrued_currency') {
-
-                            var locals = {
-                                entityType: 'currency',
-                                entityId: activeObject['instrument.accrued_currency.id'],
-                                data: {
-                                    contextData: contextData
-                                }
-                            };
-
-                            editEntity(activeObject, locals);
-
-                        }
-
-                        if (action === 'edit_price') {
-
-                            var filters = {
-                                instrument: activeObject['instrument.id'],
-                                pricing_policy: reportOptions.pricing_policy,
-                                date_after: reportOptions.report_date,
-                                date_before: reportOptions.report_date
-                            };
-
-                            priceHistoryService.getList({filters: filters}).then(function (data) {
-
-                                if (data.results.length) {
-
-                                    var item = data.results[0];
-
-                                    var locals = {
-                                        entityType: 'price-history',
-                                        entityId: item.id,
-                                        data: {
-                                            contextData: contextData
-                                        }
-                                    };
-
-                                    editEntity(activeObject, locals);
-
-                                } else {
-
-                                    var warningDescription = 'No corresponding record in Price History. Do you want to add the record?';
-                                    var createEntityLocals = {
-                                        entityType: 'price-history',
-                                        entity: {
-                                            instrument: activeObject['instrument.id'],
-                                            instrument_object: {
-                                                id: activeObject['instrument.id'],
-                                                name: activeObject['instrument.name'],
-                                                user_code: activeObject['instrument.user_code'],
-                                                short_name: activeObject['instrument.short_name']
-                                            },
-                                            pricing_policy: reportOptions.pricing_policy,
-                                            pricing_policy_object: reportOptions.pricing_policy_object,
-                                            date: reportOptions.report_date
-                                        },
-                                        data: {}
-                                    };
-
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
-
-                                }
-
-                            })
-
-
-                        }
-
-                        if (action === 'edit_fx_rate') {
-
-                            var filters = {
-                                instrument: activeObject['instrument.id'],
-                                pricing_policy: reportOptions.pricing_policy,
-                                date_0: reportOptions.report_date,
-                                date_1: reportOptions.report_date
-                            };
-
-                            currencyHistoryService.getList({filters: filters}).then(function (data) {
-
-                                if (data.results.length) {
-
-                                    var item = data.results[0];
-
-                                    var locals = {
-                                        entityType: 'currency-history',
-                                        entityId: item.id,
-                                        data: {
-                                            contextData: contextData
-                                        }
-                                    };
-
-                                    editEntity(activeObject, locals);
-
-                                } else {
-
-                                    var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-                                    var createEntityLocals = {
-                                        entityType: 'currency-history',
-                                        entity: {
-                                            currency: activeObject['currency.id'],
-                                            currency_object: {
-                                                id: activeObject['currency.id']
-                                            },
-                                            pricing_policy: reportOptions.pricing_policy,
-                                            pricing_policy_object: reportOptions.pricing_policy_object,
-                                            date: reportOptions.report_date
-                                        },
-                                        data: {}
-                                    };
-
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
-
-                                }
-
-                            })
-
-                        }
-
-                        if (action === 'edit_pricing_currency_price' && activeObject.id) {
-
-                            console.log('activeObject', activeObject);
-
-                            var filters = {
-                                currency: activeObject['instrument.pricing_currency'],
-                                instrument: activeObject['instrument.id'],
-                                pricing_policy: reportOptions.pricing_policy,
-                                date_0: reportOptions.report_date,
-                                date_1: reportOptions.report_date
-                            };
-
-                            currencyHistoryService.getList({filters: filters}).then(function (data) {
-
-                                if (data.results.length) {
-
-                                    var item = data.results[0];
-
-                                    var locals = {
-                                        entityType: 'currency-history',
-                                        entityId: item.id,
-                                        data: {
-                                            contextData: contextData
-                                        }
-                                    };
-
-                                    editEntity(activeObject, locals);
-
-                                } else {
-
-                                    var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-
-                                    var currency_object = getCurrencyObject('instrument.pricing_currency');
-                                    var createEntityLocals = {
-                                        entityType: 'currency-history',
-                                        entity: {
-                                            currency: activeObject['instrument.pricing_currency'],
-                                            currency_object: currency_object,
-                                            pricing_policy: reportOptions.pricing_policy,
-                                            pricing_policy_object: reportOptions.pricing_policy_object,
-                                            date: reportOptions.report_date
-                                        },
-                                        data: {}
-                                    };
-
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
-
-                                }
-
-                            })
-
-                        }
-
-                        if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
-
-                            var filters = {
-                                currency: activeObject['instrument.accrued_currency'],
-                                instrument: activeObject['instrument.id'],
-                                pricing_policy: reportOptions.pricing_policy,
-                                date_0: reportOptions.report_date,
-                                date_1: reportOptions.report_date
-                            };
-
-                            currencyHistoryService.getList({filters: filters}).then(function (data) {
-
-                                if (data.results.length) {
-
-                                    var item = data.results[0];
-
-                                    var locals = {
-                                        entityType: 'currency-history',
-                                        entityId: item.id,
-                                        data: {
-                                            contextData: contextData
-                                        }
-                                    };
-
-                                    editEntity(activeObject, locals);
-
-                                } else {
-
-                                    var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-
-                                    var currency_object = getCurrencyObject('instrument.accrued_currency');
-                                    var createEntityLocals = {
-                                        entityType: 'currency-history',
-                                        entity: {
-                                            currency: activeObject['instrument.accrued_currency'],
-                                            currency_object: currency_object,
-                                            pricing_policy: reportOptions.pricing_policy,
-                                            pricing_policy_object: reportOptions.pricing_policy_object,
-                                            date: reportOptions.report_date
-                                        },
-                                        data: {}
-                                    };
-
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
-
-
-                                }
-
-                            })
-
-                        }
-
-                        if (action === 'book_transaction') {
-
-                            var locals = {
-                                entityType: 'complex-transaction',
-                                entity: {},
-                                data: {}
-                            };
-
-                            if (vm.entityType === 'transaction-report') {
-
-                                locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
-                                locals.data.contextData = contextData;
-
-                            }
-
-                            createEntity(activeObject, locals);
-
-                        }
-
-                        if (action === 'book_transaction_specific') {
-
-                            var locals = {
-                                entityType: 'complex-transaction',
-                                entity: {},
-                                data: {
-                                    contextData: contextData
-                                }
-                            };
-
-                            if (actionData && actionData.id) {
-                                locals.entity.transaction_type = actionData.id
-                            }
-
-                            createEntity(activeObject, locals);
-
-                        }
-
-                        if (action === 'rebook_transaction') {
-
-                            var locals = {
-                                entityType: 'complex-transaction',
-                                entityId: activeObject['complex_transaction.id'],
-                                data: {}
-                            };
-
-                            editEntity(activeObject, locals);
-
-                        }
-                    }
-
-                });
-
-
-            };
-
             vm.getOptionsFromDependencies = function () {
 
                 var reportOptions = {};
@@ -1627,6 +1079,579 @@
                 });
             };
 
+			vm.setEventListeners = function () {
+
+				vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
+
+					rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+				});
+
+				vm.entityViewerEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
+
+					rvDataProviderService.sortObjects(vm.entityViewerDataService, vm.entityViewerEventService);
+
+				});
+
+				vm.entityViewerEventService.addEventListener(evEvents.GROUP_TYPE_SORT_CHANGE, function () {
+
+					rvDataProviderService.sortGroupType(vm.entityViewerDataService, vm.entityViewerEventService);
+
+				});
+
+				vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
+
+					rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+
+				});
+
+				vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+
+					vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+
+					vm.entityViewerDataService.setDataLoadStatus(false);
+
+					if (!fillInModeEnabled) {
+
+						vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.PROCESSING);
+						vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+					}
+
+				});
+
+				vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+					vm.entityViewerDataService.setDataLoadStatus(true);
+
+					if (!fillInModeEnabled) {
+						vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
+						vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+					}
+
+					vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
+
+				});
+
+				vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+					var columns = vm.entityViewerDataService.getColumns();
+					vm.dashboardComponentDataService.setViewerTableColumns(columns);
+					//vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
+
+				});
+
+				switch (vm.componentData.type) {
+					case 'report_viewer_grand_total':
+
+						vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+							vm.updateGrandTotalComponent();
+						})
+
+						break;
+
+					case 'report_viewer_matrix':
+
+						vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
+							vm.componentData.settings.abscissa = vm.matrixSettings.abscissa;
+							vm.componentData.settings.ordinate = vm.matrixSettings.ordinate;
+							vm.componentData.settings.value_key = vm.matrixSettings.value_key;
+						});
+
+						break;
+
+					case 'report_viewer_table_chart':
+
+						vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
+							vm.componentData.settings.title_column = vm.tableChartSettings.title_column;
+							vm.componentData.settings.value_column = vm.tableChartSettings.value_column;
+						});
+
+						break;
+				}
+
+				if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
+
+					vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+						console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', vm.componentData.type);
+						console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', gotActiveObjectFromLinkedDashboardComp);
+
+						var activeObject = vm.entityViewerDataService.getActiveObject();
+
+						if (!gotActiveObjectFromLinkedDashboardComp) {
+
+							var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
+							var compsKeys = Object.keys(componentsOutputs);
+
+							if (compsKeys.length > 0) {
+
+								compsKeys.forEach(function (compKey) {
+
+									if (componentsOutputs[compKey]) {
+
+										componentsOutputs[compKey].changedLast = false;
+
+									}
+
+								});
+
+								vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
+
+							}
+
+							var compOutputData = {
+								changedLast: true,
+								deleteOnChange: true,
+								data: activeObject
+							};
+
+							vm.dashboardDataService.setComponentOutput(vm.componentData.id, compOutputData);
+
+							vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id);
+
+							/*if (vm.componentData.settings.auto_refresh) {
+								vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
+							}*/
+							vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE);
+
+						} else {
+							gotActiveObjectFromLinkedDashboardComp = false; // reset variable indicator
+						}
+
+						if (vm.componentData.type === 'report_viewer_grand_total') {
+							vm.updateGrandTotalComponent();
+						}
+
+					});
+
+				}
+
+				if (fillInModeEnabled) {
+
+					if (vm.componentData.type === 'report_viewer' ||
+						vm.componentData.type === 'report_viewer_split_panel') {
+
+						vm.entityViewerEventService.addEventListener(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR, function () {
+							vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.OPEN_COMPONENT_EDITOR);
+						});
+
+					}
+
+				}
+				else {
+
+					vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+						var columns = vm.entityViewerDataService.getColumns();
+
+						if (vm.componentData.type === 'report_viewer' ||
+							vm.componentData.type === 'report_viewer_split_panel') {
+							vm.userSettings.columns = JSON.parse(angular.toJson(columns));
+						}
+
+
+					});
+
+					vm.entityViewerEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
+
+						var columns = vm.entityViewerDataService.getColumns();
+
+						if (vm.componentData.type === 'report_viewer' ||
+							vm.componentData.type === 'report_viewer_split_panel') {
+							vm.userSettings.columns = JSON.parse(angular.toJson(columns));
+						}
+
+					});
+				}
+
+				vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+					var activeObject = vm.entityViewerDataService.getActiveObject();
+					var action = vm.entityViewerDataService.getActiveObjectAction();
+					var actionData = vm.entityViewerDataService.getActiveObjectActionData();
+					var reportOptions = vm.entityViewerDataService.getReportOptions();
+
+					var currencies = reportOptions.item_currencies;
+
+					var getCurrencyObject = function (currencyKey) {
+						var currencyObj = {};
+
+						currencies.forEach(function (item) {
+
+							if (item.id === activeObject[currencyKey]) {
+
+								currencyObj.id = item.id;
+								currencyObj.name = item.name;
+								currencyObj.short_name = item.short_name;
+								currencyObj.user_code = item.user_code;
+
+							}
+
+						});
+
+						return currencyObj;
+					};
+
+					console.log('activeObject', activeObject);
+					console.log('actionData', actionData);
+					console.log('action', action);
+
+					var contextData = getContextData(reportOptions, activeObject);
+
+					if (activeObject) {
+
+						if (action === 'edit_instrument') {
+
+							var locals = {
+								entityType: 'instrument',
+								entityId: activeObject['instrument.id'],
+								data: {
+									contextData: contextData
+								}
+							};
+
+							editEntity(activeObject, locals);
+
+						}
+
+						if (action === 'edit_account') {
+
+							var locals = {
+								entityType: 'account',
+								entityId: activeObject['account.id'],
+								data: {
+									contextData: contextData
+								}
+							};
+
+							editEntity(activeObject, locals);
+
+						}
+
+						if (action === 'edit_portfolio') {
+
+							var locals = {
+								entityType: 'portfolio',
+								entityId: activeObject['portfolio.id'],
+								data: {
+									contextData: contextData
+								}
+							};
+
+							editEntity(activeObject, locals);
+
+						}
+
+						if (action === 'edit_currency') {
+
+							var locals = {
+								entityType: 'currency',
+								entityId: activeObject['currency.id'],
+								data: {
+									contextData: contextData
+								}
+							};
+
+							editEntity(activeObject, locals);
+
+						}
+
+						if (action === 'edit_pricing_currency') {
+
+							var locals = {
+								entityType: 'currency',
+								entityId: activeObject['instrument.pricing_currency.id'],
+								data: {
+									contextData: contextData
+								}
+							};
+
+							editEntity(activeObject, locals);
+
+						}
+
+						if (action === 'edit_accrued_currency') {
+
+							var locals = {
+								entityType: 'currency',
+								entityId: activeObject['instrument.accrued_currency.id'],
+								data: {
+									contextData: contextData
+								}
+							};
+
+							editEntity(activeObject, locals);
+
+						}
+
+						if (action === 'edit_price') {
+
+							var filters = {
+								instrument: activeObject['instrument.id'],
+								pricing_policy: reportOptions.pricing_policy,
+								date_after: reportOptions.report_date,
+								date_before: reportOptions.report_date
+							};
+
+							priceHistoryService.getList({filters: filters}).then(function (data) {
+
+								if (data.results.length) {
+
+									var item = data.results[0];
+
+									var locals = {
+										entityType: 'price-history',
+										entityId: item.id,
+										data: {
+											contextData: contextData
+										}
+									};
+
+									editEntity(activeObject, locals);
+
+								} else {
+
+									var warningDescription = 'No corresponding record in Price History. Do you want to add the record?';
+									var createEntityLocals = {
+										entityType: 'price-history',
+										entity: {
+											instrument: activeObject['instrument.id'],
+											instrument_object: {
+												id: activeObject['instrument.id'],
+												name: activeObject['instrument.name'],
+												user_code: activeObject['instrument.user_code'],
+												short_name: activeObject['instrument.short_name']
+											},
+											pricing_policy: reportOptions.pricing_policy,
+											pricing_policy_object: reportOptions.pricing_policy_object,
+											date: reportOptions.report_date
+										},
+										data: {}
+									};
+
+									offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+
+								}
+
+							})
+
+
+						}
+
+						if (action === 'edit_fx_rate') {
+
+							var filters = {
+								instrument: activeObject['instrument.id'],
+								pricing_policy: reportOptions.pricing_policy,
+								date_0: reportOptions.report_date,
+								date_1: reportOptions.report_date
+							};
+
+							currencyHistoryService.getList({filters: filters}).then(function (data) {
+
+								if (data.results.length) {
+
+									var item = data.results[0];
+
+									var locals = {
+										entityType: 'currency-history',
+										entityId: item.id,
+										data: {
+											contextData: contextData
+										}
+									};
+
+									editEntity(activeObject, locals);
+
+								} else {
+
+									var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
+									var createEntityLocals = {
+										entityType: 'currency-history',
+										entity: {
+											currency: activeObject['currency.id'],
+											currency_object: {
+												id: activeObject['currency.id']
+											},
+											pricing_policy: reportOptions.pricing_policy,
+											pricing_policy_object: reportOptions.pricing_policy_object,
+											date: reportOptions.report_date
+										},
+										data: {}
+									};
+
+									offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+
+								}
+
+							})
+
+						}
+
+						if (action === 'edit_pricing_currency_price' && activeObject.id) {
+
+							console.log('activeObject', activeObject);
+
+							var filters = {
+								currency: activeObject['instrument.pricing_currency'],
+								instrument: activeObject['instrument.id'],
+								pricing_policy: reportOptions.pricing_policy,
+								date_0: reportOptions.report_date,
+								date_1: reportOptions.report_date
+							};
+
+							currencyHistoryService.getList({filters: filters}).then(function (data) {
+
+								if (data.results.length) {
+
+									var item = data.results[0];
+
+									var locals = {
+										entityType: 'currency-history',
+										entityId: item.id,
+										data: {
+											contextData: contextData
+										}
+									};
+
+									editEntity(activeObject, locals);
+
+								} else {
+
+									var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
+
+									var currency_object = getCurrencyObject('instrument.pricing_currency');
+									var createEntityLocals = {
+										entityType: 'currency-history',
+										entity: {
+											currency: activeObject['instrument.pricing_currency'],
+											currency_object: currency_object,
+											pricing_policy: reportOptions.pricing_policy,
+											pricing_policy_object: reportOptions.pricing_policy_object,
+											date: reportOptions.report_date
+										},
+										data: {}
+									};
+
+									offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+
+								}
+
+							})
+
+						}
+
+						if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
+
+							var filters = {
+								currency: activeObject['instrument.accrued_currency'],
+								instrument: activeObject['instrument.id'],
+								pricing_policy: reportOptions.pricing_policy,
+								date_0: reportOptions.report_date,
+								date_1: reportOptions.report_date
+							};
+
+							currencyHistoryService.getList({filters: filters}).then(function (data) {
+
+								if (data.results.length) {
+
+									var item = data.results[0];
+
+									var locals = {
+										entityType: 'currency-history',
+										entityId: item.id,
+										data: {
+											contextData: contextData
+										}
+									};
+
+									editEntity(activeObject, locals);
+
+								} else {
+
+									var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
+
+									var currency_object = getCurrencyObject('instrument.accrued_currency');
+									var createEntityLocals = {
+										entityType: 'currency-history',
+										entity: {
+											currency: activeObject['instrument.accrued_currency'],
+											currency_object: currency_object,
+											pricing_policy: reportOptions.pricing_policy,
+											pricing_policy_object: reportOptions.pricing_policy_object,
+											date: reportOptions.report_date
+										},
+										data: {}
+									};
+
+									offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+
+
+								}
+
+							})
+
+						}
+
+						if (action === 'book_transaction') {
+
+							var locals = {
+								entityType: 'complex-transaction',
+								entity: {},
+								data: {}
+							};
+
+							if (vm.entityType === 'transaction-report') {
+
+								locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
+								locals.data.contextData = contextData;
+
+							}
+
+							createEntity(activeObject, locals);
+
+						}
+
+						if (action === 'book_transaction_specific') {
+
+							var locals = {
+								entityType: 'complex-transaction',
+								entity: {},
+								data: {
+									contextData: contextData
+								}
+							};
+
+							if (actionData && actionData.id) {
+								locals.entity.transaction_type = actionData.id
+							}
+
+							createEntity(activeObject, locals);
+
+						}
+
+						if (action === 'rebook_transaction') {
+
+							var locals = {
+								entityType: 'complex-transaction',
+								entityId: activeObject['complex_transaction.id'],
+								data: {}
+							};
+
+							editEntity(activeObject, locals);
+
+						}
+					}
+
+				});
+
+                vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
+                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
+                })
+
+			};
+
             vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 
                 // vm.oldEventExchanges()
@@ -1836,26 +1861,43 @@
 
                 if (vm.componentData.type === 'report_viewer_matrix') {
                     vm.matrixSettings = {
-                        top_left_title: vm.componentData.settings.top_left_title,
-                        number_format: vm.componentData.settings.number_format,
+
+                    	top_left_title: vm.componentData.settings.top_left_title,
+
                         abscissa: vm.componentData.settings.abscissa,
                         ordinate: vm.componentData.settings.ordinate,
                         value_key: vm.componentData.settings.value_key,
-                        subtotal_formula_id: vm.componentData.settings.subtotal_formula_id,
-                        matrix_view: vm.componentData.settings.matrix_view,
-                        styles: vm.componentData.settings.styles,
+						available_abscissa_keys: vm.componentData.user_settings.available_abscissa_keys,
+						available_ordinate_keys: vm.componentData.user_settings.available_ordinate_keys,
+						available_value_keys: vm.componentData.user_settings.available_value_keys,
+
+						number_format: vm.componentData.settings.number_format,
+						subtotal_formula_id: vm.componentData.settings.subtotal_formula_id,
+
+						matrix_view: vm.componentData.settings.matrix_view, // DEPRECATED possibly
+
+						styles: vm.componentData.settings.styles,
                         auto_scaling: vm.componentData.settings.auto_scaling,
                         hide_empty_lines: vm.componentData.settings.hide_empty_lines
+
                     };
                 }
 
                 if (vm.componentData.type === 'report_viewer_table_chart') {
+
+                    console.log('DasboardReportViewer.report_viewer_table_chart.vm.componentData', vm.componentData)
+
                     vm.tableChartSettings = {
                         title_column: vm.componentData.settings.title_column,
                         value_column: vm.componentData.settings.value_column,
 
                         title_column_name: vm.componentData.settings.title_column_name,
-                        value_column_name: vm.componentData.settings.value_column_name
+                        value_column_name: vm.componentData.settings.value_column_name,
+
+                        available_title_column_keys: vm.componentData.user_settings.available_title_column_keys,
+                        available_value_column_keys: vm.componentData.user_settings.available_value_column_keys,
+
+                        number_format: vm.componentData.settings.number_format
                     };
                 }
 
@@ -1995,8 +2037,8 @@
 
                                 vm.entityViewerDataService.setComponents(evComponents);
 
-                                // set dashboard columns list for small rv table
-                                if (vm.userSettings && vm.userSettings.columns) {
+								//<editor-fold desc="Set dashboard columns list for small rv table">
+								if (vm.userSettings && vm.userSettings.columns) {
 
                                     if (fillInModeEnabled) {
 
@@ -2004,7 +2046,6 @@
                                         var columns = listLayout.data.columns;
 
                                     }
-
                                     else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
@@ -2017,16 +2058,16 @@
 											groupColumns = layoutColumns.slice(0, layoutGroups.length)
 										}
 
-                                        layoutColumns.forEach(function(layoutColumn, lColIndex) {
+                                        layoutColumns.forEach(layoutColumn => {
 
-                                        	var groupColumnIndex = layoutGroups.findIndex(function (group) {
-												return group.key === layoutColumn.key;
-											});
+                                        	var groupColumn = layoutGroups.find(group => group.key === layoutColumn.key);
 
-                                        	if (groupColumnIndex > -1) { // remove groups column
-												columns.splice(lColIndex, 1);
+                                        	if (groupColumn) { // remove groups column
+
+                                        		var groupColIndex = columns.findIndex(column => column.key === layoutColumn.key);
+												if (groupColIndex > -1) columns.splice(groupColIndex, 1);
+
 											}
-
                                         	else {
 
                                         		var column = columns.find(function(itemColumn){
@@ -2048,7 +2089,8 @@
 									vm.entityViewerDataService.setColumns(columns);
 
                                 }
-                                // < set dashboard columns list for small rv table >
+								//</editor-fold desc="Set dashboard columns list for small rv table">
+
                             }
 
                             vm.initDashboardExchange();

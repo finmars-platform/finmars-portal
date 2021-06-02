@@ -33,6 +33,8 @@
                 contentWrapElement: '=',
 				workareaWrapElement: '=',
                 hideFiltersBlock: '=',
+                hideUseFromAboveFilters: '=',
+
             },
 			templateUrl: 'views/directives/groupTable/g-filters-view.html',
             link: function (scope, elem, attrs) {
@@ -50,7 +52,7 @@
 				scope.fpBackClasses = "z-index-48"
 				scope.fpClasses = "z-index-49"
 
-				scope.showUseFromAboveFilters = !scope.hideFiltersBlock;
+				scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
 
 				scope.readyStatus = {
 					filters: false
@@ -69,6 +71,10 @@
 				let dynamicAttrs = [];
 				let attrsWithoutFilters = ['notes'];
 
+                // Victor 2021.03.29 #88 fix bug with deleted custom fields
+                let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
                 scope.calculateReport = function () {
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 };
@@ -78,11 +84,8 @@
 					let allAttrsList;
 
 					if (scope.viewContext === 'reconciliation_viewer') {
-
 						allAttrsList = scope.attributeDataService.getReconciliationAttributes();
-
 					}
-
 					else {
 
 						switch (scope.entityType) {
@@ -534,7 +537,8 @@
 				// <editor-fold desc="Chips filters">
 				scope.toggleUseFromAboveFilters = function () {
 
-                	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters
+                	scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters;
+                	scope.evEventService.dispatchEvent(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
 					formatFiltersForChips();
 
                 	setTimeout(() => {
@@ -632,7 +636,7 @@
 
 					useFromAboveFilters = scope.filters.filter((filter, index) => {
 
-						if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
+						if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
 
 							filter.filtersListIndex = index;
 							return true;
@@ -679,6 +683,7 @@
                 const formatFiltersForChips = function () {
 
 					scope.filtersChips = [];
+                    const errors = [];
 
 					scope.filters.forEach(filter => {
 
@@ -704,7 +709,8 @@
 							) {
 
 								let filterData = {
-									id: filter.key
+									id: filter.key,
+                                    isActive: filterOpts.enabled
 								};
 
 								const filterName = filter.layout_name ? filter.layout_name : filter.name;
@@ -726,6 +732,31 @@
 
 								filterData.text = chipText;
 
+                                // Victor 2021.03.29 #88 fix bug with deleted custom fields
+								if (filter.key.startsWith('custom_fields')) {
+								    const customField = customFields.find( field => filter.key === `custom_fields.${field.user_code}`)
+                                    if (!customField) {
+
+                                        filter.options.enabled = false;
+                                        const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
+
+                                        filterData.error_data = {
+											code: 10,
+                                            description: description
+                                        }
+
+                                        const error = {
+                                            key: filter.key,
+                                            description: description
+                                        }
+
+                                        errors.push(error)
+
+                                    }
+
+                                }
+                                // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
 								scope.filtersChips.push(filterData);
 
 							}
@@ -733,6 +764,19 @@
 						}
 
 					});
+
+                    // Victor 2021.03.29 #88 fix bug with deleted custom fields
+					const missingCustomFields = [];
+					errors.forEach(error => {
+					    if (!missingCustomFields.find(field => field.key === error.key)) {
+
+					        missingCustomFields.push(error);
+
+                        }
+                    });
+
+					scope.evDataService.setMissingCustomFields({forFilters: missingCustomFields});
+                    // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
                     updateFilterAreaHeight()
 
@@ -782,6 +826,13 @@
 				// </editor-fold>
 
                 const initEventListeners = function () {
+
+                    // Victor 2021.03.29 #88 fix bug with deleted custom fields
+                    scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                        customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                        formatFiltersForChips();
+                    })
+                    // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
                 	scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, calculateFilterChipsContainerWidth);
 

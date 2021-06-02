@@ -4,6 +4,7 @@
 
 	var stringHelper = require('../helpers/stringHelper');
     var metaHelper = require('../helpers/meta.helper');
+    var reportHelper = require('../helpers/reportHelper');
 
     var getDefaultInterfaceLayout = function () {
 
@@ -146,7 +147,7 @@
                 step: 60, // rows to render
                 direction: null
             },
-            viewContext: '',
+            viewContext: '', // can be: reconciliation_viewer, dashboard, entity_viewer, reconciliation_viewer, split_panel
             viewType: 'report_viewer',
             viewSettings: {},
             lastViewSettings: {},
@@ -163,7 +164,13 @@
             activeObjectsCount: 0,
             dataLoadEnded: false,
             markedSubtotals: {},
-			rowSettings: {}
+			rowSettings: {},
+            missingCustomFields: {
+                forFilters: [],
+                forColumns: [],
+            },
+			warnAboutLayoutChangesLoss: true,
+			isNewLayout: false // does layout exist on server
         };
 
         var dashboardData = {
@@ -910,6 +917,14 @@
             return data.listLayout;
         }
 
+		function setIsNewLayoutState (state) {
+			data.isNewLayout = state;
+		}
+
+		function isLayoutNew () {
+			return data.isNewLayout;
+		}
+
         function setActiveLayoutConfiguration(options) {
 
             if (options && options.layoutConfig) {
@@ -961,7 +976,7 @@
                             listLayout.data.viewSettings[viewType] = getViewSettings(viewType);
                         }
 
-                        delete listLayout.data.reportOptions.items;
+                        /* delete listLayout.data.reportOptions.items;
                         delete listLayout.data.reportOptions.item_complex_transactions;
                         delete listLayout.data.reportOptions.item_counterparties;
                         delete listLayout.data.reportOptions.item_responsibles;
@@ -974,7 +989,8 @@
                         delete listLayout.data.reportOptions.item_instrument_accruals;
                         delete listLayout.data.reportOptions.item_currency_fx_rates;
                         delete listLayout.data.reportOptions.item_currencies;
-                        delete listLayout.data.reportOptions.item_accounts;
+                        delete listLayout.data.reportOptions.item_accounts; */
+						listLayout.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(listLayout.data.reportOptions);
 
                     } else {
                         listLayout.data.pagination = getPagination();
@@ -1042,22 +1058,23 @@
                     listLayout.data.viewSettings[viewType] = viewSettings;
                 }
 
-                delete listLayout.data.reportOptions.items;
-                delete listLayout.data.reportOptions.item_complex_transactions;
-                delete listLayout.data.reportOptions.item_counterparties;
-                delete listLayout.data.reportOptions.item_responsibles;
-                delete listLayout.data.reportOptions.item_strategies3;
-                delete listLayout.data.reportOptions.item_strategies2;
-                delete listLayout.data.reportOptions.item_strategies1;
-                delete listLayout.data.reportOptions.item_portfolios;
-                delete listLayout.data.reportOptions.item_instruments;
-                delete listLayout.data.reportOptions.item_instrument_pricings;
-                delete listLayout.data.reportOptions.item_instrument_accruals;
-                delete listLayout.data.reportOptions.item_currency_fx_rates;
-                delete listLayout.data.reportOptions.item_currencies;
-                delete listLayout.data.reportOptions.item_accounts;
+                /* delete listLayout.data.reportOptions.items;
+				delete listLayout.data.reportOptions.item_complex_transactions;
+				delete listLayout.data.reportOptions.item_counterparties;
+				delete listLayout.data.reportOptions.item_responsibles;
+				delete listLayout.data.reportOptions.item_strategies3;
+				delete listLayout.data.reportOptions.item_strategies2;
+				delete listLayout.data.reportOptions.item_strategies1;
+				delete listLayout.data.reportOptions.item_portfolios;
+				delete listLayout.data.reportOptions.item_instruments;
+				delete listLayout.data.reportOptions.item_instrument_pricings;
+				delete listLayout.data.reportOptions.item_instrument_accruals;
+				delete listLayout.data.reportOptions.item_currency_fx_rates;
+				delete listLayout.data.reportOptions.item_currencies;
+				delete listLayout.data.reportOptions.item_accounts; */
+				listLayout.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(listLayout.data.reportOptions);
 
-            }
+			}
 
             else {
 
@@ -1431,6 +1448,56 @@
 			return data.rowSettings || {};
 		}
 
+        function setMissingCustomFields(options) {
+
+            if (!options) {
+                data.missingCustomFields = {
+                    forFilters: [],
+                    forColumns: [],
+                };
+            }
+
+            if (options.forFilters) {
+                data.missingCustomFields.forFilters = options.forFilters;
+            }
+
+            if (options.forColumns) {
+                data.missingCustomFields.forColumns = options.forColumns;
+            }
+        }
+
+        function getMissingCustomFields() {
+            return data.missingCustomFields;
+        }
+
+		/**
+		 * Setting status to false allows to skip layout changes loss warning once
+		 *
+		 * @param status {boolean}
+		 * @memberOf module:entityViewerDataService
+		 */
+		function setLayoutChangesLossWarningState (status) {
+        	data.warnAboutLayoutChangesLoss = status;
+		}
+
+		/**
+		 * If warnAboutLayoutChangesLoss === false, turns warning back on before returning false
+		 *
+		 *@memberOf module:entityViewerDataService
+		 */
+		function isLayoutChangesLossWarningNeeded() {
+
+			if (!data.warnAboutLayoutChangesLoss) {
+
+				data.warnAboutLayoutChangesLoss = true;
+				return false;
+
+			}
+
+			return data.warnAboutLayoutChangesLoss;
+
+		}
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1582,12 +1649,14 @@
 
             setListLayout: setListLayout,
             getListLayout: getListLayout,
-
+			setIsNewLayoutState: setIsNewLayoutState,
+			isLayoutNew: isLayoutNew,
             getActiveLayoutConfiguration: getActiveLayoutConfiguration,
             setActiveLayoutConfiguration: setActiveLayoutConfiguration,
-
             getLayoutCurrentConfiguration: getLayoutCurrentConfiguration,
             setLayoutCurrentConfiguration: setLayoutCurrentConfiguration,
+			setLayoutChangesLossWarningState: setLayoutChangesLossWarningState,
+			isLayoutChangesLossWarningNeeded: isLayoutChangesLossWarningNeeded,
 
             setSplitPanelStatus: setSplitPanelStatus,
             isSplitPanelActive: isSplitPanelActive,
@@ -1659,6 +1728,9 @@
 
 			setRowSettings: setRowSettings,
 			getRowSettings: getRowSettings,
+
+            setMissingCustomFields: setMissingCustomFields,
+            getMissingCustomFields: getMissingCustomFields,
 
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,

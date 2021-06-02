@@ -159,8 +159,19 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
 
-                    uiService.deleteListLayoutByKey(item.id).then(function (data) {
+                    uiService.deleteListLayoutByKey(item.id).then(async (data) => {
+
+						if (item.is_default && vm.items.length > 1) { // If default layout was deleted and other layouts exist. Make another layout default.
+
+							let nextDefaultLayout = (vm.items[0].id === item.id) ? vm.items[1] : vm.items[0];
+							nextDefaultLayout.is_default = true;
+
+							await uiService.updateListLayout(nextDefaultLayout.id, nextDefaultLayout);
+
+						}
+
                         vm.getList();
+
                     });
                 }
             })

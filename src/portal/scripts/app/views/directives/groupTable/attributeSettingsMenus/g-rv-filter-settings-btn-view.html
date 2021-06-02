@@ -4,6 +4,8 @@
 <!--    <md-menu>-->
         <md-button aria-label="report viewer filter settings"
                    class="md-icon-button"
+                   ng-disabled="filter.error_data"
+
                    popup
                    popup-template-url="'views/popups/entity-viewer/g-filter-settings.html'"
                    popup-data="popupData"

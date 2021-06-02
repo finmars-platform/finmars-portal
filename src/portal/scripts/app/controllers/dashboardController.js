@@ -479,7 +479,7 @@
 
                     vm.dashboardDataService.setComponentStatus(compId, dashboardComponentStatuses.ERROR);
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    throw "id of defective dashboard component " + compId;
+                    // throw "id of defective dashboard component " + compId;
 
                 }
 
