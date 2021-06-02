@@ -65,6 +65,9 @@
             },
             splitPanel: {
                 height: 0
+            },
+            evLeftPanel: {
+                width: 230
             }
         }
 
