@@ -5,7 +5,9 @@ import websocketService from "../../../../shell/scripts/app/services/websocketSe
 import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents.js";
 import baseUrlService from "../../../../shell/scripts/app/services/baseUrlService.js";
 
-export default function ($mdDialog, $state, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService) {
+const metaService = require('../services/metaService'); // TODO inject into angular dependencies
+
+export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService) {
 
 	return {
 		restrict: 'E',
@@ -17,8 +19,11 @@ export default function ($mdDialog, $state, cookieService, broadcastChannelServi
 
 			if (!scope.openedInside) throw new Error("mainHeaderDirective: openedInside does not set");
 			// let user;
+			scope.currentLocation = '';
 			scope.currentMasterUser = globalDataService.getMasterUser();
 			scope.userName = '';
+
+			let deregisterOnSuccessTransitionHook;
 
 			const mdContent = document.querySelector('md-content');
 
@@ -251,10 +256,20 @@ export default function ($mdDialog, $state, cookieService, broadcastChannelServi
 
 			};
 
+			if (scope.openedInside === 'portal') {
+
+				deregisterOnSuccessTransitionHook = $transitions.onSuccess({}, function (transition) {
+					scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
+				});
+
+			}
+
 			const init = async function () {
 
 				const user = globalDataService.getUser();
 				scope.userName = user.username;
+
+				if (scope.openedInside === 'portal') scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
 
 				// Promise.all([usersService.getUser(), getMasterUsersList()]).then(resData => {
 				getMasterUsersList().then(resData => {
@@ -264,6 +279,14 @@ export default function ($mdDialog, $state, cookieService, broadcastChannelServi
 			};
 
 			init();
+
+			if (scope.openedInside === 'portal') {
+
+				scope.$on("$destroy", function () {
+					deregisterOnSuccessTransitionHook();
+				});
+
+			}
 
 		}
 	}

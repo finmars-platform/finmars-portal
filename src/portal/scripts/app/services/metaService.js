@@ -297,6 +297,19 @@
 
         var name = '';
 
+        if ($state.current.name.startsWith('app.portal.data')) {
+        	name = 'Data: ';
+		}
+        else if ($state.current.name.startsWith('app.portal.settings')) {
+			name = 'Settings: ';
+		}
+		else if ($state.current.name.startsWith('app.portal.reports')) {
+			name = 'Report: ';
+		}
+		else if ($state.current.name.startsWith('app.portal.import')) {
+			name = 'Import: '
+		}
+
         if ($state.current.name.indexOf('app.forum') !== -1) {
 
             name = 'FORUM';
@@ -305,175 +318,186 @@
 
             switch ($state.current.name) {
                 case 'app.portal.home':
-                    name = 'HOME PAGE';
+                    name = 'Home page';
                     break;
 
-                case 'app.portal.reports.balance-report':
-                    name = 'REPORT > BALANCE';
+				//<editor-fold desc="Report: ">
+				case 'app.portal.reports.balance-report':
+                    name += 'Balance';
                     break;
                 case 'app.portal.reports.pl-report':
-                    name = 'REPORT > P&L';
+                    name += 'P&L';
                     break;
                 case 'app.portal.reports.transaction-report':
-                    name = 'REPORT > TRANSACTION';
+                    name += 'Transaction';
                     break;
                 case 'app.portal.reports.check-for-events':
-                    name = 'REPORT > EVENTS';
+                    name += 'Events';
                     break;
-                case 'app.portal.data.portfolio':
-                    name = "DATA > PORTFOLIOS";
+				//</editor-fold>
+
+				//<editor-fold desc="Data: ">
+				case 'app.portal.data.portfolio':
+                    name += "Portfolios";
                     break;
                 case 'app.portal.data.account':
-                    name = "DATA > ACCOUNTS";
+                    name += "Accounts";
                     break;
                 case 'app.portal.data.instrument':
-                    name = "DATA > INSTRUMENTS";
+                    name += "Instruments";
                     break;
                 case 'app.portal.data.counterparty':
-                    name = "DATA > COUNTERPARTIES";
+                    name += "Counterparties";
                     break;
                 case 'app.portal.data.responsible':
-                    name = "DATA > RESPONSIBLES";
+                    name += "Responsibles";
                     break;
                 case 'app.portal.data.currency':
-                    name = "DATA > CURRENCIES";
+                    name += "Currencies";
                     break;
                 case 'app.portal.data.strategy':
-                    name = "DATA > STRATEGIES";
+                    name += "Strategies";
                     break;
+				//</editor-fold>
 
                 case 'app.portal.data.complex-transaction':
-                    name = "TRANSACTIONS > TRANSACTIONS";
+                    name = "Transactions: Transactions";
                     break;
                 case 'app.portal.data.price-history':
-                    name = "VALUATIONS > PRICES";
+                    name = "Valuations: Prices";
                     break;
                 case 'app.portal.data.currency-history':
-                    name = "VALUATIONS > FX RATES";
+                    name = "Valuations: Fx RATES";
                     break;
 
-                case 'app.portal.import.simple-entity':
-                    name = 'IMPORT > DATA';
+				//<editor-fold desc="Import: ">
+				case 'app.portal.import.simple-entity':
+                    name += 'Data';
                     break;
                 case 'app.portal.import.transaction':
-                    name = 'IMPORT > TRANSACTIONS';
+                    name += 'Transactions';
                     break;
                 case 'app.portal.import.complex-import':
-                    name = 'IMPORT > DATA AND TRANSACTIONS';
+                    name += 'Data and transactions';
                     break;
                 case 'app.portal.import.instrument':
-                    name = 'IMPORT > INSTRUMENT';
+                    name += 'Instrument';
                     break;
                 case 'app.portal.import.prices':
-                    name = 'IMPORT > PRICES/FX';
+                    name += 'Prices/fx';
                     break;
                 case 'app.portal.import.mapping-tables':
-                    name = 'IMPORT > MAPPING TABLES';
+                    name += 'Mapping tables';
                     break;
+				//</editor-fold>
 
                 case 'app.portal.system.instruments':
-                    name = 'JOURNAL > INSTRUMENTS AUDIT';
+                    name = 'Journal: Instruments audit';
                     break;
                 case 'app.portal.system.transactions':
-                    name = 'JOURNAL > TRANSACTIONS AUDIT';
+                    name = 'Journal: Transactions audit';
                     break;
                 case 'app.portal.data.transaction':
-                    name = 'TRANSACTIONS > BASE TRANSACTIONS';
+                    name = 'Transactions: Base transactions';
                     break;
 
                 case 'app.portal.developer-panel':
-                    name = 'DEVELOPER PANEL';
+                    name = 'Developer panel';
                     break;
                 case 'app.portal.dashboard':
-                    name = 'DASHBOARD';
+                    name = 'Dashboard';
                     break;
                 case 'app.portal.dashboard-constructor':
-                    name = 'DASHBOARD CONSTRUCTOR';
+                    name = 'Dashboard constructor';
                     break;
 
-                case 'app.portal.dashboard-layout-manager':
-                    name = 'SETTINGS > DASHBOARD LAYOUTS';
+
+				case 'app.portal.dashboard-layout-manager':
+                    name = 'Settings: Dashboard layouts';
                     break;
+				//<editor-fold desc="Settings: ">
                 case 'app.portal.settings.forms':
-                    name = 'SETTINGS > FORMS';
+                    name += 'Forms';
                     break;
                 case 'app.portal.settings.layouts':
-                    name = 'SETTINGS > LAYOUTS';
+                    name += 'Layouts';
                     break;
                 case 'app.portal.settings.notifications':
-                    name = 'SETTINGS > NOTIFICATIONS';
+                    name += 'Notifications';
                     break;
                 case 'app.portal.settings.interface-access':
-                    name = 'SETTINGS > INTERFACE COMPLEXITY';
+                    name += 'Interface complexity';
                     break;
+				//</editor-fold>
 
                 case 'app.portal.data.account-type':
-                    name = 'SETTINGS > DATA TYPES > ACCOUNT TYPES';
+                    name = 'Data types: ACCOUNT TYPES';
                     break;
                 case 'app.portal.data.instrument-type':
-                    name = 'SETTINGS > DATA TYPES > INSTRUMENT TYPES';
+                    name = 'Data types: INSTRUMENT TYPES';
                     break;
                 case 'app.portal.data.transaction-type':
-                    name = 'SETTINGS > DATA TYPES > TRANSACTION TYPES';
+                    name = 'Data types: TRANSACTION TYPES';
                     break;
                 /* case 'app.portal.data.pricing-policy':
-                    name = 'SETTINGS > DATA TYPES > PRICING TYPES';
+                    name = 'Data types: PRICING TYPES';
                     break; */
-                case 'app.portal.settings.entities-custom-attributes':
-                    name = 'SETTINGS > DATA TYPES > USER ATTRIBUTES';
+
+				//<editor-fold desc="Settings: ">
+				case 'app.portal.settings.entities-custom-attributes':
+                    name += 'Data Types: User attributes';
                     break;
                 case 'app.portal.import.reference-tables':
-                    name = 'SETTINGS > DATA TYPES > REFERENCE TABLE';
+                    name += 'Data Types: Reference table';
                     break;
                 case 'app.portal.template-layout-manager':
-                    name = 'SETTINGS > DATA TYPES > TEMPLATES';
+                    name += 'Data Types: Templates';
                     break;
 
                 case 'app.portal.settings.price-download-scheme':
-                    name = 'SETTINGS > IMPORT FROM PROVIDERS > PRICE SCHEMES';
+                    name += 'Import from providers: PRICE SCHEMES';
                     break;
                 case 'app.portal.settings.instrument-import':
-                    name = 'SETTINGS > IMPORT FROM PROVIDERS > INSTRUMENT IMPORT';
+                    name += 'Import from providers: INSTRUMENT IMPORT';
                     break;
                 case 'app.portal.settings.simple-entity-import':
-                    name = 'SETTINGS > IMPORT FROM FILES > DATA IMPORT';
+                    name += 'Import from files: DATA IMPORT';
                     break;
                 case 'app.portal.settings.transaction-import':
-                    name = 'SETTINGS > IMPORT FROM FILES > TRANSACTION IMPORT';
+                    name += 'Import from files: TRANSACTION IMPORT';
                     break;
                 case 'app.portal.settings.complex-import':
-                    name = 'SETTINGS > IMPORT FROM FILES > COMPLEX IMPORT';
+                    name += 'Import from files: COMPLEX IMPORT';
                     break;
 
                 case 'app.portal.settings.template-fields':
-                    name = 'SETTINGS > ALIASES';
+                    name += 'Aliases';
                     break;
                 case 'app.portal.settings.import-configuration':
-                    name = 'SETTINGS > CONFIGURATION > IMPORT';
+                    name += 'Configuration: Import';
                     break;
                 case 'app.portal.settings.export-configuration':
-                    name = 'SETTINGS > CONFIGURATION > EXPORT';
+                    name += 'Configuration: Export';
                     break;
                 case 'app.portal.settings.data-providers':
-                    name = 'SETTINGS > DATA PROVIDERS';
-                    break;
-                case 'app.portal.settings.data-providers-config':
-                    name = 'SETTINGS > DATA PROVIDERS';
+				case 'app.portal.settings.data-providers-config':
+                    name += 'Data providers';
                     break;
                 case 'app.portal.settings.init-configuration':
-                    name = 'SETTINGS > NEW USER SETUP';
+                    name += 'NEW USER SETUP';
                     break;
                 case 'app.portal.settings.users-groups':
-                    name = 'SETTINGS > PERMISSIONS';
+                    name += 'Permissions';
                     break;
                 case 'app.portal.settings.ecosystem-default-settings':
-                    name = 'SETTINGS > DEFAULT SETTINGS';
+                    name += 'DEFAULT SETTINGS';
                     break;
+				//</editor-fold>
                 case 'app.portal.processes':
-                    name = 'SETTINGS > ACTIVE PROCESSES';
+                    name = 'Settings: Active processes';
                     break;
                 case 'app.portal.schedules':
-                    name = 'SETTINGS > PRICING > SCHEDULES';
+                    name = 'Settings: Pricing: Schedules';
                     break;
             }
         }

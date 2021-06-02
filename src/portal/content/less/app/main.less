@@ -89,6 +89,14 @@ md-toolbar.header {
   box-sizing: border-box;
   color: #747474;
 
+  .toolbar-wrapper {
+    // height: 53px; // 1px for border;
+    height: 100%;
+    color: #747474;
+    fill: #747474;
+    // border-bottom: 1px solid rgba(224, 224, 224, 1);
+  }
+
   .md-toolbar-tools {
     min-height: 52px;
     height: 52px;
@@ -105,16 +113,15 @@ md-toolbar.header {
     }
   }
 
-  .md-button.md-default-theme {
-    border-radius: 99%; // round toolbar buttons
+  .header-breadcrumbs {
+    margin: 0;
+    padding-left: 11px;
+    font-size: 14px;
+    font-weight: 600;
   }
 
-  .toolbar-wrapper {
-    // height: 53px; // 1px for border;
-    height: 100%;
-    color: #747474;
-    fill: #747474;
-    // border-bottom: 1px solid rgba(224, 224, 224, 1);
+  .md-button.md-default-theme {
+    border-radius: 99%; // round toolbar buttons
   }
 
 }

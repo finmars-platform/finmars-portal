@@ -1,5 +1,5 @@
 'use strict';
-
+/** @module globalDataService */
 export default function () {
 
 	let userHaveCurrentMasterUser = false;
@@ -17,6 +17,7 @@ export default function () {
 	/**
 	 * Set whether user has current master user.
 	 *
+	 * @memberOf module:globalDataService
 	 * @param currentMasterUserIsSet {boolean}
 	 */
 	const setCurrentMasterUserStatus = function (currentMasterUserIsSet) {
