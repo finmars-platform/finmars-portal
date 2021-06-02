@@ -23,6 +23,7 @@
 
     // gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All', 'shell-min-All'));
 	gulp.task('default', gulp.parallel('core-min-All', 'profile-min-All', 'portal-min-All', 'shell-min-All'));
+	gulp.task('modules-min-All', gulp.parallel('core-min-All', 'profile-min-All', 'portal-min-All', 'shell-min-All'));
 
     gulp.task('doc-clean', function () {
         return gulp.src(['./docs'], {read: false, allowEmpty: true })
