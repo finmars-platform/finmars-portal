@@ -28,7 +28,9 @@
                 scope.usercode = '';
                 scope.groupPrefixes = [];
 
-                scope.updateUserCode = function () {
+                scope.updateUserCode = function (usercode) {
+
+					scope.usercode = usercode;
 
                     if (scope.prefixType === 1) {
                         scope.item.user_code = scope.usercode
