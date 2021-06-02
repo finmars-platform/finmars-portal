@@ -647,16 +647,13 @@
 
                         elAttrIndex += 1;
 
+                        var attrObj = JSON.parse(angular.toJson(attribute));
+                        delete attrObj.frontOptions;
+
                         var fieldData = {
                             "type": "field",
                             "row": elAttrIndex,
-                            "attribute": {
-                                "value_type": attribute.value_type,
-                                "content_type": attribute.content_type,
-                                "editable": true,
-                                "key": attribute.key,
-                                "name": attribute.name
-                            },
+                            "attribute": attrObj,
                             "column": 1,
                             "attribute_class": attributeClass,
                             "editable": true,
@@ -664,7 +661,7 @@
                             "colspan": 1
                         };
 
-                        if (attrType === 'attrs') {
+                        if (attrType === 'attrs' && (attribute.id || attribute.id === 0)) {
                             fieldData.attribute.id = attribute.id;
                         }
 
@@ -682,6 +679,8 @@
             addFields("layoutAttrs");
 
             var editLayoutData = {
+            	"name": "Form layout of transaction type: " + ttypeData.name,
+				"user_code": ttypeData.user_code + '_edit_layout',
                 "data": [
                     {
                         "layout": {
@@ -695,7 +694,7 @@
                 ]
             };
 
-            return transactionTypeService.patch(instanceId, {
+			return transactionTypeService.patch(instanceId, {
                 book_transaction_layout: editLayoutData
             });
 
@@ -772,16 +771,19 @@
 							resolve(responseData);
 
                         } else {
-                            createDefaultEditLayout(responseData).then(function () {
+
+                        	createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 
                                 $scope.$apply();
 
                                 resolve(responseData);
                             });
+
                         }
 
-                    }).catch(function (data) {
+                    })
+					.catch(function (data) {
 
                         $mdDialog.show({
                             controller: 'ValidationDialogController as vm',

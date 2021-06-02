@@ -1472,7 +1472,6 @@
 						}
 
 					}
-
 					else if (field.attribute_class === 'decorationAttr') {
 
 						for (l = 0; l < layoutAttrs.length; l = l + 1) {
@@ -1492,7 +1491,6 @@
 						}
 
 					}
-
 					else {
 
 						for (e = 0; e < entityAttrs.length; e = e + 1) {

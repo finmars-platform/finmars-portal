@@ -329,8 +329,19 @@
 
 			profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
-                vm.getMasterUsersList();
-                vm.getInvites();
+                // vm.getMasterUsersList();
+                // vm.getInvites();
+
+                authorizerService.setMasterUser(item.to_master_user).then(function (data) {
+
+                    console.log('vm.activateDatabase.data', data);
+
+
+                    baseUrlService.setMasterUserPrefix(data.base_api_url);
+                    portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+
+                    $state.go('app.setup');
+                })
 
             })
 
