@@ -21,8 +21,21 @@
             templateUrl: 'views/directives/layout-constructor-field-view.html',
             link: function (scope, elem, attr) {
 
+				//<editor-fold desc="Because require does not work for $mdDialog controller, have to use workaround to check for specific parent controller">
+				try {
+
+            		var parentControllerName = scope.$parent.vm.constructor.name;
+					if (parentControllerName !== 'entityDataConstructorDialogController') {
+						throw new Error('entityDataConstructorDialogController should be parent of layoutConstructorFieldDirective');
+					}
+
+            	} catch (error) {
+					throw error;
+				}
+				//</editor-fold>
+
             	var entityDataConstructorVm = scope.$parent.vm;
-                var choices = metaService.getTypeCaptions();
+				var choices = metaService.getTypeCaptions();
 
                 scope.item = {
                     column: scope.column,
@@ -604,7 +617,7 @@
                     }); */
 
 					scope.userInputs.forEach(function (userInput) {
-						userInput.disabled = isAttrDisabled(userInput, 'key');
+						userInput.disabled = isAttrDisabled(userInput, 'name');
 					});
 
                 };
