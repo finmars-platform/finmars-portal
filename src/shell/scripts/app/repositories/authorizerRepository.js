@@ -281,6 +281,22 @@ const deleteUserByKey = function (id) {
 	})
 
 };
+
+const checkUsernameUniqueness = function (username) {
+
+	var authorizerUrl = baseUrlService.getAuthorizerUrl();
+
+	return xhrService.fetch(authorizerUrl + '/user-check-existence/?username=' + username, {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	});
+
+};
 //</editor-fold>
 
 //<editor-fold desc="Master user">
@@ -722,6 +738,7 @@ export default {
 	updateUser: updateUser,
 	patchUser: patchUser,
 	deleteUserByKey: deleteUserByKey,
+	checkUsernameUniqueness: checkUsernameUniqueness,
 
 	getCurrentMasterUser: getCurrentMasterUser,
 	createMasterUser: createMasterUser,

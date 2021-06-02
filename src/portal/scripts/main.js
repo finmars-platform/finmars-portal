@@ -675,7 +675,7 @@ export default (function () {
 	portal.directive('gFilters', ['$mdDialog', require('./app/directives/groupTable/gFiltersDirective')]);
 	//</editor-fold desc="GROUP TABLE">
 
-	portal.directive('mainHeader', ['$mdDialog', '$state', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', mainHeaderDirective]);
+	portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', mainHeaderDirective]);
 	portal.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
 	portal.directive('evSelectorResolver', [require('./app/directives/entityViewerSelectorResolverDirective')]);
 	portal.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);

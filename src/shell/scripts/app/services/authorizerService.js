@@ -163,6 +163,10 @@ export default function (globalDataService) {
 
 
 	};
+
+	const checkUsernameUniqueness = function (username) {
+		return authorizerRepository.checkUsernameUniqueness(username);
+	};
 	//</editor-fold>
 
 
@@ -316,6 +320,8 @@ export default function (globalDataService) {
 		updateUser: updateUser,
 		patchUser: patchUser,
 		deleteUserByKey: deleteUserByKey,
+
+		checkUsernameUniqueness: checkUsernameUniqueness,
 
 		createMasterUser: createMasterUser,
 		getMasterUsersList: getMasterUsersList,

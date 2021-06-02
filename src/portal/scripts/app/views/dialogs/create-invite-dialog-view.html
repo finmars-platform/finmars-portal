@@ -12,8 +12,13 @@
 
             <md-input-container>
                 <label>Username</label>
-                <textarea data-ng-model="vm.username"></textarea>
+                <textarea data-ng-model="vm.username" ng-change="vm.usernameError = false"></textarea>
             </md-input-container>
+
+
+            <div data-ng-if="vm.usernameError" style="color: red">
+                User does not exist
+            </div>
 
             <two-fields-options all-options="vm.groupsList" selected-options="vm.assignedGroupsList"
                                 name-property="name"></two-fields-options>
