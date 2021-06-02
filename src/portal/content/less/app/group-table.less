@@ -2,6 +2,16 @@
 
 @star-icon-size: 25px;
 
+// Victor 2020.1202 #69 New report viewer interface
+@g-top-part-height: 50px;
+@icon-size: 20px;
+@g-top-part-color: @gray;
+@g-table-header-background-color: rgba(242, 242, 242, 1);
+//@g-table-border-color: rgb(219, 219, 219);
+@g-table-border-color: #e0e0e0;
+@g-table-cell-hover-color: rgba(216, 216, 216, 1);
+@rv-active-color: #f05a22;
+
 .new-interface() {
   color: @g-top-part-color;
   font-size: 14px;
@@ -831,9 +841,8 @@
     width: @gRvRowSettingsWidth;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding: 0 12px;
     border-right: @gCellBorder;
     transition: width 100ms linear;
 
@@ -843,6 +852,23 @@
       overflow: hidden;
       border-right: none;
     } */
+
+    .context-menu-btn-wrapper {
+      margin-left: 6px;
+      .context-menu-btn {
+        display: flex;
+        align-items: center;
+        border-radius: 50%;
+        color: #B2B2B2;
+        font-size: 24px;
+        padding: 0;
+
+        &:hover {
+          color: @gray;
+          background-color: @g-table-header-background-color;
+        }
+      }
+    }
   }
 
   .g-row-color-picker-btn {
@@ -874,7 +900,7 @@
     }
 
     &.red {
-      color: #f05a22;
+      color: @rv-active-color;
     }
 
     &.yellow {
@@ -897,15 +923,6 @@
       color: @gray;
     }
   }
-
-  // Victor 2020.1202 #69 New report viewer interface
-  @g-top-part-height: 50px;
-  @icon-size: 20px;
-  @g-top-part-color: @gray;
-  @g-table-header-background-color: rgba(242, 242, 242, 1);
-  //@g-table-border-color: rgb(219, 219, 219);
-  @g-table-border-color: #e0e0e0;
-  @g-table-cell-hover-color: rgba(216, 216, 216, 1);
 
   .md-button {
     ng-md-icon{
@@ -980,6 +997,18 @@
       md-select-value {
         border-bottom: none;
       }
+    }
+
+    .g-top-part-left {
+
+      .g-top-button.small-button-icon {
+        padding: 0 6px;
+
+        &:hover:not([disabled]) {
+          background-color: rgba(158,158,158,0.2);
+        }
+      }
+
     }
 
   }
@@ -1157,10 +1186,9 @@
     }
 
     .g-cell-button {
-      margin: 0;
+      margin: 0 0 0 1px;
       padding: 0;
 
-      min-width: auto;
       min-height: auto;
 
       &.md-button {
@@ -1370,6 +1398,18 @@
         }
       }
 
+      &.error {
+        span.error {
+          padding-left: 10px;
+          color: @rv-active-color;
+        }
+
+        .g-group-button {
+          color: @rv-active-color;
+        }
+
+      }
+
       .resize-slider {
         width: 3px;
         height: 100%;
@@ -1429,6 +1469,8 @@
   color: @orange;
 
   &.g-use-from-above-filters-hidden {
+    color: @gray;
+
     ng-md-icon svg {
       fill: @gray;
     }
@@ -1538,7 +1580,7 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
   }
 
   &.red {
-    color: #f05a22;
+    color: @rv-active-color;
   }
 
   &.yellow {
@@ -1660,13 +1702,16 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
   height: 24px;
   font-size: 14px;
   white-space: nowrap;
+  border-right: 1px solid #ddd;
   box-sizing: border-box;
 
-  &:last-child {
+  /*&:last-child {
     border-right: 1px solid #ddd;
     margin-right: 2px;
-  }
+  }*/
 }
+
+
 
 .g-column-content {
   padding: 4px 21px 4px 8px;
@@ -2876,4 +2921,11 @@ button.md-button.toggle-dashboard-filter-btn {
 }
 .group-status-missing {
   opacity: .7;
+}
+
+
+.md-panel.md-tooltip {
+  &.custom-field-error {
+    background-color: @orange;
+  }
 }

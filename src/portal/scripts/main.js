@@ -156,6 +156,7 @@ app.controller('DashboardConstructorEntityViewerSplitPanelComponentDialogControl
 app.controller('DashboardReportViewerComponentSettingsDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/dashboard/component-settings/dashboardReportViewerComponentSettingsDialogController')]);
 app.controller('DashboardReportViewerChartsComponentSettingsDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/dashboard/component-settings/dashboardReportViewerChartsComponentSettingsDialogController')]);
 app.controller('DashboardReportViewerMatrixComponentSettingsDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/dashboard/component-settings/dashboardReportViewerMatrixComponentSettingsDialogController')]);
+app.controller('DashboardReportViewerTableChartComponentSettingsDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/dashboard/component-settings/dashboardReportViewerTableChartComponentSettingsDialogController')]);
 
 app.directive('dashboardConstructorField', ['$mdDialog', require('./app/directives/dashboardConstructorFieldDirective')]);
 app.directive('dashboardConstructorGridAligner', [require('./app/directives/dashboardConstructorGridAlignerDirective')]);
@@ -369,14 +370,14 @@ app.controller('ListLayoutExportDialogController', ['$scope', '$mdDialog', 'data
 app.controller(
     'TransactionTypeAddDialogController',
     [
-        '$scope', '$mdDialog', '$state', 'entityType', 'entity',
+        '$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entity', 'data',
         require('./app/controllers/entityViewer/transactionTypeAddDialogController')
     ]
 );
 app.controller(
     'TransactionTypeEditDialogController',
     [
-        '$scope', '$mdDialog', '$state', 'entityType', 'entityId',
+        '$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entityId', 'data',
         require('./app/controllers/entityViewer/transactionTypeEditDialogController')
     ]
 );
@@ -465,6 +466,7 @@ app.controller('ViewMissingPriceHistoryDialogController', ['$scope', '$mdDialog'
 app.controller('ViewMissingFxRatesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingFxRatesDialogController')]);
 app.controller('ViewMissingHistoricalFxRatesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingHistoricalFxRatesDialogController')]);
 app.controller('ViewMissingPriceHistoryViewPositionsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingPriceHistoryViewPositionsDialogController')]);
+app.controller('ViewMissingCustomFieldsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingCustomFieldsDialogController')]);
 
 
 // Settings

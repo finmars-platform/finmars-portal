@@ -47,20 +47,25 @@
 		var columns = evDataService.getColumns();
 		var nextColumn = columns[columnNumber]; // columnNumber is columnIndex + 1
 
-		var isGrandTotalFirstColumn = obj.___level === 0 && columnNumber === 1;
-		var notLastColumn = columns.length > 1;
+		var notLastColumn = columnNumber !== columns.length;
 
-		if (isGrandTotalFirstColumn && notLastColumn) {
-			return 'border-right-transparent';
-		}
+		if (notLastColumn) {
 
-		// var isSubtotalRow = obj.___subtotal_type || obj.___subtotal_subtype;
-		var colSubtotalOff = !column.report_settings || !column.report_settings.subtotal_formula_id;
-		var nextColSubtotalOff = !nextColumn || !nextColumn.report_settings || !nextColumn.report_settings.subtotal_formula_id;
-		var nextIsNotCellWithGroupName = columnNumber + 1 !== obj.___level - 1;
+			var isGrandTotalFirstColumn = obj.___level === 0 && columnNumber === 1;
 
-		if (colSubtotalOff && nextColSubtotalOff && nextIsNotCellWithGroupName) {
-			return 'border-right-transparent';
+			if (isGrandTotalFirstColumn) {
+				return 'border-right-transparent';
+			}
+
+			// var isSubtotalRow = obj.___subtotal_type || obj.___subtotal_subtype;
+			var colSubtotalOff = !column.report_settings || !column.report_settings.subtotal_formula_id;
+			var nextColSubtotalOff = !nextColumn || !nextColumn.report_settings || !nextColumn.report_settings.subtotal_formula_id;
+			var nextIsNotCellWithGroupName = columnNumber + 1 !== obj.___level - 1;
+
+			if (colSubtotalOff && notLastColumn && nextColSubtotalOff && nextIsNotCellWithGroupName) {
+				return 'border-right-transparent';
+			}
+
 		}
 
 	};
@@ -238,23 +243,31 @@
 
         else if (columnNumber > obj.___level - 1) {
 
-            const isHideSubtotal = column.report_settings && column.report_settings.subtotal_formula_id && column.report_settings.hide_subtotal;
-            const isGrandTotal = obj.___level === 0
-            const isHideGrandTotal =  column.report_settings && column.report_settings.subtotal_formula_id && column.report_settings.hide_grandtotal;
+			var showTotal;
+			var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id; // if subtotal_formula_id === 0, it means no formula has been chosen
+			var isNotGrandTotal = obj.___level !== 0;
 
-            if (!isGrandTotal && !isHideSubtotal || isGrandTotal && !isHideGrandTotal) {
+			if (isNotGrandTotal) {
+				// showTotal = totalCalculationOn && !column.report_settings.hide_subtotal;
+				showTotal = totalCalculationOn;
 
-                if (obj.hasOwnProperty(column.key)) {
+			} else { // for grand total
+				showTotal = totalCalculationOn && !column.report_settings.hide_grandtotal;
+			}
 
-                    result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
-                    result.numeric_result = obj[column.key];
-                    result.raw_text_result = renderHelper.formatValue(obj, column);
+			if (showTotal) { // for subtotals
 
-                } else {
-                    result = getDynamicAttributeValue(obj, column);
-                }
+				if (obj.hasOwnProperty(column.key)) {
 
-            }
+					result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
+					result.numeric_result = obj[column.key];
+					result.raw_text_result = renderHelper.formatValue(obj, column);
+
+				} else {
+					result = getDynamicAttributeValue(obj, column);
+				}
+
+			}
 
         }
 
@@ -401,6 +414,10 @@
 		// grand total row
 		if (borderClasses) {
 			result.push(borderClasses);
+		}
+
+		if (column.isHidden) {
+			result.push('display-none');
 		}
 
 		return result;

@@ -854,10 +854,11 @@
 
         <div class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
 
-            <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
-                 data-ng-repeat="column in groups track by column.key"
-                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged}"
-                 data-ng-style="column.style"
+            <div class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"
+                 ng-repeat="column in groups track by column.key"
+                 ng-hide="column.isHidden"
+                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
+                 ng-style="column.style"
                  data-column-id="{{column.___group_type_id}}"
                  data-attr-key="{{column.key}}"
                  draggable="{{groupsAreaDraggable}}"
@@ -878,27 +879,31 @@
                  on-popup-close="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
-<!--                popup-data="{data: getPopupData(column, $index)}"-->
-
-                <md-tooltip md-direction="top">
+                <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
                     <span ng-bind="column.name"></span>
                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                    <span data-ng-if="column.error_data">{{column.error_data.description}}</span>
                 </md-tooltip>
 
                 <div class="g-cell g-table-header-cell g-table-header-group-cell">
 
-                    <div class="g-cell-button" data-ng-if="column.report_settings.is_level_folded" data-ng-click="unfoldLevel(column, $index)">
+                    <div ng-if="column.report_settings.is_level_folded"
+                         class="g-cell-button"
+                         ng-click="unfoldLevel(column, $index)">
                         <span class="material-icons">add</span>
                     </div>
 
-                    <div class="g-cell-button" data-ng-if="!column.report_settings.is_level_folded" data-ng-click="foldLevel(column, $index)">
+                    <div ng-if="!column.report_settings.is_level_folded"
+                         class="g-cell-button"
+                         ng-click="foldLevel(column, $index)">
                         <span class="material-icons">remove</span>
                     </div>
 
-                    <div class="g-group-button">
+                    <span data-ng-if="column.error_data" class="material-icons error">error</span>
 
-<!--                        <div class="g-group-button flex-row"
-                             data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">-->
+                    <div class="g-group-button">
+                    <!--<div class="g-group-button flex-row"
+                               data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">-->
 
                         <div  class="column-name-wrapper">
 
@@ -963,14 +968,16 @@
         </div>
 
         <div class="flex-row width-100 g-cols-holder gColumnsHolder gcAreaDnD">
-<!--            data-ng-repeat="column in notGroupingColumns track by column.key"-->
-            <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
-                 data-ng-repeat="column in notGroupingColumns track by column.key"
-                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged}"
-                 data-ng-style="column.style"
+
+            <div class="g-table-header-cell-wrapper gColumnElem gDraggableHead gcAreaDnD"
+                 ng-repeat="column in notGroupingColumns track by column.key"
+                 ng-hide="column.isHidden"
+                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
+                 ng-style="column.style"
                  data-column-id="{{column.___column_id}}"
                  data-attr-key="{{column.key}}"
                  draggable="true"
+
                  popup
                  popup-id="{{column.key}}"
                  popup-template-url="{{getPopupMenuTemplate(column)}}"
@@ -986,12 +993,15 @@
                  on-popup-close="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
-                <md-tooltip md-direction="top">
+                <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
                     <span ng-bind="column.name"></span>
                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+                    <span data-ng-if="column.error_data">{{column.error_data.description}}</span>
                 </md-tooltip>
 
                 <div class="g-cell g-table-header-cell">
+
+                        <span data-ng-if="column.error_data" class="material-icons error">error</span>
 
                     <div class="g-group-button" >
 

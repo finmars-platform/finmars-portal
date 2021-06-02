@@ -8,10 +8,6 @@
       opacity: .9;
     }
   }
-
-  &:hover {
-    background: #F4B083;
-  }
 }
 
 .rv-matrix-cell-mixin() {
@@ -28,6 +24,10 @@
 
   border-right: 1px solid rgba(224, 224, 224, 1);
   border-bottom: 1px solid rgba(224, 224, 224, 1);
+
+  &:not(.report-viewer-empty-header-cell):hover {
+    background: #F4B083;
+  }
 
   .active-cell-mixin();
 }
@@ -46,6 +46,45 @@
     //display: block;
   }
 
+  .axis-attr-selector-btns-holder {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    .axis-attr-selector-btn {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background-color: #fff;
+      padding: 0;
+      border: 1px solid @borderPale;
+      border-radius: 100%;
+      z-index: 3;
+
+      &[disabled] {
+        opacity: .5;
+      }
+
+      &.abscissa {
+        top: 50%;
+        transform: translateY(-50%);
+        right: -9px;
+      }
+
+      &.ordinate {
+        bottom: -9px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      span.material-icons {
+        color: @gray;
+        font-size: 18px;
+      }
+    }
+
+  }
+
   .rv-matrix-header {
     display: flex;
     flex-direction: row;
@@ -59,39 +98,7 @@
       position: relative;
       width: 100%;
       overflow: hidden;
-    }
-
-    .report-viewer-empty-header-cell {
-      float: none;
-      position: relative;
-      flex: 0 0 auto;
-      cursor: default;
-      background: #3B283B;
-      color: #fff;
-      border-right: 1px solid #ddd;
-      border-bottom: 1px solid #ddd;
-      .rv-matrix-cell-mixin();
-
-      .matrix-settings-button {
-        position: absolute;
-        max-width: 48px;
-        max-height: 48px;
-        right: 0;
-        top: 0;
-        fill: #333;
-        min-height: 12px;
-        min-width: 12px;
-        margin: 0;
-        width: 100%;
-        height: 100%;
-
-        ng-md-icon {
-          position: absolute;
-          top: calc(50% - 12px);
-          left: calc(50% - 12px);
-        }
-      }
-
+      z-index: 0;
     }
 
     .report-viewer-matrix-column-header-cell {
@@ -113,6 +120,54 @@
       font-weight: 700;
     }
 
+    .report-viewer-empty-header-cell {
+      /*float: none;
+      position: relative;
+      cursor: default;
+      background: #3B283B;
+      color: #fff;
+      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      .rv-matrix-cell-mixin();*/
+      float: none;
+      flex: 0 0 auto;
+      cursor: default;
+
+      .selector-button-popup {
+        min-width: 79px;
+        max-width: 100%;
+      }
+
+      .report-viewer-matrix-value-name {
+        font-size: 14px;
+        color: #747474;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* .matrix-settings-button {
+        position: absolute;
+        max-width: 48px;
+        max-height: 48px;
+        right: 0;
+        top: 0;
+        fill: #333;
+        min-height: 12px;
+        min-width: 12px;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+
+        ng-md-icon {
+          position: absolute;
+          top: calc(50% - 12px);
+          left: calc(50% - 12px);
+        }
+      } */
+
+    }
+
     .rv-matrix-header-total-cell {
       position: absolute;
       bottom: 0;
@@ -132,6 +187,8 @@
   }
 
   .report-viewer-matrix-row {
+    z-index: 0;
+
     &:after {
       content: '';
       display: block;
@@ -209,6 +266,11 @@
     font-size: 14px;
     font-weight: 700;
     background: rgba(242, 242, 242, 1);
+
+    &:hover {
+      background: #F4B083;
+    }
+
     .active-cell-mixin();
   }
 
@@ -319,3 +381,5 @@
     box-sizing: border-box;
   }
 }
+
+
