@@ -66,11 +66,9 @@
             var transactionType = gridTableHelperService.getCellFromRowByKey(newRow, 'transaction_type');
             transactionType.settings.selectorOptions = vm.transactionTypes;
 
-            var buttonPosition = gridTableHelperService.getCellFromRowByKey(newRow, 'button_position');
-            buttonPosition.settings.selectorOptions = getRangeOfNumbers(vm.event.actions.length);
-
             // Update rows in actions grid table
             vm.event.actions.forEach(function (action, actionIndex) {
+                action.button_position = actionIndex;
                 vm.eventActionsGridTableData.body[actionIndex].order = actionIndex;
             });
 
@@ -86,6 +84,7 @@
 
             // Update rows in actions grid table
             vm.event.actions.forEach(function (action, actionIndex) {
+                action.button_position = actionIndex;
                 vm.eventActionsGridTableData.body[actionIndex].order = actionIndex;
             });
 
@@ -102,7 +101,35 @@
                 rowOrder, colOrder
             );
 
-        }
+        };
+
+        const onActionsOrderChange = function (rowData, gtDataService, gtEventService) {
+
+            const tableData = gtDataService.getTableData();
+            const sortedActions = [];
+
+            tableData.body.forEach((row, rowIndex) => {
+
+                const action = vm.event.actions.find(action => {
+
+                    if (action.id || action.id === 0) return row.key === action.id;
+
+                    return row.key === action.frontOptions.gtKey;
+
+                });
+
+                if (action) {
+
+                    action.button_position = rowIndex;
+                    sortedActions.push(action);
+
+                }
+
+            });
+
+            vm.event.actions = sortedActions;
+
+        };
 
         // Event actions grid table
         vm.eventActionsGridTableData = {
@@ -167,23 +194,10 @@
                             'grid-table-cell': {'width': '130px'},
                         }
                     },
-                    {
-                        key: 'button_position',
-                        objPath: ['button_position'],
-                        columnName: 'Button position',
-                        order: 4,
-                        cellType: 'selector',
-                        settings: {
-                            value: null,
-                            selectorOptions: [],
-                        },
-                        styles: {
-                            'grid-table-cell': {'width': '130px'}
-                        }
-                    },
-
-                ]
-
+                ],
+                methods: {
+                    onOrderChange: onActionsOrderChange
+                }
             },
 
             components: {
@@ -193,6 +207,7 @@
                     columns: false,
                     search: false
                 },
+                dragAndDropElement: true,
 				rowCheckboxes: true
             }
 
@@ -209,7 +224,7 @@
                     key: column.key,
                     columnName: column.columnName,
                     order: column.order,
-                    sorting: true,
+                    sorting: false,
                     styles: {
                         'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
                     }
@@ -227,6 +242,7 @@
 
             // assemble body rows
             vm.event.actions.forEach(function (action, actionIndex) {
+                action.button_position = actionIndex;
 
             	rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
                 rowObj.key = action.id || action.frontOptions.gtKey;
@@ -245,10 +261,6 @@
 
                 var isBookAutomatic = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_book_automatic');
                 isBookAutomatic.settings.value = action.is_book_automatic;
-
-                var buttonPosition = gridTableHelperService.getCellFromRowByKey(rowObj, 'button_position');
-                buttonPosition.settings.value = action.button_position;
-                buttonPosition.settings.selectorOptions = getRangeOfNumbers(vm.event.actions.length);
 
                 vm.eventActionsGridTableData.body.push(rowObj);
 
@@ -287,54 +299,13 @@
 
         vm.agree = function () {
 
-        	var hashTableOfButtonPositions = {};
-            var buttonPositionNotValid = false;
+            collectDataFromMultitypeFields();
 
-			collectDataFromMultitypeFields();
-
-            for (var i = 0; i < vm.event.actions.length; i++) {
-
-            	var prop = vm.event.actions[i].button_position;
-
-                if ((!prop && prop !== 0) || hashTableOfButtonPositions.hasOwnProperty(prop)) {
-
-					buttonPositionNotValid = true;
-                    break;
-
-                } else {
-                    hashTableOfButtonPositions[prop] = i;
+            $mdDialog.hide({
+                status: 'agree', data: {
+                    event: vm.event
                 }
-
-            }
-
-            if (buttonPositionNotValid) {
-
-                $mdDialog.show({
-                    controller: 'WarningDialogController as vm',
-                    templateUrl: 'views/dialogs/warning-dialog-view.html',
-                    parent: angular.element(document.body),
-                    //targetEvent: $event,
-                    clickOutsideToClose: false,
-                    multiple: true,
-                    locals: {
-                        warning: {
-                            title: 'Warning',
-                            description: 'Button position should contain unique value.'
-                        }
-                    }
-                })
-
-            }
-
-            else {
-
-                $mdDialog.hide({
-                    status: 'agree', data: {
-                        event: vm.event
-                    }
-                });
-
-            }
+            });
 
         };
 
