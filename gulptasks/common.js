@@ -80,7 +80,7 @@
 
 		let bundles = browserify(pathToJS, browserifyOpts);
 
-		if (PROJECT_ENV === 'production') {
+		if (PROJECT_ENV === 'production' || PROJECT_ENV === 'development') {
 
 			const presets = [
 				["@babel/preset-env", {useBuiltIns: "entry", corejs: "^2.1.4"}, 'module:@babel/helper-module-imports'],
