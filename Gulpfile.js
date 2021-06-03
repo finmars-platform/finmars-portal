@@ -50,7 +50,7 @@
             console.log("UPDATED API_HOST ADD HTTPS: " + API_HOST)
         }
 
-        return gulp.src(['dist/portal/scripts/main.min.js'])
+        return gulp.src(['dist/shell/scripts/main.min.js'])
             // .pipe(replace(/__API_HOST__/g, API_HOST))
             // .pipe(replace(/__WS_HOST__/g, WS_HOST))
             // .pipe(replace(/__AUTHORIZER_URL__/g, AUTHORIZER_URL))
@@ -59,7 +59,7 @@
             .pipe(string_replace('__WS_HOST__', WS_HOST))
             .pipe(string_replace('__AUTHORIZER_URL__', AUTHORIZER_URL))
             .pipe(string_replace('__HEALTHCHECK_HOST__', HEALTHCHECK_HOST))
-            .pipe(gulp.dest('dist/portal/scripts/'))
+            .pipe(gulp.dest('dist/shell/scripts/'))
 
     });
 
