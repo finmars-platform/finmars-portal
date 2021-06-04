@@ -73,7 +73,7 @@
 
                         if (column.key.startsWith('custom_fields')) {
 
-                            const customField = customFields.find( field => column.key === `custom_fields.${field.user_code}`);
+                            const customField = customFields.find(field => column.key === `custom_fields.${field.user_code}`);
 
                             if (customField) {
 
@@ -81,7 +81,7 @@
 
                             } else {
 
-                            	const description = `The ${scope.columnHasCorrespondingGroup(column.key) ? 'group' : 'column'} does not exist in the Configuration`
+                            	const description = `The column does not exist in the Configuration`;
 
                                 column.error_data = {
                                 	code: 10,
@@ -1615,8 +1615,6 @@
 
                         if (group.key !== columns[groupIndex].key) {
 
-                            columnsHaveBeenSynced = true;
-
                             let columnToAdd;
                             let groupColumnIndex = columns.findIndex(column => group.key === column.key);
 
@@ -1630,6 +1628,8 @@
                             }
 
                             columns.splice(groupIndex, 0, columnToAdd);
+
+							columnsHaveBeenSynced = true;
 
                         }
 
@@ -2059,14 +2059,15 @@
 
                     updateGroupTypeIds();
 
+					if (scope.isReport) syncColumnsWithGroups();
+					syncGroupLayoutNamesWithColumns();
+
                     scope.columns = scope.evDataService.getColumns();
                     flagMissingColumns();
                     makePopupDataForColumns(scope.columns);
 
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                     collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
-
-					syncGroupLayoutNamesWithColumns();
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);

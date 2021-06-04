@@ -749,7 +749,7 @@
                                     if (!customField) {
 
                                         filter.options.enabled = false;
-                                        const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
+                                        const description = `The filter does not exist in the Configuration`
 
                                         filterData.error_data = {
                                             code: 10,
@@ -839,7 +839,7 @@
                 const syncFiltersLayoutNamesWithColumns = function () {
 
                     const columns = scope.evDataService.getColumns();
-                    const filtersChanged = false;
+                    let filtersChanged = false;
 
                     columns.forEach(column => {
 
