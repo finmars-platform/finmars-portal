@@ -176,6 +176,14 @@
                             <span>Custom Columns</span>
                         </md-button>
                     </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">
+                            <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>
+                            <span data-ng-if="!rvAutoRefresh">Enable Auto Refresh</span>
+                        </md-button>
+                    </md-menu-item>
+
                 </md-menu-content>
             </md-menu>
 

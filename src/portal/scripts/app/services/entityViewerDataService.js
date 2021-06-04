@@ -170,7 +170,8 @@
                 forColumns: [],
             },
 			warnAboutLayoutChangesLoss: true,
-			isNewLayout: false // does layout exist on server
+			isNewLayout: false, // does layout exist on server,
+            autoRefreshState: true
         };
 
         var dashboardData = {
@@ -1265,6 +1266,16 @@
             return data.viewType;
         }
 
+        function setAutoRefreshState(state) {
+            return data.autoRefreshState = state;
+        }
+
+        function getAutoRefreshState() {
+            return data.autoRefreshState;
+        }
+
+
+
         function setViewSettings(viewType, settings) {
 
             data.lastViewSettings[viewType] = JSON.parse(JSON.stringify(data.viewSettings));
@@ -1675,6 +1686,9 @@
 
             setViewType: setViewType,
             getViewType: getViewType,
+
+            setAutoRefreshState: setAutoRefreshState,
+            getAutoRefreshState: getAutoRefreshState,
 
             setViewSettings: setViewSettings,
             getViewSettings: getViewSettings,
