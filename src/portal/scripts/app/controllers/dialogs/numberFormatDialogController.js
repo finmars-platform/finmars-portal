@@ -40,14 +40,98 @@
             {id: 4, name: '0 bps'},
             {id: 5, name: '0.0 bps'},
         ];
+        
+        const presetsSettings = {
+            'price': {
+                zero_format_id: 1,
+                negative_color_format_id: 0,
+                negative_format_id : 0,
+                round_format_id : 1,
+                percentage_format_id : 0,
+            },
+            'market_value': {
+                zero_format_id: 1,
+                negative_color_format_id: 1,
+                negative_format_id : 1,
+                thousands_separator_format_id: 2,
+                round_format_id : 1,
+                percentage_format_id : 0,
+                },
+            'amount': {
+                zero_format_id: 1,
+                negative_color_format_id: 1,
+                negative_format_id : 0,
+                thousands_separator_format_id: 2,
+                round_format_id : 3,
+                percentage_format_id : 0,
+            },
+            'exposure': {
+                zero_format_id: 1,
+                negative_color_format_id: 1,
+                negative_format_id : 1,
+                round_format_id : 0,
+                percentage_format_id : 2,
+            },
+            'return': {
+                zero_format_id: 1,
+                negative_color_format_id: 1,
+                negative_format_id : 0,
+                percentage_format_id : 3,
+            },
+        };
 
-        // Negative format in new design view differ from settings structure
+        const setContainersHeight = function (containers) {
+
+            containers.forEach(container => {
+
+                const contentElement = container.querySelector('.ALS-layout-group-container');
+
+                if(contentElement) {
+
+                    container.style.height = contentElement.clientHeight + 'px';
+
+                }
+
+            })
+
+        };
+
+        const isObjectContain = function (obj, targetObj) {
+            return Object.keys(targetObj).every(key => targetObj[key] === obj[key])
+        };
+
+        const getActivePreset = function () {
+
+            const selectedPreset = vm.presetSelectorData.options.find(option => {
+
+                const requiredProps = presetsSettings[option.id];
+                const currentProps = vm.reportSettings;
+
+                return isObjectContain(currentProps, requiredProps);
+
+            });
+
+            if (selectedPreset) {
+
+                selectedPreset.isActive = true;
+
+            }
+
+            return selectedPreset;
+        };
+
+        const clearAllPresetSelection = function () {
+            vm.presetSelectorData.options.forEach(it => it.isActive = false);
+        };
+
+        // Negative format in new design differ from settings structure
         const getNegativeFormat = function (reportSettings) {
             // 0 0 -> 0
             // 0 1 -> 1
             // 1 0 -> 2
             // 1 1 -> 3
             const {negative_format_id, negative_color_format_id} = reportSettings;
+
             return parseInt('' + negative_format_id + negative_color_format_id, 2)
         };
 
@@ -63,12 +147,11 @@
             vm.negativeNumberExample = vm.formatValue(-9238.1294);
 
             vm.negativeFormat = getNegativeFormat(vm.reportSettings);
-        }
 
-        vm.getPresetName = function () {
-            const selectedPreset= vm.presetSelectorData.options.find(it => it.isActive);
-            return selectedPreset ? selectedPreset.name : 'Select Preset';
-        };
+            clearAllPresetSelection();
+            const currentPreset = getActivePreset();
+            vm.currentPresetName = currentPreset ? currentPreset.name : 'Select Preset';
+        }
 
         vm.getZeroName = function () {
             return vm.zeroFormats[vm.reportSettings.zero_format_id].name;
@@ -90,73 +173,9 @@
             return vm.percentageFormats[vm.reportSettings.percentage_format_id].name;
         };
 
-        const setContainersHeight = function (containers) { // for collapse animation
-
-            containers.forEach(container => {
-
-                const contentElement = container.querySelector('.ALS-layout-group-container');
-
-                if(contentElement) {
-
-                    container.style.height = contentElement.clientHeight + 'px';
-
-                }
-
-            })
-
-        };
-
         vm.formatRounding = value => renderHelper.formatRounding(value, {report_settings: vm.reportSettings});
+
         vm.formatValue = value => renderHelper.formatValue({example: value}, {key: 'example', report_settings: vm.reportSettings});
-
-        const getNumberFormatByPreset = function (preset) {
-
-            switch(preset) {
-                case 'price':
-                    return {
-                        zero_format_id: 1,
-                        negative_color_format_id: 0,
-                        negative_format_id : 0,
-                        round_format_id : 1,
-                        percentage_format_id : 0,
-                    };
-                case 'market_value':
-                    return {
-                        zero_format_id: 1,
-                        negative_color_format_id: 1,
-                        negative_format_id : 1,
-                        thousands_separator_format_id: 2,
-                        round_format_id : 1,
-                        percentage_format_id : 0,
-                    };
-                case 'amount':
-                    return {
-                        zero_format_id: 1,
-                        negative_color_format_id: 1,
-                        negative_format_id : 0,
-                        thousands_separator_format_id: 2,
-                        round_format_id : 3,
-                        percentage_format_id : 0,
-                    };
-                case 'exposure':
-                    return {
-                        zero_format_id: 1,
-                        negative_color_format_id: 1,
-                        negative_format_id : 1,
-                        round_format_id : 0,
-                        percentage_format_id : 2,
-                    };
-                case 'return':
-                    return {
-                        zero_format_id: 1,
-                        negative_color_format_id: 1,
-                        negative_format_id : 0,
-                        percentage_format_id : 3,
-                    };
-
-            }
-            
-        };
 
         vm.presetSelectorData = {
             options: [
@@ -172,8 +191,8 @@
 
                 vm.presetSelectorData.options.forEach(it => it.isActive = it === option);
 
-                const presetSettings = getNumberFormatByPreset(option.id);
-                Object.assign(vm.reportSettings, presetSettings);
+                const numberFormat =  presetsSettings[option.id]();
+                Object.assign(vm.reportSettings, numberFormat);
 
                 vm.onNumberFormatChange();
 
@@ -193,8 +212,6 @@
         };
 
         const init = function () {
-
-            vm.negativeFormat = getNegativeFormat(vm.reportSettings);
 
             vm.onNumberFormatChange();
 
