@@ -81,7 +81,7 @@
 
                             } else {
 
-                            	const description = `The ${column.groups ? 'group' : 'column'} does not exist in the Configuration`
+                            	const description = `The ${scope.columnHasCorrespondingGroup(column.key) ? 'group' : 'column'} does not exist in the Configuration`
 
                                 column.error_data = {
                                 	code: 10,
@@ -208,11 +208,11 @@
                     makePopupDataForColumns(scope.columns);
                 };
 
-                function getPopupData(item, $index, isGroup) {
+                function getPopupData(item, $index, isAGroup) {
 
                     let data = {
                         $index: $index,
-						isGroup: isGroup,
+						isAGroup: isAGroup,
                         item: item, // can be column or group
                         viewContext: scope.viewContext,
                         renameColumn: scope.renameColumn,
@@ -251,7 +251,7 @@
 
                     };
 
-                    if (isGroup) {
+                    if (isAGroup) {
                         data.reportSetSubtotalType = scope.reportSetSubtotalType
                     }
 
@@ -384,7 +384,7 @@
 
                     const direction = column.options && column.options.sort ? column.options.sort : 'ASC'; // save direction before clear sort options for all columns
 
-                    if (column.groups) {
+                    if (scope.columnHasCorrespondingGroup(column.key)) {
 
                         clearAllSortOptions(scope.groups);
 
@@ -404,7 +404,7 @@
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    if (column.groups) {
+                    if (scope.columnHasCorrespondingGroup(column.key)) {
 
                         clearAllSortOptions(scope.groups);
 
@@ -435,7 +435,7 @@
 
                                 scope.evDataService.setColumnSortData(column.key, layout.data)
 
-                                if (column.groups) {
+                                if (scope.columnHasCorrespondingGroup(column.key)) {
 
                                     scope.evDataService.setActiveGroupTypeSort(column);
                                     scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
@@ -458,7 +458,7 @@
 
                     } else { // default sort handler TODO External sort mode is not defined, and handling as default
 
-                        if (column.groups) {
+                        if (scope.columnHasCorrespondingGroup(column.key)) {
 
                             scope.evDataService.setActiveGroupTypeSort(column);
                             scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
@@ -877,7 +877,7 @@
                     }
 
                     var column = scope.columns.find(column => column.key === itemKey);
-                    console.log('renameColumn', column);
+
                     $mdDialog.show({
                         controller: 'RenameFieldDialogController as vm',
                         templateUrl: 'views/dialogs/rename-field-dialog-view.html',
@@ -890,9 +890,10 @@
 
                         if (res.status === 'agree') {
 
+							column.layout_name = res.data.layout_name;
                             scope.evDataService.setColumns(scope.columns);
 
-							if (scope.columnHasCorrespondingGroup(column)) {
+							if (scope.columnHasCorrespondingGroup(column.key)) {
 
 								var group = scope.groups.find(group => group.key === itemKey);
 								group.layout_name = res.data.layout_name;
