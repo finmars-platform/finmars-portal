@@ -117,7 +117,6 @@
                         zero_format_id: 1,
                         negative_color_format_id: 0,
                         negative_format_id : 0,
-                        thousands_separator_format_id: 0, // ? Victor this parameter is absent in original
                         round_format_id : 1,
                         percentage_format_id : 0,
                     };
@@ -144,7 +143,6 @@
                         zero_format_id: 1,
                         negative_color_format_id: 1,
                         negative_format_id : 1,
-                        thousands_separator_format_id: 0, // ? Victor this parameter is absent in original
                         round_format_id : 0,
                         percentage_format_id : 2,
                     };
@@ -153,8 +151,6 @@
                         zero_format_id: 1,
                         negative_color_format_id: 1,
                         negative_format_id : 0,
-                        thousands_separator_format_id: 0, // ? Victor this parameter is absent in original
-                        round_format_id : 0, // ? Victor this parameter is absent in original
                         percentage_format_id : 3,
                     };
 
@@ -176,8 +172,8 @@
 
                 vm.presetSelectorData.options.forEach(it => it.isActive = it === option);
 
-                const preset = option.id;
-                vm.reportSettings = getNumberFormatByPreset(preset);
+                const presetSettings = getNumberFormatByPreset(option.id);
+                Object.assign(vm.reportSettings, presetSettings);
 
                 vm.onNumberFormatChange();
 
