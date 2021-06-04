@@ -1266,6 +1266,19 @@
             return data.viewType;
         }
 
+
+        // That prop used only during user session and do not saved in layout
+        function setUserRequestedAction(action) {
+            return data.userRequestedAction = action;
+        }
+
+        function getUserRequestedAction() {
+            return data.userRequestedAction;
+        }
+
+
+
+
         function setAutoRefreshState(state) {
             return data.autoRefreshState = state;
         }
@@ -1686,6 +1699,9 @@
 
             setViewType: setViewType,
             getViewType: getViewType,
+
+            setUserRequestedAction: setUserRequestedAction,
+            getUserRequestedAction: getUserRequestedAction,
 
             setAutoRefreshState: setAutoRefreshState,
             getAutoRefreshState: getAutoRefreshState,
