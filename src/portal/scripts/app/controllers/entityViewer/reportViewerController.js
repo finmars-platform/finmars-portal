@@ -57,6 +57,7 @@
                     vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                 }
 
             };
@@ -244,6 +245,12 @@
                     locals: locals
                 }).then(function (res) {
 
+                    vm.autoRefreshState = vm.entityViewerDataService.getAutoRefreshState();
+
+                    if (vm.autoRefreshState) {
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    }
+
                     updateTableAfterEntityChanges(res);
 
                 });
@@ -270,6 +277,12 @@
                     locals: locals
 
                 }).then(function (res) {
+
+                    vm.autoRefreshState = vm.entityViewerDataService.getAutoRefreshState();
+
+                    if (vm.autoRefreshState) {
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    }
 
                     updateTableAfterEntityChanges(res);
 
@@ -933,7 +946,7 @@
 
             vm.setLayout = function (layout) {
 
-            	return new Promise(async function (resolve, reject) {
+                return new Promise(async function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
                     vm.setFiltersValuesFromQueryParameters();
@@ -1005,9 +1018,9 @@
                                     filters: {
                                         user_code: activeColumnSort.manual_sort_layout_user_code
                                     }
-                                }).then(function (data){
+                                }).then(function (data) {
 
-                                    if(data.results.length) {
+                                    if (data.results.length) {
 
                                         var layout = data.results[0];
 
@@ -1023,21 +1036,20 @@
 
                                     }
 
-									sortResolve();
+                                    sortResolve();
 
                                 })
 
 
-
                             } else {
-								sortResolve();
+                                sortResolve();
                             }
 
 
                         })
 
 
-                        Promise.all([activeColumnSortProm]).then(function (){
+                        Promise.all([activeColumnSortProm]).then(function () {
                             resolve();
                         })
 
@@ -1073,23 +1085,23 @@
 
                 vm.entityViewerDataService.setRowHeight(36);
 
-				vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
+                vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
 
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
 
-                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject) {
 
                     uiService.getCrossEntityAttributeExtensionList({
                         filters: {
                             context_content_type: $scope.$parent.vm.contentType
                         }
-                    }).then(function (data){
+                    }).then(function (data) {
 
                         console.log('getCrossEntityAttributeExtensionList.data', data);
 
                         vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
-						resolve();
+                        resolve();
 
                     }).catch(error => reject(error))
 
@@ -1135,8 +1147,8 @@
                 }
 
                 Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
-                	metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
-					$scope.$apply();
+                    metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
+                    $scope.$apply();
                 });
 
             };
@@ -1144,12 +1156,12 @@
             vm.init = function () {
 
                 middlewareService.onMasterUserChanged(function () {
-					vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
+                    vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
                 middlewareService.onLogOut(function () {
-					vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
+                    vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
@@ -1161,7 +1173,6 @@
 
 
             };
-
 
 
             vm.getCurrentMember = function () {
@@ -1180,7 +1191,7 @@
 
                 return new Promise(function (resolve, reject) {
 
-                	var checkForLayoutChanges = vm.entityViewerDataService.isLayoutChangesLossWarningNeeded();
+                    var checkForLayoutChanges = vm.entityViewerDataService.isLayoutChangesLossWarningNeeded();
 
                     if (checkForLayoutChanges) {
 
@@ -1317,7 +1328,7 @@
 
                     } else {
 
-                    	removeTransitionWatcher();
+                        removeTransitionWatcher();
                         resolve(true);
 
                     }

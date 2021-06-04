@@ -44,6 +44,14 @@
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.viewContext = scope.evDataService.getViewContext();
+                scope.viewContext = scope.evDataService.getViewContext();
+
+                scope.rvAutoRefresh = scope.evDataService.getAutoRefreshState();
+
+                if (scope.rvAutoRefresh === null || scope.rvAutoRefresh === undefined) { //if we missed initial state for already existing layout
+                    scope.rvAutoRefresh = true;
+                }
+
 
                 scope.isFiltersOpened = !scope.hideFiltersBlock;
 				scope.filters = scope.evDataService.getFilters();
@@ -231,6 +239,14 @@
                     });
 
                 };
+
+                scope.toggleAutoRefresh = function (){
+
+                    scope.rvAutoRefresh = !scope.rvAutoRefresh
+
+                    scope.evDataService.setAutoRefreshState(scope.rvAutoRefresh)
+
+                }
 
                 scope.toggleSplitPanel = function ($event, type) {
 
