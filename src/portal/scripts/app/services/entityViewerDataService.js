@@ -1186,7 +1186,9 @@
 
                 if (column.options && column.options.sort) {
 
-                    if (column.groups) {
+					var columnWithGroup = !!listLayout.data.grouping.find(group => group.key === column.key);
+
+                    if (columnWithGroup) {
                         setActiveGroupTypeSort(column);
                     } else {
                         setActiveColumnSort(column);
