@@ -170,7 +170,8 @@
                 forColumns: [],
             },
 			warnAboutLayoutChangesLoss: true,
-			isNewLayout: false // does layout exist on server
+			isNewLayout: false, // does layout exist on server,
+            autoRefreshState: true
         };
 
         var dashboardData = {
@@ -1267,6 +1268,29 @@
             return data.viewType;
         }
 
+
+        // That prop used only during user session and do not saved in layout
+        function setUserRequestedAction(action) {
+            return data.userRequestedAction = action;
+        }
+
+        function getUserRequestedAction() {
+            return data.userRequestedAction;
+        }
+
+
+
+
+        function setAutoRefreshState(state) {
+            return data.autoRefreshState = state;
+        }
+
+        function getAutoRefreshState() {
+            return data.autoRefreshState;
+        }
+
+
+
         function setViewSettings(viewType, settings) {
 
             data.lastViewSettings[viewType] = JSON.parse(JSON.stringify(data.viewSettings));
@@ -1677,6 +1701,12 @@
 
             setViewType: setViewType,
             getViewType: getViewType,
+
+            setUserRequestedAction: setUserRequestedAction,
+            getUserRequestedAction: getUserRequestedAction,
+
+            setAutoRefreshState: setAutoRefreshState,
+            getAutoRefreshState: getAutoRefreshState,
 
             setViewSettings: setViewSettings,
             getViewSettings: getViewSettings,
