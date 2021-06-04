@@ -25,6 +25,7 @@ module.exports = {
     'DATA_LOAD_START': 'DATA_LOAD_START',
 
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
+    'USER_REQUEST_AN_ACTION': 'USER_REQUEST_AN_ACTION', // user used a Add menu and want to Add Entity (portfolio, account,  etc)
     'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
 
 
