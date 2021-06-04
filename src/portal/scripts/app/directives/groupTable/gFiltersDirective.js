@@ -44,6 +44,14 @@
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.viewContext = scope.evDataService.getViewContext();
+                scope.viewContext = scope.evDataService.getViewContext();
+
+                scope.rvAutoRefresh = scope.evDataService.getAutoRefreshState();
+
+                if (scope.rvAutoRefresh === null || scope.rvAutoRefresh === undefined) { //if we missed initial state for already existing layout
+                    scope.rvAutoRefresh = true;
+                }
+
 
                 scope.isFiltersOpened = !scope.hideFiltersBlock;
 				scope.filters = scope.evDataService.getFilters();
@@ -231,6 +239,14 @@
                     });
 
                 };
+
+                scope.toggleAutoRefresh = function (){
+
+                    scope.rvAutoRefresh = !scope.rvAutoRefresh
+
+                    scope.evDataService.setAutoRefreshState(scope.rvAutoRefresh)
+
+                }
 
                 scope.toggleSplitPanel = function ($event, type) {
 
@@ -825,6 +841,32 @@
 				};
 				// </editor-fold>
 
+				const syncFiltersLayoutNamesWithColumns = function () {
+
+					const columns = scope.evDataService.getColumns();
+					const filtersChanged = false;
+
+					columns.forEach(column => {
+
+						if (column.layout_name) {
+
+							const matchingFilter = scope.filters.find(filter => filter.key === column.key);
+
+							if (matchingFilter) {
+
+								matchingFilter.layout_name = column.layout_name;
+								filtersChanged = true;
+
+							}
+
+						}
+
+					});
+
+					if (filtersChanged) scope.evDataService.setFilters(scope.filters);
+
+				};
+
                 const initEventListeners = function () {
 
                     // Victor 2021.03.29 #88 fix bug with deleted custom fields
@@ -965,6 +1007,8 @@
 						evEventService: scope.evEventService,
 						attributeDataService: scope.attributeDataService
 					}
+
+					syncFiltersLayoutNamesWithColumns();
 
 					formatFiltersForChips();
 
