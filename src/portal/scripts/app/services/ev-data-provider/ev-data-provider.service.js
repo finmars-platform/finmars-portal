@@ -126,6 +126,7 @@
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+                obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
 
                 obj.count = data.count;
                 obj.next = data.next;
@@ -143,6 +144,7 @@
                 obj.___group_name = event.groupName ? event.groupName : '-';
                 obj.___group_id = event.groupId ? event.groupId : '-';
                 obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                obj.___items_count = event.itemsCount ? event.itemsCount : 0;
                 obj.___is_open = true;
                 obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -170,6 +172,7 @@
 
                 item.___group_name = item.___group_name ? item.___group_name : '-';
                 item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                item.___items_count = item.___items_count ? item.___items_count : 0;
                 item.___group_id = item.___group_id ? item.___group_id : '-';
                 item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
@@ -268,6 +271,7 @@
 
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+                obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                 obj.count = data.count;
@@ -287,6 +291,7 @@
                 obj = Object.assign({}, data);
                 obj.___group_name = event.groupName ? event.groupName : '-';
                 obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                obj.___items_count = event.itemsCount ? event.itemsCount : 0;
                 obj.___group_id = event.groupId ? event.groupId : '-';
                 // obj.___group_identifier = event.groupId;
                 obj.___is_open = true;
@@ -329,6 +334,7 @@
                 item.___parentId = obj.___id;
                 item.___group_name = item.___group_name ? item.___group_name : '-';
                 item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                item.___items_count = item.___items_count ? item.___items_count : 0;
                 item.___group_id = item.___group_id ? item.___group_id : '-';
 
 
@@ -594,6 +600,7 @@
 
                             result.___group_name = item.group_name;
                             result.___group_identifier = item.group_identifier;
+                            result.___items_count = item.items_count;
 
                             return result
                         });

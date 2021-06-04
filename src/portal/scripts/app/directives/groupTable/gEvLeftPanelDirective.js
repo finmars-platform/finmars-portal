@@ -7,6 +7,7 @@
 
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
 
     module.exports = function ($mdDialog, $state,) {
@@ -22,6 +23,33 @@
             link: function (scope,) {
 
                 scope.multiselectIsActive = false;
+                scope.groupTypes = [];
+
+
+                scope.recursiveMarkHasSelected = function (tree, selectedGroups) {
+
+                    tree.___has_selected_child = false;
+
+                    selectedGroups.forEach(function (item) {
+
+                        var parents = evRvCommonHelper.getParents(item.___parentId, scope.evDataService);
+
+                        parents.forEach(function (parent) {
+                            if (parent.___id === tree.___id) {
+                                tree.___has_selected_child = true;
+                            }
+                        })
+
+                    })
+
+                    if (tree.results.length) {
+                        tree.results.forEach(function (branch) {
+                            scope.recursiveMarkHasSelected(branch, selectedGroups)
+
+                        })
+                    }
+
+                }
 
 
                 scope.generateGroupsTree = function () {
@@ -29,6 +57,10 @@
                     var result = evDataHelper.getGroupsAsTree(scope.evDataService);
 
                     console.log('generateGroupsTree.result', result)
+
+                    var selectedGroups = scope.evDataService.getSelectedGroups();
+
+                    scope.recursiveMarkHasSelected(result, selectedGroups)
 
                     return result;
 
@@ -47,12 +79,63 @@
 
                     var leftPanel = document.querySelector('.g-ev-left-panel-holder')
 
-                    leftPanel.style.height = table.clientHeight + 'px';
+                    leftPanel.style.height = (table.clientHeight - 10) + 'px'; // todo 10?
                 }
 
-                var init = async function () {
+                scope.handleSlider = function () {
 
-                    scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState()
+                    var slider = document.querySelector('.evLeftPanelSlider')
+
+                    var leftPanel = document.querySelector('.g-ev-left-panel-holder')
+                    var parentSection = leftPanel.parentElement
+                    var tableSection = document.querySelector('.g-table-section')
+
+                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                    var resultWidth;
+
+
+                    slider.addEventListener('mousedown', function (event) {
+
+                        console.log('mousedown event', event)
+
+                        var clientX = event.clientX;
+                        var clientY = event.clientY;
+
+                        var originalWidth = interfaceLayout.evLeftPanel.width
+
+                        $(window).bind('mousemove', function sliderMouseMove(event) {
+
+                            var diffX = event.clientX - clientX;
+                            // var diffY = clientY + event.clientY
+
+                            if (originalWidth + diffX >= document.body.clientWidth) {
+                                resultWidth = document.body.clientWidth;
+                            } else if (originalWidth + diffX <= 33) {
+                                resultWidth = 33;
+                            } else {
+                                resultWidth = originalWidth + diffX
+                            }
+
+                            interfaceLayout.evLeftPanel.width = resultWidth;
+                            leftPanel.style.width = resultWidth + 'px';
+                            tableSection.style.width = parentSection.clientWidth - resultWidth + 'px'
+
+                            scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                        })
+
+                    })
+
+                    $(window).bind('mouseup', function () {
+
+                        $(window).unbind('mousemove')
+                    })
+
+                }
+
+                scope.addEventListeners = function () {
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
@@ -100,6 +183,8 @@
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
+                        scope.groupTypes = scope.evDataService.getGroups()
+
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
                             scope.$apply();
@@ -117,9 +202,107 @@
 
                     });
 
+                }
+
+                scope.drake = {
+
+                    init: function () {
+                        this.dragulaInit();
+                        this.eventListeners();
+                    },
+
+                    eventListeners: function () {
+
+                        var drake = this.dragula;
+
+                        drake.on('drop', function (elem, target, source, nextSibling) {
+                            console.log('scope.elem', elem);
+
+                            var elemKey = elem.dataset.key;
+                            var nextSiblingKey;
+
+                            if (nextSibling) {
+                                nextSiblingKey = nextSibling.dataset.key
+                            }
+
+                            var elemItem;
+                            var elemNextSiblingIndex;
+
+                            scope.groupTypes.forEach(function (item, index){
+                                if(item.key === elemKey) {
+                                    elemItem = item
+                                }
+
+                            })
+
+                            scope.groupTypes = scope.groupTypes.filter(function (item){
+                                return item.key !== elemKey
+                            })
+
+                            scope.groupTypes.forEach(function (item, index){
+
+                                if (item.key === nextSiblingKey) {
+                                    elemNextSiblingIndex = index
+                                }
+                            })
+
+
+                            console.log('dragPanelLeft.elemNextSiblingIndex', elemNextSiblingIndex);
+
+                            if (elemNextSiblingIndex !== null && elemNextSiblingIndex !== undefined) {
+                                scope.groupTypes.splice(elemNextSiblingIndex, 0, elemItem);
+                            } else {
+                                scope.groupTypes.push(elemItem)
+                            }
+
+                            scope.evDataService.setSelectedGroups([])
+                            scope.evDataService.setGroups(scope.groupTypes)
+
+                            scope.evDataService.resetData();
+                            scope.evDataService.resetRequestParameters();
+
+                            var rootGroup = scope.evDataService.getRootGroupData();
+
+                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                            scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+                            console.log('dragPanelLeft.nextSibling', nextSibling);
+                            console.log('dragPanelLeft.groupTypes', scope.groupTypes);
+                        });
+
+                    },
+
+                    dragulaInit: function () {
+
+                        var items = [
+                            document.querySelector('.evLeftPanelGroupingSection')
+                        ];
+
+                        this.dragula = dragula(items, {
+                            revertOnSpill: true,
+                        });
+
+                    },
+
+                    destroy: function () {
+                        if (this.dragula) {
+                            this.dragula.destroy();
+                        }
+                    }
+                };
+
+                var init = async function () {
+
+                    scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState()
+
+                    scope.addEventListeners();
+
+                    scope.groupTypes = scope.evDataService.getGroups()
+
+                    console.log('scope.groupTypes', scope.groupTypes)
 
                     scope.tree = scope.generateGroupsTree()
-
 
                     setTimeout(function () {
 
@@ -131,57 +314,8 @@
                         scope.resize();
                     });
 
-                    var slider = document.querySelector('.evLeftPanelSlider')
-
-                    var leftPanel = document.querySelector('.g-ev-left-panel-holder')
-                    var parentSection = leftPanel.parentElement
-                    var tableSection = document.querySelector('.g-table-section')
-
-                    var interfaceLayout = scope.evDataService.getInterfaceLayout();
-                    var resultWidth;
-
-
-
-
-
-                    slider.addEventListener('mousedown', function (event) {
-
-                        console.log('mousedown event', event)
-
-                        var clientX = event.clientX;
-                        var clientY = event.clientY;
-
-                        var originalWidth = interfaceLayout.evLeftPanel.width
-
-                        $(window).bind('mousemove',function sliderMouseMove (event) {
-
-                            var diffX = event.clientX - clientX;
-                            // var diffY = clientY + event.clientY
-
-                            if (originalWidth + diffX >= document.body.clientWidth) {
-                                resultWidth = document.body.clientWidth;
-                            } else if (originalWidth + diffX <= 33) {
-                                resultWidth = 33;
-                            } else {
-                                resultWidth = originalWidth + diffX
-                            }
-
-                            interfaceLayout.evLeftPanel.width = resultWidth;
-                            leftPanel.style.width = resultWidth + 'px';
-                            tableSection.style.width = parentSection.clientWidth - resultWidth + 'px'
-
-                            scope.evDataService.setInterfaceLayout(interfaceLayout);
-
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-
-                        } )
-
-                    })
-
-                    $(window).bind('mouseup', function () {
-
-                        $(window).unbind('mousemove')
-                    })
+                    scope.handleSlider();
+                    scope.drake.init();
 
 
                 };
