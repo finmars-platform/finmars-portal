@@ -186,6 +186,30 @@
 
                 }
 
+                function openNumberFormatDialog(column) {
+                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+                    $mdDialog.show({
+                        controller: 'NumberFormatDialogController as vm',
+                        templateUrl: 'views/dialogs/number-format-dialog-view.html',
+                        parent: angular.element(document.body),
+                        locals: {
+                            data: column
+                        }
+                    }).then(res => {
+
+                        if (res.status === 'agree') {
+
+                            column.report_settings = res.data;
+
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+
+                        }
+
+                    })
+                }
+
                 // Victor 2020.12.14 #69 New report viewer design
                 scope.rowFilterColor = 'none';
 
@@ -244,6 +268,8 @@
                         onSubtotalSumClick: onSubtotalSumClick,
                         onSubtotalWeightedClick: onSubtotalWeightedClick,
                         onSubtotalAvgWeightedClick: onSubtotalAvgWeightedClick,
+
+                        openNumberFormatDialog: openNumberFormatDialog,
 
                     };
 
