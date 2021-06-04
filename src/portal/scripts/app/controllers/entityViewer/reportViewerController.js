@@ -758,6 +758,107 @@
 
                 });
 
+                vm.entityViewerEventService.addEventListener(evEvents.USER_REQUEST_AN_ACTION, function (){
+
+
+                    var action = vm.entityViewerDataService.getUserRequestedAction();
+
+                    if (action === 'add_portfolio') {
+
+                        var locals = {
+                            entityType: 'portfolio',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_instrument') {
+
+                        var locals = {
+                            entityType: 'instrument',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_account') {
+
+                        var locals = {
+                            entityType: 'account',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_currency') {
+
+                        var locals = {
+                            entityType: 'currency',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+
+                    if (action === 'add_price') {
+
+                        var locals = {
+                            entityType: 'price-history',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_fx_rate') {
+
+                        var locals = {
+                            entityType: 'currency-history',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'book_transaction') {
+
+                        var locals = {
+                            entityType: 'complex-transaction',
+                            entity: {},
+                            data: {}
+                        };
+
+                        if (vm.entityType === 'transaction-report') {
+
+                            var contextData = getContextData(reportOptions, activeObject);
+                            locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
+                            locals.data.contextData = contextData;
+
+                        }
+
+                        createEntity({}, locals);
+
+                    }
+
+
+                })
+
 
             };
 
