@@ -261,20 +261,22 @@
   }
 
   .control-button {
-    //background: #ddd;
-    background-color: rgb(63, 81, 181);
-    color: #fff;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+    /* background-color: #3f51b5; */
+    color: #f05a22;
+    //box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
     margin: 2px;
-    height: 20px;
+    height: 29px;
     border: 0;
-    border-right: 1px solid #000;
-    border-bottom: 1px solid;
+    /* border-right: 1px solid #000; */
+    /* border-bottom: 1px solid; */
     cursor: pointer;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
 
     &:hover {
       //opacity: 0.7;
-      background-color: #2f3e9b;
+      background-color: rgba(240,90,34,.1);
     }
   }
 
@@ -446,7 +448,16 @@
     position: relative;
     box-sizing: border-box;
     border-top: 1px solid rgb(224, 224, 224);
-    overflow: hidden;
+    //overflow: hidden;
+    z-index: 1;
+  }
+
+  .ev-left-panel-inner-container {
+    padding-top: 10px;
+    position: relative;
+    z-index: 1;
+    background: rgb(250, 250, 250);
+    height: 100%;
   }
 
   .ev-left-panel-slider {
@@ -477,6 +488,49 @@
     width: 100%;
   }
 
+  .ev-left-panel-grouping-menu-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #747474;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .ev-left-panel-grouping-section {
+    width: 220px;
+    position: absolute;
+    right: 0px;
+    top: 0;
+    height: 100%;
+    background: rgba(250, 250, 250, 1);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(224, 224, 224, 1);
+    border-left: 0px;
+    box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.0549019607843137);
+    transition: right 0.5s ease;
+    &.active {
+      right: -220px;
+    }
+  }
+
+  .ev-left-panel-grouping-section-item .material-icons {
+    position: relative;
+    top: 6px;
+  }
+
+  .ev-left-panel-grouping-section-item {
+    height: 48px;
+    line-height: 48px;
+    width: 100%;
+    font-size: 14px;
+    color: #747474;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    cursor: move;
+  }
+
+
   .ev-left-panel-tree-elem {
     .ev-left-panel-tree-elem-name {
       margin-left: 4px;
@@ -487,9 +541,18 @@
       letter-spacing: normal;
       color: #333333;
       line-height: 33px;
+      width: 100%;
+      cursor: pointer;
+      outline: none;
+
+      &:hover {
+        color: #F05A22;
+      }
 
 
     }
+
+
 
     .ev-left-panel-tree-elem-line {
       height: 33px;
@@ -497,6 +560,13 @@
 
       &.selected-group {
         background: rgba(240, 90, 34, 0.117647058823529);
+
+        .ev-left-panel-tree-elem-name {
+          color: #F05A22;
+        }
+      }
+
+      &.has-selected-child-group {
 
         .ev-left-panel-tree-elem-name {
           color: #F05A22;

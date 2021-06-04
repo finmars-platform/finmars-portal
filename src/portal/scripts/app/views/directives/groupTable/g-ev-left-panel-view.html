@@ -1,24 +1,45 @@
-<div>
+<div class="height-100">
 
-    <div>
+    <div class="ev-left-panel-inner-container">
 
-        <g-ev-left-panel-tree-elem item="tree" ev-data-service="evDataService"
-                                   ev-event-service="evEventService"></g-ev-left-panel-tree-elem>
+        <div class="ev-left-panel-grouping-menu-button" data-ng-click="groupSectionState = !groupSectionState">
+            <span class="material-icons">menu</span>
+        </div>
 
-    </div>
+        <div>
 
-    <div class="ev-left-panel-footer-section">
+            <g-ev-left-panel-tree-elem item="tree" ev-data-service="evDataService"
+                                       ev-event-service="evEventService"></g-ev-left-panel-tree-elem>
 
-        <md-checkbox data-ng-click="toggleMultiselect($event)" data-ng-checked="multiselectIsActive" tabindex="0"
-                     type="checkbox"
-                     role="checkbox" aria-checked="false" class="">
+        </div>
+
+        <div class="ev-left-panel-footer-section">
+
+            <md-checkbox data-ng-click="toggleMultiselect($event)" data-ng-checked="multiselectIsActive" tabindex="0"
+                         type="checkbox"
+                         role="checkbox" aria-checked="false" class="">
                 Multiselect
-        </md-checkbox>
+            </md-checkbox>
+
+        </div>
+
+        <div class="ev-left-panel-slider evLeftPanelSlider">
+            <div class="ev-left-panel-slider-button"></div>
+        </div>
 
     </div>
 
-    <div class="ev-left-panel-slider evLeftPanelSlider">
-        <div class="ev-left-panel-slider-button"></div>
+    <div class="ev-left-panel-grouping-section evLeftPanelGroupingSection"
+         data-ng-class="{'active': groupSectionState}"
+    >
+
+
+        <div data-ng-repeat="item in groupTypes" class="ev-left-panel-grouping-section-item" data-key="{{item.key}}">
+
+            <span class="material-icons">drag_indicator</span>    <span class="ev-left-panel-grouping-section-item-name">{{item.name}}</span>
+
+        </div>
+
     </div>
 
 </div>
