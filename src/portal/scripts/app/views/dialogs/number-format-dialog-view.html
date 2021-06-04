@@ -9,9 +9,20 @@
     </md-toolbar>
 
     <div class="number-format-preset-container">
-        <div class="preset-selector">
-            <span>Select Preset</span>
+        <div class="preset-selector"
+             popup
+             popup-template-url="'views/popups/selector-popup-view.html'"
+             popup-data="vm.presetSelectorData"
+             position-relative-to="element"
+             relative-popup-x="left"
+             relative-popup-y="top"
+             open-on="click"
+             popup-classes="'preset-options'"
+             close-on-click-outside="true">
+
+            <span>{{vm.getPresetName()}}</span>
             <span class="material-icons">arrow_drop_down</span>
+
         </div>
 
         <div class="examples">
