@@ -127,7 +127,7 @@
             splitPanelIsActive: false,
             verticalSplitPanelIsActive: false,
             splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
-            splitPanelLayoutToOpen: null,
+            splitPanelLayoutToOpen: null, // Only for frontend. Do not sent to server.
             additions: {},
             report: {},
             export: {},
@@ -1246,11 +1246,19 @@
         function getSplitPanelDefaultLayout() {
             return data.splitPanelDefaultLayout;
         }
-
+		/**
+		 * Set layout to open inside split panel not by default.
+		 *
+		 * @param layoutName {number} - id of layout
+		 */
         function setSplitPanelLayoutToOpen(layoutName) {
             data.splitPanelLayoutToOpen = layoutName;
         }
-
+		/**
+		 * Get layout to open inside split panel not by default.
+		 *
+		 * @returns {number|void} - id of layout to open
+		 */
         function getSplitPanelLayoutToOpen() {
             var splitPanelActiveLayoutName = data.splitPanelLayoutToOpen;
             data.splitPanelLayoutToOpen = false;
