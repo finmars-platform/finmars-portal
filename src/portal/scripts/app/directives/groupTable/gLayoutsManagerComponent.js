@@ -86,7 +86,12 @@
 
                             	if (scope.layout.is_default && scope.layouts.length > 1) { // If default layout was deleted and other layouts exist. Make another layout default.
 
-									let nextDefaultLayout = (scope.layouts[0].id === scope.layout.id) ? scope.layouts[1] : scope.layouts[0];
+									let nextDefaultLayout = scope.layouts[0];
+
+									if (scope.layouts[0].id === scope.layout.id) {
+										nextDefaultLayout = scope.layouts[1];
+									}
+
 									nextDefaultLayout.is_default = true;
 
 									await uiService.updateListLayout(nextDefaultLayout.id, nextDefaultLayout);
@@ -1068,11 +1073,13 @@
 
                 const init = async () => {
 
-                    scope.layouts = await getLayouts();
+                	Promise.allSettled([getLayouts(), getInvites()]).then(resData => {
 
-                    await getInvites();
+						if (resData[0].status = "fulfilled") scope.layouts = resData[0].value;
 
-                    scope.$apply();
+						scope.$apply();
+
+					});
 
                 }
 
