@@ -1,10 +1,10 @@
 <div class="popup-menu">
 
-    <div ng-if="popupData.data.isGroup"
+    <div ng-if="popupData.data.isAGroup"
          ng-include="'views/popups/entity-viewer/g-rv-group-settings-menu-options.html'"></div>
 
     <div>
-        <md-button ng-click="popupData.data.renameColumn(popupData.data.item, null, $event, _$popup)"
+        <md-button ng-click="popupData.data.renameColumn(popupData.data.item.key, null, $event, _$popup)"
                    class="popup-menu-item">
             <span class="material-icons" style="visibility: hidden;">done</span>
             <span>Rename</span>
