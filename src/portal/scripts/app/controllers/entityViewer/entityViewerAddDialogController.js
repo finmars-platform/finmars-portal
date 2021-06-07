@@ -775,6 +775,8 @@
                     vm.readyStatus.entity = false;
                     vm.readyStatus.layout = false;
 
+                    formLayoutFromAbove = null; // forcing getFormLayout() to download layout from server
+
                     vm.init();
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
@@ -850,8 +852,8 @@
 					vm.fixedAreaPopup.tabColumns = columns;
 					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
 
-					const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-					$bigDrawer.setWidth(bigDrawerWidthPercent);
+					const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
+					$bigDrawer.setWidth(bigDrawerWidth);
 
 					if (vm.fixedAreaPopup.tabColumns !== 6) {
 						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
@@ -898,9 +900,24 @@
             return vm.readyStatus.layout && vm.readyStatus.entity && vm.readyStatus.permissions
         }; */
 
+		vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
+		vm.bindFlex = vm.sharedLogic.bindFlex;
+		vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
+
         vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
-        vm.bindFlex = vm.sharedLogic.bindFlex;
-        vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
+
+        vm.bindFlex = function (tab, field) {
+            /*var totalColspans = 0;
+            var i;
+            for (i = 0; i < tab.layout.fields.length; i = i + 1) {
+                if (tab.layout.fields[i].row === row) {
+                    totalColspans = totalColspans + tab.layout.fields[i].colspan;
+                }
+            }*/
+            var flexUnit = 100 / tab.layout.columns;
+            return Math.floor(field.colspan * flexUnit);
+
+        };
 
         vm.checkViewState = function (tab) {
 
@@ -1043,9 +1060,8 @@
 
             if (errors.length) {
 
-                // vm.tabsWithErrors = {};
-
-                vm.sharedLogic.processTabsErrors(errors, $event);
+                // vm.sharedLogic.processTabsErrors(errors, $event);
+				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
             } else {
 
@@ -1075,8 +1091,19 @@
 
                     } else {
 
+
                         vm.entity = {...vm.entity, ...responseData};
                         vm.entity.$_isValid = true;
+
+                        const responseObj = {
+                            res: 'agree',
+                            data: {
+                                action: 'edit',
+                                entityType: vm.entityType,
+                                entity: vm.entity
+                            }
+                        };
+                        metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     }
 
@@ -1517,11 +1544,115 @@
 
         // Instrument Type Layout Settings tab end
 
+        // Instrument Type Exposure tab start
+
+        vm.instrumentTypeInstrumentsSelectorOptions = []
+        vm.instrumentTypeCurrenciesSelectorOptions = []
+
+        vm.getDataForInstrumentTypeTabs = function () {
+
+            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentTypeInstrumentsSelectorOptions = data.results.map(function (item){
+                    return {
+                        id: item.user_code,
+                        name: item.name
+                    }
+                })
+
+            })
+
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentTypeCurrenciesSelectorOptions = data.results.map(function (item){
+                    return {
+                        id: item.user_code,
+                        name: item.name
+                    }
+                })
+
+            })
+
+
+        }
+
+
+        vm.exposureCalculationModelSelectorOptions = [
+            {id: 1, name: "Market Value"},
+            {id: 2, name: "Price exposure"},
+            {id: 3, name: "Delta adjusted price exposure"},
+            {id: 4, name: "Underlying long short exposure net"},
+            {id: 5, name: "Underlying long short exposure split"},
+        ];
+
+        vm.longUnderlyingExposureSelectorOptions = [
+            {id: 1, name: "Zero"},
+            {id: 2, name: "Long Underlying Instrument Price Exposure"},
+            {id: 3, name: "Long Underlying Instrument Price Delta"},
+            {id: 4, name: "Long Underlying Currency FX Rate Exposure"},
+            {id: 5, name: "Long Underlying Currency FX Rate Delta-adjusted Exposure"},
+        ]
+
+        vm.shortUnderlyingExposureSelectorOptions = [
+            {id: 1, name: "Zero"},
+            {id: 2, name: "Short Underlying Instrument Price Exposure"},
+            {id: 3, name: "Short Underlying Instrument Price Delta"},
+            {id: 4, name: "Short Underlying Currency FX Rate Exposure"},
+            {id: 5, name: "Short Underlying Currency FX Rate Delta-adjusted Exposure"},
+        ]
+        vm.positionReportingSelectorOptions = [
+            {
+                id: 1,
+                name: 'Direct Position'
+            },
+            {
+                id: 2,
+                name: 'Factor-adjusted Position'
+            },
+            {
+                id: 3,
+                name: 'Do not show'
+            }
+        ]
+
+        // Instrument Type Exposure tab end
+
+        // Instrument tab Exposure start
+
+        vm.getDataForInstrumentTabs = function () {
+
+            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentInstrumentsSelectorOptions = data.results
+
+            })
+
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentCurrenciesSelectorOptions = data.results
+
+            })
+
+
+        }
+
+        // Instrument tab Exposure end
+
         vm.instrumentTypeChange = function ($event) {
 
             console.log('instrumentTypeChange', vm.entity)
 
-            vm.sharedLogic.getFormLayout();
+            vm.sharedLogic.getFormLayout().then(formLayoutData => {
+
+            	vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+
+				vm.attributeTypes = formLayoutData.attributeTypes;
+
+				vm.tabs = formLayoutData.tabs;
+				vm.attributesLayout = formLayoutData.attributesLayout;
+
+			});
 
         }
 
@@ -1583,6 +1714,12 @@
 
                 })
 
+                vm.getDataForInstrumentTypeTabs();
+
+            }
+
+            if (vm.entityType === 'instrument') {
+                vm.getDataForInstrumentTabs();
             }
 
             setTimeout(function () {
@@ -1615,17 +1752,19 @@
             getEntityAttrs();
 
             // vm.getFormLayout();
-            vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
+            // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
+
+			 vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
 				vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
 				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
 				vm.attributeTypes = formLayoutData.attributeTypes;
 
-            	vm.tabs = formLayoutData.tabs;
-            	vm.attributesLayout = formLayoutData.attributesLayout;
+				vm.tabs = formLayoutData.tabs;
+				vm.attributesLayout = formLayoutData.attributesLayout;
 
-            	if (vm.entityType === 'instrument') {
+				if (vm.entityType === 'instrument') {
 
 					vm.typeSelectorChange = function () {
 
@@ -1640,21 +1779,22 @@
 
 					};
 
+				} else {
+					$scope.$apply();
 				}
 
-            	/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
+				/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
-            		vm.fixedAreaPopup.fields = fieldsData;
+					vm.fixedAreaPopup.fields = fieldsData;
 					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
 
 					$scope.$apply();
 
 				}); */
-				$scope.$apply();
 
 			});
 
-            vm.getCurrencies();
+			vm.getCurrencies();
 
             if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
                 vm.readyStatus.permissions = true;

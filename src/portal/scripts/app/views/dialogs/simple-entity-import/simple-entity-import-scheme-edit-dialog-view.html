@@ -64,7 +64,7 @@
                                     <label>Separator</label>
                                     <md-select data-ng-model="vm.scheme.delimiter">
                                         <md-option value=",">Comma (,)</md-option>
-                                        <md-option value="">Semicolon (;)</md-option>
+                                        <md-option value=";">Semicolon (;)</md-option>
                                         <md-option value="\t">Tab</md-option>
                                     </md-select>
                                 </md-input-container>
@@ -103,6 +103,67 @@
 
                 <div layout="row">
                     <div layout="column" flex="33">
+
+                        <div layout="row" data-ng-if="vm.scheme.content_type == 'instruments.instrument'">
+                            <h3 style="padding-left: 10px">Calculated Columns</h3>
+                        </div>
+
+                        <div layout="column" data-ng-if="vm.scheme.content_type == 'instruments.instrument'">
+
+                            <md-card>
+                                <md-card-content>
+                                    <div data-ng-repeat="item in vm.scheme.calculated_inputs track by $index" flex="100">
+                                        <div class="fields-holder" layout="row">
+                                            <div class="iscm-item" layout="row">
+                                                <span style="position: relative; top: 8px">#</span>
+                                                <md-input-container flex="20" style="position: relative">
+                                                    <!--<label for="">Number</label>-->
+                                                    <input class="no-input-arrows"
+                                                           type="number"
+                                                           ng-model="item.column"
+                                                           aria-label="provider field column number">
+                                                </md-input-container>
+
+                                                <md-input-container flex="70">
+                                                    <!--<label for="">Name</label>-->
+                                                    <input type="text"
+                                                           data-ng-model="item.name"
+                                                           ng-blur="vm.onCalculatedFieldNameBlur(item)"
+                                                           aria-label="provider field name">
+                                                </md-input-container>
+                                            </div>
+
+                                            <div>
+                                                <md-button ng-click="vm.removeCalculatedField(item, $index)"
+                                                           class="md-raised"
+                                                           style="min-width: 40px;">x
+                                                </md-button>
+                                            </div>
+
+                                            <div>
+                                                <md-button class="md-raised"
+                                                           ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
+                                                           data-ng-class="vm.getCalcFieldFxBtnClasses(item)"
+                                                           style="min-width: 40px;">f(x)
+                                                </md-button>
+
+                                                <md-tooltip data-ng-show="item.frontOptions && item.frontOptions.noNameExpr"
+                                                            md-direction="top"
+                                                            class="error-tooltip">No expression defined for the calculated variable.</md-tooltip>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div layout="row">
+                                        <md-button class="md-raised" ng-click="vm.addCalculatedField()">
+                                            Add field
+                                        </md-button>
+                                    </div>
+                                </md-card-content>
+
+                            </md-card>
+                        </div>
+
                         <div layout="row">
                             <h3 style="padding-left: 10px">Imported Columns</h3>
                         </div>

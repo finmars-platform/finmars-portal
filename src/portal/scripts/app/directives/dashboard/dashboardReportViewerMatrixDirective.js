@@ -39,14 +39,24 @@
                 var componentData;
 
                 if (scope.item && scope.item.data) {
-                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                	componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                     if (componentData.custom_component_name) {
                         scope.customName = componentData.custom_component_name;
                     }
+
                 }
 
-                var componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+                if (componentData && !componentData.settings.filters) {
+                    componentData.settings.filters = {
+                        show_filters_area: false,
+                        show_use_from_above_filters: false,
+                    }
+                }
+
+                scope.showFiltersArea = componentData.settings.filters.show_filters_area;
+                scope.showUseFromAboveFilters = componentData.settings.filters.show_use_from_above_filters;
 
                 scope.vm = {
                     tabNumber: scope.tabNumber,
@@ -159,13 +169,9 @@
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
-				scope.toggleFilterBlock = function ($event) {
-
-					const elem = $event.currentTarget;
-					elem.classList.contains('active') ? elem.classList.remove('active') : elem.classList.add('active');
-
-					scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
-				};
+				scope.toggleFilterBlock = function () {
+				    dashboardHelper.toggleFilterBlock(scope);
+                };
 
                 scope.initEventListeners = function () {
 
@@ -243,6 +249,22 @@
 
 					});
 					//</editor-fold>
+
+                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
+
+                        scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters;
+
+                        const id = scope.vm.componentData.id;
+                        const components = scope.dashboardDataService.getComponents();
+                        const currentComponent = components.find(component => component.id === id);
+
+                        if (currentComponent) {
+                            currentComponent.settings.filters.show_use_from_above_filters = scope.showUseFromAboveFilters;
+                        }
+
+                        scope.dashboardDataService.setComponents(components);
+
+                    })
 
                 };
 

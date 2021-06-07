@@ -54,7 +54,6 @@
             'pricing_currency.notes', 'pricing_currency.reference_for_pricing', 'pricing_currency.daily_pricing_model.name', 'pricing_currency.default_fx_rate', 'currency.name',
             'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.reference_for_pricing', 'currency.daily_pricing_model.name', 'currency.default_fx_rate', 'pricing_currency_fx_rate'
 
-
         ];
 
         var performanceAttrsComp = [
@@ -84,11 +83,32 @@
         var currencyAttrsComp = ['currency.name', 'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.public_name'];
 
         var instrumentAttrsComp = [
-            'instrument.name', 'instrument.short_name', 'instrument.user_code', 'instrument.public_name', 'instrument.instrument_type.name',
-            'instrument.instrument_type.short_name', 'instrument.instrument_type.user_code', 'instrument.instrument_type.public_name', 'instrument.is_active',
-            'instrument.price_multiplier', 'instrument.accrued_currency.name', 'instrument.accrued_currency.short_name', 'instrument.accrued_currency.user_code',
-            'instrument.maturity_date', 'instrument.maturity_price', 'instrument.accrued_multiplier', 'instrument.user_text_1', 'instrument.user_text_2',
+            'instrument.name',
+            'instrument.short_name',
+            'instrument.user_code',
+            'instrument.public_name',
+            // 'instrument.instrument_type.name',
+            // 'instrument.instrument_type.short_name',
+            // 'instrument.instrument_type.user_code',
+            // 'instrument.instrument_type.public_name',
+            'instrument.is_active',
+            'instrument.price_multiplier',
+            'instrument.accrued_currency.name',
+            'instrument.accrued_currency.short_name',
+            'instrument.accrued_currency.user_code',
+            'instrument.maturity_date',
+            'instrument.maturity_price',
+            'instrument.accrued_multiplier',
+            'instrument.user_text_1',
+            'instrument.user_text_2',
             'instrument.user_text_3'
+        ];
+
+        var instrumentTypeAttrsComp = [
+            'instrument.instrument_type.name',
+            'instrument.instrument_type.short_name',
+            'instrument.instrument_type.user_code',
+            'instrument.instrument_type.public_name',
         ];
 
         var strategy1AttrsToRemove = ['strategy1.subgroup.short_name', 'strategy1.subgroup.notes', 'strategy1.subgroup.user_code'];
@@ -117,6 +137,17 @@
             });
         };
 
+        const getAttrsForInstrumentTypeTab = (vmAttrsKey, attrsToShow) => {
+
+            return vm[vmAttrsKey]
+                .filter(attr => attrsToShow.includes(attr.key))
+                .map(attr => {
+                    attr.orderNumber__ = attrsToShow.indexOf(attr.key);
+                    return attr;
+                });
+
+        };
+
         vm.getAttributes = function () {
 
             // contains attributes to show inside tab
@@ -124,6 +155,7 @@
             vm.balanceMismatchAttrsFiltered = [];
             vm.balancePerformanceAttrsFiltered = [];
             vm.instrumentAttrsFiltered = [];
+            vm.instrumentTypeAttrsFiltered = [];
             vm.linkedInstrumentAttrsFiltered = [];
             vm.currencyAttrsFiltered = [];
             vm.accountAttrsFiltered = [];
@@ -248,6 +280,7 @@
             filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
             composeAttrsInsideTab('balancePerformanceAttrs', performanceAttrsComp);
             composeAttrsInsideTab('instrumentAttrs', instrumentAttrsComp);
+            vm.instrumentTypeAttrsFiltered = getAttrsForInstrumentTypeTab('instrumentAttrs', instrumentTypeAttrsComp);
             composeAttrsInsideTab('linkedInstrumentAttrs', linkedInstrumentAttrsComp);
 
             //filterAttrsToShow('accountAttrs', accountAttrsToRemove);
