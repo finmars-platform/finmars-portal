@@ -86,6 +86,8 @@
 					</button>
 				</div>`;
 
+		} else {
+			contextMenuBtn = '<div class="context-menu-btn-wrapper"></div>';
 		}
 
 		const icon = ['red', 'yellow', 'green'].includes(color) ? 'label' : 'label_outline';
