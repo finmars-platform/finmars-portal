@@ -248,7 +248,8 @@
 
             } else {
 
-                if (column.report_settings && !column.report_settings.hide_subtotal) {
+                // if (column.report_settings && !column.report_settings.hide_subtotal) {
+				if (column.report_settings) {
 
                     var subtotal;
 
@@ -380,6 +381,8 @@
 			results.push(borderBottomTransparent);
 		}
 
+
+
 		// grouping columns cells except last
     	if (groups.length && columnNumber < groups.length) {
 
@@ -446,6 +449,10 @@
 
 		}
 
+		if (column.isHidden) {
+			result.push('display-none');
+		}
+
     	return result;
 
 	};
@@ -500,14 +507,13 @@
 
 		rowSelection = '<div class="g-row-selection"><div class="' + rowSelectionBtnClasses + '">' + rowSelectionBtnContent + '</div></div>';
 
-
         let color = 'none';
         if (markedReportRows.hasOwnProperty(obj.id)) {
             color = markedReportRows[obj.id].color
             classList.push('g-row-marked-' + color);
         }
 
-        var rowSettings = renderHelper.getRowSettings('', color);
+        var rowSettings = renderHelper.getRowSettings(color, obj.___type);
 
         var classes = classList.join(' ');
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;

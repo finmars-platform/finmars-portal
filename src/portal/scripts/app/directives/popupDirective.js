@@ -279,6 +279,9 @@
 					removeListeners();
 
 					scope.isPopupOpen = false;
+					if (scope.onPopupClose) {
+						scope.onPopupClose();
+					}
 
 					if (scope.onPopupClose) {
 						scope.onPopupClose();

@@ -25,6 +25,7 @@ module.exports = {
     'DATA_LOAD_START': 'DATA_LOAD_START',
 
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
+    'USER_REQUEST_AN_ACTION': 'USER_REQUEST_AN_ACTION', // user used a Add menu and want to Add Entity (portfolio, account,  etc)
     'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
 
 
@@ -35,11 +36,11 @@ module.exports = {
     'GROUPS_LEVEL_FOLD': 'GROUPS_LEVEL_FOLD',
     'GROUPS_LEVEL_UNFOLD': 'GROUPS_LEVEL_UNFOLD',
 
-
     'UPDATE_EV_UI': 'UPDATE_EV_UI',
     'TOGGLE_FILTER_AREA': 'TOGGLE_FILTER_AREA',
     'TOGGLE_FILTER_BLOCK': 'TOGGLE_FILTER_BLOCK', // Victor 2021.01.06 #69 new report viewer interface toggle filter block visibility
     'UPDATE_FILTER_AREA_SIZE': 'UPDATE_FILTER_AREA_SIZE',
+    'TOGGLE_SHOW_FROM_ABOVE_FILTERS': 'TOGGLE_SHOW_FROM_ABOVE_FILTERS',
 
     'UPDATE_TABLE_VIEWPORT': 'UPDATE_TABLE_VIEWPORT', // recalculate height and width for ev-viewport
     'UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE': 'UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE',
