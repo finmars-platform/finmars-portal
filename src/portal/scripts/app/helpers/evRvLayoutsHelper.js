@@ -2,8 +2,12 @@
 
     'use strict';
 
-	let uiService = require('../services/uiService');
-	var toastNotificationService = require('../../../../core/services/toastNotificationService');
+	const uiService = require('../services/uiService');
+	const metaContentTypesService = require('../services/metaContentTypesService');
+
+	const evEvents = require('../services/entityViewerEvents');
+
+	const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
     let getLinkingToFilters = function (layout) {
 
@@ -89,7 +93,7 @@
 
     };
 
-    let saveLayoutList = function (entityViewerDataService, isReport) {
+    const saveLayoutList = function (entityViewerDataService, isReport) {
 
         saveRowTypeFiltersToLocalStorage(entityViewerDataService);
 
@@ -112,11 +116,205 @@
 
 	};
 
+    /* const getLayoutByUserCode = function (entityType, userCode) {
+
+		const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+
+		return uiService.getListLayout(
+			null,
+			{
+				pageSize: 1000,
+				filters: {
+					content_type: contentType,
+					user_code: userCode
+				}
+			}
+		);
+
+	}; */
+	/**
+	 * @memberOf module:evRvLayoutsHelper
+	 *
+	 * @param isRootEntityViewer {boolean}
+	 * @param evDataService {Object}
+	 * @param evEventService {Object}
+	 * @param layout {Object}
+	 */
+	const applyLayout = function (isRootEntityViewer, evDataService, evEventService, layout) {
+
+		/* if (isRootEntityViewer) {
+
+			// middlewareService.setNewEntityViewerLayoutName(layout.name);
+
+		} else {
+			evDataService.setSplitPanelDefaultLayout(layout.id);
+			evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+			// middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active split panel layout name in the toolbar
+		} */
+
+		if (!isRootEntityViewer) {
+			evDataService.setSplitPanelDefaultLayout(layout.id);
+			evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+		}
+
+		evDataService.setListLayout(layout);
+		evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
+
+		evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+
+		toastNotificationService.success("New layout with name '" + layout.name + "' created");
+
+		evDataService.setIsNewLayoutState(false);
+
+	};
+
+	/**
+	 *
+	 * @param layoutToOverwrite {Object}
+	 * @param listLayout {Object}
+	 * @returns {Promise<any>}
+	 */
+	const overwriteLayout = (layoutToOverwrite, listLayout) => {
+
+		const id = layoutToOverwrite.id;
+
+		listLayout.id = id;
+		layoutToOverwrite.data = listLayout.data;
+		layoutToOverwrite.name = listLayout.name;
+
+		return uiService.updateListLayout(id, layoutToOverwrite);
+
+	};
+	/**
+	 * @memberOf module:evRvLayoutsHelper
+	 *
+	 * @param evDataService {Object} - entityViewerDataService
+	 * @param evEventService {Object} - entityViewerEventService
+	 * @param isReport {boolean}
+	 * @param entityType {string}
+	 * @param $event {Object} - event object
+	 * @return {Promise<any>} - saved layout or error
+	 */
+    const saveAsLayoutList = function (evDataService, evEventService, isReport, $mdDialog, entityType, $event) {
+
+    	return new Promise((resolve, reject) => {
+
+			const listLayout = evDataService.getLayoutCurrentConfiguration(isReport);
+			const isRootEntityViewer = evDataService.isRootEntityViewer();
+
+			/* $mdDialog.show({
+				controller: 'UiLayoutSaveAsDialogController as vm',
+				templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+				parent: angular.element(document.body),
+				targetEvent: $event,
+				locals: {
+					options: {
+						label: "Save layout as",
+						layoutName: listLayout.name,
+						complexSaveAsLayoutDialog: {
+							entityType: entityType
+						}
+					}
+				},
+				clickOutsideToClose: false
+
+			}) */
+			$mdDialog.show({
+				controller: 'NewLayoutDialogController as vm',
+				templateUrl: 'views/dialogs/new-layout-dialog-view.html',
+				parent: angular.element(document.body),
+				targetEvent: $event,
+				preserveScope: false,
+				locals: {
+					data: {}
+				}
+			})
+			.then(res => {
+
+				if (res.status === 'agree') {
+
+					const saveAsLayout = function () {
+
+						listLayout.name = res.data.name;
+						listLayout.user_code = res.data.user_code;
+
+						uiService.createListLayout(entityType, listLayout).then(function (data) {
+
+							listLayout.id = data.id;
+							applyLayout(isRootEntityViewer, evDataService, evEventService, listLayout);
+							toastNotificationService.success("Layout " + listLayout.name + " created.");
+
+							resolve({status: res.status, layoutData: data});
+
+						}).catch(error => {
+							// toastNotificationService.error("Error occurred");
+							reject({status: res.status, error: error});
+						});
+
+					};
+
+					if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
+
+					if (listLayout.id) { // if layout based on another existing layout
+
+						/* if (isRootEntityViewer) {
+							listLayout.is_default = true;
+
+						} else { // for split panel
+							listLayout.is_default = false;
+						} */
+						delete listLayout.id;
+						saveAsLayout();
+
+					} else { // if layout was not based on another layout
+
+						saveAsLayout();
+
+					}
+
+				}
+				else if (res.status === 'overwrite') {
+
+					const userCode = res.data.user_code;
+
+					listLayout.name = res.data.name;
+					listLayout.user_code = userCode;
+
+					uiService.getListLayoutByUserCode(entityType, userCode).then(function (layoutToOverwriteData) {
+
+						const layoutToOverwrite = layoutToOverwriteData.results[0];
+						overwriteLayout(layoutToOverwrite, listLayout).then(function (updatedLayoutData) {
+
+							listLayout.is_default = true;
+							listLayout.modified = updatedLayoutData.modified;
+
+							applyLayout(isRootEntityViewer, evDataService, evEventService, listLayout);
+							toastNotificationService.success("Success. Page was saved.");
+
+							resolve({status: res.status});
+
+						}).catch(error => reject({status: res.status, error: error}));
+
+					});
+
+				}
+				else {
+					resolve({status: 'disagree'});
+				}
+
+			});
+
+		});
+
+	};
+
+    /** @module evRvLayoutsHelper */
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
         getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
 
-		saveLayoutList: saveLayoutList
+		saveLayoutList: saveLayoutList,
+		saveAsLayoutList: saveAsLayoutList
     }
 
 }());

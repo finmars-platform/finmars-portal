@@ -14,6 +14,7 @@
 
     const middlewareService = require('../services/middlewareService');
 	const evEvents = require('../services/entityViewerEvents');
+	const evDataHelper = require('../helpers/ev-data.helper');
     const evRvCommonHelper = require('../helpers/ev-rv-common.helper');
 	const metaHelper = require('../helpers/meta.helper');
 
@@ -135,13 +136,15 @@
         attrTypeToAdd.key = attrInstance.key;
 
         if (form === 'group' || form === 'column') {
-            if (attrInstance.hasOwnProperty('entity')) {
+
+        	if (attrInstance.hasOwnProperty('entity')) {
                 attrTypeToAdd.entity = attrInstance.entity;
             }
 
             if (attrInstance.hasOwnProperty('id')) {
                 attrTypeToAdd.id = attrInstance.id;
             }
+
         }
 
         if (attrInstance.hasOwnProperty('groups')) {
@@ -194,6 +197,14 @@
 				}
 
 				break;
+		}
+
+        if (form === 'group' || form === 'column') {
+
+        	attrTypeToAdd.style = {
+				width: evDataHelper.getColumnWidth(attrTypeToAdd)
+			}
+
 		}
 
         return attrTypeToAdd;
@@ -266,24 +277,26 @@
     };
 
 	/**
+	 * Try to get layout by user code and use it. If no layout with such user code was found, get default layout.
+	 * @memberOf module:EntityViewerHelperService
+	 *
 	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
 	 * @param {string} userCode
 	 * @param {obj} $mdDialog
 	 * @param {string} viewContext
-	 * @memberOf module:EntityViewerHelperService
-	 * @return {promise}
+	 * @return {Promise<any>}
 	 */
     let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
 
     	return new Promise(function (resolve) {
-
-    		uiService.getListLayout(viewModel.entityType, {
+    		/* uiService.getListLayout(viewModel.entityType, {
 				pageSize: 1000,
 				filters: {
 					user_code: userCode
 				}
 
-			}).then(async function (activeLayoutData) {
+			}) */
+			uiService.getListLayoutByUserCode(viewModel.entityType, userCode).then(async function (activeLayoutData) {
 
 				let activeLayout = null;
 
@@ -294,7 +307,6 @@
 				if (activeLayout) {
 
 					await viewModel.setLayout(activeLayout);
-
 					resolve();
 
 				} else {
@@ -314,6 +326,7 @@
 								description: "Layout " + name + " is not found. Switching back to Default Layout."
 							}
 						}
+
 					}).then(async function (value) {
 
 						await getDefaultLayout(viewModel, viewContext);

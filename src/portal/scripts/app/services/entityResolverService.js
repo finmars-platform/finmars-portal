@@ -158,7 +158,7 @@
             case 'instrument':
                 return instrumentService.getListLight(options);
             case 'instrument-type':
-                return instrumentTypeService.getList(options);
+                return instrumentTypeService.getListLight(options);
             case 'instrument-class':
                 return instrumentClassService.getList(options);
             case 'transaction-type':
