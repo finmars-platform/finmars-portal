@@ -759,6 +759,10 @@ md-tooltip.md-tooltip.md-panel.tooltip_1 {
   .md-content.md-show {
     background-color: rgba(0, 0, 0, 0.78);
   }
+
+  &.custom-field-error {
+    background-color: @orange;
+  }
 }
 
 md-tooltip.md-panel.md-tooltip.md-default-theme,
@@ -1010,7 +1014,6 @@ md-menu-bar.header-logout-menu {
   left: 20px;
   min-height: 24px;
   min-width: 24px;
-  top: -4px;
 
   ng-md-icon {
     position: relative;
@@ -2095,9 +2098,9 @@ md-menu-content md-menu.md-menu {
 .build-date {
   position: absolute;
   bottom: 0px;
-  color: #fff;
+  color: @gray;
   z-index: 100;
-  font-size: 12px;
+  font-size: 9px;
   text-align: center;
   margin: 16px;
   cursor: pointer;
@@ -3070,6 +3073,7 @@ button.md-raised.md-warn.md-button {
   .chip-list-content {
     font-size: 14px;
     white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
   }
 
@@ -3089,7 +3093,14 @@ button.md-raised.md-warn.md-button {
 
   .chip-wrap:not(.add-chip-wrap) {
     .chip-div {
+      display: flex;
+      align-items: center;
       padding-right: 28px;
+
+      span.error {
+        color:  #f05a22;
+        margin-bottom: 2px;
+      }
     }
   }
 
@@ -3218,7 +3229,9 @@ button.md-raised.md-warn.md-button {
 
       color: @g-top-part-color;
 
-      cursor: pointer;
+      &:not([disabled]) {
+        cursor: pointer;
+      }
 
       &.default-layout {
         opacity: 0.5;
@@ -3313,6 +3326,26 @@ button.md-raised.md-warn.md-button {
   background: #f3d074;
 }
 
+.addition-button {
+  background-color: @orange;
+  min-width: 40px;
+  width: 40px;
+  min-height: 40px;
+  height: 40px;
+  border-radius: 100%;
+  color: #fff;
+  padding: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, .54);
+
+  &:hover, &.md-button:not([disabled]):hover {
+    background-color: rgba(240, 90, 34, 0.7);
+  }
+}
+
+.tooltip-error-icon {
+  color: #f05a22;
+}
+
 .vAccordion-type1 {
 
   v-pane-header {
@@ -3388,4 +3421,34 @@ button.missing-prices-warning-button.md-button {
   position: absolute;
   right: 0;
   bottom: 0;
+}
+
+.selector-button-popup {
+  position: relative;
+  display: inline-block;
+
+  .selector-button-popup-btn {
+    height: 24px;
+    max-width: 100%;
+    padding: 2px 24px 2px 4px;
+    font-size: 14px;
+    overflow: hidden;
+    color: @gray;
+    text-overflow: ellipsis;
+
+    &:not([disabled]):hover {
+      color: #000;
+    }
+  }
+
+  .selected-option-name {
+    white-space: nowrap;
+  }
+
+  .arrow_downward-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
 }

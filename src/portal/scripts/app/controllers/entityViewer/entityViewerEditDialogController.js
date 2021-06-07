@@ -443,7 +443,7 @@
 
             if (windowType === 'big-drawer') {
 
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity}};
+                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
             }
@@ -533,8 +533,8 @@
 					vm.fixedAreaPopup.tabColumns = columns;
 					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
 
-					const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(vm.fixedAreaPopup.tabColumns);
-					$bigDrawer.setWidth(bigDrawerWidthPercent);
+					const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
+					$bigDrawer.setWidth(bigDrawerWidth);
 
 					if (vm.fixedAreaPopup.tabColumns !== 6) {
 						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
@@ -954,13 +954,10 @@
             } */
 
             if (errors.length) {
-
-				// vm.tabsWithErrors = {};
-
-                vm.sharedLogic.processTabsErrors(errors, $event);
+				// vm.sharedLogic.processTabsErrors(errors, $event);
+				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
             }
-
         	else {
 
                 // var result = entityEditorHelper.removeNullFields(vm.entity);
@@ -1713,6 +1710,102 @@
         }
 
         // Instrument Type Layout Settings tab end
+
+        // Instrument Type Exposure tab start
+
+        vm.instrumentTypeInstrumentsSelectorOptions = []
+        vm.instrumentTypeCurrenciesSelectorOptions = []
+
+        vm.getDataForInstrumentTypeTabs = function () {
+
+            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentTypeInstrumentsSelectorOptions = data.results.map(function (item){
+                    return {
+                        id: item.user_code,
+                        name: item.name
+                    }
+                })
+
+            })
+
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentTypeCurrenciesSelectorOptions = data.results.map(function (item){
+                    return {
+                        id: item.user_code,
+                        name: item.name
+                    }
+                })
+
+            })
+
+
+        }
+
+
+        vm.exposureCalculationModelSelectorOptions = [
+            {id: 1, name: "Market Value"},
+            {id: 2, name: "Price exposure"},
+            {id: 3, name: "Delta adjusted price exposure"},
+            {id: 4, name: "Underlying long short exposure net"},
+            {id: 5, name: "Underlying long short exposure split"},
+        ];
+
+        vm.longUnderlyingExposureSelectorOptions = [
+            {id: 1, name: "Zero"},
+            {id: 2, name: "Long Underlying Instrument Price Exposure"},
+            {id: 3, name: "Long Underlying Instrument Price Delta"},
+            {id: 4, name: "Long Underlying Currency FX Rate Exposure"},
+            {id: 5, name: "Long Underlying Currency FX Rate Delta-adjusted Exposure"},
+        ]
+
+        vm.shortUnderlyingExposureSelectorOptions = [
+            {id: 1, name: "Zero"},
+            {id: 2, name: "Short Underlying Instrument Price Exposure"},
+            {id: 3, name: "Short Underlying Instrument Price Delta"},
+            {id: 4, name: "Short Underlying Currency FX Rate Exposure"},
+            {id: 5, name: "Short Underlying Currency FX Rate Delta-adjusted Exposure"},
+        ]
+
+        vm.positionReportingSelectorOptions = [
+            {
+                id: 1,
+                name: 'Direct Position'
+            },
+            {
+                id: 2,
+                name: 'Factor-adjusted Position'
+            },
+            {
+                id: 3,
+                name: 'Do not show'
+            }
+        ]
+
+        // Instrument Type Exposure tab end
+
+        // Instrument tab Exposure start
+
+        vm.getDataForInstrumentTabs = function () {
+
+            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentInstrumentsSelectorOptions = data.results
+
+            })
+
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+
+                vm.instrumentCurrenciesSelectorOptions = data.results
+
+            })
+
+
+        }
+
+        // Instrument tab Exposure end
+
 		vm.typeSelectorChange = null;
 
         vm.openPricingMultipleParametersDialog = function ($event, item) {
@@ -1993,6 +2086,12 @@
                         vm.currencyFields = data;
                     });
 
+                    vm.getDataForInstrumentTypeTabs();
+
+                }
+
+                if (vm.entityType === 'instrument') {
+                    vm.getDataForInstrumentTabs();
                 }
 
                 getEntityStatus();

@@ -590,10 +590,10 @@
                                 // < If group's order changed >
                                 }
 
-                                // < dragging from groups >
-
-                            // dragging from columns
-                            } else if (source.classList.contains('vcSelectedColumns')) {
+                            }
+							// < dragging from groups >
+							// dragging from columns
+                            else if (source.classList.contains('vcSelectedColumns')) {
 
                                 // dragged to groups
                                 if (target.classList.contains('vcSelectedGroups')) {
@@ -641,10 +641,11 @@
                                     }
                                 // < If column's order changed >
                                 }
-                            // < dragging from columns >
 
-                            // dragging from filters
-                            } else if (source.classList.contains('vcSelectedFilters')) {
+                            }
+							// < dragging from columns >
+							// dragging from filters
+                            else if (source.classList.contains('vcSelectedFilters')) {
 
                                 // dragged to groups
                                 if (target.classList.contains('vcSelectedGroups')) {
@@ -697,7 +698,6 @@
                         const columnsContainer = document.querySelector('.vcSelectedColumns');
                         const filtersContainer = document.querySelector('.vcSelectedFilters')
 
-
                         var items = [
                             groupsContainer,
                             columnsContainer,
@@ -712,8 +712,12 @@
                                     return false;
                                 }
 
+                                if (el.classList.contains('itemWithError') && target !== source) {
+                                	return false;
+								}
+
                                 return true;
-                            },
+                            }
                         });
                     },
 

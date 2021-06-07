@@ -366,9 +366,9 @@
             viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
             $scope.$apply();
-            const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(6);
+            const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(6);
 
-            $bigDrawer.setWidth(bigDrawerWidthPercent);
+            $bigDrawer.setWidth(bigDrawerWidth);
 
             bigDrawerResizeButton.classList.add('display-none');
             bigDrawerResizeButton.classList.remove('display-block');
@@ -666,8 +666,8 @@
                     viewModel.fixedAreaPopup.tabColumns = columns;
                     viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(viewModel.fixedAreaPopup.tabColumns, viewModel.entityType);
 
-                    const bigDrawerWidthPercent = entityViewerHelperService.getBigDrawerWidthPercent(viewModel.fixedAreaPopup.tabColumns);
-                    $bigDrawer.setWidth(bigDrawerWidthPercent);
+                    const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(viewModel.fixedAreaPopup.tabColumns);
+                    $bigDrawer.setWidth(bigDrawerWidth);
 
                     if (viewModel.fixedAreaPopup.tabColumns !== 6) {
 
@@ -778,84 +778,6 @@
 				return fields;
 		};
 
-		/**
-		 * Highlight errors on the form
-		 *
-		 * @param errors {Array.<Object>} - data for dialog with validator results
-		 * @param $event
-		 */
-        const processTabsErrors = function (errors, $event) {
-
-			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
-
-            errors.forEach(function (errorObj) {
-
-                if (errorObj.locationData &&
-                    ['user_tab', 'system_tab'].includes(errorObj.locationData.type)) {
-
-                    const tabName = errorObj.locationData.name.toLowerCase();
-					const tabType = errorObj.locationData.type; // system_tab || user_tab
-
-					let tabIsNotMarked = false;
-
-					const tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
-					const formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
-
-					if (!tabsWithErrors[tabType].hasOwnProperty(tabName)) {
-
-						tabsWithErrors[tabType][tabName] = [errorObj.key];
-						tabIsNotMarked = true;
-
-					} else if (!tabsWithErrors[tabType][tabName].includes(errorObj.key)) {
-
-						tabsWithErrors[tabType][tabName].push(errorObj.key);
-						tabIsNotMarked = true;
-
-					}
-
-					if (tabIsNotMarked) {
-
-						if (!formErrorsList.includes(errorObj.key)) { // component can be in multiple tabs (e.g. maturity_date) but formErrorsList should contain only one key
-
-							formErrorsList.push(errorObj.key);
-
-						}
-
-						if (tabType === 'user_tab') {
-
-							const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
-							const tabNameElem = document.querySelector(selectorString);
-
-							if (tabNameElem) tabNameElem.classList.add('error-tab');
-
-						}
-
-						else if (tabType === 'system_tab') {
-							entityTabsMenuBtn.classList.add('error-tab');
-						}
-
-					}
-
-                }
-
-            });
-
-            viewModel.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
-
-            $mdDialog.show({
-                controller: 'EvAddEditValidationDialogController as vm',
-                templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
-                targetEvent: $event,
-                multiple: true,
-                locals: {
-                    data: {
-                        errorsList: errors
-                    }
-                }
-            });
-
-        };
-
         /* const onSuccessfulEntitySave = function (responseData, isAutoExitAfterSave) {
 
             viewModel.processing = false;
@@ -952,7 +874,7 @@
 			// getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
             onEditorStart: onEditorStart,
 
-            processTabsErrors: processTabsErrors,
+            // processTabsErrors: processTabsErrors,
 
             getDailyPricingModelFields: getDailyPricingModelFields,
             getCurrencyFields: getCurrencyFields,

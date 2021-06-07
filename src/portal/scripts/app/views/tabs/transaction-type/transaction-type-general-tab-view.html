@@ -11,7 +11,7 @@
 
         <div layout="row">
 
-            <usercode-input data-item="vm.entity" data-ng-if="!vm.entity.id"></usercode-input>
+            <usercode-input ng-if="!vm.entity.id" data-item="vm.entity"></usercode-input>
 
             <md-input-container style="width: 300px" data-ng-if="vm.entity.id">
                 <label for="">User code</label>
@@ -99,6 +99,7 @@
             <expression-input label="Complex Transaction Date"
                               model="vm.entity.date_expr"
                               data-data="vm.expressionData"
+                              class="custom-input-bottom-space"
                               style="margin-left: 12px;"></expression-input>
         </div>
 
@@ -113,6 +114,7 @@
             <expression-input label="Display Expression"
                               model="vm.entity.display_expr"
                               data-data="vm.expressionData"
+                              class="custom-input-bottom-space"
                               style="margin-left: 12px;"></expression-input>
         </div>
 
@@ -132,7 +134,7 @@
         </div>-->
 
         <div>
-            <md-input-container>
+            <md-input-container style="margin-bottom: 13px;">
                 <label >Visibility Settings</label>
                 <md-select data-ng-model="vm.entity.visibility_status">
                     <md-option ng-value="1" >Parameters are visible</md-option>
@@ -146,9 +148,10 @@
              class="m-b-16">
 
            <expression-input label="Transaction Unique Code Expression"
-                              model="vm.entity.transaction_unique_code_expr"
-                              data-data="vm.expressionEditorData"
-                              style="margin-left: 12px;"></expression-input>
+                             model="vm.entity.transaction_unique_code_expr"
+                             data-data="vm.expressionEditorData"
+                             class="custom-input-bottom-space"
+                             style="margin-left: 12px;"></expression-input>
         </div>
 
         <div>

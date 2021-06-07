@@ -18,10 +18,12 @@
 
     <md-menu-divider></md-menu-divider>
 
-    <div class="layout-menu-item" data-ng-click="saveLayoutList()">
+    <md-button class="layout-menu-item"
+               data-ng-click="saveLayoutList()"
+               ng-disabled="isNewLayout">
         <span class="material-icons">save</span>
         <span>Save</span>
-    </div>
+    </md-button>
 
     <div class="layout-menu-item" data-ng-click="saveAsLayoutList()">
         <span class="material-icons" style="visibility: hidden;">save</span>

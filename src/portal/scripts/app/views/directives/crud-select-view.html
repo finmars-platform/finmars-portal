@@ -1,6 +1,27 @@
 <div class="crud-select">
 
     <md-input-container class="md-block">
+        <div
+             class="crud-input"
+             popup
+             popup-template-url="'views/popups/crud-select-popup-view.html'"
+             popup-data="popupData"
+             open-on="click"
+             close-on-click-outside="true"
+             position-relative-to="element"
+             relative-popup-x="left"
+             popup-classes="'rounded-border'"
+             on-popup-close="onPopupClose">
+
+            <span class="crud-input-name" data-ng-if="selectedItem.item">{{selectedItem.item.name}}</span>
+            <span class="crud-input-name" data-ng-if="!selectedItem.item">{{label}}</span>
+
+            <span class="material-icons">arrow_drop_down</span>
+
+        </div>
+    </md-input-container>
+
+    <!--<md-input-container class="md-block">
         <label data-ng-bind="labelName"></label>
         <md-select data-ng-model="item">
             <div class="md-select-holder crud-select-holder">
@@ -66,6 +87,6 @@
                 </div>
             </div>
         </md-select>
-    </md-input-container>
+    </md-input-container>-->
 
 </div>

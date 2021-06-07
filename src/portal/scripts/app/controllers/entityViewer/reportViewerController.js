@@ -38,7 +38,7 @@
                 layout: false // changed by rvSharedLogicHelper.onSetLayoutEnd();
             };
 
-            var doNotCheckLayoutChanges = false;
+            // var doNotCheckLayoutChanges = false;
 
             // Functions for context menu
 
@@ -57,6 +57,7 @@
                     vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                 }
 
             };
@@ -244,6 +245,12 @@
                     locals: locals
                 }).then(function (res) {
 
+                    vm.autoRefreshState = vm.entityViewerDataService.getAutoRefreshState();
+
+                    if (vm.autoRefreshState) {
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    }
+
                     updateTableAfterEntityChanges(res);
 
                 });
@@ -270,6 +277,12 @@
                     locals: locals
 
                 }).then(function (res) {
+
+                    vm.autoRefreshState = vm.entityViewerDataService.getAutoRefreshState();
+
+                    if (vm.autoRefreshState) {
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    }
 
                     updateTableAfterEntityChanges(res);
 
@@ -745,6 +758,107 @@
 
                 });
 
+                vm.entityViewerEventService.addEventListener(evEvents.USER_REQUEST_AN_ACTION, function (){
+
+
+                    var action = vm.entityViewerDataService.getUserRequestedAction();
+
+                    if (action === 'add_portfolio') {
+
+                        var locals = {
+                            entityType: 'portfolio',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_instrument') {
+
+                        var locals = {
+                            entityType: 'instrument',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_account') {
+
+                        var locals = {
+                            entityType: 'account',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_currency') {
+
+                        var locals = {
+                            entityType: 'currency',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+
+                    if (action === 'add_price') {
+
+                        var locals = {
+                            entityType: 'price-history',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_fx_rate') {
+
+                        var locals = {
+                            entityType: 'currency-history',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'book_transaction') {
+
+                        var locals = {
+                            entityType: 'complex-transaction',
+                            entity: {},
+                            data: {}
+                        };
+
+                        if (vm.entityType === 'transaction-report') {
+
+                            var contextData = getContextData(reportOptions, activeObject);
+                            locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
+                            locals.data.contextData = contextData;
+
+                        }
+
+                        createEntity({}, locals);
+
+                    }
+
+
+                })
+
 
             };
 
@@ -933,7 +1047,7 @@
 
             vm.setLayout = function (layout) {
 
-            	return new Promise(async function (resolve, reject) {
+                return new Promise(async function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
                     vm.setFiltersValuesFromQueryParameters();
@@ -1005,9 +1119,9 @@
                                     filters: {
                                         user_code: activeColumnSort.manual_sort_layout_user_code
                                     }
-                                }).then(function (data){
+                                }).then(function (data) {
 
-                                    if(data.results.length) {
+                                    if (data.results.length) {
 
                                         var layout = data.results[0];
 
@@ -1023,21 +1137,20 @@
 
                                     }
 
-									sortResolve();
+                                    sortResolve();
 
                                 })
 
 
-
                             } else {
-								sortResolve();
+                                sortResolve();
                             }
 
 
                         })
 
 
-                        Promise.all([activeColumnSortProm]).then(function (){
+                        Promise.all([activeColumnSortProm]).then(function () {
                             resolve();
                         })
 
@@ -1073,21 +1186,23 @@
 
                 vm.entityViewerDataService.setRowHeight(36);
 
+                vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
+
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
 
-                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject) {
 
                     uiService.getCrossEntityAttributeExtensionList({
                         filters: {
                             context_content_type: $scope.$parent.vm.contentType
                         }
-                    }).then(function (data){
+                    }).then(function (data) {
 
                         console.log('getCrossEntityAttributeExtensionList.data', data);
 
                         vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
-						resolve();
+                        resolve();
 
                     }).catch(error => reject(error))
 
@@ -1133,8 +1248,8 @@
                 }
 
                 Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
-					metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
-					$scope.$apply();
+                    metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
+                    $scope.$apply();
                 });
 
             };
@@ -1142,12 +1257,12 @@
             vm.init = function () {
 
                 middlewareService.onMasterUserChanged(function () {
-                    doNotCheckLayoutChanges = true;
+                    vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
                 middlewareService.onLogOut(function () {
-                    doNotCheckLayoutChanges = true;
+                    vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
@@ -1159,7 +1274,6 @@
 
 
             };
-
 
 
             vm.getCurrentMember = function () {
@@ -1178,7 +1292,9 @@
 
                 return new Promise(function (resolve, reject) {
 
-                    if (!doNotCheckLayoutChanges) {
+                    var checkForLayoutChanges = vm.entityViewerDataService.isLayoutChangesLossWarningNeeded();
+
+                    if (checkForLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                         var spChangedLayout = false;
@@ -1312,8 +1428,10 @@
                         }
 
                     } else {
+
                         removeTransitionWatcher();
                         resolve(true);
+
                     }
 
                 });
