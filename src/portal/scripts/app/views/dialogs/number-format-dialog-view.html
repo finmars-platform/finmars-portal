@@ -48,7 +48,7 @@
                  layout="row"
                  ng-click="zeroCollapsed = !zeroCollapsed">
                 <div class="parameter">Zero</div>
-                <div class="example" data-ng-if="zeroCollapsed">{{vm.getZeroName()}}</div>
+                <div class="example" data-ng-if="zeroCollapsed" ng-bind="vm.getZeroName()"></div>
                 <div class="example" data-ng-if="!zeroCollapsed">Select zero number format</div>
                 <div class="collapse-icon">
                     <span class="material-icons">expand_more</span>
@@ -58,7 +58,7 @@
             <div class="cb1-resizing-wrap">
                 <div layout="row"
                      layout-wrap
-                     class="ALS-layout-group-container">
+                     class="numberFormatAccordionHeight">
                     <div class="settings">
                         <div layout="column">
                             <md-radio-group ng-model="vm.reportSettings.zero_format_id" ng-change="vm.onNumberFormatChange()">
@@ -81,7 +81,10 @@
                  layout="row"
                  ng-click="negativeCollapsed = !negativeCollapsed">
                 <div class="parameter">Negative</div>
-                <div class="example" data-ng-class="{red: vm.negativeFormat % 2 === 1}" data-ng-if="negativeCollapsed">{{vm.getNegativeName()}}</div>
+                <div class="example"
+                     data-ng-if="negativeCollapsed"
+                     ng-bind="vm.getNegativeName()"
+                     data-ng-class="{red: vm.negativeFormat % 2 === 1}"></div>
                 <div class="example" data-ng-if="!negativeCollapsed">Select negative number format</div>
                 <div class="collapse-icon">
                     <span class="material-icons">expand_more</span>
@@ -91,7 +94,7 @@
             <div class="cb1-resizing-wrap">
                 <div layout="row"
                      layout-wrap
-                     class="ALS-layout-group-container">
+                     class="numberFormatAccordionHeight">
 
                     <div class="settings">
 
@@ -122,7 +125,9 @@
                  layout="row"
                  ng-click="roundingCollapsed = !roundingCollapsed">
                 <div class="parameter">Rounding</div>
-                <div class="example" data-ng-if="roundingCollapsed">{{vm.reportSettings.round_format_id === 0 ? 'No rounding' : vm.formatRounding(0)}}</div>
+                <div class="example"
+                     data-ng-if="roundingCollapsed"
+                     ng-bind="vm.reportSettings.round_format_id === 0 ? 'No rounding' : vm.formatRounding(0)"></div>
                 <div class="example" data-ng-if="!roundingCollapsed">Select rounding format</div>
                 <div class="collapse-icon">
                     <span class="material-icons">expand_more</span>
@@ -132,7 +137,7 @@
             <div class="cb1-resizing-wrap">
                 <div layout="row"
                      layout-wrap
-                     class="ALS-layout-group-container">
+                     class="numberFormatAccordionHeight">
 
                     <div class="settings">
                         <div layout="column">
@@ -163,7 +168,7 @@
                  layout="row"
                  ng-click="separationCollapsed = !separationCollapsed">
                 <div class="parameter">Thousands separation</div>
-                <div class="example" data-ng-if="separationCollapsed">{{vm.getSeparationName()}}</div>
+                <div class="example" data-ng-if="separationCollapsed" ng-bind="vm.getSeparationName()"></div>
                 <div class="example" data-ng-if="!separationCollapsed">Select separation format</div>
                 <div class="collapse-icon">
                     <span class="material-icons">expand_more</span>
@@ -173,7 +178,7 @@
             <div class="cb1-resizing-wrap">
                 <div layout="row"
                      layout-wrap
-                     class="ALS-layout-group-container">
+                     class="numberFormatAccordionHeight">
 
                     <div class="settings">
                         <div layout="column">
@@ -199,7 +204,7 @@
                  layout="row"
                  ng-click="percentageCollapsed = !percentageCollapsed">
                 <div class="parameter">Percentage</div>
-                <div class="example" data-ng-if="percentageCollapsed">{{vm.getPercentageName()}}</div>
+                <div class="example" data-ng-if="percentageCollapsed" ng-bind="vm.getPercentageName()"></div>
                 <div class="example" data-ng-if="!percentageCollapsed">Select percentage format</div>
                 <div class="collapse-icon">
                     <span class="material-icons">expand_more</span>
@@ -209,7 +214,7 @@
             <div class="cb1-resizing-wrap">
                 <div layout="row"
                      layout-wrap
-                     class="ALS-layout-group-container">
+                     class="numberFormatAccordionHeight">
 
                     <div class="settings">
                         <div layout="column">
@@ -245,12 +250,11 @@
             <div class="cb1-resizing-wrap">
                 <div layout="row"
                      layout-wrap
-                     class="ALS-layout-group-container">
+                     class="numberFormatAccordionHeight">
 
                     <div class="settings">
                         <div layout="column">
                             <text-input model="vm.reportSettings.number_suffix"
-                                        label="Suffix"
                                         placeholder-text="Suffix"
                                         on-change-callback="vm.onNumberFormatChange()"
                                         small-options="{noIndicatorBtn: true}"></text-input>
@@ -281,12 +285,11 @@
             <div class="cb1-resizing-wrap">
                 <div layout="row"
                      layout-wrap
-                     class="ALS-layout-group-container">
+                     class="numberFormatAccordionHeight">
 
                     <div class="settings">
                         <div layout="column">
                             <text-input model="vm.reportSettings.number_prefix"
-                                        label="Prefix"
                                         placeholder-text="Prefix"
                                         on-change-callback="vm.onNumberFormatChange()"
                                         small-options="{noIndicatorBtn: true}"></text-input>
@@ -317,15 +320,14 @@
             <div class="cb1-resizing-wrap">
                 <div layout="row"
                      layout-wrap
-                     class="ALS-layout-group-container">
+                     class="numberFormatAccordionHeight">
 
                     <div class="settings">
                         <div layout="column">
-                            <text-input model="vm.reportSettings.number_multiplier"
-                                        label="Multiplier"
-                                        placeholder-text="Multiplier"
-                                        on-change-callback="vm.onNumberFormatChange()"
-                                        small-options="{noIndicatorBtn: true}"></text-input>
+                            <number-input model="vm.reportSettings.number_multiplier"
+                                          placeholder-text="Multiplier"
+                                          small-options="{noIndicatorBtn: true}"
+                                          on-change-callback="vm.onNumberFormatChange()"></number-input>
                         </div>
                     </div>
 
