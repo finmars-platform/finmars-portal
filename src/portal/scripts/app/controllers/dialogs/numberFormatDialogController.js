@@ -84,7 +84,7 @@
 
             containers.forEach(container => {
 
-                const contentElement = container.querySelector('.ALS-layout-group-container');
+                const contentElement = container.querySelector('.numberFormatAccordionHeight');
 
                 if(contentElement) {
 
@@ -191,7 +191,7 @@
 
                 vm.presetSelectorData.options.forEach(it => it.isActive = it === option);
 
-                const numberFormat =  presetsSettings[option.id]();
+                const numberFormat =  presetsSettings[option.id];
                 Object.assign(vm.reportSettings, numberFormat);
 
                 vm.onNumberFormatChange();
