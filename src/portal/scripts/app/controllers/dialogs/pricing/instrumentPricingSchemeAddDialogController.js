@@ -27,7 +27,7 @@
             vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
         };
 
-        vm.multipleParameterValueTypeUpdate = function () {
+        vm.multipleParameterValueTypeUpdate = function (index) {
 
             var value_type = vm.item.type_settings.data.parameters[index].value_type;
 

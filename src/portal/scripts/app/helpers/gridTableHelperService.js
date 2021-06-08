@@ -39,7 +39,6 @@
 			var columnIndex = row.columns.findIndex(cell => cell.key === cellData.key);
 			row.columns[columnIndex] = cellData;
 		};
-
 		/**
 		 *
 		 * @param fieldTypesList {Array.<Object>} - array of objects with data for multitype field types
@@ -47,7 +46,7 @@
 		 * @param value {*} - multitype field value
 		 * @param valueType {Number} - multitype field value type. Will be changed to default if it is not set.
 		 *
-		 * @return {{cell: Object, valueType: Number}} - returns changed cell data and current value_type of multitype field in case it does not set
+		 * @return {{cell: Object, valueType: Number}} - changed cell data and current value_type of multitype field in case it does not set
 		 */
 		const getMultitypeFieldDataForCell = (fieldTypesList, cell, value, valueType) => {
 
@@ -66,11 +65,29 @@
 				fieldTypesData: fieldTypesList
 			}
 
-			if (activeType.fieldType === 'dropdownSelect') {
+			// Set cell.settings.cellText
+			switch (activeType.fieldType) {
 
-				const selOption = activeType.fieldData.menuOptions.find(option => option.id === value);
-				if (selOption) cell.settings.cellText = selOption.name;
+				case 'dropdownSelect':
 
+					const selOption = activeType.fieldData.menuOptions.find(option => option.id === value);
+					if (selOption) cell.settings.cellText = selOption.name;
+
+					break;
+
+				case 'textInput':
+				case 'numberInput':
+				case 'dateInput':
+
+					if (Array.isArray(cellValue)) { // if cell.settings.value === [value, value_type]
+
+						if (cellValue[0]) cell.settings.cellText = cellValue[0];
+
+					} else if (cellValue) {
+						cell.settings.cellText = cellValue;
+					}
+
+					break;
 			}
 
 			return {cell: cell, value_type: valueType};
