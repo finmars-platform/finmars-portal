@@ -734,30 +734,7 @@
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
                                         </li>
-                                        <li>
-                                            <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.portal.pricing-procedure">
-                                                <span class="side-nav-title">Pricing Procedures</span>
-                                                <span class="md-visually-hidden"
-                                                      data-ng-if="isSelected()">current page</span>
-                                            </md-button>
-                                        </li>
-                                        <li>
-                                            <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.portal.data-procedure">
-                                                <span class="side-nav-title">Data Procedures</span>
-                                                <span class="md-visually-hidden"
-                                                      data-ng-if="isSelected()">current page</span>
-                                            </md-button>
-                                        </li>
-                                        <li>
-                                            <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.portal.schedules">
-                                                <span class="side-nav-title">Schedules</span>
-                                                <span class="md-visually-hidden"
-                                                      data-ng-if="isSelected()">current page</span>
-                                            </md-button>
-                                        </li>
+
                                     </ul>
 
                                 </div>
@@ -831,6 +808,46 @@
                                             </md-button>
                                         </li>
 
+                                    </ul>
+
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="sidenav-dropdown-menu-wrapper"
+                                     sidenav-dropdown-menu
+                                     menu-type="dataTypes">
+
+                                    <md-button class="sidemenu-btn dataTypes-sidenav-menu-btn">
+                                        <span class="side-nav-title">Procedures and schedules</span>
+                                        <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                    </md-button>
+
+                                    <ul class="sidenav-dropdown-menu dataTypes-dropdown-menu-element ng-hide">
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.pricing-procedure">
+                                                <span class="side-nav-title">Pricing Procedures</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.data-procedure">
+                                                <span class="side-nav-title">Data Procedures</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.schedules">
+                                                <span class="side-nav-title">Schedules</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
                                     </ul>
 
                                 </div>
