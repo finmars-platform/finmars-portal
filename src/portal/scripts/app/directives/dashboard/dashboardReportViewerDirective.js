@@ -234,7 +234,6 @@
                         });
 
                     }
-
                     else {
 
                         scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {

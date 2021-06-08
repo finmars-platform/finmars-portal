@@ -507,11 +507,13 @@
 
 		rowSelection = '<div class="g-row-selection"><div class="' + rowSelectionBtnClasses + '">' + rowSelectionBtnContent + '</div></div>';
 
-        var rowSettings = renderHelper.getRowSettings('', 'object');
-
+        let color = 'none';
         if (markedReportRows.hasOwnProperty(obj.id)) {
-            classList.push('g-row-marked-' + markedReportRows[obj.id].color)
+            color = markedReportRows[obj.id].color
+            classList.push('g-row-marked-' + color);
         }
+
+        var rowSettings = renderHelper.getRowSettings(color, obj.___type);
 
         var classes = classList.join(' ');
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
