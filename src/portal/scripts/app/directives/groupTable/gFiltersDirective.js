@@ -34,7 +34,6 @@
                 workareaWrapElement: '=',
                 hideFiltersBlock: '=',
                 hideUseFromAboveFilters: '=',
-
             },
             templateUrl: 'views/directives/groupTable/g-filters-view.html',
             link: function (scope, elem, attrs) {
@@ -60,7 +59,11 @@
                 scope.fpBackClasses = "z-index-48"
                 scope.fpClasses = "z-index-49"
 
-                scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
+				if (scope.hideUseFromAboveFilters) {
+                    scope.showUseFromAboveFilters = false;
+                } else {
+                    scope.showUseFromAboveFilters = !scope.isRootEntityViewer; // if split panel then show from above filters
+                }
 
                 scope.readyStatus = {
                     filters: false
