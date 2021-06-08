@@ -500,7 +500,7 @@
 				rowClassList.push('context-menu-opened');
 			}
 
-			rowSettings = renderHelper.getRowSettings();
+			rowSettings = renderHelper.getRowSettings(obj.___backgrond_color, obj.___type);
 
 		}
 

@@ -402,13 +402,44 @@
 
     };
 
+    var getColumnWidth = function (column) {
+
+    	var defaultWidth = 100 + 'px';
+
+    	if (column.hasOwnProperty('id')) {
+
+    		var groupsWidth = metaService.columnsWidthGroups();
+
+			switch (column.value_type) {
+				case 10:
+					return groupsWidth.groupThree;
+					break;
+				case 40:
+					return groupsWidth.groupFive;
+					break;
+				case 30:
+					return groupsWidth.groupFive;
+					break;
+				default:
+					return defaultWidth;
+					break;
+			}
+
+		} else if (column.hasOwnProperty('key')) {
+    		return defaultWidth;
+		}
+
+    	return undefined;
+
+	};
+
     var setColumnsDefaultWidth = function (evDataService) {
 
         var columns = evDataService.getColumns();
 
-        var groupsWidth = metaService.columnsWidthGroups();
+        // var groupsWidth = metaService.columnsWidthGroups();
 
-        var defaultWidth = 100;
+        // var defaultWidth = 100;
 
         columns.forEach(function (column) {
 
@@ -418,29 +449,29 @@
 
             if (!column.style.width) {
 
+				/* if (column.hasOwnProperty('key')) {
+					column.style.width = defaultWidth + 'px';
+				}
 
-                if (column.hasOwnProperty('key')) {
-                    column.style.width = defaultWidth + 'px';
-                }
+				if (column.hasOwnProperty('id')) {
 
-                if (column.hasOwnProperty('id')) {
+					switch (column.value_type) {
+						case 10:
+							column.style.width = groupsWidth.groupThree;
+							break;
+						case 20:
+							column.style.width = defaultWidth + 'px';
+							break;
+						case 40:
+							column.style.width = groupsWidth.groupFive;
+							break;
+						case 30:
+							column.style.width = groupsWidth.groupFive;
+							break;
+					}
 
-                    switch (column.value_type) {
-                        case 10:
-                            column.style.width = groupsWidth.groupThree;
-                            break;
-                        case 20:
-                            column.style.width = defaultWidth + 'px';
-                            break;
-                        case 40:
-                            column.style.width = groupsWidth.groupFive;
-                            break;
-                        case 30:
-                            column.style.width = groupsWidth.groupFive;
-                            break;
-                    }
-
-                }
+				} */
+				column.style.width = getColumnWidth(column);
 
             }
 
@@ -1063,6 +1094,7 @@
         getGroupsValues: getGroupsValues,
         calculateProjection: calculateProjection,
 
+		getColumnWidth: getColumnWidth,
         setColumnsDefaultWidth: setColumnsDefaultWidth,
         updateColumnsIds: updateColumnsIds,
 

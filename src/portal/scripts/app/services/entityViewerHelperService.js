@@ -14,6 +14,7 @@
 
     // const middlewareService = require('../services/middlewareService');
 	const evEvents = require('../services/entityViewerEvents');
+	const evDataHelper = require('../helpers/ev-data.helper');
     const evRvCommonHelper = require('../helpers/ev-rv-common.helper');
 	const metaHelper = require('../helpers/meta.helper');
 
@@ -135,13 +136,15 @@
         attrTypeToAdd.key = attrInstance.key;
 
         if (form === 'group' || form === 'column') {
-            if (attrInstance.hasOwnProperty('entity')) {
+
+        	if (attrInstance.hasOwnProperty('entity')) {
                 attrTypeToAdd.entity = attrInstance.entity;
             }
 
             if (attrInstance.hasOwnProperty('id')) {
                 attrTypeToAdd.id = attrInstance.id;
             }
+
         }
 
         if (attrInstance.hasOwnProperty('groups')) {
@@ -194,6 +197,14 @@
 				}
 
 				break;
+		}
+
+        if (form === 'group' || form === 'column') {
+
+        	attrTypeToAdd.style = {
+				width: evDataHelper.getColumnWidth(attrTypeToAdd)
+			}
+
 		}
 
         return attrTypeToAdd;

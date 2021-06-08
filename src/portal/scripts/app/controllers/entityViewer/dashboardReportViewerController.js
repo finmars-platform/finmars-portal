@@ -2120,11 +2120,10 @@
                         }
                     }).then(function (data){
 
-                        console.log('getCrossEntityAttributeExtensionList.data', data);
-
                         vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+                        resolve();
 
-                    })
+                    }).catch(error => reject(error));
 
                 })
 
@@ -2152,7 +2151,7 @@
 
                     vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ERROR);
                     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    console.log("ERROR: dashboard component that uses report viewer error", error);
+                    console.error("Dashboard component that uses report viewer error", error);
                 });
 
             };
