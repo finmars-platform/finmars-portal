@@ -82,6 +82,7 @@
   position: relative;
   display: flex;
   flex-direction: row;
+  min-height: 48px;
   height: 48px;
   padding-right: 16px;
   // padding-left: 36px;
@@ -209,11 +210,11 @@
   }
 
   .gt-cell-readonly-text span {
+    font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
 
   .gt-cell-text-container {
     display: flex;
@@ -254,7 +255,7 @@
   }
 
   .gt-cell-selector-container {
-    padding-top: 5px;
+    // padding-top: 5px;
     height: 100%;
     box-sizing: border-box;
 
@@ -385,20 +386,6 @@
 
   }
 
-}
-
-.grid-table-cell.gt-cell-plain-text {
-
-
-  .gt-cell-content.gt-cell-readonly-text {
-    span {
-      display: block;
-      height: inherit;
-      overflow-x: inherit;
-      overflow-y: scroll;
-      white-space: inherit;
-    }
-  }
 }
 
 .grid-table-cell.gt-sorting-on { // header cell with sorting on

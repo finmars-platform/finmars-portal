@@ -1616,8 +1616,7 @@
                 })
 
             }
-
-            if (vm.entityType === 'currency') {
+            else if (vm.entityType === 'currency') {
 
                 vm.currencyPricingSchemes.forEach(function (scheme) {
 

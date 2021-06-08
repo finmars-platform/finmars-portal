@@ -110,7 +110,7 @@
                     },
                     {
                         key: 'pricing_scheme',
-                        objPath: ['pricing_scheme_object', 'id'],
+                        objPath: ['pricing_scheme'],
                         columnName: 'Pricing Scheme',
                         order: 1,
                         cellType: 'selector',
@@ -186,9 +186,7 @@
 
             components: {
                 topPanel: false,
-                tableBody: {
-                    rowCheckboxes: false
-                }
+				rowCheckboxes: false
             }
 
         }
@@ -200,11 +198,36 @@
 				pricingPolicy.pricing_scheme_object.type_settings.value_type) {
 
 				const selectorType = typesList.find(type => type.fieldType === 'dropdownSelect');
-				selectorType.fieldData.menuOptions = vm.attributeTypesByValueTypes[pricingPolicy.pricing_scheme_object.type_settings.value_type];
+				selectorType.fieldData.menuOptions = vm.attributeTypesByValueTypes[pricingPolicy.pricing_scheme_object.type_settings.value_type] || [];
 
 			}
 
         	return typesList;
+
+		};
+
+		/**
+		 *
+		 * @param policy {object} - pricing policy
+		 * @returns {[*, number]} - value and value_type for default parameters of pricing policy
+		 */
+		var getDefaultParametersVal = function (policy) {
+
+        	var value, valueType;
+
+        	if (policy.default_value) { // text input
+
+        		value = policy.default_value;
+				valueType = 10;
+
+			} else { // selector
+
+        		value = policy.attribute_key;
+				valueType = 70
+
+			}
+
+			return [value, valueType];
 
 		};
 
@@ -259,32 +282,26 @@
 				let defaultParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'edit_default_parameters');
                 let typesList = JSON.parse(JSON.stringify(pricingDefaultValueFieldTypes.fieldTypesList));
 
-                let defaultValue;
-				let fieldValueType = 70;
+				/* let defaultValue;
+				let fieldValueType;
 
-                if (policy.default_value) {
+				if (policy.default_value) {
 					defaultValue = policy.default_value;
 					fieldValueType = 10;
 
-                } else {
+				} else {
 
-                	defaultValue = policy.attribute_key;
+					defaultValue = policy.attribute_key;
 
-					/* if (policy.pricing_scheme_object &&
-						policy.pricing_scheme_object.type_settings &&
-						policy.pricing_scheme_object.type_settings.value_type) {
-
-						const selectorType = typesList.find(type => type.fieldType === 'dropdownSelect');
-						selectorType.fieldData.menuOptions = vm.attributeTypesByValueTypes[policy.pricing_scheme_object.type_settings.value_type];
-
-					} */
 					typesList = getOptionsForPPDefaultValueSel(typesList, policy);
 
+				} */
+				const [defaultValue, fieldValueType] = getDefaultParametersVal(policy);
 
-				}
+				if (fieldValueType === 70) typesList = getOptionsForPPDefaultValueSel(typesList, policy);
 
-                const cellData = gridTableHelperService.getMultitypeFieldDataForCell(typesList, defaultParameters, defaultValue, fieldValueType);
-                defaultParameters = cellData.cell;
+                const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(typesList, defaultParameters, defaultValue, fieldValueType);
+                defaultParameters = fieldData.cell;
 
                 gridTableHelperService.setCellInsideRow(rowObj, defaultParameters);
 				//</editor-fold>
@@ -303,6 +320,7 @@
                 eventClass.settings.value = vm.bindEventClass(policy); */
 
                 vm.pricingPoliciesGridTableData.body.push(rowObj);
+
             });
             // < assemble body rows >
 
@@ -328,9 +346,13 @@
 					vm.entity.pricing_policies[row.order][matchingProp] = cell.settings.value;
 					vm.entity.pricing_policies[row.order][propToClear] = null;
 
-				} else { // 'pricing_policy' cell
+				}
+				else if (column.key === 'pricing_scheme') { // 'pricing_policy' cell
+
+					gridTableHelperService.onGridTableCellChange(vm.entity.pricing_policies, vm.pricingPoliciesGridTableDataService, row.order, column.order);
 
 					vm.pricingSchemeChange(vm.entity.pricing_policies[row.order]);
+					// reassigning variable changedPolicy after vm.entity.pricing_policies array recreation inside vm.pricingSchemeChange()
 					const changedPolicy = vm.entity.pricing_policies[row.order];
 
 					let pricingSchemeClarCell = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'pricing_scheme_clarification');
@@ -340,12 +362,21 @@
 						pricingSchemeClarCell.settings.value = changedPolicy.pricing_scheme_object.notes_for_users;
 					}
 
-					const defaultValueCell = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'edit_default_parameters');
-					defaultValueCell.settings.value = null;
-					defaultValueCell.settings.cellText = '';
+					let defaultValueCell = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'edit_default_parameters');
+
+					const [defaultValue, fieldValueType] = getDefaultParametersVal(changedPolicy);
+
+					if (fieldValueType === 70) {
+						defaultValueCell.settings.fieldTypesData = getOptionsForPPDefaultValueSel(defaultValueCell.settings.fieldTypesData, changedPolicy);
+					}
+
+					const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(defaultValueCell.settings.fieldTypesData, defaultValueCell, defaultValue, fieldValueType);
+					defaultValueCell.settings = {...defaultValueCell.settings, ...fieldData.cell.settings};
+
+					// defaultValueCell.settings.value = null;
+					// defaultValueCell.settings.cellText = '';
 
 					// defaultValueCell.settings.fieldTypesData.forEach(type => type.model = null);
-					defaultValueCell.fieldTypesData = getOptionsForPPDefaultValueSel(defaultValueCell.fieldTypesData, changedPolicy);
 
 					// gridTableHelperService.onGridTableCellChange(vm.entity.pricing_policies, vm.pricingPoliciesGridTableDataService, row.order, column.order);
 				}

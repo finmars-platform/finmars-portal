@@ -19,7 +19,7 @@
         <span ng-bind="column.settings.value"></span>
 
         <md-tooltip ng-if="column.settings.value"
-                    class="tooltip_1"
+                    class="tooltip_1 f-s-14"
                     md-direction="top"
                     ng-bind="column.settings.value"></md-tooltip>
     </div>
@@ -28,7 +28,7 @@
         <span ng-bind="column.settings.value"></span>
 
         <md-tooltip ng-if="column.settings.value"
-                    class="tooltip_1"
+                    class="tooltip_1 f-s-14"
                     md-direction="top"
                     ng-bind="column.settings.value"></md-tooltip>
     </div>-->
@@ -39,7 +39,8 @@
                                column="column"
                                gt-data-service="gtDataService"
                                gt-event-service="gtEventService"
-                               on-load-end="onChildrenLoadEnd()"></grid-table-popup-cell>
+                               on-load-end="onChildrenLoadEnd()"
+                               class="gt-popup-cell"></grid-table-popup-cell>
         <!--<div class="gt-cell-text-container">
             <div class="gt-cell-text">
                 <span data-ng-bind="cellValue"></span>
@@ -50,13 +51,13 @@
             </md-button>
         </div>-->
         <md-tooltip ng-if="column.settings.cellText"
-                    class="tooltip_1"
+                    class="tooltip_1 f-s-14"
                     md-direction="top"
                     ng-bind="column.settings.cellText"></md-tooltip>
     </div>
 
     <div ng-if="column.cellType === 'selector'"
-         class="gt-cell-selector-container flex-row">
+         class="gt-cell-selector-container flex-row fi-center">
 
         <div class="gt-cell-selector-holder">
             <md-input-container class="m-0">

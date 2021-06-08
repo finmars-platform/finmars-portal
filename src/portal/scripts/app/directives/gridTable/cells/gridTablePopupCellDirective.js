@@ -390,12 +390,24 @@
 
                     if (!scope.column.settings.hasOwnProperty('cellText')) {
 
-                    	scope.column.settings.cellText = scope.column.settings.value;
+                        if (scope.column.cellType === 'multitypeField') {
 
-                        if (scope.column.cellType === 'multitypeField' && scope.column.hasOwnProperty("objPaths")) {
+                        	const activeType = scope.column.settings.fieldTypesData.find(type => type.isActive);
 
-                        	scope.column.settings.cellText = scope.column.settings.value[0];
+                        	if (['textInput', 'numberInput', 'dateInput'].includes(activeType.fieldType)) {
 
+								if (scope.column.hasOwnProperty("objPaths")) { // if column.settings.value === [value, value_type]
+									scope.column.settings.cellText = scope.column.settings.value[0];
+
+								} else {
+									scope.column.settings.cellText = scope.column.settings.value;
+								}
+
+							}
+
+						}
+                        else {
+							scope.column.settings.cellText = scope.column.settings.value;
 						}
 
                     }
