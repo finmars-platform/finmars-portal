@@ -34,7 +34,6 @@
                 workareaWrapElement: '=',
                 hideFiltersBlock: '=',
                 hideUseFromAboveFilters: '=',
-
             },
             templateUrl: 'views/directives/groupTable/g-filters-view.html',
             link: function (scope, elem, attrs) {
@@ -60,7 +59,11 @@
                 scope.fpBackClasses = "z-index-48"
                 scope.fpClasses = "z-index-49"
 
-                scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
+				if (scope.hideUseFromAboveFilters) {
+                    scope.showUseFromAboveFilters = false;
+                } else {
+                    scope.showUseFromAboveFilters = !scope.isRootEntityViewer; // if split panel then show from above filters
+                }
 
                 scope.readyStatus = {
                     filters: false
@@ -749,7 +752,7 @@
                                     if (!customField) {
 
                                         filter.options.enabled = false;
-                                        const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
+                                        const description = `The filter does not exist in the Configuration`
 
                                         filterData.error_data = {
                                             code: 10,
@@ -839,7 +842,7 @@
                 const syncFiltersLayoutNamesWithColumns = function () {
 
                     const columns = scope.evDataService.getColumns();
-                    const filtersChanged = false;
+                    let filtersChanged = false;
 
                     columns.forEach(column => {
 
