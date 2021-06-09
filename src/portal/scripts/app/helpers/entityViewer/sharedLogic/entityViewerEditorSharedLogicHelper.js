@@ -856,6 +856,19 @@
 
 		};
 
+		const injectUserAttributesFromInstrumentType = function (instrumentTypeId) {
+
+			instrumentTypeService.getByKey(instrumentTypeId).then(data => {
+				const attrs = data.instrument_attributes;
+				attrs.forEach(attr => {
+					const key = attr.attribute_type_user_code;
+					const value = entityEditorHelper.instrumentTypeAttrValueMapper(attr);
+					viewModel.entity[key] = value;
+				});
+
+			})
+		};
+
         return {
 
 			readyStatusObj: readyStatusObj,
@@ -880,7 +893,9 @@
             getCurrencyFields: getCurrencyFields,
 
 			isTabWithErrors: isTabWithErrors,
-			getTabBtnClasses: getTabBtnClasses
+			getTabBtnClasses: getTabBtnClasses,
+
+			injectUserAttributesFromInstrumentType: injectUserAttributesFromInstrumentType
 
         }
 
