@@ -7,28 +7,64 @@
     const attributeTypeService = require('../../../services/attributeTypeService');
     const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
+    var entityEditorHelper = require('../../../helpers/entity-editor.helper');
+
     module.exports = function instrumentTypeUserAttributesTabController ($scope, $mdDialog) {
 
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
+        console.log('#112 vm.entity', vm.entity)
         vm.entityType = $scope.$parent.vm.entityType;
 
 		vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
 		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
 
         vm.attrs = [];
+        vm.instrumentTypeAttrs = []
 
         if (!vm.entity.instrument_attributes) {
             vm.entity.instrument_attributes = []
         }
 
         vm.readyStatus = {
-            attrs: false
+            attrs: false,
+            instrumentTypeAttrs: false,
+        };
+
+        const mapAttrsFromEntity = (attrs, entityAttrs) => {
+
+            const deletedAttrs = [];
+
+            entityAttrs.forEach(entityAttr => {
+                const user_code = entityAttr.attribute_type_user_code;
+                const attr = attrs.find(attr => attr.user_code === user_code);
+                const value = entityEditorHelper.instrumentTypeAttrValueMapper(entityAttr);
+
+                const additionalProps = {
+                    value,
+                    ___classifierName: entityAttr.value_type === 30 ? value : null,
+                };
+
+                if (attr) {
+                    Object.assign(attr, additionalProps);
+                } else {
+                    deletedAttrs.push({user_code, name: user_code, ...entityAttr, ...additionalProps, ___isDisabled: true});
+                }
+            })
+
+            return attrs
+                .concat(deletedAttrs)
+                .sort((a, b) => {
+
+                    return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1
+
+                });
         };
 
         const getList = () => {
 
             vm.readyStatus.attrs = false;
+            vm.readyStatus.instrumentTypeAttrs = false;
 
             attributeTypeService.getList('instrument', {pageSize: 1000}).then((data) => {
 
@@ -38,7 +74,12 @@
 
                 vm.readyStatus.attrs = true;
 
-                $scope.$apply();
+            });
+
+            attributeTypeService.getList( vm.entityType, {pageSize: 1000}).then((data) => {
+
+                vm.instrumentTypeAttrs = data.results;
+                vm.readyStatus.instrumentTypeAttrs = true;
 
             });
 
@@ -107,51 +148,6 @@
                     return result;
                 });
 
-        };
-
-        const getAttrValue = (entityAttr) => {
-            switch (entityAttr.value_type) {
-                case 10:
-                    return entityAttr.value_string;
-                case 20:
-                    return entityAttr.value_float;
-                case 30:
-                    return entityAttr.value_classifier;
-                case 40:
-                    return entityAttr.value_date;
-                default:
-                    return null;
-            }
-        }
-
-        const mapAttrsFromEntity = (attrs, entityAttrs) => {
-
-            const deletedAttrs = [];
-
-            entityAttrs.forEach(entityAttr => {
-                const user_code = entityAttr.attribute_type_user_code;
-                const attr = attrs.find(attr => attr.user_code === user_code);
-                const value = getAttrValue(entityAttr);
-
-                const additionalProps = {
-                    value,
-                    ___classifierName: entityAttr.value_type === 30 ? value : null,
-                };
-
-                if (attr) {
-                    Object.assign(attr, additionalProps);
-                } else {
-                    deletedAttrs.push({user_code, name: user_code, ...entityAttr, ...additionalProps, ___isDisabled: true});
-                }
-            })
-
-            return attrs
-                .concat(deletedAttrs)
-                .sort((a, b) => {
-
-                return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1
-
-            });
         };
 
         const init = function () {
