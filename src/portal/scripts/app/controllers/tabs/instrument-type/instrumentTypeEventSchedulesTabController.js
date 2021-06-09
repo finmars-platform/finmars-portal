@@ -947,7 +947,10 @@
 
             // Update rows in actions grid table
             item.data.actions.forEach(function (action, actionIndex) {
+
+                action.button_position = actionIndex;
                 gridTableData.body[actionIndex].order = actionIndex;
+
             });
 
         };

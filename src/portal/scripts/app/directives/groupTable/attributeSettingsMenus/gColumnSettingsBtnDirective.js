@@ -205,7 +205,7 @@
 
                 };
 
-                scope.reportHideSubtotal = function () {
+                 /* scope.reportHideSubtotal = function () {
 
                     if (!scope.column.hasOwnProperty('report_settings')) {
                         scope.column.report_settings = {};
@@ -218,7 +218,7 @@
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                     scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
 
-                };
+                }; */
 
                 scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
                     columns = scope.evDataService.getColumns();

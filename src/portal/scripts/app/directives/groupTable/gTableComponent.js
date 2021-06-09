@@ -8,6 +8,8 @@
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
+    var rvDataHelper = require('../../helpers/rv-data.helper');
+    var localStorageService = require('../../../../../core/services/localStorageService');
 
     module.exports = function () {
         return {
@@ -17,7 +19,8 @@
                 evDataService: '=',
                 evEventService: '=',
                 spExchangeService: '=',
-                hideFiltersBlock: '='
+                hideFiltersBlock: '=',
+                hideUseFromAboveFilters: '=',
             },
 			templateUrl: 'views/directives/groupTable/g-table-component-view.html',
             link: function (scope, elem, attrs) {
@@ -42,6 +45,7 @@
 
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
                 var viewContext = scope.evDataService.getViewContext();
+                var contentType = scope.evDataService.getContentType();
 
                 var activeLayoutConfigIsSet = false;
 
@@ -167,6 +171,37 @@
 
                 }
 
+				var applyGroupsFoldingFromLocalStorage = function () {
+
+                	var listLayout = scope.evDataService.getListLayout();
+					var reportData = localStorageService.getReportDataForLayout(contentType, listLayout.user_code);
+
+					if (reportData.groupsList && reportData.groupsList.length) {
+
+						var groups = scope.evDataService.getGroups();
+
+						reportData.groupsList.forEach(groupObj => {
+
+							var group = groups.find(group => group.key === groupObj.key);
+
+							if (group) {
+
+								if (!group.report_settings) group.report_settings = {};
+
+								group.report_settings.is_level_folded = groupObj.report_settings.is_level_folded;
+
+							}
+
+						});
+
+						scope.evDataService.setGroups(groups);
+
+						rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
+
+					}
+
+				};
+
                 var initEventListeners = function () {
 
                     scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
@@ -257,6 +292,8 @@
                     initEventListeners();
 
 					scope.readyToRenderTable = !scope.isReport // TO DELETE after updating ev interface
+
+					if (scope.isReport) applyGroupsFoldingFromLocalStorage();
 
                     if (document.querySelector('body').classList.contains('filter-side-nav-collapsed')) {
 
