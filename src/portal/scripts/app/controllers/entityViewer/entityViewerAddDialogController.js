@@ -1720,6 +1720,14 @@
 
             if (vm.entityType === 'instrument') {
                 vm.getDataForInstrumentTabs();
+
+                const instrumentTypeId = vm.entity[vm.typeFieldName];
+                if (instrumentTypeId) {
+
+                    vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
+
+                }
+
             }
 
             setTimeout(function () {
@@ -1769,6 +1777,13 @@
 					vm.typeSelectorChange = function () {
 
 						vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+
+                            const instrumentTypeId = vm.entity[vm.typeFieldName];
+                            if (instrumentTypeId) {
+
+                                vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
+
+                            }
 
 							vm.tabs = data.tabs;
 							vm.attributesLayout = data.attributesLayout;
