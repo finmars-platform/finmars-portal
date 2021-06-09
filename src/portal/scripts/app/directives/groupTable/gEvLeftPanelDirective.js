@@ -25,6 +25,8 @@
                 scope.multiselectIsActive = false;
                 scope.groupTypes = [];
 
+                scope.sliderButtonState = 'unfolded';
+
 
                 scope.recursiveMarkHasSelected = function (tree, selectedGroups) {
 
@@ -79,7 +81,7 @@
 
                     var leftPanel = document.querySelector('.g-ev-left-panel-holder')
 
-                    leftPanel.style.height = (table.clientHeight - 10) + 'px'; // todo 10?
+                    leftPanel.style.height = (table.clientHeight - 15) + 'px'; // todo 10?
                 }
 
                 scope.handleSlider = function () {
@@ -93,6 +95,7 @@
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
                     var resultWidth;
 
+                    var evLeftPanelSliderButton = document.querySelector('.evLeftPanelSliderButton')
 
                     slider.addEventListener('mousedown', function (event) {
 
@@ -110,15 +113,24 @@
 
                             if (originalWidth + diffX >= document.body.clientWidth) {
                                 resultWidth = document.body.clientWidth;
+                                scope.sliderButtonState = 'unfolded';
                             } else if (originalWidth + diffX <= 33) {
                                 resultWidth = 33;
+                                scope.sliderButtonState = 'folded'
                             } else {
                                 resultWidth = originalWidth + diffX
+
+                                if (resultWidth >= 230) {
+                                    scope.sliderButtonState = 'unfolded';
+                                } else {
+                                    scope.sliderButtonState = 'folded';
+                                }
+
                             }
 
                             interfaceLayout.evLeftPanel.width = resultWidth;
                             leftPanel.style.width = resultWidth + 'px';
-                            tableSection.style.width = parentSection.clientWidth - resultWidth + 'px'
+                            tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
 
                             scope.evDataService.setInterfaceLayout(interfaceLayout);
 
@@ -133,6 +145,30 @@
                         $(window).unbind('mousemove')
                     })
 
+
+                    evLeftPanelSliderButton.addEventListener('click', function (event){
+
+                        if (scope.sliderButtonState === 'unfolded') {
+                            resultWidth = 33;
+                            scope.sliderButtonState = 'folded'
+                        } else {
+                            resultWidth = 230;
+                            scope.sliderButtonState = 'unfolded';
+                        }
+
+
+
+                        interfaceLayout.evLeftPanel.width = resultWidth;
+                        leftPanel.style.width = resultWidth + 'px';
+                        tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+
+                        scope.evDataService.setInterfaceLayout(interfaceLayout);
+
+                        scope.$apply();
+
+                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+                    })
                 }
 
                 scope.addEventListeners = function () {

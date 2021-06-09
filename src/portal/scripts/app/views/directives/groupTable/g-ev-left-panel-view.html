@@ -1,6 +1,6 @@
 <div class="height-100">
 
-    <div class="ev-left-panel-inner-container">
+    <div class="ev-left-panel-inner-container state-{{sliderButtonState}}">
 
         <div class="ev-left-panel-grouping-menu-button" data-ng-click="groupSectionState = !groupSectionState">
             <span class="material-icons">menu</span>
@@ -24,7 +24,10 @@
         </div>
 
         <div class="ev-left-panel-slider evLeftPanelSlider">
-            <div class="ev-left-panel-slider-button"></div>
+            <div class="ev-left-panel-slider-button evLeftPanelSliderButton">
+                <span class="material-icons" data-ng-if="sliderButtonState == 'unfolded'">chevron_left</span>
+                <span class="material-icons" data-ng-if="sliderButtonState == 'folded'">chevron_right</span>
+            </div>
         </div>
 
     </div>

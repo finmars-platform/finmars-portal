@@ -22,34 +22,11 @@
                 </div>
                 <div data-ng-if="!isReport"  layout="row">
 
-                    <md-menu>
-                        <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
-                                   data-ng-click="$mdOpenMenu($event)">
-                            <span class="material-icons">add</span>
-                            <md-tooltip md-direction="top">Add</md-tooltip>
-                        </md-button>
-                        <md-menu-content width="4">
-
-                            <md-menu-item>
-                                <md-button data-ng-click="evApplyFilters()"
-                                           class="g-settings-option-btn">
-
-                                    <span>Refresh Database Filters</span>
-
-                                </md-button>
-                            </md-menu-item>
-                            <md-menu-item>
-
-                                <md-button data-ng-click="evAddEntity($event)"
-                                           class="g-settings-option-btn">
-
-                                    <span>Add {{evGetEntityNameByState()}}</span>
-
-                                </md-button>
-
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                               data-ng-click="evAddEntity($event)">
+                        <span class="material-icons">add</span>
+                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                    </md-button>
 
                     <md-button class="g-toggle-use-from-above-filters md-icon-button chain-button"
                                ng-class="{'g-use-from-above-filters-hidden': !showUseFromAboveFilters}"
@@ -90,6 +67,18 @@
         </div>
 
         <div class="icon-buttons gFiltersRightPart">
+
+            <md-button data-ng-click="evApplyFilters()"
+                       class="signed-button">
+
+                <div class="flex-column flex-i-center">
+                    <span class="material-icons">refresh</span>
+                    <span>Refresh</span>
+                    <md-tooltip md-direction="top">Refresh Database Filters</md-tooltip>
+                </div>
+
+            </md-button>
+
             <md-menu class="full-width" data-ng-if="isRootEntityViewer">
                 <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
                     <div class="flex-column flex-i-center">
