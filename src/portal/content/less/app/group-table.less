@@ -55,7 +55,6 @@
   position: relative;
   height: 0;
   overflow: hidden;
-  padding: 10px;
   box-sizing: border-box;
   // transition: max-height 0.5s linear;
   .new-interface();
@@ -71,9 +70,13 @@
   }
 
   .icon-buttons {
-    display: flex;
+    flex: 0 0 252px;
+    /* display: flex;
     justify-content: flex-end;
-    flex: 0 0 191px;
+    flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
   }
 
   .g-filter-settings-big-left-btn {
