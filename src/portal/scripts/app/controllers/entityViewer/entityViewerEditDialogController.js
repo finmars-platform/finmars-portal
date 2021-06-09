@@ -574,6 +574,24 @@
 
         }; */
 
+        const injectUserAttributesFromInstrumentType = function () {
+
+            const instrumentTypeId = vm.entity[vm.typeFieldName];
+
+            instrumentTypeService.getByKey(instrumentTypeId).then(data => {
+
+                const attrs = data.instrument_attributes;
+                attrs.forEach(attr => {
+
+                    const key = attr.attribute_type_user_code;
+                    const value = entityEditorHelper.instrumentTypeAttrValueMapper(attr);
+                    vm.entity[key] = value;
+
+                });
+
+            })
+        }
+
         vm.getItem = function () {
 
             return new Promise(function (res, rej) {
@@ -597,6 +615,10 @@
                         vm.readyStatus.permissions = true;
                         vm.hasEditPermission = true;
 
+                    }
+
+                    if (vm.typeFieldName === 'instrument_type') {
+                        injectUserAttributesFromInstrumentType();
                     }
 
                     // vm.getFormLayout();
@@ -1940,6 +1962,10 @@
                 vm.typeSelectorChange = function () {
 
 					vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+
+                        if (vm.typeFieldName === 'instrument_type') {
+                            injectUserAttributesFromInstrumentType();
+                        }
 
 						vm.tabs = data.tabs;
 						vm.attributesLayout = data.attributesLayout;
