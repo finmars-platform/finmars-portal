@@ -35,6 +35,16 @@
         <span>Open</span>
     </div>
 
+    <div class="layout-menu-item" data-ng-click="makeCopy($event)">
+        <span class="material-icons">duplicate</span>
+        <span>Make copy</span>
+    </div>
+
+    <div class="layout-menu-item" data-ng-click="editDashboardLayout()">
+        <span class="material-icons" style="visibility: hidden">edit</span>
+        <span>Edit Dashboard Layout</span>
+    </div>
+
     <md-menu-divider></md-menu-divider>
 
     <div class="layout-menu-item" data-ng-click="exportLayout($event)">
@@ -65,11 +75,6 @@
         <span>Share</span>
     </div>
 
-    <div class="layout-menu-item" data-ng-click="makeCopy($event)">
-        <span class="material-icons">duplicate</span>
-        <span>Make copy</span>
-    </div>
-
     <div class="layout-menu-item"
          data-ng-class="{'default-layout': layout.is_default}"
          data-ng-click="setAsDefault()"
@@ -78,11 +83,6 @@
         <span class="material-icons">home</span>
         <span>Make default</span>
 
-    </div>
-
-    <div class="layout-menu-item" data-ng-click="editDashboardLayout()">
-        <span class="material-icons">edit</span>
-        <span>Edit Dashboard Layout</span>
     </div>
 
     <md-menu-divider></md-menu-divider>
