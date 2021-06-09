@@ -10,8 +10,11 @@
 			userInputsToRecalc: null,
 			entityAttributeTypes: [],
 
-			tabsWithErrors: null,
-			formErrorsList: null
+			tabsWithErrors: {
+				system_tab: {},
+				user_tab: {}
+			},
+			formErrorsList: []
 		};
 
         /* function setChangedUserInputData (uInputData) {
@@ -79,7 +82,7 @@
 		}
 
 		function getTabsWithErrors () {
-			return data.tabsWithErrors;
+			return data.tabsWithErrors || {system_tab: {}, user_tab: {}};
 		}
 
 		function setFormErrorsList (errorsList) {
@@ -87,7 +90,7 @@
 		}
 
 		function getFormErrorsList () {
-			return data.formErrorsList;
+			return data.formErrorsList || [];
 		}
 
         return {
