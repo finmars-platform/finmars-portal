@@ -94,7 +94,7 @@
                         scope.model = item.id;
                         scope.valueIsValid = true;
 
-                        if (scope.itemName) {
+                        if (typeof scope.itemName !== 'undefined') {
                             scope.itemName = item.name;
                         }
                         scope.inputText = item.name;
@@ -209,7 +209,7 @@
                         if (res.status === 'agree') {
 
                             scope.model = +res.data.item;
-                            if(scope.itemName) {
+                            if(typeof scope.itemName !== 'undefined') {
                                 scope.itemName = res.data.name;
                             }
                             scope.inputText = res.data.name;
@@ -379,7 +379,7 @@
                         for (var i = 0; i < scope.menuOptions.length; i++) {
                             if (scope.menuOptions[i].id === scope.model) {
 
-                                if (scope.itemName) {
+                                if (typeof scope.itemName !== 'undefined') {
                                     scope.itemName = scope.menuOptions[i].name;
                                 }
                                 scope.inputText = scope.menuOptions[i].name;
