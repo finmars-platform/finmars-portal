@@ -94,7 +94,9 @@
                         scope.model = item.id;
                         scope.valueIsValid = true;
 
-                        scope.itemName = item.name;
+                        if (scope.itemName) {
+                            scope.itemName = item.name;
+                        }
                         scope.inputText = item.name;
 
                         closeDropdownMenu();
@@ -207,7 +209,9 @@
                         if (res.status === 'agree') {
 
                             scope.model = +res.data.item;
-                            scope.itemName = res.data.name;
+                            if(scope.itemName) {
+                                scope.itemName = res.data.name;
+                            }
                             scope.inputText = res.data.name;
                             console.log('scope.model', scope.model)
                             getTree();
@@ -375,7 +379,9 @@
                         for (var i = 0; i < scope.menuOptions.length; i++) {
                             if (scope.menuOptions[i].id === scope.model) {
 
-                                scope.itemName = scope.menuOptions[i].name;
+                                if (scope.itemName) {
+                                    scope.itemName = scope.menuOptions[i].name;
+                                }
                                 scope.inputText = scope.menuOptions[i].name;
 
                                 break;
