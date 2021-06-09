@@ -135,7 +135,6 @@
 						}
 
 					}
-
 					else if (scope.dateValue !== scope.model) {
 
 						valueIsValid = false;

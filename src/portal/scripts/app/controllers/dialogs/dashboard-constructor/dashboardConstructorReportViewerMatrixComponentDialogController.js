@@ -44,7 +44,11 @@
                     auto_refresh: false,
                     auto_scaling: false,
                     linked_components: {},
-                    hide_empty_lines: ''
+                    hide_empty_lines: '',
+                    filters: {
+                        show_filters_area: false,
+                        show_use_from_above_filters: false,
+                    }
                 },
 
                 user_settings: {}

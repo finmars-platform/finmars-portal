@@ -1,6 +1,6 @@
 (function () {
 
-	var objectComparison
+	var localStorageService = require('../../../../core/services/localStorageService');
 
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
@@ -910,7 +910,7 @@
 
     var getOrCreateGroupSettings = function (evDataService, group) {
 
-        var member = evDataService.getCurrentMember()
+        var member = evDataService.getCurrentMember();
         var layout = evDataService.getListLayout();
         var contentType = evDataService.getContentType();
 
@@ -922,8 +922,9 @@
 
         console.log('parents', parents);
 
-        var reportData
+        /* var reportData
         var rawReportData = localStorage.getItem('report_data')
+
 
         if (rawReportData) {
             reportData = JSON.parse(rawReportData)
@@ -943,23 +944,44 @@
             reportData[member_id][contentType][layout.user_code] = {
                 groups: {}
             }
-        }
+        } */
 
-        var full_path = parents.map(function (item) {
-            return item.___group_name
-        })
+		var reportData = localStorageService.getReportData();
+
+		if (!reportData[contentType]) reportData[contentType] = {};
+
+		if (!reportData[contentType][layout.user_code]) {
+			reportData[contentType][layout.user_code] = {
+				groups: {}
+			}
+		}
+
+		/*if (parents.length && parents[0].___type === "subtotal") {
+
+			full_path = parents.map(function (item) {
+				return item.___group_name
+			})
+
+		}*/
+		var full_path = parents.map(function (item) {
+			return item.___group_name
+		})
 
         full_path.push(group.___group_name);
 
-        full_path = full_path.join('___'); // TODO check if safe enough
+        var full_path_prop = full_path.join('___'); // TODO check if safe enough
 
         console.log('full_path', full_path);
+		console.log('full_path_prop', full_path_prop);
 
         var groupSettings;
 
-        if (reportData[member_id][contentType][layout.user_code]['groups'][full_path]) {
+        /*if (reportData[member_id][contentType][layout.user_code]['groups'][full_path]) {
             groupSettings = reportData[member_id][contentType][layout.user_code]['groups'][full_path];
-        }
+        }*/
+		if (reportData[contentType][layout.user_code]['groups'][full_path_prop]) {
+			groupSettings = reportData[contentType][layout.user_code]['groups'][full_path_prop];
+		}
 
         if (!groupSettings) {
 
@@ -968,23 +990,26 @@
                 is_open: true
             }
 
-            reportData[member_id][contentType][layout.user_code]['groups'][full_path] = groupSettings
+            // reportData[member_id][contentType][layout.user_code]['groups'][full_path] = groupSettings
+			reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
 
-            localStorage.setItem('report_data', JSON.stringify(reportData))
+            // localStorage.setItem('report_data', JSON.stringify(reportData));
+			localStorageService.cacheReportData(reportData);
 
         }
 
-        return groupSettings
+        return groupSettings;
 
     }
 
     var setGroupSettings = function (evDataService, group, groupSettings) {
 
-        var member = evDataService.getCurrentMember()
+        // var member = evDataService.getCurrentMember()
         var layout = evDataService.getListLayout();
         var contentType = evDataService.getContentType();
+        var groups = evDataService.getGroups();
 
-        if (!member) {
+        /*if (!member) {
             throw new Error("Current Member is not set")
         }
 
@@ -1001,16 +1026,126 @@
             reportData = JSON.parse(rawReportData)
         } else {
             reportData = {}
-        }
+        } */
+		var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
+        // reportData[member_id][contentType][layout.user_code]['groups'][groupSettings.full_path] = groupSettings;
+		if (!reportData['groups']) {
+			reportData['groups'] = {}
+		}
 
-        console.log('setGroupSettings', groupSettings);
+		var full_path_prop = groupSettings.full_path;
 
-        reportData[member_id][contentType][layout.user_code]['groups'][groupSettings.full_path] = groupSettings
+		if (Array.isArray(full_path_prop)) {
+			full_path_prop = full_path_prop.join('___')
+		}
 
-        localStorage.setItem('report_data', JSON.stringify(reportData))
+		reportData['groups'][full_path_prop] = groupSettings;
 
+		/*reportData.groupsList = groups.map(group => {
+
+			var groupObj = {key: group.key};
+			if (group.report_settings && group.report_settings.is_level_folded) {
+
+				groupObj.report_settings = {
+					is_level_folded: true
+				}
+
+			}
+
+			return groupObj;
+
+		});*/
+		reportData.groupsList = [];
+
+		groups.forEach(group => {
+
+			var groupObj = {
+				key: group.key,
+				report_settings: {
+					is_level_folded: false
+				}
+			};
+
+			if (group.report_settings) {
+				groupObj.report_settings.is_level_folded = !!group.report_settings.is_level_folded;
+			}
+
+			/* if (group.report_settings && group.report_settings.is_level_folded) {
+				reportData.fullyFoldedGroups.push(group.key);
+			} */
+			reportData.groupsList.push(groupObj);
+
+		});
+
+		// if (!reportData.fullyFoldedGroups.length) delete reportData.fullyFoldedGroups;
+
+        // localStorage.setItem('report_data', JSON.stringify(reportData));
+		localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
 
     }
+
+	var markHiddenColumnsBasedOnFoldedGroups = function (evDataService) {
+
+		var groups = evDataService.getGroups();
+		var columns = evDataService.getColumns();
+		var foldedGroup = false;
+		var firstColWithoutGroupIndex = 0;
+
+		if (groups.length) {
+
+			foldedGroup = groups.find(group => group.report_settings && group.report_settings.is_level_folded);
+			firstColWithoutGroupIndex = groups.length; // index of first column without group
+
+		}
+
+		if (foldedGroup) { // if there is fully folded group, hide columns without visible content
+
+			for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
+
+				var columnWithoutSubtotal = !columns[i].report_settings || !columns[i].report_settings.subtotal_formula_id;
+				if (columnWithoutSubtotal && !columns[i].error_data) columns[i].isHidden = true;
+
+			}
+
+			/* columns.forEach((column, index) => {
+
+				var colLevel = index + 1;
+				var columnWithoutSubtotal = !column.report_settings || !column.report_settings.subtotal_formula_id;
+				var columnWithoutGroup = groups.length < colLevel;
+
+				var colIsHidden = !!(columnWithoutGroup && columnWithoutSubtotal && !column.error);
+
+				if (column.isHidden !== colIsHidden) columnsChanged = true;
+
+				column.isHidden = colIsHidden;
+
+			}); */
+
+		} else {
+
+			for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
+				columns[i].isHidden = false;
+			}
+
+			/*columns.forEach((column, index) => {
+
+				var colLevel = index + 1;
+				var columnWithoutGroup = groups.length < colLevel;
+
+				if (columnWithoutGroup) {
+
+					// if (column.isHidden) columnsChanged = true;
+					column.isHidden = false;
+
+				}
+
+			});*/
+
+		}
+
+		evDataService.setColumns(columns);
+
+	};
 
     module.exports = {
         getOrCreateGroupSettings: getOrCreateGroupSettings,
@@ -1018,7 +1153,9 @@
         syncLevelFold: syncLevelFold,
         getFlatStructure: getFlatStructure,
         getFlatListFieldUniqueValues: getFlatListFieldUniqueValues,
-        calculateProjection: calculateProjection
+        calculateProjection: calculateProjection,
+
+		markHiddenColumnsBasedOnFoldedGroups: markHiddenColumnsBasedOnFoldedGroups
     }
 
 

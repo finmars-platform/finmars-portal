@@ -854,10 +854,11 @@
 
         <div class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
 
-            <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
-                 data-ng-repeat="column in groups track by column.key"
-                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
-                 data-ng-style="column.style"
+            <div class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"
+                 ng-repeat="column in groups track by column.key"
+                 ng-hide="column.isHidden"
+                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
+                 ng-style="column.style"
                  data-column-id="{{column.___group_type_id}}"
                  data-attr-key="{{column.key}}"
                  draggable="{{groupsAreaDraggable}}"
@@ -886,11 +887,15 @@
 
                 <div class="g-cell g-table-header-cell g-table-header-group-cell">
 
-                    <div class="g-cell-button" data-ng-if="column.report_settings.is_level_folded" data-ng-click="unfoldLevel(column, $index)">
+                    <div ng-if="column.report_settings.is_level_folded"
+                         class="g-cell-button"
+                         ng-click="unfoldLevel(column, $index)">
                         <span class="material-icons">add</span>
                     </div>
 
-                    <div class="g-cell-button" data-ng-if="!column.report_settings.is_level_folded" data-ng-click="foldLevel(column, $index)">
+                    <div ng-if="!column.report_settings.is_level_folded"
+                         class="g-cell-button"
+                         ng-click="foldLevel(column, $index)">
                         <span class="material-icons">remove</span>
                     </div>
 
@@ -964,13 +969,15 @@
 
         <div class="flex-row width-100 g-cols-holder gColumnsHolder gcAreaDnD">
 
-            <div class="g-table-header-cell-wrapper gDraggableHead gcAreaDnD"
-                 data-ng-repeat="column in notGroupingColumns track by column.key"
-                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
-                 data-ng-style="column.style"
+            <div class="g-table-header-cell-wrapper gColumnElem gDraggableHead gcAreaDnD"
+                 ng-repeat="column in notGroupingColumns track by column.key"
+                 ng-hide="column.isHidden"
+                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
+                 ng-style="column.style"
                  data-column-id="{{column.___column_id}}"
                  data-attr-key="{{column.key}}"
                  draggable="true"
+
                  popup
                  popup-id="{{column.key}}"
                  popup-template-url="{{getPopupMenuTemplate(column)}}"
@@ -1058,8 +1065,18 @@
                      data-attr-key="{{column.key}}"></div>
             </div>
 
+            <div class="g-table-header-cell-wrapper">
+                <button class="g-cell g-add-column-button" data-ng-click="addColumn($event)">
+                    <md-tooltip md-direction="top">
+                        Add new column
+                    </md-tooltip>
+                    <span class="material-icons">add_circle</span>
+                </button>
+            </div>
+
         </div>
 
     </div>
+
 </div>
 <!-- <Victor #69 New report viewer interface> -->
