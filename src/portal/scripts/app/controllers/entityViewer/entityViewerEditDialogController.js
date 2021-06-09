@@ -575,20 +575,20 @@
         }; */
 
         const injectUserAttributesFromInstrumentType = function () {
+            console.log('#112 vm.entity[vm.typeFieldName] ', vm.entity[vm.typeFieldName]);
+            console.log('#112 vm.entity before inject', JSON.parse(JSON.stringify(vm.entity)));
 
             const instrumentTypeId = vm.entity[vm.typeFieldName];
-
             instrumentTypeService.getByKey(instrumentTypeId).then(data => {
-
                 const attrs = data.instrument_attributes;
+                console.log('#112 instrument type data', data.instrument_attributes)
                 attrs.forEach(attr => {
-
                     const key = attr.attribute_type_user_code;
                     const value = entityEditorHelper.instrumentTypeAttrValueMapper(attr);
                     vm.entity[key] = value;
-
                 });
 
+                console.log('#112 vm.entity', JSON.parse(JSON.stringify(vm.entity)));
             })
         }
 
