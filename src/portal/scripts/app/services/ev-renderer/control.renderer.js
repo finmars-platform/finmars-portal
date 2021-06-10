@@ -3,12 +3,37 @@
 
     var render = function (evDataService, obj, prevObj) {
 
-        var requestParameters = evDataService.getRequestParameters(obj.___parentId);
-        var pagination = requestParameters.pagination;
-        var rowHeight = evDataService.getRowHeight();
+        var selectedGroups = evDataService.getSelectedGroups();
 
-        var total_pages = Math.ceil(pagination.count / pagination.page_size);
-        var page = pagination.page;
+        // var requestParameters = evDataService.getRequestParameters(obj.___parentId);
+        // var pagination = requestParameters.pagination;
+        // var rowHeight = evDataService.getRowHeight();
+        //
+        // var total_pages = Math.ceil(pagination.count / pagination.page_size);
+        // var page = pagination.page;
+
+        var rowHeight = evDataService.getRowHeight();
+        var canLoadMore = false;
+
+
+        selectedGroups.forEach(function (selectedGroup) {
+
+            var requestParameters = evDataService.getRequestParameters(selectedGroup.___id);
+            var pagination = requestParameters.pagination;
+
+
+            var total_pages = Math.ceil(pagination.count / pagination.page_size);
+            var page = pagination.page;
+
+            if (page < total_pages) {
+                canLoadMore = true;
+            }
+
+
+        })
+
+
+        console.log('selectedGroups', selectedGroups);
 
         // console.log('requestParameters', requestParameters);
         // console.log('total_pages', total_pages);
@@ -28,7 +53,7 @@
 
         result = result + rowSelection;
 
-        if (page < total_pages) {
+        if (canLoadMore) {
 
             result = result + '<button class="control-button load-more" data-type="control" data-ev-control-action="load-more" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" >Load more</button>';
             result = result + '<button class="control-button load-all" data-type="control" data-ev-control-action="load-all" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" > Load all</button>';
