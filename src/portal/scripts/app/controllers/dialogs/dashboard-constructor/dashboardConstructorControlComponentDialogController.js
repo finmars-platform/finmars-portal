@@ -35,21 +35,23 @@
         vm.reportFields = [];
         vm.multiselectItems = [];
 
+        vm.initialDefaultSettings = {
+            mode: 2,
+            entity_type: null,
+            layout: null,
+            report_field: null,
+            setValue: null,
+            setValueName : null,
+            setValueTitle: null
+        };
+
         if (vm.item.settings.defaultValue) {
 
             vm.defaultValue = vm.item.settings.defaultValue;
 
         } else {
 
-            vm.defaultValue = {
-                mode: 2,
-                entity_type: null,
-                layout: null,
-                report_field: null,
-                setValue: null,
-                setValueName : null,
-                setValueTitle: null
-            };
+            vm.defaultValue = vm.initialDefaultSettings;
 
         }
 
@@ -123,23 +125,47 @@
 
         vm.isRequiredDefaultValue = function () {
 
-            var isDateSelected = vm.item.settings.value_type === 40;
-            var isRelationNeedDefaultValue = vm.currentContentType && vm.currentContentType.relationType;
+            if (vm.item.settings.value_type === 100) {
+                const isRelationNeedDefaultValue = vm.currentContentType && vm.currentContentType.relationType;
+                return isRelationNeedDefaultValue;
+            }
 
-            return isDateSelected || isRelationNeedDefaultValue;
+            return vm.item.settings.value_type === 40;
 
         };
 
         vm.clearDefaultValue = function () {
 
-            vm.defaultValue.layout = null;
-            vm.defaultValue.entity_type = null;
-            vm.defaultValue.setValue = null;
-            vm.defaultValue.setValueName = null;
-            vm.defaultValue.setValueTitle = null;
-            vm.multiselectItems = [];
+            Object.assign(vm.defaultValue, vm.initialDefaultSettings)
+
 
         };
+
+        vm.valueTypeChanged = function () {
+            vm.clearDefaultValue();
+        };
+
+        vm.contentTypeChanged = function () {
+            vm.clearDefaultValue();
+
+            const relationType = vm.currentContentType.relationType;
+
+            if (relationType) {
+
+                vm.getDataForMultiselect(relationType).then(function (resData) {
+
+                    vm.multiselectItems = JSON.parse(JSON.stringify(resData.results));
+
+                });
+
+            } else {
+
+                vm.multiselectItems = [];
+
+            }
+
+        };
+
 
         vm.onReportTypeChange = function() {
 
@@ -325,6 +351,10 @@
 
         vm.isValidDefaultValue = function () {
 
+            if (!vm.isRequiredDefaultValue()) {
+                return true;
+            }
+
             if (vm.defaultValue.mode === 0) { // Get default value
 
                 if (vm.item.settings.value_type === 40) { // Date
@@ -400,9 +430,9 @@
 
         };
 
-        vm.getDataForMultiselect = function () {
+        vm.getDataForMultiselect = function (relationType) {
 
-            return entityResolverService.getList(vm.currentContentType.relationType);
+            return entityResolverService.getList(relationType);
 
         };
 
@@ -467,16 +497,22 @@
 
             vm.currentContentType = vm.getContentTypeByKey(vm.item.settings.content_type);
 
-            if (vm.item.settings.multiple) {
+            const relationType = vm.currentContentType.relationType;
 
-                vm.getDataForMultiselect().then(function (resData) {
+            if (relationType) {
+
+                vm.getDataForMultiselect(relationType).then(function (resData) {
 
                     vm.multiselectItems = JSON.parse(JSON.stringify(resData.results));
 
                 });
 
+            } else {
+
+                vm.multiselectItems = [];
+
             }
-            
+
             if (!vm.defaultValue.setValueObject) {
                 vm.defaultValue.setValueObject = {};
             }
