@@ -1048,6 +1048,9 @@
 
         console.log('getObjectsFromSelectedGroups.selectedGroups', selectedGroups);
 
+
+        var controlObj = null;
+
         selectedGroups.forEach(function (group) {
 
             var rawData = evDataService.getData(group.___id)
@@ -1065,15 +1068,19 @@
                     } else if (item.___type === 'placeholder_object') {
                         result.push(item);
                     } else if (item.___type === 'control') {
-                        if (!multiselectState) {
-                            result.push(item);
-                        }
+                        // if (!multiselectState) {
+                        controlObj = item
+                        // }
                     }
 
                 })
             }
 
         })
+
+        if (controlObj) {
+            result.push(controlObj)
+        }
 
         console.log('getObjectsFromSelectedGroups.result', result)
 
