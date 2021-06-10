@@ -212,11 +212,11 @@
 
         };
 
-        vm.extractReportFieldsFromLayout = function (layoutId) {
+        vm.extractReportFieldsFromLayout = function (layoutUserCode) {
 
             var layout = vm.layouts.find(function (item) {
 
-                return item.id === layoutId;
+                return item.user_code === layoutUserCode;
 
             });
 
