@@ -55,6 +55,7 @@
   position: relative;
   height: 0;
   overflow: hidden;
+  box-sizing: border-box;
   // transition: max-height 0.5s linear;
   .new-interface();
 
@@ -69,9 +70,13 @@
   }
 
   .icon-buttons {
-    display: flex;
+    flex: 0 0 252px;
+    /* display: flex;
     justify-content: flex-end;
-    flex: 0 0 191px;
+    flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
   }
 
   .g-filter-settings-big-left-btn {
@@ -797,6 +802,7 @@
 
   .g-filters-holder {
     float: left;
+    box-sizing: border-box;
 
     .modal-dialog-card {
       margin: 8px;
@@ -1130,11 +1136,6 @@
     right: 0;
 
     .left-right-drop-area();
-  }
-
-  .g-filters-holder {
-    padding: 10px;
-    box-sizing: border-box;
   }
 
   .g-column-bottom-row.g-table-header {

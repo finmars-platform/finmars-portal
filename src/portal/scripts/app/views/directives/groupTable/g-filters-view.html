@@ -1,5 +1,7 @@
+<!-- IMPORTANT: for .gFilters padding should be set by styles, so that scripts can access it value -->
 <div class="g-filters width-100 gFilters"
-     data-ng-class="{'open-filters': isFiltersOpened}">
+     data-ng-class="{'open-filters': isFiltersOpened}"
+     style="padding: 10px;">
 
     <div class="g-filters-holder width-100 flex-row fc-space-between flex-i-start">
         <div class="flex-row flex-i-start">
@@ -65,154 +67,158 @@
 
         </div>
 
-        <div class="icon-buttons gFiltersRightPart">
+        <div class="icon-buttons">
 
-            <md-button class="signed-button" data-ng-click="calculateReport()">
-                <div class="flex-column flex-i-center">
-                    <span class="material-icons">refresh</span>
-                    <span>Refresh</span>
-                </div>
-            </md-button>
+            <div class="flex-row fc-flex-end gFiltersRightPart">
 
-            <md-menu class="full-width" data-ng-if="isRootEntityViewer">
-                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                <md-button class="signed-button" data-ng-click="calculateReport()">
                     <div class="flex-column flex-i-center">
-                        <span class="material-icons">view_stream</span>
-                        <span>Split</span>
+                        <span class="material-icons">refresh</span>
+                        <span>Refresh</span>
                     </div>
                 </md-button>
 
-                <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button data-ng-click="toggleSplitPanel($event, 'balance-report')"
-                                   class="g-settings-option-btn">
+                <md-menu class="full-width" data-ng-if="isRootEntityViewer">
+                    <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                        <div class="flex-column flex-i-center">
+                            <span class="material-icons">view_stream</span>
+                            <span>Split</span>
+                        </div>
+                    </md-button>
 
-                            <span class="material-icons" data-ng-show="currentAdditions.type === 'balance-report'">done</span>
-                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'balance-report'" style="visibility: hidden;">done</span>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button data-ng-click="toggleSplitPanel($event, 'balance-report')"
+                                       class="g-settings-option-btn">
 
-                            <span>Open Balance Report view panel</span>
+                                <span class="material-icons" data-ng-show="currentAdditions.type === 'balance-report'">done</span>
+                                <span class="material-icons" data-ng-show="currentAdditions.type !== 'balance-report'" style="visibility: hidden;">done</span>
 
-                        </md-button>
-                    </md-menu-item>
+                                <span>Open Balance Report view panel</span>
 
-                    <md-menu-item>
-                        <md-button data-ng-click="toggleSplitPanel($event, 'pl-report')"
-                                   class="g-settings-option-btn">
+                            </md-button>
+                        </md-menu-item>
 
-                            <span class="material-icons" data-ng-show="currentAdditions.type === 'pl-report'">done</span>
-                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'pl-report'" style="visibility: hidden;">done</span>
+                        <md-menu-item>
+                            <md-button data-ng-click="toggleSplitPanel($event, 'pl-report')"
+                                       class="g-settings-option-btn">
 
-                            <span>Open P&L Report view panel</span>
+                                <span class="material-icons" data-ng-show="currentAdditions.type === 'pl-report'">done</span>
+                                <span class="material-icons" data-ng-show="currentAdditions.type !== 'pl-report'" style="visibility: hidden;">done</span>
 
-                        </md-button>
-                    </md-menu-item>
+                                <span>Open P&L Report view panel</span>
 
-                    <md-menu-item>
-                        <md-button data-ng-click="toggleSplitPanel($event, 'transaction-report')"
-                                   class="g-settings-option-btn">
+                            </md-button>
+                        </md-menu-item>
 
-                            <span class="material-icons" data-ng-show="currentAdditions.type === 'transaction-report'">done</span>
-                            <span class="material-icons" data-ng-show="currentAdditions.type !== 'transaction-report'" style="visibility: hidden;">done</span>
+                        <md-menu-item>
+                            <md-button data-ng-click="toggleSplitPanel($event, 'transaction-report')"
+                                       class="g-settings-option-btn">
 
-                            <span>Open Transaction Report view panel</span>
+                                <span class="material-icons" data-ng-show="currentAdditions.type === 'transaction-report'">done</span>
+                                <span class="material-icons" data-ng-show="currentAdditions.type !== 'transaction-report'" style="visibility: hidden;">done</span>
 
-                        </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
+                                <span>Open Transaction Report view panel</span>
 
-            <md-menu class="full-width"  data-ng-if="isRootEntityViewer">
-                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                    <div class="flex-column flex-i-center">
-                        <span class="material-icons">view_module</span>
-                        <span>Matrix</span>
-                    </div>
-                </md-button>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
 
-                <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button data-ng-click="toggleMatrix($event)" class="g-settings-option-btn">
+                <md-menu class="full-width"  data-ng-if="isRootEntityViewer">
+                    <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                        <div class="flex-column flex-i-center">
+                            <span class="material-icons">view_module</span>
+                            <span>Matrix</span>
+                        </div>
+                    </md-button>
 
-                            <span class="material-icons" data-ng-show="viewContext === 'matrix'">done</span>
-                            <span class="material-icons" data-ng-show="viewContext !== 'matrix'" style="visibility: hidden;">done</span>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button data-ng-click="toggleMatrix($event)" class="g-settings-option-btn">
 
-                            <span>Open Matrix</span>
-                        </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
+                                <span class="material-icons" data-ng-show="viewContext === 'matrix'">done</span>
+                                <span class="material-icons" data-ng-show="viewContext !== 'matrix'" style="visibility: hidden;">done</span>
 
-            <md-menu>
-                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                    <div class="flex-column flex-i-center">
-                        <span class="material-icons">upgrade</span>
-                        <span>Export</span>
-                    </div>
-                </md-button>
+                                <span>Open Matrix</span>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
 
-                <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
-                            <span>Export to PDF</span>
-                        </md-button>
-                    </md-menu-item>
+                <md-menu>
+                    <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                        <div class="flex-column flex-i-center">
+                            <span class="material-icons">upgrade</span>
+                            <span>Export</span>
+                        </div>
+                    </md-button>
 
-                    <md-menu-item>
-                        <md-button data-ng-click="exportAsCSV()" class="g-settings-option-btn">
-                            <span>Export to CSV</span>
-                        </md-button>
-                    </md-menu-item>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
+                                <span>Export to PDF</span>
+                            </md-button>
+                        </md-menu-item>
 
-                    <md-menu-item>
-                        <md-button data-ng-click="exportAsExcel()" class="g-settings-option-btn">
-                            <span>Export to Excel</span>
-                        </md-button>
-                    </md-menu-item>
+                        <md-menu-item>
+                            <md-button data-ng-click="exportAsCSV()" class="g-settings-option-btn">
+                                <span>Export to CSV</span>
+                            </md-button>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-button data-ng-click="exportAsExcel()" class="g-settings-option-btn">
+                                <span>Export to Excel</span>
+                            </md-button>
+                        </md-menu-item>
 
 
-                    <md-menu-item>
-                        <md-button data-ng-click="copyReport()" class="g-settings-option-btn">
-                            <span>Copy all to buffer</span>
-                        </md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button data-ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
-                            <span>Copy selected to buffer</span>
-                        </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
+                        <md-menu-item>
+                            <md-button data-ng-click="copyReport()" class="g-settings-option-btn">
+                                <span>Copy all to buffer</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button data-ng-click="copySelectedToBuffer()" class="g-settings-option-btn">
+                                <span>Copy selected to buffer</span>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
 
-            <md-menu>
-                <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
-                    <div class="flex-column flex-i-center">
-                        <span class="material-icons">more_vert</span>
-                        <span>More</span>
-                    </div>
-                </md-button>
+                <md-menu>
+                    <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
+                        <div class="flex-column flex-i-center">
+                            <span class="material-icons">more_vert</span>
+                            <span>More</span>
+                        </div>
+                    </md-button>
 
-                <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button  data-ng-click="openViewConstructor($event)" class="g-settings-option-btn">
-                            <span>View Constructor</span>
-                        </md-button>
-                    </md-menu-item>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button  data-ng-click="openViewConstructor($event)" class="g-settings-option-btn">
+                                <span>View Constructor</span>
+                            </md-button>
+                        </md-menu-item>
 
-                    <md-menu-item>
-                        <md-button data-ng-click="openCustomFieldsManager()" class="g-settings-option-btn">
-                            <span>Custom Columns</span>
-                        </md-button>
-                    </md-menu-item>
+                        <md-menu-item>
+                            <md-button data-ng-click="openCustomFieldsManager()" class="g-settings-option-btn">
+                                <span>Custom Columns</span>
+                            </md-button>
+                        </md-menu-item>
 
-                    <md-menu-item>
-                        <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">
-                            <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>
-                            <span data-ng-if="!rvAutoRefresh">Enable Auto Refresh</span>
-                        </md-button>
-                    </md-menu-item>
+                        <md-menu-item>
+                            <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">
+                                <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>
+                                <span data-ng-if="!rvAutoRefresh">Enable Auto Refresh</span>
+                            </md-button>
+                        </md-menu-item>
 
-                </md-menu-content>
-            </md-menu>
+                    </md-menu-content>
+                </md-menu>
+
+            </div>
 
         </div>
     </div>
