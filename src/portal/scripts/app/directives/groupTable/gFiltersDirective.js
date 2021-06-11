@@ -1076,6 +1076,8 @@
 
                     syncFiltersLayoutNamesWithColumns();
 
+					getUseFromAboveFilters();
+
                     formatFiltersForChips();
 
                     scope.readyStatus.filters = true;
