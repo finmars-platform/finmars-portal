@@ -183,14 +183,14 @@
 
                 };
 
-                function clearAdditions() {
+                /* function clearAdditions() {
 
                     let additions = scope.evDataService.getAdditions();
 
                     additions.isOpen = false;
                     additions.type = '';
                     delete additions.layoutData;
-                    /*delete additions.layoutId;*/
+                    /!*delete additions.layoutId;*!/
 
                     scope.evDataService.setSplitPanelStatus(false);
                     scope.evDataService.setAdditions(additions);
@@ -201,7 +201,7 @@
                     // delete scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                }
+                } */
 
                 let getListLayoutByEntity = function (entityType) {
                     var options = {
@@ -256,13 +256,17 @@
 
                     if (scope.currentAdditions.type === type) {
 
-                        let interfaceLayout = scope.evDataService.getInterfaceLayout();
+                        /* let interfaceLayout = scope.evDataService.getInterfaceLayout();
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
                         middlewareService.setNewSplitPanelLayoutName(false);
 
-                        clearAdditions();
+                        clearAdditions(); */
+						evRvLayoutsHelper.clearSplitPanelAdditions(scope.evDataService);
+
+						scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+						scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                     } else {
 
