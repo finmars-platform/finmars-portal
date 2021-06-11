@@ -570,6 +570,8 @@
                                         data: {}
                                     };
 
+                                    contextData.date = reportOptions.report_date
+
                                     editEntity(activeObject, locals);
 
                                 } else {
