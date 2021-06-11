@@ -22,7 +22,7 @@
 
 	var scrollHelper = new ScrollHelper();
 
-    module.exports = function entityDataConstructorDialogController($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
+    module.exports = function ($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
 
         var vm = this;
 
