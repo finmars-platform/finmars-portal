@@ -70,7 +70,9 @@
                 }
 
                 const gFiltersElem = elem[0].querySelector('.gFilters');
+				/** Used when inside dashboard, and does not change with window resize. */
                 const gFiltersElemWidth = gFiltersElem.clientWidth;
+				const gFiltersElemPadding = parseInt(gFiltersElem.style.padding, 10);
                 let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
 
                 const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
@@ -687,13 +689,13 @@
                     }
                     // < TODO use only scope.contentWrapElement.clientWidth after removing gSidebarFilter >
 
-                    const availableSpace = filterAreaWidth - gFiltersLeftPartWidth - gFiltersRightPartWidth;
+					const horizontalPaddings = gFiltersElemPadding * 2;
+                    const availableSpace = filterAreaWidth - horizontalPaddings - gFiltersLeftPartWidth - gFiltersRightPartWidth;
                     /* if (availableSpace < 800) {
 
                         filtersChipsContainerWidth = Math.max(availableSpace, 500);
 
                     } */
-
                     filtersChipsContainer.style.width = availableSpace + 'px';
 
                 };
