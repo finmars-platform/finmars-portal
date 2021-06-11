@@ -543,9 +543,9 @@
 
 		vm.onRequiredFieldChange = function (fieldKey) {
 
-			const tabsWithErrors = vm.evEditorDataService.getTabsWithErrors();
+			const locsWithErrors = vm.evEditorDataService.getLocationsWithErrors();
 
-			if (tabsWithErrors['system_tab'].hasOwnProperty('accruals')) {
+			if (locsWithErrors['system_tab'].hasOwnProperty('accruals')) {
 				$scope.$parent.vm.onEntityChange(fieldKey);
 			}
 

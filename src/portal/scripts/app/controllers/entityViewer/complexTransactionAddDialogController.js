@@ -65,7 +65,7 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
-		vm.tabsWithErrors = {};
+		vm.locsWithErrors = {};
 		vm.errorFieldsList = [];
 		vm.inputsWithCalculations = null;
 
@@ -536,7 +536,7 @@
 
             if (errors.length) {
 
-				vm.tabsWithErrors = {};
+				vm.locsWithErrors = {};
 
                 /* errors.forEach(function (errorObj) {
 
@@ -550,11 +550,11 @@
                         var tabNameElem = document.querySelector(selectorString);
                         tabNameElem.classList.add('error-tab');
 
-                        if (!vm.tabsWithErrors.hasOwnProperty(tabName)) {
-							vm.tabsWithErrors[tabName] = [errorObj.key];
+                        if (!vm.locsWithErrors.hasOwnProperty(tabName)) {
+							vm.locsWithErrors[tabName] = [errorObj.key];
 
-                        } else if (vm.tabsWithErrors[tabName].indexOf(errorObj.key) < 0) {
-							vm.tabsWithErrors[tabName].push(errorObj.key);
+                        } else if (vm.locsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+							vm.locsWithErrors[tabName].push(errorObj.key);
 
                         }
 
@@ -564,7 +564,7 @@
 
                 });
 
-				sharedLogicHelper.processTabsErrors(errors, vm.tabsWithErrors, vm.errorFieldsList);
+				sharedLogicHelper.processTabsErrors(errors, vm.locsWithErrors, vm.errorFieldsList);
 
                 vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 

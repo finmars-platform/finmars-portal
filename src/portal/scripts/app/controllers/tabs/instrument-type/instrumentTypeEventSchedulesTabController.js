@@ -677,9 +677,9 @@
 		/** @param fieldKey {string} - property inside entity object, that was changed */
 		vm.onRequiredFieldChange = function (fieldKey) {
 
-			const tabsWithErrors = vm.evEditorDataService.getTabsWithErrors();
+			const locsWithErrors = vm.evEditorDataService.getLocationsWithErrors();
 
-			if (tabsWithErrors['system_tab'].hasOwnProperty('events')) {
+			if (locsWithErrors['system_tab'].hasOwnProperty('events')) {
 				$scope.$parent.vm.onEntityChange(fieldKey);
 			}
 

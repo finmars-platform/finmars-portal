@@ -218,6 +218,15 @@
 
                             scope.numberToShow = res.numberValue;
                             applyNumberFormatToInput();
+
+							if (scope.onChangeCallback) {
+
+								setTimeout(function () {
+									scope.onChangeCallback();
+								}, 0);
+
+							}
+
                         }
 
                     });

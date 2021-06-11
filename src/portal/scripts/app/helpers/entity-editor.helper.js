@@ -303,7 +303,6 @@
                 return systemTabLocationOfAttribute[entityType][attrKey] || null;
 
             }
-
             else {
 
                 return getLocationOfAttributeInsideUserTabs(attrKey, tabs);
@@ -763,7 +762,9 @@
             errorObj.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
             errorsList.push(errorObj);
 
-			copySystemTabErrorForUserTab(key, tabs, errorObj, errorsList);
+            if (errorObj.locationData.type === 'system_tab') {
+				copySystemTabErrorForUserTab(key, tabs, errorObj, errorsList);
+			}
 
         }
 
@@ -1212,56 +1213,93 @@
 	 * @param evEditorEventService {Object} - entityViewerEditorEventService
 	 * @param $mdDialog {Object}
 	 * @param $event {Object} - event object
+	 * @param fixedAreaPopup {?Object} - fields inside of popup
+	 * @returns {Object|null} - changed fixedAreaPopup or null
 	 */
-	const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event) {
+	const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup) {
 
-		const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+		var entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
-		let tabsWithErrors = evEditorDataService.getTabsWithErrors();
-		let formErrorsList = evEditorDataService.getFormErrorsList();
+		var locsWithErrors = evEditorDataService.getLocationsWithErrors();
+		var formErrorsList = evEditorDataService.getFormErrorsList();
+
+		var fixedAreaPopupChanged = false;
 
 		errors.forEach(function (errorObj) {
 
-			if (errorObj.locationData &&
-				['user_tab', 'system_tab'].includes(errorObj.locationData.type)) {
+			if (errorObj.locationData) {
 
-				const tabName = errorObj.locationData.name.toLowerCase();
-				const tabType = errorObj.locationData.type; // system_tab || user_tab
+				if (['user_tab', 'system_tab'].includes(errorObj.locationData.type)) {
 
-				let tabIsNotMarked = false;
+					const tabName = errorObj.locationData.name.toLowerCase();
+					const tabType = errorObj.locationData.type; // system_tab || user_tab
 
-				if (!tabsWithErrors[tabType].hasOwnProperty(tabName)) {
+					let tabIsNotMarked = false;
 
-					tabsWithErrors[tabType][tabName] = [errorObj.key];
-					tabIsNotMarked = true;
+					if (!locsWithErrors[tabType].hasOwnProperty(tabName)) {
 
-				} else if (!tabsWithErrors[tabType][tabName].includes(errorObj.key)) {
+						locsWithErrors[tabType][tabName] = [errorObj.key];
+						tabIsNotMarked = true;
 
-					tabsWithErrors[tabType][tabName].push(errorObj.key);
-					tabIsNotMarked = true;
+					} else if (!locsWithErrors[tabType][tabName].includes(errorObj.key)) {
+
+						locsWithErrors[tabType][tabName].push(errorObj.key);
+						tabIsNotMarked = true;
+
+					}
+
+					if (tabIsNotMarked) {
+
+						if (!formErrorsList.includes(errorObj.key)) { // component can be in multiple tabs (e.g. maturity_date) but formErrorsList should contain only one key
+
+							formErrorsList.push(errorObj.key);
+
+						}
+
+						if (tabType === 'user_tab') {
+
+							const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
+							const tabNameElem = document.querySelector(selectorString);
+
+							if (tabNameElem) tabNameElem.classList.add('error-tab');
+
+						} else if (tabType === 'system_tab') {
+							entityTabsMenuBtn.classList.add('error-tab');
+						}
+
+					}
 
 				}
+				else if (errorObj.locationData.type === 'fixed_area') {
 
-				if (tabIsNotMarked) {
+					var fieldProp = errorObj.key;
+					var popupFieldsKeysList = [];
 
-					if (!formErrorsList.includes(errorObj.key)) { // component can be in multiple tabs (e.g. maturity_date) but formErrorsList should contain only one key
+					if (fixedAreaPopup) popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
 
-						formErrorsList.push(errorObj.key);
+					var errorIsInsidePopup = popupFieldsKeysList.length && popupFieldsKeysList.includes(fieldProp);
+
+					if (!locsWithErrors.fixed_area.fields.includes(fieldProp)) {
+
+						locsWithErrors.fixed_area.fields.push(fieldProp);
+
+						if (errorIsInsidePopup) {
+
+							fixedAreaPopupChanged = true;
+							// Trigger error mode of the field inside popup of fixed area
+							fixedAreaPopup.fields[fieldProp].event = {key: "error", error: errorObj.message};
+							fixedAreaPopup.fields[fieldProp].error = errorObj.message;
+
+							/* const popupElem = document.querySelector('.entityEditorFixedAreaPopup');
+							popupElem.classList.add("error"); */
+							fixedAreaPopup.event = {key: "error", error: "There are fields with errors inside"}
+							fixedAreaPopup.error = "There are fields with errors inside";
+
+						}
 
 					}
 
-					if (tabType === 'user_tab') {
-
-						const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
-						const tabNameElem = document.querySelector(selectorString);
-
-						if (tabNameElem) tabNameElem.classList.add('error-tab');
-
-					}
-
-					else if (tabType === 'system_tab') {
-						entityTabsMenuBtn.classList.add('error-tab');
-					}
+					if (!formErrorsList.includes(fieldProp)) formErrorsList.push(fieldProp);
 
 				}
 
@@ -1269,7 +1307,7 @@
 
 		});
 
-		evEditorDataService.setTabsWithErrors(tabsWithErrors);
+		evEditorDataService.setLocationsWithErrors(locsWithErrors);
 		evEditorDataService.setFormErrorsList(formErrorsList);
 
 		evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
@@ -1286,22 +1324,50 @@
 			}
 		});
 
+		if (fixedAreaPopupChanged) return fixedAreaPopup;
+
+		return null;
+
 	};
 
 	/**
 	 *
 	 * @param errorKey {string} - name of property inside entity object
 	 * @param formErrorsList {Array.<string>} - list of error keys
-	 * @param tabsWithErrors {{system_tab: Object, user_tab: Object}} - map of tabs with errors
+	 * @param locationsWithErrors {{system_tab: Object, user_tab: Object}} - map of tabs with errors
 	 */
-    var clearEntityFormError = function (errorKey, formErrorsList, tabsWithErrors) {
+    var clearFormTabError = function (errorKey, formErrorsList, locationsWithErrors) {
 
-    	const errorIndex = formErrorsList.indexOf(errorKey);
+    	var errorIndex = formErrorsList.indexOf(errorKey);
     	formErrorsList.splice(errorIndex, 1);
 
-		var removeErrorFromTab = function (tabType) {
+		//<editor-fold desc="Remove error mark from fixed area popup">
+		/* var i;
+    	for (i = 0; i < locationsWithErrors['fixed_area'].fields.length; i++) {
 
-			var tabs = tabsWithErrors[tabType];
+    		var fieldKey = locationsWithErrors['fixed_area'].fields[i];
+
+    		if (fieldKey === errorKey) {
+
+    			locationsWithErrors['fixed_area'].fields.splice(i, 1);
+
+    			if (!locationsWithErrors['fixed_area'].fields.length) {
+
+    				var fixedAreaPopupElem = document.querySelector('.entityEditorFixedAreaPopup');
+					fixedAreaPopupElem.classList.remove("error");
+
+				}
+
+				break;
+
+			}
+
+		} */
+		//</editor-fold>
+
+		var removeErrorMarkFromTabs = function (tabType) {
+
+			var tabs = locationsWithErrors[tabType];
 			var tabKeys = Object.keys(tabs);
 
 			var t;
@@ -1330,7 +1396,7 @@
 						}
 						else if (tabType === 'system_tab' && !Object.keys(tabs).length) {
 
-							const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+							var entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
 							entityTabsMenuBtn.classList.remove('error-tab');
 
@@ -1344,15 +1410,94 @@
 
 			}
 
-		}
+		};
 
-		removeErrorFromTab('system_tab');
-		removeErrorFromTab('user_tab');
+		removeErrorMarkFromTabs('system_tab');
+		removeErrorMarkFromTabs('user_tab');
 
 	}
 
 	/**
-	 * Remove error mark from tab if all it's errors has been fixed
+	 * Validate single property of entity.
+	 *
+	 * @param errorKey {string} - name of property inside entity object
+	 * @param evEditorDataService {Object}
+	 * @param attributes {{entityAttrs: Array, attrsTypes: Array, [userInputs]: Array}} - userInputs for complex transactions only
+	 * @param entity {Object}
+	 * @param entityType {string}
+	 * @param tabs {Object} - tabs from edit layout
+	 */
+	var validateEntityProperty = function (errorKey, attributes, entity, entityType, tabs) {
+
+    	var errors = [];
+
+		if (entityType === 'instrument-type' && errorKey === 'accruals') {
+			validateInstrumentTypeAccruals(entity, errors);
+
+		} else if (entityType === 'instrument-type' && errorKey === 'events') {
+			validateInstrumentTypeEvents(entity, errors);
+
+		}
+		else { // validate fields inside system or dynamic tabs
+
+			var eAttrsToCheck = [];
+			var attrTypesToCheck = [];
+			var uInputsToCheck = [];
+
+			var entityAttrs = attributes.entityAttrs;
+			var attrsTypes = attributes.attrsTypes;
+			var userInputs = attributes.userInputs;
+
+			var attrNotFound = true;
+			var i,a,b;
+
+			for (i = 0; i < entityAttrs.length; i++) {
+				if (entityAttrs[i].key === errorKey) {
+
+					eAttrsToCheck.push(entityAttrs[i]);
+					attrNotFound = false;
+					break;
+
+				}
+			}
+
+			if (attrNotFound && attrsTypes) {
+
+				for (a = 0; a < attrsTypes.length; a++) {
+					if (attrsTypes[a].user_code === errorKey) {
+
+						attrTypesToCheck.push(attrsTypes[a]);
+						attrNotFound = false;
+						break;
+
+					}
+				}
+
+			}
+
+			if (attrNotFound && userInputs) {
+
+				for (b = 0; b < userInputs.length; b++) {
+					if (userInputs[b].user_code === errorKey) {
+
+						uInputsToCheck.push(attrsTypes[b]);
+						break;
+
+					}
+				}
+
+			}
+
+			errors = validateEntityFields(entity, entityType, tabs, [], eAttrsToCheck, attrTypesToCheck, uInputsToCheck);
+
+		}
+
+		return errors;
+
+	}
+
+	/**
+	 * Deregister error. Remove error mark from tab if all it's errors has been fixed.
 	 *
 	 * @param errorKey {string} - name of property inside entity object
 	 * @param evEditorDataService {Object}
@@ -1364,17 +1509,17 @@
     var checkTabsForErrorFields = function (errorKey, evEditorDataService, attributes, entity, entityType, tabs) {
 
     	var formErrorsList = evEditorDataService.getFormErrorsList();
-		var tabsWithErrors = evEditorDataService.getTabsWithErrors();
+		var locsWithErrors = evEditorDataService.getLocationsWithErrors();
 
         if (formErrorsList.length) {
 
         	// var fieldIndex = formErrorsList.indexOf(fieldKey);
 			// var errorData = formErrorsList[fieldIndex];
-			// var location = tabsWithErrors[errorData.location.type]; // system_tab || user_tab
+			// var location = locsWithErrors[errorData.location.type]; // system_tab || user_tab
 
 			if (formErrorsList.includes(errorKey)) {
 
-				var errors = [];
+				/* var errors = [];
 
 				if (entityType === 'instrument-type' && errorKey === 'accruals') {
 					validateInstrumentTypeAccruals(entity, errors);
@@ -1383,7 +1528,7 @@
 					validateInstrumentTypeEvents(entity, errors);
 
 				}
-				else { // validate component-field
+				else { // validate fields inside system or dynamic tabs
 
 					var eAttrsToCheck = [];
 					var attrTypesToCheck = [];
@@ -1435,60 +1580,67 @@
 
 					errors = validateEntityFields(entity, entityType, tabs, [], eAttrsToCheck, attrTypesToCheck, uInputsToCheck);
 
-				}
+				} */
+
+				var errors = validateEntityProperty(errorKey, attributes, entity, entityType, tabs);
 
 				if (!errors.length) { // if no errors left, remove marking from tab
-					clearEntityFormError(errorKey, formErrorsList, tabsWithErrors);
+					clearFormTabError(errorKey, formErrorsList, locsWithErrors);
 				}
 
 			}
-            else { // register error when it appears inside of tab with errors
+            else { // check for new error inside tab of errors
 
                 var fieldLocation = getLocationOfAttribute(errorKey, tabs, [], entityType);
 
-                if (fieldLocation) {
+                if (fieldLocation) { // register error when it appears inside of tab with errors
 
                     var tabName = fieldLocation.name.toLowerCase();
-					// var tabKeys = Object.keys(tabsWithErrors[fieldLocation.type]);
+					var fieldInsideTabWithError = locsWithErrors[fieldLocation.type] && locsWithErrors[fieldLocation.type][tabName] && locsWithErrors[fieldLocation.type][tabName].length;
 
-					if (tabsWithErrors[fieldLocation.type] &&
-						tabsWithErrors[fieldLocation.type][tabName]) {
+					if (fieldInsideTabWithError) {
 
-						formErrorsList.push(errorKey);
+						var errors = validateEntityProperty(errorKey, attributes, entity, entityType, tabs);
 
-						tabsWithErrors[fieldLocation.type][tabName].push(errorKey);
+						if (errors.length) {
+
+							formErrorsList.push(errorKey);
+
+							locsWithErrors[fieldLocation.type][tabName].push(errorKey);
+							/* if (fieldLocation.type === 'system_tab') { // same field can be inside system and dynamic tabs at once (i.e. maturity_date)
+
+								var fieldLocationInsideUserTab = getLocationOfAttributeInsideUserTabs(errorKey, tabs);
+								var userTabName = fieldLocationInsideUserTab.name.toLowerCase();
+
+								if (fieldLocationInsideUserTab) {
+
+									if (locsWithErrors['user_tab'] &&
+										locsWithErrors['user_tab'][userTabName]) {
+
+										locsWithErrors['user_tab'][userTabName].push(errorKey);
+
+									}
+
+								}
+
+							} */
+
+						}
 
 					}
-
-					if (fieldLocation.type === 'system_tab') {
+					/* if (fieldLocation.type === 'system_tab') { // same field can be inside user and dynamic tabs at once (i.e. maturity_date)
 
 						var fieldLocationInsideUserTab = getLocationOfAttributeInsideUserTabs(errorKey, tabs);
 						tabName = fieldLocationInsideUserTab.name.toLowerCase();
 
 						if (fieldLocationInsideUserTab) {
 
-							if (tabsWithErrors['system_tab'] &&
-								tabsWithErrors['system_tab'][tabName]) {
+							if (locsWithErrors['system_tab'] &&
+								locsWithErrors['system_tab'][tabName]) {
 
-								tabsWithErrors['system_tab'][tabName].push(errorKey);
+								locsWithErrors['system_tab'][tabName].push(errorKey);
 
 							}
-
-						}
-
-					}
-					/* var t;
-					for (t = 0; t < tabKeys.length; t++) {
-
-						var tKey = tabKeys[t];
-
-						if (tabName === tKey) {
-
-							formErrorsList.push(errorKey);
-
-							tabsWithErrors[fieldLocation.type][tKey].push(errorKey);
-
-							break;
 
 						}
 
@@ -1501,7 +1653,7 @@
         }
 
 		evEditorDataService.setFormErrorsList(formErrorsList);
-		evEditorDataService.setTabsWithErrors(tabsWithErrors);
+		evEditorDataService.setLocationsWithErrors(locsWithErrors);
 
     };
 

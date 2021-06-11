@@ -1263,7 +1263,7 @@
         }); */
         $bigDrawer.show({
             controller: 'EntityViewerEditDialogController as vm',
-            templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+            templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
             addResizeButton: true,
             drawerWidth: bigDrawerOptions.width,
             locals: {
