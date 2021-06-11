@@ -953,7 +953,13 @@
 
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
-				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
+
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+
+				if (processResult) {
+					vm.fixedAreaPopup = processResult;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
+				}
 
             }
         	else {
@@ -1931,7 +1937,7 @@
         };
 
         vm.onEntityChange = function (fieldKey) {
-
+        	console.lo
             if (fieldKey) {
 
             	var attributes = {
@@ -1989,7 +1995,7 @@
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
-			vm.evEditorDataService.setTabsWithErrors({"system_tab": {}, "user_tab": {}});
+			vm.evEditorDataService.setLocationsWithErrors(null);
 			vm.evEditorDataService.setFormErrorsList([]);
 
             var tooltipsOptions = {

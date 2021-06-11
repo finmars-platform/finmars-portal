@@ -3,6 +3,14 @@
 
     module.exports = function () {
 
+    	var defaultLocationWithErrors = {
+			fixed_area: {
+				fields: []
+			},
+			system_tab: {},
+			user_tab: {}
+		}
+
         var data = {
 			changedUserInputData: null,
 			tooltipsList: [],
@@ -10,10 +18,7 @@
 			userInputsToRecalc: null,
 			entityAttributeTypes: [],
 
-			tabsWithErrors: {
-				system_tab: {},
-				user_tab: {}
-			},
+			locationsWithErrors: JSON.parse(JSON.stringify(defaultLocationWithErrors)),
 			formErrorsList: []
 		};
 
@@ -77,12 +82,12 @@
             return data.recalculate;
         }
 
-        function setTabsWithErrors (tabsWithErrors) {
-			data.tabsWithErrors = tabsWithErrors;
+        function setLocationsWithErrors (locationsWithErrors) {
+			data.locationsWithErrors = locationsWithErrors;
 		}
 
-		function getTabsWithErrors () {
-			return data.tabsWithErrors || {system_tab: {}, user_tab: {}};
+		function getLocationsWithErrors () {
+			return data.locationsWithErrors || JSON.parse(JSON.stringify(defaultLocationWithErrors));
 		}
 
 		function setFormErrorsList (errorsList) {
@@ -109,8 +114,8 @@
             setRecalculationFunction: setRecalculationFunction,
             getRecalculationFunction: getRecalculationFunction,
 
-			setTabsWithErrors: setTabsWithErrors,
-			getTabsWithErrors: getTabsWithErrors,
+			setLocationsWithErrors: setLocationsWithErrors,
+			getLocationsWithErrors: getLocationsWithErrors,
 			setFormErrorsList: setFormErrorsList,
 			getFormErrorsList: getFormErrorsList
         }

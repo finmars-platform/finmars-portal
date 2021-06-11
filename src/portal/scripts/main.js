@@ -753,7 +753,7 @@ app.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/number
 app.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 app.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 // app.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
-app.directive('popup', ['$compile', require('./app/directives/popupDirective')]);
+app.directive('popup', ['$rootScope', '$compile', require('./app/directives/popupDirective')]);
 app.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
 app.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 

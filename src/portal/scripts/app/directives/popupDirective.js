@@ -4,7 +4,7 @@
 
 	const popupEvents = require('../services/events/popupEvents');
 
-    module.exports = function ($compile) {
+    module.exports = function ($rootScope, $compile) {
         return {
             restrict: 'A',
             scope: {
@@ -69,6 +69,7 @@
 				popupElem.classList.add("popup-container");
 
 				let originalPopupData;
+				let popupContentScope;
 
 				if (scope.popupClasses) {
 
@@ -198,7 +199,7 @@
 				}
 
 				let closePopupListenerIndex = null;
-				let addListeners = function () {
+				const addListeners = function () {
 
 					document.addEventListener('keyup', keyUpHandler, {once: true});
 					window.addEventListener('resize', resizeThrottler);
@@ -221,7 +222,7 @@
 					}
 				};
 
-				let removeListeners = function () {
+				const removeListeners = function () {
 					document.removeEventListener('keyup', keyUpHandler);
 					window.removeEventListener('resize', resizeThrottler);
 
@@ -244,7 +245,23 @@
 
 				};
 
-				let createPopup = function (doNotUpdateScope) {
+				const createScopeForPopupContent = () => {
+
+					popupContentScope = $rootScope.$new(false, scope);
+
+					popupContentScope.popupData = scope.popupData;
+					popupContentScope._$popup = scope._$popup;
+
+					popupContentScope.save = scope.save;
+					popupContentScope.cancel = scope.cancel;
+
+					if (scope.popupEventService) popupContentScope.popupEventService = scope.popupEventService;
+
+					return popupContentScope;
+
+				};
+
+				const createPopup = function (doNotUpdateScope) {
 
 					if (scope.popupTemplateUrl) {
 
@@ -256,7 +273,9 @@
 
 					}
 
-					$compile(popupElem)(scope);
+					popupContentScope = createScopeForPopupContent();
+
+					$compile(popupElem)(popupContentScope);
 
 					document.body.appendChild(popupBackdropElem);
 					document.body.appendChild(popupElem);
@@ -271,7 +290,7 @@
 
 				};
 
-				let removePopUp = function (event) {
+				const removePopUp = function (event) {
 
 					document.body.removeChild(popupBackdropElem);
 					document.body.removeChild(popupElem);
@@ -279,9 +298,8 @@
 					removeListeners();
 
 					scope.isPopupOpen = false;
-					if (scope.onPopupClose) {
-						scope.onPopupClose();
-					}
+
+					if (popupContentScope) popupContentScope.$destroy();
 
 					if (scope.onPopupClose) {
 						scope.onPopupClose();
@@ -369,16 +387,16 @@
 
 				scope.cancel = function () {
 
-					if (scope.onCancel) {
-						scope.onCancel();
-					}
-
 					if (scope.popupEventService) {
 
 						scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
 					} else {
 						removePopUp();
+					}
+
+					if (scope.onCancel) {
+						scope.onCancel();
 					}
 
 				};

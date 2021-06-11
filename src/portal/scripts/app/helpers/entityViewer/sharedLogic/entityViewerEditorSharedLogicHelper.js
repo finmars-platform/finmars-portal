@@ -37,7 +37,8 @@
                     }
                 },
                 entityType: viewModel.entityType,
-                tabColumns: null
+                tabColumns: null,
+				event: {}
             };
         };
 
@@ -121,6 +122,7 @@
 
 			if (viewModel.entityType === 'instrument') {
 
+				// On change of instrument type for instrument
 				if (viewModel.fixedAreaPopup.fields.type.value !== viewModel.entity.instrument_type) {
 
 					viewModel.entity.instrument_type = viewModel.fixedAreaPopup.fields.type.value;
@@ -137,18 +139,18 @@
 
 			}
 
-            viewModel.keysOfFixedFieldsAttrs.forEach(key => {
+            viewModel.keysOfFixedFieldsAttrs.forEach(key => { // transfer changes from popup to entity
 
                 if (!key || fieldsInFixedArea.includes(key)) {
                     return;
                 }
 
                 const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
-                viewModel.entity[key] = viewModel.fixedAreaPopup.fields[fieldKey].value; // save from popup to fixed area
+                viewModel.entity[key] = viewModel.fixedAreaPopup.fields[fieldKey].value;
 
             });
 
-            if (viewModel.fixedAreaPopup.tabColumns <= 5) {
+            if (viewModel.fixedAreaPopup.tabColumns <= 5) { // if status selector inside popup
 
                 if (viewModel.entityStatus !== viewModel.fixedAreaPopup.fields.status.value) {
                     viewModel.entityStatus = viewModel.fixedAreaPopup.fields.status.value;
@@ -166,12 +168,67 @@
 
             }
 
+            if (viewModel.fixedAreaPopup.error) {
+
+            	let popupHasNoErrors = true;
+
+				const attributes = {
+					entityAttrs: viewModel.entityAttrs,
+					attrsTypes: viewModel.attributeTypes
+				}
+
+            	for (const fieldKey in viewModel.originalFixedAreaPopupFields) {
+
+					const fieldError = viewModel.originalFixedAreaPopupFields[fieldKey].error;
+
+					if (fieldError) {
+
+						entityEditorHelper.checkTabsForErrorFields(fieldKey, viewModel.evEditorDataService, attributes, viewModel.entity, viewModel.entityType, viewModel.tabs);
+						const formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
+
+						const fieldErrorNotCorrected = formErrorsList.includes(fieldKey);
+
+						if (fieldErrorNotCorrected) {
+
+							viewModel.fixedAreaPopup.fields[fieldKey].event = {key: 'error', error: fieldError};
+							popupHasNoErrors = false;
+
+						} else {
+							delete viewModel.fixedAreaPopup.fields[fieldKey].event;
+						}
+
+					}
+
+				}
+
+            	if (popupHasNoErrors) {
+            		delete viewModel.fixedAreaPopup.error;
+					viewModel.fixedAreaPopup.event = {key: 'reset'};
+				}
+
+			}
+
             viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
         };
 
         const onFixedAreaPopupCancel = function () {
-            viewModel.fixedAreaPopup.fields = JSON.parse(JSON.stringify(viewModel.originalFixedAreaPopupFields));
+
+        	viewModel.fixedAreaPopup.fields = JSON.parse(JSON.stringify(viewModel.originalFixedAreaPopupFields));
+
+			for (const fieldKey in viewModel.fixedAreaPopup.fields) { // turn on error mode of fields when popup opens
+
+				const fieldData = viewModel.fixedAreaPopup.fields[fieldKey];
+
+				if (fieldData.error) {
+
+					viewModel.fixedAreaPopup.fields[fieldKey].event = {key: 'error', error: fieldData.error};
+					viewModel.fixedAreaPopup.fields[fieldKey].event1 = {key: 'error', error: fieldData.error};
+
+				}
+
+			}
+
         };
 
         const fixFieldsLayoutWithMissingSockets = function (tabs) {
@@ -682,7 +739,7 @@
                     }
 
                 }
-                // <Victor 2020.11.20 #59 Fixed area popup>
+                // <Victor 2020.11.20 #59 Fixed area popup>e
 
                 viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
@@ -834,9 +891,9 @@
         const isTabWithErrors = (tab) => {
 
         	const tabName = tab.label.toLowerCase();
-			const tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+			const locsWithErrors = viewModel.evEditorDataService.getLocationsWithErrors();
 
-			return tabsWithErrors[tab.type].hasOwnProperty(tabName);
+			return locsWithErrors[tab.type].hasOwnProperty(tabName);
 
 		};
 

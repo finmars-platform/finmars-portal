@@ -18,11 +18,12 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
-                onChangeCallback: '&?',
                 // Victor 2020.10.23 Next fields setting up classifiers properties
                 classifierAttr: '=',
                 classifierValue: '=',
-                entityType: '='
+                entityType: '=',
+				// < Victor 2020.10.23 Next fields setting up classifiers properties >
+				onChangeCallback: '&?',
             },
             templateUrl: 'views/directives/customInputs/classifier-select-view.html',
             link: function (scope, elem, attr) {
@@ -37,16 +38,26 @@
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                 }
 
-
+				/*
+				TIPS
+				scope.smallOptions probable properties
+					tooltipText: custom tooltip text
+					notNull: turn on error mode if field is not filled
+					noIndicatorBtn: whether to show button at the right part of input
+					readonly: making input readonly
+					dialogParent: 'string' - querySelector content for element to insert mdDialog into
+				*/
                 if (scope.smallOptions) {
 
-                    scope.tooltipText = scope.smallOptions.tooltipText
-                    scope.dialogParent = scope.smallOptions.dialogParent
+                	scope.tooltipText = scope.smallOptions.tooltipText;
+                    scope.dialogParent = scope.smallOptions.dialogParent;
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+
                 }
 
                 var stylePreset;
 
-                var inputContainer = elem[0].querySelector('.dropdownSelectInputContainer');
+                var inputContainer = elem[0].querySelector('.classifierInputContainer');
                 var inputElem = elem[0].querySelector('.dropdownSelectInputElem');
 
                 scope.getInputContainerClasses = function () {
