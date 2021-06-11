@@ -3,8 +3,8 @@
     <div data-ng-if="item.___parentId" layout="row" class="ev-left-panel-tree-elem-line" data-ng-class="{'selected-group': item.___is_selected, 'has-selected-child-group': item.___has_selected_child}">
         <div data-ng-if="!item.___is_open && !isLastLevel" data-ng-click="unfoldGroup($event)"><span class="material-icons">expand_more</span></div>
         <div data-ng-if="item.___is_open && !isLastLevel" data-ng-click="foldGroup($event)" style="position: relative; top: 3px;"><span class="material-icons" >chevron_right</span></div>
-<!--        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}} ({{item.___items_count}})</div>-->
-        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}}</div>
+        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}} ({{item.___items_count}})</div>
+<!--        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}}</div>-->
     </div>
 
     <div data-ng-if="item.___is_open">
