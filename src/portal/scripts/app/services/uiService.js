@@ -274,6 +274,15 @@
 		});
 
     };
+	/**
+	 *
+	 * @param id {number} - layout id
+	 * @param xhrOptions {=Object}
+	 * @returns {Promise<Object>}
+	 */
+	const pingListLayoutByKey = (id, xhrOptions) => {
+		return uiRepository.pingListLayoutByKey(id, xhrOptions);
+	}
 
 	const getListLayoutTemplate = function () {
         return uiRepository.getListLayoutTemplate();
@@ -672,7 +681,6 @@
     };
 
 	const createColumnSortData = function (item) {
-
         return uiRepository.createColumnSortData(item);
     };
 
@@ -714,9 +722,10 @@
 
         deleteListLayoutByKey: deleteListLayoutByKey,
 
-        // Input Form Layouts
+		pingListLayoutByKey: pingListLayoutByKey,
 
-        getListEditLayout: getListEditLayout,
+		//<editor-fold desc="Input form editor layout management">
+		getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
         getEditLayoutByKey: getEditLayoutByKey,
 		getEditLayoutByUserCode: getEditLayoutByUserCode,
@@ -724,6 +733,7 @@
         updateEditLayout: updateEditLayout,
 
         deleteEditLayoutByKey: deleteEditLayoutByKey,
+		//</editor-fold>
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,
