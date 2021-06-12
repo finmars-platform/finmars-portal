@@ -801,7 +801,9 @@
                     reqFieldError.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
                     errors.push(reqFieldError);
 
-					copySystemTabErrorForUserTab(key, tabs, reqFieldError, errors);
+					if (reqFieldError.locationData.type === 'system_tab') {
+						copySystemTabErrorForUserTab(key, tabs, reqFieldError, errors);
+					}
 
                 }
 

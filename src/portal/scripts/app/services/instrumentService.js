@@ -140,6 +140,11 @@
 
 	};
 
+	/**
+	 *
+	 * @param userCodes {Array<string>}
+	 * @returns {Promise<Object>}
+	 */
 	const getEditLayoutBasedOnUserCodes = function (userCodes) {
 
 		if (userCodes && userCodes.length) {
@@ -149,15 +154,18 @@
 			return new Promise(async (resolve, reject) => {
 
 				var userCode;
+				var editLayoutData
 
 				for (userCode of userCodesList) {
 
 					try {
-						var editLayoutData = await uiService.getEditLayoutByUserCode('instrument', userCode);
+						editLayoutData = await uiService.getEditLayoutByUserCode('instrument', userCode);
 
 					} catch (error) {
+
 						reject(error);
 						break;
+
 					}
 
 					if (editLayoutData.results.length) {
@@ -167,7 +175,14 @@
 
 				}
 
-				uiService.getDefaultEditLayout('instrument').then(data => resolve(data)).catch(error => reject(error));
+				if (!editLayoutData.results.length) {
+
+					uiService.getDefaultEditLayout('instrument').then(data => {
+						resolve(data);
+
+					}).catch(error => reject(error));
+
+				}
 
 			});
 
