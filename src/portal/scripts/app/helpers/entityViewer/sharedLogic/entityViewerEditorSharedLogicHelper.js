@@ -29,18 +29,7 @@
 			'instrument-type': 'instrument-class'
         };
 
-        const getFixedAreaPopup = function () {
-            return {
-                fields: {
-                    showByDefault: {
-                        value: viewModel.showByDefault
-                    }
-                },
-                entityType: viewModel.entityType,
-                tabColumns: null,
-				event: {}
-            };
-        };
+        let instrumentTypesList = [];
 
 		//<editor-fold desc="entityTabsMenuTplt">
 		const entityTabsMenuTplt =
@@ -60,6 +49,19 @@
 				'</md-button>' +
             '</div>';
 		//</editor-fold>
+
+		const getFixedAreaPopup = function () {
+			return {
+				fields: {
+					showByDefault: {
+						value: viewModel.showByDefault
+					}
+				},
+				entityType: viewModel.entityType,
+				tabColumns: null,
+				event: {}
+			};
+		};
 
         const getEditFormFieldsInFixedArea = function () {
 
@@ -119,11 +121,14 @@
         const onPopupSaveCallback = async function () {
 
             const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
+            // Fixating showByDefault because viewModel.fixedAreaPopup.fields.showByDefault.value can be changed by getAndFormatUserTabs();
+            const showByDefaultAfterSave = viewModel.fixedAreaPopup.fields.showByDefault.value;
 
 			if (viewModel.entityType === 'instrument') {
 
 				// On change of instrument type for instrument
-				if (viewModel.fixedAreaPopup.fields.type.value !== viewModel.entity.instrument_type) {
+				if (viewModel.fixedAreaPopup.tabColumns < 3 &&
+					viewModel.fixedAreaPopup.fields.type.value !== viewModel.entity.instrument_type) {
 
 					viewModel.entity.instrument_type = viewModel.fixedAreaPopup.fields.type.value;
 					// const showByDefaultValue = viewModel.showByDefault;
@@ -159,12 +164,15 @@
 
             }
 
-            if (viewModel.showByDefault !== viewModel.fixedAreaPopup.fields.showByDefault.value) {
+            if (viewModel.showByDefault !== showByDefaultAfterSave) {
 
-                viewModel.showByDefault = viewModel.fixedAreaPopup.fields.showByDefault.value;
+                viewModel.showByDefault = showByDefaultAfterSave;
+				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
                 // save layout settings
                 viewModel.dataConstructorLayout.data.fixedArea.showByDefault = viewModel.showByDefault;
-                uiService.updateEditLayout(viewModel.dataConstructorLayout.id, viewModel.dataConstructorLayout);
+                uiService.updateEditLayout(viewModel.dataConstructorLayout.id, viewModel.dataConstructorLayout).then(layoutData => {
+                	viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(layoutData));
+				});
 
             }
 
@@ -420,7 +428,8 @@
         const onBigDrawerResizeButtonClick = function () {
 
         	viewModel.fixedAreaPopup.tabColumns = 6;
-            viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
+			viewModel.fixedAreaPopup.fields = getFieldsForFixedAreaPopup();
+            // viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
             $scope.$apply();
             const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(6);
@@ -503,11 +512,38 @@
             if (viewModel.entityType === 'instrument' &&
 				viewModel.entity.instrument_type || viewModel.entity.instrument_type === 0) {
 
-				const activeInstrType = viewModel.typeSelectorOptions.find(instrType => {
+            	const activeInstrType = viewModel.typeSelectorOptions.find(instrType => {
 					return instrType.id === viewModel.entity.instrument_type;
 				});
 
-				if (activeInstrType) return instrumentService.getEditLayoutBasedOnUserCodes(activeInstrType.instrument_form_layouts);
+				if (activeInstrType) { // if instrument type exist
+
+					return new Promise(async (resolve, reject) => {
+
+						let fullInstrType = instrumentTypesList.find(instrType => instrType.id === activeInstrType.id);
+
+						if (fullInstrType) { // full instrument type was loaded
+
+							const editLayout = instrumentService.getEditLayoutBasedOnUserCodes(fullInstrType.instrument_form_layouts);
+							resolve(editLayout);
+
+						} else {
+
+							instrumentTypeService.getByKey(activeInstrType.id).then(instrTypeData => {
+
+								fullInstrType = instrTypeData;
+								instrumentTypesList.push(fullInstrType);
+
+								const editLayout = instrumentService.getEditLayoutBasedOnUserCodes(fullInstrType.instrument_form_layouts);
+								resolve(editLayout);
+
+							});
+
+						}
+
+					});
+
+				}
 
                 /* if (viewModel.entity.instrument_type) {
 
@@ -610,8 +646,8 @@
 
 						// viewModel.tabs = editLayout.results[0].data.tabs
 						tabs = editLayout.results[0].data.tabs;
-						/** @type {{showByDefault: string=}} - Received by getUserTabsAndFixedAreaData() */
-						viewModel.fixedArea = editLayout.results[0].data.fixedArea;
+						// viewModel.fixedArea = editLayout.results[0].data.fixedArea;
+						viewModel.showByDefault = editLayout.results[0].data.fixedArea.showByDefault || viewModel.showByDefaultOptions[0].id;
 
 					}
 
@@ -650,11 +686,14 @@
 
         	entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
-			if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
+			/* if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
 
 				viewModel.showByDefault = viewModel.fixedArea.showByDefault;
 				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
 
+			} */
+			if (viewModel.showByDefault) {
+				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
 			}
 
 			const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
@@ -707,11 +746,14 @@
 
             if (viewModel.openedIn === 'big-drawer') {
 
-                // viewModel.fixedArea received by getUserTabsAndFixedAreaData()
-                if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
-                    viewModel.showByDefault = viewModel.fixedArea.showByDefault;
-                    viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
-                }
+				/* // viewModel.fixedArea received by getUserTabsAndFixedAreaData()
+				if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
+					viewModel.showByDefault = viewModel.fixedArea.showByDefault;
+					viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
+				} */
+				if (viewModel.showByDefault) {
+					viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
+				}
 
                 // Instrument-type always open in max big drawer window
                 let columns = entityViewerHelperService.getEditLayoutMaxColumns(tabs);
@@ -761,7 +803,7 @@
 
 					const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
 
-					const fixedAreaData = getFieldsForFixedAreaPopup(formLayoutFromAbove);
+					const fixedAreaData = getFieldsForFixedAreaPopup();
 
 					viewModel.readyStatus.layout = true;
 					viewModel.readyStatus.entity = true;

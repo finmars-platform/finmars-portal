@@ -255,7 +255,8 @@
 
                                 switch (scope.eventSignal.key) {
                                     case 'mark_not_valid_fields':
-                                        if (scope.smallOptions && scope.smallOptions.notNull && !scope.item) {
+
+                                    	if (scope.smallOptions && scope.smallOptions.notNull && !scope.model) {
                                             scope.error = 'Field should not be null'
                                         }
 
@@ -267,20 +268,10 @@
 
                                     case 'set_style_preset1':
                                         stylePreset = 1;
-
-                                        if (scope.item) {
-                                            scope.error = ''
-                                        }
-
                                         break;
 
                                     case 'set_style_preset2':
                                         stylePreset = 2;
-
-                                        if (scope.item) {
-                                            scope.error = ''
-                                        }
-
                                         break;
                                 }
 
