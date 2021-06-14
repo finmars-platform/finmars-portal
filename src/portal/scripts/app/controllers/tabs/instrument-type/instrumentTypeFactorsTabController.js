@@ -6,14 +6,13 @@
 
     const GridTableDataService = require('../../../services/gridTableDataService');
     const GridTableEventService = require('../../../services/gridTableEventService');
+    const gridTableEvents = require('../../../services/gridTableEvents');
 
     const metaHelper = require('../../../helpers/meta.helper');
     const metaService = require('../../../services/metaService');
 
     const instrumentService = require('../../../services/instrumentService');
     const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
-
-    const EventService = require('../../../services/eventService');
 
     module.exports = function instrumentTypeFactorsTabController ($scope, $mdDialog, multitypeFieldService, gridTableHelperService) {
         var vm = this;
@@ -243,6 +242,42 @@
             return factorsGridTableData;
         }
 
+        const onFactorsTableCellChange = (data, gtDataService) => {
+
+            const cell = gtDataService.getCellByKey(data.row.order, data.column.key);
+            const path = cell.objPath[0];
+
+            vm.factorsData[data.row.order][path] = cell.settings.value;
+
+            if (cell.key === 'default_value' && cell.cellType === 'multitypeField') {
+
+                const activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+                vm.factorsData[data.row.order].default_value_type = activeType.value_type;
+
+            }
+
+            vm.entity.instrument_factor_schedule_data = JSON.stringify(vm.factorsData);
+            console.log('#116 onFactorsTableCellChange vm.entity', vm.entity)
+            console.log('#116 vm.entity.instrument_factor_schedule_data', JSON.parse(vm.entity.instrument_factor_schedule_data))
+
+        };
+
+        const createFactorsGridTable = (factorsData) => {
+
+            vm.factorsGridTableDataService = new GridTableDataService();
+            vm.factorsGridTableEventService = new GridTableEventService();
+
+            const factorsGridTableData = getFactorsGridTableData(factorsData);
+            console.log('#116 factorsGridTableData', factorsGridTableData)
+
+            vm.factorsGridTableDataService.setTableData(factorsGridTableData);
+
+            vm.factorsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+                onFactorsTableCellChange(argumentsObj, vm.factorsGridTableDataService)
+            });
+
+        };
+
         const getInstrumentAttrTypes = function () {
 
             let options = {
@@ -254,25 +289,17 @@
 
         };
 
-        const createFactorsGridTable = () => {
-
-            vm.factorsGridTableDataService = new GridTableDataService();
-            vm.factorsGridTableEventService = new GridTableEventService();
-
-            const factorsScheduleData = getFactorsScheduleData();
-            const factorsGridTableData = getFactorsGridTableData(factorsScheduleData);
-
-            vm.factorsGridTableDataService.setTableData(factorsGridTableData);
-
-        };
-
         const init = function () {
 
+            vm.factorsData = getFactorsScheduleData();
+
             getInstrumentAttrTypes().then(data => {
+
+                // inject instrument attributes to menu options in multitype fields
                 const instrumentAttrTypes = data;
                 multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
-                createFactorsGridTable();
+                createFactorsGridTable(vm.factorsData);
 
                 vm.readyStatus.factors = true;
 

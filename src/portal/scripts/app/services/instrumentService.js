@@ -408,6 +408,114 @@
 						}
 					}
 				]
+			},
+			'position_factor': {
+				value_type: 20,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'factor1': {
+				value_type: 20,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'factor2': {
+				value_type: 20,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'factor3': {
+				value_type: 20,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
 			}
 		}
 	}
