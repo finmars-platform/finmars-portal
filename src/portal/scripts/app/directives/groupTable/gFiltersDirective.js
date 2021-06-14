@@ -77,7 +77,7 @@
 				const gFiltersElemPadding = parseInt(gFiltersWrapElem.style.padding, 10);
 
 				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
-				console.log("testing paddings", gFiltersElemWidth, gFiltersElemPadding);
+
                 const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
                 const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
 
@@ -699,7 +699,7 @@
                         filtersChipsContainerWidth = Math.max(availableSpace, 500);
 
                     } */
-					console.log("testing sizes", filterAreaWidth, horizontalPaddings, gFiltersLeftPartWidth, gFiltersRightPartWidth);
+
                     filtersChipsContainer.style.width = availableSpace + 'px';
 
                 };
