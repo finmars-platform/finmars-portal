@@ -16,9 +16,9 @@
                  ng-class="{'active': modeIsActive('yesterday')}"
                  ng-click="activateMode('yesterday')">Yesterday</div>
 
-            <div class="complex-datepicker-mode-container"
+            <!--<div class="complex-datepicker-mode-container"
                  ng-class="{'active': modeIsActive('inception')}"
-                 ng-click="activateMode('inception')">All time</div>
+                 ng-click="activateMode('inception')">All time</div>-->
 
         </div>
 
@@ -29,15 +29,19 @@
                  ng-class="{'active': modeIsActive(['datepicker', 'expression'])}"
                  ng-click="activateCustomMode()">Custom</div>
 
-            <div class="complex-datepicker-mode-container no-pointer-events opacity-05"
+            <div class="complex-datepicker-mode-container"
+                 ng-class="{'active': modeIsActive('week-to-date')}"
+                 ng-click="activateRangeMode('week-to-date')">WTD</div>
+
+            <div class="complex-datepicker-mode-container"
                  ng-class="{'active': modeIsActive('month-to-date')}"
                  ng-click="activateRangeMode('month-to-date')">MTD</div>
 
-            <div class="complex-datepicker-mode-container no-pointer-events opacity-05"
+            <div class="complex-datepicker-mode-container"
                  ng-class="{'active': modeIsActive('quarter-to-date')}"
                  ng-click="activateRangeMode('quarter-to-date')">QTD</div>
 
-            <div class="complex-datepicker-mode-container no-pointer-events opacity-05"
+            <div class="complex-datepicker-mode-container"
                  ng-class="{'active': modeIsActive('year-to-date')}"
                  ng-click="activateRangeMode('year-to-date')">YTD</div>
 
