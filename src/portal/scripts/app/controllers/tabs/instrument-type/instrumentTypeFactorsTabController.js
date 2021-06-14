@@ -14,6 +14,8 @@
     const instrumentService = require('../../../services/instrumentService');
     const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
+    const EventService = require('../../../services/eventService');
+
     module.exports = function instrumentTypeFactorsTabController ($scope, $mdDialog, multitypeFieldService, gridTableHelperService) {
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
@@ -24,9 +26,14 @@
 
         console.log('#116 vm.entity', vm.entity)
 
+        // One set of multi type fields for both grid tables
         const multitypeFieldsForRows = instrumentService.getInstrumentFactorsMultitypeFieldsData();
 
-        const getFactorsScheduleData = () => {
+        const buildMultitypeFieldsCell = () => {
+
+        }
+
+        const getFactorsData = () => {
             if (vm.entity.instrument_factor_schedule_data) {
                 return JSON.parse(vm.entity.instrument_factor_schedule_data);
             }
@@ -82,9 +89,9 @@
             return defaultFactorsScheduleData;
         }
 
-        const getFactorsGridTableData = (rows) => {
+        const getFactorsDataGridTableData = (rows) => {
 
-            const factorsGridTableData = {
+            const factorsDataGridTableData = {
                 header: {
                     order: 'header',
                     columns: []
@@ -174,9 +181,9 @@
                 }
             };
 
-            const rowObj = metaHelper.recursiveDeepCopy(factorsGridTableData.templateRow, true);
+            const rowObj = metaHelper.recursiveDeepCopy(factorsDataGridTableData.templateRow, true);
 
-            factorsGridTableData.header.columns = rowObj.columns.map(column => {
+            factorsDataGridTableData.header.columns = rowObj.columns.map(column => {
 
                 const headerCol = {
                     key: column.key,
@@ -202,9 +209,9 @@
 
             });
 
-            factorsGridTableData.body = rows.map((row, index) => {
+            factorsDataGridTableData.body = rows.map((row, index) => {
 
-                const rowObj = metaHelper.recursiveDeepCopy(factorsGridTableData.templateRow, true);
+                const rowObj = metaHelper.recursiveDeepCopy(factorsDataGridTableData.templateRow, true);
 
                 rowObj.order = index;
                 rowObj.key = row.key;
@@ -239,10 +246,10 @@
             })
 
 
-            return factorsGridTableData;
+            return factorsDataGridTableData;
         }
 
-        const onFactorsTableCellChange = (data, gtDataService) => {
+        const onFactorsDataTableCellChange = (data, gtDataService) => {
 
             const cell = gtDataService.getCellByKey(data.row.order, data.column.key);
             const path = cell.objPath[0];
@@ -262,21 +269,226 @@
 
         };
 
-        const createFactorsGridTable = (factorsData) => {
+        const createFactorsDataGridTable = (factorsData) => {
+
+            vm.factorsDataGridTableDataService = new GridTableDataService();
+            vm.factorsDataGridTableEventService = new GridTableEventService();
+
+            const factorsDataGridTableData = getFactorsDataGridTableData(factorsData);
+            vm.factorsDataGridTableDataService.setTableData(factorsDataGridTableData);
+
+            vm.factorsDataGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+                onFactorsDataTableCellChange(argumentsObj, vm.factorsDataGridTableDataService)
+            });
+
+        };
+
+        const getFactorsGridTableData = (rows) => {
+
+            const COLUMN_WIDTH = '200px';
+
+            const factorsGridTableData = {
+                header: {
+                    order: 'header',
+                    columns: []
+                },
+                body: [],
+                templateRow: {
+                    isActive: false,
+                    columns: [
+                        {
+                            key: 'date',
+                            objPath: ['effective_date'],
+                            columnName: 'Date',
+                            order: 0,
+                            cellType: 'multitypeField',
+                            settings: {
+                                value: [null, null],
+                                fieldTypesData: null,
+                            },
+                            // classes: 'grid-table-cell-right-border',
+                            styles: {
+                                'grid-table-cell': {'width': COLUMN_WIDTH}
+                            }
+                        },
+                        {
+                            key: 'position_factor_value',
+                            objPath: ['position_factor_value'],
+                            columnName: 'Position factor',
+                            order: 1,
+                            cellType: 'multitypeField',
+                            settings: {
+                                value: [null, null],
+                                fieldTypesData: null,
+                            },
+                            // classes: 'grid-table-cell-right-border',
+                            styles: {
+                                'grid-table-cell': {'width': COLUMN_WIDTH}
+                            }
+                        },
+                        {
+                            key: 'factor_value1',
+                            objPath: ['factor_value1'],
+                            columnName: 'Factor 1',
+                            order: 2,
+                            cellType: 'multitypeField',
+                            settings: {
+                                value: [null, null],
+                                fieldTypesData: null,
+                            },
+                            // classes: 'grid-table-cell-right-border',
+                            styles: {
+                                'grid-table-cell': {'width': COLUMN_WIDTH}
+                            }
+                        },
+                        {
+                            key: 'factor_value2',
+                            objPath: ['factor_value2'],
+                            columnName: 'Factor 2',
+                            order: 3,
+                            cellType: 'multitypeField',
+                            settings: {
+                                value: [null, null],
+                                fieldTypesData: null,
+                            },
+                            // classes: 'grid-table-cell-right-border',
+                            styles: {
+                                'grid-table-cell': {'width': COLUMN_WIDTH}
+                            }
+                        },
+                        {
+                            key: 'factor_value3',
+                            objPath: ['factor_value3'],
+                            columnName: 'Factor 3',
+                            order: 3,
+                            cellType: 'multitypeField',
+                            settings: {
+                                value: [null, null],
+                                fieldTypesData: null,
+                            },
+                            // classes: 'grid-table-cell-right-border',
+                            styles: {
+                                'grid-table-cell': {'width': COLUMN_WIDTH}
+                            }
+                        },
+                    ],
+                    methods: {
+                        // onOrderChange: onActionsOrderChange
+                    }
+                },
+
+                components: {
+                    topPanel: {
+                        filters: false,
+                        columns: false,
+                        search: false
+                    },
+                    dragAndDropElement: true,
+                    rowCheckboxes: true
+                }
+
+            };
+
+            const rowObj = metaHelper.recursiveDeepCopy(factorsGridTableData.templateRow, true);
+            factorsGridTableData.header.columns = rowObj.columns.map(column => {
+
+                const headerCol = {
+                    key: column.key,
+                    columnName: column.columnName,
+                    order: column.order,
+                    styles: {
+                        'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
+                    }
+                };
+
+                if (column.classes) {
+
+                    let columnClasses = column.classes;
+                    if (Array.isArray(column.classes)) columnClasses = [...[], ...columnClasses];
+
+                    headerCol.classes = columnClasses;
+
+                }
+
+                return headerCol;
+
+            });
+
+            /*factorsGridTableData.body = rows.map((row, index) => {
+
+                const rowObj = metaHelper.recursiveDeepCopy(factorsGridTableData.templateRow, true);
+
+                rowObj.order = index;
+                rowObj.key = row.key;
+
+                const date = gridTableHelperService.getCellFromRowByKey(rowObj, 'date');
+                const dateValue = row.effective_date;
+
+
+/!*
+
+
+
+
+                const nameCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
+                nameCell.settings.value = row.name;
+
+                const toShowCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'to_show');
+                toShowCell.settings.value = row.to_show;
+
+                const overrideNameCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'override_name');
+                overrideNameCell.settings.value = row.override_name;
+
+                const tooltipCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'tooltip');
+                tooltipCell.settings.value = row.tooltip;
+
+                const defaultValueCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'default_value');
+
+                if (multitypeFieldsForRows[row.key] && multitypeFieldsForRows[row.key].fieldTypesList) {
+
+                    const cellValue = row.default_value;
+                    const cellValueType = row.default_value_type
+                    const fields = multitypeFieldsForRows[row.key].fieldTypesList;
+                    const defaultValueCellData = gridTableHelperService.getMultitypeFieldDataForCell(fields, defaultValueCell, cellValue, cellValueType);
+
+                    Object.assign(defaultValueCell, defaultValueCellData);
+
+                }*!/
+
+                return rowObj
+
+            })*/
+
+
+            return factorsGridTableData;
+
+        };
+
+
+
+/*        instrument_type.instrument_factor_schedule_data - JSON где храним верхнюю таблицу (где тултипы и to show)
+        instrument_type.instrument_factor_schedules - массив самих дефолтных факторов
+
+            [{
+            'effective_date': null, 'effective_date_value_type': null,
+            'position_factor_value': null, 'position_factor_value_value_type': null,
+            'factor_value1': null, 'factor_value1_value_type': null,
+            'factor_value2': null, 'factor_value2_value_type': null,
+            'factor_value3': null, 'factor_value3_value_type'
+        }]*/
+
+
+
+
+        const createFactorsGridTable = (factors) => {
 
             vm.factorsGridTableDataService = new GridTableDataService();
             vm.factorsGridTableEventService = new GridTableEventService();
 
-            const factorsGridTableData = getFactorsGridTableData(factorsData);
-            console.log('#116 factorsGridTableData', factorsGridTableData)
-
+            const factorsGridTableData = getFactorsGridTableData(factors);
             vm.factorsGridTableDataService.setTableData(factorsGridTableData);
 
-            vm.factorsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
-                onFactorsTableCellChange(argumentsObj, vm.factorsGridTableDataService)
-            });
-
-        };
+        }
 
         const getInstrumentAttrTypes = function () {
 
@@ -291,7 +503,10 @@
 
         const init = function () {
 
-            vm.factorsData = getFactorsScheduleData();
+            vm.factorsData = getFactorsData();
+            vm.factors  = vm.entity.instrument_factor_schedules || [];
+
+
 
             getInstrumentAttrTypes().then(data => {
 
@@ -299,7 +514,8 @@
                 const instrumentAttrTypes = data;
                 multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
-                createFactorsGridTable(vm.factorsData);
+                createFactorsDataGridTable(vm.factorsData); // First table
+                createFactorsGridTable(vm.factors)
 
                 vm.readyStatus.factors = true;
 
