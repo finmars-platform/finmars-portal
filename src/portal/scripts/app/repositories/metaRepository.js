@@ -278,6 +278,11 @@
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
                     },
                     {
+                        label: 'Factors',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/factors-view.html'
+                    },
+                    {
                         label: 'Exposure',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/exposure-view.html'
