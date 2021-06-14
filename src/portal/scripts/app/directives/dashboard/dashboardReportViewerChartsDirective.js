@@ -47,6 +47,18 @@
 
                 }
 
+				if (!componentData.settings.filters) {
+
+					componentData.settings.filters = {
+						show_filters_area: false,
+						show_use_from_above_filters: false,
+					}
+
+				}
+
+				scope.showFiltersArea = componentData.settings.filters.show_filters_area;
+				scope.showUseFromAboveFilters = componentData.settings.filters.show_use_from_above_filters;
+
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,
@@ -154,6 +166,10 @@
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
+				scope.toggleFilterBlock = function () {
+					dashboardHelper.toggleFilterBlock(scope);
+				};
+
                 scope.initEventListeners = function () {
 
 					dashboardHelper.initEventListeners(scope);
@@ -223,7 +239,23 @@
 
                         });
 
-                    })
+                    });
+
+					scope.dashboardComponentEventService.addEventListener(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
+
+						scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters;
+
+						const id = scope.vm.componentData.id;
+						const components = scope.dashboardDataService.getComponents();
+						const currentComponent = components.find(component => component.id === id);
+
+						if (currentComponent) {
+							currentComponent.settings.filters.show_use_from_above_filters = scope.showUseFromAboveFilters;
+						}
+
+						scope.dashboardDataService.setComponents(components);
+
+					});
 
                 };
 
