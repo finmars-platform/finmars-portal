@@ -308,13 +308,33 @@
 
 	};
 
+	const clearSplitPanelAdditions = function (evDataService) {
+
+		var interfaceLayout = evDataService.getInterfaceLayout();
+		interfaceLayout.splitPanel.height = 0;
+
+		evDataService.setInterfaceLayout(interfaceLayout);
+
+		var additions = evDataService.getAdditions();
+
+		additions.isOpen = false;
+		additions.type = '';
+		delete additions.layoutData;
+
+		evDataService.setSplitPanelStatus(false);
+		evDataService.setAdditions(additions);
+
+	};
+
     /** @module evRvLayoutsHelper */
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
         getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
 
 		saveLayoutList: saveLayoutList,
-		saveAsLayoutList: saveAsLayoutList
+		saveAsLayoutList: saveAsLayoutList,
+
+		clearSplitPanelAdditions: clearSplitPanelAdditions
     }
 
 }());
