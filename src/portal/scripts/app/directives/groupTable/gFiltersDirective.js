@@ -70,11 +70,14 @@
                 }
 
                 const gFiltersElem = elem[0].querySelector('.gFilters');
-				/** Used when inside dashboard, and does not change with window resize. */
+				/** Used when inside dashboard, and does not change with window resize. Can be less than actual width, when used outside dashboard. */
                 const gFiltersElemWidth = gFiltersElem.clientWidth;
-				const gFiltersElemPadding = parseInt(gFiltersElem.style.padding, 10);
-                let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
 
+                const gFiltersWrapElem = gFiltersElem.querySelector('.gFiltersWrap');
+				const gFiltersElemPadding = parseInt(gFiltersWrapElem.style.padding, 10);
+
+				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
+				console.log("testing paddings", gFiltersElemWidth, gFiltersElemPadding);
                 const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
                 const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
 
@@ -696,6 +699,7 @@
                         filtersChipsContainerWidth = Math.max(availableSpace, 500);
 
                     } */
+					console.log("testing sizes", filterAreaWidth, horizontalPaddings, gFiltersLeftPartWidth, gFiltersRightPartWidth);
                     filtersChipsContainer.style.width = availableSpace + 'px';
 
                 };
