@@ -405,6 +405,7 @@ app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/c
 
 app.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
 app.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
+app.controller('InstrumentTypeFactorsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', 'gridTableHelperService' , require('./app/controllers/tabs/instrument-type/instrumentTypeFactorsTabController')]);
 
 // Currency form - tabs
 
