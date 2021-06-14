@@ -907,7 +907,7 @@
                             </div>
 
                             <div class="g-checkbox-row"
-                                 data-ng-repeat="item in vm.linkedInstrumentAttrsFiltered | filter: {name: linkedInstrumentSearchTerms}"
+                                 data-ng-repeat="item in vm.linkedInstrumentAttrsFiltered | filter: {name: balanceMismatchSearchTerms}"
                                  layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
@@ -936,7 +936,7 @@
                                  data-ng-show="vm.linkedInstrumentDynamicAttrs.length > 0">
                                 <p>User Attributes</p>
                             </div>
-                            <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentDynamicAttrs | filter: {name: linkedInstrumentSearchTerms}" layout="row">
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.linkedInstrumentDynamicAttrs | filter: {name: balanceMismatchSearchTerms}" layout="row">
                                 <div class="view-constructor-checkboxes-container"
                                      layout="row"
                                      layout-align="start center">

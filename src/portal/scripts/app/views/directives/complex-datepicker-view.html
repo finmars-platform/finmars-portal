@@ -61,8 +61,8 @@
                                 ng-click="openEditExpressionDialog($event, 1)"
                                 ng-disabled="dateIsDisabled"><span class="material-icons">functions</span></button>
 
-                        <date-input model="date"
-                                    on-change-callback="onDateInputChange(date)"
+                        <date-input model="inputsModels.date"
+                                    on-change-callback="onDateInputChange(inputsModels.date)"
                                     small-options="{noIndicatorBtn: true}"
                                     is-disabled="dateIsDisabled"></date-input>
                         <!--<md-input-container class="no-error-spacer">
@@ -89,8 +89,8 @@
                                 class="expression-builder-btn"
                                 ng-click="openEditExpressionDialog($event, 2)"><span class="material-icons">functions</span></button>
 
-                        <date-input model="secondDate"
-                                    on-change-callback="onSecondDateInputChange(secondDate)"
+                        <date-input model="inputsModels.secondDate"
+                                    on-change-callback="onSecondDateInputChange(inputsModels.secondDate)"
                                     small-options="{noIndicatorBtn: true}"
                                     is-disabled="secondDateIsDisabled"></date-input>
                         <!--<md-input-container class="no-error-spacer">
