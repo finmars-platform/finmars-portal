@@ -22,7 +22,7 @@
 
 	var scrollHelper = new ScrollHelper();
 
-    module.exports = function entityDataConstructorDialogController($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
+    module.exports = function ($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
 
         var vm = this;
 
@@ -482,7 +482,6 @@
                 });
 
             }
-
             else {
 
                 var r, c;
@@ -1185,7 +1184,7 @@
 									input_value_type = 'field';
 								}
 
-								var contentType;
+								/* var contentType;
 
 								if (input.content_type && input.content_type !== undefined) {
 
@@ -1209,10 +1208,10 @@
 
 								} else {
 									contentType = input.name.split(' ').join('_').toLowerCase();
-								}
+								} */
 
 								var userInputObj = {
-									key: contentType,
+									// key: contentType,
 									name: input.name,
 									reference_table: input.reference_table,
 									verbose_name: input.verbose_name,
@@ -1220,9 +1219,10 @@
 									value_type: input_value_type,
 									frontOptions: {
 										attribute_class: 'userInput',
-										occupiesWholeRow: fullRowUserInputsList.includes(contentType)
+										// occupiesWholeRow: fullRowUserInputsList.includes(contentType)
+										occupiesWholeRow: fullRowUserInputsList.includes(input.name)
 									}
-								}
+								};
 
 								vm.userInputs.push(userInputObj);
 
@@ -1230,7 +1230,7 @@
 
 							res();
 
-						}).catch(() => rej('error on getting complex transaction'));
+						}).catch(error => rej({custom_message: 'error on getting complex transaction', error: error}));
 
 					});
 

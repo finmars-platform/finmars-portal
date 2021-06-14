@@ -3,7 +3,7 @@
     <div class="instrument-type-events-tab-view"
          data-ng-if="vm.readyStatus.gridTable">
 
-        <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" multiple>
+        <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" control="vm.eventsAccordion">
 
             <v-pane ng-repeat="item in vm.entity.events"
                     expanded="item.isPaneExpanded">
@@ -22,7 +22,11 @@
                             <span class="text-weight-bold m-r-8"># {{$index + 1}}</span>
 
                             <div ng-hide="!item.isPaneExpanded" class="accordion-name-input">
-                                <text-input model="item.name" ng-click="$event.stopPropagation();"></text-input>
+                                <text-input model="item.name"
+                                            event-signal="vm.evEditorFieldEvent"
+                                            on-change-callback="vm.onRequiredFieldChange('events')"
+                                            small-options="{notNull: true}"
+                                            ng-click="$event.stopPropagation();"></text-input>
                                 <!--<md-input-container class="no-error-spacer" style="min-height: 35px">
                                     <label></label>
                                     <input type="text"
@@ -104,15 +108,20 @@
                         <text-input label="Message on the form"
                                     placeholder-text="Message on the form"
                                     model="item.data.form_message"
-                                    small-options="{tooltipText: 'Message on the form'}"
+                                    event-signal="vm.evEditorFieldEvent"
+                                    small-options="{tooltipText: 'Message on the form', notNull: true}"
+                                    on-change-callback="vm.onRequiredFieldChange('events')"
                                     class="p-r-10"
                                     style="flex-basis: 33%;"></text-input>
 
-                        <dropdown-select class="p-r-8" label="Event class"
-                                         model="item.event_class"
+                        <dropdown-select class="p-r-8"
+                                         label="Event class"
+                                         model="item.data.event_class"
                                          placeholder-text="Event class"
                                          menu-options="vm.eventClasses"
-                                         small-options="{tooltipText: 'Event class'}"
+                                         event-signal="vm.evEditorFieldEvent"
+                                         small-options="{tooltipText: 'Event class', notNull: true}"
+                                         on-change-callback="vm.onRequiredFieldChange('events')"
                                          style="flex-basis: 33%;"></dropdown-select>
                     </div>
 
