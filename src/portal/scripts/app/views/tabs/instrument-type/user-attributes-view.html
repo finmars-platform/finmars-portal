@@ -77,6 +77,7 @@
                 <div data-ng-repeat="attr in vm.instrumentTypeAttrs" class="instrument-type-attr">
                     <div data-ng-if="attr.value_type === 10">
                         <text-input model="vm.entity[attr.user_code]"
+                                    label="{{attr.name}}"
                                     placeholder-text="{{attr.name}}"
                                     on-change-callback=""
                                     small-options="{readonly: attr.___isDisabled}"></text-input>
@@ -85,11 +86,13 @@
                     <div data-ng-if="attr.value_type === 20">
                         <number-input class=""
                                       model="vm.entity[attr.user_code]"
+                                      label="{{attr.name}}"
                                       on-change-callback=""
                                       style="width: 200px;"></number-input>
                     </div>
                     <div data-ng-if="attr.value_type === 30">
                         <classifier-select placeholder-text="{{attr.name}}"
+                                           label="{{attr.name}}"
                                            model="vm.entity[attr.user_code]"
                                            classifier-attr="!attr.___isDisabled ? attr : null"
                                            classifier-value="attr.value"
@@ -100,6 +103,7 @@
                     </div>
                     <div data-ng-if="attr.value_type === 40">
                         <date-input model="vm.entity[attr.user_code]"
+                                    label="{{attr.name}}"
                                     small-options="{noIndicatorBtn: true}"
                                     on-change-callback=""></date-input>
 
