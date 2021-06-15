@@ -1026,9 +1026,10 @@
                     // vm.getLayoutByUserCode(layoutUserCode);
                     evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
-                } else if ($stateParams.layoutUsesrCode) {
+                } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
+
                     // vm.getLayoutByUserCode(layoutUserCode);
                     evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 

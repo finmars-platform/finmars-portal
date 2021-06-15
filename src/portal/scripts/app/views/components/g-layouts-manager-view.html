@@ -9,9 +9,10 @@
     <div class="layouts-container">
 
         <div data-ng-repeat="layout in layouts" class="layout-menu-item">
-
-            <span class="material-icons default-icons" data-ng-class="{'default-layout': layout.is_default}" data-ng-click="setAsDefault(layout)">home</span>
-                <div class="layout-menu-text" data-ng-click="openLayout(layout)">{{layout.name}}</div>
+            <span class="material-icons default-icons"
+                  data-ng-class="{'default-layout': layout.is_default}"
+                  data-ng-click="setAsDefault(layout)">home</span>
+            <div class="layout-menu-text" data-ng-click="openLayout(layout)">{{layout.name}}</div>
         </div>
 
     </div>

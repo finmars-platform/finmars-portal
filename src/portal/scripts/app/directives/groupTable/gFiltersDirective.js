@@ -512,28 +512,42 @@
                     }
                 };
 
-                scope.openCustomFieldsManager = function () {
+                const openCustomFieldsManagerDialog = function ($event) {
 
-                    $mdDialog.show({
-                        controller: 'CustomFieldDialogController as vm',
-                        templateUrl: 'views/dialogs/custom-field/custom-field-dialog-view.html',
-                        parent: angular.element(document.body),
-                        clickOutsideToClose: false,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            attributeDataService: scope.attributeDataService,
-                            entityViewerEventService: scope.evEventService,
-                            data: {
-                                entityType: scope.entityType
-                            }
-                        }
-                    })
+                	$mdDialog.show({
+						controller: 'CustomFieldDialogController as vm',
+						templateUrl: 'views/dialogs/custom-field/custom-field-dialog-view.html',
+						parent: angular.element(document.body),
+						targetEvent: $event,
+						clickOutsideToClose: false,
+						preserveScope: true,
+						multiple: true,
+						locals: {
+							attributeDataService: scope.attributeDataService,
+							entityViewerEventService: scope.evEventService,
+							data: {
+								entityType: scope.entityType
+							}
+						}
+					});
 
-                };
+				};
 
+                const openManageAttrsDialog = function ($event) {
+
+                	$mdDialog.show({
+						controller: 'AttributesManagerDialogController as vm',
+						templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+						targetEvent: $event,
+						multiple: true,
+						locals: {
+							data: {
+								entityType: scope.entityType
+							}
+						}
+					});
+
+				};
 
 				// <editor-fold desc="Chips filters">
 				scope.toggleUseFromAboveFilters = function () {
@@ -819,10 +833,8 @@
 				};
 
                 scope.onChipsFirstRender = function () {
-
 					updateFilterAreaHeight();
                 	scope.evEventService.dispatchEvent(evEvents.FILTERS_RENDERED);
-
 				};
 				// </editor-fold>
 
@@ -1099,7 +1111,7 @@
 
                 // EV section end
 
-				let init = function () {
+				const init = function () {
 
 					scope.popupEventService = new EventService();
 					scope.chipsListEventService = new EventService();
@@ -1112,13 +1124,17 @@
 
 					formatFiltersForChips();
 
+					scope.openCustomFieldsManager = scope.isReport ? openCustomFieldsManagerDialog : openManageAttrsDialog;
+
 					scope.readyStatus.filters = true;
 
 
-                    // TDDO Refactor this
-                    // 1 add on "resize" event listener for filter area height change
-                    // 2 calculate before render e.g width 1000px -> we got 2 rows - height 140px
-                    //                              width 500px -> we got 3 row - heiht 210px
+                    /*
+                    TDDO: Refactor this
+                    1 add on "resize" event listener for filter area height change
+                    2 calculate before render e.g width 1000px -> we got 2 rows - height 140px
+                                                 width 500px -> we got 3 row - heiht 210px
+                    */
 					setTimeout(function () {
                         updateFilterAreaHeight(); // important here
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);

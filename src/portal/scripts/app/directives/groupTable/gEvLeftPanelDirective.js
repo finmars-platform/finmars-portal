@@ -76,13 +76,13 @@
 
                 }
 
-                scope.resize = function () {
+                /* scope.resize = function () {
                     var table = document.querySelector('.g-table-section')
 
                     var leftPanel = document.querySelector('.g-ev-left-panel-holder')
 
                     leftPanel.style.height = (table.clientHeight - 15) + 'px'; // todo 10?
-                }
+                } */
 
                 scope.handleSlider = function () {
 
@@ -90,7 +90,7 @@
 
                     var leftPanel = document.querySelector('.g-ev-left-panel-holder')
                     var parentSection = leftPanel.parentElement
-                    var tableSection = document.querySelector('.g-table-section')
+                    // var tableSection = document.querySelector('.g-table-section')
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
                     var resultWidth;
@@ -129,8 +129,9 @@
                             }
 
                             interfaceLayout.evLeftPanel.width = resultWidth;
-                            leftPanel.style.width = resultWidth + 'px';
-                            tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+                            // leftPanel.style.width = resultWidth + 'px';
+                            // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+							leftPanel.style["flex-basis"] = resultWidth + 'px';
 
                             scope.evDataService.setInterfaceLayout(interfaceLayout);
 
@@ -159,8 +160,9 @@
 
 
                         interfaceLayout.evLeftPanel.width = resultWidth;
-                        leftPanel.style.width = resultWidth + 'px';
-                        tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+                        // leftPanel.style.width = resultWidth + 'px';
+                        // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+						leftPanel.style["flex-basis"] = resultWidth + 'px';
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
 
@@ -175,7 +177,7 @@
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                        scope.resize();
+                        // scope.resize();
 
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
@@ -186,7 +188,7 @@
 
                     scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-                        scope.resize();
+                        // scope.resize();
 
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
@@ -198,7 +200,7 @@
 
                     scope.evEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                        scope.resize();
+                        // scope.resize();
 
                         setTimeout(function () {
                             scope.tree = scope.generateGroupsTree();
@@ -342,13 +344,13 @@
 
                     setTimeout(function () {
 
-                        scope.resize();
+                        // scope.resize();
 
                     }, 100)
 
-                    window.addEventListener('resize', function () {
+                    /* window.addEventListener('resize', function () {
                         scope.resize();
-                    });
+                    }); */
 
                     scope.handleSlider();
                     scope.drake.init();

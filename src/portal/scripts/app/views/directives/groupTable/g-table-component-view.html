@@ -62,7 +62,7 @@
                     </g-filters>
                 </div>
 
-                <div ng-if="!isReport" class="g-ev-left-panel-holder">
+                <!--<div ng-if="!isReport" class="g-ev-left-panel-holder">
                     <g-ev-left-panel
                                 class="height-100 display-block"
                                 ev-data-service="evDataService"
@@ -70,68 +70,86 @@
                                 attribute-data-service="attributeDataService"
                                 sp-exchange-service="spExchangeService">
                     </g-ev-left-panel>
-                </div>
+                </div>-->
 
-<!--                <div class="g-grouping-section"-->
-<!--                     data-ng-if="components.groupingArea && viewType !== 'matrix'">-->
-<!--                    <group-grouping ev-data-service="evDataService"-->
-<!--                                    ev-event-service="evEventService"-->
-<!--                                    attribute-data-service="attributeDataService"-->
-<!--                                    content-wrap-element="contentWrapElem"></group-grouping>-->
-<!--                </div>-->
+<!--                <div class="g-grouping-section"
+                     data-ng-if="components.groupingArea && viewType !== 'matrix'">
+                    <group-grouping ev-data-service="evDataService"
+                                    ev-event-service="evEventService"
+                                    attribute-data-service="attributeDataService"
+                                    content-wrap-element="contentWrapElem"></group-grouping>
+                </div>-->
 
                 <div ng-if="readyToRenderTable" class="g-table-section">
-                    <div>
-                        <div class="g-table-wrap">
 
-                            <div class="g-column-area-wrap">
-                                <div data-ng-if="components.columnArea && viewType !== 'matrix'">
-                                    <group-columns ev-data-service="evDataService"
-                                                   ev-event-service="evEventService"
-                                                   attribute-data-service="attributeDataService"
-                                                   content-wrap-element="contentWrapElem"
-                                    ></group-columns>
+                    <div class="flex-row">
+
+                        <div ng-if="!isReport" class="g-ev-left-panel-holder">
+                            <g-ev-left-panel
+                                    class="height-100 display-block"
+                                    ev-data-service="evDataService"
+                                    ev-event-service="evEventService"
+                                    attribute-data-service="attributeDataService"
+                                    sp-exchange-service="spExchangeService">
+                            </g-ev-left-panel>
+                        </div>
+
+                        <div class="g-table-container">
+
+                            <div class="g-table-wrap">
+
+                                <div class="g-column-area-wrap">
+                                    <div data-ng-if="components.columnArea && viewType !== 'matrix'">
+                                        <group-columns ev-data-service="evDataService"
+                                                       ev-event-service="evEventService"
+                                                       attribute-data-service="attributeDataService"
+                                                       content-wrap-element="contentWrapElem"
+                                        ></group-columns>
+                                    </div>
+
+                                    <!--                                <md-button data-ng-if="!isReport && !isInsideDashboard && viewType !== 'matrix'"
+                                                                           class="toggle-group-column-area-btn"
+                                                                           ng-click="toggleGroupAndColumnArea()">
+                                                                    <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"
+                                                                                icon="keyboard_arrow_up"></ng-md-icon>
+                                                                    <ng-md-icon ng-hide="!groupingAndColumnAreaCollapsed"
+                                                                                icon="keyboard_arrow_down"></ng-md-icon>
+                                                                </md-button>-->
                                 </div>
 
-<!--                                <md-button data-ng-if="!isReport && !isInsideDashboard && viewType !== 'matrix'"-->
-<!--                                           class="toggle-group-column-area-btn"-->
-<!--                                           ng-click="toggleGroupAndColumnArea()">-->
-<!--                                    <ng-md-icon ng-hide="groupingAndColumnAreaCollapsed"-->
-<!--                                                icon="keyboard_arrow_up"></ng-md-icon>-->
-<!--                                    <ng-md-icon ng-hide="!groupingAndColumnAreaCollapsed"-->
-<!--                                                icon="keyboard_arrow_down"></ng-md-icon>-->
-<!--                                </md-button>-->
-                            </div>
-
-                            <group-table-body data-ng-if="viewType == 'report_viewer'"
-                                              class="group-table-body"
-                                              data-ng-class="{
+                                <group-table-body data-ng-if="viewType == 'report_viewer'"
+                                                  class="group-table-body"
+                                                  data-ng-class="{
                                                 'g-font-size-small': reportOptions.table_font_size === 'small',
                                                 'g-font-size-medium': reportOptions.table_font_size === 'medium',
                                                 'g-font-size-large': reportOptions.table_font_size === 'large'
                                               }"
-                                              ev-data-service="evDataService"
-                                              ev-event-service="evEventService"
-                                              workarea-wrap-element="workareaWrapElem"
-                                              content-wrap-element="contentWrapElem"
-                                              root-wrap-element="rootWrapElem"
-                            ></group-table-body>
-
-                            <report-viewer-matrix data-ng-if="viewType == 'matrix'"
-                                                  class="height-100 display-block matrix-inside-report-builder"
-                                                  style="height: 600px;"
-                                                  matrix-settings="viewSettings"
                                                   ev-data-service="evDataService"
-                                                  ev-event-service="evEventService"></report-viewer-matrix>
+                                                  ev-event-service="evEventService"
+                                                  workarea-wrap-element="workareaWrapElem"
+                                                  content-wrap-element="contentWrapElem"
+                                                  root-wrap-element="rootWrapElem"
+                                ></group-table-body>
 
-                            <div g-c-areas-drag-and-drop
-                                 ev-data-service="evDataService"
-                                 ev-event-service="evEventService"
-                                 content-wrap-element="contentWrapElem"
-                                 root-wrap-element="rootWrapElem"></div>
+                                <report-viewer-matrix data-ng-if="viewType == 'matrix'"
+                                                      class="height-100 display-block matrix-inside-report-builder"
+                                                      style="height: 600px;"
+                                                      matrix-settings="viewSettings"
+                                                      ev-data-service="evDataService"
+                                                      ev-event-service="evEventService"></report-viewer-matrix>
+
+                                <div g-c-areas-drag-and-drop
+                                     ev-data-service="evDataService"
+                                     ev-event-service="evEventService"
+                                     content-wrap-element="contentWrapElem"
+                                     root-wrap-element="rootWrapElem"></div>
+
+                            </div>
 
                         </div>
+
                     </div>
+
                 </div>
 
             </div>
@@ -156,17 +174,17 @@
 
         </div>
 
-<!--        <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar && domElemsAreReady">-->
-<!--            <div>-->
-<!--                <div class="g-filter" id="filtersbag">-->
-<!--                    <g-sidebar-filter ev-data-service="evDataService"-->
-<!--                                      ev-event-service="evEventService"-->
-<!--                                      attribute-data-service="attributeDataService"-->
-<!--                                      sp-exchange-service="spExchangeService"-->
-<!--                                      content-wrap-element="contentWrapElem"></g-sidebar-filter>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+<!--        <div class="g-filter-sidebar main-sidebar" ng-if="components.sidebar && domElemsAreReady">
+            <div>
+                <div class="g-filter" id="filtersbag">
+                    <g-sidebar-filter ev-data-service="evDataService"
+                                      ev-event-service="evEventService"
+                                      attribute-data-service="attributeDataService"
+                                      sp-exchange-service="spExchangeService"
+                                      content-wrap-element="contentWrapElem"></g-sidebar-filter>
+                </div>
+            </div>
+        </div>-->
 
     </div>
 

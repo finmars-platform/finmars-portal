@@ -412,8 +412,8 @@
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
                     progressBar.style.display = 'none';
+
                     if (isReport) {
                         contentElem.style.opacity = '1';
                     }
@@ -506,15 +506,15 @@
                         scope.scrollManager = new EvScrollManager();
                     }
 
-					// TO DELETE remove after applying new interface for ev and rv
-                    if (isReport) {
+					// TO DELETE: remove after applying new interface for ev and rv
+                    /* if (isReport) {
 
 						var components = scope.evDataService.getComponents();
 						var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
 						if (components.sidebar) {
 
-							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE after removing sidebar
+							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE: after removing sidebar
 
 							interfaceLayout.filterArea.collapsed = true;
 							interfaceLayout.filterArea.width = 0;
@@ -533,8 +533,8 @@
 						scope.evDataService.setInterfaceLayout(interfaceLayout);
 						scope.evDataService.setComponents(components);
 
-					}
-					// < TO DELETE remove after applying new interface for ev and rv >
+					} */
+					// < TO DELETE: remove after applying new interface for ev and rv >
 
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
@@ -581,7 +581,8 @@
                                 cellContentOverflow();
                             });*/
 
-                        } else {
+                        }
+                        else {
 
                             evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 

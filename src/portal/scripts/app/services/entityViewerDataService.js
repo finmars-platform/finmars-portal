@@ -391,11 +391,11 @@
         }
 
         function setComponents(components) {
-            data.components = components
+            data.components = components;
         }
 
         function getComponents() {
-            return data.components
+            return data.components;
         }
 
         function setReportOptions(options) {
@@ -1224,7 +1224,7 @@
             	columnArea: true,
                 viewer: true,
                 sidebar: true,
-                groupingArea: true,
+                // groupingArea: true,
                 columnAreaHeader: true,
                 splitPanel: true,
                 addEntityBtn: true,
