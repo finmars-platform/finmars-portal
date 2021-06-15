@@ -239,7 +239,13 @@
                     });
 
 					scope.evEventService.addEventListener(evEvents.FILTERS_RENDERED, function () {
-						scope.readyToRenderTable = true
+
+						scope.readyToRenderTable = true;
+
+						setTimeout(() => {
+							scope.$apply();
+						}, 0);
+
 					});
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -290,8 +296,6 @@
                 scope.init = function () {
 
                     initEventListeners();
-
-					scope.readyToRenderTable = !scope.isReport // TO DELETE after updating ev interface
 
 					if (scope.isReport) applyGroupsFoldingFromLocalStorage();
 

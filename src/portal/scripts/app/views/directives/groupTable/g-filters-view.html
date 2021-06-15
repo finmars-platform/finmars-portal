@@ -162,7 +162,7 @@
                 </md-button>
 
                 <md-menu-content width="4">
-                    <md-menu-item>
+                    <md-menu-item ng-if="isReport">
                         <md-button data-ng-click="exportAsPdf($event)" class="g-settings-option-btn">
                             <span>Export to PDF</span>
                         </md-button>
@@ -210,8 +210,8 @@
                         </md-button>
                     </md-menu-item>
 
-                    <md-menu-item data-ng-if="isReport">
-                        <md-button data-ng-click="openCustomFieldsManager()" class="g-settings-option-btn">
+                    <md-menu-item>
+                        <md-button data-ng-click="openCustomFieldsManager($event)" class="g-settings-option-btn">
                             <span>Custom Columns</span>
                         </md-button>
                     </md-menu-item>
