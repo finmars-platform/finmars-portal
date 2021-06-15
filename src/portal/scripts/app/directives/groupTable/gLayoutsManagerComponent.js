@@ -3,7 +3,7 @@
     'use strict';
 
     const metaService = require('../../services/metaService');
-    const middlewareService = require('../../services/middlewareService');
+    // const middlewareService = require('../../services/middlewareService');
     const evEvents = require("../../services/entityViewerEvents");
     const evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
     const popupEvents = require('../../services/events/popupEvents');
@@ -42,7 +42,6 @@
             	scope.isNewLayout = scope.evDataService.isLayoutNew();
 
                 scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 let splitPanelLayoutId = null;
@@ -76,6 +75,7 @@
                         autoWrap: true,
                         skipHide: true,
                         multiple: true
+
                     }).then(function (res) {
 
                     	if (res.status === 'agree') {
@@ -86,7 +86,12 @@
 
                             	if (scope.layout.is_default && scope.layouts.length > 1) { // If default layout was deleted and other layouts exist. Make another layout default.
 
-									let nextDefaultLayout = (scope.layouts[0].id === scope.layout.id) ? scope.layouts[1] : scope.layouts[0];
+									let nextDefaultLayout = scope.layouts[0];
+
+									if (scope.layouts[0].id === scope.layout.id) {
+										nextDefaultLayout = scope.layouts[1];
+									}
+
 									nextDefaultLayout.is_default = true;
 
 									await uiService.updateListLayout(nextDefaultLayout.id, nextDefaultLayout);
@@ -112,11 +117,11 @@
                     // scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 					scope.parentPopup.cancel();
 
-                    if (scope.isRootEntityViewer) {
+                    if (isRootEntityViewer) {
 
                         if (layout.user_code) {
 
-                            middlewareService.setNewEntityViewerLayoutName(layout.name); // Give signal to update active layout name in the toolbar
+                            // middlewareService.setNewEntityViewerLayoutName(layout.name); // Give signal to update active layout name in the toolbar
                             $state.transitionTo($state.current, {layoutUserCode: layout.user_code});
 
                         } else {
@@ -128,7 +133,7 @@
 
                     } else {
 
-                        middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active layout name in the toolbar
+                        // middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active layout name in the toolbar
 
                         scope.evDataService.setSplitPanelLayoutToOpen(layout.id);
                         scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
@@ -228,7 +233,7 @@
 
                                 if (res.data.layoutUserCode) {
 
-                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                    // middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                                     $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
 
                                 } else {
@@ -237,7 +242,8 @@
                                 }
 
                             } else {
-                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+
+                                // middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
 
                                 scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
                                 scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
@@ -324,7 +330,7 @@
 
 					scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-					middlewareService.setNewSplitPanelLayoutName(false);
+					// middlewareService.setNewSplitPanelLayoutName(false);
 					clearAdditions();
 
 					if (scope.isReport) {
@@ -369,7 +375,7 @@
 							scope.evDataService.setIsNewLayoutState(true);
 
 							scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
-							middlewareService.setNewEntityViewerLayoutName(listLayout.name);
+							// middlewareService.setNewEntityViewerLayoutName(listLayout.name);
 
 							scope.$apply(); // needed to update layout name inside gTopPartDirective
 
@@ -461,7 +467,7 @@
 
 						scope.evDataService.setListLayout(listLayout);
 
-						middlewareService.setNewEntityViewerLayoutName(listLayout.name);
+						// middlewareService.setNewEntityViewerLayoutName(listLayout.name);
 						scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 
 						scope.$apply(); // needed to update layout name inside gTopPartDirective
@@ -488,7 +494,7 @@
                     const activeLayoutConfig = scope.evDataService.getActiveLayoutConfiguration();
 
                     let spChangedLayout = false;
-                    if (scope.isRootEntityViewer) {
+                    if (isRootEntityViewer) {
 
                         const additions = scope.evDataService.getAdditions();
                         if (additions.isOpen) {
@@ -639,7 +645,7 @@
 
 				/* var applyLayout = function (layout) {
 
-					if (scope.isRootEntityViewer) {
+					if (isRootEntityViewer) {
 
 						middlewareService.setNewEntityViewerLayoutName(layout.name);
 
@@ -738,7 +744,7 @@
 
                             if (listLayout.id) { // if layout based on another existing layout
 
-                                if (scope.isRootEntityViewer) {
+                                if (isRootEntityViewer) {
 
                                     listLayout.is_default = true;
 
@@ -753,7 +759,7 @@
 
                             } else { // if layout was not based on another layout
 
-                                if (scope.isRootEntityViewer) {
+                                if (isRootEntityViewer) {
                                     listLayout.is_default = true;
                                 }
 
@@ -933,11 +939,11 @@
                                 scope.evDataService.setListLayout(listLayout);
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
-                                if (isRootEntityViewer) {
+                               /* if (isRootEntityViewer) {
                                     middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
                                 } else {
                                     middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
-                                }
+                                } */
 
                                 scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 
@@ -1067,10 +1073,13 @@
 
                 const init = async () => {
 
-                    scope.layouts = await getLayouts();
-                    await getInvites();
+                	Promise.allSettled([getLayouts(), getInvites()]).then(resData => {
 
-                    scope.$apply();
+						if (resData[0].status = "fulfilled") scope.layouts = resData[0].value;
+
+						scope.$apply();
+
+					});
 
                 }
 
