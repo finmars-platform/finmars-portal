@@ -67,9 +67,8 @@
                 fillInModeEnabled = true;
             }
 
-            // Functions for context menu
-
-            var updateTableAfterEntityChanges = function (res) {
+			//region Functions for context menu
+			var updateTableAfterEntityChanges = function (res) {
 
                 vm.entityViewerDataService.setActiveObjectAction(null);
                 vm.entityViewerDataService.setActiveObjectActionData(null);
@@ -329,8 +328,11 @@
                 });
 
             };
+			//endregion
 
-            // < Functions for context menu >
+			vm.hasFiltersArea = function () {
+				return ['report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_matrix'].includes(vm.componentData.type);
+			};
 
             vm.updateGrandTotalComponent = function () {
 
