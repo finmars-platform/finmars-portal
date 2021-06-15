@@ -22,7 +22,7 @@
         <div data-ng-repeat="item in popupData.options | filter:{name: popupData.searchTerm} as results track by item.id " class="crud-option">
 
             <div data-ng-if="!item.___edit" class="flex-row">
-                <div class="option-name-container" data-ng-click="popupData.selectItem(item)">
+                <div class="option-name-container" data-ng-click="popupData.selectItem(item, _$popup)">
                     <span class="material-icons" data-ng-if="item.id === popupData.selectedItem.item.id">done</span>
                     <span class="material-icons" data-ng-if="item.id !== popupData.selectedItem.item.id" style="visibility: hidden">done</span>
                     <span class="option-name">{{item.name}}</span>
