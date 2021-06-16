@@ -19,7 +19,7 @@ var apiVersion = baseUrlService.getApiVersion();
 return window.fetch('portal/content/json/functions_items.json').then(function (data) {
             return data.json();
         })*/
-        return functionsItemsService.functionsItems;
+        return JSON.parse(JSON.stringify(functionsItemsService.functionsItems));
 
     };
 
@@ -707,7 +707,8 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
         return new Promise(function (resolve, reject) {
 
             var expressionsList = getFunctionsItems();
-            expressionsList = filterExpressions(expressionsList, data);
+			expressionsList.push({func: "get_instrument_factor()"}); // TO DELETE: after AK will add get_instrument_factor() into functions_items.json
+			expressionsList = filterExpressions(expressionsList, data);
 
             var htmlExpressionData = null;
 
@@ -734,6 +735,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
     var validateExpressionOnFrontend = function (exprItem, data) {
 
     	var expressionsList = getFunctionsItems();
+		expressionsList.push({func: "get_instrument_factor()"}); // TO DELETE: after AK will add get_instrument_factor() into functions_items.json
 		expressionsList = filterExpressions(expressionsList, data);
 
 		return getHtmlExpression(exprItem.expression, data, expressionsList);
