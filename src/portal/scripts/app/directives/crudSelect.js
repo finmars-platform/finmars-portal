@@ -24,8 +24,6 @@
                 console.log("crudSelect.options", scope.options);
                 console.log("crudSelect.entityType", scope.entityType);
 
-                console.log('# on scope scope.options', JSON.parse(JSON.stringify(scope.options)));
-
                 var entityType = scope.entityType;
 
                 if (scope.entityType && scope.entityType.indexOf('strategy') !== -1 && scope.label === 'Sub Group') {
@@ -125,9 +123,6 @@
                 // <Victor 2021.04.21 #93 New crud select design>
 
                 scope.addItem = function () {
-                    console.log('# before add scope.options', JSON.parse(JSON.stringify(scope.options)));
-
-                    console.log('addItem');
 
                     scope.searchTerm = '';
 
@@ -140,8 +135,6 @@
                         user_code: '',
                         ___edit: true
                     });
-
-                    console.log('# after add scope.options', JSON.parse(JSON.stringify(scope.options)));
 
                 };
 
