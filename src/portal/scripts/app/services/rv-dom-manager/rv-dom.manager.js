@@ -2037,7 +2037,11 @@
 
         let contextMenu;
 
-        const contextMenuData = await uiService.getContextMenuLayoutList();
+        const contextMenuData = await uiService.getContextMenuLayoutList({
+            filters:  {
+                type: "report_context_menu"
+            }
+        });
 
         if (contextMenuData.results.length) {
 
