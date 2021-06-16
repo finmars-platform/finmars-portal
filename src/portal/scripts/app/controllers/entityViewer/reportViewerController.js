@@ -633,7 +633,7 @@
 
                                     var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                                    var currency_object = getCurrencyObject('instrument.pricing_currency');
+                                    var currency_object = getCurrencyObject('instrument.pricing_currency.id');
                                     var createEntityLocals = {
                                         entityType: 'currency-history',
                                         entity: {
@@ -657,8 +657,8 @@
                         if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
 
                             var filters = {
-                                currency: activeObject['instrument.accrued_currency'],
-                                instrument: activeObject['instrument.id'],
+                                currency: activeObject['instrument.accrued_currency.id'],
+                                // instrument: activeObject['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
@@ -687,6 +687,56 @@
                                         entityType: 'currency-history',
                                         entity: {
                                             currency: activeObject['instrument.accrued_currency'],
+                                            currency_object: currency_object,
+                                            pricing_policy: reportOptions.pricing_policy,
+                                            pricing_policy_object: reportOptions.pricing_policy_object,
+                                            date: reportOptions.report_date
+                                        },
+                                        data: {}
+                                    };
+
+                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+
+
+                                }
+
+                            })
+
+                        }
+
+                        if (action === 'edit_pricing_currency_fx_rate' && activeObject.id) {
+
+                            var filters = {
+                                currency: activeObject['instrument.pricing_currency.id'],
+                                // instrument: activeObject['instrument.id'],
+                                pricing_policy: reportOptions.pricing_policy,
+                                date_0: reportOptions.report_date,
+                                date_1: reportOptions.report_date
+                            };
+
+                            currencyHistoryService.getList({filters: filters}).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var item = data.results[0];
+
+                                    var locals = {
+                                        entityType: 'currency-history',
+                                        entityId: item.id,
+                                        data: {}
+                                    };
+
+                                    editEntity(activeObject, locals);
+
+                                } else {
+
+                                    var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
+
+                                    var currency_object = getCurrencyObject('instrument.pricing_currency.id');
+                                    var createEntityLocals = {
+                                        entityType: 'currency-history',
+                                        entity: {
+                                            currency: activeObject['instrument.pricing_currency.id'],
                                             currency_object: currency_object,
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
