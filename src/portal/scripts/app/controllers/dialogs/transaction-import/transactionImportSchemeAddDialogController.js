@@ -21,6 +21,11 @@
 
         vm.readyStatus = {dataProviders: false, scheme: true, transactionTypes: false};
 
+        vm.defaultRuleScenario = {
+            name: '-',
+            is_default_rule_scenario: true
+        };
+
         vm.inputsGroup = {
             "name": "<b>Imported</b>",
             "key": 'input'
@@ -380,6 +385,9 @@
             vm.scheme.calculated_inputs = vm.calculatedFields;
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rule_scenarios = vm.mapFields;
+
+            vm.scheme.rule_scenarios.push(vm.defaultRuleScenario);
+
             vm.scheme.recon_scenarios = vm.reconFields;
 
             var warningMessage = '';

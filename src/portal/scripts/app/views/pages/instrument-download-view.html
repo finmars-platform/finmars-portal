@@ -113,7 +113,8 @@
                 <div layout="row">
                     <md-button class="md-raised" data-ng-click="vm.recalculate()">Recalculate</md-button>
                     <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
-                        Add to database
+                        <span data-ng-if="!vm.config.instrument.id">Add to database</span>
+                        <span data-ng-if="vm.config.instrument.id">Update Instrument</span>
                     </md-button>
                 </div>
             </div>
