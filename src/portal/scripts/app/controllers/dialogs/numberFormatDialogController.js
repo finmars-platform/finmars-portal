@@ -11,7 +11,24 @@
 
         var vm = this;
 
-        vm.reportSettings = JSON.parse(JSON.stringify(data.report_settings));
+        const defaultReportSettings = {
+            zero_format_id: 0,
+            negative_format_id: 0,
+            negative_color_format_id: 0,
+            round_format_id: 0,
+            thousands_separator_format_id: 0,
+            percentage_format_id: 0,
+            number_multiplier: null,
+            number_suffix: '',
+            number_prefix: '',
+        };
+
+        if (data.report_settings) {
+            const report_settings = JSON.parse(JSON.stringify(data.report_settings));
+            vm.reportSettings = {...defaultReportSettings, ...report_settings}
+        } else {
+            vm.reportSettings = {...defaultReportSettings};
+        }
 
         vm.zeroFormats = [
             {id: 0, name: '0'},
@@ -141,8 +158,52 @@
             vm.onNumberFormatChange();
         };
 
+        vm.onRoundingChange = function () {
+            if (vm.reportSettings.round_format_id !== 0) {
+                vm.reportSettings.percentage_format_id = 0;
+
+                vm.reportSettings.number_multiplier = null;
+                vm.reportSettings.number_suffix = "";
+                vm.reportSettings.number_prefix = "";
+
+            }
+
+            vm.onNumberFormatChange();
+        };
+
+        vm.onPercentageChange = function () {
+            if (vm.reportSettings.percentage_format_id !== 0) {
+                vm.reportSettings.round_format_id = 0;
+            } else {
+
+                vm.reportSettings.number_multiplier = null;
+                vm.reportSettings.number_suffix = "";
+                vm.reportSettings.number_prefix = "";
+
+            }
+
+            if (vm.reportSettings.percentage_format_id > 0 &&
+                vm.reportSettings.percentage_format_id < 4) {
+
+                vm.reportSettings.number_multiplier = 100;
+                vm.reportSettings.number_suffix = "%";
+                vm.reportSettings.number_prefix = "";
+
+            }
+
+            if (vm.reportSettings.percentage_format_id > 3) {
+
+                vm.reportSettings.number_multiplier = 10000;
+                vm.reportSettings.number_suffix = "bps";
+                vm.reportSettings.number_prefix = "";
+
+            }
+
+            vm.onNumberFormatChange();
+        };
+
         vm.onNumberFormatChange = function () {
-            vm.positiveNumberExample = vm.formatValue(4878.2309);
+            vm.positiveNumberExample = vm.formatValue(4878.2308);
             vm.zeroExample = vm.formatValue(0);
             vm.negativeNumberExample = vm.formatValue(-9238.1294);
 
