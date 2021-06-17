@@ -212,6 +212,8 @@
             clearAllPresetSelection();
             const currentPreset = getActivePreset();
             vm.currentPresetName = currentPreset ? currentPreset.name : 'Select Preset';
+
+            setTimeout(() => $scope.$apply());
         }
 
         vm.getZeroName = function () {
