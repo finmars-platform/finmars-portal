@@ -53,30 +53,61 @@
     }
 
 	/**
+	 * Returns HTML for column with row settings buttons.
 	 *
-	 * @param buttonClasses
+	 * @param color {string}
      * @param rowType {string} can be 'object', 'subtotal', 'blankLine'
-	 * @returns {string}
+	 * @returns {string} - HTML for column with row settings
 	 */
-	var getRowSettings = function (buttonClasses, rowType) {
+    var getRowSettings = function (color, rowType) {
 
-    	var classes = "g-row-color-picker-btn gTableActionBtn";
+    	/* return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
+				'<button class="' + classes + '" data-click-action-type="open_row_color_picker">' +
+					'<span class="material-icons label-icon">' + icon + '</span>' +
+					'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
+				'</button>' +
+			'</div>'; */
 
-    	if (buttonClasses) {
-			classes = classes + " " + buttonClasses;
-		}
-
-    	const contextMenuBtnTemplate = rowType === 'object'
-            ? `<button class="context-menu-btn gTableActionBtn" data-click-action-type="open_context_menu"><span class="material-icons">more_vert</span></button>`
-            : ``;
-
-        return `<div class="g-row-settings g-row-settings-table gRowSettings">
+        /* return `<div class="g-row-settings g-row-settings-table gRowSettings">
             <div class="context-menu-btn-wrapper">${contextMenuBtnTemplate}</div>
             <button class="${classes}" data-click-action-type="open_row_color_picker">
                 <span class="material-icons label-icon">label_outline</span>
                 <span class="material-icons arrow-icon">arrow_drop_down</span>
             </button>
-        </div>`;
+        </div>`; */
+		let contextMenuBtn = '';
+
+		if (rowType === 'object' || rowType === 'subtotal') {
+
+			contextMenuBtn =
+				`<div class="context-menu-btn-wrapper">
+					<button class="context-menu-btn gTableActionBtn" data-click-action-type="open_context_menu">
+						<span class="material-icons">more_vert</span>
+					</button>
+				</div>`;
+
+		} else {
+			contextMenuBtn = '<div class="context-menu-btn-wrapper"></div>';
+		}
+
+		const icon = ['red', 'yellow', 'green'].includes(color) ? 'label' : 'label_outline';
+
+		/* let rowColorpickerClasses = "g-row-color-picker-btn gTableActionBtn";
+
+		if (buttonClasses) {
+			rowColorpickerClasses = rowColorpickerClasses + " " + buttonClasses;
+		} */
+
+		const rowColorPicker =
+			`<button class="g-row-color-picker-btn gTableActionBtn" data-click-action-type="open_row_color_picker">
+				<span class="material-icons label-icon">${icon}</span>
+				<span class="material-icons arrow-icon">arrow_drop_down</span>
+			</button>`;
+
+		return `<div class="g-row-settings g-row-settings-table gRowSettings">
+					${contextMenuBtn}
+					${rowColorPicker}
+				</div>`;
 
 	};
 
@@ -233,7 +264,14 @@
 
     };
 
-    var formatPercentage = function (value, column) {
+	/**
+	 * Applies multiplier, rounding and suffix to number.
+	 *
+	 * @param value {number | string}
+	 * @param column {Object}
+	 * @returns {number | string | NaN}
+	 */
+    var formatPercentage = function (value, column, applySuffix) {
 
         var number = value;
 
@@ -243,7 +281,7 @@
                 number = parseFloat(number) * column.report_settings.number_multiplier;
             }
 
-            switch (number) {
+            switch (column.report_settings.percentage_format_id) {
 
                 case 1:
                 case 4:
@@ -258,7 +296,10 @@
                     break;
             }
 
-            /*switch (column.report_settings.percentage_format_id) {
+			if (applySuffix && column.report_settings.number_suffix) {
+				number = number + column.report_settings.number_suffix;
+			}
+            /* switch (column.report_settings.percentage_format_id) {
 
                 case 0:
                     return value;
@@ -300,7 +341,7 @@
             value = '';
         }
 
-        value = formatPercentage(value, column);
+        value = formatPercentage(value, column, false); // also applies multiplier
 
         value = formatRounding(value, column);
 
