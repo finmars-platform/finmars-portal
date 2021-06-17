@@ -55,6 +55,7 @@
   position: relative;
   height: 0;
   overflow: hidden;
+  box-sizing: border-box;
   // transition: max-height 0.5s linear;
   .new-interface();
 
@@ -69,9 +70,13 @@
   }
 
   .icon-buttons {
-    display: flex;
+    flex: 0 0 252px;
+    /* display: flex;
     justify-content: flex-end;
-    flex: 0 0 191px;
+    flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
   }
 
   .g-filter-settings-big-left-btn {
@@ -406,6 +411,24 @@
       display: block;
     }
 
+  }
+
+  .g-row-marked-red {
+    span.label-icon {
+      color: #f05a22;
+    }
+  }
+
+  .g-row-marked-yellow {
+    span.label-icon {
+      color: #fac878;
+    }
+  }
+
+  .g-row-marked-green {
+    span.label-icon {
+      color: #a5d9c9;
+    }
   }
 
   .g-grouping-section {
@@ -779,6 +802,7 @@
 
   .g-filters-holder {
     float: left;
+    box-sizing: border-box;
 
     .modal-dialog-card {
       margin: 8px;
@@ -911,8 +935,14 @@
       color: #a5d9c9;
     }
 
+    &.g-cell-button {
+      .label-icon {
+        color: @gray;
+      }
+    }
+
     .label-icon {
-      color: #dbdbdb;
+      color: @gCellBroderColor;
     }
 
     .arrow-icon {
@@ -1108,11 +1138,6 @@
     .left-right-drop-area();
   }
 
-  .g-filters-holder {
-    padding: 10px;
-    box-sizing: border-box;
-  }
-
   .g-column-bottom-row.g-table-header {
     @g-table-header-height: 50px;
 
@@ -1137,6 +1162,18 @@
       position: relative;
       width: @g-table-header-height;
       border-right: 1px solid @g-table-border-color;
+
+      .md-checked {
+
+        .md-container .md-icon {
+          &:after {
+            top: 0;
+            bottom: 0;
+            left: 5px;
+          }
+        }
+
+      }
     }
 
     md-checkbox {
@@ -1145,7 +1182,7 @@
       .md-icon {
         width: 17px;
         height: 17px;
-        border-color: @g-table-border-color;
+        border: 2px solid @gray;
         border-radius: 4px;
       }
 
@@ -1437,6 +1474,16 @@
         z-index: 1;
       }
 
+      .g-add-column-button {
+        color: @gray;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f05a22;
+        }
+
+      }
+
     }
 
 
@@ -1581,14 +1628,18 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
 
   &.red {
     color: @rv-active-color;
+    span {
+      color: @rv-active-color;
+    }
   }
 
   &.yellow {
-    color: #fac878;
+    color: #FAC878;
   }
 
   &.green {
-    color: #a5d9c9;
+    //color: #a5d9c9;
+    color: #04F7AE
   }
 }
 

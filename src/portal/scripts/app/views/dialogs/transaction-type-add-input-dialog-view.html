@@ -1,5 +1,5 @@
 <md-dialog class="ttype-add-input-dialog draggable-dialog ttypeAddInputElemToResize"
-           aria-label="fields dialog"
+           aria-label="transaction type input addition dialog"
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -20,6 +20,7 @@
                         small-options="{tooltipText: 'Input name'}"
                         event-signal="vm.textEventSignal"
                         on-blur-callback="vm.validateInputName()"
+                        class="custom-input-bottom-space"
                         style="width: 100%;"></text-input>
         </div>
 
@@ -29,6 +30,7 @@
                         placeholder-text="Enter input verbose name here"
                         model="vm.verbose_name"
                         small-options="{tooltipText: 'Input verbose name'}"
+                        class="custom-input-bottom-space"
                         style="width: 100%;"></text-input>
         </div>
 
@@ -38,6 +40,7 @@
                         placeholder-text="Enter input tooltip here"
                         model="vm.tooltip"
                         small-options="{tooltipText: 'Input tooltip'}"
+                        class="custom-input-bottom-space"
                         style="width: 240px;"></text-input>
         </div>
 
@@ -51,6 +54,7 @@
                              small-options="{tooltipText: 'Input value type'}"
                              event-signal="vm.valueTypeSignal"
                              on-change-callback="vm.onValueTypeChange()"
+                             class="custom-input-bottom-space"
                              style="width: 50%"></dropdown-select>
 
             <dropdown-select class="p-l-8"
@@ -62,6 +66,7 @@
                              event-signal="vm.contentTypeSignal"
                              is-disabled="vm.contentTypeDisabled()"
                              on-change-callback="vm.onContentTypeChange()"
+                             class="custom-input-bottom-space"
                              style="width: 50%"></dropdown-select>
         </div>
 
@@ -75,6 +80,7 @@
                                  menu-options="vm.contextProperties"
                                  small-options="{tooltipText: 'Input Context for Default value'}"
                                  is-disabled="vm.isFillFromContentDisabled()"
+                                 class="custom-input-bottom-space"
                                  style="width: 100%"></dropdown-select>
 
                 <div ng-if="!vm.isFillFromContentDisabled()"
@@ -90,32 +96,33 @@
 
             <div class="flex-row width-50 p-l-8">
 
-
                 <expression-input ng-if="vm.valueType !== 100"
                                   class="width-100"
                                   label="Default value"
                                   model="vm.defaultValue"
                                   is-disabled="vm.valueType === 120"
-                                  data-data="vm.expressionData"></expression-input>
+                                  data-data="vm.expressionData"
+                                  class="custom-input-bottom-space"></expression-input>
+
                 <dropdown-select ng-if="vm.valueType === 100"
                                  class="width-100"
                                  label="Default Value"
                                  placeholder-text="Choose Default Value"
                                  model="vm.defaultValue"
                                  menu-options="vm.defaultValuesItems"
-                                 small-options="{tooltipText: 'Input Default value'}"></dropdown-select>
+                                 small-options="{tooltipText: 'Input Default value'}"
+                                 class="custom-input-bottom-space"></dropdown-select>
             </div>
         </div>
 
         <div layout="row" class="m-t-8">
 
-
-
             <expression-input class="width-50 p-r-8"
                               label="Input expression"
                               model="vm.valueExpression"
                               is-disabled="vm.valueType === 120"
-                              data-data="vm.expressionData"></expression-input>
+                              data-data="vm.expressionData"
+                              class="custom-input-bottom-space"></expression-input>
 
             <two-fields-multiselect ng-model="vm.linkedInputsNames"
                                     class="width-50 p-l-8"
@@ -124,7 +131,8 @@
                                     name-property="name"
                                     data-selected-items-indication="array"
                                     model="vm.linkedInputsNames"
-                                    class="dashboard-constructor-selector-directive"></two-fields-multiselect>
+                                    class="dashboard-constructor-selector-directive"
+                                    class="custom-input-bottom-space"></two-fields-multiselect>
         </div>
 
 <!--        </div>-->
