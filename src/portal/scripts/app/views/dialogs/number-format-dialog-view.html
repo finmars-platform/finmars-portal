@@ -27,7 +27,11 @@
 
         <div class="examples">
             <div class="examples-caption">Examples:</div>
-            <div class="examples-items">
+            <div class="examples-items"
+                 data-ng-class="{
+                    'low-font-size': vm.reportSettings.percentage_format_id >= 3 && vm.reportSettings.percentage_format_id < 5,
+                    'small-font-size': vm.reportSettings.percentage_format_id === 5
+                    }">
                 <div>{{vm.positiveNumberExample}}</div>
                 <div>{{vm.zeroExample}}</div>
                 <div data-ng-class="{red: vm.negativeFormat % 2 === 1}">{{vm.negativeNumberExample}}</div>
