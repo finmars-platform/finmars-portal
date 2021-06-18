@@ -589,8 +589,8 @@
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
 
-                        if (window.location.pathname !== '/') {
-                            window.location.pathname = '/';
+                        if (window.location.pathname !== '/portal') {
+                            window.location.pathname = '/portal';
                         } else {
                             window.location.reload()
                         }
@@ -874,11 +874,8 @@
 
                 console.log('master_user_change data', data)
 
-                if (window.location.pathname !== '/') {
-                    window.location.pathname = '/';
-                } else {
-                    window.location.reload()
-                }
+                $state.go('app.home');
+                window.location.reload()
 
             })
 
