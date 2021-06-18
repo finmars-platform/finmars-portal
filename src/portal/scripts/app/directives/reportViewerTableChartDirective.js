@@ -9,6 +9,7 @@
 
 
     var evEvents = require('../services/entityViewerEvents');
+    var dashboardHelper = require('../helpers/dashboard.helper');
 
     module.exports = function ($mdDialog) {
         return {
@@ -38,8 +39,8 @@
                 scope.availableValueColumnAttrs = scope.tableChartSettings.available_value_column_keys || [];
                 if (scope.availableValueColumnAttrs.length) scope.availableValueColumnAttrs = JSON.parse(angular.toJson(scope.availableValueColumnAttrs));
 
-				scope.canChangeTitleColumnAttr = false;
-				scope.canChangeValueColumnAttr = false;
+                scope.canChangeTitleColumnAttr = false;
+                scope.canChangeValueColumnAttr = false;
 
                 scope.toggleSort = function (sortKey) {
 
@@ -283,10 +284,12 @@
                     }
 
                     if (scope.sortDirection === 'DESC') {
-                        prop = '-'+prop;
+                        prop = '-' + prop;
                     }
 
                     scope.items = utilsHelper.sortItems(scope.items, prop)
+
+                    initColumnSliderListener();
 
                 }
 
@@ -319,17 +322,17 @@
 
                 var onAttrsOptionSelect = function (option, optionsList, key, _$popup) {
 
-					_$popup.cancel();
+                    _$popup.cancel();
 
                     if (option.id !== scope.tableChartSettings[key]) {
 
                         scope.tableChartSettings[key] = option.id;
                         scope.createTable();
 
-						var activeOption = optionsList.find(sOption => sOption.isActive);
-						if (activeOption) activeOption.isActive = false;
+                        var activeOption = optionsList.find(sOption => sOption.isActive);
+                        if (activeOption) activeOption.isActive = false;
 
-						option.isActive = true;
+                        option.isActive = true;
 
                         scope.evEventService.dispatchEvent(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED);
 
@@ -351,25 +354,88 @@
                     }
                 };
 
-				var canChangeColumnAttr = function (availableAttrsList, colAttrKey) {
+                var canChangeColumnAttr = function (availableAttrsList, colAttrKey) {
 
-					if (availableAttrsList.length) {
+                    if (availableAttrsList.length) {
 
-						if (availableAttrsList.length === 1) {
-							// One different attribute is available for column
-							return availableAttrsList[0].attribute_data.key !== colAttrKey;
+                        if (availableAttrsList.length === 1) {
+                            // One different attribute is available for column
+                            return availableAttrsList[0].attribute_data.key !== colAttrKey;
 
-						} else {
-							return true;
-						}
+                        } else {
+                            return true;
+                        }
 
-					}
+                    }
 
-					return false;
+                    return false;
 
-				};
+                };
+
+                function initColumnSliderListener() {
+
+                    $('.rv-table-chart-table-cell-resize-slider').bind('mousedown', function (e) {
+
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        console.log('e', e)
+
+                        var mouseDownLeft = e.clientX;
+                        var diff;
+                        var result;
+
+                        var col = e.target.parentElement
+                        var index = col.dataset.index
+
+                        var currentWidth = $(col).width();
+
+                        console.log('currentWidth', currentWidth);
+                        var elems = document.querySelectorAll('.rv-table-chart-table-cell-' + index)
+
+                        $(window).bind('mousemove', function (e) {
+
+                            e.preventDefault();
+
+                            diff = e.clientX - mouseDownLeft;
+
+                            result = currentWidth + diff;
+
+                            if (result > 32) {
+
+                                col.style.width = result + 'px';
+
+                                elems.forEach(function (elem) {
+                                    elem.style.width = result + 'px';
+                                })
+
+
+                            }
+
+                            scope.tableChartSettings["column_" + index + "_width"] = result;
+
+                        });
+
+                        $(window).bind('mouseup', function () {
+                            $(window).unbind('mousemove');
+
+                            console.log('mouseup DASHBOARD_COMPONENT_DATA_CHANGED')
+
+                            scope.evEventService.dispatchEvent(evEvents.TABLE_CHART_COLUMN_RESIZE_END);
+
+                        });
+
+                    });
+
+                }
+
 
                 scope.init = function () {
+
+                    scope.column_1_width = scope.tableChartSettings.column_1_width || 400
+                    scope.column_2_width = scope.tableChartSettings.column_2_width || 400
+                    scope.column_3_width = scope.tableChartSettings.column_3_width || 400
+
 
                     scope.evDataService.setActiveObject({});
 
@@ -403,8 +469,8 @@
 
                     });
 
-					scope.canChangeTitleColumnAttr = canChangeColumnAttr(scope.availableTitleColumnAttrs, scope.tableChartSettings.title_column);
-					scope.canChangeValueColumnAttr = canChangeColumnAttr(scope.availableValueColumnAttrs, scope.tableChartSettings.value_column);
+                    scope.canChangeTitleColumnAttr = canChangeColumnAttr(scope.availableTitleColumnAttrs, scope.tableChartSettings.title_column);
+                    scope.canChangeValueColumnAttr = canChangeColumnAttr(scope.availableValueColumnAttrs, scope.tableChartSettings.value_column);
 
                 };
 
