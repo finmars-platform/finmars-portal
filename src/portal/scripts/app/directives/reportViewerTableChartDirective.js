@@ -278,7 +278,8 @@
                     }
 
                     if (scope.sortKey === 'percent_column') {
-                        prop = 'graph_percent';
+                        // prop = 'graph_percent';
+                        prop = 'total';
                     }
 
                     if (scope.sortDirection === 'DESC') {
@@ -390,6 +391,7 @@
                             initMatrixMethods();
                         }, 0)*/
                     }
+
 
                     // If we already have data (e.g. viewType changed) end
 
