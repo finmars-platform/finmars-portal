@@ -1,7 +1,13 @@
 module.exports = {
-	// chipsListDirective
+
+	//region chipsListDirective
 	'CHIPS_LIST_CHANGED': 'CHIPS_LIST_CHANGED',
 	'CHIPS_LIST_ELEMENT_SIZE_CHANGED': 'CHIPS_LIST_ELEMENT_SIZE_CHANGED',
-    'DROPDOWN_MENU_OPTIONS_CHANGED': 'DROPDOWN_MENU_OPTIONS_CHANGED'
-	// < chipsListDirective >
+    'DROPDOWN_MENU_OPTIONS_CHANGED': 'DROPDOWN_MENU_OPTIONS_CHANGED',
+	//endregion
+
+	//region classifierTreeDirective
+	'TREE_CHANGED_FROM_OUTSIDE': 'TREE_CHANGED_FROM_OUTSIDE'
+	//endregion
+
 };

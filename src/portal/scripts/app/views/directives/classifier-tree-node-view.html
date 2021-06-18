@@ -1,0 +1,23 @@
+<div class="classifier-node" ng-class="{'active': node.isActive}">
+    <div class="classifier-node-row flex-row"
+         ng-click="selectNode(node)">
+        <div>
+            <span class="material-icons">chevron_right</span> <span ng-bind="node.name"></span>
+        </div>
+
+        <!-- <div>
+            <span ng-bind="node.text2"></span>
+        </div> -->
+    </div>
+
+    <div class="classifier-node-children">
+
+        <div ng-repeat="subNode in node.children track by subNode.id"
+             class="classifier-node-holder">
+            <classifier-tree-node parent="node"
+                                  node="subNode"></classifier-tree-node>
+        </div>
+
+    </div>
+
+</div>

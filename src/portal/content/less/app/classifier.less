@@ -1,0 +1,27 @@
+.classifier-select-dialog-view {
+  md-dialog-content {
+    padding: 14px 16px;
+  }
+}
+
+.classifier-tree {
+  width: 100%;
+
+  .classifier-node-holder {
+    flex-basis: 100%;
+  }
+
+  .classifier-node {
+    cursor: pointer;
+
+    &.active {
+
+      > .classifier-node-row {
+        background-color: @orange;
+        color: #fff;
+      }
+
+    }
+  }
+
+}
