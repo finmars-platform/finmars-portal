@@ -204,7 +204,7 @@
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
-                            scope.model = +res.data.item;
+                            scope.model = res.data.item;
                             console.log('scope.model', scope.model)
                             getTree();
                         }

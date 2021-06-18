@@ -2,32 +2,42 @@
            aria-label="classifier selector dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Select classifier</h2>
+            <h2 ng-bind="vm.label"></h2>
             <span flex></span>
         </div>
     </md-toolbar>
 
     <md-dialog-content>
-        <div layout="row">
-            <div data-ng-show="vm.tree.length" class="js-tree-holder-dialog-select">
-                <div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>
-            </div>
-            <div data-ng-if="!vm.tree.length" style="width: 100%;">
-                <p style="text-align: center; width: 100%;">
-                    Press Edit to create Classification
-                </p>
+
+        <!--<div data-ng-show="vm.tree.length" class="js-tree-holder-dialog-select">
+            <div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>
+        </div>
+        <div data-ng-if="!vm.tree.length" style="width: 100%;">
+            <p style="text-align: center; width: 100%;">
+                Press Edit to create Classification
+            </p>
+        </div>-->
+        <div ng-if="vm.readyStatus">
+            <classifier-tree tree-data="vm.tree"
+                             classifier-tree-event-service="vm.classifierTreeEventService"
+                             on-active-nodes-change-callback="vm.onActiveNodesChange(activeNodesList)"></classifier-tree>
+        </div>
+
+        <div ng-if="!vm.readyStatus">
+            <div class="flex-row fc-space-between fi-center height-100" style="min-height: 110px;">
+                <progress-circular diameter="100"></progress-circular>
             </div>
         </div>
     </md-dialog-content>
 
     <md-dialog-actions layout="row">
-        <md-button class="md-raised md-primary" ng-click="vm.edit($event)">
+        <!--<md-button class="md-raised md-primary" ng-click="vm.edit($event)">
             Edit
-        </md-button>
+        </md-button>-->
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised" ng-click="vm.agree()" ng-disabled="!vm.activeNodes.length" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>
