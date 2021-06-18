@@ -1177,8 +1177,8 @@
                             vm.componentData.settings.column_2_width = vm.tableChartSettings.column_2_width;
                             vm.componentData.settings.column_3_width = vm.tableChartSettings.column_3_width;
 
-
-                            dashboardHelper.saveComponentSettingsFromDashboard(vm.dashboardDataService, vm.componentData);
+                            var showNotification = false
+                            dashboardHelper.saveComponentSettingsFromDashboard(vm.dashboardDataService, vm.componentData, showNotification);
                         });
 
 
