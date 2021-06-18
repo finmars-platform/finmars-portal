@@ -870,6 +870,18 @@
 
             });
 
+            websocketService.addEventListener('master_user_change', function (data){
+
+                console.log('master_user_change data', data)
+
+                if (window.location.pathname !== '/') {
+                    window.location.pathname = '/';
+                } else {
+                    window.location.reload()
+                }
+
+            })
+
             vm.initTransitionListener();
 
             var getUserProm = vm.getUser();
