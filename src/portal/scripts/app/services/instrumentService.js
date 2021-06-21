@@ -382,7 +382,7 @@
 
 	const getInstrumentFactorsMultitypeFieldsData = () => {
 		return {
-			'date': {
+			'effective_date': {
 				value_type: 40,
 				fieldTypesList: [
 					{
@@ -409,7 +409,7 @@
 					}
 				]
 			},
-			'position_factor': {
+			'position_factor_value': {
 				value_type: 20,
 				fieldTypesList: [
 					{
@@ -436,7 +436,7 @@
 					}
 				]
 			},
-			'factor1': {
+			'factor_value1': {
 				value_type: 20,
 				fieldTypesList: [
 					{
@@ -463,7 +463,7 @@
 					}
 				]
 			},
-			'factor2': {
+			'factor_value2': {
 				value_type: 20,
 				fieldTypesList: [
 					{
@@ -490,7 +490,7 @@
 					}
 				]
 			},
-			'factor3': {
+			'factor_value3': {
 				value_type: 20,
 				fieldTypesList: [
 					{

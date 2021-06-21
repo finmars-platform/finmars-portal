@@ -40,7 +40,7 @@
 
             const defaultFactorsScheduleData = [
                 {
-                    key: 'date',
+                    key: 'effective_date',
                     name: 'Date',
                     to_show: true,
                     override_name: '',
@@ -49,7 +49,7 @@
                     default_value: ''
                 },
                 {
-                    key: 'position_factor',
+                    key: 'position_factor_value',
                     name: 'Position factor',
                     to_show: true,
                     override_name: '',
@@ -58,7 +58,7 @@
                     default_value: ''
                 },
                 {
-                    key: 'factor1',
+                    key: 'factor_value1',
                     name: 'Factor 1',
                     to_show: true,
                     override_name: '',
@@ -67,7 +67,7 @@
                     default_value: ''
                 },
                 {
-                    key: 'factor2',
+                    key: 'factor_value2',
                     name: 'Factor 2',
                     to_show: true,
                     override_name: '',
@@ -76,7 +76,7 @@
                     default_value: ''
                 },
                 {
-                    key: 'factor3',
+                    key: 'factor_value3',
                     name: 'Factor 3',
                     to_show: true,
                     override_name: '',
@@ -89,6 +89,7 @@
             return defaultFactorsScheduleData;
         }
 
+        // Victor 2021.06.17 fist static grid table
         const getFactorsDataGridTableData = (rows) => {
 
             const factorsDataGridTableData = {
@@ -249,9 +250,9 @@
             return factorsDataGridTableData;
         }
 
-        const onFactorsDataTableCellChange = (data, gtDataService) => {
+        const onFactorsDataTableCellChange = (data) => {
 
-            const cell = gtDataService.getCellByKey(data.row.order, data.column.key);
+            const cell = vm.factorsDataGridTableDataService.getCellByKey(data.row.order, data.column.key);
             const path = cell.objPath[0];
 
             vm.factorsData[data.row.order][path] = cell.settings.value;
@@ -277,11 +278,30 @@
             const factorsDataGridTableData = getFactorsDataGridTableData(factorsData);
             vm.factorsDataGridTableDataService.setTableData(factorsDataGridTableData);
 
-            vm.factorsDataGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
-                onFactorsDataTableCellChange(argumentsObj, vm.factorsDataGridTableDataService)
-            });
+            vm.factorsDataGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, onFactorsDataTableCellChange);
 
         };
+        // <Victor 2021.06.17 fist static grid table>
+
+        // Victor 2021.06.17 second grid table (dynamic)
+        const onFactorsOrderChange = (rowData, gtDataService, gtEventService) => {
+
+            const sortedFactors = [];
+
+            const tableData = gtDataService.getTableData();
+            tableData.body.forEach((row, index) => {
+
+                const factor = vm.entity.instrument_factor_schedules.find(({id}) => id === row.key);
+                if (factor) {
+                    factor.button_position = index;
+                    sortedFactors.push(factor);
+                }
+
+            });
+
+            vm.entity.instrument_factor_schedules = sortedFactors;
+
+        }
 
         const getFactorsGridTableData = (rows) => {
 
@@ -297,7 +317,7 @@
                     isActive: false,
                     columns: [
                         {
-                            key: 'date',
+                            key: 'effective_date',
                             objPath: ['effective_date'],
                             columnName: 'Date',
                             order: 0,
@@ -373,7 +393,7 @@
                         },
                     ],
                     methods: {
-                        // onOrderChange: onActionsOrderChange
+                        onOrderChange: onFactorsOrderChange
                     }
                 },
 
@@ -390,6 +410,8 @@
             };
 
             const rowObj = metaHelper.recursiveDeepCopy(factorsGridTableData.templateRow, true);
+
+            // Assemble header
             factorsGridTableData.header.columns = rowObj.columns.map(column => {
 
                 const headerCol = {
@@ -414,53 +436,87 @@
 
             });
 
-            /*factorsGridTableData.body = rows.map((row, index) => {
+            // Assemble body
+            factorsGridTableData.body = rows.map((row, index) => {
 
                 const rowObj = metaHelper.recursiveDeepCopy(factorsGridTableData.templateRow, true);
 
                 rowObj.order = index;
-                rowObj.key = row.key;
+                rowObj.key = row.id;
 
-                const date = gridTableHelperService.getCellFromRowByKey(rowObj, 'date');
-                const dateValue = row.effective_date;
+                rowObj.columns.forEach(cell => {
 
+                    const {key} = cell;
+                    const fields = multitypeFieldsForRows[key].fieldTypesList;
+                    const cellValue = row[key];
+                    const cellValueType = row[`${key}_value_type`];
+                    const {cell: cellData, value_type } = gridTableHelperService.getMultitypeFieldDataForCell(fields, cell, cellValue, cellValueType);
 
-/!*
+                    Object.assign(cell, cellData, value_type);
 
+                })
 
+                return rowObj;
 
+            })
 
-                const nameCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'name');
-                nameCell.settings.value = row.name;
+            vm.entity.instrument_factor_schedules.forEach(function (factor, index) {
+                factor.button_position = index;
+                factorsGridTableData.body[index].order = index;
+            });
 
-                const toShowCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'to_show');
-                toShowCell.settings.value = row.to_show;
-
-                const overrideNameCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'override_name');
-                overrideNameCell.settings.value = row.override_name;
-
-                const tooltipCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'tooltip');
-                tooltipCell.settings.value = row.tooltip;
-
-                const defaultValueCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'default_value');
-
-                if (multitypeFieldsForRows[row.key] && multitypeFieldsForRows[row.key].fieldTypesList) {
-
-                    const cellValue = row.default_value;
-                    const cellValueType = row.default_value_type
-                    const fields = multitypeFieldsForRows[row.key].fieldTypesList;
-                    const defaultValueCellData = gridTableHelperService.getMultitypeFieldDataForCell(fields, defaultValueCell, cellValue, cellValueType);
-
-                    Object.assign(defaultValueCell, defaultValueCellData);
-
-                }*!/
-
-                return rowObj
-
-            })*/
-
+            vm.factorsGridTableDataService.setTableData(factorsGridTableData);
 
             return factorsGridTableData;
+
+        };
+
+        const onFactorsTableCellChange = (data) => {
+
+            const cell = vm.factorsGridTableDataService.getCellByKey(data.row.order, data.column.key);
+            const path = cell.objPath[0];
+            const activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+
+            vm.entity.instrument_factor_schedules[data.row.order][path] = cell.settings.value;
+            vm.entity.instrument_factor_schedules[data.row.order][`${path}_value_type`] = activeType.value_type;
+
+        };
+
+
+        const onFactorsTableAddRow = () => {
+
+            const newFactor = {
+                'effective_date': null, 'effective_date_value_type': 40,
+                'position_factor_value': null, 'position_factor_value_value_type': 20,
+                'factor_value1': null, 'factor_value1_value_type': 20,
+                'factor_value2': null, 'factor_value2_value_type': 20,
+                'factor_value3': null, 'factor_value3_value_type': 20,
+                'button_position': ''
+            };
+
+            vm.entity.instrument_factor_schedules.unshift(newFactor);
+
+            const gridTableData = vm.factorsGridTableDataService.getTableData();
+            const newRow = gridTableData.body[0];
+
+            newRow.columns.forEach(cell => {
+                const {key} = cell;
+                const fields = multitypeFieldsForRows[key].fieldTypesList;
+                const cellValue = newRow[key];
+                const cellValueType = newRow[`${key}_value_type`];
+                const {cell: cellData, value_type } = gridTableHelperService.getMultitypeFieldDataForCell(fields, cell, cellValue, cellValueType);
+
+                Object.assign(cell, cellData, value_type)
+            })
+
+            vm.entity.instrument_factor_schedules.forEach(function (factor, index) {
+                factor.button_position = index;
+                gridTableData.body[index].order = index;
+            });
+
+            vm.factorsGridTableDataService.setTableData(gridTableData)
+
+            console.log('#116 newRow', newRow)
 
         };
 
@@ -488,7 +544,11 @@
             const factorsGridTableData = getFactorsGridTableData(factors);
             vm.factorsGridTableDataService.setTableData(factorsGridTableData);
 
+            vm.factorsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, onFactorsTableCellChange);
+            vm.factorsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, onFactorsTableAddRow);
+
         }
+        // <Victor 2021.06.17 second grid table (dynamic)>
 
         const getInstrumentAttrTypes = function () {
 
@@ -504,9 +564,6 @@
         const init = function () {
 
             vm.factorsData = getFactorsData();
-            vm.factors  = vm.entity.instrument_factor_schedules || [];
-
-
 
             getInstrumentAttrTypes().then(data => {
 
@@ -514,8 +571,8 @@
                 const instrumentAttrTypes = data;
                 multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
-                createFactorsDataGridTable(vm.factorsData); // First table
-                createFactorsGridTable(vm.factors)
+                createFactorsDataGridTable(vm.factorsData); // First table (static)
+                createFactorsGridTable(vm.entity.instrument_factor_schedules); // Second table (dynamic)
 
                 vm.readyStatus.factors = true;
 
