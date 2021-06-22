@@ -331,7 +331,7 @@
 			//endregion
 
 			vm.hasFiltersArea = function () {
-				return ['report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_matrix'].includes(vm.componentData.type);
+				return ['report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_matrix', 'report_viewer_table_chart'].includes(vm.componentData.type);
 			};
 
             vm.updateGrandTotalComponent = function () {
