@@ -169,6 +169,8 @@
 
                             var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
 
+                            console.log('tableChart.status', status)
+
                             if (status === dashboardComponentStatuses.START) { // Init calculation of a component
 
                                 scope.readyStatus.data = 'ready';
@@ -253,6 +255,8 @@
                 scope.init = function () {
 
                     scope.initEventListeners();
+
+                    console.log('tableChart.scope.fillInModeData, ', scope.fillInModeData)
 
                     if (!scope.fillInModeData) {
 
