@@ -33,6 +33,8 @@
 
         const mapAttrsFromEntity = (attrs, entityAttrs) => {
 
+            attrs.forEach(it => it.___classifierName = null)
+
             const deletedAttrs = [];
 
             entityAttrs.forEach(entityAttr => {
@@ -42,7 +44,7 @@
 
                 const additionalProps = {
                     value,
-                    ___classifierName: entityAttr.value_type === 30 ? value : null,
+                    ___classifierName: entityAttr.value_type === 30 && value ? value : null,
                 };
 
                 if (attr) {
