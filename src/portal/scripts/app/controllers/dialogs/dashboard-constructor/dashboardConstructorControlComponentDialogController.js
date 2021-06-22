@@ -166,6 +166,11 @@
 
         };
 
+        vm.onMultipleChange = function () {
+            vm.defaultValue.setValue = null;
+            vm.defaultValue.setValueName = null;
+            vm.defaultValue.setValueObject ={};
+        }
 
         vm.onReportTypeChange = function() {
 
@@ -219,6 +224,14 @@
                 return item.user_code === layoutUserCode;
 
             });
+
+            if (!layout) { // may be layout saved as ID in old version
+                layout = vm.layouts.find(item => item.id === layoutUserCode);
+                if (layout) {
+                    vm.defaultValue.layout = layout.user_code;
+                }
+
+            }
 
             vm.reportFields = getReportFields(vm.defaultValue.entity_type, layout);
 
@@ -494,22 +507,25 @@
 
             vm.componentsTypes = dataService.getComponents();
 
+            if (vm.item.settings.value_type === 100) { // relation
 
-            vm.currentContentType = vm.getContentTypeByKey(vm.item.settings.content_type);
+                vm.currentContentType = vm.getContentTypeByKey(vm.item.settings.content_type);
 
-            const relationType = vm.currentContentType.relationType;
+                const relationType = vm.currentContentType.relationType;
 
-            if (relationType) {
+                if (relationType) {
 
-                vm.getDataForMultiselect(relationType).then(function (resData) {
+                    vm.getDataForMultiselect(relationType).then(function (resData) {
 
-                    vm.multiselectItems = JSON.parse(JSON.stringify(resData.results));
+                        vm.multiselectItems = JSON.parse(JSON.stringify(resData.results));
 
-                });
+                    });
 
-            } else {
+                } else {
 
-                vm.multiselectItems = [];
+                    vm.multiselectItems = [];
+
+                }
 
             }
 

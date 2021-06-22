@@ -38,6 +38,10 @@
                     setInputText();
                 });
 
+                scope.$watch('model', function () {
+                    setInputText();
+                });
+
                 $(elem).click(function (event) {
 
                     event.preventDefault();
