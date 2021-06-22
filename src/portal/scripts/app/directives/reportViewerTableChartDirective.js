@@ -418,9 +418,6 @@
 
                         $(window).bind('mouseup', function () {
                             $(window).unbind('mousemove');
-
-                            console.log('mouseup DASHBOARD_COMPONENT_DATA_CHANGED')
-
                             scope.evEventService.dispatchEvent(evEvents.TABLE_CHART_COLUMN_RESIZE_END);
 
                         });
