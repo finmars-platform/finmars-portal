@@ -24,6 +24,10 @@
                     Database
                 </md-button>
 
+                <md-button class="md-raised md-primary float-right"  data-ng-click="vm.createDatabaseFromBackup($event)">Create
+                    Database From Backup
+                </md-button>
+
             </div>
 
             <div data-ng-if="vm.invites.length">
@@ -129,6 +133,11 @@
 
                         <md-button data-ng-if="item.is_admin" class="md-raised"
                                    data-ng-click="vm.renameMasterUser($event, item)">Rename
+                        </md-button>
+
+                        <md-button data-ng-if="!item.legacy_id" class="md-raised" data-ng-click="vm.exportMasterUserBackup($event, item)">
+<!--                        <md-button  class="md-raised" data-ng-click="vm.exportMasterUserBackup($event, item)">-->
+                            Export Backup
                         </md-button>
 
                         <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Open

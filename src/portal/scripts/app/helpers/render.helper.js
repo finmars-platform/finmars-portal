@@ -53,24 +53,61 @@
     }
 
 	/**
+	 * Returns HTML for column with row settings buttons.
 	 *
-	 * @param buttonClasses
-	 * @returns {string}
+	 * @param color {string}
+     * @param rowType {string} can be 'object', 'subtotal', 'blankLine'
+	 * @returns {string} - HTML for column with row settings
 	 */
-	var getRowSettings = function (buttonClasses) {
+    var getRowSettings = function (color, rowType) {
 
-    	var classes = "g-row-color-picker-btn gTableActionBtn";
-
-    	if (buttonClasses) {
-			classes = classes + " " + buttonClasses;
-		}
-
-    	return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
+    	/* return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
 				'<button class="' + classes + '" data-click-action-type="open_row_color_picker">' +
-					'<span class="material-icons label-icon">label_outline</span>' +
+					'<span class="material-icons label-icon">' + icon + '</span>' +
 					'<span class="material-icons arrow-icon">arrow_drop_down</span>' +
 				'</button>' +
-			'</div>';
+			'</div>'; */
+
+        /* return `<div class="g-row-settings g-row-settings-table gRowSettings">
+            <div class="context-menu-btn-wrapper">${contextMenuBtnTemplate}</div>
+            <button class="${classes}" data-click-action-type="open_row_color_picker">
+                <span class="material-icons label-icon">label_outline</span>
+                <span class="material-icons arrow-icon">arrow_drop_down</span>
+            </button>
+        </div>`; */
+		let contextMenuBtn = '';
+
+		if (rowType === 'object' || rowType === 'subtotal') {
+
+			contextMenuBtn =
+				`<div class="context-menu-btn-wrapper">
+					<button class="context-menu-btn gTableActionBtn" data-click-action-type="open_context_menu">
+						<span class="material-icons">more_vert</span>
+					</button>
+				</div>`;
+
+		} else {
+			contextMenuBtn = '<div class="context-menu-btn-wrapper"></div>';
+		}
+
+		const icon = ['red', 'yellow', 'green'].includes(color) ? 'label' : 'label_outline';
+
+		/* let rowColorpickerClasses = "g-row-color-picker-btn gTableActionBtn";
+
+		if (buttonClasses) {
+			rowColorpickerClasses = rowColorpickerClasses + " " + buttonClasses;
+		} */
+
+		const rowColorPicker =
+			`<button class="g-row-color-picker-btn gTableActionBtn" data-click-action-type="open_row_color_picker">
+				<span class="material-icons label-icon">${icon}</span>
+				<span class="material-icons arrow-icon">arrow_drop_down</span>
+			</button>`;
+
+		return `<div class="g-row-settings g-row-settings-table gRowSettings">
+					${contextMenuBtn}
+					${rowColorPicker}
+				</div>`;
 
 	};
 
@@ -404,20 +441,14 @@
 			if (flatList[i].___type === 'object' || flatList[i].___type === 'subtotal') {
 
 				if (flatList[i].___subtotal_type !== 'proxyline') {
-
 					return false;
-
 				}
 
 			}
 
 			if (flatList[i].___level === columnNumber + 1 && flatList[i].___subtotal_type === 'proxyline') {
-
 				return true;
-				break;
-
 			}
-
 
 		}
 

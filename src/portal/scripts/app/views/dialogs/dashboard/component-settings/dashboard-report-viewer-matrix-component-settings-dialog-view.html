@@ -127,12 +127,12 @@
 
                         </div>
 
-                        <div>
+<!--                        <div>
                             <number-format-menu data-format-settings="vm.item.settings.number_format"
                                                 data-button-content="<span>Number Format</span>"
                                                 data-button-classes="md-raised md-primary"
                                                 class="dashboard-constructor-btn-among-fields"></number-format-menu>
-                        </div>
+                        </div>-->
 
                         <md-input-container class="dashboard-constructor-field1"
                                             style="margin: 0 10px;">
@@ -181,6 +181,13 @@
                         </md-input-container>
 
                     </div>
+
+                    <md-input-container style="height: 58px">
+                        <md-checkbox data-ng-model="vm.item.settings.auto_scaling"
+                                     aria-label="matrix autoscaling">
+                            Scale matrix
+                        </md-checkbox>
+                    </md-input-container>
 
                 </md-content>
             </md-tab>

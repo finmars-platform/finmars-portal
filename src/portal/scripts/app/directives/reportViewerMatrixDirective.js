@@ -38,12 +38,16 @@
                 scope.availableOrdinateAttrs = scope.matrixSettings.available_ordinate_keys || [];
                 if (scope.availableOrdinateAttrs.length) scope.availableOrdinateAttrs = JSON.parse(angular.toJson(scope.availableOrdinateAttrs));
 
+                scope.availableValueAttrs = scope.matrixSettings.available_value_keys || [];
+				if (scope.availableValueAttrs.length) scope.availableValueAttrs = JSON.parse(angular.toJson(scope.availableValueAttrs));
+
                 if (scope.matrixSettings.hide_empty_lines) {
                     scope.emptyLinesHidingType = scope.matrixSettings.hide_empty_lines;
                 }
 
                 scope.canChangeAbscissaAttr = false;
 				scope.canChangeOrdinateAttr = false;
+				scope.canChangeValueAttr = false;
 
 				var cellWidth = 0;
 
@@ -94,21 +98,19 @@
                     var rowsCount = scope.rows.length + 2; // add header and footer rows
                     var columnsCount = scope.columns.length + 2; // add left and right fixed columns
 
-                    var minWidth = 100;
-
                     // var minHeight = 20;
 
                     // var matrixHolderMinHeight = elem[0].querySelector('.report-viewer-matrix').clientHeight;
-					var matrixHolderMinHeight = 144; // equal to 3 rows
 
                     cellWidth = Math.floor(elemWidth / columnsCount);
-                    //var cellHeight = Math.floor(elemHeight / rowsCount);
-                    // var cellHeight = 25;
                     var cellHeight = 48;
+
+					var minWidth = 100;
+                    var matrixHolderMinHeight = cellHeight * 3; // equal to 3 rows
 
                     if (scope.matrixSettings.auto_scaling) {
 
-                        minWidth = 2;
+                        minWidth = 46;
 
                         var elemHeight = elem.height();
                         var cellHeight = Math.floor(elemHeight / rowsCount);
@@ -137,6 +139,7 @@
                     // because of children with absolute positioning, elem below requires manual width setting
                     rvMatrixLeftCol.style.width = cellWidth + 'px';
 
+                    var matrixWrapHeight = matrixWrap.clientHeight;
                     var matrixMaxWidth = columnsCount * cellWidth;
                     var matrixMaxHeight = rowsCount * cellHeight;
 
@@ -150,7 +153,8 @@
                     var matrixProbableHeight = rowsCount * cellHeight;
 
                     var matrixVCAvailableWidth = matrixWrap.clientWidth - cellWidth;
-                    var matrixVCAvailableHeight = matrixWrap.clientHeight - cellHeight;
+                    var matrixVCAvailableHeight = matrixWrapHeight - cellHeight;
+
                     // whether matrix has scrolls
                     if (matrixVCAvailableWidth < matrixVCContainerWidth) {
 
@@ -167,10 +171,16 @@
                         matrixHolder.classList.remove('has-y-scroll');
                     }
 
-                    if (matrixProbableHeight < matrixWrap.clientHeight) {
+                    if (matrixProbableHeight < matrixWrapHeight) {
                         matrixHolder.style.height = matrixProbableHeight + 'px';
-                    } else {
-                        matrixHolder.style.height = matrixHolderMinHeight + 'px';
+                    }
+                    else {
+
+                    	var canFitRowsNumber = matrixWrapHeight / cellHeight;
+                    	var matrixHolderHeight = canFitRowsNumber * cellHeight;
+
+						matrixHolder.style.height = matrixHolderHeight + 'px';
+
                     }
 
                     rvMatrixValueRowsHolder.style.width = matrixVCContainerWidth + 'px';
@@ -602,6 +612,8 @@
 					if (option.id !== scope.matrixSettings[axisProp]) {
 
 						scope.matrixSettings[axisProp] = option.id;
+						if (axisProp === 'value_key') scope.matrixValueAttrName = option.name;
+
 						scope.createMatrix();
 
 						var activeOption = optionsList.find(sOption => sOption.isActive);
@@ -629,20 +641,6 @@
 
 				};
 
-                scope.abscissaSelectorData = {
-                	options: formatAttrsForSelector(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa),
-					selectOption: function (option, _$popup) {
-                		onAxisAttrsOptionSelect(option, scope.abscissaSelectorData.options, 'abscissa', _$popup);
-					}
-				};
-
-				scope.ordinateSelectorData = {
-					options: formatAttrsForSelector(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate),
-					selectOption: function (option, _$popup) {
-						onAxisAttrsOptionSelect(option, scope.ordinateSelectorData.options, 'ordinate', _$popup);
-					}
-				};
-
 				var canChangeAxisAttr = function (availableAttrsList, axisAttrKey) {
 
 					if (availableAttrsList.length) {
@@ -661,6 +659,37 @@
 					return false;
 
 				};
+
+				var initAxisAttrsSelectors = function () {
+
+					scope.abscissaSelectorData = {
+						options: formatAttrsForSelector(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa),
+						selectOption: function (option, _$popup) {
+							onAxisAttrsOptionSelect(option, scope.abscissaSelectorData.options, 'abscissa', _$popup);
+						}
+					};
+
+					scope.ordinateSelectorData = {
+						options: formatAttrsForSelector(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate),
+						selectOption: function (option, _$popup) {
+							onAxisAttrsOptionSelect(option, scope.ordinateSelectorData.options, 'ordinate', _$popup);
+						}
+					};
+
+					scope.valueSelectorData = {
+						options: formatAttrsForSelector(scope.availableValueAttrs, scope.matrixSettings.value_key),
+						selectOption: function (option, _$popup) {
+							onAxisAttrsOptionSelect(option, scope.valueSelectorData.options, 'value_key', _$popup);
+						}
+					};
+
+					var activeValueAttr = scope.availableValueAttrs.find(attr => {
+						return attr.attribute_data.key === scope.matrixSettings.value_key;
+					});
+
+					scope.matrixValueAttrName = activeValueAttr.layout_name || activeValueAttr.attribute_data.name;
+
+				};
 				//</editor-fold desc="Popup-selector of attributes for axises">
 
                 scope.init = function () {
@@ -669,6 +698,8 @@
 
                     // scope.top_left_title = scope.matrixSettings.top_left_title;
                     scope.styles = scope.matrixSettings.styles;
+
+					initAxisAttrsSelectors();
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
@@ -711,6 +742,7 @@
 					} */
 					scope.canChangeAbscissaAttr = canChangeAxisAttr(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa);
 					scope.canChangeOrdinateAttr = canChangeAxisAttr(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate);
+					scope.canChangeValueAttr = canChangeAxisAttr(scope.availableValueAttrs, scope.matrixSettings.value_key);
                     // window.addEventListener('resize', scope.alignGrid);
 
                 };

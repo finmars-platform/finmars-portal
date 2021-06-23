@@ -240,6 +240,11 @@
 						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/events-schedules-tab-view.html'
                     },
+                    {
+                        label: 'Exposure',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument/exposure-view.html'
+                    },
                     // {
                     //     label: 'Pricing (old)',
                     //     templateUrl: 'views/tabs/instrument/manual-pricing-formulas-view.html'
@@ -271,6 +276,11 @@
                         label: 'Events',
 						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
+                    },
+                    {
+                        label: 'Exposure',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/exposure-view.html'
                     },
                     {
                         label: 'Layout Settings',

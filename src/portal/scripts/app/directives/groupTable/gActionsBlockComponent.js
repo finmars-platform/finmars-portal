@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var metaService = require('../../services/metaService');
+	//<editor-fold desc="Import modules">
+	var metaService = require('../../services/metaService');
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService');
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
@@ -21,6 +22,7 @@
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
+    var reportHelper = require('../../helpers/reportHelper');
 
     var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
@@ -33,6 +35,7 @@
     var exportExcelService = require('../../services/exportExcelService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
+	//</editor-fold>
 
 
     module.exports = function ($mdDialog, $state, $bigDrawer) {
@@ -846,7 +849,7 @@
                             delete currentReportOptions.task_id;
                             delete currentReportOptions.recieved_at;
                             delete currentReportOptions.task_status;
-                            delete currentReportOptions.items;
+                            /* delete currentReportOptions.items;
                             delete currentReportOptions.item_complex_transactions;
                             delete currentReportOptions.item_counterparties;
                             delete currentReportOptions.item_responsibles;
@@ -859,7 +862,8 @@
                             delete currentReportOptions.item_instrument_accruals;
                             delete currentReportOptions.item_currency_fx_rates;
                             delete currentReportOptions.item_currencies;
-                            delete currentReportOptions.item_accounts;
+                            delete currentReportOptions.item_accounts; */
+							currentReportOptions = reportHelper.cleanReportOptionsFromTmpProps(currentReportOptions);
 
                             if (isLayoutTheSame(originalReportOptions, currentReportOptions) &&
                                 isLayoutTheSame(originReportLayoutOptions, currentReportLayoutOptions)) {

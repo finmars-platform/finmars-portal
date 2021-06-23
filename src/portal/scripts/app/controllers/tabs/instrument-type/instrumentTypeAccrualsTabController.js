@@ -11,6 +11,7 @@
 	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents')
 
     const metaHelper = require('../../../helpers/meta.helper');
+	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
 	const fieldResolverService = require('../../../services/fieldResolverService');
 	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
@@ -22,11 +23,11 @@
     module.exports = function instrumentTypeAccrualsTabController ($scope, $mdDialog, multitypeFieldService) {
 
         var vm = this;
+		const gridTableHelperService = new GridTableHelperService();
+
         vm.entity = $scope.$parent.vm.entity;
 
-        if (!vm.entity.accruals) {
-            vm.entity.accruals = [];
-        }
+        if (!vm.entity.accruals) vm.entity.accruals = [];
 
 		vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
 		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
@@ -38,7 +39,8 @@
 			topPart: false,
 			accrualsAccordions: false
         };
-		vm.evEditorFieldEvent = {};
+
+        vm.evEditorFieldEvent = {};
 
 		//<editor-fold desc="Accordion actions menu">
 		vm.accordionActionsMenu =
@@ -51,6 +53,19 @@
 						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">MAKE COPY</md-button>' +
 			'</div>';
 		//</editor-fold>
+
+		vm.selectorOptionsMap = {
+			'accrual_calculation_model': [],
+			'periodicity': []
+		}
+
+		const findAccrualById = (accrual, accrualId) => {
+
+			if (accrual.id || accrual.id === 0) return accrual.id === accrualId;
+
+			return accrual.frontOptions.id === accrualId;
+
+		};
 
 		const getPaymentSizeDetailFields = function () {
 
@@ -117,18 +132,19 @@
 
         var onAccrualTableCellChange = function (data, gtDataService, gtEventService) {
 
-            var tableData = gtDataService.getTableData()
-            var cell = gtDataService.getCellByKey(data.row.order, data.column.key)
-            var path = cell.objPath[0];
+            const tableData = gtDataService.getTableData()
+			const cell = gtDataService.getCellByKey(data.row.order, data.column.key)
+			const path = cell.objPath[0];
+            let accrual = vm.entity.accruals.find(accrual => findAccrualById(accrual, tableData.accrualId))
 
-            vm.entity.accruals[tableData.order].data.items[data.row.order][path] = cell.settings.value;
+			accrual.data.items[data.row.order][path] = cell.settings.value;
 
-			vm.onDataChange('accruals');
+			vm.onRequiredFieldChange('accruals');
 
 			if (cell.key === 'default_value' && cell.cellType === 'multitypeField') {
 
 				const activeType = cell.settings.fieldTypesData.find(type => type.isActive);
-				vm.entity.accruals[tableData.order].data.items[data.row.order].default_value_type = activeType.value_type;
+				accrual.data.items[data.row.order].default_value_type = activeType.value_type;
 
 			}
 
@@ -310,22 +326,25 @@
 
 
                 if (row.defaultValueType === 'selector') {
-                    rowObj.columns[2].settings.selectorOptions = row.selectorOptions;
+                    rowObj.columns[2].settings.selectorOptions = vm.selectorOptionsMap[row.key];
                 }
-
                 else if (row.defaultValueType === 'multitypeField') {
 
                     rowObj.columns[2].cellType = 'multitypeField';
 
-					const fieldTypesList = JSON.parse(JSON.stringify(multitypeFieldsForRows[rowObj.key].fieldTypesList));
+					/* const fieldTypesList = JSON.parse(JSON.stringify(multitypeFieldsForRows[rowObj.key].fieldTypesList));
                     multitypeFieldService.setActiveTypeByValueType(fieldTypesList, row.default_value, row.default_value_type);
 
-                    rowObj.columns[2].settings = {
+					rowObj.columns[2].settings = {
                         value: row.default_value,
                         fieldTypesData: fieldTypesList
-                    };
+                    }; */
+					const cellData = gridTableHelperService.getMultitypeFieldDataForCell(multitypeFieldsForRows[rowObj.key].fieldTypesList, rowObj.columns[2], row.default_value, row.default_value_type);
 
-                }
+					rowObj.columns[2] = cellData.cell;
+					row.default_value_type = cellData.value_type;
+
+				}
 
                 rowObj.columns[3].settings.value = row.override_name;
 				rowObj.columns[4].settings.value = row.tooltip;
@@ -359,13 +378,16 @@
                 };
             };
 
-            var periodicitySelectorOptions = vm.periodicityItems.map(mapOptions);
-            var accrualModelsSelectorOptions = vm.accrualModels.map(mapOptions)
+            // var periodicitySelectorOptions = vm.periodicityItems.map(mapOptions);
+			var periodicitySelectorOptions = vm.selectorOptionsMap.periodicity.map(mapOptions);
+            // var accrualModelsSelectorOptions = vm.accrualModels.map(mapOptions)
+			var accrualModelsSelectorOptions = vm.selectorOptionsMap.accrual_calculation_model.map(mapOptions)
 
             var accrual = {
                 accrualsGridTableDataService: new GridTableDataService(),
                 accrualsGridTableEventService: new GridTableEventService(),
                 name: '',
+				frontOptions: {id: metaHelper.generateUniqueId(vm.entity.accruals.length)},
                 order: vm.entity.accruals.length,
                 autogenerate: true,
                 data: {
@@ -375,8 +397,8 @@
                         {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'multitypeField', options: false},
                         {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'multitypeField', options: false},
                         {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'multitypeField', options: false},
-                        {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.periodicityItems, options_settings: periodicitySelectorOptions},
-                        {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.accrualModels, options_settings: accrualModelsSelectorOptions},
+                        {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.selectorOptionsMap.periodicity, options_settings: periodicitySelectorOptions},
+                        {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.selectorOptionsMap.accrual_calculation_model, options_settings: accrualModelsSelectorOptions},
                         {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'multitypeField', options: false},
                     ]
                 }
@@ -388,21 +410,21 @@
 
             var accrualGridTableData = getAccrualsGridTableData(accrual);
 
-            accrualGridTableData.order = vm.entity.accruals.length;
+            accrualGridTableData.accrualId = metaHelper.generateUniqueId(vm.entity.accruals.length);
             accrual.accrualsGridTableDataService.setTableData(accrualGridTableData);
 
             vm.entity.accruals.push(accrual);
 
         };
 
-        vm.toggleItem = function (pane, item, $event) {
+        vm.toggleItem = function ($pane, item, $event) {
 
             $event.stopPropagation();
 
             var isTextInputElement = $event.target.closest('.instrument-type-accrual-name-input');
 
             if (!isTextInputElement) {
-                pane.toggle();
+                $pane.toggle();
                 item.isPaneExpanded = !item.isPaneExpanded;
             }
 
@@ -462,7 +484,8 @@
                         description: description
                     }
                 }
-            }).then(res => {
+            })
+			.then(res => {
 
 				if (res.status === 'agree') {
 
@@ -480,11 +503,14 @@
 		vm.makeCopy = function (accrualToCopy, _$popup) {
 
 			_$popup.cancel();
+			vm.accrualsAccordion.collapseAll();
 
 			const accrualOrder = accrualToCopy.order;
 			const accrualCopy = JSON.parse(angular.toJson(accrualToCopy));
 
 			delete accrualCopy.id;
+			if (!accrualCopy.frontOptions) accrualCopy.frontOptions = {};
+			accrualCopy.frontOptions.id = metaHelper.generateUniqueId(accrualOrder);
 
 			let accrualCopyName = accrualToCopy.name + ' (Copy)';
 
@@ -508,16 +534,16 @@
 
 			accrualCopy.name = accrualCopyName;
 
-			formatExistingAccrual(accrualCopy, accrualCopy.order);
+			formatExistingAccrual(accrualCopy);
 
 			vm.entity.accruals.splice(accrualOrder + 1, 0, accrualCopy);
 			vm.entity.accruals.forEach((accrual, index) => accrual.order = index);
 
 		};
 
-		vm.onDataChange = function (fieldKey) {
+		vm.onRequiredFieldChange = function (fieldKey) {
 
-			let tabsWithErrors = vm.evEditorDataService.getTabsWithErrors();
+			const tabsWithErrors = vm.evEditorDataService.getTabsWithErrors();
 
 			if (tabsWithErrors['system_tab'].hasOwnProperty('accruals')) {
 				$scope.$parent.vm.onEntityChange(fieldKey);
@@ -642,7 +668,8 @@
         const periodicityItemsPromise = new Promise(res => {
 
         	instrumentPeriodicityService.getList().then(data => {
-				vm.periodicityItems = data;
+				// vm.periodicityItems = data;
+				vm.selectorOptionsMap.periodicity = data;
 				res();
 			});
 
@@ -651,7 +678,8 @@
         const accrualModelsPromise = new Promise(res => {
 
         	accrualCalculationModelService.getList().then(data => {
-				vm.accrualModels = data;
+				// vm.accrualModels = data;
+				vm.selectorOptionsMap.accrual_calculation_model = data;
 				res();
 			});
 
@@ -668,14 +696,14 @@
 
         };
 
-        const formatExistingAccrual = function (accrual, accrualIndex) {
+        const formatExistingAccrual = function (accrual) {
 
 			accrual.accrualsGridTableDataService = new GridTableDataService();
 			accrual.accrualsGridTableEventService = new GridTableEventService();
 
 			var accrualsGridTableData = getAccrualsGridTableData(accrual);
 
-			accrualsGridTableData.order = accrualIndex;
+			accrualsGridTableData.accrualId = (accrual.id || accrual.id === 0) ? accrual.id: accrual.frontOptions.id;
 
 			accrual.accrualsGridTableDataService.setTableData(accrualsGridTableData);
 
@@ -722,7 +750,7 @@
 				multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
                 vm.entity.accruals.forEach(function (item, index) {
-                    if (item.data) formatExistingAccrual(item, index);
+                    if (item.data) formatExistingAccrual(item);
                 });
 
 				vm.readyStatus.topPart = true;

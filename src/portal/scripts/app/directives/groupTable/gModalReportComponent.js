@@ -54,7 +54,6 @@
             'pricing_currency.notes', 'pricing_currency.reference_for_pricing', 'pricing_currency.daily_pricing_model.name', 'pricing_currency.default_fx_rate', 'currency.name',
             'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.reference_for_pricing', 'currency.daily_pricing_model.name', 'currency.default_fx_rate', 'pricing_currency_fx_rate'
 
-
         ];
 
         var performanceAttrsComp = [
@@ -84,11 +83,32 @@
         var currencyAttrsComp = ['currency.name', 'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.public_name'];
 
         var instrumentAttrsComp = [
-            'instrument.name', 'instrument.short_name', 'instrument.user_code', 'instrument.public_name', 'instrument.instrument_type.name',
-            'instrument.instrument_type.short_name', 'instrument.instrument_type.user_code', 'instrument.instrument_type.public_name', 'instrument.is_active',
-            'instrument.price_multiplier', 'instrument.accrued_currency.name', 'instrument.accrued_currency.short_name', 'instrument.accrued_currency.user_code',
-            'instrument.maturity_date', 'instrument.maturity_price', 'instrument.accrued_multiplier', 'instrument.user_text_1', 'instrument.user_text_2',
+            'instrument.name',
+            'instrument.short_name',
+            'instrument.user_code',
+            'instrument.public_name',
+            // 'instrument.instrument_type.name',
+            // 'instrument.instrument_type.short_name',
+            // 'instrument.instrument_type.user_code',
+            // 'instrument.instrument_type.public_name',
+            'instrument.is_active',
+            'instrument.price_multiplier',
+            'instrument.accrued_currency.name',
+            'instrument.accrued_currency.short_name',
+            'instrument.accrued_currency.user_code',
+            'instrument.maturity_date',
+            'instrument.maturity_price',
+            'instrument.accrued_multiplier',
+            'instrument.user_text_1',
+            'instrument.user_text_2',
             'instrument.user_text_3'
+        ];
+
+        var instrumentTypeAttrsComp = [
+            'instrument.instrument_type.name',
+            'instrument.instrument_type.short_name',
+            'instrument.instrument_type.user_code',
+            'instrument.instrument_type.public_name',
         ];
 
         var strategy1AttrsToRemove = ['strategy1.subgroup.short_name', 'strategy1.subgroup.notes', 'strategy1.subgroup.user_code'];
@@ -117,6 +137,17 @@
             });
         };
 
+        const getAttrsForInstrumentTypeTab = (vmAttrsKey, attrsToShow) => {
+
+            return vm[vmAttrsKey]
+                .filter(attr => attrsToShow.includes(attr.key))
+                .map(attr => {
+                    attr.orderNumber__ = attrsToShow.indexOf(attr.key);
+                    return attr;
+                });
+
+        };
+
         vm.getAttributes = function () {
 
             // contains attributes to show inside tab
@@ -124,6 +155,7 @@
             vm.balanceMismatchAttrsFiltered = [];
             vm.balancePerformanceAttrsFiltered = [];
             vm.instrumentAttrsFiltered = [];
+            vm.instrumentTypeAttrsFiltered = [];
             vm.linkedInstrumentAttrsFiltered = [];
             vm.currencyAttrsFiltered = [];
             vm.accountAttrsFiltered = [];
@@ -133,7 +165,8 @@
             vm.strategy3attrsFiltered = [];
             vm.allocationAttrsFiltered = [];
 
-            vm.balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
+			//<editor-fold desc="Get system attributes">
+			vm.balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
 
             vm.balanceMismatchAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereportmismatch', '', 'Mismatch', {maxDepth: 1});
 
@@ -156,8 +189,10 @@
             vm.strategy2attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2', 'Strategy 2', {maxDepth: 1});
 
             vm.strategy3attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
+			//</editor-fold>
 
-            var instrumentUserFields = attributeDataService.getInstrumentUserFields();
+			//<editor-fold desc="Get dynamic attributes">
+			var instrumentUserFields = attributeDataService.getInstrumentUserFields();
 
             instrumentUserFields.forEach(function (field) {
 
@@ -217,37 +252,47 @@
             vm.instrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
             vm.allocationDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             vm.linkedInstrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+			//</editor-fold>
 
-            vm.attrsList = vm.attrsList.concat(vm.balanceAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.allocationAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.allocationDynamicAttrs);
+            // remove attributes that area already inside currency from balance
+			vm.balanceAttrs = vm.balanceAttrs.filter(bAttr => {
+				return !!!vm.currencyAttrs.find(cAttr => cAttr.key === bAttr.key);
+			});
 
-            vm.attrsList = vm.attrsList.concat(vm.balancePerformanceAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.balanceMismatchAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.custom);
+			//<editor-fold desc="Create list with all attributes">
+			vm.attrsList = vm.attrsList.concat(vm.balanceAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.allocationAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.allocationDynamicAttrs);
 
-            vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.balancePerformanceAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.balanceMismatchAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.custom);
 
-            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
 
-            vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
 
-            vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
 
-            vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
-            vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
 
-            vm.attrsList = vm.attrsList.concat(vm.strategy1attrs);
-            vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
-            vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
+			vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
+			vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
 
-            filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
+			vm.attrsList = vm.attrsList.concat(vm.strategy1attrs);
+			vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
+			vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
+			//</editor-fold>
+
+			//<editor-fold desc="Group attributes for tabs">
+			filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
             composeAttrsInsideTab('balancePerformanceAttrs', performanceAttrsComp);
             composeAttrsInsideTab('instrumentAttrs', instrumentAttrsComp);
+            vm.instrumentTypeAttrsFiltered = getAttrsForInstrumentTypeTab('instrumentAttrs', instrumentTypeAttrsComp);
             composeAttrsInsideTab('linkedInstrumentAttrs', linkedInstrumentAttrsComp);
 
             //filterAttrsToShow('accountAttrs', accountAttrsToRemove);
@@ -258,6 +303,7 @@
             filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
             filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);
             composeAttrsInsideTab('allocationAttrs', allocationAttrsComp);
+			//</editor-fold>
 
             /*vm.attrsList = attrsList;*/
 

@@ -111,3 +111,142 @@
 .md-select-menu-container ~ .md-open-menu-container.md-active {
   z-index: 55;
 }
+
+
+.crud-select {
+  .crud-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    .crud-input-name {
+      width: 150px;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+
+.popup-crud-select {
+  padding-bottom: 5px;
+
+  .crud-header {
+    padding: 8px 12px;
+  }
+
+  .crud-search {
+
+    border: none;
+    outline: none;
+  }
+
+  .options-holder {
+    max-height: 225px;
+    min-height: 225px;
+    overflow-y: scroll;
+
+    .crud-option {
+      display: flex;
+      flex-direction: row;
+      height: 38px;
+      margin: 5px 0;
+      color: #747474;
+      cursor: pointer;
+
+      div:first-child {
+        height: 38px;
+      }
+
+      &:hover {
+        .option-button {
+          display: block;
+        }
+
+        .option-name-container {
+          width: 188px;
+
+        }
+      }
+
+      .option-name-container {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        max-width: 248px;
+        white-space: nowrap;
+        outline: none;
+
+        span.option-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        span.material-icons {
+          margin: 0 8px;
+        }
+
+      }
+
+      .edit-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+
+
+        span.material-icons {
+          margin: 0 8px;
+        }
+
+        .edit-name {
+          width: 100%;
+          height: 100%;
+          border: 1px solid #f05a22;
+          border-radius: 4px;
+
+          span.material-icons {
+            margin: 0;
+          }
+        }
+
+        .crud-name-input {
+          //width: 100%;
+          max-width: 140px;
+          height: 100%;
+          border: none;
+          box-sizing: border-box;
+          margin-left: 8px;
+          outline: none;
+        }
+
+        .edit-option-button {
+          min-width: auto;
+          min-height: auto;
+          line-height: initial;
+          margin: 0 2px;
+          padding: 0;
+        }
+      }
+
+      .option-button {
+        display: none;
+        min-width: auto;
+        min-height: auto;
+        line-height: initial;
+        margin: 0 2px;
+        padding: 0;
+      }
+
+    }
+
+  }
+
+}

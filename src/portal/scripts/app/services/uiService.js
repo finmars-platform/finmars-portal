@@ -161,7 +161,7 @@
         return uiRepository.getListLayoutDefault(options);
     }; */
 
-	const getListLayoutByKey = function (key) {
+	const getListLayoutByKey = key => {
 
         return new Promise (function (resolve, reject) {
 
@@ -189,6 +189,30 @@
 
         // return uiRepository.getListLayoutByKey(key);
     };
+
+	/**
+	 *
+	 * @memberOf module:uiService
+	 * @param entityType {string}
+	 * @param userCode {string} - user code of layout
+	 * @returns {Promise<any>}
+	 */
+	const getListLayoutByUserCode = (entityType, userCode) => {
+
+		const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+
+		return getListLayout(
+			null,
+			{
+				pageSize: 1000,
+				filters: {
+					content_type: contentType,
+					user_code: userCode
+				}
+			}
+		);
+
+	}
 
 	const createListLayout = function (entity, ui) {
 
@@ -251,6 +275,15 @@
 		});
 
     };
+	/**
+	 *
+	 * @param id {number} - layout id
+	 * @param xhrOptions {=Object}
+	 * @returns {Promise<Object>}
+	 */
+	const pingListLayoutByKey = (id, xhrOptions) => {
+		return uiRepository.pingListLayoutByKey(id, xhrOptions);
+	}
 
 	const getListLayoutTemplate = function () {
         return uiRepository.getListLayoutTemplate();
@@ -672,7 +705,6 @@
     };
 
 	const createColumnSortData = function (item) {
-
         return uiRepository.createColumnSortData(item);
     };
 
@@ -695,7 +727,7 @@
         });
 
     };
-
+	/** @module uiService */
     module.exports = {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -708,14 +740,16 @@
         getListLayoutLight: getListLayoutLight,
         // getListLayoutDefault: getListLayoutDefault,
         getListLayoutByKey: getListLayoutByKey,
+		getListLayoutByUserCode: getListLayoutByUserCode,
         createListLayout: createListLayout,
         updateListLayout: updateListLayout,
 
         deleteListLayoutByKey: deleteListLayoutByKey,
 
-        // Input Form Layouts
+		pingListLayoutByKey: pingListLayoutByKey,
 
-        getListEditLayout: getListEditLayout,
+		//<editor-fold desc="Input form editor layout management">
+		getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
         getEditLayoutByKey: getEditLayoutByKey,
 		getEditLayoutByUserCode: getEditLayoutByUserCode,
@@ -723,6 +757,7 @@
         updateEditLayout: updateEditLayout,
 
         deleteEditLayoutByKey: deleteEditLayoutByKey,
+		//</editor-fold>
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

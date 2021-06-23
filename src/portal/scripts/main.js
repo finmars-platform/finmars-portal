@@ -466,6 +466,7 @@ app.controller('ViewMissingPriceHistoryDialogController', ['$scope', '$mdDialog'
 app.controller('ViewMissingFxRatesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingFxRatesDialogController')]);
 app.controller('ViewMissingHistoricalFxRatesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingHistoricalFxRatesDialogController')]);
 app.controller('ViewMissingPriceHistoryViewPositionsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingPriceHistoryViewPositionsDialogController')]);
+app.controller('ViewMissingCustomFieldsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingCustomFieldsDialogController')]);
 
 
 // Settings
@@ -541,7 +542,7 @@ app.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownM
 
 app.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
 app.directive('bindFieldTable', ['$mdDialog', 'gridTableHelperService', 'multitypeFieldService', require('./app/directives/bindFieldTableDirective')]);
-app.directive('layoutConstructorField', ['$mdDialog', 'entityDataConstructorService', require('./app/directives/layoutConstructorFieldDirective')]);
+app.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
 // app.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 
