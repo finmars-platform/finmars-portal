@@ -1060,9 +1060,8 @@
 
             if (errors.length) {
 
-                // vm.tabsWithErrors = {};
-
-                vm.sharedLogic.processTabsErrors(errors, $event);
+                // vm.sharedLogic.processTabsErrors(errors, $event);
+				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
             } else {
 

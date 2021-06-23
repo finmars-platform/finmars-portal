@@ -16,6 +16,9 @@ module.exports = {
 
     'RESIZE_COLUMNS_START': 'RESIZE_COLUMNS_START',
     'RESIZE_COLUMNS_END': 'RESIZE_COLUMNS_END',
+
+    'TABLE_CHART_COLUMN_RESIZE_END': 'TABLE_CHART_COLUMN_RESIZE_END',
+
     'UPDATE_COLUMNS_SIZE': 'UPDATE_COLUMNS_SIZE',
     'UPDATE_TABLE_HEAD_COLUMNS_SIZE': 'UPDATE_TABLE_HEAD_COLUMNS_SIZE',
     'START_CELLS_OVERFLOW': 'START_CELLS_OVERFLOW',
@@ -25,6 +28,7 @@ module.exports = {
     'DATA_LOAD_START': 'DATA_LOAD_START',
 
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
+    'USER_REQUEST_AN_ACTION': 'USER_REQUEST_AN_ACTION', // user used a Add menu and want to Add Entity (portfolio, account,  etc)
     'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
 
 
