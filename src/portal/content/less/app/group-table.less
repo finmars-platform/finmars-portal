@@ -55,6 +55,7 @@
   position: relative;
   height: 0;
   overflow: hidden;
+  box-sizing: border-box;
   // transition: max-height 0.5s linear;
   .new-interface();
 
@@ -69,9 +70,13 @@
   }
 
   .icon-buttons {
-    display: flex;
+    flex: 0 0 252px;
+    /* display: flex;
     justify-content: flex-end;
-    flex: 0 0 191px;
+    flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
   }
 
   .g-filter-settings-big-left-btn {
@@ -406,6 +411,24 @@
       display: block;
     }
 
+  }
+
+  .g-row-marked-red {
+    span.label-icon {
+      color: #f05a22;
+    }
+  }
+
+  .g-row-marked-yellow {
+    span.label-icon {
+      color: #fac878;
+    }
+  }
+
+  .g-row-marked-green {
+    span.label-icon {
+      color: #a5d9c9;
+    }
   }
 
   .g-grouping-section {
@@ -779,6 +802,7 @@
 
   .g-filters-holder {
     float: left;
+    box-sizing: border-box;
 
     .modal-dialog-card {
       margin: 8px;
@@ -841,9 +865,8 @@
     width: @gRvRowSettingsWidth;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding: 0 12px;
     border-right: @gCellBorder;
     transition: width 100ms linear;
 
@@ -853,6 +876,23 @@
       overflow: hidden;
       border-right: none;
     } */
+
+    .context-menu-btn-wrapper {
+      margin-left: 6px;
+      .context-menu-btn {
+        display: flex;
+        align-items: center;
+        border-radius: 50%;
+        color: #B2B2B2;
+        font-size: 24px;
+        padding: 0;
+
+        &:hover {
+          color: @gray;
+          background-color: @g-table-header-background-color;
+        }
+      }
+    }
   }
 
   .g-row-color-picker-btn {
@@ -895,8 +935,14 @@
       color: #a5d9c9;
     }
 
+    &.g-cell-button {
+      .label-icon {
+        color: @gray;
+      }
+    }
+
     .label-icon {
-      color: #dbdbdb;
+      color: @gCellBroderColor;
     }
 
     .arrow-icon {
@@ -981,6 +1027,18 @@
       md-select-value {
         border-bottom: none;
       }
+    }
+
+    .g-top-part-left {
+
+      .g-top-button.small-button-icon {
+        padding: 0 6px;
+
+        &:hover:not([disabled]) {
+          background-color: rgba(158,158,158,0.2);
+        }
+      }
+
     }
 
   }
@@ -1117,11 +1175,6 @@
     .left-right-drop-area();
   }
 
-  .g-filters-holder {
-    padding: 10px;
-    box-sizing: border-box;
-  }
-
   .g-column-bottom-row.g-table-header {
     @g-table-header-height: 50px;
 
@@ -1146,6 +1199,18 @@
       position: relative;
       width: @g-table-header-height;
       border-right: 1px solid @g-table-border-color;
+
+      .md-checked {
+
+        .md-container .md-icon {
+          &:after {
+            top: 0;
+            bottom: 0;
+            left: 5px;
+          }
+        }
+
+      }
     }
 
     md-checkbox {
@@ -1154,7 +1219,7 @@
       .md-icon {
         width: 17px;
         height: 17px;
-        border-color: @g-table-border-color;
+        border: 2px solid @gray;
         border-radius: 4px;
       }
 
@@ -1195,10 +1260,9 @@
     }
 
     .g-cell-button {
-      margin: 0;
+      margin: 0 0 0 1px;
       padding: 0;
 
-      min-width: auto;
       min-height: auto;
 
       &.md-button {
@@ -1447,6 +1511,16 @@
         z-index: 1;
       }
 
+      .g-add-column-button {
+        color: @gray;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f05a22;
+        }
+
+      }
+
     }
 
 
@@ -1591,14 +1665,18 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
 
   &.red {
     color: @rv-active-color;
+    span {
+      color: @rv-active-color;
+    }
   }
 
   &.yellow {
-    color: #fac878;
+    color: #FAC878;
   }
 
   &.green {
-    color: #a5d9c9;
+    //color: #a5d9c9;
+    color: #04F7AE
   }
 }
 
@@ -1712,13 +1790,16 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
   height: 24px;
   font-size: 14px;
   white-space: nowrap;
+  border-right: 1px solid #ddd;
   box-sizing: border-box;
 
-  &:last-child {
+  /*&:last-child {
     border-right: 1px solid #ddd;
     margin-right: 2px;
-  }
+  }*/
 }
+
+
 
 .g-column-content {
   padding: 4px 21px 4px 8px;

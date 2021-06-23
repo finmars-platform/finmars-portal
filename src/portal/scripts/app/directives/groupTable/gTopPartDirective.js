@@ -10,6 +10,7 @@
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var middlewareService = require('../../services/middlewareService');
+    const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     var uiService = require('../../services/uiService');
 
@@ -34,18 +35,34 @@
                 scope.reportOptions = scope.evDataService.getReportOptions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
-                scope.layoutName = '';
+                scope.layoutData = {
+                	name: ''
+				};
 
-                scope.layout = scope.evDataService.getListLayout()
-                if (scope.layout && scope.layout.name) {
-                    scope.layoutName = scope.layout.name;
-                }
+				let listLayout = scope.evDataService.getListLayout();
+
+				if (listLayout && listLayout.name) {
+					scope.layoutData.name = listLayout.name;
+				}
 
                 scope.popupData = {
                     entityType: scope.entityType,
                     evDataService: scope.evDataService,
-                    evEventService: scope.evEventService
+                    evEventService: scope.evEventService,
                 }
+
+				scope.saveLayoutList = function ($event) {
+
+					var isNewLayout = scope.evDataService.isLayoutNew();
+
+					if (isNewLayout) {
+						evRvLayoutsHelper.saveAsLayoutList(scope.evDataService, scope.evEventService, scope.isReport, $mdDialog, scope.entityType, $event);
+
+					} else {
+						evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+					}
+
+				};
 
                 scope.openMissingPricesDialog = function($event) {
 
@@ -127,9 +144,7 @@
                 };
 
                 scope.onSettingsClick = function ($event) {
-
                     return scope.isReport ? openReportSettings($event) : openEntityViewerSettings($event);
-
                 };
 
                 var prepareReportLayoutOptions = function () {
@@ -190,9 +205,17 @@
 
                         new Promise(function (resolve, reject) {
 
-                            currencyService.getListLight(currencyOptions).then(function (data) {
+                            currencyService.getListLight(currencyOptions).then(async function (data) {
 
                                 scope.currencies = scope.currencies.concat(data.results);
+
+                                if (!scope.currencies.length) {
+
+                                    const ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+                                    scope.currencies.push(ecosystemDefaultData.currency_object);
+                                    scope.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
+
+                                }
 
                                 if (data.next) {
 
@@ -244,8 +267,12 @@
                 var initEventListeners =function () {
 
                     scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
-                        const listLayout = scope.evDataService.getListLayout();
-                        scope.layoutName = listLayout.name;
+
+                    	listLayout = scope.evDataService.getListLayout();
+
+						if (listLayout && listLayout.name) {
+							scope.layoutData.name = listLayout.name;
+						}
 
                     });
 

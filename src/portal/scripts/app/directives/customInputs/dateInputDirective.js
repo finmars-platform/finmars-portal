@@ -25,7 +25,7 @@
 
 				var onChangeDelay = 800; // should be same as debounce of input.date-input
 				var stylePreset;
-				var pickmeupChangeTimeout;
+				// var pickmeupChangeTimeout;
 
 				// TIPS
 				// scope.smallOptions probable properties
@@ -37,6 +37,7 @@
 				var inputElem = elem[0].querySelector(".dateInputElem");
 
 				var inputLoaded = false; // prevents not null inputs highlight from start
+				var dateChangedFromOutside = true;
 
 				var doNotShowDatepicker = true; // used to prevent datepicker show on click
 				var position = "right";
@@ -81,7 +82,7 @@
 
 				var onChangeIndex;
 
-				scope.onDateChange = function () {
+				scope.onDateChange = function (dateValue) {
 					// scope.error = "";
 					var error = "",
 						model,
@@ -90,6 +91,7 @@
 
 					var onChangeEnd = function () {
 
+						dateChangedFromOutside = false;
 						clearTimeout(onChangeIndex);
 
 						onChangeIndex = setTimeout(() => {
@@ -105,14 +107,14 @@
 
 					};
 
-					if (scope.dateValue) {
+					if (dateValue) {
 
-						if (scope.dateValue !== scope.model) {
+						if (dateValue !== scope.model) {
 
-							if (moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
+							if (moment(dateValue, "YYYY-MM-DD", true).isValid()) {
 
 								valueIsValid = true;
-								model = JSON.parse(JSON.stringify(scope.dateValue));
+								model = dateValue;
 
 							} else {
 
@@ -129,14 +131,17 @@
 								}, 0);
 
 							} */
-							scope.model = model;
-							onChangeEnd();
+							if (model !== scope.model) { // don't signal change if invalid value changed on another invalid value or null
+
+								scope.model = model;
+								onChangeEnd();
+
+							}
 
 						}
 
 					}
-
-					else if (scope.dateValue !== scope.model) {
+					else if (scope.model !== null) {
 
 						valueIsValid = false;
 						scope.model = null;
@@ -309,7 +314,7 @@
 						pickmeupChangeTimeout = setTimeout(function () {
 							scope.onDateChange();
 						}, onChangeDelay); */
-						scope.onDateChange();
+						scope.onDateChange(scope.dateValue);
 
 					});
 
@@ -323,38 +328,45 @@
 
 					scope.$watch("model", function () {
 						//if (scope.model && scope.model.value) {
-						if (scope.model) {
+						if (dateChangedFromOutside) { // don't execute if date changed by input itself
 
-							if (scope.model !== scope.dateValue) {
+							if (scope.model) {
 
-								scope.error = "";
-								scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+								if (scope.model !== scope.dateValue) {
 
-								if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
+									scope.error = "";
+									scope.dateValue = JSON.parse(JSON.stringify(scope.model));
 
-									scope.valueIsValid = false;
-									scope.error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
-									scope.model = null;
+									if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
 
+										scope.valueIsValid = false;
+										scope.error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
+										scope.model = null;
+
+									}
+
+								}
+
+							} else {
+
+								if (scope.dateValue) {
+
+									if (!scope.error) {
+										scope.dateValue = "";
+									}
+
+								} else if (scope.smallOptions && scope.smallOptions.notNull && inputLoaded) {
+									scope.error = "Field should not be null";
 								}
 
 							}
 
-						} else {
-
-							if (scope.dateValue) {
-
-								if (!scope.error) {
-									scope.dateValue = "";
-								}
-
-							} else if (scope.smallOptions && scope.smallOptions.notNull && inputLoaded) {
-								scope.error = "Field should not be null";
-							}
+							inputLoaded = true;
 
 						}
 
-						inputLoaded = true;
+						dateChangedFromOutside = true;
+
 					});
 
 					if (scope.eventSignal) {
@@ -429,6 +441,7 @@
 					if (scope.customStyles) {
 						applyCustomStyles();
 					}
+
 				};
 
 				init();
