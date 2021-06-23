@@ -55,12 +55,14 @@
 
                 	scope.isInsideDashboard = true;
 
+                    /* For old rv interface
                     interfaceLayout.groupingArea.collapsed = true;
                     interfaceLayout.groupingArea.height = 2;
                     interfaceLayout.columnArea.collapsed = true;
                     interfaceLayout.columnArea.height = 37;
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
+                    */
 
                     scope.additions.isOpen = false;
                     scope.evDataService.setAdditions(scope.additions);
@@ -68,7 +70,6 @@
                 }
 
 
-                scope.groupingAndColumnAreaCollapsed = interfaceLayout.groupingArea.collapsed;
                 scope.dashboardFilterCollapsed = true;
 
                 scope.splitPanelIsActive = scope.evDataService.isSplitPanelActive();
@@ -120,24 +121,6 @@
                 scope.toggleGroupAndColumnArea = function () {
 
                     interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-                    var groupingAndColumnAreaCollapsed = !scope.groupingAndColumnAreaCollapsed;
-
-                    if (groupingAndColumnAreaCollapsed) {
-
-                        interfaceLayout.groupingArea.collapsed = true;
-                        interfaceLayout.groupingArea.height = 2;
-                        interfaceLayout.columnArea.collapsed = true;
-                        interfaceLayout.columnArea.height = 37;
-
-                    } else {
-
-                        interfaceLayout.groupingArea.collapsed = false;
-                        interfaceLayout.groupingArea.height = 98;
-                        interfaceLayout.columnArea.collapsed = false;
-                        interfaceLayout.columnArea.height = 70;
-
-                    }
 
                     //scope.groupingAndColumnAreaCollapsed = groupingAndColumnAreaCollapsed;
 
@@ -275,12 +258,6 @@
                     scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-                        if (interfaceLayout.groupingArea.collapsed && interfaceLayout.columnArea.collapsed) {
-                            scope.groupingAndColumnAreaCollapsed = true;
-                        } else {
-                            scope.groupingAndColumnAreaCollapsed = false;
-                        }
 
                     });
 

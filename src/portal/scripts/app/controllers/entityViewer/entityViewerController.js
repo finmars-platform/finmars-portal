@@ -830,14 +830,47 @@
 
             };
 
+			/** Separate front and back filters for old layouts */
+			var separateEvFilters = function (filters) {
+
+				var filterObj = {frontend: [], backend: []};
+
+				if (Array.isArray(filters)) { // old ev layout
+
+					let frontFiltersList;
+					let backFiltersList = [];
+
+					frontFiltersList = filters.filter(filter => {
+
+						if (filter.options.is_frontend_filter) return true;
+
+						backFiltersList.push(filter);
+
+						return false;
+
+					});
+
+					filterObj.frontend = frontFiltersList;
+					filterObj.backend = backFiltersList;
+
+				} else {
+					filterObj = filters;
+				}
+
+				return filterObj;
+
+			};
+
             vm.setLayout = function (layoutData) {
 
                 vm.layoutId = layoutData.id
 
+				layoutData.data.filters = separateEvFilters(layoutData.data.filters);
+
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
                 vm.setFiltersValuesFromQueryParameters();
                 vm.readyStatus.layout = true;
-                console.log('vm', vm);
+
                 evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
 
                 var additions = vm.entityViewerDataService.getAdditions();

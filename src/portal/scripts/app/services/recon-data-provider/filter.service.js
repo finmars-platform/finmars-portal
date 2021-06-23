@@ -23,7 +23,7 @@
     };
 
     var filterTableRows = function (items, regularFilters) {
-
+		console.log("testing.filterTableRows called");
         var match;
 
         return items.filter(function (item, tableRowIndex) {
@@ -333,14 +333,18 @@
         return items;
 
     };
-
+	/**
+	 *
+	 * @param options {{filter_settings?: Object}} - requestParameters body
+	 * @returns {[]|{}} - returns array of frontend filters or ???
+	 */
     var getRegularFilters = function (options) {
 
         var result = {};
 
         if (options.hasOwnProperty('filter_settings')) {
 
-            result = options.filter_settings;
+            result = options.filter_settings.frontend;
 
         } else {
 

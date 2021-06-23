@@ -19,9 +19,10 @@
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
         var newRequestParametersBody = Object.assign({}, requestParameters.body);
-        newRequestParametersBody['filter_settings'] = [];
+        // newRequestParametersBody['filter_settings'] = [];
+		newRequestParametersBody['filter_settings'] = {frontend: [], backend: []};
 
-        var filters = entityViewerDataService.getFilters();
+        var filtersData = entityViewerDataService.getFilters();
 
         var isFilterValid = function (filterItem) {
 
@@ -59,7 +60,7 @@
             return false;
         };
 
-        filters.forEach(function (item) {
+        /* filters.forEach(function (item) {
 
             if (isFilterValid(item)) {
 
@@ -80,7 +81,33 @@
 
             }
 
-        });
+        }); */
+
+		var formatFilter = function (filter, filterType) {
+
+			if (isFilterValid(filter)) {
+
+				var filterSettings = {
+					key: filter.key,
+					filter_type: filter.options.filter_type,
+					exclude_empty_cells: filter.options.exclude_empty_cells,
+					value_type: filter.value_type,
+					value: filter.options.filter_values
+				};
+				//newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
+				newRequestParametersBody['filter_settings'][filterType].push(filterSettings);
+
+			}
+
+		};
+
+		filtersData.frontend.forEach(function (filter) {
+			formatFilter(filter, 'frontend');
+		});
+
+		filtersData.backend.forEach(function (item) {
+			formatFilter(filter, 'backend');
+		});
 
         requestParameters.body = newRequestParametersBody;
 
@@ -402,13 +429,14 @@
 
                     var options = Object.assign({}, requestParameters.body);
 
-                    options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
+                    /* options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
                         if (!optionsFilter.is_frontend_filter) {
                             return true;
                         }
 
                         return false;
-                    });
+                    }); */
+					options.filter_settings = options.filter_settings.backend;
 
                     options.page = pageToRequest;
                     options.page_size = itemsPerPage;
@@ -553,15 +581,15 @@
 
                     var options = Object.assign({}, requestParameters.body);
 
-                    options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
+                    /* options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
                         if (!optionsFilter.is_frontend_filter) {
                             return true;
                         }
 
 
                         return false;
-                    });
-                    console.log('getGroups.options', options);
+                    }); */
+					options.filter_settings = options.filter_settings.backend;
 
                     options.page = pageToRequest;
                     options.page_size = itemsPerPage;

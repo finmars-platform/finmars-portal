@@ -1,6 +1,7 @@
 (function () {
 
-	const popupEvents = require("../../../services/events/popupEvents");
+	const popupEvents = require("../../../../services/events/popupEvents");
+	const metaHelper = require('../../../../helpers/meta.helper');
 
 	'use strict';
 
@@ -9,10 +10,11 @@
 			require: '^^rvFilter',
 			restrict: 'E',
 			scope: {},
-			templateUrl: 'views/directives/reportViewer/userFilters/rv-number-filter-popup-view.html',
+			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-number-filter-popup-view.html',
 			link: function (scope, elem, attrs, rvFilterVm) {
 
 				scope.filter = rvFilterVm.filter;
+
 				scope.activeFilterType = null;
 
 				scope.filterTypes = [

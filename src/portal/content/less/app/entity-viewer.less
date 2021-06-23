@@ -252,8 +252,12 @@
   }
 
   .ev-progressbar-holder {
+    width: 100%;
     height: 4px;
     background: #e0e0e0;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 
   .proxyline {
@@ -478,12 +482,16 @@
     border-width: 1px;
     border-style: solid;
     border-color: rgba(224, 224, 224, 1);
-    padding-top: 8px;
+    padding-top: 4px;
     box-sizing: border-box;
     padding-left: 8px;
     position: absolute;
     bottom: 0;
     width: 100%;
+
+    md-checkbox {
+      font-size: 14px;
+    }
   }
 
   .ev-left-panel-grouping-menu-button {
@@ -763,7 +771,7 @@
 .ev-left-panel-slider-button{
 
   position: absolute;
-  left: -9px;
+  right: -9px;
   cursor: pointer;
   top: 50%;
   margin-top: -33px;
@@ -779,6 +787,8 @@
 
   line-height: 66px;
   text-align: center;
+
+  z-index: 1;
 
   .material-icons {
     font-size: 18px;

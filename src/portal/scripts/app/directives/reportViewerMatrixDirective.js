@@ -23,7 +23,7 @@
             	scope.activeItem = null;
 
                 // console.log('Report Viewer Matrix Component', scope);
-
+				console.log("testing matrixSettings", scope.matrixSettings);
                 scope.processing = true;
                 scope.matrixCreationInProgress = false;
 
@@ -687,7 +687,9 @@
 						return attr.attribute_data.key === scope.matrixSettings.value_key;
 					});
 
-					scope.matrixValueAttrName = activeValueAttr.layout_name || activeValueAttr.attribute_data.name;
+					if (activeValueAttr) {
+						scope.matrixValueAttrName = activeValueAttr.layout_name || activeValueAttr.attribute_data.name;
+					}
 
 				};
 				//</editor-fold desc="Popup-selector of attributes for axises">
