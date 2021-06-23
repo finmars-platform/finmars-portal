@@ -1013,7 +1013,7 @@
 				};
 
 				event.data.items.forEach(validateEventRow);
-				event.data.blockableItems.forEach(validateEventRow)
+				if (!event.data.items_blocked) event.data.blockableItems.forEach(validateEventRow)
 
 				if (event.data.actions.length) {
 

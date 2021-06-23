@@ -713,7 +713,7 @@
 
                                     if (res.status === 'agree') {
 
-										evHelperService.updateTableAfterEntitiesDeletion(res.data.ids);
+										evHelperService.updateTableAfterEntitiesDeletion(vm.entityViewerDataService, vm.entityViewerEventService, res.data.ids);
 
                                     }
                                 });
@@ -742,7 +742,8 @@
 
                                     if (res.status === 'agree') {
 
-                                        evHelperService.updateTableAfterEntitiesDeletion(vm, res.data.ids);
+                                        // evHelperService.updateTableAfterEntitiesDeletion(vm, res.data.ids);
+                                        evHelperService.updateTableAfterEntitiesDeletion(vm.entityViewerDataService, vm.entityViewerEventService, res.data.ids);
 
                                     }
                                 });

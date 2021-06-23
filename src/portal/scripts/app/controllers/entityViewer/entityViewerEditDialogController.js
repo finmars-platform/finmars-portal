@@ -608,6 +608,7 @@
 						vm.attributeTypes = formLayoutData.attributeTypes;
 
                     	vm.tabs = formLayoutData.tabs;
+                        console.log('# vm.tabs', vm.tabs)
 						vm.attributesLayout = formLayoutData.attributesLayout;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
