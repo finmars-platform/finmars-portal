@@ -36,6 +36,7 @@
         vm.currentGlobalState = 'portal';
         vm.currentMasterUser = '';
         var member = '';
+        var PROJECT_ENV = '__PROJECT_ENV__';
 
         vm.broadcastManager = null;
 
@@ -870,14 +871,18 @@
 
             });
 
-            websocketService.addEventListener('master_user_change', function (data){
+            if (PROJECT_ENV !== 'local') {
 
-                console.log('master_user_change data', data)
+            	websocketService.addEventListener('master_user_change', function (data){
 
-                $state.go('app.home');
-                window.location.reload()
+					console.log('master_user_change data', data)
 
-            })
+					$state.go('app.home');
+					window.location.reload()
+
+				})
+
+			}
 
             vm.initTransitionListener();
 
