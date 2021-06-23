@@ -331,7 +331,7 @@
 			//endregion
 
 			vm.hasFiltersArea = function () {
-				return ['report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_matrix'].includes(vm.componentData.type);
+				return ['report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_matrix', 'report_viewer_table_chart'].includes(vm.componentData.type);
 			};
 
             vm.updateGrandTotalComponent = function () {
@@ -1165,9 +1165,24 @@
 					case 'report_viewer_table_chart':
 
 						vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
+
 							vm.componentData.settings.title_column = vm.tableChartSettings.title_column;
 							vm.componentData.settings.value_column = vm.tableChartSettings.value_column;
+
 						});
+
+                        vm.entityViewerEventService.addEventListener(evEvents.TABLE_CHART_COLUMN_RESIZE_END, function () {
+
+                            vm.componentData.settings.column_1_width = vm.tableChartSettings.column_1_width;
+                            vm.componentData.settings.column_2_width = vm.tableChartSettings.column_2_width;
+                            vm.componentData.settings.column_3_width = vm.tableChartSettings.column_3_width;
+
+                            var showNotification = false
+                            dashboardHelper.saveComponentSettingsFromDashboard(vm.dashboardDataService, vm.componentData, showNotification);
+                        });
+
+
+
 
 						break;
 				}
@@ -1892,6 +1907,10 @@
                     vm.tableChartSettings = {
                         title_column: vm.componentData.settings.title_column,
                         value_column: vm.componentData.settings.value_column,
+
+                        column_1_width: vm.componentData.settings.column_1_width,
+                        column_2_width: vm.componentData.settings.column_2_width,
+                        column_3_width: vm.componentData.settings.column_3_width,
 
                         title_column_name: vm.componentData.settings.title_column_name,
                         value_column_name: vm.componentData.settings.value_column_name,

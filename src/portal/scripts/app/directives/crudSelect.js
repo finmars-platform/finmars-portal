@@ -39,10 +39,12 @@
                    item: scope.options.find(option => option.id === scope.item)
                 };
 
-                const selectItem = (item) => {
+                const selectItem = (item, _$popup) => {
 
                     scope.selectedItem.item = item;
                     scope.item = item.id;
+
+                    _$popup.cancel();
 
                 };
 
@@ -122,8 +124,6 @@
 
                 scope.addItem = function () {
 
-                    console.log('addItem');
-
                     scope.searchTerm = '';
 
                     scope.options.forEach(function (optionItem) {
@@ -135,8 +135,6 @@
                         user_code: '',
                         ___edit: true
                     });
-
-                    console.log('scope.options', scope.options);
 
                 };
 
