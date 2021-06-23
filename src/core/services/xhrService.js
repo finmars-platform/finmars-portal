@@ -6,7 +6,9 @@
 
     var errorService = require('./errorService');
 
-    var fetch = function (url, params) {
+    var fetch = function (url, params, options) {
+
+    	if (!options) options = {};
 
         var requestId;
 
@@ -75,7 +77,7 @@
                     window.developerConsoleService.rejectRequest(requestId, reason)
                 }
 
-                errorService.notifyError(reason);
+                if (options.notifyError !== false) errorService.notifyError(reason);
 
                 console.log('XHR Service catch error', reason);
 

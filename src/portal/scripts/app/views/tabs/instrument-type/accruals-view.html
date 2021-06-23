@@ -8,7 +8,7 @@
                          menu-options="vm.currencyFields"
                          event-signal="vm.evEditorFieldEvent"
                          small-options="{tooltipText: 'Accrual Currency', notNull: true}"
-                         on-change-callback="vm.onDataChange('accrued_currency')"
+                         on-change-callback="vm.onRequiredFieldChange('accrued_currency')"
                          style="width: 200px;"></dropdown-select>
 
         <dropdown-select class="p-r-8"
@@ -18,7 +18,7 @@
                          event-signal="vm.evEditorFieldEvent"
                          menu-options="vm.dailyPricingModelFields"
                          small-options="{tooltipText: 'Accrual Size Clarification', notNull: true}"
-                         on-change-callback="vm.onDataChange('payment_size_detail')"
+                         on-change-callback="vm.onRequiredFieldChange('payment_size_detail')"
                          style="width: 230px;"></dropdown-select>
 
         <number-input class="p-r-8"
@@ -26,21 +26,21 @@
                       model="vm.entity.accrued_multiplier"
                       event-signal="vm.evEditorFieldEvent"
                       small-options="{tooltipText: 'Accrual Multiplier', onlyPositive: true}"
-                      on-change-callback="vm.onDataChange('accrued_multiplier')"
+                      on-change-callback="vm.onRequiredFieldChange('accrued_multiplier')"
                       style="width: 200px;"></number-input>
 
         <number-input label="Default Accrued"
                       model="vm.entity.default_accrued"
                       event-signal="vm.evEditorFieldEvent"
                       small-options="{tooltipText: 'Default Accrued', onlyPositive: true}"
-                      on-change-callback="vm.onDataChange('default_accrued')"
+                      on-change-callback="vm.onRequiredFieldChange('default_accrued')"
                       style="width: 200px;"></number-input>
 
     </div>
 
     <div ng-if="vm.readyStatus.accrualsAccordions" class="instrument-type-accruals-tab-view">
 
-        <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" multiple >
+        <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" control="vm.accrualsAccordion">
 
             <v-pane data-ng-repeat="item in vm.entity.accruals"
                     expanded="item.isPaneExpanded">
@@ -62,7 +62,7 @@
                                 <text-input model="item.name"
                                             event-signal="vm.evEditorFieldEvent"
                                             small-options="{notNull: true}"
-                                            on-change-callback="vm.onDataChange('accruals')"
+                                            on-change-callback="vm.onRequiredFieldChange('accruals')"
                                             ng-click="$event.stopPropagation();"></text-input>
                                 <!--<text-input class="instrument-type-accrual-name-input"
                                             model="item.name"
@@ -145,7 +145,7 @@
                                     model="item.data.form_message"
                                     event-signal="vm.evEditorFieldEvent"
                                     small-options="{tooltipText: 'Message on the form', notNull: true}"
-                                    on-change-callback="vm.onDataChange('accruals')"
+                                    on-change-callback="vm.onRequiredFieldChange('accruals')"
                                     class="p-r-10"
                                     style="flex-basis: 33%;"></text-input>
                     </div>

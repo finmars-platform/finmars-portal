@@ -92,7 +92,34 @@
             {
                 name: 'Mark row',
                 action: 'mark_row'
-            }
+            },
+
+
+
+            {
+                name: 'Add Instrument',
+                action: 'add_instrument'
+            },
+            {
+                name: 'Add Account',
+                action: 'add_account'
+            },
+            {
+                name: 'Add Currency',
+                action: 'add_currency'
+            },
+            {
+                name: 'Add Portfolio',
+                action: 'add_portfolio'
+            },
+            {
+                name: 'Add Price',
+                action: 'add_price'
+            },
+            {
+                name: 'Add FX Rate',
+                action: 'add_fx_rate'
+            },
         ];
 
         vm.markRowTypes = MARK_ROW_TYPES;

@@ -34,9 +34,95 @@
 
                 scope.searchTerm = '';
 
-                scope.addItem = function ($event) {
+                // Victor 2021.04.21 #93 New crud select design
+                let isAddingItem = false;
+                scope.selectedItem = {
+                   item: scope.options.find(option => option.id === scope.item)
+                };
 
-                    console.log('addItem');
+                const selectItem = (item, _$popup) => {
+
+                    scope.selectedItem.item = item;
+                    scope.item = item.id;
+
+                    _$popup.cancel();
+
+                };
+
+                const editItem = (item) => {
+                    scope.popupData.currentEditName = item.name;
+                    scope.editItem(item)
+                };
+
+                const cancelEditItem = (item) => {
+
+                    item.___edit = false;
+
+                    if (isAddingItem) {
+
+                        scope.options.shift();
+                        isAddingItem = false;
+
+                    }
+
+                };
+
+                const popupSaveItem = (item, $index, $event) => {
+
+                    const savedItem = {...item, name: scope.popupData.currentEditName}
+                    scope.saveItem(savedItem, $index, $event);
+                    isAddingItem = false;
+
+                };
+                const popupAddItem = () => {
+
+                    if (isAddingItem) {
+                        return;
+                    }
+
+                    scope.popupData.currentEditName = '';
+                    isAddingItem = true;
+                    scope.addItem();
+
+                };
+
+                const popupDeleteItem = (item, $index, $event) => {
+
+                    scope.deleteItem(item, $index, $event);
+
+                };
+
+                scope.onPopupClose = function () {
+
+                    scope.options.forEach(item => item.___edit = false);
+                    scope.popupData.currentEditName = '';
+                    scope.popupData.searchTerm = '';
+
+                    if (isAddingItem) {
+
+                        scope.options.shift();
+                        isAddingItem = false;
+
+                    }
+
+                };
+
+                scope.popupData = {
+                    searchTerm: scope.searchTerm,
+                    selectedItem: scope.selectedItem,
+                    options: scope.options,
+                    currentEditName: '',
+                    selectItem: selectItem,
+                    editItem: editItem,
+                    cancelEditItem: cancelEditItem,
+                    saveItem: popupSaveItem,
+                    addItem: popupAddItem,
+                    deleteItem: popupDeleteItem
+                };
+
+                // <Victor 2021.04.21 #93 New crud select design>
+
+                scope.addItem = function () {
 
                     scope.searchTerm = '';
 
@@ -50,8 +136,6 @@
                         ___edit: true
                     });
 
-                    console.log('scope.options', scope.options);
-
                 };
 
                 scope.saveItem = function (item, $index, $event) {
@@ -63,6 +147,11 @@
 
                         entityResolverService.update(entityType, item.id, item).then(function (data) {
                             scope.options[$index] = data;
+                            // Victor 2021.04.21 #93 New crud select design
+                            if (scope.selectedItem.item.id === item.id) {
+                                scope.selectedItem.item.name = item.name;
+                            }
+                            // <Victor 2021.04.21 #93 New crud select design>
                             scope.$apply();
                         }).catch(function (reason) {
                             $mdDialog.show({
@@ -121,7 +210,7 @@
                         controller: 'WarningDialogController as vm',
                         templateUrl: 'views/dialogs/warning-dialog-view.html',
                         parent: document.querySelector('.dialog-containers-wrap'),
-                        targetEvent: $event,
+                        // targetEvent: $event,
                         clickOutsideToClose: true,
                         locals: {
                             warning: {
@@ -139,6 +228,18 @@
                             entityResolverService.deleteByKey(entityType, item.id);
 
                             scope.options.splice($index, 1);
+
+                            // Victor 2021.04.21 #93 New crud select design
+                            if (scope.selectedItem.item.id === item.id) {
+                                if (scope.options.length) {
+                                    scope.selectedItem.item = scope.options[0]
+                                    scope.item = scope.selectedItem.item.id;
+                                } else {
+                                    scope.selectedItem.item = null;
+                                    scope.item = null;
+                                }
+                            }
+                            // <Victor 2021.04.21 #93 New crud select design>
                         }
 
                     });

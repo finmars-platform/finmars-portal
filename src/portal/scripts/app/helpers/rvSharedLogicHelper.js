@@ -79,7 +79,7 @@
 
 		};
 
-        var onSetLayoutEnd = function () {
+        var onSetLayoutEnd = () => {
 
             viewModel.readyStatus.layout = true;
             rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
@@ -136,6 +136,8 @@
 			putUseFromAboveFiltersFirst();
 
             $scope.$apply();
+
+            return viewModel.readyStatus.layout;
 
         };
 

@@ -28,12 +28,10 @@
 
           <md-input-container style="width: 100%;">
             <label for="">Layout User Code</label>
-            <input
-              data-ng-keydown="vm.change($event)"
-              type="text"
-              data-ng-model="vm.layoutUserCode"
-              data-ng-keyup="vm.validateUserCode()"
-            />
+            <input data-ng-keydown="vm.change($event)"
+                   type="text"
+                   data-ng-model="vm.layoutUserCode"
+                   data-ng-keyup="vm.validateUserCode()"/>
             <!-- data-ng-keydown="vm.userCodeIsTouched = true" -->
           </md-input-container>
           <div class="color-danger m-l-16"
