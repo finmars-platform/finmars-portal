@@ -1,8 +1,10 @@
 <div data-ng-if="isReport" class="settings-btn">
+
     <div data-ng-if="column.value_type == 20">
         <md-menu>
             <md-button aria-label="numeric column settings"
                        class="md-icon-button column-btns"
+                       ng-disabled="column.error_data"
                        ng-click="$mdMenu.open($event)">
                 <ng-md-icon icon="settings"></ng-md-icon>
             </md-button>
@@ -262,14 +264,14 @@
                     </md-menu>
                 </md-menu-item>
 
-                <md-menu-item>
+                <!-- <md-menu-item>
                     <md-button ng-click="reportHideSubtotal()"
                                class="g-settings-option-btn">
                         <ng-md-icon icon="done" style="visibility: hidden;"></ng-md-icon>
                         <span data-ng-show="!column.report_settings.hide_subtotal">Hide subtotal</span><span
                             data-ng-show="column.report_settings.hide_subtotal">Show subtotal</span>
                     </md-button>
-                </md-menu-item>
+                </md-menu-item> -->
 
             </md-menu-content>
         </md-menu>
@@ -279,6 +281,7 @@
         <md-menu>
             <md-button aria-label="column settings"
                        class="md-icon-button column-btns"
+                       ng-disabled="column.error_data"
                        ng-click="$mdMenu.open($event)">
                 <ng-md-icon icon="settings"></ng-md-icon>
             </md-button>
@@ -314,6 +317,7 @@
     <md-menu>
         <md-button aria-label="column settings"
                    class="md-icon-button column-btns"
+                   ng-disabled="column.error_data"
                    ng-click="$mdMenu.open($event)">
             <ng-md-icon icon="settings"></ng-md-icon>
         </md-button>
