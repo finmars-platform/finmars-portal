@@ -1,10 +1,10 @@
 (function () {
 
-	const popupEvents = require("../../../services/events/popupEvents");
-	const evEvents = require("../../../services/entityViewerEvents");
-	const userFilterService = require('../../../services/rv-data-provider/user-filter.service');
+	const popupEvents = require("../../../../services/events/popupEvents");
+	const evEvents = require("../../../../services/entityViewerEvents");
+	const userFilterService = require('../../../../services/rv-data-provider/user-filter.service');
 
-	const metaHelper = require('../../../helpers/meta.helper');
+	const metaHelper = require('../../../../helpers/meta.helper');
 
 	'use strict';
 
@@ -21,7 +21,7 @@
 				onCancel: '&',
 				onSave: '&'
 			},
-			templateUrl: 'views/directives/reportViewer/userFilters/rv-filter-view.html',
+			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-filter-popup-view.html',
 			controllerAs: 'vm',
 			controller: ['$scope', function RvFilterController ($scope) {
 
@@ -181,7 +181,7 @@
 							return type.value === vm.filter.options.filter_type;
 						});
 
-						return activeType.value;
+						return activeType ? activeType.value : null;
 
 					}
 

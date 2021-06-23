@@ -16,8 +16,8 @@
 
         // var groupingAreaHeight = 88;
         var groupingAreaHeight = 98;
-        var columnAreaHeight = 70;
-        var progressBarHeight = 4;
+        var columnAreaHeight = 50;
+        // var progressBarHeight = 4;
         var filterAreaWidth = 239;
         var filterAreaLeft = document.body.clientWidth - filterAreaWidth;
 
@@ -40,21 +40,21 @@
             mainContent: {
                 height: 0
             },
-            groupingArea: {
+            /*groupingArea: {
                 collapsed: false,
                 left: sidebarWidth,
                 top: headerToolbarHeight,
                 height: groupingAreaHeight
-            },
+            },*/
             columnArea: {
                 collapsed: false,
                 left: sidebarWidth,
                 top: headerToolbarHeight + groupingAreaHeight,
                 height: columnAreaHeight
             },
-            progressBar: {
+            /*progressBar: {
                 height: progressBarHeight
-            },
+            },*/
             filterArea: {
                 left: filterAreaLeft,
                 top: headerToolbarHeight,
@@ -945,7 +945,7 @@
                 interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
                 interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
                 interfaceLayoutToSave.columnArea = {};
-                interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
+                // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
                 interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
 
                 interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
@@ -1022,8 +1022,6 @@
 			listLayout.data.columns.forEach(column => delete column.frontOptions);
 			listLayout.data.grouping.forEach(group => delete group.frontOptions);
 
-            emptyUseFromAboveFilters(listLayout.data.filters);
-
             listLayout.data.rowSettings = getRowSettings();
             listLayout.data.additions = getAdditions();
 
@@ -1034,7 +1032,7 @@
             interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
             interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
             interfaceLayoutToSave.columnArea = {};
-            interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
+            // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
             interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
 
             interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
@@ -1042,6 +1040,8 @@
             listLayout.data.interfaceLayout = interfaceLayoutToSave;
 
             if (isReport) {
+
+				emptyUseFromAboveFilters(listLayout.data.filters);
 
                 listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
                 listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
@@ -1098,7 +1098,6 @@
                 listLayout = Object.assign({}, activeListLayout);
 
             }
-
             else {
 
                 var defaultList = uiService.getListLayoutTemplate();
@@ -1112,6 +1111,11 @@
 
                 var interfaceLayout = getInterfaceLayout();
                 interfaceLayout = Object.assign(interfaceLayout, listLayout.data.interfaceLayout);
+
+                if (interfaceLayout.columnArea && interfaceLayout.columnArea.height === 70) { // need for work of the old layouts
+                	interfaceLayout.columnArea.height = 50;
+				}
+
                 setInterfaceLayout(interfaceLayout);
 
             }
@@ -1142,8 +1146,9 @@
                     }
                 }
 
-            }
+				emptyUseFromAboveFilters(listLayout.data.filters);
 
+            }
             else {
 
                 setPagination(listLayout.data.pagination);
@@ -1174,7 +1179,7 @@
 
             setColumns(listLayout.data.columns);
             setGroups(listLayout.data.grouping);
-            emptyUseFromAboveFilters(listLayout.data.filters);
+
             setFilters(listLayout.data.filters);
 
             /*if (isRootEntityViewer()) {

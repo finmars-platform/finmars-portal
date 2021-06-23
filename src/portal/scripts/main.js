@@ -663,18 +663,23 @@ app.directive('groupTable', [require('./app/directives/groupTable/gTableComponen
 app.directive('groupTableBody', ['evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
 app.directive('gSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
 app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/groupTable/gDashboardFilterComponent')]);
-app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
+/* app.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
-app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]);
-app.directive('rvFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvFilterDirective')]);
-app.directive('rvTextFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterPopupDirective')]);
-app.directive('rvNumberFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterPopupDirective')]);
-app.directive('rvDateFilterPopup', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterPopupDirective')]);
+app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]); */
+
+app.directive('gFilters', ['$mdDialog', require('./app/directives/groupTable/filters/gFiltersDirective')]);
+app.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
+
+app.directive('gRvFilters', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/gRvFiltersDirective')]);
+app.directive('rvFilter', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvFilterPopupDirective')]);
+app.directive('rvTextFilterPopup', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterPopupDirective')]);
+app.directive('rvNumberFilterPopup', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvNumberFilterPopupDirective')]);
+app.directive('rvDateFilterPopup', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvDateFilterPopupDirective')]);
+/* app.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldTextFilterDirective')]);
+app.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldNumberFilterDirective')]);
+app.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldDateFilterDirective')]); */
 
 app.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
-app.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evTextFilterDirective')]);
-app.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evNumberFilterDirective')]);
-app.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evDateFilterDirective')]);
 app.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
 app.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);
 app.directive('groupActionsBlock', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/gActionsBlockComponent')]);
@@ -720,7 +725,6 @@ app.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog
 app.directive('gTopPart', ['$mdDialog', '$state', require('./app/directives/groupTable/gTopPartDirective')]);
 app.directive('gEvLeftPanel', ['$mdDialog', '$state', require('./app/directives/groupTable/gEvLeftPanelDirective')]);
 app.directive('gEvLeftPanelTreeElem', ['$mdDialog', '$state', require('./app/directives/groupTable/gEvLeftPanelTreeElemDirective')]);
-app.directive('gFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/gFiltersDirective')]);
 
 // GROUP TABLE END
 

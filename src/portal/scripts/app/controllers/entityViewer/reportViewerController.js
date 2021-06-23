@@ -932,7 +932,7 @@
             }; */
 
             vm.setLayout = function (layout) {
-
+				console.log("testing.setLayout ", layout);
             	return new Promise(async function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);

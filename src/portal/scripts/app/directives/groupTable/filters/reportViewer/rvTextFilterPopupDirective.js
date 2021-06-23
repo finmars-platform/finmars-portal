@@ -1,6 +1,6 @@
 (function () {
 
-	const popupEvents = require("../../../services/events/popupEvents");
+	const popupEvents = require("../../../../services/events/popupEvents");
 
 	'use strict';
 
@@ -9,14 +9,10 @@
 			require: '^^rvFilter',
 			restrict: 'E',
 			scope: {},
-			templateUrl: 'views/directives/reportViewer/userFilters/rv-text-filter-popup-view.html',
+			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-text-filter-popup-view.html',
 			link: function (scope, elem, attrs, rvFilterVm) {
 
-				scope.filter = rvFilterVm.filter
-
-				if (!scope.filter.options.filter_type) {
-					scope.filter.options.filter_type = "contains";
-				}
+				scope.filter = rvFilterVm.filter;
 
 				scope.activeFilterType = null;
 

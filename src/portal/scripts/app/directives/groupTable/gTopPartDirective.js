@@ -142,9 +142,7 @@
 
                 };
 
-                scope.onSettingsClick = function ($event) {
-                    return scope.isReport ? openReportSettings($event) : openEntityViewerSettings($event);
-                };
+                scope.onSettingsClick = scope.isReport ? openReportSettings : openEntityViewerSettings;
 
                 var prepareReportLayoutOptions = function () {
 

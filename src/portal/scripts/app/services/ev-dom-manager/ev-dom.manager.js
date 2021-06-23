@@ -1219,15 +1219,24 @@
 
         viewportWidth = viewportWidth - interfaceLayout.evLeftPanel.width;
 
-        viewportTop = interfaceLayout.progressBar.height;
+        // viewportTop = interfaceLayout.progressBar.height;
+		viewportTop = 0;
+
+		if (components.topPart) {
+			viewportTop = viewportTop + interfaceLayout.topPart.height
+		}
+
+		if (components.filterArea) {
+			viewportTop = viewportTop + interfaceLayout.filterArea.height
+		}
 
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height
         }
 
-        if (components.groupingArea) {
+        /* if (components.groupingArea) {
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
-        }
+        } */
 
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
@@ -1272,12 +1281,13 @@
         var rowHeight = evDataService.getRowHeight();
         var interfaceLayout = evDataService.getInterfaceLayout();
 
-        var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-
+        // var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+		var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height;
 
         if (!isRootEntityViewer) {
-            viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+            // viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+			viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height;
+			viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
         } else {
             viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
         }

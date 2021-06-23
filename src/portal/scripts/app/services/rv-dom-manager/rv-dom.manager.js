@@ -1144,11 +1144,7 @@
         // console.log('calculateScroll components', components);
         // console.log('calculateScroll contentWrapElemWidth', contentWrapElemWidth);
 
-        if (components.sidebar) {
-            viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
-        } else {
-            viewportWidth = contentWrapElemWidth;
-        }
+		viewportWidth = contentWrapElemWidth;
 
         // console.log('viewportWidth', viewportWidth);
 
@@ -1189,7 +1185,7 @@
         rvScrollManager.setContentElemHeight(totalHeight);
         // rvScrollManager.setContentElemPaddingTop(paddingTop);
 
-        // there is another method that calculates contentElemWidth resizeScrollableArea() form gColumnResizerComponent.js
+        // There is another method that calculates contentElemWidth. That is resizeScrollableArea() form gColumnResizerComponent.js
         var areaWidth = 0;
         var i;
         var columnMargins = 16;

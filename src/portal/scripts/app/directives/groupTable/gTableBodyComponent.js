@@ -42,7 +42,7 @@
 
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
-                var progressBar = elem[0].querySelector('.ev-progressbar');
+                // var progressBar = elem[0].querySelector('.ev-progressbar');
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 
@@ -402,21 +402,20 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-                    progressBar.style.display = 'block';
-                    if (isReport) {
+                    // progressBar.style.display = 'block';
+                    /* if (isReport) {
                         contentElem.style.opacity = '0.7';
-                    }
+                    } */
+					contentElem.style.opacity = '0.7';
 
                     scope.evDataService.setDataLoadStatus(false);
 
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                    progressBar.style.display = 'none';
+                    // progressBar.style.display = 'none';
 
-                    if (isReport) {
-                        contentElem.style.opacity = '1';
-                    }
+					contentElem.style.opacity = '1';
 
                     updateTableContent();
 
@@ -506,36 +505,6 @@
                         scope.scrollManager = new EvScrollManager();
                     }
 
-					// TO DELETE: remove after applying new interface for ev and rv
-                    /* if (isReport) {
-
-						var components = scope.evDataService.getComponents();
-						var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-						if (components.sidebar) {
-
-							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE: after removing sidebar
-
-							interfaceLayout.filterArea.collapsed = true;
-							interfaceLayout.filterArea.width = 0;
-
-						}
-
-						components.groupingArea = false
-
-						if (viewContext !== 'dashboard') {
-							components.topPart = true
-						}
-
-						interfaceLayout.columnArea.height = 50
-						// interfaceLayout.filterArea.height = 50
-
-						scope.evDataService.setInterfaceLayout(interfaceLayout);
-						scope.evDataService.setComponents(components);
-
-					} */
-					// < TO DELETE: remove after applying new interface for ev and rv >
-
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
                         calculateElemsWrapsSizes();
@@ -564,7 +533,7 @@
 
                             if (flatList.length > 1) {
 
-                                progressBar.style.display = 'none';
+                                // progressBar.style.display = 'none';
 
                                 if (isReport) {
                                     contentElem.style.opacity = '1';

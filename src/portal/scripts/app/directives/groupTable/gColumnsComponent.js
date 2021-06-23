@@ -37,7 +37,7 @@
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.notGroupingColumns = []
 
-                const setFiltersLayoutNames = () => {
+                /* const setFiltersLayoutNames = () => {
 
                     const filters = scope.evDataService.getFilters();
 
@@ -59,7 +59,7 @@
 
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-                };
+                }; */
 
                 scope.isSubtotalWeightedShouldBeExcluded = function (column) {
                     return ['market_value', 'market_value_percent', 'exposure', 'exposure_percent'].some(excludedKey => column.key === excludedKey);
@@ -123,7 +123,8 @@
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                     collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                 }
-                setFiltersLayoutNames();
+
+                // setFiltersLayoutNames();
 
                 scope.components = scope.evDataService.getComponents();
                 scope.downloadedItemsCount = null;
@@ -1960,7 +1961,7 @@
                         if (scope.isReport) {
                             scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
                             collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
-                            setFiltersLayoutNames()
+                            // setFiltersLayoutNames()
                         }
 
                     });
@@ -2006,7 +2007,7 @@
                         collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                     }
 
-                    setFiltersLayoutNames();
+                    // setFiltersLayoutNames();
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);

@@ -157,8 +157,6 @@
                             scope.sliderButtonState = 'unfolded';
                         }
 
-
-
                         interfaceLayout.evLeftPanel.width = resultWidth;
                         // leftPanel.style.width = resultWidth + 'px';
                         // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
