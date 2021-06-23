@@ -11,6 +11,7 @@
         var evEvents = require('../../services/entityViewerEvents');
         var evHelperService = require('../../services/entityViewerHelperService');
         var usersService = require('../../services/usersService');
+		var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
@@ -57,6 +58,7 @@
                     vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
                 }
 
             };
@@ -244,6 +246,12 @@
                     locals: locals
                 }).then(function (res) {
 
+                    vm.autoRefreshState = vm.entityViewerDataService.getAutoRefreshState();
+
+                    if (vm.autoRefreshState) {
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    }
+
                     updateTableAfterEntityChanges(res);
 
                 });
@@ -270,6 +278,12 @@
                     locals: locals
 
                 }).then(function (res) {
+
+                    vm.autoRefreshState = vm.entityViewerDataService.getAutoRefreshState();
+
+                    if (vm.autoRefreshState) {
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                    }
 
                     updateTableAfterEntityChanges(res);
 
@@ -557,6 +571,8 @@
                                         data: {}
                                     };
 
+                                    contextData.date = reportOptions.report_date
+
                                     editEntity(activeObject, locals);
 
                                 } else {
@@ -617,7 +633,7 @@
 
                                     var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                                    var currency_object = getCurrencyObject('instrument.pricing_currency');
+                                    var currency_object = getCurrencyObject('instrument.pricing_currency.id');
                                     var createEntityLocals = {
                                         entityType: 'currency-history',
                                         entity: {
@@ -641,8 +657,8 @@
                         if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
 
                             var filters = {
-                                currency: activeObject['instrument.accrued_currency'],
-                                instrument: activeObject['instrument.id'],
+                                currency: activeObject['instrument.accrued_currency.id'],
+                                // instrument: activeObject['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
@@ -671,6 +687,56 @@
                                         entityType: 'currency-history',
                                         entity: {
                                             currency: activeObject['instrument.accrued_currency'],
+                                            currency_object: currency_object,
+                                            pricing_policy: reportOptions.pricing_policy,
+                                            pricing_policy_object: reportOptions.pricing_policy_object,
+                                            date: reportOptions.report_date
+                                        },
+                                        data: {}
+                                    };
+
+                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+
+
+                                }
+
+                            })
+
+                        }
+
+                        if (action === 'edit_pricing_currency_fx_rate' && activeObject.id) {
+
+                            var filters = {
+                                currency: activeObject['instrument.pricing_currency.id'],
+                                // instrument: activeObject['instrument.id'],
+                                pricing_policy: reportOptions.pricing_policy,
+                                date_0: reportOptions.report_date,
+                                date_1: reportOptions.report_date
+                            };
+
+                            currencyHistoryService.getList({filters: filters}).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var item = data.results[0];
+
+                                    var locals = {
+                                        entityType: 'currency-history',
+                                        entityId: item.id,
+                                        data: {}
+                                    };
+
+                                    editEntity(activeObject, locals);
+
+                                } else {
+
+                                    var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
+
+                                    var currency_object = getCurrencyObject('instrument.pricing_currency.id');
+                                    var createEntityLocals = {
+                                        entityType: 'currency-history',
+                                        entity: {
+                                            currency: activeObject['instrument.pricing_currency.id'],
                                             currency_object: currency_object,
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
@@ -744,6 +810,107 @@
                     }
 
                 });
+
+                vm.entityViewerEventService.addEventListener(evEvents.USER_REQUEST_AN_ACTION, function (){
+
+
+                    var action = vm.entityViewerDataService.getUserRequestedAction();
+
+                    if (action === 'add_portfolio') {
+
+                        var locals = {
+                            entityType: 'portfolio',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_instrument') {
+
+                        var locals = {
+                            entityType: 'instrument',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_account') {
+
+                        var locals = {
+                            entityType: 'account',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_currency') {
+
+                        var locals = {
+                            entityType: 'currency',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+
+                    if (action === 'add_price') {
+
+                        var locals = {
+                            entityType: 'price-history',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'add_fx_rate') {
+
+                        var locals = {
+                            entityType: 'currency-history',
+                            entity: {},
+                            data: {}
+                        };
+
+                        createEntity({}, locals);
+
+                    }
+
+                    if (action === 'book_transaction') {
+
+                        var locals = {
+                            entityType: 'complex-transaction',
+                            entity: {},
+                            data: {}
+                        };
+
+                        if (vm.entityType === 'transaction-report') {
+
+                            var contextData = getContextData(reportOptions, activeObject);
+                            locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
+                            locals.data.contextData = contextData;
+
+                        }
+
+                        createEntity({}, locals);
+
+                    }
+
+
+                })
 
 
             };
@@ -931,9 +1098,15 @@
 
             }; */
 
+			/**
+			 * Integrates report viewer layout into front end. Called from module:entityViewerHelperService by callbacks getLayoutByUserCode or getDefaultLayout.
+			 *
+			 * @param layout {Object}
+			 * @returns {Promise<unknown>}
+			 */
             vm.setLayout = function (layout) {
 
-            	return new Promise(async function (resolve, reject) {
+                return new Promise(async function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
                     vm.setFiltersValuesFromQueryParameters();
@@ -963,7 +1136,43 @@
                     var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
 
                     if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
-                        vm.entityViewerDataService.setSplitPanelStatus(true);
+
+						try {
+							await uiService.pingListLayoutByKey(additions.layoutData.layoutId, {notifyError: false});
+							vm.entityViewerDataService.setSplitPanelStatus(true);
+
+						} catch (error) { // layout for split panel was not found
+
+							var errorObj = {
+								___custom_message: 'Error on getting layout with id: ' + additions.layoutData.layoutId + ' for split panel'
+							}
+
+							if (error && typeof error === 'object') {
+								errorObj = {...errorObj, ...error};
+
+							} else {
+								errorObj.error = error;
+							}
+
+							console.error(errorObj);
+							if (error && error.status === 404) {
+
+								/* interfaceLayout.splitPanel.height = 0;
+								vm.entityViewerDataService.setInterfaceLayout(interfaceLayout);
+
+								additions.isOpen = false;
+								additions.type = '';
+								delete additions.layoutData;
+
+								vm.entityViewerDataService.setAdditions(additions);
+
+								vm.entityViewerDataService.setSplitPanelStatus(false);*/
+								evRvLayoutsHelper.clearSplitPanelAdditions(vm.entityViewerDataService);
+
+							}
+
+						}
+
                     }
 
                     interfaceLayout.filterArea.width = 0;
@@ -991,7 +1200,7 @@
                             onSetLayoutEnd();
                         }); */
                         await rvSharedLogicHelper.calculateReportDatesExprs();
-                        rvSharedLogicHelper.onSetLayoutEnd();
+						vm.readyStatus.layout = rvSharedLogicHelper.onSetLayoutEnd();
 
                         var activeColumnSortProm = new Promise(function (sortResolve, sortReject) {
 
@@ -1005,9 +1214,10 @@
                                     filters: {
                                         user_code: activeColumnSort.manual_sort_layout_user_code
                                     }
-                                }).then(function (data){
 
-                                    if(data.results.length) {
+                                }).then(function (data) {
+
+                                    if (data.results.length) {
 
                                         var layout = data.results[0];
 
@@ -1023,26 +1233,23 @@
 
                                     }
 
-									sortResolve();
+                                    sortResolve();
 
                                 })
 
-
-
                             } else {
-								sortResolve();
+                                sortResolve();
                             }
-
 
                         })
 
 
-                        Promise.all([activeColumnSortProm]).then(function (){
+                        Promise.all([activeColumnSortProm]).then(function () {
                             resolve();
                         })
 
                     } else {
-                        rvSharedLogicHelper.onSetLayoutEnd();
+						vm.readyStatus.layout = rvSharedLogicHelper.onSetLayoutEnd();
                     }
 
                     resolve();
@@ -1054,7 +1261,7 @@
             // called inside entityViewerHelperService
             vm.getView = function () {
 
-                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false; // switched to true by rvSharedLogicHelper.onSetLayoutEnd()
 
@@ -1073,23 +1280,23 @@
 
                 vm.entityViewerDataService.setRowHeight(36);
 
-				vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
+                vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
 
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
 
-                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+                var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject) {
 
                     uiService.getCrossEntityAttributeExtensionList({
                         filters: {
                             context_content_type: $scope.$parent.vm.contentType
                         }
-                    }).then(function (data){
+                    }).then(function (data) {
 
                         console.log('getCrossEntityAttributeExtensionList.data', data);
 
                         vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
-						resolve();
+                        resolve();
 
                     }).catch(error => reject(error))
 
@@ -1135,8 +1342,8 @@
                 }
 
                 Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
-                	metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
-					$scope.$apply();
+                    metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
+                    $scope.$apply();
                 });
 
             };
@@ -1144,12 +1351,12 @@
             vm.init = function () {
 
                 middlewareService.onMasterUserChanged(function () {
-					vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
+                    vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
                 middlewareService.onLogOut(function () {
-					vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
+                    vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
@@ -1161,7 +1368,6 @@
 
 
             };
-
 
 
             vm.getCurrentMember = function () {
@@ -1180,7 +1386,7 @@
 
                 return new Promise(function (resolve, reject) {
 
-                	var checkForLayoutChanges = vm.entityViewerDataService.isLayoutChangesLossWarningNeeded();
+                    var checkForLayoutChanges = vm.entityViewerDataService.isLayoutChangesLossWarningNeeded();
 
                     if (checkForLayoutChanges) {
 
@@ -1317,7 +1523,7 @@
 
                     } else {
 
-                    	removeTransitionWatcher();
+                        removeTransitionWatcher();
                         resolve(true);
 
                     }
