@@ -86,8 +86,11 @@
     font-style: normal;
     font-size: 13px;
     color: #666666;
+    white-space: nowrap;
 
     span {
+      width: 100%;
+      overflow: hidden;
       cursor: pointer;
       &:focus {
         outline: none;
@@ -99,11 +102,11 @@
 
   }
   .rv-table-chart-table-cell-column-title {
-    min-width: 400px;
+    //min-width: 400px;
     position: relative;
   }
   .rv-table-chart-table-cell-column-value {
-    min-width: 400px;
+    //min-width: 400px;
     position: relative;
   }
 

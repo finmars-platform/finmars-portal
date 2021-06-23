@@ -34,7 +34,6 @@
                 workareaWrapElement: '=',
                 hideFiltersBlock: '=',
                 hideUseFromAboveFilters: '=',
-
             },
             templateUrl: 'views/directives/groupTable/g-filters-view.html',
             link: function (scope, elem, attrs) {
@@ -60,15 +59,24 @@
                 scope.fpBackClasses = "z-index-48"
                 scope.fpClasses = "z-index-49"
 
-                scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
+				if (scope.hideUseFromAboveFilters) {
+                    scope.showUseFromAboveFilters = false;
+                } else {
+                    scope.showUseFromAboveFilters = !scope.isRootEntityViewer; // if split panel then show from above filters
+                }
 
                 scope.readyStatus = {
                     filters: false
                 }
 
                 const gFiltersElem = elem[0].querySelector('.gFilters');
+				/** Used when inside dashboard, and does not change with window resize. Can be less than actual width, when used outside dashboard. */
                 const gFiltersElemWidth = gFiltersElem.clientWidth;
-                let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
+
+                const gFiltersWrapElem = gFiltersElem.querySelector('.gFiltersWrap');
+				const gFiltersElemPadding = parseInt(gFiltersWrapElem.style.padding, 10);
+
+				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
 
                 const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
                 const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
@@ -178,14 +186,14 @@
 
                 };
 
-                function clearAdditions() {
+                /* function clearAdditions() {
 
                     let additions = scope.evDataService.getAdditions();
 
                     additions.isOpen = false;
                     additions.type = '';
                     delete additions.layoutData;
-                    /*delete additions.layoutId;*/
+                    /!*delete additions.layoutId;*!/
 
                     scope.evDataService.setSplitPanelStatus(false);
                     scope.evDataService.setAdditions(additions);
@@ -196,7 +204,7 @@
                     // delete scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                }
+                } */
 
                 let getListLayoutByEntity = function (entityType) {
                     var options = {
@@ -251,13 +259,17 @@
 
                     if (scope.currentAdditions.type === type) {
 
-                        let interfaceLayout = scope.evDataService.getInterfaceLayout();
+                        /* let interfaceLayout = scope.evDataService.getInterfaceLayout();
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
                         middlewareService.setNewSplitPanelLayoutName(false);
 
-                        clearAdditions();
+                        clearAdditions(); */
+						evRvLayoutsHelper.clearSplitPanelAdditions(scope.evDataService);
+
+						scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+						scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                     } else {
 
@@ -680,7 +692,8 @@
                     }
                     // < TODO use only scope.contentWrapElement.clientWidth after removing gSidebarFilter >
 
-                    const availableSpace = filterAreaWidth - gFiltersLeftPartWidth - gFiltersRightPartWidth;
+					const horizontalPaddings = gFiltersElemPadding * 2;
+                    const availableSpace = filterAreaWidth - horizontalPaddings - gFiltersLeftPartWidth - gFiltersRightPartWidth;
                     /* if (availableSpace < 800) {
 
                         filtersChipsContainerWidth = Math.max(availableSpace, 500);
@@ -1070,6 +1083,8 @@
                     }
 
                     syncFiltersLayoutNamesWithColumns();
+
+					getUseFromAboveFilters();
 
                     formatFiltersForChips();
 

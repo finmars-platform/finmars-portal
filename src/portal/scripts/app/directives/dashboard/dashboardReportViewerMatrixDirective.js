@@ -115,7 +115,7 @@
                             }*/
 
                             if (res.action === 'save') {
-								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                             }
 
                             if (scope.fillInModeData) {
@@ -245,9 +245,9 @@
 
                     });
 
-					scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
+					/* scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
 
-					});
+					}); */
 					//</editor-fold>
 
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {

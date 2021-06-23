@@ -180,7 +180,7 @@
 
                             result = currentWidth + diff;
 
-                            if (result > 20) {
+                            if (result > 32) {
 
                                 gColumnElem.width(result);
 
