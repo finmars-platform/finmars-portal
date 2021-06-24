@@ -2,7 +2,8 @@
     <div class="classifier-node-row flex-row"
          ng-click="selectNode(node)">
         <div>
-            <span class="material-icons">chevron_right</span> <span ng-bind="node.name"></span>
+            <span class="material-icons" ng-style="{'visibility': node.children.length ? 'visible' : 'hidden'}">chevron_right</span>
+            <span ng-bind="node.name"></span>
         </div>
 
         <!-- <div>
