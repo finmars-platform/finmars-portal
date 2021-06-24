@@ -11,16 +11,35 @@
 
     module.exports = function ($scope, $mdDialog, data) {
 
+        console.log('#122 data', data)
+
         var vm = this;
 
         vm.entityType = data.entityType;
         vm.classifierId = data.classifier.id;
         vm.classifierValue = data.classifierId;
-		vm.label = data.label || 'Select classifier';
+		// vm.label = data.label || 'Select classifier';
+		vm.label = data.classifier.name ? `Select ${data.classifier.name}` : 'Select classifier';
+
+		vm.isLock = true;
 
 		vm.readyStatus = false;
 
 		vm.activeNodes = [];
+
+		vm.onEdit = () => {
+		    vm.isLock = true;
+        }
+
+        vm.onDelete = () => {
+            vm.isLock = true;
+        }
+
+        vm.onAdd = () => {
+            vm.isLock = true;
+        }
+
+        vm.isActiveNodes = () => !!vm.activeNodes.length;
 
 		var setUpTreeNodes = function (treeLevel, levelNumber, parentNode) {
 

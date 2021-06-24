@@ -1,12 +1,14 @@
-<div class="">
+<div class="classifier-tree-container">
     <div class="classifier-tree-filter-container">
+        <span class="material-icons">search</span>
         <input type="text"
+               placeholder="Search"
                ng-model="vm.treeFilterTerms"
                ng-change="vm.filterTree(vm.treeFilterTerms)"
                ng-model-options="{debounce: 1000}">
     </div>
 
-    <div class="classifier-tree flex-column">
+    <div class="classifier-tree">
         <div ng-repeat="node in vm.filteredTree track by node.id"
              class="classifier-node-holder">
             <classifier-tree-node node="node"
