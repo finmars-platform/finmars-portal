@@ -155,34 +155,7 @@
             });
         };
 
-        const setActiveParents = (tree) => {
-
-            // const newTree = metaHelper.recursiveDeepCopy(tree);
-
-            tree.forEach(node => {
-                if (node.children.length) {
-                    setActiveParents(node.children);
-                }
-                node.frontOptions.hasActiveChilds = node.children.some(child => child.isActive || child.frontOptions.hasActiveChilds);
-            })
-            // const newTree = metaHelper.recursiveDeepCopy(tree);
-            return tree;
-        };
-
-
-        vm.onActiveNodesChange = function (data) {
-            console.log('# activeNodesList', JSON.parse(JSON.stringify(data)))
-            const newTree = data.tree;
-            vm.tree = setActiveParents(newTree);
-            console.log('# tree', JSON.parse(JSON.stringify(vm.tree)))
-            // vm.classifierTreeEventService.dispatchEvent(directivesEvents.TREE_CHANGED_FROM_OUTSIDE);
-
-            setTimeout(() => {
-                // vm.tree = clearHasActiveChild(newTree);
-                // $scope.$apply()
-                vm.classifierTreeEventService.dispatchEvent(directivesEvents.TREE_CHANGED_FROM_OUTSIDE);
-            });
-        };
+        vm.onActiveNodesChange = function (activeNodesList) {vm.activeNodes = activeNodesList;};
 
 
 		/* Old code

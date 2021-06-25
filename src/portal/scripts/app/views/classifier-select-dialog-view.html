@@ -20,7 +20,7 @@
         <div ng-if="vm.readyStatus">
             <classifier-tree tree-data="vm.tree"
                              classifier-tree-event-service="vm.classifierTreeEventService"
-                             on-active-nodes-change-callback="vm.onActiveNodesChange(data)"></classifier-tree>
+                             on-active-nodes-change-callback="vm.onActiveNodesChange(activeNodesList)"></classifier-tree>
         </div>
 
         <div ng-if="!vm.readyStatus">
