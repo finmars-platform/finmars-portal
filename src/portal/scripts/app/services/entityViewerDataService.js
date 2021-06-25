@@ -265,7 +265,22 @@
         function getContentType() {
             return data.contentType;
         }
-
+		/**
+		 *
+		 * @param isReport {Boolean}
+		 * @memberOf module:entityViewerDataService
+		 */
+		function setIsReport(isReport) {
+			data.isReport = isReport;
+		}
+		/**
+		 *
+		 * @returns {Boolean}
+		 * @memberOf module:entityViewerDataService
+		 */
+		function isEntityReport() {
+			return data.isReport;
+		}
 
         function setColumns(columns) {
 
@@ -323,8 +338,8 @@
 
             if (filters) {
                 data.filters = filters;
+
             } else {
-                console.error("Set filters error", filters);
                 data.filters = [];
             }
 
@@ -1535,6 +1550,9 @@
 
             setContentType: setContentType,
             getContentType: getContentType,
+
+			setIsReport: setIsReport,
+			isEntityReport: isEntityReport,
 
             setColumns: setColumns,
             getColumns: getColumns,

@@ -27,6 +27,17 @@
 					filters: false
 				}
 
+				scope.filterPopupTemplate = `<div class="g-filter-popup-content">
+					<rv-filter filter-key="popupData.filterKey"
+							   ev-data-service="popupData.evDataService"
+							   ev-event-service="popupData.evEventService"
+							   attribute-data-service="popupData.attributeDataService"
+							   popup-event-service="popupEventService"
+							   on-cancel="cancel()"
+							   on-save="save()">
+					</rv-filter>
+				</div>`;
+
 				scope.popupPosX = gFiltersVm.popupPosX;
 				scope.popupPosY = gFiltersVm.popupPosY;
 				scope.fpBackClasses = gFiltersVm.fpBackClasses;
@@ -34,7 +45,7 @@
 
 				const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
 				const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
-				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
+				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainer");
 
 				let filters = scope.evDataService.getFilters();
 				let useFromAboveFilters = [];
@@ -46,7 +57,16 @@
 
 				//region Chips
 				scope.onFilterChipClick = gFiltersVm.onFilterChipClick;
-				scope.filterSettingsChange = gFiltersVm.filterSettingsChange;
+
+				scope.filterSettingsChange = function () {
+
+					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+					scope.evDataService.resetTableContent();
+
+					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+				};
 
 				scope.toggleUseFromAboveFilters = function () {
 

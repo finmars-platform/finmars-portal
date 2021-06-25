@@ -233,36 +233,39 @@
 
             var i;
             for (i = 0; i < attrs.length; i = i + 1) {
-                attrs[i].columns = false;
+
+            	attrs[i].columns = false;
                 attrs[i].groups = false;
                 attrs[i].filters = false;
 
                 groups.map(function (item) {
-                    if (item.hasOwnProperty('key')) {
-                        if (attrs[i].key === item.key) {
-                            attrs[i].groups = true;
-                        }
-                    } else {
-                        if (attrs[i].name === item.name) {
-                            attrs[i].groups = true;
-                        }
-                    }
+					if (attrs[i].key === item.key) {
+						attrs[i].groups = true;
+					}
                     return item;
                 });
 
                 columns.map(function (item) {
-                    if (attrs[i].name === item.name) {
+                    if (attrs[i].key === item.key) {
                         attrs[i].columns = true;
                     }
                     return item;
                 });
 
-                filters.map(function (item) {
-                    if (attrs[i].name === item.name) {
+                filters.frontend.map(function (item) {
+                    if (attrs[i].key === item.key) {
                         attrs[i].filters = true;
                     }
                     return item;
                 });
+
+				filters.backend.map(function (item) {
+					if (attrs[i].key === item.key) {
+						attrs[i].filters = true;
+					}
+					return item;
+				});
+
             }
         }
 
@@ -331,34 +334,59 @@
                     }
                 }
 
-                /////// FILTERING
+				//region FILTERING
 
-                for (f = 0; f < filters.length; f = f + 1) {
-                    if (typeAttrs[i].hasOwnProperty('key')) {
-                        if (typeAttrs[i].key === filters[f].key) {
-                            filterExist = true;
-                            if (typeAttrs[i].filters === false) {
-                                filters.splice(f, 1);
-                                f = f - 1;
-                            }
-                            break;
-                        }
-                    } else {
-                        if (typeAttrs[i].name === filters[f].name) {
-                            filterExist = true;
-                            if (typeAttrs[i].filters === false) {
-                                filters.splice(f, 1);
-                                f = f - 1;
-                            }
-                            break;
-                        }
-                    }
-                }
-                if (!filterExist) {
+				/* for (f = 0; f < filters.length; f = f + 1) {
+					if (typeAttrs[i].hasOwnProperty('key')) {
+						if (typeAttrs[i].key === filters[f].key) {
+							filterExist = true;
+							if (typeAttrs[i].filters === false) {
+								filters.splice(f, 1);
+								f = f - 1;
+							}
+							break;
+						}
+					} else {
+						if (typeAttrs[i].name === filters[f].name) {
+							filterExist = true;
+							if (typeAttrs[i].filters === false) {
+								filters.splice(f, 1);
+								f = f - 1;
+							}
+							break;
+						}
+					}
+				} */
+
+				var checkForFilterExistence = function (filtersList) {
+
+                	for (f = 0; f < filtersList.length; f = f + 1) {
+
+						if (typeAttrs[i].key === filtersList[f].key) {
+							filterExist = true;
+							if (typeAttrs[i].filters === false) {
+								filtersList.splice(f, 1);
+								f = f - 1;
+							}
+							break;
+						}
+
+					}
+
+                	return filtersList;
+
+				};
+
+                filters.frontend = checkForFilterExistence(filters.frontend);
+				filters.backend = checkForFilterExistence(filters.backend);
+
+				if (!filterExist) {
                     if (typeAttrs[i].filters === true) {
-                        filters.push(typeAttrs[i]);
+                        filters.frontend.push(typeAttrs[i]);
                     }
                 }
+				//endregion
+
             }
 
             vm.entityViewerDataService.setColumns(columns);
@@ -538,7 +566,7 @@
         };
 
 
-        var viewConstructorDnD = {
+        /* var viewConstructorDnD = {
 
             init: function () {
                 this.dragula();
@@ -573,18 +601,18 @@
                                 exist = true;
                                 existedAttrGroup = 'column';
                             }
-                            /*if (columns[i].name === name) {
+                            /!*if (columns[i].name === name) {
                                 exist = true;
-                            }*/
+                            }*!/
                         }
                     }
 
                     if (target === contentWrapElement.querySelector('#groupsbag') ||
                         target === contentWrapElement.querySelector('.g-groups-holder')) {
                         for (i = 0; i < groups.length; i = i + 1) {
-                            /*if (groups[i].name === name) {
+                            /!*if (groups[i].name === name) {
                                 exist = true;
-                            }*/
+                            }*!/
                             if (groups[i].key === identifier) {
                                 exist = true;
                                 existedAttrGroup = 'group';
@@ -595,9 +623,9 @@
                     if (target === contentWrapElement.querySelector('#filtersbag .drop-new-filter') ||
                         target === contentWrapElement.querySelector('.g-filters-holder')) {
                         for (i = 0; i < filters.length; i = i + 1) {
-                            /*if (filters[i].name === name) {
+                            /!*if (filters[i].name === name) {
                                 exist = true;
-                            }*/
+                            }*!/
 
                             if (filters[i].key === identifier) {
                                 exist = true;
@@ -752,7 +780,7 @@
             destroy: function () {
                 this.dragula.destroy();
             }
-        };
+        }; */
 
         // scroll while dragging
         /* var DnDScrollElem;
@@ -1495,7 +1523,7 @@
                 var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
                 scrollHelper.setDnDScrollElem(DnDScrollElem);
 
-                viewConstructorDnD.init();
+                // viewConstructorDnD.init();
                 selectedDnD.init();
 
             }, 500);
@@ -1504,7 +1532,7 @@
 
         vm.cancel = function () {
             $('body').removeClass('drag-dialog');
-            viewConstructorDnD.destroy();
+            // viewConstructorDnD.destroy();
             selectedDnD.destroy();
 
             $mdDialog.hide();

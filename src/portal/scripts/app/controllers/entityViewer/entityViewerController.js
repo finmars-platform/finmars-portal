@@ -862,11 +862,11 @@
 			};
 
             vm.setLayout = function (layoutData) {
-
+				// console.log("testing.setLayout layoutData", layoutData);
                 vm.layoutId = layoutData.id
 
 				layoutData.data.filters = separateEvFilters(layoutData.data.filters);
-
+				// console.log("testing.setLayout layoutData.data.filters", layoutData.data.filters);
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
                 vm.setFiltersValuesFromQueryParameters();
                 vm.readyStatus.layout = true;
@@ -1021,6 +1021,7 @@
                 vm.contentType = $scope.$parent.vm.contentType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
+				vm.entityViewerDataService.setIsReport(false);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
                 vm.entityViewerDataService.setCurrentMember(vm.currentMember);
                 vm.entityViewerDataService.setVirtualScrollStep(500);

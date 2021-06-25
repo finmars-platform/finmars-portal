@@ -29,19 +29,19 @@
 
                 <md-button class="g-toggle-use-from-above-filters md-icon-button chain-button"
                            ng-click="toggleFiltersToShow()">
-                    <span ng-hide="!showFrontFilters" class="material-icons">laptop_mac</span>
-                    <span ng-hide="showFrontFilters" class="material-icons">dns</span>
+                    <span ng-show="shownFiltersType === 'frontend'" class="material-icons">laptop_mac</span>
+                    <span ng-show="shownFiltersType === 'backend'" class="material-icons">dns</span>
                 </md-button>
 
             </div>
 
         </div>
 
-        <div class="gFiltersContainerWidth">
+        <div class="gFiltersContainer">
 
             <div ng-if="readyStatus.filters">
                 <div popup
-                     popup-template-url="'views/popups/entity-viewer/g-filter-settings.html'"
+                     popup-template="{{filterPopupTemplate}}"
                      popup-data="popupData"
                      popup-event-service="popupEventService"
                      popup-x="popupPosX"

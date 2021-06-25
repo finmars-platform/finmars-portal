@@ -21,18 +21,7 @@
 
         <div ng-if="vm.filter.value_type === 10 || vm.filter.value_type === 30"
              class="m-b-24">
-            <rv-text-filter-popup></rv-text-filter-popup>
-        </div>
-
-
-        <div ng-if="vm.filter.value_type === 20"
-             class="m-b-24">
-            <rv-number-filter-popup></rv-number-filter-popup>
-        </div>
-
-        <div ng-if="vm.filter.value_type === 40"
-             class="m-b-24">
-            <rv-date-filter-popup></rv-date-filter-popup>
+            <ev-text-filter></ev-text-filter>
         </div>
 
         <div class="flex-column">
@@ -45,6 +34,6 @@
     </div>
 
     <div class="g-filter-footer flex-row fc-flex-end">
-        <md-button ng-click="vm.saveFilterSettings()" class="link-button">APPLY</md-button>
+        <md-button ng-click="vm.save()" class="link-button">APPLY</md-button>
     </div>
 </div>

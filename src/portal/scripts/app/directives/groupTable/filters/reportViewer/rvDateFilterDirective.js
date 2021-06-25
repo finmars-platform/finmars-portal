@@ -9,7 +9,7 @@
 			require: '^^rvFilter',
 			restrict: 'E',
 			scope: {},
-			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-date-filter-popup-view.html',
+			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-date-filter-view.html',
 			link: function (scope, elem, attrs, rvFilterVm) {
 
 				scope.filter = rvFilterVm.filter;

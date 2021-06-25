@@ -3,7 +3,7 @@
     var checkForEmptyRegularFilter = function (regularFilterValue, filterType) {
         // Need null's checks for filters of data type number
 
-        if (filterType === 'from_to') {
+        if (filterType === 'from_to' || filterType === 'out_of_range') {
 
             if ((regularFilterValue.min_value || regularFilterValue.min_value === 0) &&
                 (regularFilterValue.max_value || regularFilterValue.max_value === 0)) {
@@ -166,7 +166,7 @@
 
                                 if (valueType === 20) {
 
-                                    if (filterType !== 'from_to') {
+                                    if (filterType !== 'from_to' && filterType !== 'out_of_range') {
                                         filterArgument = filterArgument[0];
                                     }
 
@@ -192,6 +192,7 @@
                                             filterArgument = new Date(filterArgument[0]).toDateString();
                                             break;
                                         case 'from_to':
+										case 'out_of_range':
                                             valueFromTable = new Date(valueFromTable);
                                             filterArgument.min_value = new Date(filterArgument.min_value);
                                             filterArgument.max_value = new Date(filterArgument.max_value);
@@ -342,13 +343,22 @@
                 break;*/
 
             case 'from_to':
-                var minValue = filterBy.min_value;
+            	var minValue = filterBy.min_value;
                 var maxValue = filterBy.max_value;
 
                 if (valueToFilter >= minValue && valueToFilter <= maxValue) {
                     return true;
                 }
                 break;
+
+			case 'out_of_range':
+				var minValue = filterBy.min_value;
+				var maxValue = filterBy.max_value;
+
+				if (valueToFilter <= minValue || valueToFilter >= maxValue) {
+					return true;
+				}
+				break;
 
             case 'multiselector':
 

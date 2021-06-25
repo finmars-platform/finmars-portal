@@ -32,10 +32,15 @@
                 makePopupDataForColumns(scope.columns);
 
                 scope.groups = scope.evDataService.getGroups();
-                evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
+                evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns);
 
                 scope.entityType = scope.evDataService.getEntityType();
-                scope.notGroupingColumns = []
+                scope.notGroupingColumns = [];
+				/**
+				 * What filters are now shown in filter area (front or back)
+				 * @type {Boolean}
+				*/
+                var showFrontEvFilters = true;
 
                 /* const setFiltersLayoutNames = () => {
 
@@ -869,13 +874,10 @@
                 scope.renameColumn = function (column, $mdMenu, $event) {
 
                     if ($mdMenu) {
-
                         $mdMenu.close();
 
                     } else {
-
                         scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-
                     }
 
                     console.log('renameColumn', column);
@@ -892,18 +894,46 @@
 
                         if (res.status === 'agree') {
 
-                            const filters = scope.evDataService.getFilters();
-                            const filter = filters.find(filter => filter.key === res.data.key);
+							const filters = scope.evDataService.getFilters();
 
-                            if (filter) {
+                        	if (scope.isReport) {
 
-                                filter.layout_name = res.data.layout_name;
+								const filter = filters.find(filter => filter.key === res.data.key);
 
-                                scope.evDataService.setFilters(filters);
+								if (filter) {
 
-                                scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+									filter.layout_name = res.data.layout_name;
 
-                            }
+									scope.evDataService.setFilters(filters);
+
+									scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+								}
+
+							}
+                        	else {
+
+                        		let filterLayoutNameChanged = false;
+
+                        		for (var filtersProp in filters) { // search among front and back filters
+
+									const filter = filters[filtersProp].find(filter => filter.key === res.data.key);
+
+									if (filter) {
+										filter.layout_name = res.data.layout_name;
+										filterLayoutNameChanged = true;
+									}
+
+								}
+
+                        		if (filterLayoutNameChanged) {
+
+                        			scope.evDataService.setFilters(filters);
+									scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+								}
+
+							}
 
                         }
 
@@ -1225,18 +1255,6 @@
 
                 };
 
-                scope.checkForFilteringBySameAttr = function (columnKey) {
-                    var filters = scope.evDataService.getFilters();
-
-                    for (var i = 0; i < filters.length; i++) {
-                        if (filters[i].key === columnKey) {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                };
-
                 scope.editManualSorting = function ($event, column) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
@@ -1275,11 +1293,25 @@
                     var filters = scope.evDataService.getFilters();
                     var filterToAdd = evHelperService.getTableAttrInFormOf('filter', column);
 
-                    filters.push(filterToAdd);
+                    if (scope.isReport) {
+						filters.push(filterToAdd);
+
+                    } else {
+
+                    	if (showFrontEvFilters) {
+							filters.frontend.push(filterToAdd);
+
+                    	} else {
+							filters.backend.push(filterToAdd);
+						}
+
+					}
+
 
                     scope.evDataService.setFilters(filters);
 
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
                 };
 
                 scope.removeGroup = function (columnTableId) {
@@ -1910,6 +1942,42 @@
 
                 };
 
+                if (scope.isReport) {
+
+					scope.checkForFilteringBySameAttr = function (columnKey) {
+
+						var filters = scope.evDataService.getFilters();
+
+						for (var i = 0; i < filters.length; i++) {
+							if (filters[i].key === columnKey) {
+								return false;
+							}
+						}
+
+						return true;
+
+					};
+
+				}
+                else {
+
+					scope.checkForFilteringBySameAttr = function (columnKey) {
+
+						var filters = scope.evDataService.getFilters();
+						var filtersList = showFrontEvFilters ? filters.frontend : filters.backend;
+
+						for (var i = 0; i < filtersList.length; i++) {
+							if (filtersList[i].key === columnKey) {
+								return false;
+							}
+						}
+
+						return true;
+
+					};
+
+				}
+
                 const initEventListeners = function () {
 
                     // Victor 2021.03.29 #88 fix bug with deleted custom fields
@@ -1980,10 +2048,16 @@
                     scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, onGroupLevelFoldingSwitch);
 
                     if (!scope.isReport) {
-                        scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                            getDownloadedTableItemsCount();
-                        });
-                    }
+
+                    	scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+							getDownloadedTableItemsCount();
+						});
+
+						scope.evEventService.addEventListener(evEvents.FILTERS_TO_SHOW_CHANGE, function () {
+							showFrontEvFilters = !showFrontEvFilters;
+						});
+
+					}
 
                 };
 

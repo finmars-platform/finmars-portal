@@ -23,7 +23,6 @@
             	scope.activeItem = null;
 
                 // console.log('Report Viewer Matrix Component', scope);
-				console.log("testing matrixSettings", scope.matrixSettings);
                 scope.processing = true;
                 scope.matrixCreationInProgress = false;
 

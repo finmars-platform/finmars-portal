@@ -22,12 +22,23 @@
 				scope.entityType = gFiltersVm.entityType;
 				scope.isReport = false;
 				scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-				scope.showFrontFilters = true;
+				scope.shownFiltersType = 'frontend';
 
 				scope.readyStatus = {
 					filters: false
 				}
 
+				scope.filterPopupTemplate = `<div class="g-filter-popup-content">
+					<ev-filter filter-key="popupData.filterKey"
+							   filter-type="{{popupData.shownFiltersType}}"
+							   ev-data-service="popupData.evDataService"
+							   ev-event-service="popupData.evEventService"
+							   attribute-data-service="popupData.attributeDataService"
+							   popup-event-service="popupEventService"
+							   on-cancel="cancel()"
+							   on-save="save()">
+					</ev-filter>
+				</div>`;
 				scope.popupPosX = gFiltersVm.popupPosX;
 				scope.popupPosY = gFiltersVm.popupPosY;
 				scope.fpBackClasses = gFiltersVm.fpBackClasses;
@@ -35,7 +46,8 @@
 
 				const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
 				const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
-				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
+				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainer");
+				let addFilterElem;
 
 				let filters = scope.evDataService.getFilters();
 				let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
@@ -172,13 +184,12 @@
 
 				//region Chips
 				const formatFiltersForChips = function () {
-					console.log("testing.formatFiltersForChips ", filters);
+
 					scope.filtersChips = [];
 
 					const errors = [];
-					const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
-					console.log("testing.formatFiltersForChips filtersList", shownFilters, scope.showFrontFilters);
-					shownFilters.forEach(filter => {
+					// const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
+					filters[scope.shownFiltersType].forEach(filter => {
 
 						const filterOpts = filter.options || {};
 						let filterVal = filterOpts.filter_values || "";
@@ -211,30 +222,30 @@
 
 					gFiltersVm.updateFilterAreaHeight();
 
-					console.log("testing.formatFiltersForChips filtersChips", scope.filtersChips);
-
 				};
 
 				scope.onFilterChipClick = gFiltersVm.onFilterChipClick;
-				scope.filterSettingsChange = gFiltersVm.filterSettingsChange;
+
+				scope.filterSettingsChange = function () {
+
+					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+					if (scope.shownFiltersType === 'frontend') scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+				};
 
 				scope.onChipsFirstRender = gFiltersVm.onChipsFirstRender;
 
 				scope.addFilter = function ($event) {
 
-					const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
+					// const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
 
-					gFiltersVm.openAddFilterDialog($event, shownFilters).then(res => {
-						console.log("testing.addFilter res", res);
+					gFiltersVm.openAddFilterDialog($event, filters[scope.shownFiltersType]).then(res => {
+						// console.log("testing.addFilter res", res);
 						if (res.status === 'agree') {
 
-							if (scope.showFrontFilters) {
-								filters.frontend.push(res.data);
-
-							} else {
-								filters.backend.push(res.data);
-							}
-							console.log("testing.addFilter filters", filters);
+							filters[scope.shownFiltersType].push(res.data);
+							// console.log("testing.addFilter filters", filters);
 							scope.evDataService.setFilters(filters);
 							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
@@ -246,16 +257,9 @@
 
 				scope.removeFilter = function (filtersToRemove) {
 
-					const filterRemovedFilters = filter => {
+					filters[scope.shownFiltersType] = filters[scope.shownFiltersType].filter(filter => {
 						return filtersToRemove.find(item => item.id !== filter.key);
-					};
-
-					if (scope.showFrontFilters) {
-						filters.frontend = filters.frontend.filter(filterRemovedFilters);
-
-					} else {
-						filters.backend = filters.backend.filter(filterRemovedFilters);
-					}
+					});
 
 					scope.evDataService.setFilters(filters);
 
@@ -266,8 +270,22 @@
 				//endregion
 
 				scope.toggleFiltersToShow = function () {
-					scope.showFrontFilters = !scope.showFrontFilters;
+
+					// scope.showFrontFilters = !scope.showFrontFilters;
+
+					scope.shownFiltersType = (scope.shownFiltersType === 'frontend') ? 'backend' : 'frontend';
+					scope.popupData.shownFiltersType = scope.shownFiltersType;
+
+					if (!addFilterElem) {
+						addFilterElem = filtersChipsContainer.querySelector('.add-chip-wrap .chip-list-content');
+					}
+
+					addFilterElem.innerText = (scope.shownFiltersType === 'frontend') ? 'ADD FILTER' : 'ADD SERVER FILTER';
+
 					formatFiltersForChips();
+
+					scope.evEventService.dispatchEvent(evEvents.FILTERS_TO_SHOW_CHANGE);
+
 				};
 
 				scope.toggleSplitPanel = gFiltersVm.toggleSplitPanel;
@@ -351,6 +369,7 @@
 					scope.chipsListEventService = gFiltersVm.chipsListEventService;
 
 					scope.popupData = gFiltersVm.popupData;
+					scope.popupData.shownFiltersType = scope.shownFiltersType;
 
 					formatFiltersForChips();
 
