@@ -36,6 +36,7 @@
         vm.currentGlobalState = 'portal';
         vm.currentMasterUser = '';
         var member = '';
+        var PROJECT_ENV = '__PROJECT_ENV__';
 
         vm.broadcastManager = null;
 
@@ -589,8 +590,8 @@
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
 
-                        if (window.location.pathname !== '/') {
-                            window.location.pathname = '/';
+                        if (window.location.pathname !== '/portal') {
+                            window.location.pathname = '/portal';
                         } else {
                             window.location.reload()
                         }
@@ -869,6 +870,19 @@
                 // }, 1000);
 
             });
+
+            if (PROJECT_ENV !== 'local') {
+
+            	websocketService.addEventListener('master_user_change', function (data){
+
+					console.log('master_user_change data', data)
+
+					$state.go('app.home');
+					window.location.reload()
+
+				})
+
+			}
 
             vm.initTransitionListener();
 
