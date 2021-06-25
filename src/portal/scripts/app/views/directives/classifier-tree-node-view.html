@@ -1,9 +1,12 @@
 <div class="classifier-node" ng-class="{'active': node.isActive}">
     <div class="classifier-node-row flex-row"
-         ng-click="selectNode(node)">
+         data-ng-class="{'opened': !node.frontOptions.closed, 'has-active-child': node.frontOptions.hasActiveChilds}">
         <div>
-            <span class="material-icons" ng-style="{'visibility': node.children.length ? 'visible' : 'hidden'}">chevron_right</span>
-            <span ng-bind="node.name"></span>
+            <span class="material-icons pointer"
+                  ng-style="{'visibility': node.children.length ? 'visible' : 'hidden'}"
+                  data-ng-click="node.frontOptions.closed = !node.frontOptions.closed">chevron_right</span>
+
+            <span ng-bind="node.name" ng-click="selectNode(node)"></span>
         </div>
 
         <!-- <div>
@@ -11,7 +14,7 @@
         </div> -->
     </div>
 
-    <div class="classifier-node-children">
+    <div class="classifier-node-children" ng-hide="node.frontOptions.closed">
 
         <div ng-repeat="subNode in node.children track by subNode.id"
              class="classifier-node-holder">
