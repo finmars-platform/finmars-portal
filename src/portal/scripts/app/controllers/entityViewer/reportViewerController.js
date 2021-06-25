@@ -932,7 +932,7 @@
             }; */
 
             vm.setLayout = function (layout) {
-				console.log("testing.setLayout ", layout);
+
             	return new Promise(async function (resolve, reject) {
 
                     vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
@@ -1066,6 +1066,7 @@
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
+				vm.entityViewerDataService.setIsReport(true);
                 vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setViewContext('entity_viewer');
                 vm.entityViewerDataService.setCurrentMember(vm.currentMember);

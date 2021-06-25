@@ -1,14 +1,14 @@
 (function () {
 
+	'use strict';
+
 	const popupEvents = require("../../../../services/events/popupEvents");
 	const evEvents = require("../../../../services/entityViewerEvents");
 	const userFilterService = require('../../../../services/rv-data-provider/user-filter.service');
 
 	const metaHelper = require('../../../../helpers/meta.helper');
 
-	'use strict';
-
-	module.exports = function ($mdDialog) {
+	module.exports = function ($mdDialog, gFiltersHelper) {
 		return {
 			restrict: 'E',
 			scope: {
@@ -21,24 +21,24 @@
 				onCancel: '&',
 				onSave: '&'
 			},
-			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-filter-popup-view.html',
+			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-filter-view.html',
 			controllerAs: 'vm',
 			controller: ['$scope', function RvFilterController ($scope) {
 
-				const vm = this;
+				let vm = this;
 
-				vm.evDataService = $scope.evDataService
-				vm.evEventService = $scope.evEventService
-				vm.attributeDataService = $scope.attributeDataService
-				vm.popupEventService = $scope.popupEventService
+				vm.evDataService = $scope.evDataService;
+				vm.evEventService = $scope.evEventService;
+				vm.attributeDataService = $scope.attributeDataService;
+				vm.popupEventService = $scope.popupEventService;
 
-				vm.columnRowsContent = []
-				vm.showSelectMenu = false
+				vm.columnRowsContent = [];
+				vm.showSelectMenu = false;
 
 				vm.isRootEntityViewer = vm.evDataService.isRootEntityViewer();
 				vm.useFromAbove = vm.evDataService.getUseFromAbove();
 
-				let filters;
+				let filtersList;
 				let useFromAboveFilters;
 				let isUseFromAboveFilter = false;
 				let filterIndex;
@@ -46,7 +46,7 @@
 				const findFilter = function () {
 
 					let allFilters = JSON.parse(JSON.stringify(vm.evDataService.getFilters()));
-					filters = [];
+					filtersList = [];
 					useFromAboveFilters = [];
 
 					isUseFromAboveFilter = false;
@@ -69,12 +69,12 @@
 
 						else {
 
-							filters.push(filter);
+							filtersList.push(filter);
 
 							if (filter.key === $scope.filterKey) {
 
 								vm.filter = filter
-								filterIndex = filters.length - 1;
+								filterIndex = filtersList.length - 1;
 
 							}
 
@@ -82,25 +82,7 @@
 
 					});
 
-					if (!vm.filter.options) {
-						vm.filter.options = {}
-					}
-
-					if (!vm.filter.options.filter_type) {
-						vm.filter.options.filter_type = metaHelper.getDefaultFilterType(vm.filter.value_type);
-					}
-
-					if (!vm.filter.options.filter_values) {
-						vm.filter.options.filter_values = []
-					}
-
-					if (!vm.filter.options.hasOwnProperty('exclude_empty_cells')) {
-						vm.filter.options.exclude_empty_cells = false;
-					}
-
-					if (!vm.filter.options.use_from_above) {
-						vm.filter.options.use_from_above = {}
-					}
+					vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter, true);
 
 				};
 
@@ -111,7 +93,7 @@
 					vm.columnRowsContent = columnRowsContent.map(cRowsContent => {
 						return {
 							id: cRowsContent, // for text multiselector
-							value: cRowsContent,
+							value: cRowsContent, // for text selector
 							active: false // for date multiselector
 						}
 					});
@@ -154,9 +136,10 @@
 
 								}
 
-							}
+							} else {
 
-							resolve(vm.filter.options.filter_type);
+								resolve(vm.filter.options.filter_type);
+							}
 
 						});
 
@@ -177,7 +160,7 @@
 
 					} else {
 
-						let activeType = filterTypesList.find(type => {
+						const activeType = filterTypesList.find(type => {
 							return type.value === vm.filter.options.filter_type;
 						});
 
@@ -193,19 +176,19 @@
 
 						if (isUseFromAboveFilter) { // became ordinary filter
 
-							filters.push(vm.filter);
+							filtersList.push(vm.filter);
 							useFromAboveFilters.splice(filterIndex, 1);
 
 						} else { // became use from above filter
 
-							filters.splice(filterIndex, 1);
+							filtersList.splice(filterIndex, 1);
 							useFromAboveFilters.push(vm.filter);
 
 						}
 
 					}
 
-					let allFilters = useFromAboveFilters.concat(filters);
+					let allFilters = useFromAboveFilters.concat(filtersList);
 
 					vm.evDataService.setFilters(allFilters);
 
@@ -219,7 +202,7 @@
 					$scope.$destroy();
 				};
 
-				let init = function () {
+				const init = function () {
 
 					findFilter();
 

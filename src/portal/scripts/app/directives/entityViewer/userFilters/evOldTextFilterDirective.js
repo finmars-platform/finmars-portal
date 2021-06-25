@@ -18,7 +18,7 @@
                 evDataService: '=',
                 evEventService: '='
             },
-            templateUrl: 'views/directives/entityViewer/userFilters/ev-text-filter-view.html',
+            templateUrl: 'views/directives/entityViewer/userFilters/ev-old-text-filter-view.html',
             link: function (scope, elem, attrs) {
 
                 scope.filters = scope.evDataService.getFilters();

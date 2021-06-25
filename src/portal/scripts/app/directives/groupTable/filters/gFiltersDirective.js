@@ -25,7 +25,7 @@
 
 	const EventService = require('../../../services/eventService');
 
-    module.exports = function ($mdDialog, $state, $bigDrawer) {
+    module.exports = function ($mdDialog, gFiltersHelper) {
         return {
             restrict: 'E',
             scope: {
@@ -560,7 +560,7 @@
 								if (res && res.status === "agree") {
 
 									// res.data.groups = true;
-									if (!res.data.options) {
+									/* if (!res.data.options) {
 										res.data.options = {};
 									}
 
@@ -574,11 +574,8 @@
 
 									if (!res.data.options.hasOwnProperty('exclude_empty_cells')) {
 										res.data.options.exclude_empty_cells = false;
-									}
-
-									if (!scope.isReport) {
-										res.data.options.is_frontend_filter = scope.showFrontFilters;
-									}
+									} */
+									res.data = gFiltersHelper.setFilterDefaultOptions(res.data);
 
 									resolve({status: res.status, data: res.data});
 
@@ -760,16 +757,6 @@
 					vm.popupPosY.value = event.clientY
 
 					vm.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
-
-				};
-
-                vm.filterSettingsChange = function () {
-
-					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-
-					scope.evDataService.resetTableContent();
-
-					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
 				};
 

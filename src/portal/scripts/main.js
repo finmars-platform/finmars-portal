@@ -125,6 +125,7 @@ app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services
 app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
 app.service('evRvDomManagerService', [require('./app/services/evRvDomManagerService')]);
 app.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
+app.service('gFiltersHelper', [require('./app/helpers/gFiltersHelper')]);
 
 // Dashboard
 
@@ -667,14 +668,17 @@ app.directive('groupDashboardFilter', ['$mdDialog', require('./app/directives/gr
 app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
 app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]); */
 
-app.directive('gFilters', ['$mdDialog', require('./app/directives/groupTable/filters/gFiltersDirective')]);
+app.directive('gFilters', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/gFiltersDirective')]);
 app.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
+app.directive('evFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evFilterDirective')]);
+app.directive('evTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
+app.directive('evNumberFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evNumberFilterDirective')]);
 
 app.directive('gRvFilters', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/gRvFiltersDirective')]);
-app.directive('rvFilter', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvFilterPopupDirective')]);
-app.directive('rvTextFilterPopup', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterPopupDirective')]);
-app.directive('rvNumberFilterPopup', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvNumberFilterPopupDirective')]);
-app.directive('rvDateFilterPopup', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvDateFilterPopupDirective')]);
+app.directive('rvFilter', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvFilterDirective')]);
+app.directive('rvTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterDirective')]);
+app.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvNumberFilterDirective')]);
+app.directive('rvDateFilter', ['$mdDialog', require('./app/directives/groupTable/filters/reportViewer/rvDateFilterDirective')]);
 /* app.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldTextFilterDirective')]);
 app.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldNumberFilterDirective')]);
 app.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldDateFilterDirective')]); */

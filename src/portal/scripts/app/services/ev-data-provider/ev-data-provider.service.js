@@ -105,7 +105,7 @@
 			formatFilter(filter, 'frontend');
 		});
 
-		filtersData.backend.forEach(function (item) {
+		filtersData.backend.forEach(function (filter) {
 			formatFilter(filter, 'backend');
 		});
 
