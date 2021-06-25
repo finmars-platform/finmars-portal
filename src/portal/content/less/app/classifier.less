@@ -82,6 +82,20 @@
         flex-direction: row;
         align-items: center;
       }
+
+      .pointer {
+        color: #747474;
+      }
+
+      &.opened {
+        .pointer {
+          transform: rotate(90deg);
+        }
+      }
+
+      &.has-active-child {
+        color: @orange;
+      }
     }
 
     &.active {
@@ -89,6 +103,10 @@
       > .classifier-node-row {
         background-color: @orange;
         color: #fff;
+
+        .pointer {
+          color: #fff;
+        }
       }
 
     }

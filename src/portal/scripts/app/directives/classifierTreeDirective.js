@@ -99,7 +99,9 @@
 					if ($scope.onActiveNodesChangeCallback) {
 
 						const activeNodesList = nodeFromOriginalTree ? [nodeFromOriginalTree] : [];
-						$scope.onActiveNodesChangeCallback({activeNodesList: activeNodesList});
+						const data = {activeNodesList: activeNodesList, tree: JSON.parse(angular.toJson(vm.filteredTree))}
+						$scope.onActiveNodesChangeCallback({data: data});
+						// $scope.onActiveNodesChangeCallback(activeNodesList);
 
 					}
 

@@ -8,6 +8,7 @@
     var attributeTypeService = require('../../services/attributeTypeService');
     var EventService = require('../../services/eventService');
 	var directivesEvents = require('../../services/events/directivesEvents');
+    const metaHelper = require('../../helpers/meta.helper');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -53,6 +54,7 @@
 				node.frontOptions = {};
                 node.frontOptions.treePath = [index];
 				node.frontOptions.closed = node.level > 0;
+				node.frontOptions.hasActiveChilds = false;
 
                 if (parentNode) node.frontOptions.treePath = parentNode.frontOptions.treePath.concat(['children', index]);
 
@@ -153,7 +155,35 @@
             });
         };
 
-        vm.onActiveNodesChange = function (activeNodesList) {vm.activeNodes = activeNodesList;};
+        const setActiveParents = (tree) => {
+
+            // const newTree = metaHelper.recursiveDeepCopy(tree);
+
+            tree.forEach(node => {
+                if (node.children.length) {
+                    setActiveParents(node.children);
+                }
+                node.frontOptions.hasActiveChilds = node.children.some(child => child.isActive || child.frontOptions.hasActiveChilds);
+            })
+            // const newTree = metaHelper.recursiveDeepCopy(tree);
+            return tree;
+        };
+
+
+        vm.onActiveNodesChange = function (data) {
+            console.log('# activeNodesList', JSON.parse(JSON.stringify(data)))
+            const newTree = data.tree;
+            vm.tree = setActiveParents(newTree);
+            console.log('# tree', JSON.parse(JSON.stringify(vm.tree)))
+            // vm.classifierTreeEventService.dispatchEvent(directivesEvents.TREE_CHANGED_FROM_OUTSIDE);
+
+            setTimeout(() => {
+                // vm.tree = clearHasActiveChild(newTree);
+                // $scope.$apply()
+                vm.classifierTreeEventService.dispatchEvent(directivesEvents.TREE_CHANGED_FROM_OUTSIDE);
+            });
+        };
+
 
 		/* Old code
 		function setName(item) {

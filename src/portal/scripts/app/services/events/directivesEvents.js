@@ -7,7 +7,8 @@ module.exports = {
 	//endregion
 
 	//region classifierTreeDirective
-	'TREE_CHANGED_FROM_OUTSIDE': 'TREE_CHANGED_FROM_OUTSIDE'
+	'TREE_CHANGED_FROM_OUTSIDE': 'TREE_CHANGED_FROM_OUTSIDE',
+	'TREE_CHANGED_FROM_WITHIN': 'TREE_CHANGED_FROM_WITHIN'
 	//endregion
 
 };
