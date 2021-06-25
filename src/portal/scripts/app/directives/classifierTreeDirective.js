@@ -78,6 +78,20 @@
 
 				};
 
+				const setActiveParents = (tree) => {
+
+					// const newTree = metaHelper.recursiveDeepCopy(tree);
+
+					tree.forEach(node => {
+						if (node.children.length) {
+							setActiveParents(node.children);
+						}
+						node.frontOptions.hasActiveChilds = node.children.some(child => child.isActive || child.frontOptions.hasActiveChilds);
+					})
+					// const newTree = metaHelper.recursiveDeepCopy(tree);
+					// return tree;
+				};
+
 				const selectNode = function (clickedNode) {
 
 					if (activeNode) { // current activeNode
@@ -94,14 +108,14 @@
 					const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, clickedNode.frontOptions.treePath);
 					nodeFromOriginalTree.isActive = true;
 
+					setActiveParents(vm.filteredTree)
+
 					activeNode = clickedNode;
 
 					if ($scope.onActiveNodesChangeCallback) {
 
 						const activeNodesList = nodeFromOriginalTree ? [nodeFromOriginalTree] : [];
-						const data = {activeNodesList: activeNodesList, tree: JSON.parse(angular.toJson(vm.filteredTree))}
-						$scope.onActiveNodesChangeCallback({data: data});
-						// $scope.onActiveNodesChangeCallback(activeNodesList);
+						$scope.onActiveNodesChangeCallback({activeNodesList: activeNodesList});
 
 					}
 
