@@ -1105,6 +1105,43 @@
 
   }
 
+  .active-rows-actions {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    color: #fff;
+    font-size: 16px;
+    background-color: @rv-active-color;
+    z-index: 1;
+
+    .active-row-actions-wrapper {
+      height: 33px;
+      display: flex;
+
+      .selected-rows-count {
+        width: 115px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid #fff;
+
+        span:first-child {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .close-button {
+      color: #fff;
+      margin-right: 505px;
+    }
+  }
+
   .column-to-filters-drop-area {
     left: 0;
     width: 85%;

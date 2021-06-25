@@ -118,13 +118,17 @@
                     </div>
 
                     <div data-ng-if="checkForCrudSelects()">
-                        <crud-select
-                                data-label="getName()"
-                                data-item="entity[fieldKey]"
-                                data-entity-type="crudEntityType"
-                                data-options="fields"
-                                data-ng-click="getData()"
-                        ></crud-select>
+
+                        <div data-ng-if="readyStatus.content">
+                            <crud-select
+                                    data-label="getName()"
+                                    data-item="entity[fieldKey]"
+                                    data-entity-type="crudEntityType"
+                                    data-options="fields"
+                                    data-ng-click="getData()"
+                            ></crud-select>
+                        </div>
+
                     </div>
                 </div>
 
