@@ -570,6 +570,8 @@
         //console.log("click group handleSubtotalClick data", clickData, parent);
         var subtotal_type;
 
+        const isAllRowsCheckboxChecked = parent.___is_area_subtotal_activated && parent.___is_line_subtotal_activated;
+
         if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
 
             handleShiftSelection(evDataService, evEventService, clickData);
@@ -586,10 +588,12 @@
 
             if (subtotal_type === 'area') {
                 parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
+                parent.___is_line_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
             if (subtotal_type === 'line') {
                 parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
+                parent.___is_area_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
             evDataService.setLastActivatedRow({
@@ -619,11 +623,13 @@
             }
 
             if (subtotal_type === 'area') {
-                parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
+                parent.___is_area_subtotal_activated = isAllRowsCheckboxChecked || !parent.___is_area_subtotal_activated;
+                parent.___is_line_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
             if (subtotal_type === 'line') {
-                parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
+                parent.___is_line_subtotal_activated = isAllRowsCheckboxChecked || !parent.___is_line_subtotal_activated;
+                parent.___is_area_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
             if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
@@ -669,6 +675,8 @@
 
         }
 
+        evDataService.setSelectAllRowsState(false); // Victor #111 every click must clear 'all select' checkbox
+        evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
     };
 
@@ -720,7 +728,8 @@
 
         }
 
-
+        evDataService.setSelectAllRowsState(false); // Victor #111 every click must clear 'all select' checkbox
+        evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
     };
 
     var updateDataFromCellEdit = function (obj, column, evDataService, evEventService) {
@@ -902,6 +911,23 @@
 
     };
 
+    var getSubtotalDataFromRow = function (gRowElem) {
+
+    	var subtotalType = gRowElem.dataset.subtotalType;
+    	var subtotalData = null;
+
+		if (subtotalType) {
+
+			subtotalData = {type: subtotalType};
+
+			if (subtotalType === 'arealine') subtotalData.subType = gRowElem.dataset.subtotalSubtype;
+
+		}
+
+		return subtotalData;
+
+	}
+
     var initEventDelegation = async function (elem, evDataService, evEventService) {
 
         const ttypes = await getAllTTypes();
@@ -969,12 +995,27 @@
 							break;
 
                         case 'open_context_menu':
-                            const objectId = clickData.___id;
-                            const parentGroupHashId = clickData.___parentId;
-                            const contextMenuPosition = {positionX: event.pageX, positionY: event.pageY};
 
-                            event.stopPropagation();
-                            createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition)
+                        	const gRowElem = event.target.closest('.g-row');
+
+                        	if (gRowElem) {
+
+                        		const objectId = clickData.___id;
+								const subtotalData = getSubtotalDataFromRow(gRowElem);
+								const parentGroupHashId = clickData.___parentId;
+								const contextMenuPosition = {positionX: event.pageX, positionY: event.pageY};
+
+								event.stopPropagation();
+
+								if (subtotalData) { // for subtotal rows
+									createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+
+								} else {
+									createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+								}
+
+							}
+                            // createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition)
 
                             break;
 
@@ -1053,14 +1094,16 @@
                     objectId = gRowElem.dataset.objectId;
                     parentGroupHashId = gRowElem.dataset.parentGroupHashId;
 
-                    var subtotalType = gRowElem.dataset.subtotalType;
+                    /* var subtotalType = gRowElem.dataset.subtotalType;
+
                     if (subtotalType) {
 
                         subtotalData = {type: subtotalType};
 
                         if (subtotalType === 'arealine') subtotalData.subType = gRowElem.dataset.subtotalSubtype;
 
-                    }
+                    } */
+					subtotalData = getSubtotalDataFromRow(gRowElem);
 
                     /*if (gRowElem.dataset.subtotalType) {
 
@@ -1079,7 +1122,7 @@
 
                 var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
-                if (subtotalData) {
+                if (subtotalData) { // for subtotal rows
                     createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
                 } else {
@@ -1999,7 +2042,11 @@
 
         let contextMenu;
 
-        const contextMenuData = await uiService.getContextMenuLayoutList();
+        const contextMenuData = await uiService.getContextMenuLayoutList({
+            filters:  {
+                type: "report_context_menu"
+            }
+        });
 
         if (contextMenuData.results.length) {
 
@@ -2161,13 +2208,13 @@
 					'<span class="material-icons">label_outline</span>' +
 				'</button>' +
                 '<button class="g-row-color-picker-option red gPopupMenuOption" data-color="red">' +
-					'<span class="material-icons">label_outline</span>' +
+					'<span class="material-icons">label</span>' +
 				'</button>' +
                 '<button class="g-row-color-picker-option yellow gPopupMenuOption" data-color="yellow">' +
-					'<span class="material-icons">label_outline</span>' +
+					'<span class="material-icons">label</span>' +
 				'</button>' +
                 '<button class="g-row-color-picker-option green gPopupMenuOption" data-color="green">' +
-					'<span class="material-icons">label_outline</span>' +
+					'<span class="material-icons">label</span>' +
 				'</button>' +
             '</div>'
 		//</editor-fold>

@@ -132,23 +132,19 @@
 
 			const formFieldsNames = userInputs.map(input => input.name);
 			const userInputsNotPlacedInTheForm = ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
-			console.log('#64 userInputsNotPlacedInTheForm', userInputsNotPlacedInTheForm)
 
 			const missingFieldsPromises = [];
 
 			userInputsNotPlacedInTheForm
 				.filter(input => !entity[input.name] && !!input.value) // take inputs if property is empty and input have default value
 				.forEach(input => {
-					console.log('#64 input', input.name, input.value);
 
 					if (input.value_type === 20) { // Expression
 
 						const expressionPromise = expressionService.getResultOfExpression({'expression': input.value})
 							.then(data => entity[input.name] = data.result) // set property after expression resolved
-							.catch(err => {
-								console.log('#64 Error', err)
-								console.log('#64 input.name', input.name)
-								console.log('#64 expression', input.value)
+							.catch(error => {
+								console.error('fillMissingFieldsByDefaultValues expression error', error)
 							})
 
 						missingFieldsPromises.push(expressionPromise);
@@ -161,7 +157,6 @@
 				});
 
 			return Promise.allSettled(missingFieldsPromises);
-			// console.log('#64 after fillMissingFieldsByDefaultValues', JSON.parse(JSON.stringify(entity)))
 
 		};
 
@@ -270,7 +265,7 @@
 					userInputs: viewModel.userInputs,
 				};
 
-				entityEditorHelper.checkTabsForErrorFields(
+				/* entityEditorHelper.checkTabsForErrorFields(
 					fieldKey,
 					viewModel.errorFieldsList,
 					viewModel.tabsWithErrors,
@@ -278,16 +273,20 @@
 					viewModel.entity,
 					viewModel.entityType,
 					viewModel.tabs
-				);
+				); */
+				entityEditorHelper.checkTabsForErrorFields(fieldKey, viewModel.evEditorDataService, attributes, viewModel.entity, viewModel.entityType, viewModel.tabs);
 				// < When all faulty fields corrected, remove tab's error indicator. >
 
 			}
 
 		};
 
-		const processTabsErrors = function (errors, tabsWithErrors, errorFieldsList) {
+		/* const processTabsErrors = function (errors) {
 
 			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+
+			let formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
+			let tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
 
 			errors.forEach(errorObj => {
 
@@ -304,7 +303,6 @@
 						if (tabNameElem) tabNameElem.classList.add('error-tab');
 
 					}
-
 					else if (errorObj.locationData.type === 'system_tab') {
 						entityTabsMenuBtn.classList.add('error-tab');
 					}
@@ -317,13 +315,22 @@
 
 					}
 
-					if (!errorFieldsList.includes(errorObj.key)) errorFieldsList.push(errorObj.key);
+					/!* if (!errorFieldsList.includes(errorObj.key)) {
+
+						errorFieldsList.push(errorObj.key);
+						viewModel.evEditorDataService.setFormErrorsList(errorFieldsList);
+
+					} *!/
+					if (!formErrorsList.includes(errorObj.key)) formErrorsList.push(errorObj.key);
 
 				}
 
 			});
 
-		};
+			viewModel.evEditorDataService.setTabsWithErrors(tabsWithErrors);
+			viewModel.evEditorDataService.setFormErrorsList(formErrorsList);
+
+		}; */
 
 		return {
 			preRecalculationActions: preRecalculationActions,
@@ -336,7 +343,7 @@
 
 			onFieldChange: onFieldChange,
 
-			processTabsErrors: processTabsErrors
+			// processTabsErrors: processTabsErrors
 		}
 
 	};

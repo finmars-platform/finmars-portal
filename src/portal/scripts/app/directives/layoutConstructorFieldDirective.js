@@ -8,7 +8,7 @@
     var metaService = require('../services/metaService');
     var layoutService = require('../services/entity-data-constructor/layoutService');
 
-    module.exports = function ($mdDialog, entityDataConstructorService) {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'E',
             scope: {
@@ -22,7 +22,7 @@
             link: function (scope, elem, attr) {
 
             	var entityDataConstructorVm = scope.$parent.vm;
-                var choices = metaService.getTypeCaptions();
+				var choices = metaService.getTypeCaptions();
 
                 scope.item = {
                     column: scope.column,
@@ -330,7 +330,7 @@
 							}
 
 							var attributeData = JSON.parse(JSON.stringify(scope.item.attribute));
-							delete attributeData.frontOptions;
+							delete attributeData.frontOptions; // have to be after calling entityDataConstructorVm.getAttributeClass();
 
 							scope.tab.layout.fields[i].name = scope.item.attribute.name;
 							scope.tab.layout.fields[i].type = scope.item.type;
@@ -604,7 +604,7 @@
                     }); */
 
 					scope.userInputs.forEach(function (userInput) {
-						userInput.disabled = isAttrDisabled(userInput, 'key');
+						userInput.disabled = isAttrDisabled(userInput, 'name');
 					});
 
                 };

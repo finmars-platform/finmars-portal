@@ -31,6 +31,8 @@
 			templateUrl: "views/directives/two-fields-multiselect-view.html",
 			link: function (scope, elem, attr, ngModel) {
 
+				console.log('# scope.model', scope.model)
+
 				scope.inputText = '';
 				scope.error = '';
 				scope.orderOptions = {
@@ -80,6 +82,8 @@
 				let getSelectedOptionsIds = function () {
 
 					if (scope.model) {
+
+						console.log('# scope.model', scope.model)
 
 						selOptionsIdsList = scope.model.map(function (selOption) {
 

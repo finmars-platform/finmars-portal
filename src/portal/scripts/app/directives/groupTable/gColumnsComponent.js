@@ -29,8 +29,6 @@
             link: function (scope, elem, attrs) {
 
                 scope.columns = scope.evDataService.getColumns();
-                makePopupDataForColumns(scope.columns);
-
                 scope.groups = scope.evDataService.getGroups();
                 evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns);
 
@@ -45,12 +43,12 @@
                 /* const setFiltersLayoutNames = () => {
 
                     const filters = scope.evDataService.getFilters();
-
-                    const totalColumns = [...scope.groups, ...scope.notGroupingColumns];
+                    const columns = scope.evDataService.getColumns();
+                    // const totalColumns = [...scope.groups, ...scope.notGroupingColumns];
 
                     filters.forEach(filter => {
 
-                        const column = totalColumns.find(col => col.key === filter.key);
+                        const column = columns.find(col => col.key === filter.key);
 
                         if (column && column.layout_name) {
 
@@ -72,52 +70,73 @@
 
                 // Victor 2021.03.29 #88 fix bug with deleted custom fields
                 let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+				/**
+				 * Collects errors from columns.
+				 */
+                function collectMissingCustomFieldsErrors() {
 
-                function collectMissingCustomFieldsErrors(columns, groups) {
+                    const columnsErrorsList = [];
+                    const groupsErrorsList = [];
 
-                    const errors = [];
+                    const markItemUsingMissingCustomField = function (item, itemType, errorsList) {
 
-                    columns.concat(groups).forEach(column => {
+                    	if (item.key.startsWith('custom_fields')) {
 
-                        if (column.key.startsWith('custom_fields')) {
+							const customField = customFields.find(field => item.key === `custom_fields.${field.user_code}`);
 
-                            const customField = customFields.find(field => column.key === `custom_fields.${field.user_code}`);
+							if (customField) {
+								item.error_data = null;
 
-                            if (customField) {
+							} else {
 
-                                column.error_data = null;
+								const description = `The ${itemType} does not exist in the Configuration`;
 
-                            } else {
+								item.error_data = {
+									code: 10,
+									description: description
+								};
 
-                                const description = `The ${column.groups ? 'group' : 'column'} does not exist in the Configuration`
+								const error = {
+									key: item.key,
+									description: description
+								};
 
-                                column.error_data = {
-                                    code: 10,
-                                    description: description
-                                };
+								errorsList.push(error);
+							}
 
-                                const error = {
-                                    key: column.key,
-                                    description: description
-                                };
+						}
 
-                                errors.push(error);
-                            }
+					};
 
-                        }
+                    if (scope.isReport) {
 
-                    })
+                    	let groups = scope.evDataService.getGroups();
 
-                    const missingCustomFields = [];
-                    errors.forEach(error => {
-                        if (!missingCustomFields.find(field => field.key === error.key)) {
+						groups.forEach(group => {
+							markItemUsingMissingCustomField(group, 'group', groupsErrorsList);
+						});
 
-                            missingCustomFields.push(error);
+                    }
 
-                        }
+                    let columns = scope.evDataService.getColumns();
+
+                    columns.forEach(column => {
+						markItemUsingMissingCustomField(column, 'column', columnsErrorsList);
                     });
 
-                    scope.evDataService.setMissingCustomFields({forColumns: missingCustomFields});
+					/* const missingCustomFields = [];
+
+					errors.forEach(error => {
+
+						const errorNotRegistered = !!!missingCustomFields.find(field => field.key === error.key);
+
+						if (errorNotRegistered) missingCustomFields.push(error);
+
+					});
+
+                    scope.evDataService.setMissingCustomFields({forColumns: missingCustomFields}); */
+					scope.evDataService.setMissingCustomFields({forColumns: columnsErrorsList, forGroups: groupsErrorsList});
+
                 }
 
                 // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
@@ -126,10 +145,7 @@
                 // Victor 2020.12.11 scope.notGroupingColumns should update on any scope.columns or scope.groups change (if not dispatched evEvents.COLUMNS_CHANGE)
                 if (scope.isReport) {
                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                    collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                 }
-
-                // setFiltersLayoutNames();
 
                 scope.components = scope.evDataService.getComponents();
                 scope.downloadedItemsCount = null;
@@ -137,7 +153,8 @@
                 scope.columnAreaCollapsed = false;
 
                 scope.viewContext = scope.evDataService.getViewContext();
-                scope.isReport = metaService.isReport(scope.entityType);
+                // scope.isReport = metaService.isReport(scope.entityType);
+				scope.isReport = scope.evDataService.isEntityReport();
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
                 scope.isAllStarsSelected = false;
@@ -202,10 +219,16 @@
                 scope.columnsPopupsData = null;
 
                 function makePopupDataForColumns(columns) {
-                    scope.columnsPopupsData = {};
-                    columns.forEach((column, index) => {
-                        scope.columnsPopupsData[column.key] = {
-                            data: getPopupData(column, index)
+
+                	scope.columnsPopupsData = {};
+
+                	columns.forEach((column, index) => {
+
+                		var matchingGroup = scope.groups.find(group => group.key === column.key);
+                		var item = matchingGroup || column;
+
+                    	scope.columnsPopupsData[column.key] = {
+                            data: getPopupData(item, index, !!matchingGroup)
                         }
 
                     })
@@ -216,11 +239,12 @@
                     makePopupDataForColumns(scope.columns);
                 };
 
-                function getPopupData(column, $index) {
+                function getPopupData(item, $index, isAGroup) {
 
                     let data = {
                         $index: $index,
-                        column: column,
+						isAGroup: isAGroup,
+                        item: item, // can be column or group
                         viewContext: scope.viewContext,
                         renameColumn: scope.renameColumn,
                         isReport: scope.isReport,
@@ -246,10 +270,10 @@
                         reportHideGrandTotal: scope.reportHideGrandTotal,
                         isSubtotalWeightedShouldBeExcluded: scope.isSubtotalWeightedShouldBeExcluded,
 
-                        isSubtotalSum: isSubtotalSum(column),
-                        isSubtotalWeighted: isSubtotalWeighted(column),
-                        isSubtotalAvgWeighted: isSubtotalAvgWeighted(column),
-                        subtotalFormula: getSubtotalFormula(column),
+                        isSubtotalSum: isSubtotalSum(item),
+                        isSubtotalWeighted: isSubtotalWeighted(item),
+                        isSubtotalAvgWeighted: isSubtotalAvgWeighted(item),
+                        subtotalFormula: getSubtotalFormula(item),
                         isTemporaryWeighted: false,
 
                         onSubtotalSumClick: onSubtotalSumClick,
@@ -258,9 +282,7 @@
 
                     };
 
-                    const groups = scope.evDataService.getGroups();
-
-                    if (groups.length && $index < groups.length) {
+                    if (isAGroup) {
                         data.reportSetSubtotalType = scope.reportSetSubtotalType
                     }
 
@@ -393,7 +415,7 @@
 
                     const direction = column.options && column.options.sort ? column.options.sort : 'ASC'; // save direction before clear sort options for all columns
 
-                    if (column.groups) {
+                    if (scope.columnHasCorrespondingGroup(column.key)) {
 
                         clearAllSortOptions(scope.groups);
 
@@ -413,7 +435,7 @@
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    if (column.groups) {
+                    if (scope.columnHasCorrespondingGroup(column.key)) {
 
                         clearAllSortOptions(scope.groups);
 
@@ -444,7 +466,7 @@
 
                                 scope.evDataService.setColumnSortData(column.key, layout.data)
 
-                                if (column.groups) {
+                                if (scope.columnHasCorrespondingGroup(column.key)) {
 
                                     scope.evDataService.setActiveGroupTypeSort(column);
                                     scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
@@ -467,7 +489,7 @@
 
                     } else { // default sort handler TODO External sort mode is not defined, and handling as default
 
-                        if (column.groups) {
+                        if (scope.columnHasCorrespondingGroup(column.key)) {
 
                             scope.evDataService.setActiveGroupTypeSort(column);
                             scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
@@ -594,13 +616,14 @@
 
                 scope.columnHasCorrespondingGroup = function (columnKey) {
 
-                    for (var i = 0; i < scope.groups.length; i++) {
+                    /*for (var i = 0; i < scope.groups.length; i++) {
                         if (scope.groups[i].key === columnKey) {
                             return true;
                         }
-                    }
+                    }*/
+					var groupIndex = scope.groups.findIndex(group => group.key === columnKey);
 
-                    return false;
+                    return groupIndex > -1;
 
                 };
 
@@ -667,9 +690,16 @@
 
                     dataList.forEach(function (item) {
 
-                        item.___is_activated = scope.isAllSelected;
-                        item.___is_area_subtotal_activated = scope.isAllSelected;
-                        item.___is_line_subtotal_activated = scope.isAllSelected;
+                        if (item.___level === 0) {
+
+                            item.___is_activated = scope.isAllSelected;
+
+                        } else {
+                            // TODO Victor #111 better select only one type of subtotal, but I don't know item subtotal type
+                            item.___is_area_subtotal_activated = scope.isAllSelected;
+                            item.___is_line_subtotal_activated = scope.isAllSelected;
+
+                        }
 
                         if (item.results && item.results.length) {
 
@@ -687,6 +717,7 @@
                     scope.evDataService.setAllData(dataList);
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
                     console.timeEnd('Selecting all rows');
 
@@ -729,9 +760,9 @@
 
                                 if (scope.isReport) {
                                     scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                                    collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                                 }
 
+								collectMissingCustomFieldsErrors();
                                 scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
                             } else {
@@ -776,8 +807,9 @@
 
                         if (scope.isReport) {
                             scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                            collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                         }
+
+						collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
 
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -871,16 +903,24 @@
 
                 };
 
-                scope.renameColumn = function (column, $mdMenu, $event) {
+				/**
+				 * Can be called by a group.
+				 *
+				 * @param itemKey {string} - key of column or group
+				 * @param $mdMenu {Object} - object with data of $mdMenu
+				 * @param $event {Object} event object
+				 * @param _$popup
+				 */
+				scope.renameColumn = function (itemKey, $mdMenu, $event, _$popup) { // TODO after reworking entity viewer, remove $mdMenu argument
 
                     if ($mdMenu) {
                         $mdMenu.close();
 
                     } else {
-                        scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+						_$popup.cancel();
                     }
 
-                    console.log('renameColumn', column);
+                    var column = scope.columns.find(column => column.key === itemKey);
 
                     $mdDialog.show({
                         controller: 'RenameFieldDialogController as vm',
@@ -892,11 +932,23 @@
                         }
                     }).then(res => {
 
-                        if (res.status === 'agree') {
+						if (res.status === 'agree') {
+
+							column.layout_name = res.data.layout_name;
+							scope.evDataService.setColumns(scope.columns);
+
+							if (scope.columnHasCorrespondingGroup(column.key)) {
+
+								var group = scope.groups.find(group => group.key === itemKey);
+								group.layout_name = res.data.layout_name;
+
+								scope.evDataService.setGroups(scope.groups);
+
+							}
 
 							const filters = scope.evDataService.getFilters();
 
-                        	if (scope.isReport) {
+							if (scope.isReport) {
 
 								const filter = filters.find(filter => filter.key === res.data.key);
 
@@ -911,11 +963,11 @@
 								}
 
 							}
-                        	else {
+							else {
 
-                        		let filterLayoutNameChanged = false;
+								let filterLayoutNameChanged = false;
 
-                        		for (var filtersProp in filters) { // search among front and back filters
+								for (var filtersProp in filters) { // search among front and back filters
 
 									const filter = filters[filtersProp].find(filter => filter.key === res.data.key);
 
@@ -926,16 +978,29 @@
 
 								}
 
-                        		if (filterLayoutNameChanged) {
+								if (filterLayoutNameChanged) {
 
-                        			scope.evDataService.setFilters(filters);
+									scope.evDataService.setFilters(filters);
 									scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
 								}
 
 							}
 
-                        }
+							/* var filters = scope.evDataService.getFilters();
+							var filterToRename = filters.find(filter => filter.key === res.data.key);
+
+                            if (filterToRename) {
+
+								filterToRename.layout_name = res.data.layout_name;
+
+                                scope.evDataService.setFilters(filters);
+
+                                scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+                            } */
+
+						}
 
                     })
 
@@ -1314,26 +1379,35 @@
 
                 };
 
-                scope.removeGroup = function (columnTableId) {
+                scope.removeGroup = function (groupKey, _$popup) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+					_$popup.cancel();
+                    // scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     var groups = scope.evDataService.getGroups();
 
                     /** remove group */
-                    var i;
+                    /* var i;
                     for (i = 0; i < groups.length; i++) {
                         if (groups[i].___group_type_id === columnTableId) {
                             groups.splice(i, 1);
                             break;
                         }
-                    }
+                    } */
+					var groupToRemoveIndex = groups.findIndex(group => group.key === groupKey);
 
-                    scope.evDataService.setGroups(groups);
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+					if (groupToRemoveIndex > -1) {
+						groups.splice(groupToRemoveIndex, 1);
+
+					} else {
+						throw new Error("No group with such key found: " + groupKey);
+					}
+
+					scope.evDataService.setGroups(groups);
+					scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
                     /** remove column */
-                    var c;
+                    /* var c;
                     for (c = 0; c < scope.columns.length; c++) {
 
                         if (scope.columns[c].___column_id === columnTableId) {
@@ -1341,13 +1415,22 @@
                             break;
                         }
 
-                    }
+                    } */
+					var colToRemoveIndex = scope.columns.findIndex(column => column.key === groupKey);
+					if (colToRemoveIndex > -1) {
+						scope.columns.splice(colToRemoveIndex, 1);
+
+					} else {
+						throw new Error("No column with such key found: " + groupKey);
+					}
 
                     scope.evDataService.setColumns(scope.columns);
-                    if (scope.isReport) {
+
+					if (scope.isReport) {
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                        collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                     }
+
+					collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
 
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
@@ -1356,23 +1439,32 @@
 
                 };
 
-                scope.unGroup = function (columnTableId) {
+                scope.unGroup = function (groupKey, _$popup) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+					_$popup.cancel();
+                    // scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     var groups = scope.evDataService.getGroups();
 
                     /** remove group */
-                    var i;
+                    var groupToRemoveIndex = groups.findIndex(group => group.key === groupKey);
+
+                    /*var i;
                     for (i = 0; i < groups.length; i++) {
                         if (groups[i].___group_type_id === columnTableId) {
                             groups.splice(i, 1);
                             break;
                         }
-                    }
+                    }*/
+					if (groupToRemoveIndex > -1) {
+						groups.splice(groupToRemoveIndex, 1);
+
+					} else {
+						throw new Error("No group with such key found: " + groupKey);
+					}
 
                     const columns = scope.evDataService.getColumns();
-                    const ungroupedColumn = columns.find(column => column.___column_id === columnTableId);
+                    const ungroupedColumn = columns.find(column => column.key === groupKey);
 
                     if (ungroupedColumn) {
                         if (!ungroupedColumn.frontOptions) {
@@ -1604,8 +1696,6 @@
 
                         if (group.key !== columns[groupIndex].key) {
 
-                            columnsHaveBeenSynced = true;
-
                             let columnToAdd;
                             let groupColumnIndex = columns.findIndex(column => group.key === column.key);
 
@@ -1619,6 +1709,8 @@
                             }
 
                             columns.splice(groupIndex, 0, columnToAdd);
+
+							columnsHaveBeenSynced = true;
 
                         }
 
@@ -1942,6 +2034,29 @@
 
                 };
 
+				const syncGroupLayoutNamesWithColumns = function () {
+
+					var groupChanged = false;
+
+					scope.columns.forEach(column => {
+
+						if (column.layout_name) {
+
+							const matchingGroup = scope.groups.find(group => group.key === column.key);
+
+							if (matchingGroup) {
+								matchingGroup.layout_name = column.layout_name;
+								groupChanged = true;
+							}
+
+						}
+
+					});
+
+					if (groupChanged) scope.evDataService.setGroups(scope.groups);
+
+				};
+
                 if (scope.isReport) {
 
 					scope.checkForFilteringBySameAttr = function (columnKey) {
@@ -1983,9 +2098,16 @@
                     // Victor 2021.03.29 #88 fix bug with deleted custom fields
                     scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
                         customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
-                        collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
+						collectMissingCustomFieldsErrors();
                     })
                     // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
+                    // Victor 2021.05.12 #111 multi rows selection
+                    scope.evEventService.addEventListener(evEvents.ROW_ACTIVATION_CHANGE, function () {
+                        scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
+                        setTimeout(() => scope.$apply())
+                    })
+                    // Victor 2021.05.12 #111 multi rows selection
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
@@ -2002,8 +2124,9 @@
 
                         if (scope.isReport) {
                             scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                            collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                         }
+
+						collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                         // setFiltersLayoutNames();
                         var foldedGroup = scope.groups.find(group => group.report_settings && group.report_settings.is_level_folded);
 
@@ -2028,9 +2151,9 @@
 
                         if (scope.isReport) {
                             scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                            collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
-                            // setFiltersLayoutNames()
                         }
+
+						collectMissingCustomFieldsErrors();
 
                     });
 
@@ -2072,16 +2195,18 @@
 
                     updateGroupTypeIds();
 
+					if (scope.isReport) syncColumnsWithGroups();
+					syncGroupLayoutNamesWithColumns();
+
                     scope.columns = scope.evDataService.getColumns();
                     flagMissingColumns();
                     makePopupDataForColumns(scope.columns);
 
                     if (scope.isReport) {
                         scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                        collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                     }
 
-                    // setFiltersLayoutNames();
+					collectMissingCustomFieldsErrors();
 
                     evDataHelper.updateColumnsIds(scope.evDataService);
                     evDataHelper.setColumnsDefaultWidth(scope.evDataService);

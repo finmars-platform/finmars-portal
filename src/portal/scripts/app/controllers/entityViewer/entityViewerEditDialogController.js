@@ -608,6 +608,7 @@
 						vm.attributeTypes = formLayoutData.attributeTypes;
 
                     	vm.tabs = formLayoutData.tabs;
+                        console.log('# vm.tabs', vm.tabs)
 						vm.attributesLayout = formLayoutData.attributesLayout;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
@@ -952,13 +953,10 @@
             } */
 
             if (errors.length) {
-
-				// vm.tabsWithErrors = {};
-
-                vm.sharedLogic.processTabsErrors(errors, $event);
+				// vm.sharedLogic.processTabsErrors(errors, $event);
+				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
             }
-
         	else {
 
                 // var result = entityEditorHelper.removeNullFields(vm.entity);

@@ -53,9 +53,9 @@
 
   }
 
-  .g-filters-holder {
+  /* .g-filters-holder {
     float: none;
-  }
+  } */
 
   .g-wrapper .g-group-holder {
     line-height: initial;
@@ -490,16 +490,16 @@
   background: rgba(152, 251, 152, 0.6);
 }
 
-.g-wrapper .g-row.g-row-marked-red:not(.selected) {
-  background: #e69999;
+.g-wrapper .g-row.g-row-marked-red:not(.selected):not(.last-selected) {
+  background-color: #FDECE5;
 }
 
-.g-wrapper .g-row.g-row-marked-yellow:not(.selected) {
-  background: #fefea4;
+.g-wrapper .g-row.g-row-marked-yellow:not(.selected):not(.last-selected) {
+  background-color: #FEF9EF;
 }
 
-.g-wrapper .g-row.g-row-marked-green:not(.selected) {
-  background: #99c099;
+.g-wrapper .g-row.g-row-marked-green:not(.selected):not(.last-selected) {
+  background-color: #E1FEF5;
 }
 
 
@@ -531,6 +531,9 @@
       }
 
       .g-row-selection {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: @gRowHeight;
         width: @gRowSelectionWidth;
         border-bottom: @gCellBorder;
@@ -544,11 +547,11 @@
         min-width: 17px;
         font-size: 15px;
         line-height: 13px;
-        border: 2px solid @borderPale;
+        border: 2px solid @gCellBroderColor;
         border-radius: 3px;
         box-sizing: border-box;
         background: rgba(0,0,0,.01960784);
-        margin: 4px auto 0;
+        margin: 0;
         cursor: pointer;
 
         svg {
@@ -568,6 +571,10 @@
             right: 3px;
             fill: #fff;
           }
+        }
+
+        &:hover {
+          border: 2px solid @gray;
         }
 
       }
