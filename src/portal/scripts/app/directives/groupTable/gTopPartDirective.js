@@ -10,6 +10,7 @@
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var middlewareService = require('../../services/middlewareService');
+    const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     var uiService = require('../../services/uiService');
 
@@ -202,9 +203,17 @@
 
                         new Promise(function (resolve, reject) {
 
-                            currencyService.getListLight(currencyOptions).then(function (data) {
+                            currencyService.getListLight(currencyOptions).then(async function (data) {
 
                                 scope.currencies = scope.currencies.concat(data.results);
+
+                                if (!scope.currencies.length) {
+
+                                    const ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+                                    scope.currencies.push(ecosystemDefaultData.currency_object);
+                                    scope.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
+
+                                }
 
                                 if (data.next) {
 

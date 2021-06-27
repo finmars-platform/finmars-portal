@@ -130,7 +130,7 @@
             splitPanelIsActive: false,
             verticalSplitPanelIsActive: false,
             splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
-            splitPanelLayoutToOpen: null,
+            splitPanelLayoutToOpen: null, // Only for frontend. Do not sent to server.
             additions: {},
             report: {},
             export: {},
@@ -173,7 +173,8 @@
                 forColumns: [],
             },
 			warnAboutLayoutChangesLoss: true,
-			isNewLayout: false // does layout exist on server
+			isNewLayout: false, // does layout exist on server,
+            autoRefreshState: true
         };
 
         var dashboardData = {
@@ -1208,7 +1209,9 @@
 
                 if (column.options && column.options.sort) {
 
-                    if (column.groups) {
+					var columnWithGroup = !!listLayout.data.grouping.find(group => group.key === column.key);
+
+                    if (columnWithGroup) {
                         setActiveGroupTypeSort(column);
                     } else {
                         setActiveColumnSort(column);
@@ -1269,11 +1272,19 @@
         function getSplitPanelDefaultLayout() {
             return data.splitPanelDefaultLayout;
         }
-
+		/**
+		 * Set layout to open inside split panel not by default.
+		 *
+		 * @param layoutName {number} - id of layout
+		 */
         function setSplitPanelLayoutToOpen(layoutName) {
             data.splitPanelLayoutToOpen = layoutName;
         }
-
+		/**
+		 * Get layout to open inside split panel not by default.
+		 *
+		 * @returns {number|void} - id of layout to open
+		 */
         function getSplitPanelLayoutToOpen() {
             var splitPanelActiveLayoutName = data.splitPanelLayoutToOpen;
             data.splitPanelLayoutToOpen = false;
@@ -1287,6 +1298,29 @@
         function getViewType() {
             return data.viewType;
         }
+
+
+        // That prop used only during user session and do not saved in layout
+        function setUserRequestedAction(action) {
+            return data.userRequestedAction = action;
+        }
+
+        function getUserRequestedAction() {
+            return data.userRequestedAction;
+        }
+
+
+
+
+        function setAutoRefreshState(state) {
+            return data.autoRefreshState = state;
+        }
+
+        function getAutoRefreshState() {
+            return data.autoRefreshState;
+        }
+
+
 
         function setViewSettings(viewType, settings) {
 
@@ -1720,6 +1754,12 @@
 
             setViewType: setViewType,
             getViewType: getViewType,
+
+            setUserRequestedAction: setUserRequestedAction,
+            getUserRequestedAction: getUserRequestedAction,
+
+            setAutoRefreshState: setAutoRefreshState,
+            getAutoRefreshState: getAutoRefreshState,
 
             setViewSettings: setViewSettings,
             getViewSettings: getViewSettings,

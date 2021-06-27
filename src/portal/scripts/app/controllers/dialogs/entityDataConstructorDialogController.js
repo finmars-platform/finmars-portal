@@ -22,7 +22,7 @@
 
 	var scrollHelper = new ScrollHelper();
 
-    module.exports = function entityDataConstructorDialogController($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
+    module.exports = function ($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
 
         var vm = this;
 
@@ -482,7 +482,6 @@
                 });
 
             }
-
             else {
 
                 var r, c;
@@ -1185,7 +1184,7 @@
 									input_value_type = 'field';
 								}
 
-								var contentType;
+								/* var contentType;
 
 								if (input.content_type && input.content_type !== undefined) {
 
@@ -1209,10 +1208,10 @@
 
 								} else {
 									contentType = input.name.split(' ').join('_').toLowerCase();
-								}
+								} */
 
 								var userInputObj = {
-									key: contentType,
+									// key: contentType,
 									name: input.name,
 									reference_table: input.reference_table,
 									verbose_name: input.verbose_name,
@@ -1220,9 +1219,10 @@
 									value_type: input_value_type,
 									frontOptions: {
 										attribute_class: 'userInput',
-										occupiesWholeRow: fullRowUserInputsList.includes(contentType)
+										// occupiesWholeRow: fullRowUserInputsList.includes(contentType)
+										occupiesWholeRow: fullRowUserInputsList.includes(input.name)
 									}
-								}
+								};
 
 								vm.userInputs.push(userInputObj);
 
@@ -1230,7 +1230,7 @@
 
 							res();
 
-						}).catch(() => rej('error on getting complex transaction'));
+						}).catch(error => rej({custom_message: 'error on getting complex transaction', error: error}));
 
 					});
 
@@ -1392,11 +1392,16 @@
             return items;
 
         };
-
+		/**
+		 * Also called inside layoutConstructorFieldDirective.
+		 *
+		 * @param item {Object} - filled sockeet data
+		 * @returns {string} - attribute class
+		 */
         vm.getAttributeClass = function (item) {
 
 			if (item.attribute.frontOptions &&
-				item.attribute.frontOptions.attribute_class) {
+				item.attribute.frontOptions.attribute_class) { // must have for determining userInputs
 
 				var attributeClass = item.attribute.frontOptions.attribute_class;
 				return attributeClass;
@@ -1511,7 +1516,6 @@
 
                     var itemIndex = parseInt(elem.dataset.index, 10);
 					var attr = JSON.parse(JSON.stringify(vm.items[itemIndex]));
-					delete attr.frontOptions;
 
                     field.attribute = attr;
                     field.editable = attr.editable;
@@ -1565,6 +1569,8 @@
                     if (occupiesWholeRow) {
                     	occupyWholeRow(field, targetTab.layout.columns);
                     }
+
+                    if (field.attribute) delete field.attribute.frontOptions;  // have to be after calling vm.getAttributeClass();
 
                     break;
 

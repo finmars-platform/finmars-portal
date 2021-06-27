@@ -16,7 +16,7 @@
 				evEventService: '=',
 				attributeDataService: '=',
 			},
-			templateUrl: 'views/directives/groupTable/filters/g-filters-ev-rv-view.html',
+			templateUrl: 'views/directives/groupTable/filters/g-ev-rv-filters-view.html',
 			link: function (scope, elem, attrs, gFiltersVm) {
 
 				scope.entityType = gFiltersVm.entityType;
@@ -177,10 +177,14 @@
 
 				};
 
-				scope.evApplyDatabaseFilters = function () {
+				/* scope.evApplyDatabaseFilters = function () {
 					scope.evDataService.resetTableContent();
 					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-				};
+				}; */
+				scope.refreshTable = function () {
+					scope.evDataService.resetTableContent();
+					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+				}
 
 				//region Chips
 				const formatFiltersForChips = function () {

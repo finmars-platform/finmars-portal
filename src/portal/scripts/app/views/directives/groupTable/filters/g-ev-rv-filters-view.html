@@ -6,11 +6,28 @@
 
             <div data-ng-if="isReport" layout="row">
 
-                <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                <!--<md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
                            ng-click="calculateReport()">
                     <span class="material-icons">refresh</span>
                     <md-tooltip md-direction="top">Calculate</md-tooltip>
-                </md-button>
+                </md-button>-->
+
+                <md-menu>
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                               ng-click="$mdOpenMenu($event)">
+                        <span class="material-icons">add</span>
+                        <md-tooltip md-direction="top">Add</md-tooltip>
+                    </md-button>
+
+                    <md-menu-content width="4">
+                        <md-menu-item data-ng-repeat="item in addMenu.data.menu.root.items">
+                            <md-button data-ng-click="dispatchAddMenuAction($event, item)" class="g-settings-option-btn">
+                                <span>{{item.name}}</span>
+                            </md-button>
+                        </md-menu-item>
+
+                    </md-menu-content>
+                </md-menu>
 
                 <md-button class="g-toggle-use-from-above-filters md-icon-button chain-button"
                            ng-class="{'g-use-from-above-filters-hidden': !showUseFromAboveFilters}"
@@ -67,8 +84,7 @@
 
     <div class="icon-buttons gFiltersRightPart">
 
-        <md-button ng-if="!isReport"
-                   data-ng-click="evApplyDatabaseFilters()"
+        <md-button data-ng-click="refreshTable()"
                    class="signed-button">
 
             <div class="flex-column flex-i-center">
@@ -215,6 +231,13 @@
                 <md-menu-item>
                     <md-button data-ng-click="openCustomFieldsManager($event)" class="g-settings-option-btn">
                         <span>Custom Columns</span>
+                    </md-button>
+                </md-menu-item>
+
+                <md-menu-item ng-if="isReport">
+                    <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">
+                        <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>
+                        <span data-ng-if="!rvAutoRefresh">Enable Auto Refresh</span>
                     </md-button>
                 </md-menu-item>
 

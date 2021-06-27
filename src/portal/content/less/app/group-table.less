@@ -55,6 +55,7 @@
   position: relative;
   height: 0;
   overflow: hidden;
+  box-sizing: border-box;
   // transition: max-height 0.5s linear;
   .new-interface();
 
@@ -70,6 +71,12 @@
 
   .icon-buttons {
     flex: 0 0 252px;
+    /* display: flex;
+        justify-content: flex-end;
+        flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
   }
 
   .g-filter-settings-big-left-btn {
@@ -404,6 +411,24 @@
       display: block;
     }
 
+  }
+
+  .g-row-marked-red {
+    span.label-icon {
+      color: #f05a22;
+    }
+  }
+
+  .g-row-marked-yellow {
+    span.label-icon {
+      color: #fac878;
+    }
+  }
+
+  .g-row-marked-green {
+    span.label-icon {
+      color: #a5d9c9;
+    }
   }
 
   .g-grouping-section {
@@ -776,7 +801,7 @@
   }
 
   .g-filters-holder {
-    float: left;
+    // float: left;
     box-sizing: border-box;
 
     .modal-dialog-card {
@@ -910,8 +935,14 @@
       color: #a5d9c9;
     }
 
+    &.g-cell-button {
+      .label-icon {
+        color: @gray;
+      }
+    }
+
     .label-icon {
-      color: #dbdbdb;
+      color: @gCellBroderColor;
     }
 
     .arrow-icon {
@@ -1074,6 +1105,43 @@
 
   }
 
+  .active-rows-actions {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    color: #fff;
+    font-size: 16px;
+    background-color: @rv-active-color;
+    z-index: 1;
+
+    .active-row-actions-wrapper {
+      height: 33px;
+      display: flex;
+
+      .selected-rows-count {
+        width: 115px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid #fff;
+
+        span:first-child {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .close-button {
+      color: #fff;
+      margin-right: 505px;
+    }
+  }
+
   .column-to-filters-drop-area {
     left: 0;
     width: 85%;
@@ -1131,6 +1199,18 @@
       position: relative;
       width: @g-table-header-height;
       border-right: 1px solid @g-table-border-color;
+
+      .md-checked {
+
+        .md-container .md-icon {
+          &:after {
+            top: 0;
+            bottom: 0;
+            left: 5px;
+          }
+        }
+
+      }
     }
 
     md-checkbox {
@@ -1139,7 +1219,7 @@
       .md-icon {
         width: 17px;
         height: 17px;
-        border-color: @g-table-border-color;
+        border: 2px solid @gray;
         border-radius: 4px;
       }
 
@@ -1431,6 +1511,16 @@
         z-index: 1;
       }
 
+      .g-add-column-button {
+        color: @gray;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f05a22;
+        }
+
+      }
+
     }
 
 
@@ -1575,14 +1665,18 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
 
   &.red {
     color: @rv-active-color;
+    span {
+      color: @rv-active-color;
+    }
   }
 
   &.yellow {
-    color: #fac878;
+    color: #FAC878;
   }
 
   &.green {
-    color: #a5d9c9;
+    //color: #a5d9c9;
+    color: #04F7AE
   }
 }
 
@@ -2421,7 +2515,7 @@ body.md-dialog-is-showing {
     }
 
     .g-filters-holder.g-filters-holder-container {
-      float: none;
+      // float: none;
       display: flex;
       flex-direction: column;
       justify-content: start;

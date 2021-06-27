@@ -2,6 +2,7 @@
 
 	'use strict';
 
+	const uiService = require('../../../../services/uiService');
 	const evEvents = require('../../../../services/entityViewerEvents');
 
 	// const EventService = require('../../../../services/eventService');
@@ -15,13 +16,27 @@
 				evEventService: '=',
 				attributeDataService: '=',
 			},
-			templateUrl: 'views/directives/groupTable/filters/g-filters-ev-rv-view.html',
+			templateUrl: 'views/directives/groupTable/filters/g-ev-rv-filters-view.html',
 			link: function (scope, elem, attrs, gFiltersVm) {
 
 				scope.entityType = gFiltersVm.entityType;
 				scope.isReport = true;
 				scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 				scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
+
+				const hideUseFromAboveFilters = gFiltersVm.hideUseFromAboveFilters;
+
+				if (hideUseFromAboveFilters) {
+					scope.showUseFromAboveFilters = false;
+				} else {
+					scope.showUseFromAboveFilters = !scope.isRootEntityViewer; // show use from above filters by default inside split panel
+				}
+
+				scope.rvAutoRefresh = scope.evDataService.getAutoRefreshState();
+
+				if (scope.rvAutoRefresh === null || scope.rvAutoRefresh === undefined) { //if we missed initial state for already existing layout
+					scope.rvAutoRefresh = true;
+				}
 
 				scope.readyStatus = {
 					filters: false
@@ -51,7 +66,10 @@
 				let useFromAboveFilters = [];
 				let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
 
-				scope.calculateReport = function () {
+				/* scope.calculateReport = function () {
+					scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+				}; */
+				scope.refreshTable = function () {
 					scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 				};
 
@@ -337,6 +355,76 @@
 
 				};
 
+				scope.toggleAutoRefresh = function () {
+
+					scope.rvAutoRefresh = !scope.rvAutoRefresh
+
+					scope.evDataService.setAutoRefreshState(scope.rvAutoRefresh)
+
+				}
+
+				scope.addMenu = {
+					data: {
+						menu: {
+							root: {
+								items: [
+									{
+										action: "book_transaction",
+										name: "Book Transaction",
+										order: 0
+									},
+									{
+										action: "add_portfolio",
+										name: "Add Portfolio",
+										order: 1
+									},
+									{
+										action: "add_account",
+										name: "Add Account",
+										order: 2
+									},
+									{
+										action: "add_currency",
+										name: "Add Currency",
+										order: 3
+									},
+									{
+										action: "add_instrument",
+										name: "Add Instrument",
+										order: 4
+									}
+								]
+							}
+						}
+					}
+				}
+
+				const getAddMenuLayout = function () {
+
+					uiService.getContextMenuLayoutList({
+						filters: {
+							type: 'report_menu_add_entities'
+						}
+					}).then(function (data) {
+
+						if (data.results.length) {
+							scope.addMenu = data.results[0]
+						}
+
+						scope.$apply()
+
+					});
+
+				}
+
+				scope.dispatchAddMenuAction = function ($event, item) {
+
+					scope.evDataService.setUserRequestedAction(item.action)
+
+					scope.evEventService.dispatchEvent(evEvents.USER_REQUEST_AN_ACTION)
+
+				}
+
 				const initEventListeners = function () {
 
 					// placed here because formatFiltersForChips() should be called only after customFields update
@@ -456,6 +544,8 @@
 					scope.chipsListEventService = gFiltersVm.chipsListEventService;
 
 					scope.popupData = gFiltersVm.popupData;
+
+					getAddMenuLayout();
 
 					formatFiltersForChips();
 

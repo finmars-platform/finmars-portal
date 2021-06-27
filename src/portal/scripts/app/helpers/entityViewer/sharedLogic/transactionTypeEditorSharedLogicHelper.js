@@ -381,6 +381,19 @@
 
         };
 
+        const actionsFieldsMap = {
+			instrument_event_schedule_action: {
+				transaction_type_from_instrument_type: {
+					field_type: 'selector',
+					value_type: 10
+				},
+				event_schedule_phantom: {
+					field_type: 'selector',
+					value_type: 20
+				}
+			}
+		};
+
         const checkActionsForEmptyFields = function (actions) {
 
             var result = [];
@@ -418,7 +431,8 @@
 
                                 }
 
-                            } else {
+                            }
+                            else {
 
                                 if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
 
@@ -454,7 +468,8 @@
                                     }
 
 
-                                } else {
+                                }
+                                else {
 
                                     if (actionItem[actionItemKey] === null ||
                                         actionItem[actionItemKey] === undefined ||
@@ -466,12 +481,19 @@
                                             value: actionItem[actionItemKey]
                                         })
 
-                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // deleted inputs use
+                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // field with expression
 
-                                        fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
-                                                                                             actionItem[actionItemKey],
-                                                                                             actionItemKey,
-                                                                                             action.action_notes);
+                                    	var actionFieldsMap = actionsFieldsMap[actionKey];
+                                    	if (actionFieldsMap) var actionFieldData = actionFieldsMap[actionItemKey];
+
+                                    	if (!actionFieldData || actionFieldData.field_type === 'expression') {
+
+                                    		fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
+												actionItem[actionItemKey],
+												actionItemKey,
+												action.action_notes);
+
+										}
 
                                     }
 
