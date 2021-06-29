@@ -3,15 +3,12 @@
          data-ng-class="{'opened': !node.frontOptions.closed, 'has-active-child': node.frontOptions.hasActiveChilds}">
         <div>
             <span class="material-icons pointer"
-                  ng-style="{'visibility': node.children.length ? 'visible' : 'hidden'}"
+                  ng-hide="!node.children.length"
                   data-ng-click="node.frontOptions.closed = !node.frontOptions.closed">chevron_right</span>
 
             <span ng-bind="node.name" ng-click="selectNode(node)"></span>
         </div>
 
-        <!-- <div>
-            <span ng-bind="node.text2"></span>
-        </div> -->
     </div>
 
     <div class="classifier-node-children" ng-hide="node.frontOptions.closed">
