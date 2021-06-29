@@ -78,18 +78,17 @@
 
 				};
 
-				const setActiveParents = (tree) => {
+				const getParentsOfNode = (node) => {
+					const isNodeHaveParents = node.frontOptions.treePath >= 3;
 
-					// const newTree = metaHelper.recursiveDeepCopy(tree);
+					if (isNodeHaveParents) {
+						const parentPath = node.frontOptions.treePath.slice(0, -2);
+						const parent = metaHelper.getObjectNestedPropVal(vm.filteredTree, parentPath);
 
-					tree.forEach(node => {
-						if (node.children.length) {
-							setActiveParents(node.children);
-						}
-						node.frontOptions.hasActiveChilds = node.children.some(child => child.isActive || child.frontOptions.hasActiveChilds);
-					})
-					// const newTree = metaHelper.recursiveDeepCopy(tree);
-					// return tree;
+						return [parent, ...getParentsOfNode(parent)];
+					}
+
+					return [];
 				};
 
 				const selectNode = function (clickedNode) {
@@ -101,6 +100,9 @@
 						const activeNodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, activeNode.frontOptions.treePath);
 						activeNodeFromOriginalTree.isActive = false;
 
+						const parents = getParentsOfNode(activeNode);
+						parents.forEach(node => node.frontOptions.hasActiveChilds = false);
+
 					}
 
 					clickedNode.isActive = true;
@@ -108,9 +110,10 @@
 					const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, clickedNode.frontOptions.treePath);
 					nodeFromOriginalTree.isActive = true;
 
-					setActiveParents(vm.filteredTree)
-
 					activeNode = clickedNode;
+
+					const parents = getParentsOfNode(activeNode);
+					parents.forEach(node => node.frontOptions.hasActiveChilds = true);
 
 					if ($scope.onActiveNodesChangeCallback) {
 
