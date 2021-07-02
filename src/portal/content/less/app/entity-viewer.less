@@ -17,34 +17,38 @@
     min-width: 100%;
   }
 
-  .g-wrapper .g-row {
-    border-bottom: 1px solid #ddd;
-    overflow: hidden;
+  .g-wrapper {
 
-    height: 23px;
-  }
+    .g-row {
+      border-bottom: 1px solid #ddd;
+      overflow: hidden;
 
-  .g-wrapper .g-group-holder {
-    line-height: initial;
-    padding-top: 4px;
-
-    position: relative;
-
-    .g-row-selection {
-      position: absolute;
-      background: #fff;
-      top: 0;
-      left: 0;
       height: 23px;
     }
 
-    &.selected {
+    .g-group-holder {
+      line-height: initial;
+      padding-top: 4px;
 
-      background: rgba(205, 136, 99, .4);
+      position: relative;
 
       .g-row-selection {
-        background: #ffeee8;
-        fill: #4C334D;
+        position: absolute;
+        background: #fff;
+        top: 0;
+        left: 0;
+        height: 23px;
+      }
+
+      &.selected {
+
+        background: rgba(205, 136, 99, .4);
+
+        .g-row-selection {
+          background: #ffeee8;
+          fill: #4C334D;
+
+        }
 
       }
 
@@ -290,7 +294,8 @@
 
 }
 
-/***** Popup menu *****/
+
+//region Popup menu
 .ev-dropdown {
   display: block;
   background: #fff;
@@ -377,8 +382,8 @@
   }
 
 }
+//endregion
 
-/***** < Popup menu > *****/
 
 .control-error-message {
   display: inline-block;
@@ -386,7 +391,8 @@
   margin-left: 4px;
 }
 
-
+// TODO merge styles below into corresponding classes above
+//region Table rows position update
 .entity-viewer-holder {
   .g-wrapper {
     .g-row {
@@ -403,6 +409,7 @@
     }
   }
 }
+//endregion
 
 .accrual-add-row-popup-container {
   width: 240px;
@@ -439,6 +446,16 @@
 // Report Material Design Interface Start
 
 .entity-viewer-holder {
+
+  .g-filters .icon-buttons {
+    flex: 0 0 201px;
+    /* display: flex;
+        justify-content: flex-end;
+        flex: 0 0 191px; */
+    & > div {
+      width: 201px;
+    }
+  }
 
   .g-ev-left-panel-holder {
     // width: 230px;
@@ -717,44 +734,6 @@
 
 }
 
-// Inside dashboard START
-
-.dashboard-component:not(.dashboard-component-filled-in) {
-
-  .g-filter-settings-big-left-btn {
-    display: none;
-  }
-
-  .g-filter-left-part {
-    flex-basis: 52px;
-  }
-
-  .icon-buttons {
-    display: none;
-  }
-
-}
-
-// Inside dashboard END
-
-// Must be at the bottom
-.entity-viewer-holder {
-  .g-wrapper {
-    .g-row {
-
-      .border-right-transparent {
-        border-right: transparent;
-      }
-
-      .border-bottom-transparent {
-        border-bottom: transparent;
-      }
-
-    }
-  }
-}
-
-
 .column-manual-sort-icon {
   width: 10px;
   color: #f05a22;
@@ -806,6 +785,23 @@
   md-checkbox {
     .md-label {
       display: none;
+    }
+  }
+}
+
+// Must be at the bottom
+.entity-viewer-holder {
+  .g-wrapper {
+    .g-row {
+
+      .border-right-transparent {
+        border-right: transparent;
+      }
+
+      .border-bottom-transparent {
+        border-bottom: transparent;
+      }
+
     }
   }
 }

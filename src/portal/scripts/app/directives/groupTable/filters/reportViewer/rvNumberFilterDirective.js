@@ -10,7 +10,7 @@
 			require: '^^rvFilter',
 			restrict: 'E',
 			scope: {},
-			templateUrl: 'views/directives/groupTable/filters/ev-rv-number-filter-popup-view.html',
+			templateUrl: 'views/directives/groupTable/filters/ev-rv-number-filter-view.html',
 			link: function (scope, elem, attrs, rvFilterVm) {
 
 				scope.filter = rvFilterVm.filter;
@@ -52,7 +52,10 @@
 					if (filterType !== 'use_from_above') {
 
 						scope.filter.options.use_from_above = {};
-						[scope.activeFilter.type, scope.filter.options] = gFiltersHelper.emptyNumberFilter(filterType, scope.filter.options);
+
+						const resultList = gFiltersHelper.emptyNumberFilter(filterType, scope.filter.options);
+						scope.activeFilter.type = resultList[0];
+						scope.filter.options = resultList[1];
 
 					}
 

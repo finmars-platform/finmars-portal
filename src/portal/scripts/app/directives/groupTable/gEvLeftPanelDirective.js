@@ -8,7 +8,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-
+	var evFilterService = require('../../services/ev-data-provider/filter.service');
 
     module.exports = function ($mdDialog, $state,) {
         return {
@@ -58,11 +58,12 @@
 
                     var result = evDataHelper.getGroupsAsTree(scope.evDataService);
 
-                    console.log('generateGroupsTree.result', result)
-
+                    console.log('generateGroupsTree.result', result);
                     var selectedGroups = scope.evDataService.getSelectedGroups();
 
-                    scope.recursiveMarkHasSelected(result, selectedGroups)
+                    scope.recursiveMarkHasSelected(result, selectedGroups);
+
+					// result = evFilterService.filterTableTree(result, scope.evDataService);
 
                     return result;
 
@@ -171,9 +172,9 @@
                     })
                 }
 
-                scope.addEventListeners = function () {
+                scope.initEventListeners = function () {
 
-                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    /* scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         // scope.resize();
 
@@ -182,7 +183,7 @@
                             scope.$apply()
                         }, 0)
 
-                    });
+                    }); */
 
                     scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
@@ -207,7 +208,7 @@
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+                    /* scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
 
                         setTimeout(function () {
@@ -215,8 +216,9 @@
                             scope.$apply();
                         }, 0)
 
-                    });
+                    }); */
 
+                    /* In one of GROUPS_CHANGE listeners, update table called
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
                         scope.groupTypes = scope.evDataService.getGroups()
@@ -226,8 +228,9 @@
                             scope.$apply();
                         }, 0)
 
-                    });
+                    }); */
 
+                    /* REDRAW_TABLE called after entity viewer's front filters changed
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
 
@@ -236,7 +239,7 @@
                             scope.$apply();
                         }, 0)
 
-                    });
+                    }); */
 
                 }
 
@@ -332,7 +335,7 @@
 
                     scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState()
 
-                    scope.addEventListeners();
+                    scope.initEventListeners();
 
                     scope.groupTypes = scope.evDataService.getGroups()
 
@@ -340,15 +343,15 @@
 
                     scope.tree = scope.generateGroupsTree()
 
-                    setTimeout(function () {
+					/* setTimeout(function () {
 
-                        // scope.resize();
+						scope.resize();
 
-                    }, 100)
+					}, 100)
 
-                    /* window.addEventListener('resize', function () {
-                        scope.resize();
-                    }); */
+					window.addEventListener('resize', function () {
+						scope.resize();
+					}); */
 
                     scope.handleSlider();
                     scope.drake.init();

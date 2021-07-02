@@ -1,20 +1,24 @@
 (function () {
 
-	const popupEvents = require("../../../../services/events/popupEvents");
-
 	'use strict';
 
-	module.exports = function () {
+	const popupEvents = require("../../../../services/events/popupEvents");
+
+	module.exports = function (gFiltersHelper) {
 		return {
 			require: '^^rvFilter',
 			restrict: 'E',
 			scope: {},
-			templateUrl: 'views/directives/groupTable/filters/reportViewer/rv-date-filter-view.html',
+			templateUrl: 'views/directives/groupTable/filters/ev-rv-date-filter-view.html',
 			link: function (scope, elem, attrs, rvFilterVm) {
 
 				scope.filter = rvFilterVm.filter;
+				scope.isReport = false;
+				scope.activeFilter = {
+					type: null
+				};
 
-				scope.activeFilterType = null;
+				scope.readyStatus = true;
 
 				scope.filterTypes = [
 					{name: 'Equal', value: 'equal'},
@@ -29,127 +33,32 @@
 					{name: 'Date tree', value: 'date_tree'},
 				];
 
-				const convertDatesTreeToFlatList = function (dateTree) {
-
-					var datesList = [];
-
-					dateTree.map(function (yearGroup) {
-
-						yearGroup.items.map(function (monthGroup) {
-
-							monthGroup.items.map(function (date) {
-
-								delete date.dayNumber;
-								delete date.available;
-
-								date = JSON.parse(angular.toJson(date));
-
-								if (date.active) {
-									datesList.push(date.value);
-								}
-
-							});
-
-						});
-
-					});
-
-					return datesList;
-
-				};
-
 				scope.dateTreeChanged =function (dateTree) {
-					scope.filter.options.filter_values = convertDatesTreeToFlatList(dateTree);
+					scope.filter.options.filter_values = gFiltersHelper.convertDatesTreeToFlatList(dateTree);
 				}
 
+				scope.changeFilterType = async function (filterType) {
 
-				scope.changeFilterType = async function () {
+					if (filterType !== 'use_from_above') {
 
-					scope.filter.options.use_from_above = {};
-					scope.filter.options.filter_type = scope.activeFilterType;
+						scope.filter.options.use_from_above = {};
 
-					if (scope.activeFilterType === 'date_tree') {
-						scope.filter.options.dates_tree = [];
-					}
-
-					if (scope.activeFilterType === 'from_to' || scope.activeFilterType === 'out_of_range') {
-
-						scope.filter.options.filter_values = {};
-
-					} else {
-
-						if (scope.activeFilterType === 'empty') {
-							scope.filter.options.exclude_empty_cells = false;
-						}
-
-						scope.filter.options.filter_values = [];
+						const resultList = gFiltersHelper.emptyDateFilter(filterType, scope.filter.options);
+						scope.activeFilter.type = resultList[0];
+						scope.filter.options = resultList[1];
 
 					}
 
 				};
 
 				scope.openUseFromAboveSettings = async function () {
-					scope.activeFilterType = await rvFilterVm.openUseFromAboveSettings();
+					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
 					scope.$apply();
 				};
 
-				var isUseFromAboveActive = function () {
-					if (scope.filter.options.use_from_above && Object.keys(scope.filter.options.use_from_above).length) {
-						return true;
-					}
-
-					return false;
-				};
-
-				scope.getFilterRegime = function () {
-
-					var filterRegime = "";
-
-					if (isUseFromAboveActive()) {
-
-						filterRegime = "Linked to Selection";
-
-					} else {
-
-						switch (scope.filter.options.filter_type) {
-
-							case "equal":
-								filterRegime = "Equal";
-								break;
-							case "not_equal":
-								filterRegime = "Not equal";
-								break;
-							case "greater":
-								filterRegime = "Greater than";
-								break;
-							case "greater_equal":
-								filterRegime = "Greater or equal to";
-								break;
-							case "less":
-								filterRegime = "Less than";
-								break;
-							case "less_equal":
-								filterRegime = "Less or equal to";
-								break;
-							case "empty":
-								filterRegime = "Show empty cells";
-								break;
-							case "date_tree":
-								filterRegime = "Date tree";
-								break;
-
-						}
-
-					}
-
-					return filterRegime;
-
-				};
-
-
 				const init = function () {
 
-					scope.activeFilterType = rvFilterVm.getActiveFilterType(scope.filterTypes);
+					scope.activeFilter.type = rvFilterVm.getActiveFilterType(scope.filterTypes);
 
 					if (!rvFilterVm.columnRowsContent || !rvFilterVm.columnRowsContent.length) {
 

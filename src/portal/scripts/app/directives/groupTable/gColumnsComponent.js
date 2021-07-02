@@ -33,7 +33,6 @@
                 evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns);
 
                 scope.entityType = scope.evDataService.getEntityType();
-                scope.notGroupingColumns = [];
 				/**
 				 * What filters are now shown in filter area (front or back)
 				 * @type {Boolean}
@@ -67,6 +66,19 @@
                 scope.isSubtotalWeightedShouldBeExcluded = function (column) {
                     return ['market_value', 'market_value_percent', 'exposure', 'exposure_percent'].some(excludedKey => column.key === excludedKey);
                 }
+
+                const getColumnsToShow = function () {
+
+                	if (scope.isReport) {
+						scope.columnsToShow = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+
+                	} else {
+						scope.columnsToShow = scope.columns;
+					}
+
+                	return scope.columnsToShow;
+
+				};
 
                 // Victor 2021.03.29 #88 fix bug with deleted custom fields
                 let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
@@ -140,12 +152,6 @@
                 }
 
                 // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
-
-
-                // Victor 2020.12.11 scope.notGroupingColumns should update on any scope.columns or scope.groups change (if not dispatched evEvents.COLUMNS_CHANGE)
-                if (scope.isReport) {
-                    scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                }
 
                 scope.components = scope.evDataService.getComponents();
                 scope.downloadedItemsCount = null;
@@ -759,7 +765,7 @@
                                 scope.evDataService.setActiveColumnSort(column);
 
                                 if (scope.isReport) {
-                                    scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
+                                    scope.columnsToShow = getColumnsToShow();
                                 }
 
 								collectMissingCustomFieldsErrors();
@@ -776,7 +782,8 @@
                         })
 
 
-                    } else { // default sort handler
+                    }
+                    else { // default sort handler
 
                         var i;
                         for (i = 0; i < scope.columns.length; i = i + 1) {
@@ -805,11 +812,9 @@
 
                         scope.evDataService.setColumns(columns);
 
-                        if (scope.isReport) {
-                            scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                        }
+						scope.columnsToShow = getColumnsToShow();
 
-						collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
+						collectMissingCustomFieldsErrors();
 
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
@@ -1378,7 +1383,11 @@
                     scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
                 };
-
+				/**
+				 * Used by report viewer.
+				 * @param groupKey {string}
+				 * @param _$popup {Object} - data from popup
+				 */
                 scope.removeGroup = function (groupKey, _$popup) {
 
 					_$popup.cancel();
@@ -1426,11 +1435,9 @@
 
                     scope.evDataService.setColumns(scope.columns);
 
-					if (scope.isReport) {
-                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                    }
+					scope.columnsToShow = getColumnsToShow();
 
-					collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
+					collectMissingCustomFieldsErrors();
 
                     scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
@@ -1463,29 +1470,34 @@
 						throw new Error("No group with such key found: " + groupKey);
 					}
 
-                    const columns = scope.evDataService.getColumns();
-                    const ungroupedColumn = columns.find(column => column.key === groupKey);
+					if (scope.isReport) {
 
-                    if (ungroupedColumn) {
-                        if (!ungroupedColumn.frontOptions) {
-                            ungroupedColumn.frontOptions = {};
-                        }
+						const columns = scope.evDataService.getColumns();
+						const ungroupedColumn = columns.find(column => column.key === groupKey);
 
-                        ungroupedColumn.frontOptions.lastDragged = true;
-                        scope.evDataService.setColumns(columns);
-                    }
+						if (ungroupedColumn) {
+							if (!ungroupedColumn.frontOptions) {
+								ungroupedColumn.frontOptions = {};
+							}
+
+							ungroupedColumn.frontOptions.lastDragged = true;
+							scope.evDataService.setColumns(columns);
+						}
+
+					}
 
                     scope.groups = groups;
                     scope.evDataService.setGroups(groups);
                     scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
 
-                    if (scope.isReport) {
-                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                    }
-                    scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
+					if (scope.isReport) {
 
-                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+						scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+						scope.evEventService.dispatchEvent(evEvents.UPDATE_COLUMNS_SIZE);
+
+						scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+					}
 
                 };
 
@@ -1576,10 +1588,6 @@
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
                     hideSubtotalForColumn('hide_grandtotal', column)
 
-                };
-
-                scope.triggerResizeTableHeadColumns = function () {
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_HEAD_COLUMNS_SIZE);
                 };
 
                 var getDownloadedTableItemsCount = function () {
@@ -1718,9 +1726,10 @@
 
                     scope.evDataService.setColumns(columns);
 
-                    if (columnsHaveBeenSynced) {
+                    /* if (columnsHaveBeenSynced) {
                         scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                    }
+                    } */
+					return columnsHaveBeenSynced;
 
                 };
 
@@ -1863,7 +1872,7 @@
 
                 };
 
-                var flagMissingColumns = function () {
+                /* var flagMissingColumns = function () {
 
 
                     console.log("flagMissingColumns.columns", scope.columns);
@@ -1963,7 +1972,7 @@
                     }
 
 
-                };
+                }; */
 
                 scope.addColumn = function ($event) {
 
@@ -2057,6 +2066,8 @@
 
 				};
 
+				let onGroupsChange;
+
                 if (scope.isReport) {
 
 					scope.checkForFilteringBySameAttr = function (columnKey) {
@@ -2073,8 +2084,51 @@
 
 					};
 
+					onGroupsChange = function () {
+
+						updateGroupTypeIds();
+						setDefaultGroupType();
+						updateGroupFoldingState();
+
+						scope.groups = scope.evDataService.getGroups();
+						scope.evDataService.resetTableContent();
+
+						const colsChanged = syncColumnsWithGroups();
+
+						evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
+
+						scope.columnsToShow = getColumnsToShow();
+
+						collectMissingCustomFieldsErrors();
+						// setFiltersLayoutNames();
+						var foldedGroup = scope.groups.find(group => group.report_settings && group.report_settings.is_level_folded);
+
+						if (!foldedGroup) {
+							rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
+						}
+
+						if (colsChanged) scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+
+						scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+					}
+
 				}
                 else {
+
+					onGroupsChange = function () {
+
+						updateGroupTypeIds();
+						setDefaultGroupType();
+
+						scope.groups = scope.evDataService.getGroups();
+						scope.evDataService.resetTableContent();
+
+						collectMissingCustomFieldsErrors();
+
+						scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+					}
 
 					scope.checkForFilteringBySameAttr = function (columnKey) {
 
@@ -2109,34 +2163,7 @@
                     })
                     // Victor 2021.05.12 #111 multi rows selection
 
-                    scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
-
-                        updateGroupTypeIds();
-                        setDefaultGroupType();
-                        updateGroupFoldingState();
-
-                        scope.groups = scope.evDataService.getGroups();
-                        scope.evDataService.resetTableContent();
-
-                        if (scope.isReport) syncColumnsWithGroups();
-
-                        evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns)
-
-                        if (scope.isReport) {
-                            scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                        }
-
-						collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
-                        // setFiltersLayoutNames();
-                        var foldedGroup = scope.groups.find(group => group.report_settings && group.report_settings.is_level_folded);
-
-                        if (!foldedGroup) {
-                            rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
-                        }
-
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                    });
+                    scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, onGroupsChange);
 
                     scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
@@ -2145,13 +2172,11 @@
 
                         scope.columns = scope.evDataService.getColumns();
 
-                        getColsAvailableForAdditions();
-                        flagMissingColumns();
+                        getColsAvailableForAdditions(); // when inside dashboard
+                        // flagMissingColumns();
                         makePopupDataForColumns(scope.columns);
 
-                        if (scope.isReport) {
-                            scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                        }
+                        scope.columnsToShow = getColumnsToShow();
 
 						collectMissingCustomFieldsErrors();
 
@@ -2199,12 +2224,10 @@
 					syncGroupLayoutNamesWithColumns();
 
                     scope.columns = scope.evDataService.getColumns();
-                    flagMissingColumns();
+                    // flagMissingColumns();
                     makePopupDataForColumns(scope.columns);
 
-                    if (scope.isReport) {
-                        scope.notGroupingColumns = evDataHelper.separateNotGroupingColumns(scope.columns, scope.groups);
-                    }
+					scope.columnsToShow = getColumnsToShow();
 
 					collectMissingCustomFieldsErrors();
 

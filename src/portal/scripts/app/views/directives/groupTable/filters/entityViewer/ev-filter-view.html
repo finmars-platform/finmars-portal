@@ -19,9 +19,19 @@
 
     <div class="g-filter-content">
 
-        <div ng-if="vm.filter.value_type === 10 || vm.filter.value_type === 30"
+        <div ng-if="vm.filter.value_type === 10 || vm.filter.value_type === 30 || vm.filter.value_type === 'field'"
              class="m-b-24">
             <ev-text-filter></ev-text-filter>
+        </div>
+
+        <div ng-if="vm.filter.value_type === 20"
+             class="m-b-24">
+            <ev-number-filter></ev-number-filter>
+        </div>
+
+        <div ng-if="vm.filter.value_type === 40"
+             class="m-b-24">
+            <ev-date-filter></ev-date-filter>
         </div>
 
         <div class="flex-column">

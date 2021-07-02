@@ -30,6 +30,7 @@
 				vm.evEventService = $scope.evEventService;
 				vm.attributeDataService = $scope.attributeDataService;
 				vm.popupEventService = $scope.popupEventService;
+				vm.filterNotFound = false;
 
 				/**
 				 * Frontend or backend filters
@@ -45,9 +46,16 @@
 					filtersList = JSON.parse(JSON.stringify(filtersData[vm.filterType]));
 
 					filterIndex = filtersList.findIndex(filter => filter.key === $scope.filterKey)
-					vm.filter = filtersList[filterIndex];
 
-					vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter);
+					if (filterIndex > -1) {
+
+						vm.filter = filtersList[filterIndex];
+
+						vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter);
+
+					} else {
+						vm.filterNotFound = true;
+					}
 
 				};
 
@@ -65,7 +73,7 @@
 
 					let filters = vm.evDataService.getFilters();
 					filters[vm.filterType] = filtersList;
-					// console.log("testing.save ", filters, filtersList);
+
 					vm.evDataService.setFilters(filters);
 
 					$scope.onSave();

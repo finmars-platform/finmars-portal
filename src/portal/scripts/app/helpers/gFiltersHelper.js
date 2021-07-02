@@ -90,6 +90,37 @@
 
 		};
 		/**
+		 * @param filterType {string} - filter mode
+		 * @param filterOptions {Object}
+		 * @returns {Array} - array with filterType and emptied filterOptions
+		 * @memberof gFiltersHelper
+		 */
+		const emptyDateFilter = (filterType, filterOptions) => {
+
+			filterOptions.filter_type = filterType;
+
+			if (filterType === 'date_tree') {
+				filterOptions.dates_tree = [];
+
+			}
+			else if (filterType === 'from_to' || filterType === 'out_of_range') {
+
+				filterOptions.filter_values = {}
+
+			} else {
+
+				if (filterType === 'empty') {
+					filterOptions.exclude_empty_cells = false;
+				}
+
+				filterOptions.filter_values = [];
+
+			}
+
+			return [filterType, filterOptions];
+
+		};
+		/**
 		 *
 		 * @param useFromAboveDialogPromise {Promise} - response of dialog window with use from above settings
 		 * @param filterOptions {Object}
@@ -119,14 +150,50 @@
 			});
 
 		};
+		/**
+		 *
+		 * @param dateTree {Object}
+		 * @returns {Array} - selected dates
+		 */
+		const convertDatesTreeToFlatList = function (dateTree) {
+
+			var datesList = [];
+
+			dateTree.map(function (yearGroup) {
+
+				yearGroup.items.map(function (monthGroup) {
+
+					monthGroup.items.map(function (date) {
+
+						delete date.dayNumber;
+						delete date.available;
+
+						date = JSON.parse(angular.toJson(date));
+
+						if (date.active) {
+							datesList.push(date.value);
+						}
+
+					});
+
+				});
+
+			});
+
+			return datesList;
+
+		};
 
 		return {
 			setFilterDefaultOptions: setFilterDefaultOptions,
 
 			emptyTextFilter: emptyTextFilter,
 			emptyNumberFilter: emptyNumberFilter,
+			emptyDateFilter: emptyDateFilter,
 
 			openUseFromAboveSettings: openUseFromAboveSettings,
+
+			convertDatesTreeToFlatList: convertDatesTreeToFlatList
 		};
 
 	}

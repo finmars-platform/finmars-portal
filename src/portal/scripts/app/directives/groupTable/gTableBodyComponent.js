@@ -133,42 +133,6 @@
 
                 }
 
-                var isFilterValid = function (filterItem) {
-
-                    if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
-
-                        var filterType = filterItem.options.filter_type;
-
-                        if (filterType === 'empty' ||
-                            filterItem.options.exclude_empty_cells) { // if filter works for empty cells
-
-                            return true;
-
-                        } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
-
-                            var filterValues = filterItem.options.filter_values;
-
-                            if (filterType === 'from_to') {
-
-                                if ((filterValues.min_value || filterValues.min_value === 0) &&
-                                    (filterValues.max_value || filterValues.max_value === 0)) {
-                                    return true;
-                                }
-
-                            } else if (Array.isArray(filterValues)) {
-
-                                if (filterValues[0] || filterValues[0] === 0) {
-                                    return true;
-                                }
-
-                            }
-                        }
-
-                    }
-
-                    return false;
-                };
-
                 function renderEntityViewer() {
 
                     // var flatList = evDataHelper.getFlatStructure(scope.evDataService);
@@ -184,35 +148,13 @@
 
                     scope.evDataService.setUnfilteredFlatList(flatList);
 
-                    var filters = scope.evDataService.getFilters();
+					var filters = scope.evDataService.getFilters();
+					var regularFilters = evFilterService.convertIntoRegularFilters(filters.frontend);
 
-                    var frontEndFilters = [];
-
-                    for (var f = 0; f < filters.length; f++) {
-                        var filter = filters[f];
-
-                        if (filter.options &&
-                            filter.options.is_frontend_filter &&
-                            filter.options.enabled &&
-                            isFilterValid(filter)) {
-
-                            var filterOptions = {
-                                key: filter.key,
-                                filter_type: filter.options.filter_type,
-                                exclude_empty_cells: filter.options.exclude_empty_cells,
-                                value_type: filter.value_type,
-                                value: filter.options.filter_values
-                            };
-
-                            frontEndFilters.push(filterOptions);
-
-                        }
-                    }
-
-                    if (frontEndFilters.length > 0) {
-                        var groups = scope.evDataService.getGroups();
-                        flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
-                    }
+					if (regularFilters.length) {
+						var groups = scope.evDataService.getGroups();
+						flatList = evFilterService.filterTableRows(flatList, regularFilters, groups);
+					}
 
                     var index = 0;
                     flatList = flatList.map(function (item, i) {

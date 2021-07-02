@@ -24,68 +24,68 @@
 
         var filtersData = entityViewerDataService.getFilters();
 
-        var isFilterValid = function (filterItem) {
+		/* var isFilterValid = function (filterItem) {
 
-            if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
+			if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
 
-                var filterType = filterItem.options.filter_type;
+				var filterType = filterItem.options.filter_type;
 
-                if (filterType === 'empty' ||
-                    filterItem.options.exclude_empty_cells) { // if filter works for empty cells
+				if (filterType === 'empty' ||
+					filterItem.options.exclude_empty_cells) { // if filter works for empty cells
 
-                    return true;
+					return true;
 
-                } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
+				} else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
 
-                    var filterValues = filterItem.options.filter_values;
+					var filterValues = filterItem.options.filter_values;
 
-                    if (filterType === 'from_to') {
+					if (filterType === 'from_to') {
 
-                        if ((filterValues.min_value || filterValues.min_value === 0) &&
-                            (filterValues.max_value || filterValues.max_value === 0)) {
-                            return true;
-                        }
+						if ((filterValues.min_value || filterValues.min_value === 0) &&
+							(filterValues.max_value || filterValues.max_value === 0)) {
+							return true;
+						}
 
-                    } else if (Array.isArray(filterValues)) {
+					} else if (Array.isArray(filterValues)) {
 
-                        if (filterValues[0] || filterValues[0] === 0) {
-                            return true;
-                        }
+						if (filterValues[0] || filterValues[0] === 0) {
+							return true;
+						}
 
-                    }
-                }
+					}
+				}
 
-            }
+			}
 
-            return false;
-        };
+			return false;
+		};
 
-        /* filters.forEach(function (item) {
+		filters.forEach(function (item) {
 
-            if (isFilterValid(item)) {
+			if (isFilterValid(item)) {
 
-                var filterSettings = {
-                    key: item.key,
-                    filter_type: item.options.filter_type,
-                    exclude_empty_cells: item.options.exclude_empty_cells,
-                    value_type: item.value_type,
-                    value: item.options.filter_values
-                };
+				var filterSettings = {
+					key: item.key,
+					filter_type: item.options.filter_type,
+					exclude_empty_cells: item.options.exclude_empty_cells,
+					value_type: item.value_type,
+					value: item.options.filter_values
+				};
 
-                if (item.options.is_frontend_filter) {
-                    filterSettings.is_frontend_filter = true;
-                }
+				if (item.options.is_frontend_filter) {
+					filterSettings.is_frontend_filter = true;
+				}
 
-                //newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
-                newRequestParametersBody['filter_settings'].push(filterSettings);
+				//newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
+				newRequestParametersBody['filter_settings'].push(filterSettings);
 
-            }
+			}
 
-        }); */
+		}); */
 
 		var formatFilter = function (filter, filterType) {
 
-			if (isFilterValid(filter)) {
+			if (evRvCommonHelper.isFilterValid(filter)) {
 
 				var filterSettings = {
 					key: filter.key,
@@ -101,9 +101,11 @@
 
 		};
 
+		/* TO DELETE: if frontend filters will be applied outside of ev-data-provider files
 		filtersData.frontend.forEach(function (filter) {
 			formatFilter(filter, 'frontend');
 		});
+		*/
 
 		filtersData.backend.forEach(function (filter) {
 			formatFilter(filter, 'backend');
@@ -288,7 +290,8 @@
             console.log('obj', obj);
 
 
-        } else {
+        }
+        else {
 
             var groupData = entityViewerDataService.getData(event.___id);
 
@@ -466,7 +469,7 @@
                     requestParameters.pagination.page = pageToRequest;
                     entityViewerDataService.setRequestParameters(requestParameters);
 
-                    entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                     objectsService.getFilteredList(entityType, options).then(function (data) {
 
@@ -495,7 +498,7 @@
 
                                 evDataHelper.deleteDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
 
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                             } else {
 
@@ -530,7 +533,7 @@
 
                         evDataHelper.deleteDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
 
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         resolveLocal()
 
@@ -544,9 +547,8 @@
 
             Promise.all(promises).then(function () {
 
+				entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 resolve();
-
-                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
             })
             //};
@@ -610,7 +612,7 @@
                     requestParameters.pagination.page = pageToRequest;
                     entityViewerDataService.setRequestParameters(requestParameters);
 
-                    entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                     groupsService.getFilteredList(entityType, options).then(function (data) {
 
@@ -635,7 +637,7 @@
 
                         deserializeGroups(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
 
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         resolveLocal();
 
@@ -652,7 +654,8 @@
 
                         }
 
-                    }).catch(function (data) {
+                    })
+					.catch(function (data) {
 
                         console.log('error request requestParameters', requestParameters);
 
@@ -668,7 +671,7 @@
 
                         evDataHelper.deleteDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
 
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         resolveLocal()
 
@@ -679,7 +682,8 @@
             });
 
             Promise.all(promises).then(function () {
-                resolve();
+				entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            	resolve();
             })
 
         })

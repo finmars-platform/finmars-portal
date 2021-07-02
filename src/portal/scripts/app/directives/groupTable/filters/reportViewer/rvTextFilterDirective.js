@@ -33,7 +33,7 @@
 
 					if (filterType !== 'use_from_above') {
 
-						scope.filter.options.use_from_above = {}
+						scope.filter.options.use_from_above = {};
 						// openUseFromAboveSettings() responsible for setting 'use_from_above' into scope.activeFilterType
 
 						/* scope.activeFilter.type = filterType;
@@ -44,8 +44,9 @@
 						}
 
 						scope.filter.options.filter_values = []; */
-						[scope.activeFilter.type, scope.filter.options] = gFiltersHelper.emptyTextFilter(filterType, scope.filter.options);
-
+						const resultList = gFiltersHelper.emptyTextFilter(filterType, scope.filter.options);
+						scope.activeFilter.type = resultList[0];
+						scope.filter.options = resultList[1];
 					}
 
 				};

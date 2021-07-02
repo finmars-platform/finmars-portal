@@ -196,7 +196,17 @@
 					filters[scope.shownFiltersType].forEach(filter => {
 
 						const filterOpts = filter.options || {};
-						let filterVal = filterOpts.filter_values || "";
+						/* let filterVal = filterOpts.filter_values || "";
+
+						if (filterOpts.filter_type === 'from_to') {
+
+							filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
+
+						} else if (filterOpts.filter_type === 'out_of_range' ) {
+
+							filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
+
+						} */
 
 						let filterData = {
 							id: filter.key,
@@ -205,7 +215,7 @@
 
 						const filterName = filter.layout_name ? filter.layout_name : filter.name;
 
-						let chipText = gFiltersVm.getChipTextElem(filterName, filterVal);
+						let chipText = gFiltersVm.getChipTextElem(filterName, filterOpts.filter_values, filterOpts.filter_type);
 
 						filterData.text = chipText;
 
@@ -245,11 +255,11 @@
 					// const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
 
 					gFiltersVm.openAddFilterDialog($event, filters[scope.shownFiltersType]).then(res => {
-						// console.log("testing.addFilter res", res);
+
 						if (res.status === 'agree') {
 
 							filters[scope.shownFiltersType].push(res.data);
-							// console.log("testing.addFilter filters", filters);
+
 							scope.evDataService.setFilters(filters);
 							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 

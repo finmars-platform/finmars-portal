@@ -69,9 +69,48 @@
 
     };
 
+    var isFilterValid = function (filterObj) {
+
+    	if (filterObj.options && filterObj.options.enabled) { // if filter is enabled
+
+			var filterType = filterObj.options.filter_type;
+
+			if (filterType === 'empty' ||
+				filterObj.options.exclude_empty_cells) { // if filter works for empty cells
+
+				return true;
+
+			} else if (filterObj.options.filter_values) { // if filter values can be used for filtering (not empty)
+
+				var filterValues = filterObj.options.filter_values;
+
+				if (filterType === 'from_to' || filterType === 'out_of_range') {
+
+					if ((filterValues.min_value || filterValues.min_value === 0) &&
+						(filterValues.max_value || filterValues.max_value === 0)) {
+						return true;
+					}
+
+				} else if (Array.isArray(filterValues)) {
+
+					if (filterValues[0] || filterValues[0] === 0) {
+						return true;
+					}
+
+				}
+			}
+
+		}
+
+		return false;
+
+	};
+
     module.exports = {
         getId: getId,
-        getParents: getParents
+        getParents: getParents,
+
+		isFilterValid: isFilterValid
     }
 
 
