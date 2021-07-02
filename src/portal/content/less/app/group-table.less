@@ -69,22 +69,32 @@
     flex: 0 0 104px;
   }
 
-  .icon-buttons {
-    flex: 0 0 252px;
-    /* display: flex;
-        justify-content: flex-end;
-        flex: 0 0 191px; */
-    & > div {
-      width: 252px;
-    }
-  }
-
   .g-filter-settings-big-left-btn {
     display: flex;
     justify-content: center;
   }
 
 }
+
+// Inside dashboard START
+
+.dashboard-component:not(.dashboard-component-filled-in) {
+
+  .g-filter-settings-big-left-btn {
+    display: none;
+  }
+
+  .g-filter-left-part {
+    flex-basis: 52px;
+  }
+
+  .icon-buttons {
+    display: none;
+  }
+
+}
+
+// Inside dashboard END
 
 .g-wrapper {
   overflow: hidden;

@@ -34,7 +34,10 @@
 				scope.changeFilterType = function (filterType) {
 
 					scope.filter.options.use_from_above = {};
-					[scope.activeFilter.type, scope.filter.options] = gFiltersHelper.emptyNumberFilter(filterType, scope.filter.options);
+
+					const resultList = gFiltersHelper.emptyNumberFilter(filterType, scope.filter.options);
+					scope.activeFilter.type = resultList[0];
+					scope.filter.options = resultList[1];
 
 				};
 
@@ -47,7 +50,11 @@
 				};
 
 				const init = function () {
+
+					scope.activeFilter.type = filterVm.getActiveFilterType(scope.filterTypes);
+
 					initEventListeners();
+
 				};
 
 				init();

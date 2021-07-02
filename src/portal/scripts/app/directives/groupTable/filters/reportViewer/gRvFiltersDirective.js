@@ -132,17 +132,17 @@
 						if (filter.type !== "filter_link") { // don't show filter from dashboard component
 
 							const filterOpts = filter.options || {};
-							let filterVal = filterOpts.filter_values || "";
+							/* let filterVal = filterOpts.filter_values || "";
 
 							if (filterOpts.filter_type === 'from_to') {
 
-								filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`
+								filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
 
 							} else if (filterOpts.filter_type === 'out_of_range' ) {
 
-								filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`
+								filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
 
-							}
+							} */
 
 							// hide use from above filters if needed
 							if (
@@ -157,7 +157,7 @@
 
 								const filterName = filter.layout_name ? filter.layout_name : filter.name;
 
-								let chipText = gFiltersVm.getChipTextElem(filterName, filterVal);
+								let chipText = gFiltersVm.getChipTextElem(filterName, filterOpts.filter_values, filterOpts.filter_type);
 
 								if (filterOpts.use_from_above &&
 									Object.keys(filterOpts.use_from_above).length) {

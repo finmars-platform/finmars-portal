@@ -11,7 +11,7 @@
 			require: '^^evFilter',
 			restrict: 'E',
 			scope: {},
-			templateUrl: 'views/directives/groupTable/filters/ev-rv-text-filter-view.html',
+			templateUrl: 'views/directives/groupTable/filters/ev-rv-date-filter-view.html',
 			link: function (scope, elem, attrs, filterVm) {
 
 				scope.filter = filterVm.filter;
@@ -22,11 +22,15 @@
 
 				scope.filterTypes = [
 					{name: 'Equal', value: 'equal'},
-					{name: 'Contains', value: 'contains'},
-					{name: 'Does not contains', value: 'does_not_contains'},
-					{name: 'Select', value: 'selector'},
-					{name: 'Multiple Select', value: 'multiselector'},
-					{name: 'Empty cells', value: 'empty'}
+					{name: 'Not equal', value: 'not_equal'},
+					{name: 'Greater than', value: 'greater'},
+					{name: 'Greater or equal to', value: 'greater_equal'},
+					{name: 'Less than', value: 'less'},
+					{name: 'Less or equal to', value: 'less_equal'},
+					{name: 'From ... to ... (incl)', value: 'from_to'},
+					{name: 'Out of range (incl)', value: 'out_of_range'},
+					{name: 'Empty cells', value: 'empty'},
+					{name: 'Date tree', value: 'date_tree'},
 				];
 
 				scope.columnRowsContent = null;
@@ -59,21 +63,17 @@
 
 				};
 
+				scope.dateTreeChanged =function (dateTree) {
+					scope.filter.options.filter_values = gFiltersHelper.convertDatesTreeToFlatList(dateTree);
+				}
+
 				scope.changeFilterType = function (filterType) {
 
-					/* scope.activeFilter.type = filterType;
-					scope.filter.options.filter_type = scope.activeFilter.type;
-
-					if (scope.activeFilter.type === 'empty') {
-						scope.filter.options.exclude_empty_cells = false;
-					}
-
-					scope.filter.options.filter_values = []; */
-					const resultList = gFiltersHelper.emptyTextFilter(filterType, scope.filter.options);
+					const resultList = gFiltersHelper.emptyDateFilter(filterType, scope.filter.options);
 					scope.activeFilter.type = resultList[0];
 					scope.filter.options = resultList[1];
 
-					if (['selector', 'multiselector'].includes(scope.filter.options.filter_type) &&
+					if (scope.filter.options.filter_type === 'date_tree' &&
 						!scope.columnRowsContent) {
 
 						getDataForSelects();
@@ -83,10 +83,6 @@
 				};
 
 				const initEventListeners = function () {
-
-					/* if (!dataLoadEndId) {
-						dataLoadEndId = filterVm.evEventService.addEventListener(evEvents.DATA_LOAD_END, getDataForSelects);
-					} */
 
 					filterVm.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, function () {
 
@@ -103,13 +99,7 @@
 
 					initEventListeners();
 
-					/*if (!scope.columnRowsContent || scope.columnRowsContent.length === 0) {
-						setTimeout(() => {
-							getDataForSelects();
-						}, 500);
-					}*/
-
-					if (['selector', 'multiselector'].includes(scope.filter.options.filter_type)) {
+					if (scope.filter.options.filter_type === 'date_tree') {
 						getDataForSelects();
 					}
 

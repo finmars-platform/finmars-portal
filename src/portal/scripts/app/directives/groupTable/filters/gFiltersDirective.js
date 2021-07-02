@@ -32,7 +32,7 @@
                 evEventService: '=',
                 attributeDataService: '=',
                 contentWrapElement: '=',
-                workareaWrapElement: '=',
+				dashboardComponentElement: '=',
                 hideFiltersBlock: '=',
                 hideUseFromAboveFilters: '=',
             },
@@ -44,8 +44,7 @@
             	vm.entityType = $scope.evDataService.getEntityType();
                 $scope.isReport = metaService.isReport(vm.entityType);
                 $scope.currentAdditions = $scope.evDataService.getAdditions();
-                // $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
-                $scope.viewContext = $scope.evDataService.getViewContext();
+                $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
                 $scope.viewContext = $scope.evDataService.getViewContext();
 
                 $scope.isFiltersOpened = !$scope.hideFiltersBlock; // when inside dashboard or split panel
@@ -62,7 +61,8 @@
 				$scope.showFrontFilters = true;
 
 				// const gFiltersElem = elem[0].querySelector('.gFilters');
-				const gFiltersElem = $scope.contentWrapElement.querySelector('.gFilters');
+				const filtersContainerElem = $scope.contentWrapElement ? $scope.contentWrapElement : $scope.dashboardComponentElement;
+				const gFiltersElem = filtersContainerElem.querySelector('.gFilters');
 				/** Used when inside dashboard, and does not change with window resize. Can be less than actual width, when used outside dashboard. */
 				const gFiltersElemWidth = gFiltersElem.clientWidth;
 
@@ -236,7 +236,28 @@
 
                 };
 
-                vm.getChipTextElem = function (filterName, filterVal) {
+                vm.getChipTextElem = function (filterName, filterValues, filterType) {
+
+                	let filterVal = filterValues || "";
+
+                	switch (filterType) {
+						case 'from_to':
+							filterVal = `From ${filterValues.min_value} to ${filterValues.max_value}`;
+							break;
+
+						case 'out_of_range':
+							filterVal = `Out of range from ${filterValues.min_value} to ${filterValues.max_value}`;
+							break;
+
+						case 'multiselector':
+							filterVal = filterValues.join(', ');
+							break;
+
+						case 'date_tree':
+							const formattedDates = filterValues.map(date => moment(date).format('YYYY-MM-DD'));
+							filterVal = formattedDates.join(', ');
+							break;
+					}
 
                 	return `<span class="g-filter-chips-text">
 						<span class="g-filter-chip-name">${filterName}:</span>
@@ -625,19 +646,13 @@
 
 					// let filtersChipsContainerWidth = 800;
 
-					// using workareaWrapElement because .g-filters not always assume full width in time
-					// TODO use only $scope.contentWrapElement.clientWidth after removing gSidebarFilter
 					let filterAreaWidth;
-					if ($scope.workareaWrapElement) {
-						filterAreaWidth = $scope.workareaWrapElement.clientWidth;
-					}
-					else if ($scope.contentWrapElement) {
+					if ($scope.contentWrapElement) {
 						filterAreaWidth = $scope.contentWrapElement.clientWidth;
 					}
 					else if ($scope.viewContext === 'dashboard') { // For dashboard components without wrapElems e.g. matrix
 						filterAreaWidth = gFiltersElemWidth;
 					}
-					// < TODO use only $scope.contentWrapElement.clientWidth after removing gSidebarFilter >
 
 					const horizontalPaddings = gFiltersElemPadding * 2;
 					const availableSpace = filterAreaWidth - horizontalPaddings - leftPartWidth - rightPartWidth;
@@ -918,7 +933,7 @@
 
 				vm.updateFilterAreaHeightOnInit = function () {
 					/*
-                    TDDO: Refactor this
+                    TODO: Refactor this
                     1 add on "resize" event listener for filter area height change
                     2 calculate before render e.g width 1000px -> we got 2 rows - height 140px
                                                  width 500px -> we got 3 row - heiht 210px
@@ -933,30 +948,39 @@
 				const syncFiltersLayoutNamesWithColumns = function () {
 
 					const columns = $scope.evDataService.getColumns();
-					let filtersChanged = false;
+					const filters = $scope.evDataService.getFilters();
 
 					columns.forEach(column => {
 
 						if (column.layout_name) {
 
-							const matchingFilter = $scope.filters.find(filter => filter.key === column.key);
+							if ($scope.isReport) {
 
-							if (matchingFilter) {
-
-								matchingFilter.layout_name = column.layout_name;
-								filtersChanged = true;
+								const matchingFilter = filters.find(filter => filter.key === column.key);
+								if (matchingFilter) matchingFilter.layout_name = column.layout_name;
 
 							}
+							else {
+
+								const matchingFrontFilter = filters.frontend.find(filter => filter.key === column.key);
+								if (matchingFrontFilter) matchingFrontFilter.layout_name = column.layout_name;
+
+								const matchingBackFilter = filters.backend.find(filter => filter.key === column.key);
+								if (matchingBackFilter) matchingBackFilter.layout_name = column.layout_name;
+
+							}
+
 
 						}
 
 					});
 
-					if (filtersChanged) $scope.evDataService.setFilters($scope.filters);
+					$scope.evDataService.setFilters(filters);
 
 				};
 
 				const init = function () {
+					const filtersObj = $scope.evDataService.getFilters();
 
 					vm.popupEventService = new EventService();
 					vm.chipsListEventService = new EventService();
@@ -973,18 +997,6 @@
 					// $scope.openCustomFieldsManager = $scope.isReport ? openCustomFieldsManagerDialog : openManageAttrsDialog;
 
 					// $scope.readyStatus.filters = true;
-
-
-                    /*
-                    TDDO: Refactor this
-                    1 add on "resize" event listener for filter area height change
-                    2 calculate before render e.g width 1000px -> we got 2 rows - height 140px
-                                                 width 500px -> we got 3 row - heiht 210px
-                    */
-					/* setTimeout(function () {
-                        updateFilterAreaHeight(); // important here
-                        $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-                    }, 1000); */
 
                     initEventListeners();
 

@@ -1857,7 +1857,9 @@
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.componentData = $scope.$parent.vm.componentData;
                 vm.userSettings = vm.componentData.user_settings;
-                vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
+                vm.dashboardComponentElement = $scope.$parent.vm.componentElement;
+
+				vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
                 vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
                 vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;

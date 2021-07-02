@@ -38,12 +38,15 @@
 				vm.isRootEntityViewer = vm.evDataService.isRootEntityViewer();
 				vm.useFromAbove = vm.evDataService.getUseFromAbove();
 
+				vm.filterNotFound = false;
+
 				let filtersList;
 				let useFromAboveFilters;
 				let isUseFromAboveFilter = false;
-				let filterIndex;
+				let filterIndex = -1;
 
 				const findFilter = function () {
+					const filtersTest = vm.evDataService.getFilters();
 
 					let allFilters = JSON.parse(JSON.stringify(vm.evDataService.getFilters()));
 					filtersList = [];
@@ -82,7 +85,13 @@
 
 					});
 
-					vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter, true);
+					if (filterIndex > -1) {
+						vm.filter = gFiltersHelper.setFilterDefaultOptions(vm.filter, true);
+
+					} else {
+						vm.filterNotFound = true;
+					}
+
 
 				};
 
