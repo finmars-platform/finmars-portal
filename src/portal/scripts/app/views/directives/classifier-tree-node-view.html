@@ -1,12 +1,16 @@
-<div class="classifier-node" ng-class="{'active': node.isActive}">
+<div class="classifier-node" ng-class="{'active': node.isActive, 'edit': node.frontOptions.editOn}">
     <div class="classifier-node-row flex-row"
-         data-ng-class="{'opened': !node.frontOptions.closed, 'has-active-child': node.frontOptions.hasActiveChilds}">
+         data-ng-class="{'opened': !node.frontOptions.closed, 'has-active-child': node.frontOptions.hasActiveChild}">
         <div>
             <span class="material-icons pointer"
-                  ng-hide="!node.children.length"
+                  ng-style="{'visibility': node.children.length ? 'visible' : 'hidden'}"
                   data-ng-click="node.frontOptions.closed = !node.frontOptions.closed">chevron_right</span>
 
-            <span ng-bind="node.name" ng-click="selectNode(node)"></span>
+            <div data-ng-if="!node.frontOptions.editOn" ng-click="selectNode(node)">
+                <span ng-bind="node.name" ></span>
+            </div>
+
+            <input class="classifier-name" data-ng-if="node.frontOptions.editOn" type="text" ng-model="node.name" data-ng-init="focusInput()">
         </div>
 
     </div>

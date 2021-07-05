@@ -43,6 +43,11 @@
     height: 62px;
     display: flex;
     justify-content: space-between;
+
+    &.edit {
+      justify-content: flex-end;
+    }
+
     button {
 
       &:disabled {
@@ -78,6 +83,7 @@
     .classifier-node-row {
       div {
         height: 36px;
+        width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -102,7 +108,8 @@
       }
     }
 
-    &.active {
+    &.active,
+    &.edit {
 
       > .classifier-node-row {
         background-color: @orange;
@@ -113,6 +120,15 @@
         }
       }
 
+    }
+
+    &.edit {
+      .classifier-name {
+        width: 100%;
+        margin-right: 20px;
+        outline: none;
+        border: none;
+      }
     }
   }
 
