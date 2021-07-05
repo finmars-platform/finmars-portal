@@ -125,7 +125,9 @@
 						activeNodeFromOriginalTree.isActive = false;
 
 						const parents = getParentsOfNode(activeNode);
-						parents.forEach(node => node.frontOptions.hasActiveChild = false);
+						parents.forEach(node => {
+							node.frontOptions.hasActiveChild = false;
+						});
 
 					}
 
@@ -139,7 +141,9 @@
 						activeNode = clickedNode;
 
 						const parents = getParentsOfNode(activeNode);
-						parents.forEach(node => node.frontOptions.hasActiveChild = true);
+						parents.forEach(node => {
+							node.frontOptions.hasActiveChild = true;
+						});
 
 						if ($scope.onActiveNodesChangeCallback) {
 
@@ -273,6 +277,10 @@
 					const activeNodeOnInit = getActiveNode(vm.filteredTree);
 					if (activeNodeOnInit) {
 						selectNode(activeNodeOnInit);
+						const parents = getParentsOfNode(activeNode);
+						parents.forEach(node => {
+							node.frontOptions.closed = false;
+						});
 					}
 
 					if ($scope.classifierTreeEventService) {
