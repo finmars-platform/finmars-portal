@@ -30,15 +30,15 @@
         </div>
     </md-dialog-content>
 
-    <md-dialog-actions class="classifier-footer">
-        <div>
+    <md-dialog-actions class="classifier-footer" data-ng-class="{edit: vm.isEdit}">
+        <div data-ng-if="!vm.isEdit">
             <button data-ng-if="vm.isLock" data-ng-click="vm.isLock = false"><span class="material-icons">lock</span></button>
             <button data-ng-if="!vm.isLock" data-ng-click="vm.onAdd()"><span class="material-icons">add</span></button>
             <button data-ng-if="!vm.isLock" data-ng-click="vm.onEdit()" data-ng-disabled="!vm.isActiveNodes()"><span class="material-icons">edit</span></button>
             <button data-ng-if="!vm.isLock" data-ng-click="vm.onDelete()" data-ng-disabled="!vm.isActiveNodes()"><span class="material-icons">delete</span></button>
         </div>
 
-        <div>
+        <div  data-ng-if="!vm.isEdit">
             <md-button ng-click="vm.cancel()" class="link-button">
                 <span>CANCEL</span>
             </md-button>
@@ -48,8 +48,10 @@
             </md-button>
         </div>
 
-
-
+        <div  data-ng-if="vm.isEdit">
+            <button ><span class="material-icons" data-ng-click="vm.onSaveEdit()">done</span></button>
+            <button ><span class="material-icons" data-ng-click="vm.onCancelEdit()">close</span></button>
+        </div>
 
     </md-dialog-actions>
 

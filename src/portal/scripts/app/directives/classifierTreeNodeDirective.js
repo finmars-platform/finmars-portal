@@ -16,11 +16,12 @@
 			},
 			templateUrl: 'views/directives/classifier-tree-node-view.html',
 			link: function (scope, elem, attrs, cTreeVm) {
-				if(scope.node && scope.node.frontOptions.hasActiveChilds) {
-					console.log('# hasActiveChilds', scope.node)
-				}
 
 				scope.selectNode = cTreeVm.selectNode;
+				scope.focusInput = () => {
+					const inputElement = elem[0].querySelector('input.classifier-name');
+					inputElement.focus();
+				}
 
 			}
 		}

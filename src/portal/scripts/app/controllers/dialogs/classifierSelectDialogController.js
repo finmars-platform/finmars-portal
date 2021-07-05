@@ -12,33 +12,78 @@
 
     module.exports = function ($scope, $mdDialog, data) {
 
-        console.log('#122 data', data)
-
         var vm = this;
 
         vm.entityType = data.entityType;
+        vm.classifier = data.classifier;
         vm.classifierId = data.classifier.id;
         vm.classifierValue = data.classifierId;
 		// vm.label = data.label || 'Select classifier';
 		vm.label = data.classifier.name ? `Select ${data.classifier.name}` : 'Select classifier';
 
 		vm.isLock = true;
+		vm.isEdit = false;
 
 		vm.readyStatus = false;
 
 		vm.activeNodes = [];
+		let activeNodesIdsBeforeUpdate = [];
 
 		vm.onEdit = () => {
-		    vm.isLock = true;
+
+		    if(!vm.activeNodes.length) {
+                return;
+            }
+
+            vm.isEdit = true;
+            vm.classifierTreeEventService.dispatchEvent(directivesEvents.EDIT_NODE);
+
         }
 
+        vm.onCancelEdit = () => {
+		    vm.isEdit = false;
+            vm.classifierTreeEventService.dispatchEvent(directivesEvents.TREE_CHANGED_FROM_OUTSIDE); // original tree will render without changes
+        };
+
+        vm.onSaveEdit = () => {
+            vm.isEdit = false;
+            vm.classifierTreeEventService.dispatchEvent(directivesEvents.SAVE_NODE);
+        };
+
         vm.onDelete = () => {
-            vm.isLock = true;
+
+            if(!vm.activeNodes.length) {
+                return;
+            }
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                // targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: 'Are you sure you want to delete classifier ' + vm.activeNodes[0].name + '?'
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    vm.isLock = true;
+                    vm.classifierTreeEventService.dispatchEvent(directivesEvents.DELETE_NODE, {activeNodes: vm.activeNodes});
+                }
+            });
+
         }
 
         vm.onAdd = () => {
-            vm.isLock = true;
-        }
+            vm.isEdit = true;
+            vm.classifierTreeEventService.dispatchEvent(directivesEvents.ADD_NODE, {activeNodes: vm.activeNodes});
+        };
 
         vm.isActiveNodes = () => !!vm.activeNodes.length;
 
@@ -50,11 +95,12 @@
 
 		        node.level = levelNumber;
                 node.order = index;
+                node.isActive = activeNodesIdsBeforeUpdate.includes(node.id);
 
 				node.frontOptions = {};
                 node.frontOptions.treePath = [index];
 				node.frontOptions.closed = node.level > 0;
-				node.frontOptions.hasActiveChilds = false;
+				node.frontOptions.hasActiveChild = false;
 
                 if (parentNode) node.frontOptions.treePath = parentNode.frontOptions.treePath.concat(['children', index]);
 
@@ -63,6 +109,10 @@
                     var nextLevel = levelNumber + 1;
                     setUpTreeNodes(node.children, nextLevel, node);
 
+                }
+
+                if(node.isActive) {
+                    vm.activeNodes.push(node);
                 }
 
             });
@@ -155,7 +205,31 @@
             });
         };
 
+        const clearFrontOptions = (tree) => {
+            return tree.map(node => {
+                delete node.frontOptions;
+                if(node.children.length) {
+                    node.children = clearFrontOptions(node.children)
+                }
+
+                return node;
+            })
+        }
+
         vm.onActiveNodesChange = function (activeNodesList) {vm.activeNodes = activeNodesList;};
+
+        const updateClassifier = () => {
+
+            vm.readyStatus = false;
+            const classifiers = clearFrontOptions(vm.tree);
+            vm.classifier.classifiers = classifiers;
+
+            attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier).then(function () {
+                activeNodesIdsBeforeUpdate = vm.activeNodes.map(({id}) => id);
+                vm.activeNodes = [];
+                vm.getTree();
+            });
+        }
 
 
 		/* Old code
@@ -225,6 +299,10 @@
         	vm.classifierTreeEventService = new EventService();
 
 			vm.getTree();
+
+			vm.classifierTreeEventService.addEventListener(directivesEvents.CLASSIFIER_TREE_CHANGED, () => {
+                updateClassifier()
+            })
 
 		};
 
