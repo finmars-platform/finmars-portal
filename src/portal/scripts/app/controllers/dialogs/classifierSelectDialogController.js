@@ -205,11 +205,11 @@
             });
         };
 
-        const clearFrontOptions = (tree) => {
+        const getClearTree = (tree) => {
             return tree.map(node => {
                 delete node.frontOptions;
                 if(node.children.length) {
-                    node.children = clearFrontOptions(node.children)
+                    node.children = getClearTree(node.children)
                 }
 
                 return node;
@@ -221,11 +221,11 @@
         const updateClassifier = () => {
 
             vm.readyStatus = false;
-            const classifiers = clearFrontOptions(vm.tree);
+            const classifiers = getClearTree(vm.tree);
             vm.classifier.classifiers = classifiers;
+            activeNodesIdsBeforeUpdate = vm.activeNodes.map(({id}) => id);
 
             attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier).then(function () {
-                activeNodesIdsBeforeUpdate = vm.activeNodes.map(({id}) => id);
                 vm.activeNodes = [];
                 vm.getTree();
             });
