@@ -29,7 +29,7 @@
 				}
 
 				scope.isSaveDisabled = () => {
-					return !scope.editableNode.name.trim();
+					return scope.editableNode && !scope.editableNode.name.trim();
 				}
 
 			}
