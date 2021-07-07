@@ -7,7 +7,7 @@
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var EventService = require('../../services/eventService');
-	var directivesEvents = require('../../services/events/directivesEvents');
+	var classifierEvents = require('../../services/events/classifierEvents');
     const metaHelper = require('../../helpers/meta.helper');
 
     module.exports = function ($scope, $mdDialog, data) {
@@ -37,7 +37,7 @@
             }
 
             vm.isEdit = true;
-            vm.classifierTreeEventService.dispatchEvent(directivesEvents.EDIT_NODE);
+            vm.classifierTreeEventService.dispatchEvent(classifierEvents.EDIT_NODE);
 
         }
 
@@ -65,7 +65,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
                     vm.isLock = true;
-                    vm.classifierTreeEventService.dispatchEvent(directivesEvents.DELETE_NODE, {activeNodes: vm.activeNodes});
+                    vm.classifierTreeEventService.dispatchEvent(classifierEvents.DELETE_NODE, {activeNodes: vm.activeNodes});
                 }
             });
 
@@ -73,7 +73,7 @@
 
         vm.onAdd = () => {
             vm.isEdit = true;
-            vm.classifierTreeEventService.dispatchEvent(directivesEvents.ADD_NODE, {activeNodes: vm.activeNodes});
+            vm.classifierTreeEventService.dispatchEvent(classifierEvents.ADD_NODE, {activeNodes: vm.activeNodes});
         };
 
         vm.isActiveNodes = () => !!vm.activeNodes.length;
@@ -291,11 +291,11 @@
 
 			vm.getTree();
 
-			vm.classifierTreeEventService.addEventListener(directivesEvents.CLASSIFIER_TREE_CHANGED, () => {
+			vm.classifierTreeEventService.addEventListener(classifierEvents.CLASSIFIER_TREE_CHANGED, () => {
                 updateClassifier()
             });
 
-            vm.classifierTreeEventService.addEventListener(directivesEvents.CANCEL_EDIT_NODE, () => {
+            vm.classifierTreeEventService.addEventListener(classifierEvents.CANCEL_EDIT_NODE, () => {
                 vm.isEdit = false;
             })
 
