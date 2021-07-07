@@ -283,13 +283,14 @@
 
 				const onEditNode = () => {
 
-					vm.isEdit = true;
-
 					if (!activeNode) {
 						return;
 					}
+
 					vm.editableNode = activeNode;
 					vm.editableNode.frontOptions.editOn = true;
+					vm.isEdit = true;
+
 				};
 
 				const onSaveNode = () => {
