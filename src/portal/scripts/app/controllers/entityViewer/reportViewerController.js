@@ -1271,7 +1271,7 @@
                 vm.attributeDataService = new AttributeDataService();
 
                 vm.entityType = $scope.$parent.vm.entityType;
-                vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                /* vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
 				vm.entityViewerDataService.setIsReport(true);
                 vm.entityViewerDataService.setRootEntityViewer(true);
@@ -1279,7 +1279,10 @@
                 vm.entityViewerDataService.setCurrentMember(vm.currentMember);
                 vm.entityViewerDataService.setVirtualScrollStep(500);
 
-                vm.entityViewerDataService.setRowHeight(36);
+                vm.entityViewerDataService.setRowHeight(36); */
+				rvSharedLogicHelper.setLayoutDataForView();
+				vm.entityViewerDataService.setRootEntityViewer(true);
+				vm.entityViewerDataService.setViewContext('entity_viewer');
 
                 vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
 

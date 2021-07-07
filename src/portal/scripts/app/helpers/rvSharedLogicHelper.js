@@ -10,7 +10,7 @@
 
     module.exports = function (viewModel, $scope, $mdDialog) {
 
-		let downloadAttributes = function () {
+		const downloadAttributes = function () {
 
 			return new Promise(function (resolve, reject) {
 
@@ -54,7 +54,7 @@
 
 		};
 
-		let putUseFromAboveFiltersFirst = function () { // needed for already existing rv layouts
+		const putUseFromAboveFiltersFirst = function () { // needed for already existing rv layouts
 
 			let allFilters = viewModel.entityViewerDataService.getFilters();
 			let filters = [];
@@ -79,7 +79,19 @@
 
 		};
 
-        var onSetLayoutEnd = () => {
+		const setLayoutDataForView = function () {
+
+			viewModel.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+			viewModel.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
+			viewModel.entityViewerDataService.setIsReport(true);
+			viewModel.entityViewerDataService.setCurrentMember(viewModel.currentMember);
+			viewModel.entityViewerDataService.setVirtualScrollStep(500);
+
+			viewModel.entityViewerDataService.setRowHeight(36);
+
+		};
+
+        const onSetLayoutEnd = () => {
 
             viewModel.readyStatus.layout = true;
             rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
@@ -141,17 +153,17 @@
 
         };
 
-        var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+		const reportDateProperties = {
+			'balance-report': [null, 'report_date'],
+			'pl-report': ['pl_first_date', 'report_date'],
+			'transaction-report': ['begin_date', 'end_date']
+		};
 
-            var reportDateProperties = {
-                'balance-report': [null, 'report_date'],
-                'pl-report': ['pl_first_date', 'report_date'],
-                'transaction-report': ['begin_date', 'end_date']
-            };
+        const calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
 
-            var dateProp = reportDateProperties[viewModel.entityType][reportDateIndex];
+            const dateProp = reportDateProperties[viewModel.entityType][reportDateIndex];
 
-            var result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
+            const result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
                 reportOptions[dateProp] = data.result
             });
 
@@ -159,7 +171,7 @@
 
         };
 
-        var calculateReportDatesExprs = function (options) {
+        const calculateReportDatesExprs = function (options) {
 
             if (!options) {
                 options = {}
@@ -188,6 +200,7 @@
         };
 
         return {
+			setLayoutDataForView: setLayoutDataForView,
 			downloadAttributes: downloadAttributes,
             calculateReportDatesExprs: calculateReportDatesExprs,
             onSetLayoutEnd: onSetLayoutEnd

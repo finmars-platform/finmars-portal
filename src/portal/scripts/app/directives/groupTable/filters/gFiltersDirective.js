@@ -921,7 +921,7 @@
 
                             $scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-                            $scope.evDataService.resetTableContent();
+                            $scope.evDataService.resetTableContent($scope.isReport);
 
                             $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 

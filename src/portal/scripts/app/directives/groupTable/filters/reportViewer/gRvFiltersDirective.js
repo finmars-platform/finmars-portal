@@ -7,7 +7,7 @@
 
 	// const EventService = require('../../../../services/eventService');
 
-	module.exports = function ($mdDialog,) {
+	module.exports = function ($mdDialog, gFiltersHelper) {
 		return {
 			require: '^^gFilters',
 			restrict: 'E',
@@ -80,7 +80,7 @@
 
 					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-					scope.evDataService.resetTableContent();
+					scope.evDataService.resetTableContent(true);
 
 					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
@@ -105,7 +105,7 @@
 
 				};
 
-				const getUseFromAboveFilters = function () {
+				/* const getUseFromAboveFilters = function () {
 
 					useFromAboveFilters = filters.filter((filter, index) => {
 
@@ -120,7 +120,7 @@
 
 					});
 
-				};
+				}; */
 
 				const formatFiltersForChips = function () {
 
@@ -441,7 +441,8 @@
 
 						filters = scope.evDataService.getFilters();
 
-						getUseFromAboveFilters();
+						// getUseFromAboveFilters();
+						useFromAboveFilters = gFiltersHelper.filterUseFromAboveFilters(filters);
 
 						formatFiltersForChips();
 
@@ -462,7 +463,7 @@
 
 						if (useFromAboveFilters.length) {
 
-							let filterChangedFromAbove = false;
+							/* let filterChangedFromAbove = false;
 
 							useFromAboveFilters.forEach((useFromAboveFilter) => {
 
@@ -493,7 +494,9 @@
 								formatFiltersForChips();
 								scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-							}
+							} */
+							const filtersChangedFromAbove = gFiltersHelper.insertActiveObjectDataIntoFilters(scope.evDataService, scope.evEventService);
+							if (filtersChangedFromAbove) formatFiltersForChips();
 
 						}
 
@@ -528,7 +531,7 @@
 
 							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-							scope.evDataService.resetTableContent();
+							scope.evDataService.resetTableContent(true);
 
 							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
@@ -547,6 +550,7 @@
 
 					getAddMenuLayout();
 
+					useFromAboveFilters = gFiltersHelper.filterUseFromAboveFilters(filters);
 					formatFiltersForChips();
 
 					scope.readyStatus.filters = true;

@@ -760,7 +760,7 @@
             data.activeRequestParametersId = id;
         }
 
-        function resetTableContent () {
+        function resetTableContent (isReport) {
 
         	resetData();
 			resetRequestParameters();
@@ -768,6 +768,8 @@
 			var rootGroup = getRootGroupData();
 
 			setActiveRequestParametersId(rootGroup.___id);
+
+			if (!isReport) setSelectedGroups([]);
 
 		}
 
@@ -1558,7 +1560,14 @@
         // MATERIAL DESIGN ENTITY VIEWER LOGIC
 
         function setSelectedGroups(groups) {
-		    data.selectedGroups = groups
+
+			if (!groups || !Array.isArray(groups)) {
+				data.selectedGroups = [];
+
+			} else {
+				data.selectedGroups = groups;
+			}
+
         }
 
         function getSelectedGroups(){

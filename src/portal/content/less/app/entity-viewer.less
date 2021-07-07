@@ -20,10 +20,9 @@
   .g-wrapper {
 
     .g-row {
-      border-bottom: 1px solid #ddd;
+      // border-bottom: 1px solid #ddd;
       overflow: hidden;
-
-      height: 23px;
+      // height: 23px;
     }
 
     .g-group-holder {
@@ -394,10 +393,11 @@
 // TODO merge styles below into corresponding classes above
 //region Table rows position update
 .entity-viewer-holder {
+
   .g-wrapper {
     .g-row {
       position: absolute;
-      width: 100%;
+      // width: 100%;
     }
 
     .placeholder-row {
@@ -407,7 +407,16 @@
     .ev-content {
       position: relative;
     }
+
+    .control-content {
+      float: left;
+      height: @gRowHeight;
+      border-right: 1px solid @gCellBroderColor;
+      border-bottom: 1px solid @gCellBroderColor;
+      box-sizing: border-box;
+    }
   }
+
 }
 //endregion
 
@@ -620,18 +629,18 @@
       position: relative;
 
       .g-row {
-        height: 36px;
+        height: @gRowHeight;
       }
 
       .g-cell {
         border-bottom: 1px solid;
         border-color: @gCellBroderColor;
-        height: 36px;
+        height: @gRowHeight;
         font-family: 'Roboto-Regular', 'Roboto', sans-serif;
         font-weight: 400;
         font-style: normal;
         color: #666666;
-        line-height: 36px;
+        line-height: @gRowHeight;
         padding: 0 15px;
       }
 

@@ -19,11 +19,21 @@
         var groups = evDataService.getGroups();
         var currentMember = evDataService.getCurrentMember();
 
-        var previousRow = null;
+        // var previousRow = null;
+		var previousItem = null;
 
         var verticalAdditions = evDataService.getVerticalAdditions();
         var viewContext = evDataService.getViewContext();
 
+        var columnsWidthSum = 0;
+		columns.forEach(function (column) {
+
+			if (column.style && column.style.width) {
+				columnsWidthSum += parseFloat(column.style.width);
+			}
+
+		});
+		console.log("testing projection", projection);
         var rows = projection.map(function (item, index) {
 
             var renderedRow = null;
@@ -40,12 +50,13 @@
                     renderedRow = objectRender.render(evDataService, item, columns, currentMember, viewContext, verticalAdditions);
                     break;
                 case 'control':
-                    renderedRow = controlRender.render(evDataService, item, previousRow);
+                    renderedRow = controlRender.render(evDataService, item, previousItem, columnsWidthSum);
                     break;
             }
 
             if (renderedRow) {
-                previousRow = renderedRow;
+                // previousRow = renderedRow;
+				previousItem = item;
 
                 return renderedRow;
             }

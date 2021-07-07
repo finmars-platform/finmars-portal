@@ -3,6 +3,8 @@
 	'use strict';
 	const metaHelper = require("./meta.helper");
 
+	const evEvents = require('../services/entityViewerEvents');
+
 	/** @module: gFiltersHelper */
 	module.exports = function () {
 
@@ -121,6 +123,70 @@
 
 		};
 		/**
+		 * Returns useFromAboveFilters without changing original array.
+		 *
+		 * @param filters {Array<Object>} - from entityViewerDataService
+		 * @returns {Array}
+		 * @memberof gFiltersHelper
+		 */
+		const filterUseFromAboveFilters = function (filters) {
+
+			const useFromAboveFilters = filters.filter((filter, index) => {
+
+				if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
+
+					filter.filtersListIndex = index;
+					return true;
+
+				}
+
+				return false;
+
+			});
+
+			return useFromAboveFilters;
+
+		};
+		const insertActiveObjectDataIntoFilters = function (evDataService, evEventService) {
+
+			let filtersChangedFromAbove = false;
+
+			let filters = evDataService.getFilters();
+
+			let useFromAboveFilters = filterUseFromAboveFilters(filters);
+			const activeObjectFromAbove = evDataService.getActiveObjectFromAbove();
+
+			useFromAboveFilters.forEach(ufaFilter => {
+
+				let filter = filters[ufaFilter.filtersListIndex];
+				let key = filter.options.use_from_above; // for old layouts
+
+				if (typeof filter.options.use_from_above === 'object') {
+					key = filter.options.use_from_above.key;
+				}
+
+				if (activeObjectFromAbove && typeof activeObjectFromAbove === 'object') {
+
+					var value = activeObjectFromAbove[key];
+					filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
+
+					filtersChangedFromAbove = true;
+
+				}
+
+			});
+
+			if (filtersChangedFromAbove) {
+
+				evDataService.setFilters(filters);
+				evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+			}
+
+			return filtersChangedFromAbove;
+
+		};
+		/**
 		 *
 		 * @param useFromAboveDialogPromise {Promise} - response of dialog window with use from above settings
 		 * @param filterOptions {Object}
@@ -190,6 +256,9 @@
 			emptyTextFilter: emptyTextFilter,
 			emptyNumberFilter: emptyNumberFilter,
 			emptyDateFilter: emptyDateFilter,
+
+			filterUseFromAboveFilters: filterUseFromAboveFilters,
+			insertActiveObjectDataIntoFilters: insertActiveObjectDataIntoFilters,
 
 			openUseFromAboveSettings: openUseFromAboveSettings,
 

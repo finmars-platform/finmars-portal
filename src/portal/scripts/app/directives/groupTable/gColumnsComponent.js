@@ -30,7 +30,9 @@
 
                 scope.columns = scope.evDataService.getColumns();
                 scope.groups = scope.evDataService.getGroups();
-                evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns);
+				scope.viewContext = scope.evDataService.getViewContext();
+				// scope.isReport = metaService.isReport(scope.entityType);
+				scope.isReport = scope.evDataService.isEntityReport();
 
                 scope.entityType = scope.evDataService.getEntityType();
 				/**
@@ -158,9 +160,7 @@
                 scope.contentType = scope.evDataService.getContentType();
                 scope.columnAreaCollapsed = false;
 
-                scope.viewContext = scope.evDataService.getViewContext();
-                // scope.isReport = metaService.isReport(scope.entityType);
-				scope.isReport = scope.evDataService.isEntityReport();
+
 
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
                 scope.isAllStarsSelected = false;
@@ -2091,7 +2091,7 @@
 						updateGroupFoldingState();
 
 						scope.groups = scope.evDataService.getGroups();
-						scope.evDataService.resetTableContent();
+						scope.evDataService.resetTableContent(scope.isReport);
 
 						const colsChanged = syncColumnsWithGroups();
 
@@ -2122,7 +2122,7 @@
 						setDefaultGroupType();
 
 						scope.groups = scope.evDataService.getGroups();
-						scope.evDataService.resetTableContent();
+						scope.evDataService.resetTableContent(scope.isReport);
 
 						collectMissingCustomFieldsErrors();
 
@@ -2210,6 +2210,8 @@
                 };
 
                 const init = function () {
+
+					evDataHelper.importGroupsStylesFromColumns(scope.groups, scope.columns);
 
                     if (scope.hideRowSettings) {
                         scope.contentWrapElement.classList.add('g-row-settings-collapsed');
