@@ -33,7 +33,7 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, $transitions) {
+        module.exports = function ($scope, $mdDialog, $transitions, gFiltersHelper) {
 
             var vm = this;
 
@@ -381,7 +381,7 @@
                     });
 
                 } else {
-                    vm.grandTotalValue = val
+                    vm.grandTotalValue = val;
                 }
 
                 // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
@@ -1237,7 +1237,10 @@
 						}
 
 						if (vm.componentData.type === 'report_viewer_grand_total') {
+
+							gFiltersHelper.insertActiveObjectDataIntoFilters(vm.entityViewerDataService, vm.entityViewerEventService);
 							vm.updateGrandTotalComponent();
+
 						}
 
 					});
@@ -2017,16 +2020,18 @@
 
                 console.log('$scope.$parent.vm.contentType', $scope.$parent.vm.contentType)
 
-                vm.entityViewerDataService.setEntityType(vm.entityType);
+                /* vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 				vm.entityViewerDataService.setRowHeight(36);
 				vm.entityViewerDataService.setVirtualScrollStep(500);
 				vm.entityViewerDataService.setCurrentMember(vm.currentMember);
 
-                /* if (vm.componentData.type === 'report_viewer_split_panel') {
+                if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
                 } */
+				rvSharedLogicHelper.setLayoutDataForView();
+				vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setUseFromAbove(true);
 
                 var layoutId = vm.componentData.settings.layout;

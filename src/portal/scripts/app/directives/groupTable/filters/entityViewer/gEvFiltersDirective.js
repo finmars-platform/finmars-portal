@@ -2,6 +2,7 @@
 
 	'use strict';
 
+	const uiService = require('../../../../services/uiService');
 	const evEvents = require('../../../../services/entityViewerEvents');
 
 	const evHelperService = require('../../../../services/entityViewerHelperService');
@@ -178,12 +179,15 @@
 				};
 
 				/* scope.evApplyDatabaseFilters = function () {
-					scope.evDataService.resetTableContent();
+					scope.evDataService.resetTableContent(false);
 					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 				}; */
 				scope.refreshTable = function () {
-					scope.evDataService.resetTableContent();
+
+					scope.evDataService.resetTableContent(false);
+
 					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
 				}
 
 				//region Chips

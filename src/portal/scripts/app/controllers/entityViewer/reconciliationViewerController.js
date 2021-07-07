@@ -462,8 +462,11 @@
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
+				vm.entityViewerDataService.setIsReport(false);
                 vm.entityViewerDataService.setViewContext('reconciliation_viewer');
                 vm.entityViewerDataService.setVirtualScrollStep(500);
+
+				vm.entityViewerDataService.setRowHeight(36);
 
                 var components = {
                     columnArea: true,

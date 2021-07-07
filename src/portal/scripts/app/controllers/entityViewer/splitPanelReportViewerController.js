@@ -883,13 +883,14 @@
                 console.log('scope, ', $scope);
 
                 vm.entityType = $scope.$parent.vm.entityType;
-                vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
+                /* vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
                 vm.entityViewerDataService.setUseFromAbove(true);
                 vm.entityViewerDataService.setViewContext('split_panel');
-                vm.entityViewerDataService.setRowHeight(36);
-
+                vm.entityViewerDataService.setRowHeight(36); */
+				rvSharedLogicHelper.setLayoutDataForView();
+				vm.entityViewerDataService.setViewContext('split_panel');
 
 				var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
 

@@ -1,7 +1,7 @@
 (function () {
 
 
-    var render = function (evDataService, obj, prevObj) {
+    var render = function (evDataService, obj, prevObj, columnsWidthSum) {
 
         var selectedGroups = evDataService.getSelectedGroups();
 
@@ -33,13 +33,9 @@
         })
 
 
-        console.log('selectedGroups', selectedGroups);
-
         // console.log('requestParameters', requestParameters);
         // console.log('total_pages', total_pages);
         // console.log('page', page);
-
-        console.log('obj', obj);
 
         var classList = ['g-row'];
 
@@ -49,9 +45,21 @@
 
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
-        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px"  data-type="control" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result = '<div class="' + classes + '" style="top: '+ offsetTop + 'px"  data-type="control" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
 
         result = result + rowSelection;
+
+		result = result + '<div class="control-content" style="width: ' + columnsWidthSum + 'px;">';
+
+		var flatList = evDataService.getFlatList();
+		var parentGroup = evDataService.getGroup(obj.___parentId);
+
+		var visibleItemsCount = flatList.length - 1; // "-1" because control at the end does not count
+		// var itemsTotal = '';
+		// var resultText = '(' + visibleItemsCount + ' of ' + parentGroup.___items_count + ' / ' + itemsTotal + ' total)';
+		var resultText = '(' + visibleItemsCount + ' of ' + parentGroup.___items_count + ')';
+
+		result = result + '<span class="display-inline-block m-0" style="padding-top: 6px; padding-left: 15px; color: #868686;">' + resultText + '</span>';
 
         if (canLoadMore) {
 
@@ -62,7 +70,7 @@
                 result = result + '<div class="control-error-message">' + obj.___errorMessage + '</div>'
             }
 
-        } else {
+        } /* else {
 
             if (!prevObj || obj.___parentId === prevObj.___id) {
 
@@ -73,9 +81,10 @@
                 result = result + '<p class="m-0" style="padding-top: 7px; padding-left: 58px; color: #868686;">Data fully loaded</p>';
 
             }
-        }
 
-        result = result + '</div>';
+        } */
+
+        result = result + '</div></div>'; // closing div.g-row and div.control-content
 
         return result;
 
