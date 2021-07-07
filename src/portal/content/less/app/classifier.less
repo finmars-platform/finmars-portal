@@ -1,4 +1,6 @@
 .classifier-select-dialog-view {
+  overflow: hidden;
+
   .md-toolbar-tools {
     height: 87px;
     max-height: 87px;
@@ -33,19 +35,21 @@
   }
 
   md-dialog-content {
-    //height: 500px;
-    //max-height: 500px;
-    //min-height: 500px;
-    //overflow: hidden;
+    height: 410px;
+    max-height: 410px;
+    min-height: 410px;
+    overflow: hidden;
   }
 
   md-dialog-actions.classifier-footer {
     height: 62px;
     display: flex;
     justify-content: space-between;
+    background-color: #FFFFFF;
+    opacity: 1;
 
     &.edit {
-      justify-content: flex-end;
+      opacity: 0.5;
     }
 
     button {
@@ -61,13 +65,57 @@
   }
 }
 
+.classifier-tree-wrapper {
+  position: relative;
+
+  .tree-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: white;
+    opacity: 0.5;
+
+  }
+}
+
+.classifier-tree-container {
+  height: 410px;
+  max-height: 410px;
+  min-height: 410px;
+}
+
 .classifier-tree {
   width: 100%;
-  height: 348px;
   max-height: 348px;
+  min-height: 348px;
   padding: 0 20px;
   box-sizing: border-box;
   overflow: auto;
+
+  &.shadow {
+    box-shadow: inset 0 -8px 12px -8px rgba(0, 0, 0, 0.25),
+                inset 0 8px 12px -8px rgba(0, 0, 0, 0.25);
+  }
+
+  &.top-shadow {
+    box-shadow: inset 0 8px 12px -8px rgba(0, 0, 0, 0.25);
+
+  }
+
+  &.bottom-shadow {
+    box-shadow: inset 0 -8px 12px -8px rgba(0, 0, 0, 0.25);
+  }
+
+
+
+
 
   .classifier-node-holder {
     flex-basis: 100%;
@@ -106,6 +154,14 @@
           color: @orange;
         }
       }
+
+      button {
+        display: flex;
+
+        span {
+          color: #FFFFFF;
+        }
+      }
     }
 
     &.active,
@@ -124,7 +180,7 @@
 
     &.edit {
       .classifier-name {
-        width: 100%;
+        width: 80%;
         margin-right: 20px;
         outline: none;
         border: none;
