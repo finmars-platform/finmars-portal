@@ -4,13 +4,16 @@
         <div>
             <span class="material-icons pointer"
                   ng-style="{'visibility': node.children.length ? 'visible' : 'hidden'}"
-                  data-ng-click="node.frontOptions.closed = !node.frontOptions.closed">chevron_right</span>
+                  ng-click="closeStatusChange(node)">chevron_right</span>
 
             <div data-ng-if="!node.frontOptions.editOn" ng-click="selectNode(node)">
                 <span ng-bind="node.name" ></span>
             </div>
 
             <input class="classifier-name" data-ng-if="node.frontOptions.editOn" type="text" ng-model="node.name" data-ng-init="focusInput()">
+            <button data-ng-if="node.frontOptions.editOn && !isSaveDisabled()" data-ng-click="onSaveNode()"><span class="material-icons">done</span></button>
+            <button data-ng-if="node.frontOptions.editOn" data-ng-click="onCancelEdit()"><span class="material-icons" >close</span></button>
+
         </div>
 
     </div>

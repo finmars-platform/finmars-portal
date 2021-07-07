@@ -31,6 +31,8 @@
 				vm.isMultiselector = $scope.multiselector === 'true';
 				vm.isEdit = false;
 
+				const treeElement = document.querySelector('.classifier-tree');
+
 				const getActiveNode = (tree) => {
 
 					for (let node of tree) {
@@ -50,7 +52,26 @@
 				}
 
 				let activeNode = null;
-				let editableNode = null;
+				vm.editableNode = null;
+
+				const getShadowClass = (elem) => {
+
+					const noScroll = (elem.scrollHeight - elem.clientHeight) <= -1;
+					if (noScroll) {
+						return '';
+					}
+
+					if (elem.scrollTop === 0) {
+						return 'bottom-shadow';
+					}
+
+					const scrollBottom = elem.scrollHeight - elem.clientHeight - elem.scrollTop;
+					if (scrollBottom <= 0) {
+						return 'top-shadow';
+					}
+
+					return 'shadow';
+				}
 
 				const filterNode = (node, filterTerms) => {
 
@@ -98,17 +119,28 @@
 
 				};
 
-				const getParentsOfNode = (node) => {
+				const getNearestParentOfNode = (tree, node) => {
+
+					const parentPath = node.frontOptions.treePath.slice(0, -2);
+
+					return metaHelper.getObjectNestedPropVal(tree, parentPath);
+
+				};
+
+				const getParentsOfNode = (tree, node) => {
+
 					const isNodeHaveParents = node.frontOptions.treePath.length >= 3;
 
 					if (isNodeHaveParents) {
-						const parentPath = node.frontOptions.treePath.slice(0, -2);
-						const parent = metaHelper.getObjectNestedPropVal(vm.filteredTree, parentPath);
 
-						return [parent, ...getParentsOfNode(parent)];
+						const parent = getNearestParentOfNode(tree, node);
+
+						return [parent, ...getParentsOfNode(tree, parent)];
+
 					}
 
 					return [];
+
 				};
 
 				const selectNode = function (clickedNode) {
@@ -124,7 +156,7 @@
 						const activeNodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, activeNode.frontOptions.treePath);
 						activeNodeFromOriginalTree.isActive = false;
 
-						const parents = getParentsOfNode(activeNode);
+						const parents = getParentsOfNode(vm.filteredTree, activeNode);
 						parents.forEach(node => {
 							node.frontOptions.hasActiveChild = false;
 						});
@@ -140,7 +172,7 @@
 
 						activeNode = clickedNode;
 
-						const parents = getParentsOfNode(activeNode);
+						const parents = getParentsOfNode(vm.filteredTree, activeNode);
 						parents.forEach(node => {
 							node.frontOptions.hasActiveChild = true;
 						});
@@ -167,6 +199,29 @@
 
 				vm.selectNode = selectNode;
 
+				let currentShadow = getShadowClass(treeElement);
+				if(currentShadow) {
+					treeElement.classList.add(currentShadow);
+				}
+
+				const applyShadow = () => {
+					const shadow = getShadowClass(treeElement);
+
+					if (currentShadow !== shadow) {
+						currentShadow && treeElement.classList.remove(currentShadow);
+						shadow && treeElement.classList.add(shadow);
+						currentShadow = shadow;
+					}
+
+				};
+
+				const closeStatusChange = function (clickedNode) {
+					clickedNode.frontOptions.closed = !clickedNode.frontOptions.closed;
+					setTimeout(() => applyShadow());
+				};
+
+				vm.closeStatusChange = closeStatusChange;
+
 				const getFirstActiveNodeFromTree = (tree) => {
 					for (const node of tree) {
 						if(node.isActive) {
@@ -182,7 +237,10 @@
 					return null;
 				}
 
+				let addition = false;
+
 				const onAddNode = (data) => {
+					addition = true;
 
 					const parentNodeFromOriginalTree = data.activeNodes[0];
 
@@ -219,7 +277,7 @@
 					}
 
 					vm.isEdit = true;
-					editableNode = newNode;
+					vm.editableNode = newNode;
 
 				};
 
@@ -230,25 +288,55 @@
 					if (!activeNode) {
 						return;
 					}
-					editableNode = activeNode;
-					editableNode.frontOptions.editOn = true;
+					vm.editableNode = activeNode;
+					vm.editableNode.frontOptions.editOn = true;
 				};
 
 				const onSaveNode = () => {
 
 					vm.isEdit = false;
-					editableNode.frontOptions.editOn = false;
-					const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, editableNode.frontOptions.treePath);
+					addition = false;
+					vm.editableNode.frontOptions.editOn = false;
+					const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData,vm.editableNode.frontOptions.treePath);
 
-					if (nodeFromOriginalTree.name !== editableNode.name) {
+					if (nodeFromOriginalTree.name !==vm.editableNode.name) {
 
-						nodeFromOriginalTree.name = editableNode.name;
+						nodeFromOriginalTree.name =vm.editableNode.name;
 						$scope.classifierTreeEventService.dispatchEvent(directivesEvents.CLASSIFIER_TREE_CHANGED);
 
 					}
 
-					editableNode = null;
+					vm.editableNode = null;
+					$scope.classifierTreeEventService.dispatchEvent(directivesEvents.CANCEL_EDIT_NODE);
 				};
+
+				vm.onSaveNode = onSaveNode;
+
+				const onCancelEdit = () => {
+
+					const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData,vm.editableNode.frontOptions.treePath);
+					vm.editableNode.name = nodeFromOriginalTree.name;
+
+					if (addition) {
+
+						const parentNodeFromOriginalTree = getNearestParentOfNode($scope.treeData, nodeFromOriginalTree);
+						const parent = getNearestParentOfNode(vm.filteredTree, vm.editableNode);
+
+						parentNodeFromOriginalTree.children.pop();
+						parent.children.pop();
+
+						addition = false;
+
+					}
+
+					vm.isEdit = false;
+					vm.editableNode.frontOptions.editOn = false;
+					vm.editableNode = null;
+					$scope.classifierTreeEventService.dispatchEvent(directivesEvents.CANCEL_EDIT_NODE);
+
+				}
+
+				vm.onCancelEdit = onCancelEdit;
 
 				const onDeleteNode = () => {
 
@@ -289,8 +377,6 @@
 
 						const editNodeId = $scope.classifierTreeEventService.addEventListener(directivesEvents.EDIT_NODE, onEditNode);
 
-						const saveNodeId = $scope.classifierTreeEventService.addEventListener(directivesEvents.SAVE_NODE, onSaveNode);
-
 						const deleteNodeId = $scope.classifierTreeEventService.addEventListener(directivesEvents.DELETE_NODE, onDeleteNode);
 
 						const addNodeId = $scope.classifierTreeEventService.addEventListener(directivesEvents.ADD_NODE, onAddNode);
@@ -298,11 +384,15 @@
 						$scope.$on("$destroy", function () {
 							$scope.classifierTreeEventService.removeEventListener(directivesEvents.TREE_CHANGED_FROM_OUTSIDE, treeChangedFromOutsideId);
 							$scope.classifierTreeEventService.removeEventListener(directivesEvents.EDIT_NODE, editNodeId);
-							$scope.classifierTreeEventService.removeEventListener(directivesEvents.SAVE_NODE, saveNodeId);
 							$scope.classifierTreeEventService.removeEventListener(directivesEvents.ADD_NODE, addNodeId);
 							$scope.classifierTreeEventService.removeEventListener(directivesEvents.DELETE_NODE, deleteNodeId);
 						});
+
 					}
+
+					treeElement.addEventListener('scroll', () => {
+						applyShadow();
+					});
 
 				};
 

@@ -14,6 +14,7 @@
 
         var vm = this;
 
+        vm.tree = null;
         vm.entityType = data.entityType;
         vm.classifier = data.classifier;
         vm.classifierId = data.classifier.id;
@@ -39,16 +40,6 @@
             vm.classifierTreeEventService.dispatchEvent(directivesEvents.EDIT_NODE);
 
         }
-
-        vm.onCancelEdit = () => {
-		    vm.isEdit = false;
-            vm.classifierTreeEventService.dispatchEvent(directivesEvents.TREE_CHANGED_FROM_OUTSIDE); // original tree will render without changes
-        };
-
-        vm.onSaveEdit = () => {
-            vm.isEdit = false;
-            vm.classifierTreeEventService.dispatchEvent(directivesEvents.SAVE_NODE);
-        };
 
         vm.onDelete = () => {
 
@@ -302,6 +293,10 @@
 
 			vm.classifierTreeEventService.addEventListener(directivesEvents.CLASSIFIER_TREE_CHANGED, () => {
                 updateClassifier()
+            });
+
+            vm.classifierTreeEventService.addEventListener(directivesEvents.CANCEL_EDIT_NODE, () => {
+                vm.isEdit = false;
             })
 
 		};
