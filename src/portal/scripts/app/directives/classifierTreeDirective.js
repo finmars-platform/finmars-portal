@@ -6,7 +6,7 @@
 	'use strict';
 
 	const metaHelper = require('../helpers/meta.helper');
-	const directivesEvents = require('../services/events/directivesEvents');
+	const classifierEvents = require('../services/events/classifierEvents');
 
 	module.exports = function () {
 
@@ -302,12 +302,12 @@
 					if (nodeFromOriginalTree.name !==vm.editableNode.name) {
 
 						nodeFromOriginalTree.name =vm.editableNode.name;
-						$scope.classifierTreeEventService.dispatchEvent(directivesEvents.CLASSIFIER_TREE_CHANGED);
+						$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED);
 
 					}
 
 					vm.editableNode = null;
-					$scope.classifierTreeEventService.dispatchEvent(directivesEvents.CANCEL_EDIT_NODE);
+					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
 				};
 
 				vm.onSaveNode = onSaveNode;
@@ -332,7 +332,7 @@
 					vm.isEdit = false;
 					vm.editableNode.frontOptions.editOn = false;
 					vm.editableNode = null;
-					$scope.classifierTreeEventService.dispatchEvent(directivesEvents.CANCEL_EDIT_NODE);
+					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
 
 				}
 
@@ -346,7 +346,7 @@
 
 					activeNode = null;
 
-					$scope.classifierTreeEventService.dispatchEvent(directivesEvents.CLASSIFIER_TREE_CHANGED);
+					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED);
 				};
 
 				const onTreeChangedFromOutside = () => {
@@ -373,19 +373,19 @@
 
 					if ($scope.classifierTreeEventService) {
 
-						const treeChangedFromOutsideId = $scope.classifierTreeEventService.addEventListener(directivesEvents.TREE_CHANGED_FROM_OUTSIDE, onTreeChangedFromOutside);
+						const treeChangedFromOutsideId = $scope.classifierTreeEventService.addEventListener(classifierEvents.TREE_CHANGED_FROM_OUTSIDE, onTreeChangedFromOutside);
 
-						const editNodeId = $scope.classifierTreeEventService.addEventListener(directivesEvents.EDIT_NODE, onEditNode);
+						const editNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.EDIT_NODE, onEditNode);
 
-						const deleteNodeId = $scope.classifierTreeEventService.addEventListener(directivesEvents.DELETE_NODE, onDeleteNode);
+						const deleteNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.DELETE_NODE, onDeleteNode);
 
-						const addNodeId = $scope.classifierTreeEventService.addEventListener(directivesEvents.ADD_NODE, onAddNode);
+						const addNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.ADD_NODE, onAddNode);
 
 						$scope.$on("$destroy", function () {
-							$scope.classifierTreeEventService.removeEventListener(directivesEvents.TREE_CHANGED_FROM_OUTSIDE, treeChangedFromOutsideId);
-							$scope.classifierTreeEventService.removeEventListener(directivesEvents.EDIT_NODE, editNodeId);
-							$scope.classifierTreeEventService.removeEventListener(directivesEvents.ADD_NODE, addNodeId);
-							$scope.classifierTreeEventService.removeEventListener(directivesEvents.DELETE_NODE, deleteNodeId);
+							$scope.classifierTreeEventService.removeEventListener(classifierEvents.TREE_CHANGED_FROM_OUTSIDE, treeChangedFromOutsideId);
+							$scope.classifierTreeEventService.removeEventListener(classifierEvents.EDIT_NODE, editNodeId);
+							$scope.classifierTreeEventService.removeEventListener(classifierEvents.ADD_NODE, addNodeId);
+							$scope.classifierTreeEventService.removeEventListener(classifierEvents.DELETE_NODE, deleteNodeId);
 						});
 
 					}
