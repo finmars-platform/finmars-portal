@@ -118,7 +118,7 @@
 
             switch (column.report_settings.round_format_id) {
                 case 0:
-                    return value;
+                    return '' + value;
                     break;
                 case 1:
                     //return parseInt(value, 10);
@@ -149,7 +149,7 @@
 
         }
 
-        return value
+        return '' + value; // Must return string
 
     };
 
