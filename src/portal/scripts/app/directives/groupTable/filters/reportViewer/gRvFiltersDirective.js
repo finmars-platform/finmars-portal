@@ -42,16 +42,7 @@
 					filters: false
 				}
 
-				scope.filterPopupTemplate = `<div class="g-filter-popup-content">
-					<rv-filter filter-key="popupData.filterKey"
-							   ev-data-service="popupData.evDataService"
-							   ev-event-service="popupData.evEventService"
-							   attribute-data-service="popupData.attributeDataService"
-							   popup-event-service="popupEventService"
-							   on-cancel="cancel()"
-							   on-save="save()">
-					</rv-filter>
-				</div>`;
+				scope.filterPopupTemplate = 'views/popups/groupTable/filters/rv-filter-popup-view.html';
 
 				scope.popupPosX = gFiltersVm.popupPosX;
 				scope.popupPosY = gFiltersVm.popupPosY;

@@ -13,7 +13,7 @@
         </md-button>
     </div>
 
-    <div data-ng-if="!popupData.data.itemHasCorrespondingGroup(popupData.data.item.key)">
+    <div data-ng-if="!popupData.data.columnHasCorrespondingGroup(popupData.data.item.key)">
         <md-button data-ng-click="popupData.data.addColumnEntityToGrouping(popupData.data.item)"
                    class="popup-menu-item">
 <!--            <ng-md-icon icon="visibility_off"
@@ -23,7 +23,7 @@
         </md-button>
     </div>
 
-    <div ng-if="!popupData.data.isReport || popupData.data.itemHasCorrespondingGroup(popupData.data.item.key)">
+    <div ng-if="!popupData.data.isReport || popupData.data.columnHasCorrespondingGroup(popupData.data.item.key)">
         <md-button data-ng-click="popupData.data.unGroup(popupData.data.item.___column_id || popupData.data.item.___group_type_id)"
                    class="popup-menu-item">
             <!--            <ng-md-icon icon="visibility_off"
@@ -203,37 +203,11 @@
             <span>Resize</span>
         </md-button>
     </div>-->
+    <div data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.item.key)"
+         ng-include="'views/popups/groupTable/columnSettings/g-column-alignment-menu-options.html'"
+         class="flex-column"></div>
 
-    <md-menu-divider data-ng-if="!popupData.data.isReport || !popupData.data.itemHasCorrespondingGroup(popupData.data.item.key)"></md-menu-divider>
-
-    <div data-ng-if="!popupData.data.isReport || !popupData.data.itemHasCorrespondingGroup(popupData.data.item.key)" class="alignment-menu-item">
-
-        <md-button class="md-icon-button align-button rounded"
-                   data-ng-class="{active: popupData.data.checkColTextAlign(popupData.data.item, 'left')}"
-                   ng-click="popupData.data.changeColumnTextAlign(popupData.data.item, 'left')">
-            <span class="material-icons">format_align_left</span>
-            <md-tooltip md-direction="top">Left alignment</md-tooltip>
-        </md-button>
-
-        <md-button class="md-icon-button align-button rounded"
-                   data-ng-class="{active: popupData.data.checkColTextAlign(popupData.data.item, 'center')}"
-                   ng-click="popupData.data.changeColumnTextAlign(popupData.data.item, 'center')">
-            <span class="material-icons">format_align_center</span>
-            <md-tooltip md-direction="top">Center alignment</md-tooltip>
-        </md-button>
-
-        <md-button class="md-icon-button align-button rounded"
-                   data-ng-class="{active: popupData.data.checkColTextAlign(popupData.data.item, 'right')}"
-                   ng-click="popupData.data.changeColumnTextAlign(popupData.data.item, 'right')">
-            <span class="material-icons">format_align_right</span>
-            <md-tooltip md-direction="top">Right alignment</md-tooltip>
-        </md-button>
-
-    </div>
-
-    <md-menu-divider data-ng-if="!popupData.data.isReport || !popupData.data.itemHasCorrespondingGroup(popupData.data.item.key)"></md-menu-divider>
-
-    <div data-ng-if="!popupData.data.isReport || popupData.data.itemHasCorrespondingGroup(popupData.data.item.key)">
+    <div data-ng-if="!popupData.data.isReport || popupData.data.columnHasCorrespondingGroup(popupData.data.item.key)">
         <md-button ng-click="popupData.data.removeGroup(popupData.data.item.___column_id || popupData.data.item.___group_type_id)"
                    class="popup-menu-item">
             <span class="material-icons" style="visibility: hidden;">done</span>
@@ -241,7 +215,7 @@
         </md-button>
     </div>
 
-    <div data-ng-if="!popupData.data.isReport || !popupData.data.itemHasCorrespondingGroup(popupData.data.item.key)">
+    <div data-ng-if="!popupData.data.isReport || !popupData.data.columnHasCorrespondingGroup(popupData.data.item.key)">
         <md-button ng-click="popupData.data.removeColumn(popupData.data.item)"
                    class="popup-menu-item">
             <span class="material-icons" style="visibility: hidden;">done</span>

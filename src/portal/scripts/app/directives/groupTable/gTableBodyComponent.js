@@ -63,6 +63,10 @@
 
                 var activeLayoutConfigIsSet = false;
 
+                if (!isReport) {
+                	elements.leftPanelElem = scope.workareaWrapElement.querySelector('.gEvLeftPanelHolder');
+				}
+
                 const setColorsForSubtotals = function (flatList, coloredSubtotals) {
 
                     return flatList.map(item => {

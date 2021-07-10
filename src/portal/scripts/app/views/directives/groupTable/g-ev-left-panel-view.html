@@ -6,21 +6,27 @@
             <span class="material-icons">menu</span>
         </div>
 
-        <div>
+        <div class="flex-column height-100">
+            <div class="flex-1-1-auto overflow-auto">
 
-            <g-ev-left-panel-tree-elem item="tree" ev-data-service="evDataService"
-                                       ev-event-service="evEventService"></g-ev-left-panel-tree-elem>
+                <g-ev-left-panel-tree-elem item="tree" ev-data-service="evDataService"
+                                           ev-event-service="evEventService"></g-ev-left-panel-tree-elem>
 
-        </div>
+            </div>
 
-        <div class="ev-left-panel-footer-section">
+            <div class="ev-left-panel-footer-section">
 
-            <md-checkbox data-ng-click="toggleMultiselect($event)" data-ng-checked="multiselectIsActive" tabindex="0"
-                         type="checkbox"
-                         role="checkbox" aria-checked="false" class="">
-                Multiselect
-            </md-checkbox>
+                <div class="footer-content">
+                    <md-checkbox data-ng-click="toggleMultiselect($event)"
+                                 data-ng-checked="multiselectIsActive"
+                                 tabindex="0"
+                                 type="checkbox"
+                                 role="checkbox" aria-checked="false" class="m-b-0">
+                        Multiselect
+                    </md-checkbox>
+                </div>
 
+            </div>
         </div>
 
         <div class="ev-left-panel-slider evLeftPanelSlider"></div>

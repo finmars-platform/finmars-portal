@@ -33,7 +33,7 @@
 			}
 
 		});
-		console.log("testing projection", projection);
+
         var rows = projection.map(function (item, index) {
 
             var renderedRow = null;
