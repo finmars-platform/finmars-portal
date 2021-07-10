@@ -81,12 +81,12 @@
                                             <div class="g-modal-draggable-card">
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
-                                                <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
-                                                <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
-                                                    <span class="material-icons tooltip-error-icon">error</span>
-                                                    <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
-                                                </span>
                                             </div>
                                         </div>
 
@@ -229,10 +229,10 @@
                                         <div flex="10"
                                              layout="row"
                                              layout-align="end center">
-                                            <g-rv-filter-settings-button data-filter-key="item.key"
-                                                                      data-ev-data-service="vm.entityViewerDataService"
-                                                                      data-ev-event-service="vm.entityViewerEventService"
-                                                                      data-attribute-data-service="vm.attributeDataService"></g-rv-filter-settings-button>
+                                            <g-filter-settings-btn data-filter-key="item.key"
+                                                                   data-ev-data-service="vm.entityViewerDataService"
+                                                                   data-ev-event-service="vm.entityViewerEventService"
+                                                                   data-attribute-data-service="vm.attributeDataService"></g-filter-settings-btn>
                                         </div>
 
                                     </div>

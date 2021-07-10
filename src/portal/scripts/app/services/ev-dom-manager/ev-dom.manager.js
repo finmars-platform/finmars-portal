@@ -1189,10 +1189,11 @@
 
     var calculateScroll = function (elements, evDataService, evScrollManager) {
 
-        evScrollManager.setViewportElem(elements.viewportElem);
-        evScrollManager.setContentElem(elements.contentElem);
+        evScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
+        evScrollManager.setContentElem(elements.contentElem); // .ev-content
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
         evScrollManager.setRootWrapElem(elements.rootWrapElem);
+		evScrollManager.setLeftPanelElem(elements.leftPanelElem);
 
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
@@ -1229,6 +1230,9 @@
 		if (components.filterArea) {
 			viewportTop = viewportTop + interfaceLayout.filterArea.height
 		}
+
+		var leftPanelHeight = Math.floor(contentWrapElemHeight - viewportTop); // should be calculated before adding column area height to viewportTop
+		evScrollManager.setLeftPanelElemHeight(leftPanelHeight);
 
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height

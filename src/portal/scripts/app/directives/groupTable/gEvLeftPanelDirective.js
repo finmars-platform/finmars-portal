@@ -105,63 +105,56 @@
                         var clientX = event.clientX;
                         var clientY = event.clientY;
 
-                        var originalWidth = interfaceLayout.evLeftPanel.width
+                        var originalWidth = interfaceLayout.evLeftPanel.width;
 
-                        $(window).bind('mousemove', function sliderMouseMove(event) {
+						$(window).bind('mousemove', function sliderMouseMove(event) {
 
-                            var diffX = event.clientX - clientX;
-                            // var diffY = clientY + event.clientY
+							var diffX = event.clientX - clientX;
+							// var diffY = clientY + event.clientY
+							resultWidth = Math.max(230, originalWidth + diffX);
 
-                            if (originalWidth + diffX >= document.body.clientWidth) {
-                                resultWidth = document.body.clientWidth;
-                                scope.sliderButtonState = 'unfolded';
-                            } else if (originalWidth + diffX <= 33) {
-                                resultWidth = 33;
-                                scope.sliderButtonState = 'folded'
-                            } else {
-                                resultWidth = originalWidth + diffX
-
-                                if (resultWidth >= 230) {
-                                    scope.sliderButtonState = 'unfolded';
-                                } else {
-                                    scope.sliderButtonState = 'folded';
-                                }
-
-                            }
-
-                            interfaceLayout.evLeftPanel.width = resultWidth;
-                            // leftPanel.style.width = resultWidth + 'px';
-                            // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+							interfaceLayout.evLeftPanel.width = resultWidth;
+							// leftPanel.style.width = resultWidth + 'px';
+							// tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
 							leftPanel.style["flex-basis"] = resultWidth + 'px';
+							leftPanel.style.width = resultWidth + 'px';
 
-                            scope.evDataService.setInterfaceLayout(interfaceLayout);
+							scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                        })
+						});
 
                     })
 
                     $(window).bind('mouseup', function () {
 
-                        $(window).unbind('mousemove')
-                    })
+                        $(window).unbind('mousemove');
+                        scope.$apply(); // apply scope.sliderButtonState change right away
 
+                    });
 
                     evLeftPanelSliderButton.addEventListener('click', function (event){
 
                         if (scope.sliderButtonState === 'unfolded') {
+
                             resultWidth = 33;
-                            scope.sliderButtonState = 'folded'
+                            scope.sliderButtonState = 'folded';
+							slider.classList.add('display-none');
+
                         } else {
-                            resultWidth = 230;
+
+                        	resultWidth = 230;
                             scope.sliderButtonState = 'unfolded';
+							slider.classList.remove('display-none');
+
                         }
 
                         interfaceLayout.evLeftPanel.width = resultWidth;
                         // leftPanel.style.width = resultWidth + 'px';
                         // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
 						leftPanel.style["flex-basis"] = resultWidth + 'px';
+						leftPanel.style.width = resultWidth + 'px';
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
 
@@ -169,7 +162,8 @@
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                    })
+                    });
+
                 }
 
                 scope.initEventListeners = function () {
@@ -360,6 +354,10 @@
                 };
 
                 init();
+
+                scope.$on('$destroy', function () {
+					$(window).unbind('mouseup');
+				});
 
             },
         }

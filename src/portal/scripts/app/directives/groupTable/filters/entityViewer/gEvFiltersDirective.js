@@ -29,17 +29,8 @@
 					filters: false
 				}
 
-				scope.filterPopupTemplate = `<div class="g-filter-popup-content">
-					<ev-filter filter-key="popupData.filterKey"
-							   filter-type="{{popupData.shownFiltersType}}"
-							   ev-data-service="popupData.evDataService"
-							   ev-event-service="popupData.evEventService"
-							   attribute-data-service="popupData.attributeDataService"
-							   popup-event-service="popupEventService"
-							   on-cancel="cancel()"
-							   on-save="save()">
-					</ev-filter>
-				</div>`;
+				scope.filterPopupTemplate = 'views/popups/groupTable/filters/ev-filter-popup-view.html';
+
 				scope.popupPosX = gFiltersVm.popupPosX;
 				scope.popupPosY = gFiltersVm.popupPosY;
 				scope.fpBackClasses = gFiltersVm.fpBackClasses;

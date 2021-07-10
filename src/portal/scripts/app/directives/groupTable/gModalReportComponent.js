@@ -17,7 +17,7 @@
 
         var vm = this;
 
-        var gModalSharedLogicHelper = new GModalSharedLogicHelper(vm);
+        var sharedLogicHelper = new GModalSharedLogicHelper(vm);
 
         vm.readyStatus = {content: false};
 
@@ -406,6 +406,10 @@
         };
 
         function syncTypeAttrs(attrs) {
+			// Drag and drop inside tab "Selected" changes GCF without dispatching events
+			groups = vm.entityViewerDataService.getGroups();
+			columns = vm.entityViewerDataService.getColumns();
+			filters = vm.entityViewerDataService.getFilters();
 
             var i;
             for (i = 0; i < attrs.length; i = i + 1) {
@@ -454,6 +458,11 @@
         }
 
         function updateTypeAttrs(attrs) {
+			// Drag and drop inside tab "Selected" changes GCF without dispatching events
+        	groups = vm.entityViewerDataService.getGroups();
+			columns = vm.entityViewerDataService.getColumns();
+			filters = vm.entityViewerDataService.getFilters();
+
             var c, g, f;
             var columnExist, groupExist, filterExist;
 
@@ -565,7 +574,7 @@
 
         var getSelectedAttrs = function () {
 
-            const attributes = [
+            const attributesLists = [
                 'balanceAttrs',
                 'balancePerformanceAttrs',
                 'balanceMismatchAttrs',
@@ -587,9 +596,9 @@
                 'strategy3attrs'
             ];
 
-            const attrGroups = {groups, columns, filters}; // Victor 2020.12.10 I need variables: groups, columns, filters in gModalSharedLogicHelper
+            const attrGroups = {groups, columns, filters}; // Victor 2020.12.10 I need variables: groups, columns, filters in sharedLogicHelper
 
-            gModalSharedLogicHelper.getSelectedAttrs(attributes, attrGroups);
+			sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
 
         };
         // < format data for SELECTED tab >

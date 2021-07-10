@@ -1164,8 +1164,8 @@
 
     var calculateScroll = function (elements, evDataService) {
 
-        rvScrollManager.setViewportElem(elements.viewportElem);
-        rvScrollManager.setContentElem(elements.contentElem);
+        rvScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
+        rvScrollManager.setContentElem(elements.contentElem); // .ev-content
         rvScrollManager.setContentWrapElem(elements.contentWrapElem);
         rvScrollManager.setRootWrapElem(elements.rootWrapElem);
 

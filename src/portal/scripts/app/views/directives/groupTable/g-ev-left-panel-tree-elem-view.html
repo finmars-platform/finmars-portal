@@ -1,14 +1,29 @@
-<div data-ng-if="item.___type === 'group'" class="ev-left-panel-tree-elem">
+<div data-ng-if="item.___type === 'group'"
+     class="ev-left-panel-tree-elem"
+     ng-class="{'last-level-group': isLastLevel}">
 
-    <div data-ng-if="item.___parentId" layout="row" class="ev-left-panel-tree-elem-line" data-ng-class="{'selected-group': item.___is_selected, 'has-selected-child-group': item.___has_selected_child}">
-        <div data-ng-if="!item.___is_open && !isLastLevel" data-ng-click="unfoldGroup($event)"><span class="material-icons">expand_more</span></div>
-        <div data-ng-if="item.___is_open && !isLastLevel" data-ng-click="foldGroup($event)" style="position: relative; top: 3px;"><span class="material-icons" >chevron_right</span></div>
-        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}} ({{item.___items_count}})</div>
+    <div data-ng-if="item.___parentId"
+         class="ev-left-panel-tree-elem-line flex-row fi-center"
+         data-ng-class="{'selected-group': item.___is_selected, 'has-selected-child-group': item.___has_selected_child}">
+
+        <div data-ng-show="!item.___is_open"
+             class="ev-left-panel-folding-btn"
+             data-ng-click="unfoldGroup($event)">
+            <span class="material-icons">chevron_right</span>
+        </div>
+
+        <div data-ng-show="item.___is_open"
+             class="ev-left-panel-folding-btn"
+             data-ng-click="foldGroup($event)">
+            <span class="material-icons" >expand_more</span>
+        </div>
+
+        <div data-ng-click="toggleGroupSelection($event)" class="ev-left-panel-tree-elem-name"> {{item.___group_name}} ({{item.___items_count}})</div>
 <!--        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}}</div>-->
     </div>
 
     <div data-ng-if="item.___is_open">
-        <div data-ng-repeat="child in item.results">
+        <div data-ng-repeat="child in item.results" class="ev-left-panel-children-holder" >
 
             <g-ev-left-panel-tree-elem item="child" ev-data-service="evDataService"
                                        ev-event-service="evEventService"></g-ev-left-panel-tree-elem>

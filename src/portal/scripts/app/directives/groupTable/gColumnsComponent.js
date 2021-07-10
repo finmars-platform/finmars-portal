@@ -299,10 +299,10 @@
                 scope.getPopupMenuTemplate = function (column) {
 
                     if (scope.isReport && column.value_type == 20) {
-                        return "'views/popups/entity-viewer/g-report-viewer-numeric-column-settings-popup-menu.html'"; // Victor 2020.12.14 #69 string in string must returned for template binding
+                        return "'views/popups/groupTable/columnSettings/g-numeric-column-settings-popup-menu.html'"; // Victor 2020.12.14 #69 string in string must returned for template binding
                     }
 
-                    return "'views/popups/entity-viewer/g-report-viewer-column-settings-popup-menu.html'";
+                    return "'views/popups/groupTable/columnSettings/g-column-settings-popup-menu.html'";
 
                 };
 
