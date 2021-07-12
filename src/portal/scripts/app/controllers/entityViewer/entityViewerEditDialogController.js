@@ -600,17 +600,6 @@
 
                     }
 
-                    if (vm.typeFieldName === 'instrument_type') {
-
-                        const instrumentTypeId = vm.entity[vm.typeFieldName];
-                        if (instrumentTypeId) {
-
-                            vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
-
-                        }
-
-                    }
-
                     // vm.getFormLayout();
                     vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
@@ -671,6 +660,14 @@
         };
 
         vm.updateEntityBeforeSave = function () {
+
+            if (vm.entityType === 'instrument-type') {
+
+                if (!vm.entity.instrument_factor_schedule_data) {
+                    vm.entity.instrument_factor_schedule_data = ''
+                }
+
+            }
 
             if (vm.entity.attributes) {
 
@@ -2045,17 +2042,6 @@
                 vm.typeSelectorChange = function () {
 
 					vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
-
-                        if (vm.typeFieldName === 'instrument_type') {
-
-                            const instrumentTypeId = vm.entity[vm.typeFieldName];
-                            if (instrumentTypeId) {
-
-                                vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
-
-                            }
-
-                        }
 
 						vm.tabs = data.tabs;
 						vm.attributesLayout = data.attributesLayout;
