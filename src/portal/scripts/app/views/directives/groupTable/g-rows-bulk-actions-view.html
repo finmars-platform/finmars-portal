@@ -5,7 +5,14 @@
             <span>{{selectedRowsCount}}</span>
             <span>selected</span>
         </div>
-        <div clas="active-row-actions-container"></div>
+
+        <div class="active-row-actions-container">
+            <div ng-if="!isReport">
+                <g-ev-rows-bulk-actions ev-data-service="evDataService"
+                                        ev-event-service="evEventService"></g-ev-rows-bulk-actions>
+            </div>
+        </div>
+
     </div>
 
     <button class="close-button" data-ng-click="closeSelectedRowsActions()">

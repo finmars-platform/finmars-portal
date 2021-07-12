@@ -32,6 +32,7 @@ module.exports = {
     'USER_REQUEST_AN_ACTION': 'USER_REQUEST_AN_ACTION', // user used a Add menu and want to Add Entity (portfolio, account,  etc)
     'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
 
+	'ROWS_ACTION_FIRED': 'ROWS_ACTION_FIRED',
 
     'COLUMN_SORT_CHANGE': 'COLUMN_SORT_CHANGE',
     'GROUP_TYPE_SORT_CHANGE': 'GROUP_TYPE_SORT_CHANGE',

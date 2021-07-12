@@ -491,9 +491,9 @@
 		var rowSelectionBtnContent = '';
 		var rowSelectionBtnClasses = 'g-row-selection-button';
 
-		if (obj.___is_last_activated || obj.___is_activated) {
+		if (obj.___is_active_object || obj.___is_activated) {
 
-			var className = obj.___is_last_activated ? 'last-selected': 'selected';
+			var className = obj.___is_active_object ? 'is-active-object': 'selected';
             classList.push(className);
 
 			rowSelectionBtnClasses += ' checked';

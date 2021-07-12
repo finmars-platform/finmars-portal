@@ -909,7 +909,7 @@
 
             objects.forEach(function (item) {
                 item.___is_activated = false;
-                item.___is_last_activated = false;
+                item.___is_active_object = false;
 
                 evDataService.setObject(item);
 
@@ -955,7 +955,7 @@
 
             objects.forEach(function (item) {
                 item.___is_activated = false;
-                item.___is_last_activated = false;
+                item.___is_active_object = false;
 
                 evDataService.setObject(item);
 
@@ -1046,7 +1046,7 @@
 
         objects.forEach(function (item) {
 
-            item.___is_last_activated = false;
+            item.___is_active_object = false;
             evDataService.setObject(item);
 
         });
@@ -1060,7 +1060,7 @@
         objects.forEach(function (item) {
 
             item.___is_activated = false;
-            item.___is_last_activated = false;
+            item.___is_active_object = false;
 
             evDataService.setObject(item);
 

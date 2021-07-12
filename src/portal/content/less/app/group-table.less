@@ -1115,10 +1115,12 @@
 
   }
 
+  @gRowsActionSelectorWidth: 133px;
+
   .active-rows-actions {
     position: absolute;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     left: 0;
     bottom: 0;
@@ -1130,11 +1132,14 @@
     z-index: 1;
 
     .active-row-actions-wrapper {
+      flex: 1 1 auto;
+      max-width: 1000px;
       height: 33px;
       display: flex;
 
       .selected-rows-count {
-        width: 115px;
+        // width: 115px;
+        flex: 0 0 115px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -1144,12 +1149,31 @@
           margin-right: 5px;
         }
       }
+
+      .ev-active-row-actions {
+
+        .selector-btn {
+          width: @gRowsActionSelectorWidth;
+          margin: 0 0 0 20px;
+          min-height: 33px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          line-height: 1;
+        }
+
+      }
     }
 
     .close-button {
+      flex: 0 0 30px;
       color: #fff;
-      margin-right: 505px;
+      // margin-right: 505px;
     }
+  }
+
+  .rows-actions-selector-popup {
+    min-width: @gRowsActionSelectorWidth;
   }
 
   .column-to-filters-drop-area {

@@ -70,8 +70,9 @@
 			//region Functions for context menu
 			var updateTableAfterEntityChanges = function (res) {
 
-                vm.entityViewerDataService.setActiveObjectAction(null);
-                vm.entityViewerDataService.setActiveObjectActionData(null);
+                /*vm.entityViewerDataService.setActiveObjectAction(null);
+                vm.entityViewerDataService.setActiveObjectActionData(null);*/
+				vm.entityViewerDataService.setRowsActionData(null);
 
                 if (res && res.res === 'agree') {
 

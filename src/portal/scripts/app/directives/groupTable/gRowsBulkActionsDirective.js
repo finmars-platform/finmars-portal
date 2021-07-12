@@ -17,6 +17,8 @@
 
 				let vm = this;
 
+				$scope.isReport = $scope.evDataService.isEntityReport();
+
 				$scope.selectedRowsCount = 0;
 				const selectedRowsActionBlockElement = $scope.contentWrapElement.querySelector('.activeRowsActions');
 
@@ -77,8 +79,8 @@
 
 				$scope.closeSelectedRowsActions = function () {
 
-					$scope.selectedRowsCount = 0;
-					clearAllRowsSelection();
+					// $scope.selectedRowsCount = 0;
+					// clearAllRowsSelection();
 					selectedRowsActionBlockElement.classList.add('display-none');
 
 				};

@@ -139,7 +139,7 @@
 
         objects.forEach(function (item) {
             item.___is_activated = false;
-            item.___is_last_activated = false;
+            item.___is_active_object = false;
 
             evDataService.setObject(item);
         });
@@ -159,7 +159,7 @@
 
     var handleShiftSelection = function (evDataService, evEventService, clickData) {
 
-        var lastActiveRow = evDataService.getLastActivatedRow();
+        var lastActiveRow = evDataService.getActiveObjectRow();
 
         console.log('lastActiveRow', lastActiveRow);
 
@@ -171,7 +171,7 @@
 
                 obj.___is_activated = !obj.___is_activated;
                 evDataService.setObject(obj);
-                evDataService.setLastActivatedRow(obj);
+                evDataService.setActiveObjectRow(obj);
 
             } else if (clickData.___type === 'group') {
 
@@ -181,7 +181,7 @@
 
                     group.___is_activated = !group.___is_activated;
 
-                    evDataService.setLastActivatedRow({
+                    evDataService.setActiveObjectRow({
                         ___id: clickData.___id,
                         ___parentId: clickData.___parentId
                     });
@@ -336,13 +336,13 @@
                 if (group) {
                     group.___is_activated = true;
                     evDataService.setData(group);
-                    evDataService.setLastActivatedRow(group);
+                    evDataService.setActiveObjectRow(group);
                 } else {
 
                     var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
                     obj.___is_activated = true;
                     evDataService.setObject(obj);
-                    evDataService.setLastActivatedRow(obj);
+                    evDataService.setActiveObjectRow(obj);
 
                 }
 
@@ -365,11 +365,11 @@
                 if (group) {
                     group.___is_activated = !state;
                     evDataService.setData(group);
-                    evDataService.setLastActivatedRow(group);
+                    evDataService.setActiveObjectRow(group);
                 } else {
                     obj.___is_activated = !state;
                     evDataService.setObject(obj);
-                    evDataService.setLastActivatedRow(obj);
+                    evDataService.setActiveObjectRow(obj);
                 }
 
 
@@ -391,11 +391,11 @@
             obj.___is_activated = !obj.___is_activated;
 
             if (!obj.___is_activated) {
-                obj.___is_last_activated = false;
+                obj.___is_active_object = false;
             }
 
             evDataService.setObject(obj);
-            evDataService.setLastActivatedRow(obj);
+            evDataService.setActiveObjectRow(obj);
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
@@ -408,29 +408,30 @@
             evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
             obj.___is_activated = !obj.___is_activated;
-            obj.___is_last_activated = !obj.___is_last_activated;
+            obj.___is_active_object = !obj.___is_active_object;
 
             evDataService.setObject(obj);
 
-            if (obj.___is_last_activated || obj.___is_activated) {
+            if (obj.___is_active_object || obj.___is_activated) {
 
                 obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
 
                 evDataService.setActiveObject(obj);
 
-                evDataService.setLastActivatedRow(obj);
+                evDataService.setActiveObjectRow(obj);
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
             } else {
 
                 evDataService.setActiveObject(null);
-                evDataService.setLastActivatedRow(null);
+                evDataService.setActiveObjectRow(null);
 
             }
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
         }
 
+		evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
     };
 
@@ -595,7 +596,8 @@
 
                 metaHelper.openLinkInNewTab(event);
 
-            } else if (event.detail === 2) { // double click handler
+            }
+            else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -604,24 +606,28 @@
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-                    var dropdownAction = 'edit';
+                    // var dropdownAction = 'edit';
 
                     evDataService.setActiveObject(obj);
-                    evDataService.setActiveObjectAction(dropdownAction);
+                    // evDataService.setActiveObjectAction(dropdownAction);
+					evDataService.setRowsActionData({actionKey: 'edit', object: obj});
 
                     evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+					evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
+					evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
                 }
 
-            } else if (clickData.isShiftPressed) {
+            }
+            else if (clickData.isShiftPressed) {
 
                 if (event.detail === 1) {
 
-                    if (clickData.___type === 'group') {
+                    /* if (clickData.___type === 'group') {
 
                         handleGroupClick(clickData, evDataService, evEventService);
 
-                    }
+                    } */
 
                     if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
@@ -634,13 +640,15 @@
                     }
                 }
 
-            } else if (!selection.length) {
+            }
+            else if (!selection.length) {
 
                 if (event.detail === 1) {
 
-                    if (clickData.___type === 'group') {
+                    /*if (clickData.___type === 'group') {
                         handleGroupClick(clickData, evDataService, evEventService);
-                    } else if (clickData.___type === 'control') {
+                    } else*/
+					if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
                     } else if (clickData.___type === 'object') {
                         handleObjectClick(clickData, evDataService, evEventService);
@@ -650,6 +658,7 @@
 
 
             }
+
         });
 
     };
@@ -770,25 +779,33 @@
         if (dropdownAction === 'toggle_row') {
 
             var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+			var activeObjChanged = false;
 
             if (obj.___is_activated) {
 
-                obj.___is_activated = false;
-                obj.___is_last_activated = false;
+            	if (obj.___is_active_object) {
 
-                evDataService.setActiveObject(null);
-                evDataService.setLastActivatedRow(null);
+            		evDataService.setActiveObjectRow(null);
+					evDataService.setActiveObject(null);
+					activeObjChanged = true;
+
+				}
+
+                obj.___is_activated = false;
+                obj.___is_active_object = false;
+
+                // evDataService.setActiveObject(null);
 
             } else {
 
                 // clearObjectActiveState(evDataService);
-                evDataHelper.clearLastActiveObject(evDataService);
+                // evDataHelper.clearLastActiveObject(evDataService);
 
                 obj.___is_activated = true;
-                obj.___is_last_activated = true;
+                obj.___is_active_object = true;
 
-                evDataService.setActiveObject(obj);
-                evDataService.setLastActivatedRow(obj);
+                // evDataService.setActiveObject(obj);
+                // evDataService.setActiveObjectRow(obj);
 
             }
 
@@ -796,29 +813,37 @@
 
             clearDropdownsAndRows(evDataService, evEventService, true);
 
-        } else {
+			if (activeObjChanged) evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+			evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
+
+        }
+        else {
 
             if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
             }
 
             if (objectId && dropdownAction && parentGroupHashId) {
-
-                var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+				dropdownActionData.actionKey = dropdownAction;
+                /* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
                 if (!obj) {
                     obj = {}
-                }
+                } */
+				dropdownActionData.object = evDataHelper.getObject(objectId, parentGroupHashId, evDataService) || {};
 
-                obj.event = event;
+                // obj.event = event;
+				dropdownActionData.event = event;
 
                 console.log('dropdownActionData', dropdownActionData);
 
-                evDataService.setActiveObject(obj);
-                evDataService.setActiveObjectAction(dropdownAction);
-                evDataService.setActiveObjectActionData(dropdownActionData);
+                // evDataService.setActiveObject(obj);
+                /* evDataService.setActiveObjectAction(dropdownAction);
+                evDataService.setActiveObjectActionData(dropdownActionData); */
+				evDataService.setRowsActionData(dropdownActionData);
 
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                // evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+				evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
 
                 clearDropdownsAndRows(evDataService, evEventService, true);
 

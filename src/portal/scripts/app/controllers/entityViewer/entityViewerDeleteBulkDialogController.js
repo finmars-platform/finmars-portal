@@ -7,13 +7,19 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    module.exports = function EntityViewerDeleteBulkDialogController($scope, $mdDialog, evDataService, evEventService) {
+    module.exports = function EntityViewerDeleteBulkDialogController($scope, $mdDialog, evDataService, evEventService, data) {
 
         var vm = this;
 
         vm.entityType = evDataService.getEntityType();
 
         vm.isDeleted = false;
+
+		var idsToDelete = [];
+
+		if (data) {
+			idsToDelete = data.idsToDelete || [];
+		}
 
 
         vm.cancel = function () {
@@ -24,13 +30,20 @@
 
             var objects = evDataService.getObjects();
 
-
             var ids = objects
                 .filter(function (item) {
                     return item.___is_activated
                 }).map(function (item) {
                     return item.id
                 });
+
+			idsToDelete.forEach(function (id) {
+
+				if (ids.indexOf(id) === -1) {
+					ids.push(id);
+				}
+
+			});
 
             console.log('ids', ids);
 
