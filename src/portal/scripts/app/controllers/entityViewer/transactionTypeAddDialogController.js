@@ -1978,7 +1978,7 @@
             return result;
         };
 
-        vm.loadRelation = function (field) {
+        /* vm.loadRelation = function (field) {
 
             console.log('field', field);
             field = field.replace(/-/g, "_");
@@ -1999,7 +1999,8 @@
                 }
 
             })
-        };
+        }; */
+		vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
 
