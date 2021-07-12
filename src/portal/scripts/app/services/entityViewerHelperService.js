@@ -518,10 +518,10 @@
         }
     };
 
-    var insertObjectAfterCreateHandler = function (dataService, eventService, resultItem) {
+    var insertObjectAfterCreateHandler = function (evDataService, evEventService, resultItem) {
 
-        var groups = dataService.getDataAsList();
-        var requestParameters = dataService.getAllRequestParameters();
+        var groups = evDataService.getDataAsList();
+        var requestParameters = evDataService.getAllRequestParameters();
         var requestParametersKeys = Object.keys(requestParameters);
 
         var matchedRequestParameter;
@@ -583,31 +583,32 @@
 
         }
 
-        eventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
-    var postEditionActions = function (dataService, eventService, layout, $bigDrawer, res, entityId) {
+    var postEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
 
-        dataService.setActiveObjectAction(null);
-        dataService.setActiveObjectActionData(null);
+        /* evDataService.setActiveObjectAction(null);
+        evDataService.setActiveObjectActionData(null); */
+		evDataService.setRowsActionData(null);
 
         if (res && res.res === 'agree') {
 
             if (res.data.action === 'delete') {
 
-                updateTableAfterEntitiesDeletion(dataService, eventService, [entityId]);
+                updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
 
             } else if (res.data.action === 'copy') {
 
                 const entitytype = res.data.entityType;
                 const entity = res.data.entity;
 
-                openEntityViewerAddDrawer(dataService, eventService, layout, $bigDrawer, entitytype, entity);
+                openEntityViewerAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
 
             } else {
 
-                updateEntityInsideTable(dataService, eventService, res);
+                updateEntityInsideTable(evDataService, evEventService, res);
 
             }
 
@@ -615,11 +616,11 @@
 
     };
 
-    var postAdditionActions = function (dataService, eventService, layout, $bigDrawer, res, resultItem) { // resultItem need because complex transaction have different data
+    var postAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, resultItem) { // resultItem need because complex transaction have different data
 
         if (res && res.res === 'agree') {
 
-            insertObjectAfterCreateHandler(dataService, eventService, resultItem);
+            insertObjectAfterCreateHandler(evDataService, evEventService, resultItem);
 
             if (res.data.action === 'edit') {
                 // open edit window
@@ -627,8 +628,8 @@
                 const entitytype = resultItem.entityType;
                 const entityId = resultItem.entity.id;
                 openEntityViewerEditDrawer(
-                    dataService,
-                    eventService,
+                    evDataService,
+                    evEventService,
                     layout,
                     $bigDrawer,
                     entitytype,
@@ -639,64 +640,65 @@
         }
     };
 
-    var postTTypeEditionActions = function (dataService, eventService, layout, $bigDrawer, res, entityId) {
+    var postTTypeEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
 
-        dataService.setActiveObjectAction(null);
-        dataService.setActiveObjectActionData(null);
+        /* evDataService.setActiveObjectAction(null);
+        evDataService.setActiveObjectActionData(null); */
+		evDataService.setRowsActionData(null);
 
         if (res && res.res === 'agree') {
 
             if (res.data.action === 'delete') {
 
-                var objects = dataService.getObjects();
+                var objects = evDataService.getObjects();
 
                 objects.forEach(function (obj) {
 
                     if (entityId === obj.id) {
 
-                        var parent = dataService.getData(obj.___parentId);
+                        var parent = evDataService.getData(obj.___parentId);
 
                         parent.results = parent.results.filter(function (resultItem) {
                             return resultItem.id !== entityId
                         });
 
-                        dataService.setData(parent)
+                        evDataService.setData(parent)
 
                     }
 
                 });
 
-                eventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                updateTableAfterEntitiesDeletion(dataService, eventService, [entityId]);
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
 
             }  else if (res.data.action === 'copy') {
 
                 const entitytype = res.data.entityType;
                 const entity = res.data.entity;
 
-                openTTypeAddDrawer(dataService, eventService, layout, $bigDrawer, entitytype, entity);
+                openTTypeAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
 
             } else {
 
-                updateEntityInsideTable(dataService, eventService, res);
+                updateEntityInsideTable(evDataService, evEventService, res);
 
             }
 
         }
     };
 
-    var postTTypeAdditionActions = function (dataService, eventService, layout, $bigDrawer, res) {
+    var postTTypeAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res) {
         if (res && res.res === 'agree') {
 
-            insertObjectAfterCreateHandler(dataService, eventService, res.data);
+            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
 
             if (res.data.action === 'edit') {
                 // open edit window
                 const entitytype = res.data.entityType;
                 const entityId = res.data.entity.id;
                 openTTypeEditDrawer(
-                    dataService,
-                    eventService,
+                    evDataService,
+                    evEventService,
                     layout,
                     $bigDrawer,
                     entitytype,
@@ -707,16 +709,17 @@
         }
     };
 
-    var postComplexTransactionEditionAction = function (dataService, eventService, layout, $bigDrawer, res, entityId) {
+    var postComplexTransactionEditionAction = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
 
-        dataService.setActiveObjectAction(null);
-        dataService.setActiveObjectActionData(null);
+        /* evDataService.setActiveObjectAction(null);
+        evDataService.setActiveObjectActionData(null); */
+		evDataService.setRowsActionData(null);
 
         if (res && res.res === 'agree') {
 
             if (res.data.action === 'delete') {
 
-                updateTableAfterEntitiesDeletion(dataService, eventService, [entityId]);
+                updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
 
             } else if (res.data.action === 'copy') {
 
@@ -724,11 +727,11 @@
                 const entity = res.data.entity;
                 const isCopy = true;
 
-                openComplexTransactionAddDrawer(dataService, eventService, layout, $bigDrawer, entitytype, entity, isCopy)
+                openComplexTransactionAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity, isCopy)
 
             } else {
 
-                var objects = dataService.getObjects();
+                var objects = evDataService.getObjects();
 
                 objects.forEach(function (obj) {
 
@@ -740,13 +743,13 @@
 
                         });
 
-                        dataService.setObject(obj);
+                        evDataService.setObject(obj);
 
                     }
 
                 });
 
-                eventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
             }
 
@@ -755,20 +758,20 @@
 
             var tIsLocked = res.data.updateRowIcon.is_locked;
             var tIsCanceled = res.data.updateRowIcon.is_canceled;
-            var activeObject = dataService.getActiveObject();
-            var transactionObj = dataService.getObject(activeObject.___id, activeObject.___parentId);
+            var activeObject = evDataService.getActiveObject();
+            var transactionObj = evDataService.getObject(activeObject.___id, activeObject.___parentId);
 
             transactionObj.is_locked = tIsLocked;
             transactionObj.is_canceled = tIsCanceled;
-            dataService.setObject(transactionObj);
+            evDataService.setObject(transactionObj);
 
-            eventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
+            evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
         }
     };
 
     var openComplexTransactionAddDrawer = function (
-        dataService,
-        eventService,
+        evDataService,
+        evEventService,
         layout,
         $bigDrawer,
         entityType,
@@ -812,20 +815,20 @@
 
         }).then(function (res) {
 
-            postAdditionActions(dataService, eventService, layout, $bigDrawer, res, res.data.complex_transaction);
+            postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data.complex_transaction);
 
         });
     };
 
 	/**
 	 *
-	 * @param dataService {Object} - entityViewerDataService
-	 * @param eventService {Object} - entityViewerEventService
+	 * @param evDataService {Object} - entityViewerDataService
+	 * @param evEventService {Object} - entityViewerEventService
 	 * @param $bigDrawer {Object} - bigDrawer module
 	 * @param entityId {number} - complex transaction id
 	 * @param layout {Object=} - layout of form
 	 */
-    var openComplexTransactionEditDrawer = function (dataService, eventService, $bigDrawer, entityId, layout) {
+    var openComplexTransactionEditDrawer = function (evDataService, evEventService, $bigDrawer, entityId, layout) {
 
 /* $mdDialog.show({
             controller: 'ComplexTransactionEditDialogController as vm',
@@ -925,15 +928,15 @@
 
         }).then(function (res) {
 
-            postComplexTransactionEditionAction(dataService, eventService, layout, $bigDrawer, res, entityId);
+            postComplexTransactionEditionAction(evDataService, evEventService, layout, $bigDrawer, res, entityId);
 
         });
 
     }
 
     var openTTypeAddDrawer = function (
-        dataService,
-        eventService,
+        evDataService,
+        evEventService,
         layout,
         $bigDrawer,
         entityType,
@@ -970,7 +973,7 @@
 
         }).then(function (res) {
 
-            postTTypeAdditionActions(dataService, eventService, layout, $bigDrawer, res);
+            postTTypeAdditionActions(evDataService, evEventService, layout, $bigDrawer, res);
 
         });
 
@@ -978,8 +981,8 @@
 
 
     var openTTypeEditDrawer = function (
-        dataService,
-        eventService,
+        evDataService,
+        evEventService,
         layout,
         $bigDrawer,
         entitytype,
@@ -1074,7 +1077,7 @@
 
         }).then(function (res) {
 
-            postTTypeEditionActions(dataService, eventService, layout, $bigDrawer, res, entityId);
+            postTTypeEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
 
 /*                            vm.entityViewerDataService.setActiveObjectAction(null);
                             vm.entityViewerDataService.setActiveObjectActionData(null);
@@ -1136,8 +1139,8 @@
     };
 
     var openEntityViewerAddDrawer = function (
-        dataService,
-        eventService,
+        evDataService,
+        evEventService,
         layout,
         $bigDrawer,
         entityType,
@@ -1177,7 +1180,7 @@
 
         }).then(function (res) {
 
-            postAdditionActions(dataService, eventService, layout, $bigDrawer, res, res.data);
+            postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data);
 
         });
 
@@ -1185,8 +1188,8 @@
 
 
     var openEntityViewerEditDrawer = function (
-        dataService,
-        eventService,
+        evDataService,
+        evEventService,
         layout,
         $bigDrawer,
 		entityType,
@@ -1277,21 +1280,21 @@
 
         }).then(function (res) {
 
-            postEditionActions(dataService, eventService, layout, $bigDrawer, res, entityId);
+            postEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
 
         });
     };
 
-    var updateTableAfterEntitiesDeletion = function (dataService, eventService, deletedEntitiesIds) {
+    var updateTableAfterEntitiesDeletion = function (evDataService, evEventService, deletedEntitiesIds) {
 
-        var evOptions = dataService.getEntityViewerOptions();
-        var objects = dataService.getObjects();
+        var evOptions = evDataService.getEntityViewerOptions();
+        var objects = evDataService.getObjects();
 
         objects.forEach(function (obj) {
 
             if (deletedEntitiesIds.includes(obj.id)) {
 
-                var parent = dataService.getData(obj.___parentId)
+                var parent = evDataService.getData(obj.___parentId)
 
                 // if deleted entities shown, mark them
                 if (evOptions.entity_filters && evOptions.entity_filters.includes('deleted')) {
@@ -1312,19 +1315,19 @@
 
                 }
 
-                dataService.setData(parent);
+                evDataService.setData(parent);
 
             }
 
         });
 
-        eventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 
-    var updateEntityInsideTable = function (dataService, eventService, res) {
+    var updateEntityInsideTable = function (evDataService, evEventService, res) {
 
-        var objects = dataService.getObjects();
+        var objects = evDataService.getObjects();
 
         objects.forEach(function (obj) {
 
@@ -1336,13 +1339,13 @@
 
                 });
 
-                dataService.setObject(obj);
+                evDataService.setObject(obj);
 
             }
 
         });
 
-        eventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
     };
 

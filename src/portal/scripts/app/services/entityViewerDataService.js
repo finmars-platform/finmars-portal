@@ -777,12 +777,12 @@
         // Activated Row just for selection purpose
         // Active Object for Split panel,
 
-        function setLastActivatedRow(obj) {
-            data.lastActivatedRow = obj;
+        function setActiveObjectRow(obj) {
+            data.activeObjectRow = obj;
         }
 
-        function getLastActivatedRow() {
-            return data.lastActivatedRow;
+        function getActiveObjectRow() {
+            return data.activeObjectRow;
         }
 
         function setActiveObject(obj) {
@@ -804,7 +804,7 @@
 
         }
 
-        function setActiveObjectAction(action) {
+        /* function setActiveObjectAction(action) {
             data.activeObjectAction = action;
         }
 
@@ -818,23 +818,7 @@
 
         function getActiveObjectActionData() {
             return data.activeObjectActionData;
-        }
-
-        function setActiveColumnSort(column) {
-            data.activeColumnSort = column;
-        }
-
-        function getActiveColumnSort() {
-            return data.activeColumnSort;
-        }
-
-        function setActiveGroupTypeSort(group) {
-            data.activeGroupTypeSort = group;
-        }
-
-        function getActiveGroupTypeSort() {
-            return data.activeGroupTypeSort;
-        }
+        } */
 
         function getActiveObject() {
             return data.activeObject;
@@ -843,6 +827,41 @@
         function getActiveObjectFromAbove() {
             return data.activeObjectFromAbove;
         }
+
+		function setActiveColumnSort(column) {
+			data.activeColumnSort = column;
+		}
+
+		function getActiveColumnSort() {
+			return data.activeColumnSort;
+		}
+
+		function setActiveGroupTypeSort(group) {
+			data.activeGroupTypeSort = group;
+		}
+		/**
+		 *
+		 * @param actionData {Object|null}
+		 * @param {String} actionData.actionKey - edit, delete etc
+		 * @param {Object=} actionData.object - data about table row targeted for action
+		 * @param {string|number=} actionData.id - e.g. transactionType.id, price history error id, etc.
+		 * @memberof module:entityViewerDataService
+		 */
+		function setRowsActionData (actionData) {
+			data.rowsActionData = actionData;
+		}
+		/**
+		 *
+		 * @returns {{actionKey: String, [object]: Object, [id]: string|number} | any}
+		 * @memberof module:entityViewerDataService
+		 */
+		function getRowsActionData () {
+			return data.rowsActionData;
+		}
+
+		function getActiveGroupTypeSort() {
+			return data.activeGroupTypeSort;
+		}
 
         function setRowHeight(height) {
             return data.virtualScroll.rowHeight = height;
@@ -1686,11 +1705,14 @@
             setActiveObject: setActiveObject,
             getActiveObject: getActiveObject,
             clearActiveObject: clearActiveObject,
-            setActiveObjectAction: setActiveObjectAction,
+            /* setActiveObjectAction: setActiveObjectAction,
             getActiveObjectAction: getActiveObjectAction,
 
             setActiveObjectActionData: setActiveObjectActionData,
-            getActiveObjectActionData: getActiveObjectActionData,
+            getActiveObjectActionData: getActiveObjectActionData, */
+
+			setRowsActionData: setRowsActionData,
+			getRowsActionData: getRowsActionData,
 
             getRowHeight: getRowHeight,
             setRowHeight: setRowHeight,
@@ -1755,8 +1777,8 @@
             setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,
             getSplitPanelLayoutToOpen: getSplitPanelLayoutToOpen,
 
-            setLastActivatedRow: setLastActivatedRow,
-            getLastActivatedRow: getLastActivatedRow,
+			setActiveObjectRow: setActiveObjectRow,
+			getActiveObjectRow: getActiveObjectRow,
 
             setUseFromAbove: setUseFromAbove,
             getUseFromAbove: getUseFromAbove,

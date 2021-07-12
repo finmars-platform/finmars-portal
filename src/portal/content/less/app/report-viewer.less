@@ -206,7 +206,7 @@
       }
     }
 
-    &.last-selected, &.context-menu-opened {
+    &.is-active-object, &.context-menu-opened {
       // background: #e4c1b5;
       .g-row-selection {
         fill: #4C334D;
@@ -217,7 +217,7 @@
       }
     }
 
-    &.last-selected {
+    &.is-active-object {
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
       z-index: 1;
     }
@@ -500,15 +500,15 @@
   background: rgba(152, 251, 152, 0.6);
 }
 
-.g-wrapper .g-row.g-row-marked-red:not(.selected):not(.last-selected) {
+.g-wrapper .g-row.g-row-marked-red:not(.selected):not(.is-active-object) {
   background-color: #FDECE5;
 }
 
-.g-wrapper .g-row.g-row-marked-yellow:not(.selected):not(.last-selected) {
+.g-wrapper .g-row.g-row-marked-yellow:not(.selected):not(.is-active-object) {
   background-color: #FEF9EF;
 }
 
-.g-wrapper .g-row.g-row-marked-green:not(.selected):not(.last-selected) {
+.g-wrapper .g-row.g-row-marked-green:not(.selected):not(.is-active-object) {
   background-color: #E1FEF5;
 }
 

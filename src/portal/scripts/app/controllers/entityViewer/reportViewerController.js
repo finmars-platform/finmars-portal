@@ -45,8 +45,9 @@
 
             var updateTableAfterEntityChanges = function (res) {
 
-                vm.entityViewerDataService.setActiveObjectAction(null);
-                vm.entityViewerDataService.setActiveObjectActionData(null);
+                /* vm.entityViewerDataService.setActiveObjectAction(null);
+                vm.entityViewerDataService.setActiveObjectActionData(null); */
+				vm.entityViewerDataService.setRowsActionData(null);
 
                 if (res && res.res === 'agree') {
 
@@ -228,7 +229,7 @@
                 return contextData;
             };
 
-            var createEntity = function (activeObject, locals) {
+            var createEntity = function (event, locals) {
 
                 var dialogController = 'EntityViewerAddDialogController as vm';
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-add-dialog-view.html';
@@ -242,7 +243,7 @@
                     controller: dialogController,
                     templateUrl: dialogTemplateUrl,
                     parent: angular.element(document.body),
-                    targetEvent: activeObject.event,
+                    targetEvent: event,
                     locals: locals
                 }).then(function (res) {
 
@@ -258,7 +259,7 @@
 
             };
 
-            var editEntity = function (activeObject, locals) {
+            var editEntity = function (event, locals) {
 
                 var dialogController = 'EntityViewerEditDialogController as vm';
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
@@ -274,7 +275,7 @@
                     controller: dialogController,
                     templateUrl: dialogTemplateUrl,
                     parent: angular.element(document.body),
-                    targetEvent: activeObject.event,
+                    targetEvent: event,
                     locals: locals
 
                 }).then(function (res) {
@@ -291,13 +292,13 @@
 
             };
 
-            var offerToCreateEntity = function (activeObject, warningDescription, createEntityLocals) {
+            var offerToCreateEntity = function (event, warningDescription, createEntityLocals) {
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
                     parent: angular.element(document.body),
-                    targetEvent: activeObject.event,
+                    targetEvent: event,
                     preserveScope: true,
                     autoWrap: true,
                     multiple: true,
@@ -350,7 +351,7 @@
                             }
                         });*/
 
-                        createEntity(activeObject, createEntityLocals);
+                        createEntity(event, createEntityLocals);
 
                     }
                 });
@@ -391,12 +392,17 @@
 
                 });
 
-                vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+                vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, function () {
 
-                    var activeObject = vm.entityViewerDataService.getActiveObject();
+                    /* var activeObject = vm.entityViewerDataService.getActiveObject();
                     var action = vm.entityViewerDataService.getActiveObjectAction();
-                    var actionData = vm.entityViewerDataService.getActiveObjectActionData();
+                    var actionData = vm.entityViewerDataService.getActiveObjectActionData(); */
+					var actionData = vm.entityViewerDataService.getRowsActionData();
+					var action = actionData.actionKey;
                     var reportOptions = vm.entityViewerDataService.getReportOptions();
+                    var flatList = vm.entityViewerDataService.getFlatList();
+					var activeRowIndex = flatList.findIndex(object => object.___is_activated);
+					var activeRowExist = activeRowIndex > -1;
 
                     var currencies = reportOptions.item_currencies;
 
@@ -405,7 +411,7 @@
 
                         currencies.forEach(function (item) {
 
-                            if (item.id === activeObject[currencyKey]) {
+                            if (item.id === actionData.object[currencyKey]) {
                                 currencyObj.id = item.id;
                                 currencyObj.name = item.name;
                                 currencyObj.short_name = item.short_name;
@@ -417,89 +423,86 @@
                         return currencyObj;
                     };
 
-                    console.log('activeObject', activeObject);
-                    console.log('actionData', actionData);
-                    console.log('action', action);
+                    var contextData = getContextData(reportOptions, actionData.object);
 
-                    var contextData = getContextData(reportOptions, activeObject);
-
-                    if (activeObject) {
+                    // if (activeObject) {
+					if (actionData.object || activeRowExist) {
 
                         if (action === 'edit_instrument') {
 
                             var locals = {
                                 entityType: 'instrument',
-                                entityId: activeObject['instrument.id'],
+                                entityId: actionData.object['instrument.id'],
                                 data: {}
                             };
 
-                            editEntity(activeObject, locals);
+                            editEntity(actionData.event, locals);
                         }
 
-                        if (action === 'edit_account') {
+                        else if (action === 'edit_account') {
 
                             var locals = {
                                 entityType: 'account',
-                                entityId: activeObject['account.id'],
+                                entityId: actionData.object['account.id'],
                                 data: {}
                             };
 
-                            editEntity(activeObject, locals);
+                            editEntity(actionData.event, locals);
 
                         }
 
-                        if (action === 'edit_portfolio') {
+                        else if (action === 'edit_portfolio') {
 
                             var locals = {
                                 entityType: 'portfolio',
-                                entityId: activeObject['portfolio.id'],
+                                entityId: actionData.object['portfolio.id'],
                                 data: {}
                             };
 
-                            editEntity(activeObject, locals);
+                            editEntity(actionData.event, locals);
 
                         }
 
-                        if (action === 'edit_currency') {
+                        else if (action === 'edit_currency') {
 
                             var locals = {
                                 entityType: 'currency',
-                                entityId: activeObject['currency.id'],
+                                entityId: actionData.object['currency.id'],
                                 data: {}
                             };
 
-                            editEntity(activeObject, locals);
+                            editEntity(actionData.event, locals);
 
                         }
 
-                        if (action === 'edit_pricing_currency') {
+                        else if (action === 'edit_pricing_currency') {
 
                             var locals = {
                                 entityType: 'currency',
-                                entityId: activeObject['instrument.pricing_currency.id'],
+                                entityId: actionData.object['instrument.pricing_currency.id'],
                                 data: {}
                             };
 
-                            editEntity(activeObject, locals);
+                            editEntity(actionData.event, locals);
 
                         }
 
-                        if (action === 'edit_accrued_currency') {
+                        else if (action === 'edit_accrued_currency') {
 
                             var locals = {
                                 entityType: 'currency',
-                                entityId: activeObject['instrument.accrued_currency.id'],
+                                entityId: actionData.object['instrument.accrued_currency.id'],
                                 data: {}
                             };
 
-                            editEntity(activeObject, locals);
+                            editEntity(actionData.event, locals);
 
                         }
 
-                        if (action === 'edit_price') {
+                        else if (action === 'edit_price') {
 
                             var filters = {
-                                instrument: activeObject['instrument.id'],
+                                instrument: actionData.object['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_after: reportOptions.report_date,
                                 date_before: reportOptions.report_date
@@ -517,7 +520,7 @@
                                         data: {}
                                     };
 
-                                    editEntity(activeObject, locals);
+                                    editEntity(actionData.event, locals);
 
                                 } else {
 
@@ -526,12 +529,12 @@
                                     var createEntityLocals = {
                                         entityType: 'price-history',
                                         entity: {
-                                            instrument: activeObject['instrument.id'],
+                                            instrument: actionData.object['instrument.id'],
                                             instrument_object: {
-                                                id: activeObject['instrument.id'],
-                                                name: activeObject['instrument.name'],
-                                                user_code: activeObject['instrument.user_code'],
-                                                short_name: activeObject['instrument.short_name']
+                                                id: actionData.object['instrument.id'],
+                                                name: actionData.object['instrument.name'],
+                                                user_code: actionData.object['instrument.user_code'],
+                                                short_name: actionData.object['instrument.short_name']
                                             },
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
@@ -540,7 +543,7 @@
                                         data: {}
                                     };
 
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+                                    offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
 
                                 }
 
@@ -549,10 +552,10 @@
 
                         }
 
-                        if (action === 'edit_fx_rate') {
+                        else if (action === 'edit_fx_rate') {
 
                             var filters = {
-                                currency: activeObject['currency.id'],
+                                currency: actionData.object['currency.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
@@ -573,7 +576,7 @@
 
                                     contextData.date = reportOptions.report_date
 
-                                    editEntity(activeObject, locals);
+                                    editEntity(actionData.event, locals);
 
                                 } else {
 
@@ -581,12 +584,12 @@
                                     var createEntityLocals = {
                                         entityType: 'currency-history',
                                         entity: {
-                                            currency: activeObject['currency.id'],
+                                            currency: actionData.object['currency.id'],
                                             currency_object: {
-                                                id: activeObject['currency.id'],
-                                                name: activeObject['currency.name'],
-                                                short_name: activeObject['currency.short_name'],
-                                                user_code: activeObject['currency.user_code']
+                                                id: actionData.object['currency.id'],
+                                                name: actionData.object['currency.name'],
+                                                short_name: actionData.object['currency.short_name'],
+                                                user_code: actionData.object['currency.user_code']
                                             },
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
@@ -595,7 +598,7 @@
                                         data: {}
                                     };
 
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+                                    offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
 
                                 }
 
@@ -603,13 +606,11 @@
 
                         }
 
-                        if (action === 'edit_pricing_currency_price' && activeObject.id) {
-
-                            console.log('activeObject', activeObject);
+                        else if (action === 'edit_pricing_currency_price' && actionData.object.id) {
 
                             var filters = {
-                                currency: activeObject['instrument.pricing_currency'],
-                                instrument: activeObject['instrument.id'],
+                                currency: actionData.object['instrument.pricing_currency'],
+                                instrument: actionData.object['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
@@ -627,7 +628,7 @@
                                         data: {}
                                     };
 
-                                    editEntity(activeObject, locals);
+                                    editEntity(actionData.event, locals);
 
                                 } else {
 
@@ -637,7 +638,7 @@
                                     var createEntityLocals = {
                                         entityType: 'currency-history',
                                         entity: {
-                                            currency: activeObject['instrument.pricing_currency'],
+                                            currency: actionData.object['instrument.pricing_currency'],
                                             currency_object: currency_object,
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
@@ -646,7 +647,7 @@
                                         data: {}
                                     };
 
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+                                    offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
 
                                 }
 
@@ -654,11 +655,11 @@
 
                         }
 
-                        if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
+						else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
 
                             var filters = {
-                                currency: activeObject['instrument.accrued_currency.id'],
-                                // instrument: activeObject['instrument.id'],
+                                currency: actionData.object['instrument.accrued_currency.id'],
+                                // instrument: actionData.object['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
@@ -676,7 +677,7 @@
                                         data: {}
                                     };
 
-                                    editEntity(activeObject, locals);
+                                    editEntity(actionData.event, locals);
 
                                 } else {
 
@@ -686,7 +687,7 @@
                                     var createEntityLocals = {
                                         entityType: 'currency-history',
                                         entity: {
-                                            currency: activeObject['instrument.accrued_currency'],
+                                            currency: actionData.object['instrument.accrued_currency'],
                                             currency_object: currency_object,
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
@@ -695,7 +696,7 @@
                                         data: {}
                                     };
 
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+                                    offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
 
 
                                 }
@@ -704,11 +705,11 @@
 
                         }
 
-                        if (action === 'edit_pricing_currency_fx_rate' && activeObject.id) {
+						else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
 
                             var filters = {
-                                currency: activeObject['instrument.pricing_currency.id'],
-                                // instrument: activeObject['instrument.id'],
+                                currency: actionData.object['instrument.pricing_currency.id'],
+                                // instrument: actionData.object['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
@@ -726,7 +727,7 @@
                                         data: {}
                                     };
 
-                                    editEntity(activeObject, locals);
+                                    editEntity(actionData.event, locals);
 
                                 } else {
 
@@ -736,7 +737,7 @@
                                     var createEntityLocals = {
                                         entityType: 'currency-history',
                                         entity: {
-                                            currency: activeObject['instrument.pricing_currency.id'],
+                                            currency: actionData.object['instrument.pricing_currency.id'],
                                             currency_object: currency_object,
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
@@ -745,7 +746,7 @@
                                         data: {}
                                     };
 
-                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+                                    offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
 
 
                                 }
@@ -754,7 +755,7 @@
 
                         }
 
-                        if (action === 'book_transaction') {
+						else if (action === 'book_transaction') {
 
                             var locals = {
                                 entityType: 'complex-transaction',
@@ -764,19 +765,19 @@
 
                             if (vm.entityType === 'transaction-report') {
 
-                                var contextData = getContextData(reportOptions, activeObject);
-                                locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
+                                var contextData = getContextData(reportOptions, actionData.object);
+                                locals.entity.transaction_type = actionData.object['complex_transaction.transaction_type.id'];
                                 locals.data.contextData = contextData;
 
                             }
 
-                            createEntity(activeObject, locals);
+                            createEntity(actionData.event, locals);
 
                         }
 
-                        if (action === 'book_transaction_specific') {
+						else if (action === 'book_transaction_specific') {
 
-                            var contextData = getContextData(reportOptions, activeObject);
+                            var contextData = getContextData(reportOptions, actionData.object);
 
                             var locals = {
                                 entityType: 'complex-transaction',
@@ -790,13 +791,13 @@
                                 locals.entity.transaction_type = actionData.id
                             }
 
-                            createEntity(activeObject, locals);
+                            createEntity(actionData.event, locals);
 
                         }
 
-                        if (action === 'rebook_transaction') {
+						else if (action === 'rebook_transaction') {
 
-                            var complex_transaction_id = activeObject['complex_transaction.id'] || activeObject['complex_transaction']
+                            var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 
                             var locals = {
                                 entityType: 'complex-transaction',
@@ -804,7 +805,7 @@
                                 data: {}
                             };
 
-                            editEntity(activeObject, locals);
+                            editEntity(actionData.event, locals);
 
                         }
                     }
@@ -889,7 +890,7 @@
 
                     }
 
-                    if (action === 'book_transaction') {
+                    /* if (action === 'book_transaction') {
 
                         var locals = {
                             entityType: 'complex-transaction',
@@ -907,7 +908,7 @@
 
                         createEntity({}, locals);
 
-                    }
+                    } */
 
 
                 })

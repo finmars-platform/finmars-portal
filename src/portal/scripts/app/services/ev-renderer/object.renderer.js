@@ -298,8 +298,8 @@
 			classList.push('context-menu-opened');
 		}
 
-        if (obj.___is_last_activated) {
-            classList.push('last-selected');
+        if (obj.___is_active_object) {
+            classList.push('is-active-object');
 
         } else if (obj.___is_activated) {
             classList.push('selected');
