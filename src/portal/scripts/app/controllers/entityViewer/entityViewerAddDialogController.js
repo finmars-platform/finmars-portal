@@ -1048,6 +1048,14 @@
                 }
             }
 
+            if (vm.entityType === 'instrument-type') {
+
+                if (!vm.entity.instrument_factor_schedule_data) {
+                    vm.entity.instrument_factor_schedule_data = ''
+                }
+
+            }
+
             vm.updateEntityBeforeSave();
 
             /* var errors = entityEditorHelper.validateEntityFields(vm.entity,
