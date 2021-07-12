@@ -133,11 +133,10 @@
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
                         if (window.location.pathname !== '/') {
-                            window.location.pathname = '/';
+                            window.location.href = '/';
                         } else {
                             window.location.reload()
                         }
-
 
                         cookiesService.deleteCookie();
                     });
@@ -591,7 +590,7 @@
                         sessionStorage.removeItem('afterLoginEvents');
 
                         if (window.location.pathname !== '/portal') {
-                            window.location.pathname = '/portal';
+                            window.location.href = '/portal/';
                         } else {
                             window.location.reload()
                         }
@@ -813,15 +812,17 @@
             $transitions.onStart({}, function (transition) {
 
                 if (member.is_admin) {
+					console.log("testingopen.enableAccessHandler 1");
                     return true
                 }
 
                 console.log('transition.to().name', transition.to().name);
 
                 if (transactionsList.includes(transition.to().name)) {
+					console.log("testingopen.enableAccessHandler 2");
                     return false;
                 }
-
+				console.log("testingopen.enableAccessHandler 3");
                 return true;
             })
 
@@ -878,7 +879,7 @@
 					console.log('master_user_change data', data)
 
 					$state.go('app.home');
-					window.location.reload()
+					window.location.reload();
 
 				})
 
@@ -922,6 +923,7 @@
                 } else {
 
                     if (vm.currentGlobalState !== 'profile') {
+                    	console.log("testingopen1 ", vm.masters);
                         $state.go('app.profile', {}, {reload: 'app'})
                     }
 
@@ -982,7 +984,8 @@
 
             authorizerService.ping().then(function (data) {
 
-                // console.log('ping data', data);
+            	// console.log('ping data', data);
+                console.log("testingopen ping data", data);
 
                 if (!data.is_authenticated) {
 
@@ -995,6 +998,7 @@
                     vm.isAuthenticated = true;
 
                     if (!data.current_master_user_id) {
+						console.log("testingopen ping data 1");
                         $state.go('app.profile', {}, {})
                     }
 
