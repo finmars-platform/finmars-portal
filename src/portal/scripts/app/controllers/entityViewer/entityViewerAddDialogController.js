@@ -1036,7 +1036,17 @@
 
         };*/
 
-        vm.save = function ($event, isAutoExitAfterSave) {
+        vm.save = async function ($event, isAutoExitAfterSave) {
+
+            if (vm.entityType === 'instrument') {
+
+                const instrumentTypeId = vm.entity[vm.typeFieldName];
+                if (instrumentTypeId) {
+
+                    await vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
+
+                }
+            }
 
             vm.updateEntityBeforeSave();
 
@@ -1720,14 +1730,6 @@
 
             if (vm.entityType === 'instrument') {
                 vm.getDataForInstrumentTabs();
-
-                const instrumentTypeId = vm.entity[vm.typeFieldName];
-                if (instrumentTypeId) {
-
-                    vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
-
-                }
-
             }
 
             setTimeout(function () {
@@ -1777,13 +1779,6 @@
 					vm.typeSelectorChange = function () {
 
 						vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
-
-                            const instrumentTypeId = vm.entity[vm.typeFieldName];
-                            if (instrumentTypeId) {
-
-                                vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
-
-                            }
 
 							vm.tabs = data.tabs;
 							vm.attributesLayout = data.attributesLayout;

@@ -13,7 +13,6 @@
 
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
-        console.log('#112 vm.entity', vm.entity)
         vm.entityType = $scope.$parent.vm.entityType;
 
 		vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
@@ -32,10 +31,9 @@
         };
 
         const mapAttrsFromEntity = (attrs, entityAttrs) => {
-
             attrs.forEach(it => it.___classifierName = null)
 
-            const deletedAttrs = [];
+            const deletedAttrs = []; // Attrs which deleted in user attributes, but it remained in entity.
 
             entityAttrs.forEach(entityAttr => {
                 const user_code = entityAttr.attribute_type_user_code;
@@ -44,7 +42,7 @@
 
                 const additionalProps = {
                     value,
-                    ___classifierName: entityAttr.value_type === 30 && value ? value : null,
+                    ___classifierName: entityAttr.value_type === 30 && attr.value ? attr.value : null,
                 };
 
                 if (attr) {
@@ -140,7 +138,7 @@
                             result.value_float = attr.value;
                             break;
                         case 30:
-                            result.value_classifier = attr.___classifierName ? attr.___classifierName : null;
+                            result.value_classifier = attr.value;
                             break;
                         case 40:
                             result.value_date = attr.value;
