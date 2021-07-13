@@ -359,6 +359,8 @@
 
 					vm.isEdit = false;
 
+					$scope.$apply();
+
 				};
 
 				const init = function () {

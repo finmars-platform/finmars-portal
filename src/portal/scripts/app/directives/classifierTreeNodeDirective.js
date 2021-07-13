@@ -17,6 +17,8 @@
 			templateUrl: 'views/directives/classifier-tree-node-view.html',
 			link: function (scope, elem, attrs, cTreeVm) {
 
+				console.log('# node', scope.node);
+
 				scope.selectNode = cTreeVm.selectNode;
 				scope.closeStatusChange = cTreeVm.closeStatusChange;
 				scope.onCancelEdit = cTreeVm.onCancelEdit;

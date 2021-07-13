@@ -9,7 +9,7 @@
     </div>
 
     <div class="classifier-tree">
-        <div ng-repeat="node in vm.filteredTree track by node.id"
+        <div ng-repeat="node in vm.filteredTree track by node.name"
              class="classifier-node-holder">
             <classifier-tree-node node="node"
                                   parent="treeData"></classifier-tree-node>
