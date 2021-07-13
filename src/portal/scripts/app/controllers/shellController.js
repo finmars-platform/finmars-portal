@@ -1001,10 +1001,11 @@
 
                     vm.isAuthenticated = true;
 
-                    if (!data.current_master_user_id) {
-						console.log("testingopen ping data 1");
-                        $state.go('app.profile', {}, {})
-                    }
+                    // ??
+                    // if (!data.current_master_user_id) {
+					// 	console.log("testingopen ping data 1");
+                    //     $state.go('app.profile', {}, {})
+                    // }
 
                     if (data.base_api_url) {
                         baseUrlService.setMasterUserPrefix(data.base_api_url)
