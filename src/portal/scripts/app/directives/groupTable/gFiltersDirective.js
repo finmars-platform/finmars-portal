@@ -87,6 +87,72 @@
                 let dynamicAttrs = [];
                 let attrsWithoutFilters = ['notes'];
 
+                // Victor 2021.05.12 #111 multi rows selection
+                scope.selectedRowsCount = 0;
+				const selectedRowsActionBlockElement = elem[0].querySelector('.active-rows-actions');
+
+                const countSelectedRows = (tree) => {
+
+                    let count = 0;
+
+                    tree.forEach(subtotal => {
+
+                        const isSubtotalSelected = subtotal.___level !== 0 && (subtotal.___is_area_subtotal_activated || subtotal.___is_line_subtotal_activated);
+
+                        if (isSubtotalSelected) {
+                            count++;
+                        }
+
+                        if (subtotal.results) {
+                            subtotal.results.forEach(obj => {
+                                const isObjSelected = obj.id && obj.___is_activated
+                                if (isObjSelected) {
+                                    count++;
+                                }
+                            })
+                        }
+                    });
+
+                    return count;
+                };
+
+                const clearAllRowsSelection = () => {
+
+                    const dataList = scope.evDataService.getDataAsList();
+
+                    dataList.forEach(function (item) {
+
+                        item.___is_activated = false;
+                        item.___is_area_subtotal_activated = false;
+                        item.___is_line_subtotal_activated = false;
+
+                        if (item.results && item.results.length) {
+
+                            item.results.forEach(function (childItem) {
+
+                                childItem.___is_activated = false
+
+                            });
+
+                        }
+
+                    });
+
+                    scope.evDataService.setSelectAllRowsState(false);
+                    scope.evDataService.setAllData(dataList);
+
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
+
+                };
+
+                scope.closeSelectedRowsActions = function () {
+                    scope.selectedRowsCount = 0;
+                    clearAllRowsSelection();
+                    selectedRowsActionBlockElement.classList.add('display-none');
+                };
+                // <Victor 2021.05.12 #111 multi rows selection>
+
                 // Victor 2021.03.29 #88 fix bug with deleted custom fields
                 let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
                 // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
@@ -884,7 +950,27 @@
                     })
                     // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
 
-                    scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, calculateFilterChipsContainerWidth);
+					// Victor 2021.05.12 #111 multi rows selection
+					scope.evEventService.addEventListener(evEvents.ROW_ACTIVATION_CHANGE, function () {
+
+						const allData = scope.evDataService.getDataAsList();
+						scope.selectedRowsCount = countSelectedRows(allData);
+
+						if (scope.selectedRowsCount > 1) {
+
+							selectedRowsActionBlockElement.classList.remove('display-none');
+							setTimeout(() => scope.$apply());
+
+						} else {
+
+							selectedRowsActionBlockElement.classList.add('display-none');
+
+						}
+
+					})
+					// <Victor 2021.05.12 #111 multi rows selection>
+
+					scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, calculateFilterChipsContainerWidth);
 
                     scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
