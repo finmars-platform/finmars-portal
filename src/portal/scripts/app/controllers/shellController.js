@@ -879,7 +879,7 @@
 					console.log('master_user_change data', data)
 
                     if (window.location.pathname !== '/') {
-                        window.location.href = '/';
+                        window.location.href = '/portal';
                     } else {
                         window.location.reload()
                     }
