@@ -125,6 +125,7 @@
 				vm.readyStatus = true;
 
 				$scope.$apply();
+                vm.classifierTreeEventService.dispatchEvent(classifierEvents.TREE_CHANGED_FROM_OUTSIDE);
 
 				/* $('.js-tree-holder-dialog-select').append('<div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>');
 

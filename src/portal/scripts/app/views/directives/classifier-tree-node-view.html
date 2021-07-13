@@ -20,7 +20,7 @@
 
     <div class="classifier-node-children" ng-hide="node.frontOptions.closed">
 
-        <div ng-repeat="subNode in node.children track by subNode.id"
+        <div ng-repeat="subNode in node.children track by subNode.name"
              class="classifier-node-holder">
             <classifier-tree-node parent="node"
                                   node="subNode"></classifier-tree-node>
