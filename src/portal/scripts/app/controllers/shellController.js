@@ -878,8 +878,11 @@
 
 					console.log('master_user_change data', data)
 
-					$state.go('app.home');
-					window.location.reload();
+                    if (window.location.pathname !== '/') {
+                        window.location.href = '/';
+                    } else {
+                        window.location.reload()
+                    }
 
 				})
 
