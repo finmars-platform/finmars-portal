@@ -29,7 +29,7 @@
         var vm = this;
 
         vm.isAuthenticated = false; // check if logged in or not
-        vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
+        // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
 
         vm.readyStatus = {masters: false};
 
@@ -835,7 +835,7 @@
             vm.currentGlobalState = vm.getCurrentGlobalState();
 
             if (vm.currentGlobalState === 'profile') {
-                vm.isIdentified = true;
+                // vm.isIdentified = true;
                 console.log("User status: Identified");
             }
 
@@ -911,23 +911,24 @@
                 localStorageService.setUMuM(vm.user.id, vm.currentMasterUser.id, member.id);
                 enableAccessHandler($transitions); // TODO Run after successful auth
 
-                if (vm.masters.length) {
-
-                    // vm.getNotifications();
-
-                    vm.isIdentified = true;
-                    console.log("User status: Identified");
-
-                    $scope.$apply();
-
-                } else {
-
-                    if (vm.currentGlobalState !== 'profile') {
-                    	console.log("testingopen1 ", vm.masters);
-                        $state.go('app.profile', {}, {reload: 'app'})
-                    }
-
-                }
+                // Deprecated
+                // if (vm.masters.length) {
+                //
+                //     // vm.getNotifications();
+                //
+                //     vm.isIdentified = true;
+                //     console.log("User status: Identified");
+                //
+                //     $scope.$apply();
+                //
+                // } else {
+                //
+                //     if (vm.currentGlobalState !== 'profile') {
+                //     	console.log("testingopen1 ", vm.masters);
+                //         $state.go('app.profile', {}, {reload: 'app'})
+                //     }
+                //
+                // }
 
                 if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
                     showLayoutName = true;
