@@ -36,6 +36,7 @@
         vm.currentGlobalState = 'portal';
         vm.currentMasterUser = '';
         var member = '';
+        var PROJECT_ENV = '__PROJECT_ENV__';
 
         vm.broadcastManager = null;
 
@@ -132,11 +133,10 @@
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
                         if (window.location.pathname !== '/') {
-                            window.location.pathname = '/';
+                            window.location.href = '/';
                         } else {
                             window.location.reload()
                         }
-
 
                         cookiesService.deleteCookie();
                     });
@@ -590,7 +590,7 @@
                         sessionStorage.removeItem('afterLoginEvents');
 
                         if (window.location.pathname !== '/portal') {
-                            window.location.pathname = '/portal';
+                            window.location.href = '/portal/';
                         } else {
                             window.location.reload()
                         }
@@ -812,15 +812,17 @@
             $transitions.onStart({}, function (transition) {
 
                 if (member.is_admin) {
+					console.log("testingopen.enableAccessHandler 1");
                     return true
                 }
 
                 console.log('transition.to().name', transition.to().name);
 
                 if (transactionsList.includes(transition.to().name)) {
+					console.log("testingopen.enableAccessHandler 2");
                     return false;
                 }
-
+				console.log("testingopen.enableAccessHandler 3");
                 return true;
             })
 
@@ -870,17 +872,18 @@
 
             });
 
-            websocketService.addEventListener('master_user_change', function (data){
+            if (PROJECT_ENV !== 'local') {
 
-                console.log('master_user_change data', data)
+            	websocketService.addEventListener('master_user_change', function (data){
 
-                if (window.location.pathname !== '/') {
-                    window.location.pathname = '/';
-                } else {
-                    window.location.reload()
-                }
+					console.log('master_user_change data', data)
 
-            })
+					$state.go('app.home');
+					window.location.reload();
+
+				})
+
+			}
 
             vm.initTransitionListener();
 
@@ -920,6 +923,7 @@
                 } else {
 
                     if (vm.currentGlobalState !== 'profile') {
+                    	console.log("testingopen1 ", vm.masters);
                         $state.go('app.profile', {}, {reload: 'app'})
                     }
 
@@ -980,7 +984,8 @@
 
             authorizerService.ping().then(function (data) {
 
-                // console.log('ping data', data);
+            	// console.log('ping data', data);
+                console.log("testingopen ping data", data);
 
                 if (!data.is_authenticated) {
 
@@ -993,6 +998,7 @@
                     vm.isAuthenticated = true;
 
                     if (!data.current_master_user_id) {
+						console.log("testingopen ping data 1");
                         $state.go('app.profile', {}, {})
                     }
 
