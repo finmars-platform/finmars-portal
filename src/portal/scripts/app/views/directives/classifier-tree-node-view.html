@@ -10,8 +10,8 @@
                 <span ng-bind="node.name" ></span>
             </div>
 
-            <input class="classifier-name" data-ng-if="node.frontOptions.editOn" type="text" ng-model="node.name" data-ng-init="focusInput()">
-            <button data-ng-if="node.frontOptions.editOn && !isSaveDisabled()" data-ng-click="onSaveNode()"><span class="material-icons">done</span></button>
+            <input class="classifier-name" data-ng-if="node.frontOptions.editOn" type="text" ng-model="currentEdit.name" data-ng-init="onInputInit()">
+            <button data-ng-if="node.frontOptions.editOn && !isSaveDisabled()" data-ng-click="onSaveNode(currentEdit.name)"><span class="material-icons">done</span></button>
             <button data-ng-if="node.frontOptions.editOn" data-ng-click="onCancelEdit()"><span class="material-icons" >close</span></button>
 
         </div>
@@ -20,7 +20,7 @@
 
     <div class="classifier-node-children" ng-hide="node.frontOptions.closed">
 
-        <div ng-repeat="subNode in node.children track by subNode.name"
+        <div ng-repeat="subNode in node.children | orderBy:'name':false:emptyLast track by $index"
              class="classifier-node-holder">
             <classifier-tree-node parent="node"
                                   node="subNode"></classifier-tree-node>

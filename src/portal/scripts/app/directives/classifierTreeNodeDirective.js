@@ -5,6 +5,8 @@
 
 	'use strict';
 
+	const utilsHelper = require('../helpers/utils.helper');
+
 	module.exports = function () {
 
 		return {
@@ -17,21 +19,29 @@
 			templateUrl: 'views/directives/classifier-tree-node-view.html',
 			link: function (scope, elem, attrs, cTreeVm) {
 
-				console.log('# node', scope.node);
-
 				scope.selectNode = cTreeVm.selectNode;
 				scope.closeStatusChange = cTreeVm.closeStatusChange;
 				scope.onCancelEdit = cTreeVm.onCancelEdit;
 				scope.onSaveNode = cTreeVm.onSaveNode;
 				scope.editableNode = cTreeVm.editableNode;
+				scope.currentEdit = {
+					name: ''
+				}
 
-				scope.focusInput = () => {
+				scope.emptyLast = utilsHelper.emptyLastComparator;
+
+				const focusInput = () => {
 					const inputElement = elem[0].querySelector('input.classifier-name');
 					inputElement.focus();
 				}
 
+				scope.onInputInit = () => {
+					scope.currentEdit.name = scope.node.name;
+					focusInput();
+				}
+
 				scope.isSaveDisabled = () => {
-					return scope.editableNode && !scope.editableNode.name.trim();
+					return !scope.currentEdit.name.trim();
 				}
 
 			}

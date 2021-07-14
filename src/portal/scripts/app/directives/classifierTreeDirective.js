@@ -6,6 +6,7 @@
 	'use strict';
 
 	const metaHelper = require('../helpers/meta.helper');
+	const utilsHelper = require('../helpers/utils.helper');
 	const classifierEvents = require('../services/events/classifierEvents');
 
 	module.exports = function () {
@@ -30,6 +31,8 @@
 				vm.treeFilterTerms = '';
 				vm.isMultiselector = $scope.multiselector === 'true';
 				vm.isEdit = false;
+
+				vm.emptyLast = utilsHelper.emptyLastComparator;
 
 				const treeElement = document.querySelector('.classifier-tree');
 
@@ -293,16 +296,17 @@
 
 				};
 
-				const onSaveNode = () => {
+				const onSaveNode = (newName) => {
 
 					vm.isEdit = false;
 					addition = false;
 					vm.editableNode.frontOptions.editOn = false;
 					const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData,vm.editableNode.frontOptions.treePath);
 
-					if (nodeFromOriginalTree.name !==vm.editableNode.name) {
+					if (nodeFromOriginalTree.name !== newName) {
 
-						nodeFromOriginalTree.name =vm.editableNode.name;
+						nodeFromOriginalTree.name = newName;
+						vm.editableNode.name = newName;
 						$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED);
 
 					}
@@ -323,8 +327,13 @@
 						const parentNodeFromOriginalTree = getNearestParentOfNode($scope.treeData, nodeFromOriginalTree);
 						const parent = getNearestParentOfNode(vm.filteredTree, vm.editableNode);
 
-						parentNodeFromOriginalTree.children.pop();
-						parent.children.pop();
+						if (Array.isArray(parentNodeFromOriginalTree.children)) {
+							parentNodeFromOriginalTree.children.pop();
+							parent.children.pop();
+						} else { // root
+							parentNodeFromOriginalTree.pop();
+							parent.pop();
+						}
 
 						addition = false;
 
@@ -358,6 +367,7 @@
 					if (vm.treeFilterTerms) vm.filterTree(vm.treeFilterTerms);
 
 					vm.isEdit = false;
+					applyShadow();
 
 					$scope.$apply();
 

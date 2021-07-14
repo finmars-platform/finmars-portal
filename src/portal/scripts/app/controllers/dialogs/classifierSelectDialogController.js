@@ -279,6 +279,10 @@
             console.log('ite---------------m', item);
             $mdDialog.hide({status: 'agree', data: {item: item[0]}}); */
 
+            if (!vm.activeNodes.length) {
+                return vm.cancel();
+            }
+
 			$mdDialog.hide({status: 'agree', data: {item: vm.activeNodes[0].id}});
         };
 

@@ -280,6 +280,25 @@
 
     };
 
+    // comparator for orderBy which set empty item last
+    const emptyLastComparator = (v1, v2) => {
+        console.log('# emptyLast', v1, v2)
+        // If we don't get strings, just compare by index
+        if (v1.type !== 'string' || v2.type !== 'string') {
+            return (v1.index < v2.index) ? -1 : 1;
+        }
+
+        if (v1.value === '') {
+            return 1
+        }
+
+        if (v2.value === '') {
+            return -1;
+        }
+
+        return v1.value.toLowerCase() < v2.value.toLowerCase() ? -1 : 1;
+    };
+
 
     module.exports = {
         floor10: floor10,
@@ -289,7 +308,8 @@
         convertTreeToList: convertTreeToList,
         convertTreeToTreeList: convertTreeToTreeList,
 
-        sortItems: sortItems
+        sortItems: sortItems,
+        emptyLastComparator: emptyLastComparator
     }
 
 
