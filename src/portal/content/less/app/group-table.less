@@ -96,6 +96,11 @@
 
 // Inside dashboard END
 
+.g-table-container {
+  flex: 0 1 100%;
+  overflow: hidden;
+}
+
 .g-wrapper {
   overflow: hidden;
   height: 100%;
@@ -159,6 +164,29 @@
 
   .g-content-wrap {
     position: relative;
+
+    .g-table-header-drop {
+      display: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    &.g-groups-columns-dnd {
+
+      .g-table-header-cell-wrapper {
+
+        .g-table-header-drop {
+          display: block;
+        }
+
+      }
+
+    }
+
   }
 
   .g-rootentity-content-wrap {
@@ -754,9 +782,9 @@
     position: relative;
   }
 
-  .g-table-body {
+  /* .g-table-body {
     position: relative;
-  }
+  } */
 
   .toggle-group-column-area-btn {
     position: absolute;
@@ -1053,6 +1081,68 @@
 
   }
 
+  @gRowsActionSelectorWidth: 133px;
+
+  .active-rows-actions {
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    color: #fff;
+    font-size: 16px;
+    background-color: @rv-active-color;
+    z-index: 1;
+
+    .active-row-actions-wrapper {
+      flex: 1 1 auto;
+      max-width: 1000px;
+      height: 33px;
+      display: flex;
+
+      .selected-rows-count {
+        // width: 115px;
+        flex: 0 0 115px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid #fff;
+
+        span:first-child {
+          margin-right: 5px;
+        }
+      }
+
+      .ev-active-row-actions {
+
+        .selector-btn {
+          width: @gRowsActionSelectorWidth;
+          margin: 0 0 0 20px;
+          min-height: 33px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          line-height: 1;
+        }
+
+      }
+    }
+
+    .close-button {
+      flex: 0 0 30px;
+      color: #fff;
+      // margin-right: 505px;
+    }
+  }
+
+  .rows-actions-selector-popup {
+    min-width: @gRowsActionSelectorWidth;
+  }
+
+  //region groups, columns, filters drag and drop
   .drop-area-wrap {
     position: absolute;
     top: 0;
@@ -1115,67 +1205,6 @@
 
   }
 
-  @gRowsActionSelectorWidth: 133px;
-
-  .active-rows-actions {
-    position: absolute;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: 100%;
-    color: #fff;
-    font-size: 16px;
-    background-color: @rv-active-color;
-    z-index: 1;
-
-    .active-row-actions-wrapper {
-      flex: 1 1 auto;
-      max-width: 1000px;
-      height: 33px;
-      display: flex;
-
-      .selected-rows-count {
-        // width: 115px;
-        flex: 0 0 115px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-right: 1px solid #fff;
-
-        span:first-child {
-          margin-right: 5px;
-        }
-      }
-
-      .ev-active-row-actions {
-
-        .selector-btn {
-          width: @gRowsActionSelectorWidth;
-          margin: 0 0 0 20px;
-          min-height: 33px;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          line-height: 1;
-        }
-
-      }
-    }
-
-    .close-button {
-      flex: 0 0 30px;
-      color: #fff;
-      // margin-right: 505px;
-    }
-  }
-
-  .rows-actions-selector-popup {
-    min-width: @gRowsActionSelectorWidth;
-  }
-
   .column-to-filters-drop-area {
     left: 0;
     width: 85%;
@@ -1208,6 +1237,7 @@
 
     .left-right-drop-area();
   }
+  //endregion groups, columns, filters drag and drop
 
   .g-column-bottom-row.g-table-header {
     @g-table-header-height: 50px;
@@ -1533,16 +1563,6 @@
 
       .md-button {
         cursor: grab;
-      }
-
-      .g-table-header-drop {
-        display: none;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 1;
       }
 
       .g-add-column-button {

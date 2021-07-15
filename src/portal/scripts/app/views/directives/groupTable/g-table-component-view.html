@@ -90,6 +90,14 @@
                                     attribute-data-service="attributeDataService"
                                     sp-exchange-service="spExchangeService">
                             </g-ev-left-panel>
+
+                            <div class="drop-area-wrap left-side-groups-drop-area display-none gLeftSideGroupsHolder">
+                                <div class="g-drop-area gDropArea"></div>
+
+                                <div class="drop-area-content">
+                                    <span>Drop here to add grouping</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="g-table-container">
@@ -136,11 +144,22 @@
                                                       ev-data-service="evDataService"
                                                       ev-event-service="evEventService"></report-viewer-matrix>
 
-                                <div g-c-areas-drag-and-drop
+                                <!--<div g-c-areas-drag-and-drop
                                      ev-data-service="evDataService"
                                      ev-event-service="evEventService"
                                      content-wrap-element="contentWrapElem"
-                                     root-wrap-element="rootWrapElem"></div>
+                                     root-wrap-element="rootWrapElem"></div>-->
+                                <div ng-if="isReport"
+                                     rv-gcf-areas-dnd
+                                     ev-data-service="evDataService"
+                                     ev-event-service="evEventService"
+                                     content-wrap-element="contentWrapElem"></div>
+
+                                <div ng-if="!isReport"
+                                     ev-gcf-areas-dnd
+                                     ev-data-service="evDataService"
+                                     ev-event-service="evEventService"
+                                     content-wrap-element="contentWrapElem"></div>
 
                             </div>
 

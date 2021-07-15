@@ -122,10 +122,12 @@ app.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$control
 
 app.service('multitypeFieldService', [require('./app/services/multitypeFieldService')]);
 app.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
-app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
 app.service('evRvDomManagerService', [require('./app/services/evRvDomManagerService')]);
 app.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
+// app.service('gcfAreasDndService', [require('./app/services/groupTable/gcfAreasDndService')]);
+
 app.service('gFiltersHelper', [require('./app/helpers/gFiltersHelper')]);
+app.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
 
 // Dashboard
 
@@ -699,7 +701,9 @@ app.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$co
 app.directive('gVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
 app.directive('groupPermissionEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gPermissionEditorBinderComponent')]);
 app.directive('groupReconciliationMatchEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gReconciliationMatchEditorBinderComponent')]);
-app.directive('gCAreasDragAndDrop', ['$mdDialog', require('./app/directives/groupTable/gCAreasDragAndDropDirective')]);
+// app.directive('gCAreasDragAndDrop', ['$mdDialog', require('./app/directives/groupTable/gCAreasDragAndDropDirective')]);
+app.directive('rvGcfAreasDnd', ['$mdDialog', require('./app/directives/groupTable/rvGcfAreasDndDirective')]);
+app.directive('evGcfAreasDnd', ['$mdDialog', require('./app/directives/groupTable/evGcfAreasDndDirective')]);
 app.directive('viewConstructorDragAndDrop', ['$mdDialog', require('./app/directives/viewConstructorDragAndDropDirective')]);
 
 app.directive('groupBindReportRow', [require('./app/directives/groupTable/gBindReportRowDirective.js')]);

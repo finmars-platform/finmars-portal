@@ -20,7 +20,6 @@
             },
             link: function (scope, elem, attrs) {
 
-                scope.entityType = scope.evDataService.getEntityType();
                 scope.viewContext = scope.evDataService.getViewContext();
 
                 const entityType = scope.evDataService.getEntityType();
@@ -481,6 +480,7 @@
                         }
 
                     }
+
                 };
 
 				/* var dragAndDropNewInterface = {
@@ -1281,14 +1281,11 @@
 
 				let initListenersOnDragstart;
 
-				if (scope.viewContext !== 'dashboard') {
-
-					initListenersOnDragstart = onDragstartListeners;
-
-				} else {
-
+				if (scope.viewContext === 'dashboard') {
 					initListenersOnDragstart = onDragstartInsideDashboardListeners;
 
+				} else {
+					initListenersOnDragstart = onDragstartListeners;
 				}
 
 				/**
