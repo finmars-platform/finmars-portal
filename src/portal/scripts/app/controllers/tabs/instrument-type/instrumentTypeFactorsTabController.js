@@ -14,8 +14,6 @@
     const instrumentService = require('../../../services/instrumentService');
     const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
-    const EventService = require('../../../services/eventService');
-
     module.exports = function instrumentTypeFactorsTabController ($scope, $mdDialog, multitypeFieldService, gridTableHelperService) {
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
@@ -24,14 +22,8 @@
             factors: false
         }
 
-        console.log('#116 vm.entity', vm.entity)
-
         // One set of multi type fields for both grid tables
         const multitypeFieldsForRows = instrumentService.getInstrumentFactorsMultitypeFieldsData();
-
-        const buildMultitypeFieldsCell = () => {
-
-        }
 
         const getFactorsData = () => {
             if (vm.entity.instrument_factor_schedule_data) {
@@ -265,8 +257,6 @@
             }
 
             vm.entity.instrument_factor_schedule_data = JSON.stringify(vm.factorsData);
-            console.log('#116 onFactorsTableCellChange vm.entity', vm.entity)
-            console.log('#116 vm.entity.instrument_factor_schedule_data', JSON.parse(vm.entity.instrument_factor_schedule_data))
 
         };
 
@@ -329,7 +319,6 @@
                                 value: [null, null],
                                 fieldTypesData: null,
                             },
-                            // classes: 'grid-table-cell-right-border',
                             styles: {
                                 'grid-table-cell': {'width': COLUMN_WIDTH}
                             }
@@ -344,7 +333,6 @@
                                 value: [null, null],
                                 fieldTypesData: null,
                             },
-                            // classes: 'grid-table-cell-right-border',
                             styles: {
                                 'grid-table-cell': {'width': COLUMN_WIDTH}
                             }
@@ -359,7 +347,6 @@
                                 value: [null, null],
                                 fieldTypesData: null,
                             },
-                            // classes: 'grid-table-cell-right-border',
                             styles: {
                                 'grid-table-cell': {'width': COLUMN_WIDTH}
                             }
@@ -374,7 +361,6 @@
                                 value: [null, null],
                                 fieldTypesData: null,
                             },
-                            // classes: 'grid-table-cell-right-border',
                             styles: {
                                 'grid-table-cell': {'width': COLUMN_WIDTH}
                             }
@@ -389,7 +375,6 @@
                                 value: [null, null],
                                 fieldTypesData: null,
                             },
-                            // classes: 'grid-table-cell-right-border',
                             styles: {
                                 'grid-table-cell': {'width': COLUMN_WIDTH}
                             }
@@ -488,7 +473,6 @@
         const onFactorsTableAddRow = () => {
             const gridTableData = vm.factorsGridTableDataService.getTableData();
             const newRow = gridTableData.body[0];
-            console.log('# newRow', newRow);
 
             const newFactor = {
                 'effective_date': null, 'effective_date_value_type': 40,
@@ -519,8 +503,6 @@
 
             vm.factorsGridTableDataService.setTableData(gridTableData)
 
-            console.log('#116 newRow', newRow)
-
         };
 
         const onFactorsTableDeleteRow = (data) => {
@@ -536,18 +518,6 @@
                 gridTableData.body[index].order = index;
             });
         }
-
-/*        instrument_type.instrument_factor_schedule_data - JSON где храним верхнюю таблицу (где тултипы и to show)
-        instrument_type.instrument_factor_schedules - массив самих дефолтных факторов
-
-            [{
-            'effective_date': null, 'effective_date_value_type': null,
-            'position_factor_value': null, 'position_factor_value_value_type': null,
-            'factor_value1': null, 'factor_value1_value_type': null,
-            'factor_value2': null, 'factor_value2_value_type': null,
-            'factor_value3': null, 'factor_value3_value_type'
-        }]*/
-
 
         const createFactorsGridTable = (factors) => {
 
