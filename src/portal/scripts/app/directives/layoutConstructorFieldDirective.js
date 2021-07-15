@@ -8,7 +8,7 @@
     var metaService = require('../services/metaService');
     var layoutService = require('../services/entity-data-constructor/layoutService');
 
-    module.exports = function ($mdDialog, entityDataConstructorService) {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'E',
             scope: {
@@ -20,19 +20,6 @@
             },
             templateUrl: 'views/directives/layout-constructor-field-view.html',
             link: function (scope, elem, attr) {
-
-				//<editor-fold desc="Because require does not work for $mdDialog controller, have to use workaround to check for specific parent controller">
-				try {
-
-            		var parentControllerName = scope.$parent.vm.constructor.name;
-					if (parentControllerName !== 'entityDataConstructorDialogController') {
-						throw new Error('entityDataConstructorDialogController should be parent of layoutConstructorFieldDirective');
-					}
-
-            	} catch (error) {
-					throw error;
-				}
-				//</editor-fold>
 
             	var entityDataConstructorVm = scope.$parent.vm;
 				var choices = metaService.getTypeCaptions();
@@ -343,7 +330,7 @@
 							}
 
 							var attributeData = JSON.parse(JSON.stringify(scope.item.attribute));
-							delete attributeData.frontOptions;
+							delete attributeData.frontOptions; // have to be after calling entityDataConstructorVm.getAttributeClass();
 
 							scope.tab.layout.fields[i].name = scope.item.attribute.name;
 							scope.tab.layout.fields[i].type = scope.item.type;
