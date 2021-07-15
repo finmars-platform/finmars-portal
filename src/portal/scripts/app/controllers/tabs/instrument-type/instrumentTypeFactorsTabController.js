@@ -292,9 +292,12 @@
             tableData.body.forEach((row, index) => {
 
                 const factor = vm.entity.instrument_factor_schedules.find(({id}) => id === row.key);
+
                 if (factor) {
                     factor.button_position = index;
                     sortedFactors.push(factor);
+                } else {
+                    throw new Error('On factors order change: not found factor ' + row.key);
                 }
 
             });
@@ -485,6 +488,7 @@
         const onFactorsTableAddRow = () => {
             const gridTableData = vm.factorsGridTableDataService.getTableData();
             const newRow = gridTableData.body[0];
+            console.log('# newRow', newRow);
 
             const newFactor = {
                 'effective_date': null, 'effective_date_value_type': 40,
