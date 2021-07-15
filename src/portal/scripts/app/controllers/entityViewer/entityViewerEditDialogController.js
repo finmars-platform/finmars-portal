@@ -961,8 +961,6 @@
                 // var result = entityEditorHelper.removeNullFields(vm.entity);
                 var result = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
 
-                console.log('# SAVE ', result);
-
                 if (vm.dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(vm.dataConstructorLayout.id, vm.dataConstructorLayout);
                 }
