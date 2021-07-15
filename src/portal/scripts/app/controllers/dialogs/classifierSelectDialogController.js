@@ -275,15 +275,15 @@
                 vm.dialogElemToResize = document.querySelector('.classifierSelectorElemToDrag');
             }, 100);
 
-            var item = $('#js-tree-select-wrapper').jstree(true).get_selected();
+            var item = $('#js-tree-select-wrapper').jstree(true).get_selected(true);
             console.log('ite---------------m', item);
-            $mdDialog.hide({status: 'agree', data: {item: item[0]}}); */
+            $mdDialog.hide({status: 'agree', data: {item: item[0].id, name: item[0].text}}); */
 
             if (!vm.activeNodes.length) {
                 return vm.cancel();
             }
 
-			$mdDialog.hide({status: 'agree', data: {item: vm.activeNodes[0].id}});
+			$mdDialog.hide({status: 'agree', data: {item: vm.activeNodes[0].id, name: vm.activeNodes[0].text}});
         };
 
         vm.cancel = function () {
