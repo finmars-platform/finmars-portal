@@ -482,8 +482,9 @@
 
         };
 
-
         const onFactorsTableAddRow = () => {
+            const gridTableData = vm.factorsGridTableDataService.getTableData();
+            const newRow = gridTableData.body[0];
 
             const newFactor = {
                 'effective_date': null, 'effective_date_value_type': 40,
@@ -491,13 +492,11 @@
                 'factor_value1': null, 'factor_value1_value_type': 20,
                 'factor_value2': null, 'factor_value2_value_type': 20,
                 'factor_value3': null, 'factor_value3_value_type': 20,
-                'button_position': ''
+                'button_position': '',
+                frontOptions: {newRow: true, gtKey: newRow.key}
             };
 
             vm.entity.instrument_factor_schedules.unshift(newFactor);
-
-            const gridTableData = vm.factorsGridTableDataService.getTableData();
-            const newRow = gridTableData.body[0];
 
             newRow.columns.forEach(cell => {
                 const {key} = cell;
@@ -520,7 +519,19 @@
 
         };
 
+        const onFactorsTableDeleteRow = (data) => {
 
+            const gridTableData = vm.factorsGridTableDataService.getTableData();
+            vm.entity.instrument_factor_schedules =  vm.entity.instrument_factor_schedules.filter(factor => {
+                const factorId = factor.id || factor.frontOptions.gtKey;
+                return !data.deletedRowsKeys.includes(factorId);
+            });
+
+            vm.entity.instrument_factor_schedules.forEach(function (factor, index) {
+                factor.button_position = index;
+                gridTableData.body[index].order = index;
+            });
+        }
 
 /*        instrument_type.instrument_factor_schedule_data - JSON где храним верхнюю таблицу (где тултипы и to show)
         instrument_type.instrument_factor_schedules - массив самих дефолтных факторов
@@ -534,8 +545,6 @@
         }]*/
 
 
-
-
         const createFactorsGridTable = (factors) => {
 
             vm.factorsGridTableDataService = new GridTableDataService();
@@ -546,6 +555,7 @@
 
             vm.factorsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, onFactorsTableCellChange);
             vm.factorsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, onFactorsTableAddRow);
+            vm.factorsGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, onFactorsTableDeleteRow);
 
         }
         // <Victor 2021.06.17 second grid table (dynamic)>
@@ -565,6 +575,10 @@
 
             vm.factorsData = getFactorsData();
 
+            if (!vm.entity.instrument_factor_schedule_data) {
+                vm.entity.instrument_factor_schedule_data = JSON.stringify(vm.factorsData);
+            }
+
             getInstrumentAttrTypes().then(data => {
 
                 // inject instrument attributes to menu options in multitype fields
@@ -576,7 +590,7 @@
 
                 vm.readyStatus.factors = true;
 
-            })
+            });
 
         }
 
