@@ -574,6 +574,7 @@
 
         }; */
 
+
         vm.getItem = function () {
 
             return new Promise(function (res, rej) {
@@ -660,6 +661,14 @@
         };
 
         vm.updateEntityBeforeSave = function () {
+
+            if (vm.entityType === 'instrument-type') {
+
+                if (!vm.entity.instrument_factor_schedule_data) {
+                    vm.entity.instrument_factor_schedule_data = ''
+                }
+
+            }
 
             if (vm.entity.attributes) {
 

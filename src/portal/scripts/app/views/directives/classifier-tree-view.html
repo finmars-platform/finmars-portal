@@ -1,0 +1,18 @@
+<div class="classifier-tree-container">
+    <div class="classifier-tree-filter-container">
+        <span class="material-icons">search</span>
+        <input type="text"
+               placeholder="Search"
+               ng-model="vm.treeFilterTerms"
+               ng-change="vm.filterTree(vm.treeFilterTerms)"
+               ng-model-options="{debounce: 1000}">
+    </div>
+
+    <div class="classifier-tree">
+        <div ng-repeat="node in vm.filteredTree | orderBy:'name':false:vm.emptyLast track by $index"
+             class="classifier-node-holder">
+            <classifier-tree-node node="node"
+                                  parent="treeData"></classifier-tree-node>
+        </div>
+    </div>
+</div>
