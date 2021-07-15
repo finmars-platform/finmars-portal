@@ -29,7 +29,7 @@
         var vm = this;
 
         vm.isAuthenticated = false; // check if logged in or not
-        vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
+        // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
 
         vm.readyStatus = {masters: false};
 
@@ -133,11 +133,10 @@
                         console.log('Logged out');
                         sessionStorage.removeItem('afterLoginEvents');
                         if (window.location.pathname !== '/') {
-                            window.location.pathname = '/';
+                            window.location.href = '/';
                         } else {
                             window.location.reload()
                         }
-
 
                         cookiesService.deleteCookie();
                     });
@@ -591,7 +590,7 @@
                         sessionStorage.removeItem('afterLoginEvents');
 
                         if (window.location.pathname !== '/portal') {
-                            window.location.pathname = '/portal';
+                            window.location.href = '/portal/';
                         } else {
                             window.location.reload()
                         }
@@ -813,15 +812,17 @@
             $transitions.onStart({}, function (transition) {
 
                 if (member.is_admin) {
+					console.log("testingopen.enableAccessHandler 1");
                     return true
                 }
 
                 console.log('transition.to().name', transition.to().name);
 
                 if (transactionsList.includes(transition.to().name)) {
+					console.log("testingopen.enableAccessHandler 2");
                     return false;
                 }
-
+				console.log("testingopen.enableAccessHandler 3");
                 return true;
             })
 
@@ -834,7 +835,7 @@
             vm.currentGlobalState = vm.getCurrentGlobalState();
 
             if (vm.currentGlobalState === 'profile') {
-                vm.isIdentified = true;
+                // vm.isIdentified = true;
                 console.log("User status: Identified");
             }
 
@@ -877,8 +878,11 @@
 
 					console.log('master_user_change data', data)
 
-					$state.go('app.home');
-					window.location.reload()
+                    if (window.location.pathname !== '/') {
+                        window.location.href = '/portal/#!/';
+                    } else {
+                        window.location.reload()
+                    }
 
 				})
 
@@ -910,22 +914,24 @@
                 localStorageService.setUMuM(vm.user.id, vm.currentMasterUser.id, member.id);
                 enableAccessHandler($transitions); // TODO Run after successful auth
 
-                if (vm.masters.length) {
-
-                    // vm.getNotifications();
-
-                    vm.isIdentified = true;
-                    console.log("User status: Identified");
-
-                    $scope.$apply();
-
-                } else {
-
-                    if (vm.currentGlobalState !== 'profile') {
-                        $state.go('app.profile', {}, {reload: 'app'})
-                    }
-
-                }
+                // Deprecated
+                // if (vm.masters.length) {
+                //
+                //     // vm.getNotifications();
+                //
+                //     vm.isIdentified = true;
+                //     console.log("User status: Identified");
+                //
+                //     $scope.$apply();
+                //
+                // } else {
+                //
+                //     if (vm.currentGlobalState !== 'profile') {
+                //     	console.log("testingopen1 ", vm.masters);
+                //         $state.go('app.profile', {}, {reload: 'app'})
+                //     }
+                //
+                // }
 
                 if (pageStateName.indexOf('app.data.') !== -1 || vm.isReport()) {
                     showLayoutName = true;
@@ -982,7 +988,8 @@
 
             authorizerService.ping().then(function (data) {
 
-                // console.log('ping data', data);
+            	// console.log('ping data', data);
+                console.log("testingopen ping data", data);
 
                 if (!data.is_authenticated) {
 
@@ -994,9 +1001,11 @@
 
                     vm.isAuthenticated = true;
 
-                    if (!data.current_master_user_id) {
-                        $state.go('app.profile', {}, {})
-                    }
+                    // ??
+                    // if (!data.current_master_user_id) {
+					// 	console.log("testingopen ping data 1");
+                    //     $state.go('app.profile', {}, {})
+                    // }
 
                     if (data.base_api_url) {
                         baseUrlService.setMasterUserPrefix(data.base_api_url)

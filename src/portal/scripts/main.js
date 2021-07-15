@@ -217,6 +217,8 @@ app.controller('TableAttributeSelectorDialogController', ['$scope', '$mdDialog',
 app.controller('TableAttributesMenuConstructorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/tableAttributesMenuConstructorDialogController')]);
 app.controller('LayoutChangesLossWarningDialogController', ['$scope', 'data', '$mdDialog', require('./app/controllers/dialogs/layoutChangesLossWarningDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
+app.directive('classifierTree', [require('./app/directives/classifierTreeDirective')]);
+app.directive('classifierTreeNode', [require('./app/directives/classifierTreeNodeDirective')]);
 app.controller('ExpandableItemsSelectorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/expandableItemsSelectorDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 app.controller('RenameFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameFieldDialogController')]);
@@ -408,6 +410,7 @@ app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/c
 
 app.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
 app.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
+app.controller('InstrumentTypeUserAttributesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeUserAttributesTabController')]);
 
 // Currency form - tabs
 

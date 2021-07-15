@@ -11,7 +11,7 @@
 
         console.log('websocket send', data);
 
-        if (window.ws) {
+        if (isOnline()) {
 
             window.ws.send(JSON.stringify(data));
 
@@ -27,32 +27,34 @@
 
         callbacks[event].push(callback);
 
-        window.ws.onmessage = function (message) {
+        if(window.ws) {
+            window.ws.onmessage = function (message) {
 
-            console.log('Websocket.message ', message);
+                console.log('Websocket.message ', message);
 
-            try {
+                try {
 
-                var parsedMessage = JSON.parse(message.data)
+                    var parsedMessage = JSON.parse(message.data)
 
-                if (parsedMessage.hasOwnProperty('type')) {
+                    if (parsedMessage.hasOwnProperty('type')) {
 
-                    if (callbacks[parsedMessage.type]) {
-                        callbacks[parsedMessage.type].forEach(function (callback) {
-                            callback(parsedMessage.payload);
-                        })
+                        if (callbacks[parsedMessage.type]) {
+                            callbacks[parsedMessage.type].forEach(function (callback) {
+                                callback(parsedMessage.payload);
+                            })
+                        }
+
+                    } else {
+                        console.log("Websocket onmessage error. Type is not set", message);
                     }
 
-                } else {
-                    console.log("Websocket onmessage error. Type is not set", message);
+                } catch (error) {
+                    console.log("Websocket onmessage error. Error: ", error);
+                    console.log("Websocket onmessage error. Message: ", message);
                 }
 
-            } catch (error) {
-                console.log("Websocket onmessage error. Error: ", error);
-                console.log("Websocket onmessage error. Message: ", message);
+
             }
-
-
         }
 
     }
