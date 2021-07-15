@@ -58,12 +58,12 @@
                 var entityType = scope.evDataService.getEntityType();
                 var viewContext = scope.evDataService.getViewContext();
 
-                var isReport = metaService.isReport(entityType);
+                scope.isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 var activeLayoutConfigIsSet = false;
 
-                if (!isReport) {
+                if (!scope.isReport) {
                 	elements.leftPanelElem = scope.workareaWrapElement.querySelector('.gEvLeftPanelHolder');
 				}
 
@@ -283,7 +283,7 @@
 				}
 
                 function updateTableContent() {
-                    if (isReport) {
+                    if (scope.isReport) {
                         renderReportViewer();
 
                     } else {
@@ -325,7 +325,7 @@
 
                     var flatList = scope.evDataService.getFlatList();
 
-                    if (isReport) {
+                    if (scope.isReport) {
 
                         projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
 
@@ -349,7 +349,7 @@
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
                     // progressBar.style.display = 'block';
-                    /* if (isReport) {
+                    /* if (scope.isReport) {
                         contentElem.style.opacity = '0.7';
                     } */
 					contentElem.style.opacity = '0.7';
@@ -367,7 +367,7 @@
 
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
                         activeLayoutConfigIsSet = true;
-                        scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
+                        scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport}); // saving layout for checking for changes
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
                     }
 
@@ -396,7 +396,7 @@
 
                     calculateElemsWrapsSizes();
 
-                    if (isReport) {
+                    if (scope.isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
@@ -422,7 +422,7 @@
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                    if (isReport) {
+                    if (scope.isReport) {
 
                         // rvDomManager.calculateScroll(elements, scope.evDataService);
 
@@ -447,7 +447,7 @@
 
                     window.addEventListener('resize', onWindowResize);
 
-                    if (!isReport) {
+                    if (!scope.isReport) {
                         scope.scrollManager = new EvScrollManager();
                     }
 
@@ -455,7 +455,7 @@
 
                         calculateElemsWrapsSizes();
 
-                        if (isReport) {
+                        if (scope.isReport) {
 
                             rvDomManager.calculateScroll(elements, scope.evDataService);
 
@@ -481,7 +481,7 @@
 
                                 // progressBar.style.display = 'none';
 
-                                if (isReport) {
+                                if (scope.isReport) {
                                     contentElem.style.opacity = '1';
                                 }
 
@@ -537,7 +537,7 @@
 
                 /* $(window).on('resize', function () { // TODO what?
 
-                    if (isReport) {
+                    if (scope.isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
