@@ -47,6 +47,21 @@
                 ></dashboard-report-viewer-matrix>
             </div>
 
+
+            <div data-ng-if="vm.componentFillInModeData.item.data.type == 'report_viewer_table_chart'"
+                 class="height-100">
+                <dashboard-report-viewer-table-chart
+                        class="height-100 display-block"
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                        fill-in-mode-data="vm.componentFillInModeData"
+                ></dashboard-report-viewer-table-chart>
+            </div>
+
         </div>
 
         <div data-ng-if="vm.layout" class="dashboard-main-area">
@@ -171,7 +186,7 @@
                     <div class="dashboard-rows-holder"  data-row="{{row.row_number}}" data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
 
                         <div data-ng-repeat="item in row.columns"
-                             class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}"
+                             class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}} {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
                              data-tab="fixed_area"
                              data-row="{{row.row_number}}"
                              data-column="{{item.column_number}}"
@@ -354,7 +369,7 @@
                                 <div class="dashboard-rows-holder" data-row="{{row.row_number}}"  data-ng-repeat="row in tab.layout.rows">
 
                                     <div data-ng-repeat="item in row.columns"
-                                         class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}"
+                                         class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}  {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
                                          data-tab="{{tab.tab_number}}"
                                          data-row="{{row.row_number}}"
                                          data-column="{{item.column_number}}"
