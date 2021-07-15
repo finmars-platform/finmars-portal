@@ -553,6 +553,10 @@
                 vm.entity.instrument_factor_schedule_data = JSON.stringify(vm.factorsData);
             }
 
+            if (!vm.entity.instrument_factor_schedules) {
+                vm.entity.instrument_factor_schedules = [];
+            }
+
             getInstrumentAttrTypes().then(data => {
 
                 // inject instrument attributes to menu options in multitype fields
