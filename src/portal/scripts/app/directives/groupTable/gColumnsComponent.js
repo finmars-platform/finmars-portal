@@ -331,7 +331,7 @@
                     scope.rowFilterColor = color;
                     scope.evDataService.setRowTypeFilters(scope.rowFilterColor);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 };
 
@@ -341,7 +341,6 @@
 
                     rowTypeFilters = JSON.parse(rowTypeFilters);
                     scope.rowFilterColor = rowTypeFilters.markedRowFilters;
-                    scope.changeRowFilterColor(scope.rowFilterColor);
 
                 }
 
