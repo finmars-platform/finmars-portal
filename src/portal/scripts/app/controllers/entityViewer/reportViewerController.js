@@ -1282,6 +1282,16 @@
 
                 vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
 
+                let rowTypeFilters = localStorage.getItem("row_type_filters");
+
+                if (rowTypeFilters) {
+
+                    rowTypeFilters = JSON.parse(rowTypeFilters);
+                    const rowFilterColor = rowTypeFilters.markedRowFilters;
+                    vm.entityViewerDataService.setRowTypeFilters(rowFilterColor);
+
+                }
+
                 var downloadAttrsProm = rvSharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
 
