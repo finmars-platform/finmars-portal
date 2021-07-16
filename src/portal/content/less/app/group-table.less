@@ -1402,6 +1402,7 @@
         border: 2px solid @g-top-part-color;
         border-radius: 3px;
         box-sizing: border-box;
+        z-index: 1;
 
         cursor: pointer;
 
@@ -1414,7 +1415,7 @@
         }
       }
 
-      .g-group-button {
+      .g-table-header-button {
         width: 100%;
         overflow: hidden;
         padding: 2px 0 2px 10px;
@@ -1424,20 +1425,23 @@
 
         cursor: pointer;
 
-        &:hover,
+        /* &:hover,
         &:focus {
           color: black;
-        }
+        } */
 
         &:focus {
           outline: none;
+          color: black;
         }
 
         .sort {
+          position: relative;
           width: 13px;
           margin-top: -7px;
           margin-right: 10px;
           outline: none;
+          z-index: 1;
         }
 
         .gt-sorting-icon {
@@ -1456,6 +1460,15 @@
 
       &.g-table-header-group-cell {
         padding: 0 0 0 15px;
+      }
+
+      .g-column-sort-settings-opener {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
       }
 
       .column-name-wrapper {
@@ -1489,6 +1502,16 @@
           }
 
           &:hover {
+            /*.arrow-down {
+              display: block;
+            }*/
+
+            .column-manual-sort-icon {
+              margin-left: 0;
+            }
+          }
+
+          /* &.active {
             .arrow-down {
               display: block;
             }
@@ -1496,17 +1519,7 @@
             .column-manual-sort-icon {
               margin-left: 0;
             }
-          }
-
-          &.active {
-            .arrow-down {
-              display: block;
-            }
-
-            .column-manual-sort-icon {
-              margin-left: 0;
-            }
-          }
+          } */
         }
 
 
@@ -1518,35 +1531,7 @@
     .g-table-header-cell-wrapper {
       position: relative;
       box-sizing: border-box;
-      cursor: grab;
-
-      &.drop-left {
-        box-shadow: inset 3px 0 0 rgba(0,0,0,0.5);
-      }
-
-      &.drop-right {
-        box-shadow: inset 3px 0 0 rgba(0,0,0,0.5);
-      }
-
-      &:hover {
-        background-color: @g-table-cell-hover-color;
-
-        .resize-slider {
-          background-color: @g-table-cell-hover-color;
-        }
-      }
-
-      &.error {
-        span.error {
-          padding-left: 10px;
-          color: @rv-active-color;
-        }
-
-        .g-group-button {
-          color: @rv-active-color;
-        }
-
-      }
+      cursor: pointer;
 
       .resize-slider {
         width: 3px;
@@ -1559,6 +1544,7 @@
         border: 1px solid @g-table-border-color;
         border-left: none;
         box-sizing: border-box;
+        z-index: 1;
       }
 
       .md-button {
@@ -1571,6 +1557,56 @@
 
         &:hover {
           background-color: #f05a22;
+        }
+
+      }
+
+      &.drop-left {
+        box-shadow: inset 3px 0 0 rgba(0,0,0,0.5);
+      }
+
+      &.drop-right {
+        box-shadow: inset 3px 0 0 rgba(0,0,0,0.5);
+      }
+
+      &.sort-menu-opened {
+        .column-name-wrapper .name-block .arrow-down {
+          display: block;
+        }
+
+        .column-manual-sort-icon {
+          margin-left: 0;
+        }
+
+        .g-table-header-cell .g-table-header-button {
+          color: black;
+        }
+      }
+
+      &:hover {
+        background-color: @g-table-cell-hover-color;
+
+        .resize-slider {
+          background-color: @g-table-cell-hover-color;
+        }
+
+        .column-name-wrapper .name-block .arrow-down {
+          display: block;
+        }
+
+        .g-table-header-cell .g-table-header-button {
+          color: black;
+        }
+      }
+
+      &.error {
+        span.error {
+          padding-left: 10px;
+          color: @rv-active-color;
+        }
+
+        .g-table-header-button {
+          color: @rv-active-color;
         }
 
       }

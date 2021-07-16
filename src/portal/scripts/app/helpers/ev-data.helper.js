@@ -256,7 +256,6 @@
     var getUnfoldedGroups = function (evDataService) {
 
         var data = evDataService.getData();
-
         var keys = Object.keys(data);
 
         var items = [];
