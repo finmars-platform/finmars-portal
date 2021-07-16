@@ -31,8 +31,6 @@
 			templateUrl: "views/directives/two-fields-multiselect-view.html",
 			link: function (scope, elem, attr, ngModel) {
 
-				console.log('# scope.model', scope.model)
-
 				scope.inputText = '';
 				scope.error = '';
 				scope.orderOptions = {
@@ -339,9 +337,19 @@
 
 							});
 
-							return {
-								id: selOptId,
-								text: selOpt[scope.nameProperty]
+							if (selOpt) {
+								return {
+									id: selOptId,
+									text: selOpt[scope.nameProperty]
+								}
+							} else {
+								return {
+									id: selOptId,
+									text: '<span>&lt;Not found&gt;</span>',
+									error_data: {
+										description: ''
+									}
+								}
 							}
 
 						});
