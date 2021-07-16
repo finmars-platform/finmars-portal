@@ -1,5 +1,7 @@
 (function () {
 
+	const md5Helper = require('../helpers/md5.helper');
+
     function recursiveDeepCopy(o, saveFunctions) {
         var newO,
             i;
@@ -49,7 +51,7 @@
 
     }
 
-    var getObjectNestedPropVal = function(obj, pathToProp) {
+	const getObjectNestedPropVal = function(obj, pathToProp) {
 
         var objPlace = obj;
 
@@ -59,10 +61,28 @@
 
         return objPlace;
 
+    };
+
+    const deletePropertyByPath = function (obj, pathToProp) {
+
+        if(pathToProp.length === 1) {
+            if (Array.isArray(obj)) {
+                const index = pathToProp[0];
+                obj.splice(index, 1);
+                return true;
+            }
+            return delete obj[pathToProp[0]];
+        } else {
+            if(obj[pathToProp[0]])
+                return deletePropertyByPath(obj[pathToProp[0]], pathToProp.slice(1));
+            else
+                return false;
+        }
+
     }
 
     // sorts array alphabetically but puts text that starts with '-' at the beginning
-    let textWithDashSort = (arr, field)  => {
+	const textWithDashSort = (arr, field)  => {
 
     	const keys = ['name', 'user_code', 'public_name']; // preferred fields for sort
         const key = field || keys.find(key => arr.every(item => item.hasOwnProperty(key)));
@@ -149,7 +169,7 @@
         });
     }
 
-    let openLinkInNewTab = function (event) {
+	const openLinkInNewTab = function (event) {
 
 		event.preventDefault();
 		let targetElem = event.target;
@@ -163,7 +183,7 @@
 
 	};
 
-    let closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
+	const closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
 
         if (openedIn === 'big-drawer') {
 
@@ -175,7 +195,7 @@
 
     };
 
-	let getDefaultFilterType = valueType => {
+	const getDefaultFilterType = valueType => {
 
 		const defaultTextFilterType = "contains";
 		const defaultNumberAndDateFilterType = "equal";
@@ -184,15 +204,24 @@
 
 	};
 
+	/** @param key {*=} - can be usefull if multiple ids needed at once */
+	const generateUniqueId = (key) => {
+		const currentDate = Date.now().toString();
+		return md5Helper.md5(currentDate, key);
+	}
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
+        deletePropertyByPath: deletePropertyByPath,
         textWithDashSort: textWithDashSort,
 		openLinkInNewTab: openLinkInNewTab,
 
         closeComponent: closeComponent,
 		getDefaultFilterType: getDefaultFilterType,
+
+		generateUniqueId: generateUniqueId
     }
 
 }());

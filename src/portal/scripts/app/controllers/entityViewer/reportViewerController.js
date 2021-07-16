@@ -11,6 +11,7 @@
         var evEvents = require('../../services/entityViewerEvents');
         var evHelperService = require('../../services/entityViewerHelperService');
         var usersService = require('../../services/usersService');
+		var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
@@ -570,6 +571,8 @@
                                         data: {}
                                     };
 
+                                    contextData.date = reportOptions.report_date
+
                                     editEntity(activeObject, locals);
 
                                 } else {
@@ -630,7 +633,7 @@
 
                                     var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                                    var currency_object = getCurrencyObject('instrument.pricing_currency');
+                                    var currency_object = getCurrencyObject('instrument.pricing_currency.id');
                                     var createEntityLocals = {
                                         entityType: 'currency-history',
                                         entity: {
@@ -654,8 +657,8 @@
                         if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
 
                             var filters = {
-                                currency: activeObject['instrument.accrued_currency'],
-                                instrument: activeObject['instrument.id'],
+                                currency: activeObject['instrument.accrued_currency.id'],
+                                // instrument: activeObject['instrument.id'],
                                 pricing_policy: reportOptions.pricing_policy,
                                 date_0: reportOptions.report_date,
                                 date_1: reportOptions.report_date
@@ -684,6 +687,56 @@
                                         entityType: 'currency-history',
                                         entity: {
                                             currency: activeObject['instrument.accrued_currency'],
+                                            currency_object: currency_object,
+                                            pricing_policy: reportOptions.pricing_policy,
+                                            pricing_policy_object: reportOptions.pricing_policy_object,
+                                            date: reportOptions.report_date
+                                        },
+                                        data: {}
+                                    };
+
+                                    offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
+
+
+                                }
+
+                            })
+
+                        }
+
+                        if (action === 'edit_pricing_currency_fx_rate' && activeObject.id) {
+
+                            var filters = {
+                                currency: activeObject['instrument.pricing_currency.id'],
+                                // instrument: activeObject['instrument.id'],
+                                pricing_policy: reportOptions.pricing_policy,
+                                date_0: reportOptions.report_date,
+                                date_1: reportOptions.report_date
+                            };
+
+                            currencyHistoryService.getList({filters: filters}).then(function (data) {
+
+                                if (data.results.length) {
+
+                                    var item = data.results[0];
+
+                                    var locals = {
+                                        entityType: 'currency-history',
+                                        entityId: item.id,
+                                        data: {}
+                                    };
+
+                                    editEntity(activeObject, locals);
+
+                                } else {
+
+                                    var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
+
+                                    var currency_object = getCurrencyObject('instrument.pricing_currency.id');
+                                    var createEntityLocals = {
+                                        entityType: 'currency-history',
+                                        entity: {
+                                            currency: activeObject['instrument.pricing_currency.id'],
                                             currency_object: currency_object,
                                             pricing_policy: reportOptions.pricing_policy,
                                             pricing_policy_object: reportOptions.pricing_policy_object,
@@ -1045,6 +1098,12 @@
 
             }; */
 
+			/**
+			 * Integrates report viewer layout into front end. Called from module:entityViewerHelperService by callbacks getLayoutByUserCode or getDefaultLayout.
+			 *
+			 * @param layout {Object}
+			 * @returns {Promise<unknown>}
+			 */
             vm.setLayout = function (layout) {
 
                 return new Promise(async function (resolve, reject) {
@@ -1077,7 +1136,43 @@
                     var interfaceLayout = vm.entityViewerDataService.getInterfaceLayout();
 
                     if (additions.isOpen && interfaceLayout.splitPanel.height && interfaceLayout.splitPanel.height > 0) {
-                        vm.entityViewerDataService.setSplitPanelStatus(true);
+
+						try {
+							await uiService.pingListLayoutByKey(additions.layoutData.layoutId, {notifyError: false});
+							vm.entityViewerDataService.setSplitPanelStatus(true);
+
+						} catch (error) { // layout for split panel was not found
+
+							var errorObj = {
+								___custom_message: 'Error on getting layout with id: ' + additions.layoutData.layoutId + ' for split panel'
+							}
+
+							if (error && typeof error === 'object') {
+								errorObj = {...errorObj, ...error};
+
+							} else {
+								errorObj.error = error;
+							}
+
+							console.error(errorObj);
+							if (error && error.status === 404) {
+
+								/* interfaceLayout.splitPanel.height = 0;
+								vm.entityViewerDataService.setInterfaceLayout(interfaceLayout);
+
+								additions.isOpen = false;
+								additions.type = '';
+								delete additions.layoutData;
+
+								vm.entityViewerDataService.setAdditions(additions);
+
+								vm.entityViewerDataService.setSplitPanelStatus(false);*/
+								evRvLayoutsHelper.clearSplitPanelAdditions(vm.entityViewerDataService);
+
+							}
+
+						}
+
                     }
 
                     interfaceLayout.filterArea.width = 0;
@@ -1105,7 +1200,7 @@
                             onSetLayoutEnd();
                         }); */
                         await rvSharedLogicHelper.calculateReportDatesExprs();
-                        rvSharedLogicHelper.onSetLayoutEnd();
+						vm.readyStatus.layout = rvSharedLogicHelper.onSetLayoutEnd();
 
                         var activeColumnSortProm = new Promise(function (sortResolve, sortReject) {
 
@@ -1119,6 +1214,7 @@
                                     filters: {
                                         user_code: activeColumnSort.manual_sort_layout_user_code
                                     }
+
                                 }).then(function (data) {
 
                                     if (data.results.length) {
@@ -1141,11 +1237,9 @@
 
                                 })
 
-
                             } else {
                                 sortResolve();
                             }
-
 
                         })
 
@@ -1155,7 +1249,7 @@
                         })
 
                     } else {
-                        rvSharedLogicHelper.onSetLayoutEnd();
+						vm.readyStatus.layout = rvSharedLogicHelper.onSetLayoutEnd();
                     }
 
                     resolve();
@@ -1167,7 +1261,7 @@
             // called inside entityViewerHelperService
             vm.getView = function () {
 
-                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false; // switched to true by rvSharedLogicHelper.onSetLayoutEnd()
 

@@ -3,7 +3,7 @@
  */
 /**
  * Entity viewer helper service.
- * @module EntityViewerHelperService
+ * @module entityViewerHelperService
  */
 (function () {
 
@@ -66,7 +66,7 @@
      * @param {object} activeLayoutConfig - Object with configuration of layout saved on server
      * @param {object} layoutCurrentConfig - Object with current
      * @param {boolean} isReport
-     * @memberOf module:EntityViewerHelperService
+     * @memberOf module:entityViewerHelperService
      * @return {boolean} Returns true if layout has been changed, otherwise false
      */
     let checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
@@ -126,7 +126,7 @@
      * Turn table attribute into group, column or filter
      * @param {string} form - In what form get attribute
      * @param {object} attrInstance - Object with attribute data on which attribute form will be based
-     * @memberOf module:EntityViewerHelperService
+     * @memberOf module:entityViewerHelperService
      * @return {object} Return attribute in form of group, column or filter
      */
     let getTableAttrInFormOf = function (form, attrInstance) {
@@ -214,7 +214,7 @@
     /**
      * Get value of dynamic attribute by it's user_code
      * @param {object} dAttrData - Data of dynamic attribute
-     * @memberOf module:EntityViewerHelperService
+     * @memberOf module:entityViewerHelperService
      * @return {string|float|date} Return value of dynamic attribute
      */
     let getDynamicAttrValue = function (dAttrData) {
@@ -253,7 +253,7 @@
      * Get value of dynamic attribute by it's user_code
      * @param {string} userCode - Dynamic attribute user code
      * @param {array} dAttrsList - Array of objects with data of dynamic attribute
-     * @memberOf module:EntityViewerHelperService
+     * @memberOf module:entityViewerHelperService
      * @return {string|float|date} Return value of dynamic attribute
      */
     let getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
@@ -278,7 +278,7 @@
 
 	/**
 	 * Try to get layout by user code and use it. If no layout with such user code was found, get default layout.
-	 * @memberOf module:EntityViewerHelperService
+	 * @memberOf module:entityViewerHelperService
 	 *
 	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
 	 * @param {string} userCode
@@ -346,7 +346,7 @@
 	/**
 	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
 	 * @param {string} viewContext
-	 * @memberOf module:EntityViewerHelperService
+	 * @memberOf module:entityViewerHelperService
 	 * @return {promise}
 	 */
     let getDefaultLayout = function (viewModel, viewContext) {
@@ -381,7 +381,7 @@
     /**
      * Get max columns from tabs of Edit Layout
      * @param {Array} editLayoutTabs
-     * @memberOf module:EntityViewerHelperService
+     * @memberOf module:entityViewerHelperService
      * @returns {number}
      */
     var getEditLayoutMaxColumns = function (editLayoutTabs) {

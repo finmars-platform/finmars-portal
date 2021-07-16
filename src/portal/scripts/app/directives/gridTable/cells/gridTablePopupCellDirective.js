@@ -210,8 +210,9 @@
 
                     closePopupArea();
 
-                    if (scope.column.cellType === 'multitypeField') scope.fieldTypesData = null;
-
+                    if (scope.column.cellType === 'multitypeField') {
+                    	scope.fieldTypesData = null;
+					}
                     else {
 
                     	if (scope.column.settings.value &&

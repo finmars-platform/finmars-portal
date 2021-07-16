@@ -55,6 +55,7 @@
   position: relative;
   height: 0;
   overflow: hidden;
+  box-sizing: border-box;
   // transition: max-height 0.5s linear;
   .new-interface();
 
@@ -69,9 +70,13 @@
   }
 
   .icon-buttons {
-    display: flex;
+    flex: 0 0 252px;
+    /* display: flex;
     justify-content: flex-end;
-    flex: 0 0 191px;
+    flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
   }
 
   .g-filter-settings-big-left-btn {
@@ -797,6 +802,7 @@
 
   .g-filters-holder {
     float: left;
+    box-sizing: border-box;
 
     .modal-dialog-card {
       margin: 8px;
@@ -1099,6 +1105,43 @@
 
   }
 
+  .active-rows-actions {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    color: #fff;
+    font-size: 16px;
+    background-color: @rv-active-color;
+    z-index: 1;
+
+    .active-row-actions-wrapper {
+      height: 33px;
+      display: flex;
+
+      .selected-rows-count {
+        width: 115px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid #fff;
+
+        span:first-child {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .close-button {
+      color: #fff;
+      margin-right: 505px;
+    }
+  }
+
   .column-to-filters-drop-area {
     left: 0;
     width: 85%;
@@ -1130,11 +1173,6 @@
     right: 0;
 
     .left-right-drop-area();
-  }
-
-  .g-filters-holder {
-    padding: 10px;
-    box-sizing: border-box;
   }
 
   .g-column-bottom-row.g-table-header {

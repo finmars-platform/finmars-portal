@@ -37,7 +37,7 @@
 
                             <md-input-container class="md-block" style="height: 58px">
                                 <label>Value Type</label>
-                                <md-select data-ng-model="vm.item.settings.value_type" ng-change="vm.clearDefaultValue()">
+                                <md-select data-ng-model="vm.item.settings.value_type" ng-change="vm.valueTypeChanged()">
                                     <md-option ng-repeat="valueType in vm.valueTypes" ng-value="valueType.code">{{valueType.name}}</md-option>
                                 </md-select>
                             </md-input-container>
@@ -51,7 +51,7 @@
                                     <md-select ng-model="vm.currentContentType"
                                                md-container-class="common-select-container"
                                                md-on-close="searchTerm = ''"
-                                               ng-change="vm.clearDefaultValue()"
+                                               ng-change="vm.contentTypeChanged()"
                                                style="margin-bottom: 10px">
 
                                         <md-select-header>
@@ -79,7 +79,7 @@
 
                                     <md-input-container style="height: 58px">
 
-                                        <md-checkbox data-ng-model="vm.item.settings.multiple" ng-change="vm.clearDefaultValue()">Multiple Select</md-checkbox>
+                                        <md-checkbox data-ng-model="vm.item.settings.multiple" data-ng-change="vm.onMultipleChange()">Multiple Select</md-checkbox>
 
                                     </md-input-container>
 
@@ -127,12 +127,12 @@
                                     </md-select>
                                 </md-input-container>
 
-                                <expandable-items-selector data-model="vm.defaultValue.layout"
-                                                           data-title="Layout"
-                                                           data-dialog-title="Choose layout"
-                                                           data-items="vm.layoutsWithLinkToFilters"
-                                                           data-is-disabled="!vm.defaultValue.entity_type"
-                                                           data-on-change-callback="vm.onLayoutChange()"
+                                <expandable-items-selector model="vm.defaultValue.layout"
+                                                           title="Layout"
+                                                           dialog-title="Choose layout"
+                                                           items="vm.layoutsWithLinkToFilters"
+                                                           is-disabled="!vm.defaultValue.entity_type"
+                                                           on-change-callback="vm.onLayoutChange()"
                                                            class="dashboard-constructor-selector-directive"></expandable-items-selector>
 
                                 <md-input-container ng-if="vm.item.settings.value_type == 40 && vm.defaultValue.entity_type !== 'balance-report'"
@@ -176,11 +176,11 @@
                                                           data-entity-type="vm.currentContentType.relationType"></entity-search-select>
 
                                     <two-fields-multiselect data-ng-if="vm.item.settings.multiple"
-                                                            data-title="{{vm.currentContentType.name}}"
-                                                            data-items="vm.multiselectItems"
-                                                            data-model="vm.defaultValue.setValue"
-                                                            data-name-property="short_name"
-                                                            data-get-data-method="vm.getDataForMultiselect()"
+                                                            title="{{vm.currentContentType.name}}"
+                                                            items="vm.multiselectItems"
+                                                            model="vm.defaultValue.setValue"
+                                                            name-property="short_name"
+                                                            get-data-method="vm.getDataForMultiselect()"
                                                             class="two-fields-multiselect no-error-spacer dashboard-control-multiselect"></two-fields-multiselect>
 
                                 </div>

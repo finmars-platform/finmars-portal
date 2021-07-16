@@ -214,6 +214,8 @@ app.controller('TableAttributeSelectorDialogController', ['$scope', '$mdDialog',
 app.controller('TableAttributesMenuConstructorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/tableAttributesMenuConstructorDialogController')]);
 app.controller('LayoutChangesLossWarningDialogController', ['$scope', 'data', '$mdDialog', require('./app/controllers/dialogs/layoutChangesLossWarningDialogController')]);
 app.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
+app.directive('classifierTree', [require('./app/directives/classifierTreeDirective')]);
+app.directive('classifierTreeNode', [require('./app/directives/classifierTreeNodeDirective')]);
 app.controller('ExpandableItemsSelectorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/expandableItemsSelectorDialogController')]);
 app.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 app.controller('RenameFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameFieldDialogController')]);
@@ -406,6 +408,7 @@ app.controller('ManualPricingFormulasTabController', ['$scope', require('./app/c
 
 app.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
 app.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
+app.controller('InstrumentTypeUserAttributesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeUserAttributesTabController')]);
 
 // Currency form - tabs
 
@@ -543,7 +546,7 @@ app.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownM
 
 app.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
 app.directive('bindFieldTable', ['$mdDialog', 'gridTableHelperService', 'multitypeFieldService', require('./app/directives/bindFieldTableDirective')]);
-app.directive('layoutConstructorField', ['$mdDialog', 'entityDataConstructorService', require('./app/directives/layoutConstructorFieldDirective')]);
+app.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
 // app.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
 app.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
 

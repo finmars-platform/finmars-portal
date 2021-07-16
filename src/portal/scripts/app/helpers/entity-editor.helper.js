@@ -33,6 +33,32 @@
 
                 break;
 
+			case 'instrument-type':
+
+				if (entity.accruals && entity.accruals.length) {
+
+					entity.accruals.forEach(accrual => {
+						delete accrual.frontOptions;
+					});
+
+				}
+
+				if (entity.events && entity.events.length) {
+
+					entity.events.forEach(event => {
+
+						delete event.frontOptions;
+
+						event.data.actions.forEach(action => {
+							delete action.frontOptions;
+						});
+
+					});
+
+				}
+
+				break;
+
         }
 
     };
@@ -903,6 +929,142 @@
 
 	};
 
+    var validateInstrumentTypeEvents = function (entity, errorsList) {
+
+    	if (entity.events && entity.events.length) {
+
+    		entity.events.forEach(event => {
+
+    			var eventName = event.name || "";
+    			var eventNumber = event.order + 1;
+
+				if (!event.name) {
+
+					errorsList.push({
+						key: 'events',
+						locationData: {
+							type: "system_tab",
+							name: 'Events',
+							validatorText: "EVENT #" + eventNumber + " " + eventName,
+							accordionIndex: event.order
+						},
+						fieldName: "Event name",
+						message: 'Event #' + eventNumber + ' should be named'
+					});
+
+				}
+
+				if (!event.data.form_message) {
+
+					errorsList.push({
+						key: 'events',
+						locationData: {
+							type: "system_tab",
+							name: 'Events',
+							validatorText: "EVENT #" + eventNumber + " " + eventName,
+							accordionIndex: event.order
+						},
+						fieldName: "Message on the form",
+						message: 'Field should not be empty.'
+					});
+
+				}
+
+				if (!event.data.event_class) {
+
+					errorsList.push({
+						key: 'events',
+						locationData: {
+							type: "system_tab",
+							name: 'Events',
+							validatorText: "EVENT #" + eventNumber + " " + eventName,
+							accordionIndex: event.order
+						},
+						fieldName: "Event class",
+						message: 'Field should not be empty.'
+					});
+
+				}
+
+				var validateEventRow = function (item) {
+
+					if (item.to_show) {
+
+						if (!item.default_value && item.default_value !== 0) {
+
+							errorsList.push({
+								key: 'events',
+								locationData: {
+									type: "system_tab",
+									name: 'Events',
+									validatorText: "EVENT #" + eventNumber + " " + eventName,
+									accordionIndex: event.order
+								},
+								tableName: "",
+								rowName: item.name,
+								columnName: "Default Value",
+								message: "Cell should not be empty."
+							});
+
+						}
+
+					}
+
+				};
+
+				event.data.items.forEach(validateEventRow);
+				if (!event.data.items_blocked) event.data.blockableItems.forEach(validateEventRow)
+
+				if (event.data.actions.length) {
+
+					event.data.actions.forEach((action, index) => {
+
+						if (!action.transaction_type) {
+
+							errorsList.push({
+								key: 'events',
+								locationData: {
+									type: "system_tab",
+									name: 'Events',
+									validatorText: "EVENT #" + eventNumber + " " + eventName,
+									accordionIndex: event.order
+								},
+								tableName: "Actions",
+								rowName: '# ' + (index + 1),
+								columnName: "Transaction type",
+								message: "Cell should not be empty."
+							});
+
+						}
+
+						if (!action.text) {
+
+							errorsList.push({
+								key: 'events',
+								locationData: {
+									type: "system_tab",
+									name: 'Events',
+									validatorText: "EVENT #" + eventNumber + " " + eventName,
+									accordionIndex: event.order
+								},
+								tableName: "Actions",
+								rowName: '# ' + (index + 1),
+								columnName: "Text",
+								message: "Cell should not be empty."
+							});
+
+						}
+
+					});
+
+				}
+
+			});
+
+		}
+
+	};
+
     var validateComplexTransactionUserInput = function (userInput, fieldValue, transactionsTypeActions, tabs, errorsList) {
 
         validateEvField(userInput.name, fieldValue, userInput, tabs, [], 'complex-transaction', errorsList);
@@ -1218,7 +1380,8 @@
 					validateInstrumentTypeAccruals(entity, errors);
 
 				} else if (entityType === 'instrument-type' && errorKey === 'events') {
-					// validateInstrumentTypeEvents(entity, errors);
+					validateInstrumentTypeEvents(entity, errors);
+
 				}
 				else { // validate component-field
 
@@ -1314,7 +1477,6 @@
 						}
 
 					}
-
 					/* var t;
 					for (t = 0; t < tabKeys.length; t++) {
 
@@ -1347,7 +1509,10 @@
 
 		var errors = validateEntityFields(item, entityType, tabs, fixedFieldsAttrs, entityAttrs, attrsTypes);
 
-    	if (entityType === 'instrument-type') validateInstrumentTypeAccruals(item, errors);
+    	if (entityType === 'instrument-type') {
+    		validateInstrumentTypeAccruals(item, errors);
+    		validateInstrumentTypeEvents(item, errors);
+		}
 
 		return errors;
 
@@ -1706,6 +1871,22 @@
         return dcLayoutHasBeenFixed;
 
     };
+
+    const instrumentTypeAttrValueMapper = (entityAttr) => {
+        switch (entityAttr.value_type) {
+            case 10:
+                return entityAttr.value_string;
+            case 20:
+                return entityAttr.value_float;
+            case 30:
+                return +entityAttr.value_classifier; // The string comes from the server. Must be number/
+            case 40:
+                return entityAttr.value_date;
+            default:
+                return null;
+        }
+    };
+
 	/** @module entityEditorHelper */
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
@@ -1727,7 +1908,9 @@
         checkTabsForErrorFields: checkTabsForErrorFields,
 
         generateAttributesFromLayoutFields: generateAttributesFromLayoutFields,
-        fixCustomTabs: fixCustomTabs
+        fixCustomTabs: fixCustomTabs,
+
+        instrumentTypeAttrValueMapper: instrumentTypeAttrValueMapper
     }
 
 }());
