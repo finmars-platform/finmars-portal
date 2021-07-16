@@ -7,12 +7,21 @@
         </div>
 
         <div class="flex-column height-100">
+
             <div class="flex-1-1-auto overflow-auto">
 
-                <g-ev-left-panel-tree-elem item="tree" ev-data-service="evDataService"
+                <g-ev-left-panel-tree-elem ng-if="groupTypes.length"
+                                           item="tree"
+                                           ev-data-service="evDataService"
                                            ev-event-service="evEventService"></g-ev-left-panel-tree-elem>
 
+                <div ng-if="!groupTypes.length" class="ev-left-panel-drag-msg">
+                    <span class="material-icons">file_download</span>
+                    <span class="text">Drag a column here to group by</span>
+                </div>
+
             </div>
+
 
             <div class="ev-left-panel-footer-section">
 
@@ -27,6 +36,7 @@
                 </div>
 
             </div>
+
         </div>
 
         <div class="ev-left-panel-slider evLeftPanelSlider"></div>

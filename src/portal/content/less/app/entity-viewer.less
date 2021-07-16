@@ -466,6 +466,7 @@
     }
   }
 
+  //region Left panel with grouping area
   .g-ev-left-panel-holder {
     width: 230px;
     // float: left;
@@ -489,6 +490,27 @@
     border-right: 1px solid @borderPale;
     overflow: hidden;
     box-sizing: border-box;
+  }
+
+  .ev-left-panel-drag-msg {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .material-icons {
+      font-size: 48px;
+      color: #747474;
+    }
+
+    .text {
+      width: 100%;
+      padding: 0 16px;
+      box-sizing: border-box;
+      text-align: center;
+      font-size: 16px;
+    }
   }
 
   .ev-left-panel-slider {
@@ -572,7 +594,6 @@
     cursor: move;
   }
 
-
   .ev-left-panel-tree-elem {
 
     .ev-left-panel-tree-elem-name {
@@ -631,6 +652,8 @@
     }
 
   }
+  //endregion Left panel with grouping area
+
 
   .g-wrapper {
 

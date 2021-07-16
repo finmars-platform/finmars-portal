@@ -386,18 +386,25 @@
 
                 // Victor 2021.04.07 #90 sort setting for column
 
-                let activeNameBlockElement = null;
+                // let activeNameBlockElement = null;
+				let columnWithOpenSortMenuElem = null;
 
                 scope.showArrowDown = ($event) => {
-                    activeNameBlockElement = $event.target.closest('.name-block');
-                    activeNameBlockElement.classList.add('active');
+                    /* activeNameBlockElement = $event.target.closest('.name-block');
+                    activeNameBlockElement.classList.add('active'); */
+					columnWithOpenSortMenuElem = $event.target.closest('.gColumnElem');
+					columnWithOpenSortMenuElem.classList.add('sort-menu-opened');
                 };
 
                 scope.hideArrowDown = () => {
-                    if (activeNameBlockElement) {
+                    /* if (activeNameBlockElement) {
                         activeNameBlockElement.classList.remove('active');
                         activeNameBlockElement = null;
-                    }
+                    } */
+					if (columnWithOpenSortMenuElem) {
+						columnWithOpenSortMenuElem.classList.remove('sort-menu-opened');
+						columnWithOpenSortMenuElem = null;
+					}
                 }
 
                 const clearAllSortOptions = function (columns) {
@@ -456,6 +463,22 @@
 
                 };
 
+				const signalSortChange = function (column) {
+
+					if (scope.columnHasCorrespondingGroup(column.key)) {
+
+						scope.evDataService.setActiveGroupTypeSort(column);
+						scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
+
+					} else {
+
+						scope.evDataService.setActiveColumnSort(column);
+						scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
+
+					}
+
+				};
+
                 const sort = function (column) {
 
                     if (column.options.sort_mode === 'manual') { // manual sort handler
@@ -472,17 +495,7 @@
 
                                 scope.evDataService.setColumnSortData(column.key, layout.data)
 
-                                if (scope.columnHasCorrespondingGroup(column.key)) {
-
-                                    scope.evDataService.setActiveGroupTypeSort(column);
-                                    scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
-
-                                } else {
-
-                                    scope.evDataService.setActiveColumnSort(column);
-                                    scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
-
-                                }
+								signalSortChange(column);
 
                             } else {
 
@@ -495,17 +508,7 @@
 
                     } else { // default sort handler TODO External sort mode is not defined, and handling as default
 
-                        if (scope.columnHasCorrespondingGroup(column.key)) {
-
-                            scope.evDataService.setActiveGroupTypeSort(column);
-                            scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
-
-                        } else {
-
-                            scope.evDataService.setActiveColumnSort(column);
-                            scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
-
-                        }
+						signalSortChange(column);
 
                     }
 
