@@ -25,6 +25,11 @@
             "key": 'input'
         };
 
+        vm.defaultRuleScenario = {
+            name: '-',
+            is_default_rule_scenario: true
+        };
+
         vm.inputsFunctions = [];
         vm.selector_values_projection = [];
 
@@ -206,8 +211,17 @@
                     vm.mapFields = [];
 
                     vm.scheme.rule_scenarios.forEach(function (item) {
-                        vm.mapFields.push(item);
+
+                        if (item.is_default_rule_scenario) {
+                            vm.defaultRuleScenario = item
+                        } else {
+                            vm.mapFields.push(item);
+                        }
+
                     })
+
+
+
 
                 }
 
@@ -449,6 +463,9 @@
             vm.scheme.calculated_inputs = vm.calculatedFields;
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rule_scenarios = vm.mapFields;
+
+            vm.scheme.rule_scenarios.push(vm.defaultRuleScenario)
+
             vm.scheme.recon_scenarios = vm.reconFields;
 
             var warningMessage = '';

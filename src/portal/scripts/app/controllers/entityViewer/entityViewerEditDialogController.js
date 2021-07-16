@@ -576,6 +576,7 @@
 
         }; */
 
+
         vm.getItem = function () {
 
             return new Promise(function (res, rej) {
@@ -610,6 +611,7 @@
 						vm.attributeTypes = formLayoutData.attributeTypes;
 
                     	vm.tabs = formLayoutData.tabs;
+                        console.log('# vm.tabs', vm.tabs)
 						vm.attributesLayout = formLayoutData.attributesLayout;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
@@ -661,6 +663,14 @@
         };
 
         vm.updateEntityBeforeSave = function () {
+
+            if (vm.entityType === 'instrument-type') {
+
+                if (!vm.entity.instrument_factor_schedule_data) {
+                    vm.entity.instrument_factor_schedule_data = ''
+                }
+
+            }
 
             if (vm.entity.attributes) {
 

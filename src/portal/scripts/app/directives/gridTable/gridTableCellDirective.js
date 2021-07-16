@@ -154,9 +154,9 @@
 
                     /* if (scope.column.settings && scope.column.settings.value) {
                         scope.cellValue = scope.column.settings.value;
-                    } */
+                    }
 
-					/* scope.gtEventService.addEventListener(gtEvents.UPDATE_CELLS_CONTENT, function () {
+					scope.gtEventService.addEventListener(gtEvents.UPDATE_CELLS_CONTENT, function () {
 
 						if (scope.row && scope.column && scope.row.order !== 'header') {
 

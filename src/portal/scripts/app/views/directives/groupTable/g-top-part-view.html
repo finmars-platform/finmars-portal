@@ -37,10 +37,8 @@
         <md-button  data-ng-if="missingPricesData.items.length" class="missing-prices-warning-button" data-ng-click="openMissingPricesDialog($event)"><span class="material-icons">warning</span> Missing Data ({{missingPricesData.items.length}})</md-button>
 
         <md-select data-ng-model="reportOptions.cost_method" ng-change="updateReportOptions()" ng-if="entityType != 'transaction-report'">
-            <md-option ng-value="1">AVCO
-            </md-option>
-            <md-option ng-value="2">FIFO
-            </md-option>
+            <md-option ng-value="1">AVCO</md-option>
+            <md-option ng-value="2">FIFO</md-option>
             <!--<md-option ng-value="3">LIFO-->
             <!--</md-option>-->
         </md-select>

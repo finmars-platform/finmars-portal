@@ -46,7 +46,7 @@
 		 * @param value {*} - multitype field value
 		 * @param valueType {Number} - multitype field value type. Will be changed to default if it is not set.
 		 *
-		 * @return {{cell: Object, valueType: Number}} - changed cell data and current value_type of multitype field in case it does not set
+		 * @return {{cell: Object, value_type: Number}} - returns changed cell data and current value_type of multitype field in case it does not set
 		 */
 		const getMultitypeFieldDataForCell = (fieldTypesList, cell, value, valueType) => {
 
