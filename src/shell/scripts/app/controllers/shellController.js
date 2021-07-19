@@ -7,7 +7,7 @@
 'use strict';
 // import * as authorizerService from '../services/authorizerService';
 // const cookieService = require('../../../../core/services/cookieService');
-
+import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
 
@@ -22,6 +22,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
 	// let finmarsBroadcastChannel = new BroadcastChannel('finmars_broadcast');
 	// vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
+	const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
 	let readyStatus = false;
 
@@ -37,6 +38,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 	}
 
 	const onLogInSuccess = function (authorizationToken) {
+
+		vm.username = '';
 
 		if (authorizationToken) cookieService.setCookie('authtoken', authorizationToken);
 
@@ -56,7 +59,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 	}
 	/** Used inside shell/.../login-view.html */
 	vm.logIn = function ($event) {
-		// vm.username, vm.password setted inside login-view.html
+		// vm.username, vm.password set inside login-view.html
 		authorizerService.tokenLogin(vm.username, vm.password).then(function (data) {
 
 			console.log('authorizerService.login.data', data);
@@ -85,6 +88,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 		}).catch(error => {
 			console.error(error);
 		});
+
+		vm.password = '';
 
 	};
 
@@ -172,7 +177,12 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 			}, 1000); */
 			transitionFromState = transition.from().name;
 
-			middlewareService.clearEvents();
+			if (transitionFromState === 'app.authentication') {
+				vm.username = '';
+				vm.password = '';
+			}
+
+			// middlewareService.clearEvents();
 			vm.isAuthenticationPage = transition.to().name === 'app.authentication';
 
 		});
@@ -208,8 +218,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 			if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
 				middlewareService.masterUserChanged();
 
-				$state.go('app.home');
-				vm.getMasterUsersList();
+				$state.go('app.portal.home');
+				// vm.getMasterUsersList();
 			}
 
 			if (ev.data.event === crossTabEvents.LOGOUT) {
@@ -220,11 +230,12 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
 					sessionStorage.removeItem('afterLoginEvents');
 
-					if (window.location.pathname !== '/') {
+					/* if (window.location.pathname !== '/') {
 						window.location.pathname = '/';
 					} else {
 						window.location.reload()
-					}
+					} */
+					$state.go('app.authentication');
 
 					cookieService.deleteCookie('authtoken');
 
@@ -240,6 +251,33 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 	}
 
 	const init = function () {
+
+		if (PROJECT_ENV !== 'local') {
+
+			websocketService.addEventListener('master_user_change', function (data){
+
+				console.log('master_user_change data', data);
+
+				/* if (window.location.pathname !== '/') {
+					window.location.href = '/portal/#!/';
+				} else {
+					window.location.reload()
+				} */
+				if ($state.current.name === 'app.portal.home') {
+					$state.reload('app');
+
+				} else {
+					$state.go('app.portal.home');
+				}
+
+			})
+
+		}
+
+		middlewareService.addListenerOnLogOut(function () {
+			isAuthenticated = false;
+			vm.isAuthenticated = isAuthenticated;
+		});
 
 		initTransitionListener();
 
@@ -309,7 +347,6 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 	};
 
 	init();
-
 	// vm.currentGlobalState = 'portal';
 
 };

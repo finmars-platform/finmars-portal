@@ -261,8 +261,7 @@ export default function (globalDataService) {
 
 			authorizerRepository.setCurrentMasterUser(id).then(function (masterUserData) {
 
-				globalDataService.setMasterUser(masterUserData);
-
+				globalDataService.setMasterUser(null);
 				globalDataService.setMember(null);
 
 				resolve(masterUserData);

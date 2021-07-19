@@ -659,9 +659,16 @@
 
                     dataList.forEach(function (item) {
 
-                        item.___is_activated = scope.isAllSelected;
-                        item.___is_area_subtotal_activated = scope.isAllSelected;
-                        item.___is_line_subtotal_activated = scope.isAllSelected;
+                        if (item.___level === 0) {
+
+                            item.___is_activated = scope.isAllSelected;
+
+                        } else {
+                            // TODO Victor #111 better select only one type of subtotal, but I don't know item subtotal type
+                            item.___is_area_subtotal_activated = scope.isAllSelected;
+                            item.___is_line_subtotal_activated = scope.isAllSelected;
+
+                        }
 
                         if (item.results && item.results.length) {
 
@@ -679,6 +686,7 @@
                     scope.evDataService.setAllData(dataList);
 
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
                     console.timeEnd('Selecting all rows');
 
@@ -1984,6 +1992,13 @@
                         collectMissingCustomFieldsErrors(scope.notGroupingColumns, scope.groups);
                     })
                     // <Victor 2021.03.29 #88 fix bug with deleted custom fields>
+
+                    // Victor 2021.05.12 #111 multi rows selection
+                    scope.evEventService.addEventListener(evEvents.ROW_ACTIVATION_CHANGE, function () {
+                        scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
+                        setTimeout(() => scope.$apply())
+                    })
+                    // Victor 2021.05.12 #111 multi rows selection
 
                     scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 

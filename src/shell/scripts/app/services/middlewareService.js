@@ -1,5 +1,7 @@
 /**
  * Created by mevstratov on 08.03.2019
+ *
+ * Used to perform global communication between modules
  */
 // (function () {
 
@@ -7,13 +9,7 @@
 
 export default function () {
 
-	let data = {
-		newEntityViewerLayoutName: false,
-		newSplitPanelLayoutName: false,
-		warnOnLayoutChangeFn: false,
-		masterUserChangeEvents: [],
-		logOutEvents: []
-	};
+	/* COMMITTED: 2021-07-19
 
 	function setNewEntityViewerLayoutName(layoutName) {
 		data.newEntityViewerLayoutName = layoutName;
@@ -34,7 +30,14 @@ export default function () {
 
 	function getNewSplitPanelLayoutName() {
 		return data.newSplitPanelLayoutName;
-	}
+	} */
+	let data = {
+		/* newEntityViewerLayoutName: false,
+		newSplitPanelLayoutName: false, */
+		warnOnLayoutChangeFn: false,
+		masterUserChangeEvents: [],
+		logOutEvents: []
+	};
 
 	function setWarningOfLayoutChangesLossFn(callbackFn) {
 		data.warnOnLayoutChangeFn = callbackFn;
@@ -45,12 +48,31 @@ export default function () {
 		data.warnOnLayoutChangeFn = false;
 		return callbackFn;
 	}
-
+	/**
+	 *
+	 * @param callback {Function} - to be called on log out
+	 * @returns {number} - index of added callback inside list of callbacks
+	 */
 	function onMasterUserChanged(callback) {
 
 		if (callback) {
 			data.masterUserChangeEvents.push(callback);
+			return data.masterUserChangeEvents.length - 1;
 		}
+
+	}
+
+	function removeOnUserChangedListeners (callbackIndex) {
+
+		if (callbackIndex < 0) {
+			throw "Index is 0 or lesser";
+		}
+
+		if (callbackIndex > data.masterUserChangeEvents.length) {
+			throw "Index is greater then listeners count";
+		}
+
+		data.masterUserChangeEvents.splice(callbackIndex, 1);
 
 	}
 
@@ -62,11 +84,31 @@ export default function () {
 
 	}
 
-	function onLogOut(callback) {
+	/**
+	 *
+	 * @param callback {Function} - to be called on log out
+	 * @returns {number} - index of added callback inside list of callbacks
+	 */
+	function addListenerOnLogOut(callback) {
 
 		if (callback) {
 			data.logOutEvents.push(callback);
+			return data.logOutEvents.length - 1;
 		}
+
+	}
+
+	function removeOnLogOutListener (callbackIndex) {
+
+		if (callbackIndex < 0) {
+			throw "Index is 0 or lesser";
+		}
+
+		if (callbackIndex > data.logOutEvents.length) {
+			throw "Index is greater then listeners count";
+		}
+
+		data.logOutEvents.splice(callbackIndex, 1);
 
 	}
 
@@ -91,20 +133,24 @@ export default function () {
 			masterUserChanged: false
 		};
 	}
-
+	/** @module: middlewareService */
 	return {
+		/* COMMITTED: 2021-07-19
+
 		setNewEntityViewerLayoutName: setNewEntityViewerLayoutName,
 		getNewEntityViewerLayoutName: getNewEntityViewerLayoutName,
 		setNewSplitPanelLayoutName: setNewSplitPanelLayoutName,
-		getNewSplitPanelLayoutName: getNewSplitPanelLayoutName,
+		getNewSplitPanelLayoutName: getNewSplitPanelLayoutName, */
 
 		setWarningOfLayoutChangesLossFn: setWarningOfLayoutChangesLossFn,
 		getWarningOfLayoutChangesLossFn: getWarningOfLayoutChangesLossFn,
 
 		onMasterUserChanged: onMasterUserChanged,
+		removeOnUserChangedListeners: removeOnUserChangedListeners,
 		masterUserChanged: masterUserChanged,
 
-		onLogOut: onLogOut,
+		addListenerOnLogOut: addListenerOnLogOut,
+		removeOnLogOutListener: removeOnLogOutListener,
 		initLogOut: initLogOut,
 
 		clearEvents: clearEvents,

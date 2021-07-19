@@ -20,13 +20,16 @@ export default function () {
 
 		if (!channelName || typeof channelName !== 'string') {
 			console.error({invalidChannelName: channelName});
-			throw new Error('Channel with such name already opened');
+			throw new Error('Name for a channel should be a not empty string');
 		}
 
 		const openedChannelsNamesList = Object.keys(channels);
-		if (openedChannelsNamesList.includes(channelName)) throw new Error('Channel with such name already opened');
 
-		channels[channelName] = new BroadcastChannel(channelName);
+		if (!openedChannelsNamesList.includes(channelName)) {
+
+			channels[channelName] = new BroadcastChannel(channelName);
+
+		}
 
 	};
 

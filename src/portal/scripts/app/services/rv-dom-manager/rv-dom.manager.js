@@ -570,6 +570,8 @@
         //console.log("click group handleSubtotalClick data", clickData, parent);
         var subtotal_type;
 
+        const isAllRowsCheckboxChecked = parent.___is_area_subtotal_activated && parent.___is_line_subtotal_activated;
+
         if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
 
             handleShiftSelection(evDataService, evEventService, clickData);
@@ -586,10 +588,12 @@
 
             if (subtotal_type === 'area') {
                 parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
+                parent.___is_line_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
             if (subtotal_type === 'line') {
                 parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
+                parent.___is_area_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
             evDataService.setLastActivatedRow({
@@ -619,11 +623,13 @@
             }
 
             if (subtotal_type === 'area') {
-                parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
+                parent.___is_area_subtotal_activated = isAllRowsCheckboxChecked || !parent.___is_area_subtotal_activated;
+                parent.___is_line_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
             if (subtotal_type === 'line') {
-                parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
+                parent.___is_line_subtotal_activated = isAllRowsCheckboxChecked || !parent.___is_line_subtotal_activated;
+                parent.___is_area_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
             if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
@@ -669,6 +675,8 @@
 
         }
 
+        evDataService.setSelectAllRowsState(false); // Victor #111 every click must clear 'all select' checkbox
+        evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
     };
 
@@ -720,7 +728,8 @@
 
         }
 
-
+        evDataService.setSelectAllRowsState(false); // Victor #111 every click must clear 'all select' checkbox
+        evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
     };
 
     var updateDataFromCellEdit = function (obj, column, evDataService, evEventService) {
@@ -2037,7 +2046,11 @@
 
         let contextMenu;
 
-        const contextMenuData = await uiService.getContextMenuLayoutList();
+        const contextMenuData = await uiService.getContextMenuLayoutList({
+            filters:  {
+                type: "report_context_menu"
+            }
+        });
 
         if (contextMenuData.results.length) {
 

@@ -1035,7 +1035,25 @@
 
         };*/
 
-        vm.save = function ($event, isAutoExitAfterSave) {
+        vm.save = async function ($event, isAutoExitAfterSave) {
+
+            if (vm.entityType === 'instrument') {
+
+                const instrumentTypeId = vm.entity[vm.typeFieldName];
+                if (instrumentTypeId) {
+
+                    await vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
+
+                }
+            }
+
+            if (vm.entityType === 'instrument-type') {
+
+                if (!vm.entity.instrument_factor_schedule_data) {
+                    vm.entity.instrument_factor_schedule_data = ''
+                }
+
+            }
 
             vm.updateEntityBeforeSave();
 

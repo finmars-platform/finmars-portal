@@ -3,6 +3,7 @@
  */
 'use strict';
 
+// noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
 
     var app = angular.module('finmars.forum', []);

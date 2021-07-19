@@ -1,60 +1,60 @@
-<div ng-if="vm.readyStatus">
-    <div class="page-dnd-wrapper min-height" dnd-files-on-page is-disabled="!vm.hasCurrentMasterUser">
-        <main-header opened-inside="profile" class="profile-header"></main-header>
+<div ng-if="vm.readyStatus" class="min-height">
 
-        <md-content class="app-md-content min-height">
-            <md-tabs md-dynamic-height md-border-bottom md-selected="1" md-center-tabs="true">
-                <md-tab label="Personal data">
-                    <md-content class="md-padding">
+    <main-header opened-inside="profile" class="profile-header"></main-header>
 
-                        <div data-ng-include="'views/profile-settings-view.html'"
-                             data-ng-controller="ProfileSettingsController as vm">
+    <md-content class="app-md-content min-height">
+        <md-tabs md-dynamic-height md-border-bottom md-selected="1" md-center-tabs="true">
+            <md-tab label="Personal data">
+                <md-content class="md-padding">
 
-                        </div>
+                    <div data-ng-include="'views/profile-settings-view.html'"
+                         data-ng-controller="ProfileSettingsController as vm">
 
-                    </md-content>
-                </md-tab>
+                    </div>
 
-                <md-tab label="Databases">
-                    <md-content class="md-padding min-height">
+                </md-content>
+            </md-tab>
 
-                        <div data-ng-include="'views/profile-databases-view.html'"
-                             data-ng-controller="ProfileDatabasesController as vm">
+            <md-tab label="Databases">
+                <md-content class="md-padding min-height">
 
-                        </div>
+                    <div data-ng-include="'views/profile-databases-view.html'"
+                         data-ng-controller="ProfileDatabasesController as vm">
 
-                    </md-content>
-                </md-tab>
+                    </div>
 
-                <md-tab label="Billing">
-                    <md-content class="md-padding">
+                </md-content>
+            </md-tab>
 
-                        Coming soon
+            <md-tab label="Billing">
+                <md-content class="md-padding">
 
-                    </md-content>
-                </md-tab>
+                    Coming soon
 
-                <md-tab label="Password">
-                    <md-content class="md-padding">
-                        <div ng-include="'views/settings/change-password-settings-view.html'"
-                             ng-controller="SettingsGeneralChangePasswordController as vm">
+                </md-content>
+            </md-tab>
 
-                        </div>
-                    </md-content>
-                </md-tab>
+            <md-tab label="Password">
+                <md-content class="md-padding">
+                    <div ng-include="'views/settings/change-password-settings-view.html'"
+                         ng-controller="SettingsGeneralChangePasswordController as vm">
 
-                <md-tab label="Security">
-                    <md-content class="md-padding">
-                        <div ng-include="'views/security-settings-view.html'"
-                             ng-controller="SecuritySettingsController as vm">
+                    </div>
+                </md-content>
+            </md-tab>
 
-                        </div>
-                    </md-content>
-                </md-tab>
+            <md-tab label="Security">
+                <md-content class="md-padding">
+                    <div ng-include="'views/security-settings-view.html'"
+                         ng-controller="SecuritySettingsController as vm">
 
-            </md-tabs>
-        </md-content>
-    </div>
+                    </div>
+                </md-content>
+            </md-tab>
+
+        </md-tabs>
+    </md-content>
+
 </div>
 
 <div ng-if="!vm.readyStatus" class="flex-row fc-space-around fi-center height-100" style="min-height: 150px;">
