@@ -10,7 +10,7 @@ const send = function (data) {
 
 	console.log('websocket send', data);
 
-	if (window.ws) {
+	if (isOnline()) {
 
 		window.ws.send(JSON.stringify(data));
 
@@ -18,7 +18,7 @@ const send = function (data) {
 
 };
 
- function addEventListener(event, callback) {
+function addEventListener(event, callback) {
 
 	if (!callbacks[event]) {
 		callbacks[event] = [];
@@ -26,31 +26,35 @@ const send = function (data) {
 
 	callbacks[event].push(callback);
 
-	window.ws.onmessage = function (message) {
+	if (isOnline()) {
 
-		console.log('Websocket.message ', message);
+		window.ws.onmessage = function (message) {
 
-		try {
+			console.log('Websocket.message ', message);
 
-			var parsedMessage = JSON.parse(message.data)
+			try {
 
-			if (parsedMessage.hasOwnProperty('type')) {
+				var parsedMessage = JSON.parse(message.data)
 
-				if (callbacks[parsedMessage.type]) {
-					callbacks[parsedMessage.type].forEach(function (callback) {
-						callback(parsedMessage.payload);
-					})
+				if (parsedMessage.hasOwnProperty('type')) {
+
+					if (callbacks[parsedMessage.type]) {
+						callbacks[parsedMessage.type].forEach(function (callback) {
+							callback(parsedMessage.payload);
+						})
+					}
+
+				} else {
+					console.log("Websocket onmessage error. Type is not set", message);
 				}
 
-			} else {
-				console.log("Websocket onmessage error. Type is not set", message);
+			} catch (error) {
+				console.log("Websocket onmessage error. Error: ", error);
+				console.log("Websocket onmessage error. Message: ", message);
 			}
 
-		} catch (error) {
-			console.log("Websocket onmessage error. Error: ", error);
-			console.log("Websocket onmessage error. Message: ", message);
-		}
 
+		}
 
 	}
 
@@ -65,7 +69,7 @@ function removeEventListener(event){
 }
 
 function isOnline(){
-	return !!window.ws
+	return !!window.ws;
 }
 
 export default {

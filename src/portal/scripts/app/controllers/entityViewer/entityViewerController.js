@@ -57,6 +57,8 @@
                 'app.portal.data.strategy'
             ];
 
+			var onLogoutIndex, onUserChangeIndex;
+
             vm.stateWithLayout = false;
 
             if (listOfStatesWithLayout.indexOf($state.current.name) !== -1) {
@@ -713,7 +715,7 @@
 
                                     if (res.status === 'agree') {
 
-										evHelperService.updateTableAfterEntitiesDeletion(res.data.ids);
+										evHelperService.updateTableAfterEntitiesDeletion(vm.entityViewerDataService, vm.entityViewerEventService, res.data.ids);
 
                                     }
                                 });
@@ -742,7 +744,8 @@
 
                                     if (res.status === 'agree') {
 
-                                        evHelperService.updateTableAfterEntitiesDeletion(vm, res.data.ids);
+                                        // evHelperService.updateTableAfterEntitiesDeletion(vm, res.data.ids);
+                                        evHelperService.updateTableAfterEntitiesDeletion(vm.entityViewerDataService, vm.entityViewerEventService, res.data.ids);
 
                                     }
                                 });
@@ -1024,7 +1027,7 @@
                     // vm.getLayoutByUserCode(layoutUserCode);
                     evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
-                } else if ($stateParams.layoutUsesrCode) {
+                } else if ($stateParams.layoutUserCode) {
 
                     layoutUserCode = $stateParams.layoutUserCode;
                     // vm.getLayoutByUserCode(layoutUserCode);
@@ -1266,14 +1269,14 @@
                     window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
                 }
 
-                middlewareService.onMasterUserChanged(function () {
+				onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
 
                     doNotCheckLayoutChanges = true;
                     removeTransitionWatcher();
 
                 });
 
-                middlewareService.onLogOut(function () {
+				onLogoutIndex = middlewareService.addListenerOnLogOut(function () {
 
                     doNotCheckLayoutChanges = true;
                     removeTransitionWatcher();
@@ -1291,7 +1294,12 @@
             vm.init();
 
             this.$onDestroy = function () {
+
+				middlewareService.removeOnUserChangedListeners(onUserChangeIndex);
+				middlewareService.removeOnLogOutListener(onLogoutIndex);
+
                 removeTransitionWatcher();
+
             }
         }
 

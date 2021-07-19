@@ -88,6 +88,7 @@
         vm.inputsForMultiselector = [];
 
         vm.openedIn = data.openedIn;
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -2243,32 +2244,7 @@
             return result;
         };
 
-        vm.loadRelation = function (field, noScopeUpdate) {
-            console.log("loadrelation2");
-            console.log('field', field);
-
-            field = field.replace(/-/g, "_"); // replace all '_' with '-'
-
-            if (!vm.relationItems.hasOwnProperty(field)) {
-
-                return new Promise(function (resolve, reject) {
-
-                    fieldResolverService.getFields(field).then(function (data) {
-                        vm.relationItems[field] = data.data;
-
-                        if (noScopeUpdate) {
-                            $scope.$apply();
-                        }
-
-                        resolve(vm.relationItems[field]);
-                    })
-
-                });
-
-            }
-
-            return {status: 'item_exist', field: field};
-        };
+        vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
 

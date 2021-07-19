@@ -143,11 +143,12 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 							sessionStorage.removeItem('afterLoginEvents');
 
-							if (window.location.pathname !== '/') {
+							/* if (window.location.pathname !== '/') {
 								window.location.pathname = '/';
 							} else {
 								window.location.reload()
-							}
+							} */
+							$state.go('app.authentication');
 
 							cookieService.deleteCookie('authtoken');
 
@@ -194,13 +195,19 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 						// $state.go('app.portal.home', null, {reload: 'app'});
 
-						window.location.reload();
-
+						// window.location.reload();
 						if (broadcastChannelService.isAvailable) {
 							broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
 						}
 
 						getMasterUsersList();
+
+						if ($state.current.name.startsWith('app.portal')) {
+							$state.reload('app.portal')
+
+						} else {
+							$state.go('app.portal.home')
+						}
 
 					});
 				};

@@ -1425,7 +1425,6 @@
 						changeOrder('groups', nextSibling);
 
 					}
-
 					else if (droppedItemData.itemOrigin === 'columns') {
 
 						const groupToAdd = evHelperService.getTableAttrInFormOf('groups', draggableItem);
@@ -1638,6 +1637,7 @@
 							scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
 
 								columns = scope.evDataService.getColumns();
+
 								// wait for columns ngRepeat inside gColumnsComponent
 								setTimeout(() => initDnDFromColumns(), 500);
 
@@ -1648,9 +1648,17 @@
 							scope.evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
 								groups = scope.evDataService.getGroups();
-								// wait for groups ngRepeat inside gColumnsComponent
+								columns = scope.evDataService.getColumns();
+
 								if (scope.viewContext !== 'dashboard') {
-									setTimeout(() => initDnDFromGroups(), 500);
+									// wait for groups ngRepeat inside gColumnsComponent
+									setTimeout(() => {
+
+										initDnDFromGroups();
+										initDnDFromColumns();
+
+									}, 500);
+
 								}
 
 							});

@@ -20,7 +20,7 @@ export default function ($stateProvider, $urlServiceProvider) {
 	$stateProvider.state('app.authentication', {
 		url: '/authentication',
 		templateUrl: 'views/login-view.html',
-		// controller: 'AuthenticationController as vm'
+		// ShellController used for this state
 	});
 
 };

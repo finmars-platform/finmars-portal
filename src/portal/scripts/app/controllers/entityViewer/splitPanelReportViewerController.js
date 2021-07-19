@@ -412,6 +412,7 @@
                     additions.layoutData.layoutId = spDefaultLayout.layoutId;
                     additions.layoutData.name = spDefaultLayout.name;
                     additions.layoutData.content_type = spDefaultLayout.content_type;
+					additions.layoutData.user_code = spDefaultLayout.user_code;
 
                     parentEntityViewerDataService.setAdditions(additions);
 
@@ -833,6 +834,34 @@
                 })
 
             }; */
+			vm.setLayout = function (layout, spDefaultLayoutData) {
+
+				return new Promise(async function (resolve, reject) {
+
+					vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
+					vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+
+					// var reportOptions = vm.entityViewerDataService.getReportOptions();
+					var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
+
+					// Check if there is need to solve report datepicker expression
+					if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
+
+						await rvSharedLogicHelper.calculateReportDatesExprs();
+						rvSharedLogicHelper.onSetLayoutEnd();
+
+						resolve();
+
+						// < Check if there is need to solve report datepicker expression >
+					} else {
+						rvSharedLogicHelper.onSetLayoutEnd();
+					}
+
+					resolve();
+
+				});
+
+			};
 
             vm.getView = function () {
 
@@ -876,7 +905,7 @@
                 if (splitPanelLayoutToOpen) {
                     defaultLayoutId = splitPanelLayoutToOpen;
 
-                } else {
+                } else { // open default for split panel layout
 
                     defaultLayoutId = additions.layoutId; // needed in order for old system layouts work
 
@@ -890,50 +919,21 @@
 
                 vm.setEventListeners();
 
-				var setLayoutProm;
+				// var setLayoutProm;
 
-                vm.setLayout = function (layout) {
-
-					return new Promise(async function (resolve, reject) {
-
-						vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
-						vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
-
-						// var reportOptions = vm.entityViewerDataService.getReportOptions();
-						var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
-
-						// Check if there is need to solve report datepicker expression
-						if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
-
-							await rvSharedLogicHelper.calculateReportDatesExprs();
-							rvSharedLogicHelper.onSetLayoutEnd();
-
-							resolve();
-
-							// < Check if there is need to solve report datepicker expression >
-						} else {
-							rvSharedLogicHelper.onSetLayoutEnd();
-						}
-
-						resolve();
-
-					});
-
-                };
-
-                if (defaultLayoutId) {
+                /* if (defaultLayoutId) {
 
                     uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
 
-                        /* if (spLayoutData) {
-                            middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
-                        } */
+                        //  if (spLayoutData) {
+                        //     middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
+                        // }
 
-                        vm.setLayout(spLayoutData);
+						setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
 
                     }).catch(function (reason) {
 						setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
-                    })
+                    });
 
                 } else {
 					setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
@@ -941,6 +941,16 @@
 
 				Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
 					$scope.$apply();
+				}); */
+
+				uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
+
+					var setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
+
+					Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
+						$scope.$apply();
+					});
+
 				});
 
             };

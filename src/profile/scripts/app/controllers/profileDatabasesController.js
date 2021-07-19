@@ -1,3 +1,5 @@
+import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents";
+
 /**
  * Created by sergey on 30.07.16.
  */
@@ -9,11 +11,11 @@
     // var authorizerService = require('../services/authorizerService');
 
     var baseUrlService = require('../services/baseUrlService');
-    var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
+    // var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $state, $mdDialog, profileAuthorizerService, commonDialogsService) {
+    module.exports = function ($scope, $state, $mdDialog, profileAuthorizerService, broadcastChannelService, commonDialogsService) {
 
         var vm = this;
 
@@ -100,7 +102,11 @@
 			profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
 
                 baseUrlService.setMasterUserPrefix(data.base_api_url);
-                portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+                // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+
+				if (broadcastChannelService.isAvailable) {
+					broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
+				}
 
                 $state.go('app.portal.home');
 
@@ -338,7 +344,7 @@
 
 
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
-                    portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+                    // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
                     $state.go('app.setup');
                 })

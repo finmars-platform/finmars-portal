@@ -222,14 +222,20 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 			})
 		});
 	};
-
-	var pingListLayoutByKey = function (layoutId) {
+	/**
+	 *
+	 * @param layoutId {number}
+	 * @param xhrOptions {=Object} - options for xhrService
+	 * @returns {Promise<Object>}
+	 */
+	var pingListLayoutByKey = function (layoutId, xhrOptions) {
 
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + layoutId + '/ping/',
-			getRequestParams('GET'))
+			getRequestParams('GET'), xhrOptions);
+
 	};
 
 	var getListLayoutTemplate = function () {

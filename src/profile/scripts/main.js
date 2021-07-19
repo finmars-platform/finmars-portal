@@ -9,6 +9,7 @@ import profileAuthorizerService from './app/services/authorizerService'; // insi
 
 import profileController from './app/controllers/profileController.js';
 
+// noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
 
     let profile = angular.module('finmars.profile', []);
@@ -24,7 +25,7 @@ export default (function () {
     profile.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', require('./app/controllers/newDatabaseController')]);
     profile.controller('ProfileController', ['$scope', 'authorizerService', 'globalDataService', profileController]);
     profile.controller('ProfileSettingsController', ['$scope', 'globalDataService', require('./app/controllers/profileSettingsController')]);
-    profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'commonDialogsService', require('./app/controllers/profileDatabasesController')]);
+    profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService', require('./app/controllers/profileDatabasesController')]);
     profile.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/createMasterUserDialogController')]);
     profile.controller('CreateMasterUserFromDumpDialogController', ['$scope', '$mdDialog', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/createMasterUserFromDumpDialogController')]);
     profile.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', '$state', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
