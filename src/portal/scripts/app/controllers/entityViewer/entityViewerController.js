@@ -10,7 +10,7 @@
         var evEvents = require('../../services/entityViewerEvents');
         var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
-        var usersService = require('../../services/usersService');
+        // var usersService = require('../../services/usersService');
 
         var complexTransactionService = require('../../services/transaction/complexTransactionService');
         var instrumentService = require('../../services/instrumentService');
@@ -22,12 +22,12 @@
         var AttributeDataService = require('../../services/attributeDataService');
 
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
         var transactionTypeService = require('../../services/transactionTypeService');
 
 
-        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer) {
+        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService) {
 
             var vm = this;
 
@@ -39,23 +39,25 @@
             };
 
             var listOfStatesWithLayout = [
-                'app.data.portfolio',
-                'app.data.account',
-                'app.data.account-type',
-                'app.data.counterparty',
-                'app.data.responsible',
-                'app.data.instrument',
-                'app.data.instrument-type',
-                // 'app.data.pricing-policy',
-                'app.data.complex-transaction',
-                'app.data.transaction',
-                'app.data.transaction-type',
-                'app.data.currency-history',
-                'app.data.price-history',
-                'app.data.currency',
-                'app.data.strategy-group',
-                'app.data.strategy'
+                'app.portal.data.portfolio',
+                'app.portal.data.account',
+                'app.portal.data.account-type',
+                'app.portal.data.counterparty',
+                'app.portal.data.responsible',
+                'app.portal.data.instrument',
+                'app.portal.data.instrument-type',
+                // 'app.portal.data.pricing-policy',
+                'app.portal.data.complex-transaction',
+                'app.portal.data.transaction',
+                'app.portal.data.transaction-type',
+                'app.portal.data.currency-history',
+                'app.portal.data.price-history',
+                'app.portal.data.currency',
+                'app.portal.data.strategy-group',
+                'app.portal.data.strategy'
             ];
+
+			var onLogoutIndex, onUserChangeIndex;
 
             vm.stateWithLayout = false;
 
@@ -976,7 +978,7 @@
 
             vm.getView = function () {
 
-                middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false;
 
@@ -1077,7 +1079,7 @@
                 });
             };
 
-            var checkLayoutForChanges = function () { // called on attempt to change or reload page
+            var checkLayoutForChanges = function (transition) { // called on attempt to change or reload page
 
                 return new Promise(function (resolve, reject) {
 
@@ -1267,14 +1269,14 @@
                     window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
                 }
 
-                middlewareService.onMasterUserChanged(function () {
+				onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
 
                     doNotCheckLayoutChanges = true;
                     removeTransitionWatcher();
 
                 });
 
-                middlewareService.onLogOut(function () {
+				onLogoutIndex = middlewareService.addListenerOnLogOut(function () {
 
                     doNotCheckLayoutChanges = true;
                     removeTransitionWatcher();
@@ -1292,7 +1294,12 @@
             vm.init();
 
             this.$onDestroy = function () {
+
+				middlewareService.removeOnUserChangedListeners(onUserChangeIndex);
+				middlewareService.removeOnLogOutListener(onLogoutIndex);
+
                 removeTransitionWatcher();
+
             }
         }
 

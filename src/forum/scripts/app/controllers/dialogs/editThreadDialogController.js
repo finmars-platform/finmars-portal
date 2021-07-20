@@ -5,10 +5,10 @@
 	var tagService = require('../../../../../portal/scripts/app/services/tagService');
 	var threadService = require('../../services/threadService');
 
-	var usersService = require('../../../../../portal/scripts/app/services/usersService');
+	// var usersService = require('../../../../../portal/scripts/app/services/usersService');
 	var usersGroupService = require('../../../../../portal/scripts/app/services/usersGroupService');
 	
-	module.exports = function ($scope, $mdDialog, threadId) {
+	module.exports = function ($scope, $mdDialog, threadId, usersService) {
 		var vm = this;
 
 		vm.tags = [];

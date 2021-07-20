@@ -4,7 +4,7 @@
 
         <div class="height-100 shellViewDnDDiv">
 
-            <div data-ng-if="vm.readyStatus.masters" class="min-height">
+            <div data-ng-if="vm.isIdentified && vm.readyStatus.masterUsers" class="min-height">
 
                 <div data-ng-if="vm.currentGlobalState == 'profile'" class="min-height">
 
@@ -31,14 +31,14 @@
                                     </md-button>
 
                                     <div class="header-masteruser">
-                                        <md-menu data-ng-if="vm.readyStatus.masters">
+                                        <md-menu data-ng-if="vm.readyStatus.masterUsers">
                                             <md-button class="md-button header-account-btn" aria-label="Account button"
                                                        ng-click="$mdOpenMenu($event)">
                                                 <span class="header-masteruser-name"
                                                       data-ng-bind="vm.currentMasterUser.name"></span>
                                             </md-button>
                                             <md-menu-content>
-                                                <md-menu-item data-ng-repeat="item in vm.masters">
+                                                <md-menu-item data-ng-repeat="item in vm.masterUsers">
                                                     <md-button data-ng-click="vm.selectMaster(item)"
                                                                aria-label="Select master">
                                                         <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>
@@ -48,7 +48,7 @@
                                             </md-menu-content>
                                         </md-menu>
 
-                                        <div data-ng-if="!vm.readyStatus.masters">
+                                        <div data-ng-if="!vm.readyStatus.masterUsers">
                                             <div class="m-16" layout="row" layout-sm="column"
                                                  layout-align="space-around">
                                                 <!--<md-progress-circular class="progress-circular-white" md-diameter="16"-->
@@ -69,7 +69,7 @@
                                             </md-button>
                                             <md-menu-content>
                                                 <md-menu-item style="border-bottom: 1px solid #ddd;">
-                                                    <md-button data-ui-sref="app.profile">
+                                                    <md-button data-ui-sref="app.portal.profile">
                                                         <b>Profile</b>
                                                     </md-button>
                                                 </md-menu-item>
@@ -100,17 +100,16 @@
                             <md-toolbar ng-show="!showSearch" class="header">
 
                                 <div layout="row" class="toolbar-wrapper">
-<!--                                    <div class="md-toolbar-tools" flex="60" layout="start center">-->
-<!--                                        <h2 class="current-location-title" data-ng-if="vm.currentLocation().length > 0"-->
-<!--                                            data-ng-bind="vm.currentLocation()"></h2>-->
-<!--                                        <h3 data-ng-if="vm.isStateOfEntity()" class="toolbar-layout-info">-->
-<!--                                            (Layout: <span-->
-<!--                                                class="toolbar-layout-name">{{ vm.activeLayoutName }}</span><span-->
-<!--                                                ng-if="vm.activeSPLayoutName">; Split Panel: <span-->
-<!--                                                class="toolbar-layout-name">{{ vm.activeSPLayoutName }}</span></span>)-->
-<!--                                        </h3>-->
-<!--                                    </div>-->
-
+<!--                                    <div class="md-toolbar-tools" flex="60" layout="start center">
+                                        <h2 class="current-location-title" data-ng-if="vm.currentLocation().length > 0"
+                                            data-ng-bind="vm.currentLocation()"></h2>
+                                        <h3 data-ng-if="vm.isStateOfEntity()" class="toolbar-layout-info">
+                                            (Layout: <span
+                                                class="toolbar-layout-name">{{ vm.activeLayoutName }}</span><span
+                                                ng-if="vm.activeSPLayoutName">; Split Panel: <span
+                                                class="toolbar-layout-name">{{ vm.activeSPLayoutName }}</span></span>)
+                                        </h3>
+                                    </div>-->
                                     <div class="md-toolbar-tools"
                                          flex="relative main-content-container layout-fill layout-column40"
                                          layout-align="end center">
@@ -118,7 +117,7 @@
                                         <div class="header-misc" layout="row">
 
                                             <md-button class="md-button header-cloud-layout-btn"
-                                                       data-ui-sref="app.processes">
+                                                       data-ui-sref="app.portal.processes">
                                                 <ng-md-icon icon="cloud_download" size="24">
                                                     <md-tooltip class="tooltip_1" md-direction="bottom">Open Active
                                                         Processes
@@ -146,7 +145,7 @@
                                             </md-button>
 
                                             <md-button style="margin-left: 0"
-                                                       data-ui-sref="app.system.notifications({notificationsListType: 'unreaded'})"
+                                                       data-ui-sref="app.portal.system.notifications({notificationsListType: 'unreaded'})"
                                                        aria-label="Notifications">
                                                 <ng-md-icon icon="flag"></ng-md-icon>
                                                 <span data-ng-show="vm.unreadedNotificationsAmount"
@@ -162,21 +161,21 @@
                                             </md-button>
 
                                             <md-button style="margin-left: 0"
-                                                       data-ui-sref="app.system-messages"
+                                                       data-ui-sref="app.portal.system-messages"
                                                        aria-label="System Messages">
                                                 <ng-md-icon icon="email"></ng-md-icon>
                                             </md-button>
 
                                             <div class="header-masteruser">
-                                                <md-menu data-ng-if="vm.readyStatus.masters">
+                                                <md-menu data-ng-if="vm.readyStatus.masterUsers">
                                                     <md-button class="md-button header-account-btn"
                                                                aria-label="Account button"
                                                                ng-click="$mdOpenMenu($event)">
-                                    <span class="header-masteruser-name"
-                                          data-ng-bind="vm.currentMasterUser.name"></span>
+                                                        <span class="header-masteruser-name"
+                                                              data-ng-bind="vm.currentMasterUser.name"></span>
                                                     </md-button>
                                                     <md-menu-content>
-                                                        <md-menu-item data-ng-repeat="item in vm.masters">
+                                                        <md-menu-item data-ng-repeat="item in vm.masterUsers">
                                                             <md-button data-ng-click="vm.selectMaster(item)"
                                                                        aria-label="Select master">
                                                                 <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>
@@ -186,7 +185,7 @@
                                                     </md-menu-content>
                                                 </md-menu>
 
-                                                <div data-ng-if="!vm.readyStatus.masters">
+                                                <div data-ng-if="!vm.readyStatus.masterUsers">
                                                     <div class="m-16" layout="row" layout-sm="column"
                                                          layout-align="space-around">
                                                         <!--<md-progress-circular md-diameter="16" class="progress-circular-white"-->
@@ -208,7 +207,7 @@
                                                     <md-menu-content>
 
                                                         <md-menu-item style="border-bottom: 1px solid #ddd;">
-                                                            <md-button data-ui-sref="app.profile">
+                                                            <md-button data-ui-sref="app.portal.profile">
                                                                 Profile
                                                             </md-button>
                                                         </md-menu-item>
@@ -221,6 +220,7 @@
                                                     </md-menu-content>
                                                 </md-menu>
                                             </div>
+
                                         </div>
 
                                         <!--<a href="#" data-ng-click="vm.logout()">Log out</a>-->
@@ -232,6 +232,7 @@
                                      layout="row"
                                      class="bookmarks-list-container"
                                      data-ng-if="vm.showBookmarks">
+
                                     <div class="bookmarks-list" layout="row" layout-align="space-between center">
                                         <div layout="row" class="bookmarks-container">
                                             <div data-ng-repeat="item in vm.items track by item.id">
@@ -261,6 +262,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div layout="row">
                                             <md-button class="md-button header-cloud-layout-btn"
                                                        data-ng-click="vm.openSettings($event)">
@@ -268,6 +270,7 @@
                                             </md-button>
                                         </div>
                                     </div>
+
                                 </div>
                                 <!-- ----------------------------------------- -->
                             </md-toolbar>
@@ -302,7 +305,7 @@
 
     </div>
 
-    <div data-ng-if="!vm.isAuthenticated && !vm.readyStatus.masters" style="padding-top: 120px;">
+    <div data-ng-if="!vm.isAuthenticated && !vm.readyStatus.masterUsers" style="padding-top: 120px;">
 
         <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
             <progress-linear></progress-linear>

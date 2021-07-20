@@ -9,8 +9,6 @@
 
     var uiService = require('../../../services/uiService');
 
-    var middlewareService = require('../../../services/middlewareService');
-
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
     var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');

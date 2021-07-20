@@ -1,5 +1,8 @@
 /**
  * Created by szhitenev on 15.06.2016.
+ *
+ * Deprecated. Use shell/scripts/app/services/toastNotificationService.js instead.
+ *
  */
 
 (function () {

@@ -215,10 +215,10 @@
             if (vm.entityType.indexOf('strategy-') !== -1) {
 
                 var strategyNumber = vm.entityType.split('-')[1];
-                return 'app.data.strategy({strategyNumber: ' + strategyNumber + '})';
+                return 'app.portal.data.strategy({strategyNumber: ' + strategyNumber + '})';
 
             } else {
-                return 'app.data.' + vm.entityType;
+                return 'app.portal.data.' + vm.entityType;
             }
 
         };
@@ -242,7 +242,7 @@
 
                 entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.isInstanceId};
             }
-            $state.go('app.data-constructor', entityAddress);
+            $state.go('app.portal.data-constructor', entityAddress);
         };*/
 
         vm.deleteAttr = function (ev, item) {
