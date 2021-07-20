@@ -29,7 +29,7 @@
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'E',
-            templateUrl: 'views/components/g-layouts-manager-view.html',
+            templateUrl: 'views/components/layouts-manager-view.html',
             scope: {
                 entityType: '=',
                 evDataService: '=',
@@ -40,7 +40,8 @@
 
             	scope.isReport = metaService.isReport(scope.entityType);
             	scope.isNewLayout = scope.evDataService.isLayoutNew();
-
+            	scope.viewContext = scope.evDataService.getViewContext();
+				console.log("testing ", scope.viewContext);
                 scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
@@ -141,6 +142,10 @@
                     }
 
                 };
+
+                scope.getLinkToLayout = function (userCode) {
+					return $state.current.name + "({layoutUserCode: '" + userCode + "'})";
+				};
 
                 scope.setAsDefault = (targetLayout) => {
 
