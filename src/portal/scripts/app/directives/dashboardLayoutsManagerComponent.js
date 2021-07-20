@@ -2,8 +2,6 @@
 
     'use strict';
 
-    const middlewareService = require('../services/middlewareService');
-    const evEvents = require("../services/entityViewerEvents");
     const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
     const popupEvents = require('../services/events/popupEvents');
     const dashboardEvents = require('../services/dashboard/dashboardEvents');
@@ -18,15 +16,16 @@
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'E',
-            templateUrl: 'views/components/dashboard-layouts-manager-view.html',
+            templateUrl: 'views/components/layouts-manager-view.html',
             scope: {
                 onChangeLayoutCallback: '&',
-                evDataService: '=',
-                evEventService: '=',
+                dashboardDataService: '=',
+                dashboardEventService: '=',
             },
             link: function (scope) {
 
-                scope.layout = scope.evDataService.getData()
+                scope.layout = scope.dashboardDataService.getData();
+				scope.viewContext = 'dashboard';
 
                 scope.invites = [];
 
@@ -36,11 +35,11 @@
 
                 scope.layouts = [];
 
-                scope.createLayout = function (){
+                scope.createNewLayout = function (){
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    $state.go('app.dashboard-constructor', {
+                    $state.go('app.portal.dashboard-constructor', {
                         id: 'new'
                     })
 
@@ -48,7 +47,7 @@
 
                 scope.deleteLayout = function (ev) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
@@ -80,40 +79,47 @@
 
                 scope.openLayout = (layout) => {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     console.log('openLayout.layout', layout);
 
-                    scope.evDataService.setLayoutToOpen(layout);
+                    scope.dashboardDataService.setLayoutToOpen(layout);
 
-                    scope.evEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
 
 
                 };
 
-                scope.setAsDefault = () => {
+				scope.getLinkToLayout = function (userCode) {
+					return $state.current.name + "({layoutUserCode: '" + userCode + "'})";
+				};
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                scope.setAsDefault = (targetLayout) => {
 
-                    scope.layout.is_default = true;
+					if (targetLayout.is_default) {
+						return;
+					}
 
-                    uiService.updateDashboardLayout(scope.layout.id, scope.layout).then(async function (data) {
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                        toastNotificationService.success("Dashboard Layout is set as default")
+					targetLayout.is_default = true;
 
+                    uiService.updateDashboardLayout(targetLayout.id, targetLayout).then(async function (data) {
+
+                        toastNotificationService.success("Dashboard Layout is set as default");
 
                     });
 
                 };
 
                 scope.editDashboardLayout = () => {
-                    const url = $state.href('app.dashboard-constructor', {id: scope.layout.id});
+                    const url = $state.href('app.portal.dashboard-constructor', {id: scope.layout.id});
                     window.open(url, '_blank');
                 };
 
                 scope.saveLayoutList = function () {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     uiService.updateDashboardLayout(scope.layout.id, scope.layout).then(function (data) {
 
@@ -126,7 +132,7 @@
 
                 scope.saveAsLayoutList = function ($event) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     // TODO save as method?
 
@@ -134,7 +140,7 @@
 
                 scope.renameLayout = function ($event) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     //$event.stopPropagation();
                     // var layoutData = layoutsList[index];
@@ -174,7 +180,7 @@
 
                 scope.shareLayout = function ($event) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     var type = 'dashboard_viewer';
 
@@ -222,7 +228,7 @@
 
                 scope.pullUpdate = function ($event) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     shareConfigurationFileService.getByKey(scope.layout.sourced_from_global_layout).then(function (data) {
 
@@ -246,7 +252,7 @@
 
                 scope.makeCopy = function ($event) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     var layout = JSON.parse(JSON.stringify(scope.layout))
 
@@ -259,9 +265,9 @@
 
                     uiService.createDashboardLayout(layout).then(async function (data) {
 
-                        scope.evDataService.setLayoutToOpen(data);
+                        scope.dashboardDataService.setLayoutToOpen(data);
 
-                        scope.evEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
 
                         toastNotificationService.success("Dashboard Layout is Duplicated")
 
@@ -272,7 +278,7 @@
 
                 scope.exportLayout = function ($event) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
                         controller: 'DashboardLayoutExportDialogController as vm',
@@ -288,7 +294,7 @@
 
                 scope.openInvites = function ($event) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
                         controller: 'UiLayoutListInvitesDialogController as vm',
@@ -298,8 +304,8 @@
                         preserveScope: false,
                         locals: {
                             options: {
-                                entityViewerDataService: scope.evDataService,
-                                entityViewerEventService: scope.evEventService
+                                entityViewerDataService: scope.dashboardDataService,
+                                entityViewerEventService: scope.dashboardEventService
                             }
                         }
                     })
@@ -308,7 +314,7 @@
 
                 scope.openLayoutList = function ($event) {
 
-                    scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
                         controller: 'DashboardLayoutListDialogController as vm',
@@ -318,17 +324,17 @@
                         preserveScope: false,
                         locals: {
                             data: {
-                                dashboardDataService: scope.evDataService,
-                                dashboardEventService: scope.evEventService
+                                dashboardDataService: scope.dashboardDataService,
+                                dashboardEventService: scope.dashboardEventService
                             }
                         }
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
 
-                            scope.evDataService.setLayoutToOpen(res.data.layout);
+                            scope.dashboardDataService.setLayoutToOpen(res.data.layout);
 
-                            scope.evEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
 
 
                         }

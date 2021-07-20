@@ -21,7 +21,9 @@
     var HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
     var AUTHORIZER_URL = process.env.AUTHORIZER_URL || 'http://0.0.0.0:8083/authorizer';
 
-    gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All'));
+    // gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All', 'shell-min-All'));
+	gulp.task('default', gulp.parallel('core-min-All', 'profile-min-All', 'portal-min-All', 'shell-min-All'));
+	gulp.task('modules-min-All', gulp.parallel('profile-min-All', 'portal-min-All', 'shell-min-All'));
 
     gulp.task('doc-clean', function () {
         return gulp.src(['./docs'], {read: false, allowEmpty: true })
@@ -48,7 +50,7 @@
             console.log("UPDATED API_HOST ADD HTTPS: " + API_HOST)
         }
 
-        return gulp.src(['dist/portal/scripts/main.min.js'])
+        return gulp.src(['dist/shell/scripts/main.min.js'])
             // .pipe(replace(/__API_HOST__/g, API_HOST))
             // .pipe(replace(/__WS_HOST__/g, WS_HOST))
             // .pipe(replace(/__AUTHORIZER_URL__/g, AUTHORIZER_URL))
@@ -57,8 +59,8 @@
             .pipe(string_replace('__WS_HOST__', WS_HOST))
             .pipe(string_replace('__AUTHORIZER_URL__', AUTHORIZER_URL))
             .pipe(string_replace('__HEALTHCHECK_HOST__', HEALTHCHECK_HOST))
-            .pipe(gulp.dest('dist/portal/scripts/'))
+            .pipe(gulp.dest('dist/shell/scripts/'))
 
     });
 
-}());
+})();

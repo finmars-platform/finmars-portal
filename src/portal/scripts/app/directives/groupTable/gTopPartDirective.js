@@ -9,14 +9,9 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
-    var middlewareService = require('../../services/middlewareService');
-    const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
+	const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
-    var uiService = require('../../services/uiService');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    var currencyService = require('../../services/currencyService');
+	var currencyService = require('../../services/currencyService');
 
     module.exports = function ($mdDialog, $state,) {
         return {

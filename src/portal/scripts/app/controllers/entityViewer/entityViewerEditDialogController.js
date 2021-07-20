@@ -8,7 +8,7 @@
     var entityResolverService = require('../../services/entityResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -40,10 +40,11 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data, authorizerService, usersService) {
 
         var vm = this;
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
@@ -316,7 +317,7 @@
 
         vm.getCurrentMasterUser = function () {
 
-            return usersService.getCurrentMasterUser().then(function (data) {
+            return authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;

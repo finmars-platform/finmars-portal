@@ -10,7 +10,7 @@
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
         var evHelperService = require('../../services/entityViewerHelperService');
-        var usersService = require('../../services/usersService');
+        // var usersService = require('../../services/usersService');
 		var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
         var priceHistoryService = require('../../services/priceHistoryService');
@@ -26,9 +26,9 @@
         var pricesCheckerService = require('../../services/reports/pricesCheckerService');
 
         var expressionService = require('../../services/expression.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $stateParams, $transitions) {
+        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, middlewareService, usersService) {
 
             var vm = this;
 
@@ -38,6 +38,8 @@
                 attributes: false,
                 layout: false // changed by rvSharedLogicHelper.onSetLayoutEnd();
             };
+
+			var onLogoutIndex, onUserChangeIndex;
 
             // var doNotCheckLayoutChanges = false;
 
@@ -1355,12 +1357,12 @@
 
             vm.init = function () {
 
-                middlewareService.onMasterUserChanged(function () {
+                onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
                     vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
 
-                middlewareService.onLogOut(function () {
+                onLogoutIndex = middlewareService.addListenerOnLogOut(function () {
                     vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
                     removeTransitionWatcher();
                 });
@@ -1578,6 +1580,9 @@
             window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
 
             this.$onDestroy = function () {
+
+            	middlewareService.removeOnUserChangedListeners(onUserChangeIndex);
+				middlewareService.removeOnLogOutListener(onLogoutIndex);
 
                 removeTransitionWatcher();
 

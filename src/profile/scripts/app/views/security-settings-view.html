@@ -6,17 +6,17 @@
         <div layout="row">
             <div>Two-step verification</div>
 
-            <md-checkbox style="margin-left: 16px;" data-ng-model="vm.user.two_factor_verification"
-                         data-ng-change="vm.updateUser()" aria-label="member permission">
+            <md-checkbox style="margin-left: 16px;" data-ng-model="vm.twoFactorVerification"
+                         data-ng-change="vm.updateUser(vm.twoFactorVerification)" aria-label="member permission">
 
-                <span data-ng-if="vm.user.two_factor_verification"><b>On</b></span>
-                <span data-ng-if="!vm.user.two_factor_verification"><b>Off</b></span>
+                <span data-ng-if="vm.twoFactorVerification"><b>On</b></span>
+                <span data-ng-if="!vm.twoFactorVerification"><b>Off</b></span>
 
             </md-checkbox>
 
         </div>
 
-        <div data-ng-if="vm.user.two_factor_verification">
+        <div data-ng-if="vm.twoFactorVerification">
 
 
             <div data-ng-if="vm.twoFactorItems.length">

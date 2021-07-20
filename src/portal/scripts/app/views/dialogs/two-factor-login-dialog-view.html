@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="two-factor-login-dialog">
+<md-dialog class="two-factor-login-dialog" aria-label="two factor authentication dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Two Factor Verification</h2>
@@ -17,7 +17,8 @@
 
                     <md-input-container class="md-block" style="margin: 0">
                         <label>Security code</label>
-                        <input data-ng-model="vm.securityCode" data-ng-change="vm.validateCode()"
+                        <input data-ng-model="vm.securityCode"
+                               data-ng-change="vm.validateCode()"
                                data-ng-blur="vm.validateCode()">
                     </md-input-container>
 

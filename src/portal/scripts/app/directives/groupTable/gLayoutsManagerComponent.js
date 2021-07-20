@@ -29,7 +29,7 @@
     module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'E',
-            templateUrl: 'views/components/g-layouts-manager-view.html',
+            templateUrl: 'views/components/layouts-manager-view.html',
             scope: {
                 entityType: '=',
                 evDataService: '=',
@@ -40,6 +40,7 @@
 
             	scope.isReport = metaService.isReport(scope.entityType);
             	scope.isNewLayout = scope.evDataService.isLayoutNew();
+            	scope.viewContext = scope.evDataService.getViewContext();
 
                 scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
@@ -142,6 +143,10 @@
 
                 };
 
+                scope.getLinkToLayout = function (userCode) {
+					return $state.current.name + "({layoutUserCode: '" + userCode + "'})";
+				};
+
                 scope.setAsDefault = (targetLayout) => {
 
                     if (targetLayout.is_default) {
@@ -242,7 +247,6 @@
                                 }
 
                             } else {
-
                                 // middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
 
                                 scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
@@ -939,7 +943,7 @@
                                 scope.evDataService.setListLayout(listLayout);
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
-                               /* if (isRootEntityViewer) {
+                                /* if (isRootEntityViewer) {
                                     middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
                                 } else {
                                     middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
