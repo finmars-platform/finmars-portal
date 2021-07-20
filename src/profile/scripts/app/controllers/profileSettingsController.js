@@ -4,28 +4,31 @@
 (function () {
 
     var timeZonesService = require('../services/timeZonesService');
+    // var authorizerService = require('../services/authorizerService');
 
-    var usersService = require('../services/usersService');
-    var authorizerService = require('../services/authorizerService');
-
-    module.exports = function ($scope) {
+    module.exports = function ($scope, globalDataService) {
 
         var vm = this;
 
-        vm.readyStatus = {user: false};
+        // vm.readyStatus = {user: false};
 
         vm.timeZones = timeZonesService.getList();
 
-        authorizerService.getByKey(0).then(function (data) {
-            vm.user = data;
+		/* authorizerService.getUserByKey(0).then(function (data) {
+
+        	vm.user = data;
             vm.readyStatus.user = true;
+
             $scope.$apply();
-        });
+
+        }); */
+
+		vm.user = globalDataService.getUser();
 
         vm.save = function () {
-            authorizerService.update(0, vm.user).then(function () {
+			/* usersService.update(vm.user.id, vm.user).then(function () {
                 $scope.$apply();
-            })
+            }) */
         }
     }
 

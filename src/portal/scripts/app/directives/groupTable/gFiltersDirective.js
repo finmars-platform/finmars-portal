@@ -11,7 +11,7 @@
     const directivesEvents = require('../../services/events/directivesEvents');
     const evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
-    const middlewareService = require('../../services/middlewareService');
+	// const middlewareService = require('../../services/middlewareService');
 
     const uiService = require('../../services/uiService');
     const downloadFileHelper = require('../../helpers/downloadFileHelper');
@@ -329,7 +329,7 @@
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
-                        middlewareService.setNewSplitPanelLayoutName(false);
+                        // middlewareService.setNewSplitPanelLayoutName(false);
 
                         clearAdditions(); */
 						evRvLayoutsHelper.clearSplitPanelAdditions(scope.evDataService);

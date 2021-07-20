@@ -6,18 +6,19 @@
 	var threadService = require('../../services/threadService');
 	var tagService = require('../../../../../portal/scripts/app/services/tagService');
 
-	var usersService = require('../../../../../portal/scripts/app/services/usersService');
+	// var usersService = require('../../../../../portal/scripts/app/services/usersService');
 	var usersGroupService = require('../../../../../portal/scripts/app/services/usersGroupService');
 
-	module.exports = function ($scope, $mdDialog, threadsGroupId) {
-		var vm = this;	
+	module.exports = function ($scope, $mdDialog, threadsGroupId, usersService) {
 
-		console.log('threadsGroupId is', threadsGroupId);
+		var vm = this;
+
 		vm.tags = [];
 		tagService.getListByContentType("thread-group", "tag").then(function (data) {
+
 			vm.tags = data.results;
-			console.log('forum group tags is', vm.tags, data);
 			$scope.$apply();
+
 		});
 
 		vm.threadGroup = [];

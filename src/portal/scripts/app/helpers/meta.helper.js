@@ -61,6 +61,24 @@
 
         return objPlace;
 
+    };
+
+    const deletePropertyByPath = function (obj, pathToProp) {
+
+        if(pathToProp.length === 1) {
+            if (Array.isArray(obj)) {
+                const index = pathToProp[0];
+                obj.splice(index, 1);
+                return true;
+            }
+            return delete obj[pathToProp[0]];
+        } else {
+            if(obj[pathToProp[0]])
+                return deletePropertyByPath(obj[pathToProp[0]], pathToProp.slice(1));
+            else
+                return false;
+        }
+
     }
 
     // sorts array alphabetically but puts text that starts with '-' at the beginning
@@ -196,6 +214,7 @@
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
+        deletePropertyByPath: deletePropertyByPath,
         textWithDashSort: textWithDashSort,
 		openLinkInNewTab: openLinkInNewTab,
 

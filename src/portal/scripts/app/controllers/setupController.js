@@ -6,12 +6,12 @@
     'use strict';
 
     var uiService = require('../services/uiService');
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
     var usersGroupService = require('../services/usersGroupService');
 
     var backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $state) {
+    module.exports = function ($scope, $state, usersService) {
 
         var vm = this;
 
@@ -56,7 +56,7 @@
 
                 setTimeout(function () {
 
-                    $state.go('app.home');
+                    $state.go('app.portal.home');
 
                 }, 1000)
 
@@ -166,7 +166,7 @@
 
             }).then(function (value) {
 
-                $state.go('app.home');
+                $state.go('app.portal.home');
 
             })
 

@@ -1,6 +1,8 @@
 /**
  * Created by szhitenev on 16.06.2016.
  *
+ * Deprecated. Use shell/scripts/app/services/cookieService instead.
+ *
  */
 (function () {
 
