@@ -8,7 +8,7 @@
     var fieldResolverService = require('../../services/fieldResolverService');
 
     var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -37,7 +37,7 @@
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data)
+    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data, usersService)
     {
 
         var vm = this;
@@ -221,7 +221,7 @@
             if (vm.fromEntityType) {
                 entityType = {entityType: vm.entityType, from: vm.fromEntityType};
             }
-            $state.go('app.attributesManager', entityType);
+            $state.go('app.portal.attributesManager', entityType);
             $mdDialog.hide();*/
 
             $mdDialog.show({
@@ -368,7 +368,7 @@
                     console.log('vm.relationItems', vm.relationItems)
 
                     /*vm.editLayout = function () {
-                        $state.go('app.data-constructor', {
+                        $state.go('app.portal.data-constructor', {
                             entityType: 'complex-transaction',
                             from: vm.entityType,
                             instanceId: data.id
@@ -377,7 +377,7 @@
                     };*/
 
                     /* vm.manageAttrs = function () {
-                        $state.go('app.attributesManager', {
+                        $state.go('app.portal.attributesManager', {
                             entityType: 'transaction-type',
                             from: vm.entityType,
                             instanceId: data.id

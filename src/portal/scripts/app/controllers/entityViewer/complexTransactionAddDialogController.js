@@ -436,7 +436,7 @@
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: 'complex-transaction', from: vm.entityType};
             }
-            $state.go('app.data-constructor', entityAddress);
+            $state.go('app.portal.data-constructor', entityAddress);
             $mdDialog.hide();*/
         };
 

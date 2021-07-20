@@ -2,159 +2,201 @@
 
     'use strict';
 
-    let UMuM = ''; // <user.id>_<masterUser.id>_<member.id>
+// export default function (globalDataService) {
+
+	/* let UMuM = ''; // <user.id>_<masterUser.id>_<member.id>
 	const noUMuMErrorMessage = "No user, master user or/and member set";
 
-    let setUMuM = function (userId, masterUserId, memberId) {
+	let setUMuM = function (userId, masterUserId, memberId) {
 
-        console.log('setUMuM', userId, masterUserId, memberId)
-
-    	if ((userId || userId === 0) &&
+		if ((userId || userId === 0) &&
 			(masterUserId || masterUserId === 0) &&
 			(memberId || memberId === 0)) {
 
-    		UMuM = userId + '_' + masterUserId + '_' + memberId;
+			UMuM = userId + '_' + masterUserId + '_' + memberId;
 
 		}
 
-    };
+	}; */
+	let globalDataService;
 
-    let getCache = () => {
+	const setGlobalDataService = function (globalDataServiceReference) {
+		globalDataService = globalDataServiceReference;
+	};
 
-        let cache = localStorage.getItem(UMuM);
+	const getPropertyForStoring = function () {
 
-        if (cache) {
-            cache = JSON.parse(cache);
+		let errorsList = [];
 
-        } else {
-            cache = {}
-        }
+		const user = globalDataService.getUser();
+		if (!user) errorsList.push(new Error('No user set'));
 
-        return cache;
+		const masterUser = globalDataService.getMasterUser();
+		if (!masterUser) errorsList.push(new Error('No masterUser set'));
 
-    };
+		const member = globalDataService.getMember();
+		if (!member) errorsList.push(new Error('No member set'));
 
-    let cacheData = function (objPath, item, cache) {
+		if (errorsList.length) {
 
-        if (!cache) {
-            cache = getCache();
-        }
+			const lastError = errorsList.pop();
+			if (errorsList.length) console.error(...errorsList);
 
-        let objPlace = cache;
-        let lastProp = objPath.pop();
+			throw lastError;
 
-        for (let i = 0; i < objPath.length; i++) {
+		}
 
-            let prop = objPath[i];
-            if (!objPlace[prop]) {
-                objPlace[prop] = {};
-            }
+		return user.id + '_' + masterUser.id + '_' + member.id;
 
-            objPlace = objPlace[prop]
+	};
 
-        }
+	const getCache = () => {
 
+		// let cache = localStorage.getItem(UMuM);
+		const propName = getPropertyForStoring();
+		let cache = localStorage.getItem(propName);
 
-        objPlace[lastProp] = item
+		if (cache) {
+			cache = JSON.parse(cache);
 
-        return cache;
+		} else {
+			cache = {}
+		}
 
-    };
+		return cache;
 
-    let getCacheProp = function (objPath, cache) {
+	};
 
-        if (!cache) {
-            cache = getCache();
-        }
+	const cacheData = function (objPath, item, cache) {
 
-        let objPlace = cache;
+		if (!cache) {
+			cache = getCache();
+		}
 
-        for (let i = 0; i < objPath.length; i++) {
+		let objPlace = cache;
+		let lastProp = objPath.pop();
 
-            let prop = objPath[i];
+		for (let i = 0; i < objPath.length; i++) {
 
-            if (!objPlace[prop]) {
-                return null;
-            }
+			let prop = objPath[i];
+			if (!objPlace[prop]) {
+				objPlace[prop] = {};
+			}
 
-            objPlace = objPlace[prop]
+			objPlace = objPlace[prop]
 
-        }
-
-        return objPlace;
-
-    };
-
-    let removeFromCache = (objPath, cache) => {
-
-        if (!cache) {
-            cache = getCache();
-        }
-
-        let objPlace = cache;
-        let lastProp = objPath.pop();
-        let propertyExist = true;
-
-        for (let i = 0; i < objPath.length; i++) {
-
-            let prop = objPath[i];
-
-            if (!objPlace[prop]) {
-                propertyExist = false;
-                break;
-            }
-
-            objPlace = objPlace[prop]
-
-        }
-
-        if (propertyExist) {
-            delete objPlace[lastProp];
-        }
-
-        return cache;
-
-    };
+		}
 
 
-    let cacheLayout = function (layout) {
+		objPlace[lastProp] = item
 
-        let objPath = ['layouts', 'layoutsList', layout.id];
+		return cache;
 
-        if (UMuM) {
-            let cache = cacheData(objPath, layout);
-            localStorage.setItem(UMuM, JSON.stringify(cache));
+	};
 
-        } else {
-            throw("No current master user set");
-        }
+	const getCacheProp = function (objPath, cache) {
 
-    };
+		if (!cache) {
+			cache = getCache();
+		}
 
-    let getCachedLayout = (layoutId) => {
+		let objPlace = cache;
 
-        let objPath = ['layouts', 'layoutsList', layoutId];
+		for (let i = 0; i < objPath.length; i++) {
 
-        if (UMuM) {
-            return getCacheProp(objPath);
-        }
+			let prop = objPath[i];
 
-    };
+			if (!objPlace[prop]) {
+				return null;
+			}
 
-    let cacheDefaultLayout = function (layout) {
+			objPlace = objPlace[prop]
 
-        const defLayoutDataPath = ['layouts', 'defaultLayouts', layout.content_type];
-        const cachedLayoutsList = ['layouts', 'layoutsList']
-        const layoutPath = ['layouts', 'layoutsList', layout.id];
+		}
 
-        let defaultLayoutData = {
-            content_type: layout.content_type,
-            id: layout.id,
-            name: layout.name,
-            user_code: layout.user_code
-        }
+		return objPlace;
 
-        if (UMuM) {
+	};
+
+	const removeFromCache = (objPath, cache) => {
+
+		if (!cache) {
+			cache = getCache();
+		}
+
+		let objPlace = cache;
+		let lastProp = objPath.pop();
+		let propertyExist = true;
+
+		for (let i = 0; i < objPath.length; i++) {
+
+			let prop = objPath[i];
+
+			if (!objPlace[prop]) {
+				propertyExist = false;
+				break;
+			}
+
+			objPlace = objPlace[prop]
+
+		}
+
+		if (propertyExist) {
+			delete objPlace[lastProp];
+		}
+
+		return cache;
+
+	};
+
+
+	const cacheLayout = function (layout) {
+
+		let objPath = ['layouts', 'layoutsList', layout.id];
+		const propName = getPropertyForStoring();
+
+		let cache = cacheData(objPath, layout);
+		localStorage.setItem(propName, JSON.stringify(cache));
+		/* if (UMuM) {
+			let cache = cacheData(objPath, layout);
+			localStorage.setItem(UMuM, JSON.stringify(cache));
+
+		} else {
+			throw new Error("No current master user set");
+		} */
+
+	};
+
+	const getCachedLayout = (layoutId) => {
+
+		/* let objPath = ['layouts', 'layoutsList', layoutId];
+
+		if (UMuM) {
+			return getCacheProp(objPath);
+		} */
+		if (getPropertyForStoring()) { // check for availability of user, masterUser, member
+
+			let objPath = ['layouts', 'layoutsList', layoutId];
+			return getCacheProp(objPath);
+
+		}
+
+	};
+
+	const cacheDefaultLayout = function (layout) {
+
+		const defLayoutDataPath = ['layouts', 'defaultLayouts', layout.content_type];
+		const cachedLayoutsList = ['layouts', 'layoutsList']
+		const layoutPath = ['layouts', 'layoutsList', layout.id];
+
+		let defaultLayoutData = {
+			content_type: layout.content_type,
+			id: layout.id,
+			name: layout.name,
+			user_code: layout.user_code
+		}
+
+		/* if (UMuM) {
 
 			const cachedLayouts = getCacheProp(cachedLayoutsList);
 
@@ -162,9 +204,9 @@
 
 				Object.keys(cachedLayouts).forEach(layoutId => {
 
-                    if (cachedLayouts[layoutId].content_type === layout.content_type) {
-                        cachedLayouts[layoutId].is_default = false;
-                    }
+					if (cachedLayouts[layoutId].content_type === layout.content_type) {
+						cachedLayouts[layoutId].is_default = false;
+					}
 
 				});
 
@@ -172,57 +214,84 @@
 
 			let cache = cacheData(cachedLayoutsList, cachedLayouts);
 
-            cacheData(defLayoutDataPath, defaultLayoutData, cache);
-            cacheData(layoutPath, layout, cache);
+			cacheData(defLayoutDataPath, defaultLayoutData, cache);
+			cacheData(layoutPath, layout, cache);
 
-            localStorage.setItem(UMuM, JSON.stringify(cache));
+			localStorage.setItem(UMuM, JSON.stringify(cache));
 
-        } else {
-            throw("No current master user set");
-        }
+		} else {
+			throw new Error("No current master user set");
+		} */
 
-    };
+		const propName = getPropertyForStoring();
 
-    let getDefaultLayout = (contentType) => {
+		const cachedLayouts = getCacheProp(cachedLayoutsList);
 
-        let objPath = ['layouts', 'defaultLayouts', contentType];
+		if (cachedLayouts && typeof cachedLayouts === 'object') {
 
-        if (UMuM) {
+			Object.keys(cachedLayouts).forEach(layoutId => {
 
-            let defaultLayoutData = getCacheProp(objPath);
+				if (cachedLayouts[layoutId].content_type === layout.content_type) {
+					cachedLayouts[layoutId].is_default = false;
+				}
 
-            if (!defaultLayoutData || !defaultLayoutData.id) {
-                return null;
-            }
+			});
 
-            let defaultLayout = getCachedLayout(defaultLayoutData.id);
+		}
 
-            return defaultLayout;
+		let cache = cacheData(cachedLayoutsList, cachedLayouts);
 
-        }
+		cacheData(defLayoutDataPath, defaultLayoutData, cache);
+		cacheData(layoutPath, layout, cache);
 
-    };
+		localStorage.setItem(propName, JSON.stringify(cache));
 
-    let deleteLayoutFromCache = function (layoutId) {
+	};
 
-        let layoutPath = ['layouts', 'layoutsList', layoutId];
-        let cache = getCache();
-        let layoutToDelete = getCacheProp(layoutPath, cache);
+	const getDefaultLayout = (contentType) => {
 
-        // clear content_type default layout
-        if (layoutToDelete && layoutToDelete.is_default) {
-            let defLayoutPath = ['layouts', 'defaultLayouts', layoutToDelete.content_type];
-            cache = removeFromCache(defLayoutPath, cache);
-        }
+		let objPath = ['layouts', 'defaultLayouts', contentType];
+		const propName = getPropertyForStoring();
 
-        cache = removeFromCache(layoutPath, cache);
-        localStorage.setItem(UMuM, JSON.stringify(cache));
+		if (propName) {
 
-    };
+			let defaultLayoutData = getCacheProp(objPath);
+
+			if (!defaultLayoutData || !defaultLayoutData.id) {
+				return null;
+			}
+
+			let defaultLayout = getCachedLayout(defaultLayoutData.id);
+
+			return defaultLayout;
+
+		}
+
+	};
+
+	const deleteLayoutFromCache = function (layoutId) {
+
+		const propName = getPropertyForStoring();
+
+		let layoutPath = ['layouts', 'layoutsList', layoutId];
+		let cache = getCache();
+		let layoutToDelete = getCacheProp(layoutPath, cache);
+
+		// clear content_type default layout
+		if (layoutToDelete && layoutToDelete.is_default) {
+			let defLayoutPath = ['layouts', 'defaultLayouts', layoutToDelete.content_type];
+			cache = removeFromCache(defLayoutPath, cache);
+		}
+
+		cache = removeFromCache(layoutPath, cache);
+		// localStorage.setItem(UMuM, JSON.stringify(cache));
+		localStorage.setItem(propName, JSON.stringify(cache));
+
+	};
 
 	const cacheReportData = function (reportData) {
 
-		if (UMuM) {
+		/*if (UMuM) {
 
 			const storageKey = UMuM + '_report_data';
 
@@ -230,13 +299,19 @@
 
 		} else {
 			throw(noUMuMErrorMessage);
-		}
+		}*/
+
+		const propName = getPropertyForStoring();
+
+		const storageKey = propName + '_report_data';
+
+		localStorage.setItem(storageKey, JSON.stringify(reportData));
 
 	};
 
 	const getReportData = function () {
 
-		if (UMuM) {
+		/* if (UMuM) {
 
 			const storageKey = UMuM + '_report_data';
 			const storageValue = localStorage.getItem(storageKey);
@@ -248,7 +323,17 @@
 
 		} else {
 			throw(noUMuMErrorMessage);
-		}
+		} */
+
+		const propName = getPropertyForStoring();
+
+		const storageKey = propName + '_report_data';
+		const storageValue = localStorage.getItem(storageKey);
+		let reportData = {};
+
+		if (storageValue) reportData = JSON.parse(storageValue);
+
+		return reportData;
 
 	};
 
@@ -284,21 +369,23 @@
 
 	};
 
-    module.exports = {
+	module.exports = {
 
-		setUMuM: setUMuM,
+		setGlobalDataService: setGlobalDataService, // TODO: inject localStorageService into dependencies
+		// setUMuM: setUMuM,
 
-        cacheDefaultLayout: cacheDefaultLayout,
-        getDefaultLayout: getDefaultLayout,
-        cacheLayout: cacheLayout,
-        getCachedLayout: getCachedLayout,
-        deleteLayoutFromCache: deleteLayoutFromCache,
+		cacheDefaultLayout: cacheDefaultLayout,
+		getDefaultLayout: getDefaultLayout,
+		cacheLayout: cacheLayout,
+		getCachedLayout: getCachedLayout,
+		deleteLayoutFromCache: deleteLayoutFromCache,
 
 		cacheReportData: cacheReportData,
 		getReportData: getReportData,
 		getReportDataForLayout: getReportDataForLayout,
 		cacheReportDataForLayout: cacheReportDataForLayout
 
-    }
+	}
+// };
 
 }());

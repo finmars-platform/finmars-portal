@@ -12,7 +12,7 @@
 
 	const entityResolverService = require('../services/entityResolverService');
 
-    const middlewareService = require('../services/middlewareService');
+    // const middlewareService = require('../services/middlewareService');
 	const evEvents = require('../services/entityViewerEvents');
 	const evDataHelper = require('../helpers/ev-data.helper');
     const evRvCommonHelper = require('../helpers/ev-rv-common.helper');
@@ -359,9 +359,9 @@
 				if (defaultLayoutData.results && defaultLayoutData.results.length > 0) {
 
 					defaultLayout = defaultLayoutData.results[0];
-					if (viewContext === 'split_panel') {
+					/* if (viewContext === 'split_panel') {
 						middlewareService.setNewSplitPanelLayoutName(defaultLayout.name);
-					}
+					} */
 
 				}
 

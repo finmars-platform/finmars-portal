@@ -19,16 +19,9 @@
         var AttributeDataService = require('../../services/attributeDataService');
 
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function (
-            $scope,
-            $mdDialog,
-            $transitions,
-            parentEntityViewerDataService,
-            parentEntityViewerEventService,
-            splitPanelExchangeService
-        ) {
+        module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
             var vm = this;
 
@@ -934,9 +927,9 @@
 
                     uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
 
-                        if (spLayoutData) {
-                            middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
-                        }
+                        //  if (spLayoutData) {
+                        //     middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
+                        // }
 
 						setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
 
@@ -953,10 +946,6 @@
 				}); */
 
 				uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
-
-					if (spLayoutData) {
-						middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
-					}
 
 					var setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
 

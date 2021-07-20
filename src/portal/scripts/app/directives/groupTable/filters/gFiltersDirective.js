@@ -12,8 +12,6 @@
 	const metaHelper = require('../../../helpers/meta.helper');
 	const evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
 
-	const middlewareService = require('../../../services/middlewareService');
-
 	const uiService = require('../../../services/uiService');
 	const downloadFileHelper = require('../../../helpers/downloadFileHelper');
 
@@ -313,13 +311,6 @@
 
                     if ($scope.currentAdditions.type === type) {
 
-                        /* let interfaceLayout = $scope.evDataService.getInterfaceLayout();
-                        interfaceLayout.splitPanel.height = 0;
-
-                        $scope.evDataService.setInterfaceLayout(interfaceLayout);
-                        middlewareService.setNewSplitPanelLayoutName(false);
-
-                        clearAdditions(); */
 						evRvLayoutsHelper.clearSplitPanelAdditions($scope.evDataService);
 
 						$scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
