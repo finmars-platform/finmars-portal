@@ -7,7 +7,7 @@
 'use strict';
 
 import usersRepository from '../repositories/usersRepository.js';
-import authorizerRepository from "../repositories/authorizerRepository";
+// import authorizerRepository from "../repositories/authorizerRepository";
 /** @module usersService */
 export default function (globalDataService) {
 
