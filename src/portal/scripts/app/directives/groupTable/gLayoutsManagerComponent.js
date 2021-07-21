@@ -24,9 +24,9 @@
 
     const inviteToSharedConfigurationFileService = require('../../services/inviteToSharedConfigurationFileService');
     const shareConfigurationFileService = require('../../services/shareConfigurationFileService');
-    const backendConfigurationImportService = require('../../services/backendConfigurationImportService');
+    // const backendConfigurationImportService = require('../../services/backendConfigurationImportService');
 
-    module.exports = function ($mdDialog, $state) {
+    module.exports = function ($mdDialog, $state, backendConfigurationImportService) {
         return {
             restrict: 'E',
             templateUrl: 'views/components/layouts-manager-view.html',

@@ -76,12 +76,6 @@
             controller: 'HomeController as vm'
         });
 
-        $stateProvider.state('app.portal.setup', {
-            url: '/setup',
-            templateUrl: 'views/setup-view.html',
-            controller: 'SetupController as vm'
-        });
-
         $stateProvider.state('app.portal.actions', {
             url: '/actions',
             templateUrl: 'views/actions-view.html',

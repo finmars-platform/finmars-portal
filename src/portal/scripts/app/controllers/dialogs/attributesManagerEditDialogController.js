@@ -7,13 +7,13 @@
 
     var logService = require('../../../../../core/services/logService');
     // var usersService = require('../../services/usersService');
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
 
     var metaService = require('../../services/metaService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    module.exports = function ($scope, $mdDialog, data, usersService) {
+    module.exports = function ($scope, $mdDialog, usersService, usersGroupService, data) {
 
         logService.controller('AttributesAddDialogManagerController', 'initialized');
 
