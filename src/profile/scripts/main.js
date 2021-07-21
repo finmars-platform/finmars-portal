@@ -3,11 +3,11 @@
  */
 'use strict';
 
-import profileRouter from './app/router.js';
+import profileRouter from "./app/router.js";
 
-import profileAuthorizerService from './app/services/authorizerService'; // inside for creation of database
+import profileAuthorizerService from "./app/services/authorizerService"; // inside for creation of database
 
-import profileController from './app/controllers/profileController.js';
+import profileController from "./app/controllers/profileController.js";
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -22,7 +22,7 @@ export default (function () {
 
 	profile.service('profileAuthorizerService', ['xhrService', 'cookieService', profileAuthorizerService]);
 
-    profile.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', require('./app/controllers/newDatabaseController')]);
+    // profile.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', require('./app/controllers/newDatabaseController')]);
     profile.controller('ProfileController', ['$scope', 'authorizerService', 'globalDataService', profileController]);
     profile.controller('ProfileSettingsController', ['$scope', 'globalDataService', require('./app/controllers/profileSettingsController')]);
     profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService', require('./app/controllers/profileDatabasesController')]);

@@ -7,7 +7,7 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
     // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
@@ -40,7 +40,7 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data, authorizerService, usersService) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entityId, data) {
 
         var vm = this;
 
