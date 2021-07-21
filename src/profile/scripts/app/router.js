@@ -16,12 +16,12 @@ export default function ($stateProvider) {
 		}
 	});
 
-	$stateProvider.state('app.new-database', {
+	/* $stateProvider.state('app.new-database', {
 		url: '/new-database',
 		templateUrl: 'views/new-database-view.html',
 		// abstract: true,
 		controller: 'NewDatabaseController as vm'
-	})
+	}) */
 
 };
 

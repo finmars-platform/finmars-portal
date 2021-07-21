@@ -7,7 +7,7 @@
 
     var fieldResolverService = require('../../services/fieldResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -38,7 +38,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, usersService) {
+    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, usersService, usersGroupService) {
 
         var vm = this;
 

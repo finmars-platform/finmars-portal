@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
     // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
@@ -30,7 +30,7 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data, usersService) {
+    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data) {
 
         var vm = this;
 		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
