@@ -1,14 +1,14 @@
 <md-toolbar class="header">
 
-    <div layout="columns" class="toolbar-wrapper">
+    <div class="toolbar-wrapper flex-row fc-space-between">
 
-        <div class="md-toolbar-tools flex-row flex-basis-60 fc-start fi-center">
+        <div class="md-toolbar-tools flex-row fc-start fi-center">
             <div ng-if="openedInside === 'portal'">
                 <h4 class="header-breadcrumbs" ng-bind="currentLocation"></h4>
             </div>
         </div>
 
-        <div class="md-toolbar-tools flex-row flex-basis-40 fc-end fi-center">
+        <div class="md-toolbar-tools flex-row fc-end fi-center">
 
             <div class="header-misc" layout="row">
 

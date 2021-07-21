@@ -5,13 +5,13 @@
 
     'use strict';
 
-    var uiService = require('../services/uiService');
+    var uiService = require('../../../../portal/scripts/app/services/uiService');
     // var usersService = require('../services/usersService');
-    var usersGroupService = require('../services/usersGroupService');
+    // var usersGroupService = require('../services/usersGroupService');
 
-    var backendConfigurationImportService = require('../services/backendConfigurationImportService');
+    // var backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $state, usersService) {
+    module.exports = function ($scope, $state, usersService, usersGroupService, backendConfigurationImportService) {
 
         var vm = this;
 
