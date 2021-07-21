@@ -5,13 +5,9 @@
 'use strict';
 
 // fixes angular module import error
-require('../../forum/scripts/main.js');
-// require('../../profile/scripts/main.js');
-
+// require('../../forum/scripts/main.js');
 import profile from '../../profile/scripts/main.js';
-
-// require('../../portal/scripts/main.js');
-
+import database from '../../database/scripts/main.js';
 import portal from '../../portal/scripts/main.js';
 
 
@@ -29,6 +25,8 @@ import globalDataService from "./app/services/globalDataService.js";
 import authorizerService from "./app/services/authorizerService.js";
 import middlewareService from "./app/services/middlewareService.js";
 import usersService from "./app/services/usersService.js";
+import usersGroupService from "./app/services/usersGroupService";
+import backendConfigurationImportService from "../../portal/scripts/app/services/backendConfigurationImportService";
 
 import commonDialogsService from "./app/services/commonDialogsService.js";
 
@@ -47,8 +45,9 @@ const app = angular.module('finmars', [
 	'ui.router',
 
 	'finmars.profile',
+	'finmars.database',
 	'finmars.portal',
-	'finmars.forum'
+	// 'finmars.forum'
 ]);
 
 // app.config(['$stateProvider', '$urlServiceProvider', require('./app/router.js')]);
@@ -135,6 +134,8 @@ app.service('globalDataService', [globalDataService]);
 app.service('authorizerService', ['globalDataService', authorizerService]);
 app.service('middlewareService', [middlewareService]);
 app.service('usersService', ['globalDataService', usersService]);
+app.service('usersGroupService', ['globalDataService', usersGroupService]);
+app.service('backendConfigurationImportService', ['cookieService', backendConfigurationImportService]);
 
 app.service('commonDialogsService', ['$mdDialog', commonDialogsService]);
 
