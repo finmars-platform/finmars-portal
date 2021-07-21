@@ -17,6 +17,7 @@
                       ng-click="setAsDefault(layout)">home</span>
 
                 <a ui-sref="{{getLinkToLayout(layout.user_code)}}"
+                   ng-click="parentPopup.cancel()"
                    class="layout-menu-a">{{layout.name}}</a>
 
             </div>
