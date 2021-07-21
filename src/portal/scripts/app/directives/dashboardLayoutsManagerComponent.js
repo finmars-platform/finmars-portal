@@ -21,6 +21,7 @@
                 onChangeLayoutCallback: '&',
                 dashboardDataService: '=',
                 dashboardEventService: '=',
+				parentPopup: '='
             },
             link: function (scope) {
 
@@ -352,7 +353,6 @@
                         scope.layouts = data.results;
 
                         scope.processing = false;
-
 
                         scope.$apply();
 
