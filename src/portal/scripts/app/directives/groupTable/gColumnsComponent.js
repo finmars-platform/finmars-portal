@@ -13,6 +13,7 @@
     var evHelperService = require('../../services/entityViewerHelperService');
     var uiService = require('../../services/uiService');
     var rvDataHelper = require('../../helpers/rv-data.helper');
+    var renderHelper = require('../../helpers/render.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -35,6 +36,7 @@
 				scope.isReport = scope.evDataService.isEntityReport();
 
                 scope.entityType = scope.evDataService.getEntityType();
+                scope.rowStatusFilterIcon = `<span class="material-icons">star_outline</span>`;
 				/**
 				 * What filters are now shown in filter area (front or back)
 				 * @type {Boolean}
@@ -328,6 +330,13 @@
                     return "rounded-border g-column-context-menu-popup";
                 }
 
+                scope.getRowStatusSelectorIcon = function () {
+
+					let rowTypeFiltersData = scope.evDataService.getRowTypeFilters();
+
+                	renderHelper.getIcon();
+				};
+
                 scope.rowFiltersToggle = function () {
 
                     scope.hideRowSettings = !scope.hideRowSettings;
@@ -365,8 +374,11 @@
 
                 scope.changeRowFilterColor = function (color) {
 
-                    scope.rowFilterColor = color;
-                    scope.evDataService.setRowTypeFilters(scope.rowFilterColor);
+					let rowTypeFiltersData = scope.evDataService.getRowTypeFilters();
+
+					rowTypeFiltersData.markedRowFilters = color;
+
+					scope.evDataService.setRowTypeFilters(rowTypeFiltersData);
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 

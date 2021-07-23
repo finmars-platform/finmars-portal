@@ -139,11 +139,11 @@
 				clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 				if (rowElem.dataset.subtotalType) {
-					clickData.___subtotal_type = rowElem.dataset.subtotalType
+					clickData.___subtotal_type = rowElem.dataset.subtotalType;
 				}
 
 				if (rowElem.dataset.subtotalSubtype) {
-					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype
+					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
 				}
 
 			}
@@ -160,8 +160,8 @@
 
 				if (clickedActionBtn) {
 
-					clickData.actionElem = clickedActionBtn
-					clickData.actionType = clickedActionBtn.dataset.clickActionType
+					clickData.actionElem = clickedActionBtn;
+					clickData.actionType = clickedActionBtn.dataset.clickActionType;
 
 				}
 
@@ -944,7 +944,6 @@
             	metaHelper.openLinkInNewTab(event);
 
 			}
-
             else if (event.detail === 2) { // double click handler
 
                 var cellElem;
@@ -978,13 +977,12 @@
                 }
 
             }
-
             else if (event.detail === 1) {
 
                 if (clickData.isFoldButtonPressed) {
                     handleFoldButtonClick(clickData, evDataService, evEventService);
-                }
 
+                }
                 else if (clickData.actionType) {
 
 					switch (clickData.actionType) {
@@ -1032,7 +1030,6 @@
 					}
 
                 }
-
                 else {
 
                     var selection = window.getSelection().toString();

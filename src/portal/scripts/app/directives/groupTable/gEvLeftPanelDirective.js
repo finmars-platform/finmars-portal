@@ -19,6 +19,7 @@
                 evEventService: '=',
                 attributeDataService: '=',
                 spExchangeService: '=', // TODO may be not need
+				contentWrapElement: '='
             },
             link: function (scope,) {
 
@@ -27,6 +28,7 @@
 
                 scope.sliderButtonState = 'unfolded';
 
+				let finishRenderIndex;
 
                 scope.recursiveMarkHasSelected = function (tree, selectedGroups) {
 
@@ -308,7 +310,7 @@
 
                     dragulaInit: function () {
 
-                        var items = [
+                        const items = [
                             document.querySelector('.evLeftPanelGroupingSection')
                         ];
 
@@ -350,6 +352,12 @@
                     scope.handleSlider();
                     scope.drake.init();
 
+					finishRenderIndex = scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
+
+						scope.evContentElement = scope.contentWrapElement.querySelector('.ev-viewport');
+						scope.evEventService.removeEventListener(evEvents.FINISH_RENDER, finishRenderIndex);
+
+					});
 
                 };
 

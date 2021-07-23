@@ -13,25 +13,44 @@
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
 
 
-    module.exports = function ($mdDialog, $state,) {
+    module.exports = function ($mdDialog, $state) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/groupTable/g-ev-left-panel-tree-elem-view.html',
             scope: {
                 evDataService: '=',
                 evEventService: '=',
-                item: '='
+                item: '=',
+				evContentElement: '='
             },
             link: function (scope,) {
 
-                scope.unfoldGroup = function ($event) {
-                    scope.item.___is_open = true;
+            	scope.loading = false;
 
-                    scope.evDataService.setData(scope.item)
+                scope.unfoldGroup = function ($event) {
+
+                	scope.item.___is_open = true;
+
+                    scope.evDataService.setData(scope.item);
+
+					const hasUnloadedChildren = scope.item.___items_count > 0 && !scope.item.results.length;
+
+					if (hasUnloadedChildren) {
+
+						scope.loading = true;
+
+						const dataLoadEndIndex = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+							scope.loading = false;
+							scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndIndex);
+
+						});
+
+					}
 
                     evDomManager.requestGroups(scope.item.___id, scope.item.___parentId, scope.evDataService, scope.evEventService);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+                    // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 }
 
                 scope.foldGroup = function ($event) {
@@ -53,7 +72,8 @@
                     scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState()
 
                     if (!scope.multiselectIsActive) {
-                        var items = scope.evDataService.getDataAsList();
+
+                    	var items = scope.evDataService.getDataAsList();
 
                         items.forEach(function (item) {
                             item.___is_selected = false;
@@ -63,6 +83,7 @@
                         selectedGroups = []
 
                         scope.evDataService.setSelectedGroups(selectedGroups);
+
                     }
 
                     scope.item.___is_selected = selected;
@@ -88,6 +109,8 @@
                     scope.evDataService.setData(scope.item)
 
                     scope.evDataService.setSelectedGroups(selectedGroups);
+
+					scope.evContentElement.scrollTop = 0;
 
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)

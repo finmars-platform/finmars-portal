@@ -1,7 +1,14 @@
 (function () {
 
-
-    var render = function (evDataService, obj, prevObj, columnsWidthSum) {
+	/**
+	 *
+	 * @param evDataService {Object} - entityViewerDataService
+	 * @param obj {Object} - data of row from flat list
+	 * @param prevObj {Object} - data of previous row from flat list
+	 * @param contentWidth {number} - sum of widths of columns
+	 * @returns {string}
+	 */
+    var render = function (evDataService, obj, prevObj, contentWidth) {
 
         var selectedGroups = evDataService.getSelectedGroups();
 
@@ -41,15 +48,18 @@
 
         var classes = classList.join(' ');
 
-        var rowSelection = '<div class="g-row-selection"></div>';
+        var rowSelection = '<div class="g-row-selection border-right-transparent"></div>';
+        var rowSettings = '<div class="g-row-settings g-row-settings-table border-right-transparent gRowSettings"></div>';
 
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
         var result = '<div class="' + classes + '" style="top: '+ offsetTop + 'px"  data-type="control" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
 
-        result = result + rowSelection;
+        result = result + rowSelection + rowSettings;
 
-		result = result + '<div class="control-content" style="width: ' + columnsWidthSum + 'px;">';
+		result = result + '<div class="control-placeholder" style="width: ' + contentWidth + 'px;"></div>';
+
+		var content = '<div class="control-content">';
 
 		var flatList = evDataService.getFlatList();
 		var parentGroup = evDataService.getGroup(obj.___parentId);
@@ -59,18 +69,26 @@
 		// var resultText = '(' + visibleItemsCount + ' of ' + parentGroup.___items_count + ' / ' + itemsTotal + ' total)';
 		var resultText = '(' + visibleItemsCount + ' of ' + parentGroup.___items_count + ')';
 
-		result = result + '<span class="display-inline-block m-0" style="padding-top: 6px; padding-left: 15px; color: #868686;">' + resultText + '</span>';
+		// result = result + '<span class="display-inline-block m-0" style="padding-top: 6px; padding-left: 15px; color: #868686;">' + resultText + '</span>';
+		content = content + '<span class="display-inline-block m-0" style="padding-top: 6px; padding-left: 15px; color: #868686;">' + resultText + '</span>';
 
         if (canLoadMore) {
 
-            result = result + '<button class="control-button load-more" data-type="control" data-ev-control-action="load-more" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" >Load more</button>';
+            /* result = result + '<button class="control-button load-more" data-type="control" data-ev-control-action="load-more" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" >Load more</button>';
             result = result + '<button class="control-button load-all" data-type="control" data-ev-control-action="load-all" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" > Load all</button>';
 
             if (obj.___errorMessage ) {
                 result = result + '<div class="control-error-message">' + obj.___errorMessage + '</div>'
-            }
+            } */
+			content = content + '<button class="control-button load-more" data-type="control" data-ev-control-action="load-more" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" >Load more</button>';
+			content = content + '<button class="control-button load-all" data-type="control" data-ev-control-action="load-all" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" > Load all</button>';
 
-        } /* else {
+			if (obj.___errorMessage ) {
+				content = content + '<div class="control-error-message">' + obj.___errorMessage + '</div>'
+			}
+
+        }
+        /* else {
 
             if (!prevObj || obj.___parentId === prevObj.___id) {
 
@@ -83,8 +101,9 @@
             }
 
         } */
+		content = content + '</div>';
 
-        result = result + '</div></div>'; // closing div.g-row and div.control-content
+        result = result + content + '</div>'; // closing div.g-row
 
         return result;
 
