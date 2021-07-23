@@ -350,10 +350,8 @@
             return data.filters;
         }
 
-        function setRowTypeFilters (color) {
-            data.rowTypeFilters = {
-                markedRowFilters: color
-            };
+        function setRowTypeFilters (filtersData) {
+			data.rowTypeFilters = filtersData;
         }
 
         function getRowTypeFilters () {

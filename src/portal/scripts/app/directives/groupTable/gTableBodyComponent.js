@@ -193,7 +193,7 @@
                     });
 
 
-                    scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER)
+                    scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER);
 
                 }
 
@@ -490,7 +490,6 @@
                             }
 
                             //  If we already have data (e.g. viewType changed) end
-
 
                             /*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
                                 cellContentOverflow();

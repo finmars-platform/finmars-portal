@@ -554,11 +554,10 @@
 
                 clickData.___type = rowElem.dataset.type;
                 clickData.___id = rowElem.dataset.objectId;
-
                 clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 
-                if (event.target.classList.contains('ev-fold-button')) {
+                /* if (event.target.classList.contains('ev-fold-button')) {
                     clickData.isFoldButtonPressed = true;
                 }
 
@@ -568,9 +567,18 @@
 
                 if (rowElem.dataset.subtotalSubtype) {
                     clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-                }
+                } */
 
             }
+
+			var clickedActionBtn = clickData.target.closest(".gTableActionBtn");
+
+			if (clickedActionBtn) {
+
+				clickData.actionElem = clickedActionBtn;
+				clickData.actionType = clickedActionBtn.dataset.clickActionType;
+
+			}
 
         }
 
@@ -634,10 +642,9 @@
                     }
 
                     if (clickData.___type === 'object') {
-
                         handleObjectClick(clickData, evDataService, evEventService);
-
                     }
+
                 }
 
             }
@@ -648,14 +655,39 @@
                     /*if (clickData.___type === 'group') {
                         handleGroupClick(clickData, evDataService, evEventService);
                     } else*/
-					if (clickData.___type === 'control') {
+					if (clickData.actionType) {
+
+						switch (clickData.actionType) {
+
+							case 'open_context_menu':
+
+								const gRowElem = event.target.closest('.g-row');
+
+								if (gRowElem) {
+
+									const objectId = clickData.___id;
+									const parentGroupHashId = clickData.___parentId;
+									const contextMenuPosition = {positionX: event.pageX, positionY: event.pageY};
+
+									event.stopPropagation();
+
+									createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+
+								}
+
+								break;
+
+						}
+
+					}
+					else if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
-                    } else if (clickData.___type === 'object') {
+					}
+					else if (clickData.___type === 'object') {
                         handleObjectClick(clickData, evDataService, evEventService);
-                    }
+					}
 
                 }
-
 
             }
 
@@ -802,7 +834,6 @@
                 // evDataHelper.clearLastActiveObject(evDataService);
 
                 obj.___is_activated = true;
-                obj.___is_active_object = true;
 
                 // evDataService.setActiveObject(obj);
                 // evDataService.setActiveObjectRow(obj);

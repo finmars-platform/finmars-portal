@@ -431,7 +431,7 @@
 		}
 
 		if (isActivated) {
-			classList.push('activated');
+			classList.push('selected');
 		}
 
 		var activeObjRow = evDataService.getActiveObjectRow();
@@ -518,7 +518,7 @@
 				rowClassList.push('context-menu-opened');
 			}
 
-			rowSettings = renderHelper.getRowSettings(obj.___backgrond_color, obj.___type);
+			rowSettings = renderHelper.getRowSettings(obj.___type, obj.___backgrond_color);
 
 		}
 

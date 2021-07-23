@@ -46,8 +46,6 @@
 
     module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
 
-        console.log('testing usersGroupService', usersGroupService);
-
         var vm = this;
 
 		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);

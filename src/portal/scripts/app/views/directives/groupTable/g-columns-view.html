@@ -5,10 +5,10 @@
             <md-checkbox data-ng-click="selectAllRows()" data-ng-checked="isAllSelected"></md-checkbox>
         </div>
 
-        <div ng-if="isReport" class="g-cell-rows-settings">
+        <div class="g-cell-rows-settings">
 
-            <div class="g-cell g-row-settings">
-                <md-button ng-if="!isReport"
+            <div class="g-row-settings height-100">
+                <!--<md-button ng-if="!isReport"
                            class="g-cell-button"
                            data-ng-class="{'selected': isAllStarsSelected}"
                            data-ng-Click="isAllStarsSelected = !isAllStarsSelected">
@@ -16,10 +16,18 @@
                         <ng-md-icon data-ng-if="!isAllStarsSelected" icon="star_border" size="25" class="flex-row"></ng-md-icon>
                         <ng-md-icon data-ng-if="isAllStarsSelected" icon="star" size="25" class="flex-row"></ng-md-icon>
                     </div>
-                </md-button>
+                </md-button>-->
+                <div class="context-menu-btn-wrapper"></div>
+
+                <button ng-if="!isReport"
+                        class="g-row-settings-btn visibility-hidden"
+                        data-click-action-type="open_row_status_picker">
+                    <span ng-bind-html="rowStatusFilterIcon" style="height: 24px;"></span>
+                    <span class="material-icons arrow-icon">arrow_drop_down</span>
+                </button>
 
                 <md-menu>
-                    <md-button class="g-cell-button g-row-color-picker-btn"
+                    <md-button class="g-cell-button g-row-settings-btn g-row-color-picker-btn"
                                data-ng-class="rowFilterColor"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons label-icon" data-ng-if="rowFilterColor === 'none'">label_outline</span>
@@ -58,7 +66,7 @@
                 </md-menu>
             </div>
 
-            <md-button class="favorite-toggle" data-ng-click="rowFiltersToggle()">
+            <md-button class="g-row-settings-toggle" data-ng-click="rowFiltersToggle()">
                 <div class="flex-row flex-i-center height-100">
                     <!--                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>-->
                     <span ng-hide="hideRowSettings" class="material-icons f-s-16">keyboard_arrow_left</span>
