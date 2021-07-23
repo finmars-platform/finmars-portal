@@ -140,6 +140,12 @@
                     multiselectorElem.click();
                 };
 
+                scope.onButtonClick = function () {
+                    if (scope.column.methods && typeof scope.column.methods.onClick === 'function') {
+                        scope.column.methods.onClick();
+                    }
+                }
+
                 /*var removeEventListeners = function () {
 
 				};*/

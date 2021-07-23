@@ -5,34 +5,15 @@
 
     'use strict';
 
-    var metaNotificationClassService = require('../../../services/metaNotificationClassService');
-    var metaEventClassService = require('../../../services/metaEventClassService');
-    var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
     const instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
     const attributeTypeService = require('../../../services/attributeTypeService');
 
     const GridTableDataService = require('../../../services/gridTableDataService');
     const GridTableEventService = require('../../../services/gridTableEventService');
-    var gridTableEvents = require('../../../services/gridTableEvents');
+    const gridTableEvents = require('../../../services/gridTableEvents');
 
-    var metaHelper = require('../../../helpers/meta.helper');
-    var md5Helper = require('../../../helpers/md5.helper');
+    const metaHelper = require('../../../helpers/meta.helper');
     const GridTableHelperService = require('../../../helpers/gridTableHelperService');
-
-    var EVENT_INIT_OBJECT = {
-        "name": '',
-        "description": "",
-        "notification_class": '',
-        "notify_in_n_days": '',
-        "periodicity": '',
-        "periodicity_n": '',
-        "action_is_sent_to_pending": null,
-        "action_is_book_automatic": null,
-        "actions": [],
-        "effective_date": null,
-        "final_date": null,
-        "event_class": null
-    };
 
     module.exports = function pricingPoliciesTabController($scope, $mdDialog) {
 
@@ -42,7 +23,6 @@
 
         vm.entity = $scope.$parent.vm.entity;
         vm.readyStatus = false;
-        console.log('#71 vm.entity', vm.entity)
         vm.currencies = $scope.$parent.vm.currencies;
         vm.pricingConditions = $scope.$parent.vm.pricingConditions;
         vm.instrumentPricingSchemes = null;
@@ -137,20 +117,6 @@
                         },
                         classes: 'pricing-scheme-clarification gt-cell-plain-text'
                     },
-/*                    {
-                        key: 'edit_default_parameters',
-                        objPath: ['edit_default_parameters'],
-                        columnName: 'Edit Default Parameters',
-                        order: 4,
-                        cellType: 'selector',
-                        settings: {
-                            value: null,
-                            selectorOptions: [],
-                        },
-                        styles: {
-                            'grid-table-cell': {'width': '180px'}
-                        }
-                    },*/
                     {
                         key: 'edit_default_parameters',
                         objPath: ['default_value'],
@@ -160,19 +126,27 @@
                         settings: {
                             value: null,
 							fieldTypesData: []
-							/* closeOnMouseOut: false,
-							popupSettings: {
-								contentHtml: {
-									main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-pricing-edit-default-parameters-view.html'\"></div>"
-								},
-								data: {}
-							} */
                         },
                         styles: {
-                            'grid-table-cell-elem': {'width': '30%'}
+                            'grid-table-cell-elem': {'width': '20%'}
                         },
                         classes: 'edit-default-parameters'
                     },
+                    {
+                        key: 'multiple_parameters',
+                        // objPath: ['default_value'],
+                        columnName: 'Multiple Parameters',
+                        order: 4,
+                        cellType: 'readonly_text',
+                        settings: {
+                            value: '-'
+                        },
+                        styles: {
+                            'grid-table-cell-elem': {'width': '10%'}
+                        },
+                        // classes: 'edit-default-parameters'
+                    },
+
                 ],
                 methods: {
                     onClick: '' // onEventsTableRowClick
@@ -231,6 +205,35 @@
 
 		};
 
+		const openPricingMultipleParametersDialog = (policy) => {
+
+            $mdDialog.show({
+                controller: 'PricingMultipleParametersDialogController as vm',
+                templateUrl: 'views/dialogs/pricing/pricing-multiple-parameter-dialog-view.html',
+                parent: angular.element(document.body),
+                // targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: policy,
+                        entityType: vm.entityType,
+                        attributeTypes: vm.attributeTypes
+                    }
+
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    policy.data = res.data.item.data
+                }
+
+            })
+        }
+
         var formatDataForPricingGridTable = function () {
 
             // assemble header columns
@@ -258,7 +261,6 @@
             vm.entity.pricing_policies.forEach(function (policy, policyIndex) {
 
             	rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
-                console.log('#71 rowObj', rowObj)
                 rowObj.key = policy.id;
                 rowObj.order = policyIndex;
 
@@ -282,20 +284,20 @@
 				let defaultParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'edit_default_parameters');
                 let typesList = JSON.parse(JSON.stringify(pricingDefaultValueFieldTypes.fieldTypesList));
 
-				/* let defaultValue;
-				let fieldValueType;
+                if (policy.pricing_scheme_object && policy.pricing_scheme_object.type_object.input_type == 3) {
 
-				if (policy.default_value) {
-					defaultValue = policy.default_value;
-					fieldValueType = 10;
+                    const multipleParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'multiple_parameters');
+                    multipleParameters.cellType = 'button';
+                    multipleParameters. settings = {
+                        buttonHtml: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
+                    };
+                    multipleParameters.methods = {
+                        onClick: () => openPricingMultipleParametersDialog(policy)
+                    }
 
-				} else {
 
-					defaultValue = policy.attribute_key;
+                }
 
-					typesList = getOptionsForPPDefaultValueSel(typesList, policy);
-
-				} */
 				const [defaultValue, fieldValueType] = getDefaultParametersVal(policy);
 
 				if (fieldValueType === 70) typesList = getOptionsForPPDefaultValueSel(typesList, policy);
@@ -304,20 +306,6 @@
                 defaultParameters = fieldData.cell;
 
                 gridTableHelperService.setCellInsideRow(rowObj, defaultParameters);
-				//</editor-fold>
-                // defaultParameters.settings.popupSettings.data.item = policy;
-
-				/* const parameterClarification = gridTableHelperService.getCellFromRowByKey(rowObj, 'parameter_clarification');
-                parameterClarification.settings.value = policy.pricing_scheme_object.notes_for_parameter;
-
-                var finalDate = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_scheme_clarification');
-                finalDate.settings.value = policy.pricing_scheme_clarification;
-
-                var isAutoGenerated = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_auto_generated');
-                isAutoGenerated.settings.value = policy.is_auto_generated;
-
-                var eventClass = gridTableHelperService.getCellFromRowByKey(rowObj, 'event_class');
-                eventClass.settings.value = vm.bindEventClass(policy); */
 
                 vm.pricingPoliciesGridTableData.body.push(rowObj);
 
@@ -329,7 +317,6 @@
 
         var initGridTableEvents = function () {
 
-            // vm.eventSchedulesGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, onEventsTableDeleteRows);
 			vm.pricingPoliciesGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, argObj => {
 
 				const row = argObj.row;
@@ -373,12 +360,25 @@
 					const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(defaultValueCell.settings.fieldTypesData, defaultValueCell, defaultValue, fieldValueType);
 					defaultValueCell.settings = {...defaultValueCell.settings, ...fieldData.cell.settings};
 
-					// defaultValueCell.settings.value = null;
-					// defaultValueCell.settings.cellText = '';
+                    const multipleParameters = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'multiple_parameters');
+                    if (changedPolicy.pricing_scheme_object && changedPolicy.pricing_scheme_object.type_object.input_type == 3) {
 
-					// defaultValueCell.settings.fieldTypesData.forEach(type => type.model = null);
+                        multipleParameters.cellType = 'button';
+                        multipleParameters. settings = {
+                            buttonHtml: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
+                        };
+                        multipleParameters.methods = {
+                            onClick: () => openPricingMultipleParametersDialog(changedPolicy)
+                        }
 
-					// gridTableHelperService.onGridTableCellChange(vm.entity.pricing_policies, vm.pricingPoliciesGridTableDataService, row.order, column.order);
+
+                    } else {
+
+                        multipleParameters.cellType = 'readonly_text';
+                        multipleParameters.settings.value = '-';
+
+                    }
+
 				}
 
 			});
@@ -500,19 +500,6 @@
             vm.attributeTypes = data.results;
         });
 
-        vm.switchPricingPolicyParameter = function ($event, item) {
-
-            if (item.switchState === 'default_value') {
-                item.switchState = 'attribute_key'
-            } else {
-                item.switchState = 'default_value'
-            }
-
-            item.default_value = null;
-            item.attribute_key = null;
-
-        };
-
         vm.init = function () {
 
         	vm.pricingPoliciesGridTableDataService = new GridTableDataService();
@@ -529,8 +516,6 @@
 				vm.readyStatus = true;
 
             });
-
-            console.log('#71 vm.pricingPoliciesGridTableData', vm.pricingPoliciesGridTableData)
 
         };
 

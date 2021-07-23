@@ -73,8 +73,6 @@
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
-        console.log('#71 vm.entityTabs', vm.entityTabs)
-
         vm.formIsValid = true;
 
         vm.attributeTypes = [];
