@@ -225,14 +225,28 @@
 
                 <h5>Pricing Parameters</h5>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.value_type">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -250,16 +264,6 @@
                     <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
 
                 </div>
-
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
 
                 <div class="m-t-16">
 
@@ -447,14 +451,28 @@
 
                 <h4>Bloomberg</h4>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.value_type">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -472,16 +490,6 @@
                     <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
 
                 </div>
-
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
 
                 <h4 class="m-t-16">Parameters for T-1 Pricing</h4>
 
@@ -660,14 +668,28 @@
 
                 <h4>World Trading Data</h4>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.value_type">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -685,16 +707,6 @@
                     <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
 
                 </div>
-
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
 
                 <div class="pricing-scheme-help-box">
 
@@ -825,14 +837,28 @@
 
                 <h4>Alpha Vantage</h4>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.value_type">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -850,16 +876,6 @@
                     <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
 
                 </div>
-
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
 
                 <div class="pricing-scheme-help-box">
 
@@ -992,14 +1008,28 @@
 
                 <h5>Pricing Parameters</h5>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
-                        <label>Maturity Date</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <label>Default Value</label>
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.value_type">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -1015,20 +1045,6 @@
                     </md-input-container>
 
                     <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
-
-                </div>
-
-                <div>
-
-                    <md-input-container class="m-t-16">
-                        <label>Value Type</label>
-                        <md-select data-ng-model="vm.item.type_settings.value_type"
-                                   data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                            <md-option value="10">Text</md-option>
-                            <md-option value="20">Number</md-option>
-                            <md-option value="40">Date</md-option>
-                        </md-select>
-                    </md-input-container>
 
                 </div>
 
