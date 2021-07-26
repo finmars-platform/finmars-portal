@@ -53,9 +53,8 @@
                 <span data-ng-bind="vm.getEntityName(item)"
                       data-ng-class="{
                       'used-dynamic-attrs': item.attributeIsUsed__}"></span>
-                <span
-                        class="cie-dependency"
-                        data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
+                <span class="cie-dependency"
+                      data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
 
                 <span data-ng-if="item.is_duplicate" class="cursor-pointer"><ng-md-icon
