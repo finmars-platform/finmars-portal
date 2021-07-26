@@ -103,6 +103,10 @@
 
 					});
 
+					$scope.evEventService.addEventListener(evEvents.HIDE_BULK_ACTIONS_AREA, function () {
+						selectedRowsActionBlockElement.classList.add('display-none');
+					});
+
 				};
 
 				init();

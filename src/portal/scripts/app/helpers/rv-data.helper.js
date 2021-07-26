@@ -882,27 +882,24 @@
 
     var calculateProjection = function (flatList, evDataService) {
 
-        console.time('Creating projection');
+        // console.time('Creating projection');
 
         var rowHeight = evDataService.getRowHeight();
         var offsetPx = evDataService.getVirtualScrollOffsetPx();
         var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
-
+		console.log("dubugging.rowsToShow calculateProjection data", rowHeight, offsetPx, step);
         evDataService.setProjectionLastFrom(from);
 
         var to = from + (step / 2);
 
-        console.timeEnd('Creating projection');
+        // console.timeEnd('Creating projection');
 
         from = from - (step / 2) // two rows, before viewport
         if (from < 0) {
             from = 0;
         }
-        // console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
-        // console.log('View Context ' + evDataService.getViewContext() + ' from', from);
-        // console.log('View Context ' + evDataService.getViewContext() + ' to', to);
-
+		console.log("dubugging.rowsToShow calculateProjection from to", from, to);
         return flatList.slice(from, to);
 
     };

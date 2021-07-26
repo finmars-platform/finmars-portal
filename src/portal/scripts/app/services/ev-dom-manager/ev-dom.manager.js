@@ -106,7 +106,7 @@
 
     };
 
-    var foldChildGroups = function (parentGroupId, evDataService) {
+    /* var foldChildGroups = function (parentGroupId, evDataService) {
 
         var childrens = evDataHelper.getAllChildrenGroups(parentGroupId, evDataService);
 
@@ -131,7 +131,7 @@
 
         })
 
-    };
+    }; */
 
     /* var clearObjectActiveState = function (evDataService, evEventService) {
 
@@ -146,7 +146,7 @@
 
     }; */
 
-    var clearGroupActiveState = function (evDataService, evEventService) {
+    /* var clearGroupActiveState = function (evDataService, evEventService) {
 
         var groups = evDataService.getDataAsList();
 
@@ -155,7 +155,7 @@
             evDataService.setData(item);
         });
 
-    };
+    }; */
 
     var handleShiftSelection = function (evDataService, evEventService, clickData) {
 
@@ -199,7 +199,8 @@
 
             }
 
-        } else {
+        }
+        else {
 
             var list = evDataService.getFlatList();
 
@@ -249,7 +250,7 @@
 
             console.log('activated_ids', activated_ids);
 
-            clearGroupActiveState(evDataService, evEventService);
+            // clearGroupActiveState(evDataService, evEventService);
             evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
             list.forEach(function (object) {
@@ -276,7 +277,27 @@
 
     };
 
-    var handleGroupClick = function (clickData, evDataService, evEventService) {
+	var areAllRowsActive = function (evDataService) {
+
+		var selGroups = evDataService.getSelectedGroups();
+		var allItemsCount = 0;
+
+		selGroups.forEach(function (group) {
+			allItemsCount += group.___items_count;
+		});
+
+		var flatList = evDataService.getFlatList();
+		var loadedObjects = flatList.length - 1; // -1 because of control at the end
+
+		if (loadedObjects !== allItemsCount) return false;
+
+		var inactiveRowDoesNotExist = !!!flatList.find(item => item.___type === "object" && !item.___is_activated);
+
+		return inactiveRowDoesNotExist;
+
+	};
+
+    /* var handleGroupClick = function (clickData, evDataService, evEventService) {
 
         var group = evDataService.getData(clickData.___id);
         var obj;
@@ -380,7 +401,7 @@
         }
 
 
-    };
+    }; */
 
     var handleObjectClick = function (clickData, evDataService, evEventService) {
 
@@ -399,11 +420,11 @@
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        } else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
-
+        }
+        else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
             handleShiftSelection(evDataService, evEventService, clickData);
-
-        } else if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
+        }
+        else if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
 
             evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
@@ -430,6 +451,9 @@
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
         }
+
+		var allRowsAreActive = areAllRowsActive(evDataService);
+		evDataService.setSelectAllRowsState(allRowsAreActive);
 
 		evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
@@ -571,13 +595,9 @@
 
             }
 
-			var clickedActionBtn = clickData.target.closest(".gTableActionBtn");
-
-			if (clickedActionBtn) {
-
-				clickData.actionElem = clickedActionBtn;
-				clickData.actionType = clickedActionBtn.dataset.clickActionType;
-
+            if (clickData.target.classList.contains('gTableActionBtn')) {
+				// clickData.actionElem = clickedActionBtn;
+				clickData.actionType = clickData.target.dataset.clickActionType;
 			}
 
         }
@@ -622,6 +642,10 @@
 
                     evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 					evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
+
+					var allRowsAreActive = areAllRowsActive(evDataService);
+					evDataService.setSelectAllRowsState(allRowsAreActive);
+
 					evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
                 }
@@ -845,6 +869,10 @@
             clearDropdownsAndRows(evDataService, evEventService, true);
 
 			if (activeObjChanged) evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+			var allRowsAreActive = areAllRowsActive(evDataService);
+			evDataService.setSelectAllRowsState(allRowsAreActive);
+
 			evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
         }
