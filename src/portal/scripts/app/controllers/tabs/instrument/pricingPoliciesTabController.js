@@ -262,9 +262,11 @@
 
 			vm.entity.pricing_policies.forEach(function (policy, policyIndex) {
 
+				policy.order = policyIndex;
+
             	rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
                 rowObj.key = policy.id;
-                rowObj.order = policyIndex;
+                rowObj.order = policy.order;
 
                 const pricingPolicy = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_policy');
                 pricingPolicy.settings.value = policy.pricing_policy_object.name;
