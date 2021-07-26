@@ -121,7 +121,10 @@
                     scope.evDataService.setFlatList(flatList);
 
                     projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
-
+					if (projection) {
+						console.log("dubugging.rowsToShow projection", projection);
+						console.log("dubugging.rowsToShow projection immutable", JSON.parse(JSON.stringify(projection)));
+					}
                     scope.evDataService.setProjection(projection);
 
                     // console.log('projection', projection);

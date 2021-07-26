@@ -99,9 +99,10 @@
 
 			contextMenuBtn =
 				`<div class="context-menu-btn-wrapper">
-					<button class="context-menu-btn gTableActionBtn" data-click-action-type="open_context_menu">
+					<div class="context-menu-btn position-relative">
 						<span class="material-icons">more_vert</span>
-					</button>
+						<button class="g-click-catcher gTableActionBtn" data-click-action-type="open_context_menu"></button>
+					</div>
 				</div>`;
 
 		} else {
@@ -116,11 +117,11 @@
 			if (!statusIcon) statusIcon = 'star_outline';
 
 			rowStatus =
-				`<button class="g-row-settings-btn gTableActionBtn" 
-						 data-click-action-type="open_row_status_picker">
+				`<div class="g-row-settings-btn position-relative">
 					${statusIcon}
 					<span class="material-icons arrow-icon">arrow_drop_down</span>
-				</button>`;
+					<button class="g-click-catcher gTableActionBtn" data-click-action-type="open_row_status_picker"></button>
+				</div>`;
 		}
 		//endregion
 
@@ -133,10 +134,12 @@
 		} */
 
 		const rowColorPicker =
-			`<button class="g-row-settings-btn g-row-color-picker gTableActionBtn" data-click-action-type="open_row_color_picker">
+			`<div class="g-row-settings-btn g-row-color-picker position-relative">
 				<span class="material-icons label-icon">${colorIcon}</span>
 				<span class="material-icons arrow-icon">arrow_drop_down</span>
-			</button>`;
+				
+				<button class="g-click-catcher gTableActionBtn" data-click-action-type="open_row_color_picker"></button>
+			</div>`;
 
 		return `<div class="g-row-settings g-row-settings-table gRowSettings">
 					${contextMenuBtn}

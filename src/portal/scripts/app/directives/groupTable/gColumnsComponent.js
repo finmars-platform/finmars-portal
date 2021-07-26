@@ -1399,7 +1399,7 @@
 
                 };
 				/**
-				 * Used by report viewer.
+				 * Used in only by report viewer.
 				 * @param groupKey {string}
 				 * @param _$popup {Object} - data from popup
 				 */
@@ -1487,16 +1487,19 @@
 
 					if (scope.isReport) {
 
+						const lastDraggedElem = scope.contentWrapElement.querySelector('.gDraggableHead.last-dragged');
+						if (lastDraggedElem) lastDraggedElem.classList.remove('last-dragged');
+
 						const columns = scope.evDataService.getColumns();
 						const ungroupedColumn = columns.find(column => column.key === groupKey);
 
 						if (ungroupedColumn) {
-							if (!ungroupedColumn.frontOptions) {
-								ungroupedColumn.frontOptions = {};
-							}
+
+							if (!ungroupedColumn.frontOptions) ungroupedColumn.frontOptions = {};
 
 							ungroupedColumn.frontOptions.lastDragged = true;
 							scope.evDataService.setColumns(columns);
+
 						}
 
 					}

@@ -12,6 +12,7 @@
 @g-table-cell-hover-color: rgba(216, 216, 216, 1);
 @rv-active-color: #f05a22;
 @gRowSelectionWidth: 50px; // used inside entity-viewer.less
+@gTableBackgroundColor: #fafafa;
 
 .new-interface() {
   color: @g-top-part-color;
@@ -220,6 +221,7 @@
     position: relative;
 
     .ev-content {
+      background-color: @gTableBackgroundColor;
 
       .g-row-selection {
         display: flex;
@@ -371,6 +373,16 @@
         font-style: normal;
       }
 
+      .g-click-catcher {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        z-index: 1;
+      }
+
       .border-right-transparent {
         border-right: transparent;
       }
@@ -381,14 +393,26 @@
 
       &.g-row-marked-red {
         background-color: #FDECE5;
+
+        div.g-row-color-picker span.label-icon {
+          color: #f05a22;
+        }
       }
 
       &.g-row-marked-yellow {
         background-color: #FEF9EF;
+
+        div.g-row-color-picker span.label-icon {
+          color: #fac878;
+        }
       }
 
       &.g-row-marked-green {
         background-color: #E1FEF5;
+
+        div.g-row-color-picker span.label-icon {
+          color: #a5d9c9;
+        }
       }
 
     }
@@ -531,6 +555,7 @@
     overflow: auto;
     width: 100%;
     display: block;
+    background-color: @gTableBackgroundColor;
 
     &.g-font-size-small {
       .g-cell {
@@ -592,24 +617,6 @@
 
     &:last-child:after {
       content: ''
-    }
-  }
-
-  .g-row-marked-red {
-    span.label-icon {
-      color: #f05a22;
-    }
-  }
-
-  .g-row-marked-yellow {
-    span.label-icon {
-      color: #fac878;
-    }
-  }
-
-  .g-row-marked-green {
-    span.label-icon {
-      color: #a5d9c9;
     }
   }
 
@@ -1315,6 +1322,7 @@
     position: absolute;
     top: 0;
     height: 100%;
+    z-index: 2;
 
     /* .drop-area-holder {
       display: block;
@@ -1819,18 +1827,6 @@
   }
   // <Victor 2020.1202 #69 New report viewer interface>
 
-}
-
-.md-button.chain-button {
-  color: @orange;
-
-  &.g-use-from-above-filters-hidden {
-    color: @gray;
-
-    ng-md-icon svg {
-      fill: @gray;
-    }
-  }
 }
 
 .md-button.g-filter-area-toggle {

@@ -5,6 +5,22 @@
     display: none;
   }
 
+  .g-filters {
+
+    .md-button.chain-button {
+      color: @orange;
+
+      &.g-use-from-above-filters-hidden {
+        color: @gray;
+
+        ng-md-icon svg {
+          fill: @gray;
+        }
+      }
+    }
+
+  }
+
   .g-filters .icon-buttons {
     flex: 0 0 252px;
     /* display: flex;
@@ -262,14 +278,6 @@
     100% {
       opacity: .1;
     }
-  }
-
-  .g-wrapper .group-table-body {
-    background: #d6d6d6;
-  }
-
-  .g-wrapper .group-table-body .ev-content {
-    background: #DCDCDC;
   }
 
   .ev-loader {

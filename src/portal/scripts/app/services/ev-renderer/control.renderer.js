@@ -44,12 +44,10 @@
         // console.log('total_pages', total_pages);
         // console.log('page', page);
 
-        var classList = ['g-row'];
+        var classes = 'g-row g-control-row';
 
-        var classes = classList.join(' ');
-
-        var rowSelection = '<div class="g-row-selection border-right-transparent"></div>';
-        var rowSettings = '<div class="g-row-settings g-row-settings-table border-right-transparent gRowSettings"></div>';
+        var rowSelection = '<div class="g-row-selection border-right-transparent border-bottom-transparent"></div>';
+        var rowSettings = '<div class="g-row-settings g-row-settings-table border-right-transparent border-bottom-transparent gRowSettings"></div>';
 
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
