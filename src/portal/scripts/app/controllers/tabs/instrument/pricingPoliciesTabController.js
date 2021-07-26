@@ -258,7 +258,9 @@
             // < assemble header columns >
 
             // assemble body rows
-            vm.entity.pricing_policies.forEach(function (policy, policyIndex) {
+			if (!Array.isArray(vm.entity.pricing_policies)) vm.entity.pricing_policies = [];
+
+			vm.entity.pricing_policies.forEach(function (policy, policyIndex) {
 
             	rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
                 rowObj.key = policy.id;
