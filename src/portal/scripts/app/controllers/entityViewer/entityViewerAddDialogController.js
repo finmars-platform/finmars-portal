@@ -7,8 +7,8 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersGroupService = require('../../services/usersGroupService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -44,14 +44,11 @@
         {id: 'user_code', name: 'User Code'},
     ];
 
-    module.exports = function entityViewerAddDialogController(
-        $scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
-    ) {
-
-        console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
 
         var vm = this;
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
@@ -464,7 +461,7 @@
 
         vm.getCurrentMasterUser = function () {
 
-            return usersService.getCurrentMasterUser().then(function (data) {
+            return authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;
@@ -1036,7 +1033,25 @@
 
         };*/
 
-        vm.save = function ($event, isAutoExitAfterSave) {
+        vm.save = async function ($event, isAutoExitAfterSave) {
+
+            if (vm.entityType === 'instrument') {
+
+                const instrumentTypeId = vm.entity[vm.typeFieldName];
+                if (instrumentTypeId) {
+
+                    await vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
+
+                }
+            }
+
+            if (vm.entityType === 'instrument-type') {
+
+                if (!vm.entity.instrument_factor_schedule_data) {
+                    vm.entity.instrument_factor_schedule_data = ''
+                }
+
+            }
 
             vm.updateEntityBeforeSave();
 

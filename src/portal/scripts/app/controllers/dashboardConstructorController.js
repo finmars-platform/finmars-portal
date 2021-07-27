@@ -498,7 +498,7 @@
         };
 
         vm.goToDashboard = function () {
-            $state.go('app.dashboard')
+            $state.go('app.portal.dashboard')
         };
 
         var emptySocketInsideTab = function (tabNumber, rowNumber, columnNumber) {
@@ -1185,7 +1185,7 @@
 
             uiService.createDashboardLayout(layout).then(function (data) {
 
-                $state.go('app.dashboard-constructor', {
+                $state.go('app.portal.dashboard-constructor', {
                     id: data.id
                 })
 

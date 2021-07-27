@@ -21,26 +21,14 @@
     var buffer = require('vinyl-buffer');
     var browserify = require('browserify');
 
+    var commonTasks = require('./common');
+
     var appName = 'forum';
 
     function forumHtmlToJs () {
-        // console.log('Executing task index-HTML-templateCache...');
-
         var pathToHtml = ['src/' + appName + '/scripts/app/**/*.html'];
-
-        return gulp.src(pathToHtml)
-            .pipe(htmlmin({collapseWhitespace: true}))
-            .on('error', function (error) {
-                console.error('\nError on HTML minifaction: \n', error.toString());
-                this.emit('end');
-            })
-            .pipe(ngHtml2Js({
-                moduleName: appName
-            }))
-            .pipe(concat('templates.min.js'))
-            .pipe(uglify())
-            .pipe(gulp.dest('src/' + appName + '/scripts/'))
-			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
+        var angularModuleName = 'finmars.' + appName;
+		return commonTasks.htmlToJs(pathToHtml, appName, angularModuleName);
     }
 
     gulp.task(appName + '-HTML-to-JS', function () {
