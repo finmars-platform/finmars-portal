@@ -5,17 +5,13 @@
 
     'use strict';
 
-    var logService = require('../../../../../core/services/logService');
+    // var usersService = require('../../services/usersService');
+    // var usersGroupService = require('../../services/usersGroupService');
 
-    var usersService = require('../../services/usersService');
-    var usersGroupService = require('../../services/usersGroupService');
-
-    var metaService = require('../../services/metaService');
+    // var metaService = require('../../services/metaService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
-    module.exports = function ($scope, $mdDialog, data) {
-
-        logService.controller('AttributesAddDialogManagerController', 'initialized');
+    module.exports = function ($scope, $mdDialog, usersService, usersGroupService, data) {
 
         var vm = this;
 

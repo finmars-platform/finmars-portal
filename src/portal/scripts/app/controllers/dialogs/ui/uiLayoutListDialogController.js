@@ -9,13 +9,13 @@
 
     var uiService = require('../../../services/uiService');
 
-    var middlewareService = require('../../../services/middlewareService');
+    // var middlewareService = require('../../../services/middlewareService');
 
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
-    var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
+    // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $mdDialog, options) {
+    module.exports = function ($scope, $mdDialog, backendConfigurationImportService, options) {
 
         var vm = this;
 
@@ -118,11 +118,11 @@
 							listLayout.modified = data.name;
 							entityViewerDataService.setListLayout(listLayout);
 
-							if (isRootEntityViewer) {
+							/* if (isRootEntityViewer) {
 								middlewareService.setNewEntityViewerLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
 							} else {
 								middlewareService.setNewSplitPanelLayoutName(layoutData.name); // Give signal to update active layout name in the toolbar
-							}
+							} */
 
 							entityViewerEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 

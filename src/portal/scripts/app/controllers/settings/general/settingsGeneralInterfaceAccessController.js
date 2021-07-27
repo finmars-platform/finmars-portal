@@ -5,9 +5,9 @@
 
     var timeZonesService = require('../../../services/timeZonesService');
 
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
 
-    module.exports = function ($scope, $state) {
+    module.exports = function ($scope, $state, usersService) {
 
         var vm = this;
 
@@ -24,7 +24,7 @@
         vm.save = function () {
             usersService.updateOwnMemberSettings(vm.member.id, vm.member).then(function () {
 
-                $state.go('app.settings.interface-access', null, { reload: 'app' });
+                $state.go('app.portal.settings.interface-access', null, { reload: 'app' });
 
                 $scope.$apply();
             })

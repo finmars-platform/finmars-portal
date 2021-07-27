@@ -10,8 +10,6 @@
     var uiService = require('../../../services/uiService');
     var memberService = require('../../../services/membersAndGroupsService');
 
-    var middlewareService = require('../../../services/middlewareService');
-
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
 

@@ -5,19 +5,18 @@
 
     'use strict';
 
-    var logService = require('../../../../core/services/logService');
-    var toastNotificationService = require('../../../../core/services/toastNotificationService');
-    var uiService = require('../services/uiService');
+	// const toastNotificationService = require('../../../../core/services/toastNotificationService');
+	const uiService = require('../services/uiService');
 
-    var bookmarkService = require('../services/bookmarkService');
+	const bookmarkService = require('../services/bookmarkService');
 
-    module.exports = function ($scope, $mdDialog, $state) {
+    module.exports = function ($scope, $mdDialog, $state, toastNotificationService) {
 
-        var vm = this;
-
-        logService.controller('BookmarksController', 'initialized');
+        const vm = this;
 
         vm.entityUpdating = false;
+
+        let notPortalStatesNamesList = [];
 
         vm.getBookmarks = function() {
 
@@ -30,14 +29,28 @@
 
         vm.getBookmarks();
 
-        vm.setLayout = function (layoutInfo) {
+        const fixStateToGo = state => { // needed for existing bookmarks to work, after creation of 'app.portal' abstract state
 
-            var layoutId = layoutInfo.list_layout;
-            var stateToGo = layoutInfo.data.state;
-            var layoutExist = false;
+        	if (notPortalStatesNamesList.includes(state)) return state;
+
+        	let substringsList = state.split('.');
+
+			substringsList.splice(1, 0, 'portal');
+
+			return substringsList.join('.');
+
+		};
+
+        vm.goToState = function (layoutInfo) {
+
+            const layoutId = layoutInfo.list_layout;
+            const stateToGo = fixStateToGo(layoutInfo.data.state);
+
+            let layoutExist = false;
 
             if (!vm.entityUpdating) {
-                vm.entityUpdating = true;
+
+            	vm.entityUpdating = true;
 
                 uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
                     var layout = layoutData;
@@ -46,7 +59,7 @@
                         layoutExist = true;
                     }
 
-                    var openActiveLayout = function () {
+                    const openActiveLayout = function () {
 
                         /*$state.transitionTo(stateToGo, {layoutName: layout.name});
 
@@ -57,7 +70,7 @@
                             vm.entityUpdating = false;
 
                         } else {
-                            var errorText = 'Layout "' + layout.name + '" has no user code.';
+                            const errorText = 'Layout "' + layout.name + '" has no user code.';
                             toastNotificationService.error(errorText);
                         }
 
@@ -66,7 +79,7 @@
                     if (layoutExist) {
                         openActiveLayout();
                     } else {
-                        $state.go('app.not-found');
+                        $state.go('app.portal.not-found');
                         vm.entityUpdating = false;
                     }
 
@@ -93,5 +106,20 @@
 
         };
 
+        const init = function () {
+
+        	const registeredStatesList = $state.get();
+
+			notPortalStatesNamesList = registeredStatesList
+				.map(stateDeclObj => stateDeclObj.name)
+				.filter(stateName => {
+					return stateName && stateName !== 'app' && !stateName.startsWith('app.portal.')
+				});
+
+		};
+
+        init();
+
     }
+
 }());

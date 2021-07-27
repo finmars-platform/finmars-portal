@@ -4,19 +4,24 @@
 
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
-    var authorizerService = require('../../services/authorizerService');
-    var usersService = require('../../services/usersService');
+    // var authorizerService = require('../../services/authorizerService');
+    // var usersService = require('../../services/usersService');
 
-    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog) {
+    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog, authorizerService, globalDataService) {
 
         var vm = this;
 
         vm.members = [];
         vm.groups = [];
+		vm.currentMasterUserStatus = null;
 
-        vm.readyStatus = {content: false, masterUser: false};
+        // vm.readyStatus = {content: false, masterUser: false};
+		vm.readyStatus = {content: false};
+
 
         vm.processing = false;
+
+        var currentMasterUser;
 
         vm.getData = function () {
 
@@ -82,9 +87,9 @@
 
         vm.getMasterUser = function () {
 
-            vm.readyStatus.masterUser = false;
+            /* vm.readyStatus.masterUser = false;
 
-            usersService.getCurrentMasterUser().then(function (data) {
+			authorizerService.getCurrentMasterUser().then(function (data) {
 
                 console.log('getMasterUser data', data);
 
@@ -94,16 +99,17 @@
 
                 $scope.$apply();
 
-            })
-
+            }) */
+			currentMasterUser = globalDataService.getMasterUser();
+			// vm.currentMasterUserStatus = currentMasterUser.status;
 
         };
 
         vm.saveMasterUser = function ($event) {
 
-            vm.processing = true;
+            /* vm.processing = true;
 
-            usersService.updateMaster(vm.masterUser.id, vm.masterUser).then(function (data) {
+			authorizerService.updateMasterUser(currentMasterUser.id, currentMasterUser).then(function (data) {
 
                 console.log('saveMasterUser data', data);
 
@@ -113,7 +119,7 @@
 
                 vm.getMasterUser();
 
-            })
+            }) */
 
         };
 
@@ -319,7 +325,8 @@
         vm.init = function () {
 
             vm.getData();
-            vm.getMasterUser();
+            // vm.getMasterUser();
+
 
         };
 
