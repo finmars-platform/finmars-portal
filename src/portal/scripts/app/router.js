@@ -120,6 +120,22 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.portfolio-register', {
+                url: '/portfolio-registers',
+                templateUrl: 'views/data/data-portfolio-register-view.html',
+                controller: 'DataPortfolioRegisterController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
+            .state('app.portal.data.portfolio-register-record', {
+                url: '/portfolio-register-records',
+                templateUrl: 'views/data/data-portfolio-register-record-view.html',
+                controller: 'DataPortfolioRegisterRecordController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
             .state('app.portal.data.tag', {
                 url: '/tags',
                 templateUrl: 'views/data/data-tag-view.html',

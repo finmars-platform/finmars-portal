@@ -18,6 +18,7 @@
 
         var entityAttributesData = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),

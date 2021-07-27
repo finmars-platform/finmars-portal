@@ -158,6 +158,11 @@
                 key: "portfolios.portfolio"
             },
             {
+                name: "Portfolio Register",
+                entity: 'portfolio-register',
+                key: "portfolios.portfolioregister"
+            },
+            {
                 name: "Instrument Type",
                 entity: 'instrument-type',
                 key: "instruments.instrumenttype"
@@ -524,6 +529,11 @@
                 name: "Portfolio",
                 entity: 'portfolio',
                 key: "portfolios.portfolio"
+            },
+            {
+                name: "Portfolio Register",
+                entity: 'portfolio-register',
+                key: "portfolios.portfolioregister"
             },
             {
                 name: "Instrument Type",
