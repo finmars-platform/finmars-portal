@@ -5,16 +5,13 @@
 
     'use strict';
 
-    var evEvents = require('../../../services/entityViewerEvents');
-
     var uiService = require('../../../services/uiService');
 
-    var middlewareService = require('../../../services/middlewareService');
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
-    var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
+    // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, backendConfigurationImportService, data) {
 
         var vm = this;
 

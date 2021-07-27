@@ -3,32 +3,41 @@
  */
 'use strict';
 
-(function () {
+import profileRouter from "./app/router.js";
 
-    var app = angular.module('profile', []);
+import profileAuthorizerService from "./app/services/authorizerService"; // inside for creation of database
 
-    app.config(['$stateProvider', require('./app/router.js')]);
+import profileController from "./app/controllers/profileController.js";
 
-    app.run(function () {
+// noinspection JSVoidFunctionReturnValueUsed
+export default (function () {
 
-    });
+    let profile = angular.module('finmars.profile', []);
 
-    app.controller('NewDatabaseController', ['$scope', '$state', require('./app/controllers/newDatabaseController')]);
-    app.controller('ProfileController', ['$scope', require('./app/controllers/profileController')]);
-    app.controller('ProfileSettingsController', ['$scope', require('./app/controllers/profileSettingsController')]);
-    app.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', require('./app/controllers/profileDatabasesController')]);
-    app.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createMasterUserDialogController')]);
-    app.controller('CreateMasterUserFromDumpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createMasterUserFromDumpDialogController')]);
-    app.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', '$state', 'data', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
+	profile.config(['$stateProvider', profileRouter]);
 
-    app.controller('SecuritySettingsController', ['$scope', '$mdDialog', require('./app/controllers/securitySettingsController')]);
-    app.controller('TwoFactorSetupDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoFactorSetupDialogController')]);
+	/* profile.run(function () {
 
-    app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/createMasterUserDialogController')]);
-    app.controller('ProfileInfoDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/infoDialogController')]);
-    app.controller('DeleteMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/deleteMasterUserDialogController')]);
-    app.controller('RenameMasterUserDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameMasterUserDialogController')]);
+    });*/
+
+	profile.service('profileAuthorizerService', ['xhrService', 'cookieService', profileAuthorizerService]);
+
+    // profile.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', require('./app/controllers/newDatabaseController')]);
+    profile.controller('ProfileController', ['$scope', 'authorizerService', 'globalDataService', profileController]);
+    profile.controller('ProfileSettingsController', ['$scope', 'globalDataService', require('./app/controllers/profileSettingsController')]);
+    profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService', require('./app/controllers/profileDatabasesController')]);
+    profile.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/createMasterUserDialogController')]);
+    profile.controller('CreateMasterUserFromDumpDialogController', ['$scope', '$mdDialog', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/createMasterUserFromDumpDialogController')]);
+    profile.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', '$state', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
+
+    profile.controller('SecuritySettingsController', ['$scope', '$mdDialog', 'authorizerService', 'globalDataService', 'commonDialogsService', require('./app/controllers/securitySettingsController')]);
+    profile.controller('TwoFactorSetupDialogController', ['$scope', '$mdDialog', 'data', 'globalDataService', require('./app/controllers/dialogs/twoFactorSetupDialogController')]);
+
+    profile.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/createMasterUserDialogController')]);
+    profile.controller('ProfileInfoDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/infoDialogController')]);
+    profile.controller('DeleteMasterUserDialogController', ['$scope', '$mdDialog', 'data', 'toastNotificationService', 'profileAuthorizerService', 'commonDialogsService', require('./app/controllers/dialogs/deleteMasterUserDialogController')]);
+    profile.controller('RenameMasterUserDialogController', ['$scope', '$mdDialog', 'data', 'toastNotificationService', 'profileAuthorizerService', require('./app/controllers/dialogs/renameMasterUserDialogController')]);
 
     // require('./templates.min.js');
 
-}());
+})();

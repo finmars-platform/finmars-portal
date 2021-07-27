@@ -5,12 +5,11 @@
 
     'use strict';
 
-    var usersService = require('../../services/usersService');
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    // var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, data, toastNotificationService, profileAuthorizerService) {
 
         var vm = this;
         vm.master_user = data.master_user;
@@ -25,7 +24,7 @@
 
             vm.master_user.name = vm.name;
 
-            authorizerService.updateMaster(vm.master_user.id, vm.master_user).then(function (data) {
+			profileAuthorizerService.updateMasterUser(vm.master_user.id, vm.master_user).then(function (data) {
 
                 toastNotificationService.success("Database was successfully renamed");
 
