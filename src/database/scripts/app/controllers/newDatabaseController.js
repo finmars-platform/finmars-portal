@@ -9,9 +9,9 @@
     // var authorizerService = require('../services/authorizerService');
 
     // TODO resolve service from profile module
-    var backendConfigurationImportService = require('../services/backendConfigurationImportService')
+    // var backendConfigurationImportService = require('../services/backendConfigurationImportService')
 
-    module.exports = function ($scope, $state, profileAuthorizerService) {
+    module.exports = function ($scope, $state, profileAuthorizerService, backendConfigurationImportService) {
 
         var vm = this;
 

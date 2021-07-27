@@ -1,38 +1,40 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
 
-    var usersGroupRepository = require('../repositories/usersGroupRepository');
+'use strict';
 
-    var getList = function (options) {
+// var usersGroupRepository = require('../repositories/usersGroupRepository');
+import usersGroupRepository from "../repositories/usersGroupRepository";
+
+export default function () {
+
+    const getList = function (options) {
         return usersGroupRepository.getList(options);
     };
 
-    var getByKey = function (id) {
+	const getByKey = function (id) {
         return usersGroupRepository.getByKey(id);
     };
 
-    var create = function (group) {
+	const create = function (group) {
         return usersGroupRepository.create(group);
     };
 
-    var update = function (id, group) {
+	const update = function (id, group) {
         return usersGroupRepository.update(id, group);
     };
 
-    var deleteByKey = function (id) {
+	const deleteByKey = function (id) {
         return usersGroupRepository.deleteByKey(id);
     };
 
-
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
         deleteByKey: deleteByKey
-    }
+    };
 
-
-}());
+};

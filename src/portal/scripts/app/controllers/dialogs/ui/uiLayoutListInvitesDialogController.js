@@ -11,9 +11,9 @@
 
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
-    var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
+    // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $mdDialog, options) {
+    module.exports = function ($scope, $mdDialog, backendConfigurationImportService, options) {
 
         var vm = this;
 

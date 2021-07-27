@@ -24,9 +24,9 @@
 
     const inviteToSharedConfigurationFileService = require('../../services/inviteToSharedConfigurationFileService');
     const shareConfigurationFileService = require('../../services/shareConfigurationFileService');
-    const backendConfigurationImportService = require('../../services/backendConfigurationImportService');
+    // const backendConfigurationImportService = require('../../services/backendConfigurationImportService');
 
-    module.exports = function ($mdDialog, $state) {
+    module.exports = function ($mdDialog, $state, backendConfigurationImportService) {
         return {
             restrict: 'E',
             templateUrl: 'views/components/layouts-manager-view.html',
@@ -41,7 +41,7 @@
             	scope.isReport = metaService.isReport(scope.entityType);
             	scope.isNewLayout = scope.evDataService.isLayoutNew();
             	scope.viewContext = scope.evDataService.getViewContext();
-				console.log("testing ", scope.viewContext);
+
                 scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
