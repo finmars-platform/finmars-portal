@@ -7,7 +7,7 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
     // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
@@ -44,9 +44,7 @@
         {id: 'user_code', name: 'User Code'},
     ];
 
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, authorizerService, usersService) {
-
-        console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
 
         var vm = this;
 

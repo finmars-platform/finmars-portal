@@ -7,9 +7,9 @@
 	var tagService = require('../../../../../portal/scripts/app/services/tagService');
 
 	// var usersService = require('../../../../../portal/scripts/app/services/usersService');
-	var usersGroupService = require('../../../../../portal/scripts/app/services/usersGroupService');
+	// var usersGroupService = require('../../../../../portal/scripts/app/services/usersGroupService');
 
-	module.exports = function ($scope, $mdDialog, threadsGroupId, usersService) {
+	module.exports = function ($scope, $mdDialog, threadsGroupId, usersService, usersGroupService) {
 
 		var vm = this;
 

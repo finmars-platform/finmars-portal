@@ -8,12 +8,12 @@
 
     const uiService = require('../services/uiService');
     const shareConfigurationFileService = require('../services/shareConfigurationFileService');
-    const backendConfigurationImportService = require('../services/backendConfigurationImportService');
+    // const backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
     const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
 
-    module.exports = function ($mdDialog, $state) {
+    module.exports = function ($mdDialog, $state, backendConfigurationImportService) {
         return {
             restrict: 'E',
             templateUrl: 'views/components/layouts-manager-view.html',
@@ -21,6 +21,7 @@
                 onChangeLayoutCallback: '&',
                 dashboardDataService: '=',
                 dashboardEventService: '=',
+				parentPopup: '='
             },
             link: function (scope) {
 
@@ -352,7 +353,6 @@
                         scope.layouts = data.results;
 
                         scope.processing = false;
-
 
                         scope.$apply();
 
