@@ -163,6 +163,15 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li data-ng-if="vm.accessTable.data_portfolio">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data.portfolio-register">
+                                        <span class="side-nav-title">Registers</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                                 <li data-ng-if="vm.accessTable.data_account">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
@@ -263,6 +272,14 @@
                                     <md-button class="sidenav-dropdown-menu-btn"
                                                ui-sref="app.portal.data.transaction">
                                         <span class="side-nav-title">Base Transactions</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li>
+                                    <md-button class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data.portfolio-register-record">
+                                        <span class="side-nav-title">Register Records</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>

@@ -6,6 +6,8 @@
     'use strict';
 
     var portfolioService = require('./portfolioService');
+    var portfolioRegisterService = require('./portfolioRegisterService');
+    var portfolioRegisterRecordService = require('./portfolioRegisterRecordService');
     var accountService = require('./accountService');
     var accountTypeService = require('./accountTypeService');
     var responsibleService = require('./responsibleService');
@@ -53,6 +55,12 @@
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getList(options);
+                break;
+            case 'portfolio-register':
+                return portfolioRegisterService.getList(options);
+                break;
+            case 'portfolio-register-record':
+                return portfolioRegisterRecordService.getList(options);
                 break;
             case 'account':
                 return accountService.getList(options);
@@ -145,6 +153,8 @@
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getListLight(options);
+            case 'portfolio-register':
+                return portfolioRegisterService.getListLight(options);
             case 'account':
                 return accountService.getListLight(options);
             case 'account-type':
@@ -178,6 +188,9 @@
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getByKey(id);
+                break;
+            case 'portfolio-register':
+                return portfolioRegisterService.getByKey(id);
                 break;
             case 'account':
                 return accountService.getByKey(id);
@@ -277,6 +290,9 @@
                 entity.transaction_types = entity.transaction_types || [];
                 return portfolioService.create(entity);
                 break;
+            case 'portfolio-register':
+                return portfolioRegisterService.create(entity);
+                break;
             case 'account':
                 entity.portfolios = entity.portfolios || [];
                 return accountService.create(entity);
@@ -373,6 +389,9 @@
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.update(id, entity);
+                break;
+            case 'portfolio-register':
+                return portfolioRegisterService.update(id, entity);
                 break;
             case 'currency':
                 return currencyService.update(id, entity);
@@ -494,6 +513,9 @@
             case 'portfolio':
                 return portfolioService.updateBulk(entities);
                 break;
+            case 'portfolio-register':
+                return portfolioRegisterService.updateBulk(entities);
+                break;
             case 'currency':
                 //return currencyService.update(id, entity);
                 break;
@@ -578,6 +600,9 @@
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.deleteByKey(id);
+                break;
+            case 'portfolio-register':
+                return portfolioRegisterService.deleteByKey(id);
                 break;
             case 'account':
                 return accountService.deleteByKey(id);
@@ -669,6 +694,8 @@
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.deleteBulk(data);
+            case 'portfolio-register':
+                return portfolioRegisterService.deleteBulk(data);
             case 'currency':
                 return currencyService.deleteBulk(data);
             case 'account':
