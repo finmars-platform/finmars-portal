@@ -9,7 +9,7 @@
         var localStorageService = require('../../../../../core/services/localStorageService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
-        var usersService = require('../../services/usersService');
+        // var usersService = require('../../services/usersService');
         var objectComparison = require('../../helpers/objectsComparisonHelper');
 
         var priceHistoryService = require('../../services/priceHistoryService');
@@ -23,7 +23,7 @@
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
         var expressionService = require('../../services/expression.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
         var rvDataHelper = require('../../helpers/rv-data.helper');
 
@@ -33,7 +33,7 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, $transitions) {
+        module.exports = function ($scope, $mdDialog, usersService) {
 
             var vm = this;
 
@@ -1996,7 +1996,7 @@
 
             vm.getView = function () {
 
-                //middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false;
 

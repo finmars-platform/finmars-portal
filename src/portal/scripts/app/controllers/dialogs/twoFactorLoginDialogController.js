@@ -24,6 +24,8 @@
 
         vm.validateCode = function () {
 
+			vm.codeIsValid = false;
+
             if (vm.securityCode && vm.securityCode.length === 6) {
 
                 twoFactorService.validateCode({code: vm.securityCode, username: vm.username}).then(function (data) {

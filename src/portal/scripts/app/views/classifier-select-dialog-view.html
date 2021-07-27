@@ -2,33 +2,46 @@
            aria-label="classifier selector dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>Select classifier</h2>
+            <h2 ng-bind="vm.label"></h2>
             <span flex></span>
         </div>
     </md-toolbar>
 
     <md-dialog-content>
-        <div layout="row">
-            <div data-ng-show="vm.tree.length" class="js-tree-holder-dialog-select">
-                <div id="js-tree-select-wrapper" class="js-tree-select" style="width: 100%; overflow: hidden"></div>
+
+        <div class="classifier-tree-wrapper">
+
+            <div ng-if="vm.tree">
+                <classifier-tree tree-data="vm.tree"
+                                 classifier-tree-event-service="vm.classifierTreeEventService"
+                                 on-active-nodes-change-callback="vm.onActiveNodesChange(activeNodesList)"></classifier-tree>
             </div>
-            <div data-ng-if="!vm.tree.length" style="width: 100%;">
-                <p style="text-align: center; width: 100%;">
-                    Press Edit to create Classification
-                </p>
+
+            <div class="tree-loader" ng-if="!vm.readyStatus">
+                <progress-circular diameter="100"></progress-circular>
             </div>
         </div>
+
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
-        <md-button class="md-raised md-primary" ng-click="vm.edit($event)">
-            Edit
-        </md-button>
-        <md-button class="md-raised" ng-click="vm.cancel()">
-            Cancel
-        </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
-            Save
-        </md-button>
+    <md-dialog-actions class="classifier-footer" data-ng-class="{edit: vm.isEdit}">
+        <div>
+            <button data-ng-if="vm.isLock" data-ng-click="vm.isLock = false"><span class="material-icons">lock</span></button>
+            <button data-ng-if="!vm.isLock" data-ng-click="vm.onAdd()" data-ng-disabled="vm.isEdit"><span class="material-icons">add</span></button>
+            <button data-ng-if="!vm.isLock" data-ng-click="vm.onEdit()" data-ng-disabled="!vm.isActiveNodes() || vm.isEdit"><span class="material-icons">edit</span></button>
+            <button data-ng-if="!vm.isLock" data-ng-click="vm.onDelete()" data-ng-disabled="!vm.isActiveNodes() || vm.isEdit"><span class="material-icons">delete</span></button>
+        </div>
+
+        <div >
+            <md-button ng-click="vm.cancel()" class="link-button" data-ng-disabled="vm.isEdit">
+                <span>CANCEL</span>
+            </md-button>
+
+            <md-button ng-click="vm.agree()" class="link-button" ng-disabled="vm.isEdit">
+                <span>OK</span>
+            </md-button>
+        </div>
+
     </md-dialog-actions>
+
 </md-dialog>
