@@ -41,7 +41,7 @@
 
             	vm.entityType = $scope.evDataService.getEntityType();
                 $scope.isReport = metaService.isReport(vm.entityType);
-                $scope.currentAdditions = $scope.evDataService.getAdditions();
+                // $scope.currentAdditions = $scope.evDataService.getAdditions();
                 $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
                 $scope.viewContext = $scope.evDataService.getViewContext();
 
@@ -66,6 +66,7 @@
 
 				const gFiltersWrapElem = gFiltersElem.querySelector('.gFiltersWrap');
 				const gFiltersElemPadding = parseInt(gFiltersWrapElem.style.padding, 10);
+				let currentAdditions = $scope.evDataService.getAdditions();
 				// let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
 
 				/* let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
@@ -309,7 +310,7 @@
 
                 vm.toggleSplitPanel = function ($event, type) {
 
-                    if ($scope.currentAdditions.type === type) {
+                    if (currentAdditions.type === type) {
 
 						evRvLayoutsHelper.clearSplitPanelAdditions($scope.evDataService);
 
@@ -382,7 +383,7 @@
                                         $scope.evDataService.setSplitPanelStatus(true);
                                         $scope.evDataService.setAdditions(additions);
                                         $scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-                                        $scope.currentAdditions = $scope.evDataService.getAdditions();
+                                        currentAdditions = $scope.evDataService.getAdditions();
 
                                     }
 
@@ -390,7 +391,8 @@
 
                             });
 
-                        } else {
+                        }
+                        else {
 
                             var additions = $scope.evDataService.getAdditions();
 
@@ -402,7 +404,7 @@
                             $scope.evDataService.setSplitPanelStatus(true);
                             $scope.evDataService.setAdditions(additions);
                             $scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-                            $scope.currentAdditions = $scope.evDataService.getAdditions();
+                            currentAdditions = $scope.evDataService.getAdditions();
 
                         }
 
