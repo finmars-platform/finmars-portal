@@ -345,7 +345,8 @@
 							} else {
 								return {
 									id: selOptId,
-									text: '<span>&lt;Not found&gt;</span>',
+									// text: '<span>&lt;Not found&gt;</span>',
+									text: 'Not found',
 									error_data: {
 										description: ''
 									}
