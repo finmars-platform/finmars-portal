@@ -59,6 +59,7 @@
 
                 scope.hasCreatePermission = false;
                 scope.isBaseTransaction = $state.current.name === 'app.portal.data.transaction'; // Victor 2021.01.06 #72 remove ADD TRANSACTION button
+                scope.isPortfolioRegisterRecord = $state.current.name === 'app.portal.data.portfolio-register-record';
 
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
@@ -332,6 +333,29 @@
                             break;
                     }
                 };
+
+                scope.calculatePortfolioRegisterRecords = function($event){
+
+                    $mdDialog.show({
+                        controller: "CalculatePortfolioRegisterRecordsDialogController as vm",
+                        templateUrl: "views/dialogs/calculate-portfolio-register-records-dialog-view.html",
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {}
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        }
+
+                    })
+
+                }
 
 				scope.addEntity = async function (ev) {
 
