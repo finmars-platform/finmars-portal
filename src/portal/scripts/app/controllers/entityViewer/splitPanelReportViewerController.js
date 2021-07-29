@@ -254,7 +254,7 @@
                 var dialogController = 'EntityViewerEditDialogController as vm';
                 var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
 
-				locals.openedIn = 'modal'
+				locals.openedIn = 'modal';
 
                 if (locals.entityType && locals.entityType === 'complex-transaction') {
                     dialogController = 'ComplexTransactionEditDialogController as vm';
@@ -269,6 +269,10 @@
                     locals: locals
 
                 }).then(function (res) {
+
+					if (vm.autoRefreshState) {
+						vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+					}
 
                     updateTableAfterEntityChanges(res);
 
@@ -658,9 +662,13 @@
                                 break;
 
                             case 'rebook_transaction':
+
+                            	var complex_transaction_id = activeObject['complex_transaction.id'] || activeObject['complex_transaction'];
+
                                 var locals = {
                                     entityType: 'complex-transaction',
-                                    entityId: activeObject['complex_transaction.id'],
+                                    // entityId: activeObject['complex_transaction.id'],
+									entityId: complex_transaction_id,
                                     data: {}
                                 };
 
