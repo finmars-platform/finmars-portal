@@ -135,6 +135,7 @@
     var checkRestrictedEntityTypesForAM = function (entityType) {
         switch (entityType) {
             case "portfolio":
+            case "portfolio-registry":
             case "account":
             case "strategy-1":
             case "strategy-2":

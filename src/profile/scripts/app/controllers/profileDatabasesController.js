@@ -356,6 +356,9 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
         vm.init = function () {
             vm.getMasterUsersList();
             vm.getInvites();
+
+
+
             // vm.readyStatus.invites = true;
         };
 

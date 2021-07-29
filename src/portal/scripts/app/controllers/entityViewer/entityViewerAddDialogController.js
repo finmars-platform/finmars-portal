@@ -46,8 +46,6 @@
 
     module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
 
-        console.log('testing usersGroupService', usersGroupService);
-
         var vm = this;
 
 		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
@@ -1813,7 +1811,7 @@
 
 			vm.getCurrencies();
 
-            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
+            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history' || vm.entityType === 'portfolio-register' || vm.entityType === 'portfolio-register-record') {
                 vm.readyStatus.permissions = true;
             } else {
                 vm.loadPermissions();

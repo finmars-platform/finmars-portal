@@ -23,6 +23,8 @@ export default function ($scope, authorizerService, globalDataService) {
 
 		vm.readyStatus = false;
 
+		vm.user = globalDataService.getUser();
+
 		if (vm.hasCurrentMasterUser) {
 
 			const currentMasterUser = globalDataService.getMasterUser();
