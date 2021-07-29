@@ -69,7 +69,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-register/calculate-records',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-register/calculate-records/',
             {
                 method: 'POST',
                 credentials: 'include',
