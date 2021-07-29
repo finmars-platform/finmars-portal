@@ -371,6 +371,8 @@ export default (function () {
 	portal.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
 	portal.controller('GenerateEventScheduleDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/generateEventScheduleDialogController')]);
 
+	portal.controller('CalculatePortfolioRegisterRecordsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/calculatePortfolioRegisterRecordsDialogController')]);
+
 	// Data
 
 	portal.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);

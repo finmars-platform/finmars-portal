@@ -163,6 +163,11 @@
                 key: "portfolios.portfolioregister"
             },
             {
+                name: "Portfolio Register Record",
+                entity: 'portfolio-register-record',
+                key: "portfolios.portfolioregisterrecord"
+            },
+            {
                 name: "Instrument Type",
                 entity: 'instrument-type',
                 key: "instruments.instrumenttype"
@@ -534,6 +539,11 @@
                 name: "Portfolio Register",
                 entity: 'portfolio-register',
                 key: "portfolios.portfolioregister"
+            },
+            {
+                name: "Portfolio Register Record",
+                entity: 'portfolio-register-record',
+                key: "portfolios.portfolioregisterrecord"
             },
             {
                 name: "Instrument Type",
