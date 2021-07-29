@@ -8,6 +8,9 @@
     var metaHelper = require('../../helpers/meta.helper');
     var evEvents = require('../../services/entityViewerEvents');
 
+	var EvRvDomManagerService = require('../evRvDomManagerService');
+	var evRvDomManagerService = new EvRvDomManagerService();
+
     var metaService = require('../../services/metaService');
 
     var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
@@ -683,6 +686,13 @@
 
 						switch (clickData.actionType) {
 
+							case 'open_row_color_picker':
+
+								event.stopPropagation();
+								evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns, markRowByColor);
+
+								break;
+
 							case 'open_context_menu':
 
 								const gRowElem = event.target.closest('.g-row');
@@ -741,54 +751,48 @@
 
     };
 
-    var popupsToClear = [];
+	/*  var popupsToClear = [];
 
-    var clearDropdowns = function () {
+	var clearDropdowns = function () {
 
-        var dropdowns = document.querySelectorAll('.ev-dropdown');
+		var dropdowns = document.querySelectorAll('.ev-dropdown');
 
-        /* for (var i = 0; i < dropdowns.length; i = i + 1) {
-            dropdowns[i].remove();
-        } */
-        dropdowns.forEach(dropdown => {
-            // remove popup after animation
-            if (!popupsToClear.includes(dropdown.id)) {
+		dropdowns.forEach(dropdown => {
+			// remove popup after animation
+			if (!popupsToClear.includes(dropdown.id)) {
 
-                dropdown.classList.add("fade-out");
+				dropdown.classList.add("fade-out");
 
-                popupsToClear.push(dropdown.id);
-                var dropdownIndex = popupsToClear.length - 1;
+				popupsToClear.push(dropdown.id);
+				var dropdownIndex = popupsToClear.length - 1;
 
-                setTimeout(function () {
+				setTimeout(function () {
 
-                    dropdown.parentElement.removeChild(dropdown);
-                    popupsToClear.splice(dropdownIndex, 1);
+					dropdown.parentElement.removeChild(dropdown);
+					popupsToClear.splice(dropdownIndex, 1);
 
-                }, 200); // duration of animation
+				}, 200); // duration of animation
 
-            }
+			}
 
-        });
+		});
 
-        //<editor-fold desc="Remove dropdown related listeners">
-        for (const prop in eventListenerFn2Args) {
-            eventListenerFn2Args[prop] = null;
-        }
-        window.removeEventListener('click', executeContextMenuAction);
+		//<editor-fold desc="Remove dropdown related listeners">
+		for (const prop in eventListenerFn2Args) {
+			eventListenerFn2Args[prop] = null;
+		}
+		window.removeEventListener('click', executeContextMenuAction);
 
-        clearDropdownsAndRowsArgs.evDataService = null;
-        clearDropdownsAndRowsArgs.evEventService = null;
-        window.removeEventListener('contextmenu', callClearDropdownsAndRows);
-        //</editor-fold>
-        /*window.removeEventListener('click', executeContextMenuAction);
-        window.removeEventListener('click', executeSubtotalContextMenuAction);
-
-        clearDropdownsAndRowsArgs.evDataService = null;
-        clearDropdownsAndRowsArgs.evEventService = null;
-        window.removeEventListener('contextmenu', callClearDropdownsAndRows);*/
+		clearDropdownsAndRowsArgs.evDataService = null;
+		clearDropdownsAndRowsArgs.evEventService = null;
+		window.removeEventListener('contextmenu', callClearDropdownsAndRows);
+		//</editor-fold>
 
 
-    };
+	}; */
+	var clearDropdowns = function () {
+		[eventListenerFn2Args, clearDropdownsAndRowsArgs] = evRvDomManagerService.clearDropdowns(eventListenerFn2Args, clearDropdownsAndRowsArgs, executeContextMenuAction, callClearDropdownsAndRows);
+	};
 
     var clearDropdownsAndRows = function (evDataService, evEventService, redrawTable) {
 
@@ -1049,6 +1053,10 @@
 
     };
 
+    var markRowByColor = function (objectId, parentGroupHashId, evDataService, evEventService, color) {
+
+	};
+
     var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
         // var entityType = evDataService.getEntityType();
@@ -1074,7 +1082,7 @@
         popup.style.cssText = menuPosition;
         popup.style.position = 'absolute';*/
 
-        var popup = evDataHelper.prepareRowAndGetPopupMenu(objectId, parentGroupHashId, evDataService, false);
+        var popup = evRvDomManagerService.prepareRowAndGetPopupMenu(objectId, parentGroupHashId, evDataService, false);
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
         // var innerHTMLString = '';
@@ -1084,7 +1092,7 @@
 
             popup.innerHTML = generateContextMenu(obj, objectId, parentGroupHashId, evDataService);
 
-            evDataHelper.calculateMenuPosition(popup, menuPosition);
+            evRvDomManagerService.calculateMenuPosition(popup, menuPosition);
 
             document.body.appendChild(popup);
 
