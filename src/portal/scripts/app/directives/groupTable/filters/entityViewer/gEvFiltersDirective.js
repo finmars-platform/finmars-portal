@@ -368,6 +368,10 @@
 
 					});
 
+					scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+						scope.currentAdditions = scope.evDataService.getAdditions();
+					});
+
 				};
 
 				const init = function () {
