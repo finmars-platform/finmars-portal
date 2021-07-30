@@ -15,6 +15,7 @@
     var uiService = require('../../services/uiService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    const localStorageService = require('../../../../../core/services/localStorageService');
 
     var RvScrollManager = require('./rv-scroll.manager');
 
@@ -1792,7 +1793,9 @@
 			};
 		}
 
-		localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
+		const viewType = evDataService.getViewType();
+        const entityType = evDataService.getEntityType();
+        localStorageService.cacheMarkedRows(viewType, entityType, markedReportRows)
 
 		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 

@@ -8,6 +8,7 @@
 	const evEvents = require('../services/entityViewerEvents');
 
 	const toastNotificationService = require('../../../../core/services/toastNotificationService');
+	const localStorageService = require('../../../../core/services/localStorageService');
 
     let getLinkingToFilters = function (layout) {
 
@@ -88,7 +89,10 @@
         const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
         if (rowTypeFilters) {
-            localStorage.setItem("row_type_filters", JSON.stringify(rowTypeFilters))
+			const color = rowTypeFilters.markedRowFilters || 'none';
+			const entityType = entityViewerDataService.getEntityType();
+			const viewType = entityViewerDataService.getViewType();
+			localStorageService.cacheRowTypeFilter(viewType, entityType, color);
         }
 
     };
