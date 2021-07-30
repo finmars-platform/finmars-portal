@@ -649,13 +649,9 @@
 
 	const getMarkedRowsAndSubtotals = function (color, evDataService) {
 
-		let markedReportRows = localStorage.getItem("marked_report_rows");
-
-		if (markedReportRows) {
-			markedReportRows = JSON.parse(markedReportRows);
-		} else {
-			markedReportRows = {};
-		}
+        const viewType = evDataService.getViewType();
+        const entityType = evDataService.getEntityType();
+        const markedReportRows = localStorageService.getMarkedRows(viewType, entityType);
 
 		const markedSubtotals = evDataService.getMarkedSubtotals();
 
