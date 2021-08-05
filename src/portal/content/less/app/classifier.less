@@ -126,11 +126,14 @@
   }
 
   .classifier-node {
+    position: relative;
     cursor: pointer;
 
     .classifier-node-row {
-      div {
-        height: 36px;
+
+      .row-content {
+        // height: 36px;
+        height: 26px;
         width: 100%;
         display: flex;
         flex-direction: row;
@@ -140,6 +143,13 @@
       .pointer {
         color: #747474;
       }
+
+      /* .drop-inside-node-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 65%;
+      } */
 
       &.opened {
         .pointer {
@@ -186,6 +196,10 @@
         border: none;
       }
     }
+  }
+
+  .node-drop-container {
+    height: 10px;
   }
 
 }
