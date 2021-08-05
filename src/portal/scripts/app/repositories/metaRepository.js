@@ -56,6 +56,8 @@
     var getEntityAttrs = function (entity) {
         var entityAttrs = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
+            "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),
