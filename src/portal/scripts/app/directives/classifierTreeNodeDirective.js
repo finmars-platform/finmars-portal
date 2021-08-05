@@ -28,7 +28,7 @@
 					name: ''
 				}
 
-				scope.emptyLast = utilsHelper.emptyLastComparator;
+				const classifierNodeRowElem = elem[0].querySelector('.classifierNodeRow');
 
 				const focusInput = () => {
 					const inputElement = elem[0].querySelector('input.classifier-name');
@@ -43,6 +43,12 @@
 				scope.isSaveDisabled = () => {
 					return !scope.currentEdit.name.trim();
 				}
+
+				classifierNodeRowElem.addEventListener('dragstart', cTreeVm.onDragStart);
+
+				scope.getPathToNodeAsString = function () {
+					return scope.node.frontOptions.treePath.join(',');
+				};
 
 			}
 		}

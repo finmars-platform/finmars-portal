@@ -85,15 +85,18 @@
 		    treeLevel.forEach((node, index) => {
 
 		        node.level = levelNumber;
-                node.order = index;
-                node.isActive = activeNodesIdsBeforeUpdate.includes(node.id);
+                // node.order = index;
+                // node.isActive = activeNodesIdsBeforeUpdate.includes(node.id);
 
 				node.frontOptions = {};
-                node.frontOptions.treePath = [index];
+				node.frontOptions.isActive = activeNodesIdsBeforeUpdate.includes(node.id);
+                // node.frontOptions.treePath = [index];
+				node.frontOptions.pathToNode = [node.id];
 				node.frontOptions.closed = node.level > 0;
 				node.frontOptions.hasActiveChild = false;
 
-                if (parentNode) node.frontOptions.treePath = parentNode.frontOptions.treePath.concat(['children', index]);
+                // if (parentNode) node.frontOptions.treePath = parentNode.frontOptions.treePath.concat(['children', index]);
+				if (parentNode) node.frontOptions.pathToNode = parentNode.frontOptions.pathToNode.concat([node.id]);
 
                 if (node.children.length) {
 
@@ -214,9 +217,10 @@
 
             vm.readyStatus = false;
             const classifiers = getClearTree(vm.tree);
+			// console.log("testing.updateClassifier ClearTree", JSON.parse(JSON.stringify(classifiers)));
             vm.classifier.classifiers = classifiers;
             activeNodesIdsBeforeUpdate = vm.activeNodes.map(({id}) => id);
-
+			// console.log("testing.updateClassifier classifier", JSON.parse(JSON.stringify(vm.classifier)));
             attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier).then(function () {
                 vm.activeNodes = [];
                 vm.getTree();
@@ -297,7 +301,8 @@
 			vm.getTree();
 
 			vm.classifierTreeEventService.addEventListener(classifierEvents.CLASSIFIER_TREE_CHANGED, () => {
-                updateClassifier()
+				// console.log("testing CLASSIFIER_TREE_CHANGED tree", JSON.parse(JSON.stringify(vm.tree)));
+                updateClassifier();
             });
 
             vm.classifierTreeEventService.addEventListener(classifierEvents.CANCEL_EDIT_NODE, () => {
