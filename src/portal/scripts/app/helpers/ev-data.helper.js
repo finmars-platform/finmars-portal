@@ -1,9 +1,11 @@
 (function () {
 
+	var metaService = require('../services/metaService');
+	var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+
     var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
-    var metaService = require('../services/metaService');
 
     var getNextPage = function (options, event, entityViewerDataService) {
 
@@ -318,6 +320,28 @@
 
     };
 
+	const filterByRowColor = function (flatList, evDataService) {
+
+		var rowTypeFilters = evDataService.getRowTypeFilters();
+		var filterByColor = rowTypeFilters.markedRowFilters;
+
+		if (filterByColor === 'none') { //  color filter disabled
+			return flatList;
+		}
+
+		var entityType = evDataService.getEntityType();
+		var markedRows = localStorageService.getMarkedRows(false, entityType);
+
+		return flatList.filter(item => {
+
+			if (item.___type !== 'object') return true;
+			// does color of row matches to filter
+			return markedRows.hasOwnProperty(item.id) && markedRows[item.id].color === filterByColor;
+
+		});
+
+	};
+
     var getFlatStructure = function (evDataService) {
 
         var data = JSON.parse(JSON.stringify(evDataService.getData()));
@@ -334,6 +358,8 @@
         // console.log('getFlatStructure.list', list);
 
         list = removeItemsFromFoldedGroups(list);
+
+        list = filterByRowColor(list, evDataService);
 
         // console.log('list', list);
 
@@ -933,6 +959,10 @@
         if (controlObj) {
             result.push(controlObj)
         }
+
+		evDataService.setUnfilteredFlatList(result);
+
+		result = filterByRowColor(result, evDataService);
 
         console.log('getObjectsFromSelectedGroups.result', result)
 

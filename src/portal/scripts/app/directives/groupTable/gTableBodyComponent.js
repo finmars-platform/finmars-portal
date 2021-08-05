@@ -144,16 +144,14 @@
 
                     // var flatList = evDataHelper.getFlatStructure(scope.evDataService);
                     var flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
-                    // flatList.shift(); // remove root group
 
-                    flatList = flatList.map(function (item, i) {
+					console.log('renderEntityViewer.flatlist', flatList);
+                    /* flatList = flatList.map(function (item, i) {
                         item.___flat_list_index = i;
                         return item
                     });
 
-                    console.log('renderEntityViewer.flatlist', flatList);
-
-                    scope.evDataService.setUnfilteredFlatList(flatList);
+                    scope.evDataService.setUnfilteredFlatList(flatList); */
 
 					var filters = scope.evDataService.getFilters();
 					var regularFilters = evFilterService.convertIntoRegularFilters(filters.frontend);

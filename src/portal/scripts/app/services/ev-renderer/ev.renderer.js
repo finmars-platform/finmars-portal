@@ -6,6 +6,9 @@
     var objectRender = require('./object.renderer');
     var controlRender = require('./control.renderer');
     var placeholderRender = require('./placeholder.renderer');
+
+	var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
+
     var evEvents = require('../../services/entityViewerEvents');
 
     var render = function (elem, projection, evDataService, evEventService) {
@@ -24,6 +27,9 @@
 
         var verticalAdditions = evDataService.getVerticalAdditions();
         var viewContext = evDataService.getViewContext();
+
+        var entityType = evDataService.getEntityType();
+		var markedRows = localStorageService.getMarkedRows(false, entityType);
 
         var columnsWidthSum = 0;
 		columns.forEach(function (column) {
@@ -47,7 +53,7 @@
                 //     renderedRow = groupRender.render(evDataService, item, groups);
                 //     break;
                 case 'object':
-                    renderedRow = objectRender.render(evDataService, item, columns, currentMember, viewContext, verticalAdditions);
+                    renderedRow = objectRender.render(evDataService, item, columns, currentMember, viewContext, verticalAdditions, markedRows);
                     break;
                 case 'control':
                     renderedRow = controlRender.render(evDataService, item, previousItem, columnsWidthSum);

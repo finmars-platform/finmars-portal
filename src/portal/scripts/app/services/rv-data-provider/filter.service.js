@@ -400,19 +400,14 @@
 
     };
 
-    const filterByRowType = function (items, color) {
+    /* const filterByRowType = function (items, color) {
 
         if (color === 'none') {
             return items;
         }
 
-        let markedReportRows = localStorage.getItem("marked_report_rows");
-
-        if (markedReportRows) {
-            markedReportRows = JSON.parse(markedReportRows);
-        } else {
-            markedReportRows = {};
-        }
+		var entityType = evDataService.getEntityType();
+		var markedReportRows = localStorageService.getMarkedRows(true, entityType);
 
         const result = items.filter((item) => {
 
@@ -424,7 +419,7 @@
 
         return result;
 
-    };
+    }; */
 
     var getRegularFilters = function (options) {
 
@@ -482,7 +477,7 @@
     module.exports = {
         filterTableRows: filterTableRows,
         filterByGroupsFilters: filterByGroupsFilters,
-        filterByRowType: filterByRowType,
+        // filterByRowType: filterByRowType,
         getRegularFilters: getRegularFilters,
         convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters
     }
