@@ -8,7 +8,7 @@
 	const evEvents = require('../services/entityViewerEvents');
 
 	const toastNotificationService = require('../../../../core/services/toastNotificationService');
-	const localStorageService = require('../../../../core/services/localStorageService');
+	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
     let getLinkingToFilters = function (layout) {
 
@@ -84,22 +84,24 @@
 
     };
 
-    const saveRowTypeFiltersToLocalStorage = function (entityViewerDataService) {
+    const saveRowTypeFiltersToLocalStorage = function (entityViewerDataService, isReport) {
 
         const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
         if (rowTypeFilters) {
-			const color = rowTypeFilters.markedRowFilters || 'none';
+
+        	const color = rowTypeFilters.markedRowFilters || 'none';
 			const entityType = entityViewerDataService.getEntityType();
-			const viewType = entityViewerDataService.getViewType();
-			localStorageService.cacheRowTypeFilter(viewType, entityType, color);
+
+			localStorageService.cacheRowTypeFilter(isReport, entityType, color);
+
         }
 
     };
 
     const saveLayoutList = function (entityViewerDataService, isReport) {
 
-        saveRowTypeFiltersToLocalStorage(entityViewerDataService);
+        saveRowTypeFiltersToLocalStorage(entityViewerDataService, isReport);
 
     	var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(isReport);
 

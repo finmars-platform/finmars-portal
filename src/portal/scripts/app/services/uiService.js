@@ -6,7 +6,7 @@
     'use strict';
 
 	const metaContentTypesService = require('./metaContentTypesService');
-	const localStorageService = require('../../../../core/services/localStorageService');
+	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
     const ecosystemDefaultService = require('./ecosystemDefaultService');
 
 	const uiRepository = require('../repositories/uiRepository');

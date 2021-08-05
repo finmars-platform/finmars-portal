@@ -381,52 +381,99 @@
 		return storageValue ? JSON.parse(storageValue) : {};
 	};
 
-	const getRowTypeFilter = (viewType, entityType) => {
+	const getRowTypeFilter = (isReport, entityType) => {
+
 		const markedRowsData = getMarkedRowsData();
-		if (markedRowsData[viewType] && markedRowsData[viewType][entityType] && markedRowsData[viewType][entityType]['row_type_filter']) {
-			return markedRowsData[viewType][entityType]['row_type_filter'];
+		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+
+		if (markedRowsData[viewerType] && markedRowsData[viewerType][entityType] && markedRowsData[viewerType][entityType]['row_type_filter']) {
+			return markedRowsData[viewerType][entityType]['row_type_filter'];
 		}
 
 		return 'none';
 	};
 
-	const cacheRowTypeFilter = (viewType, entityType, color) => {
+	const cacheRowTypeFilter = (isReport, entityType, color) => {
+
 		const markedRowsData = getMarkedRowsData();
-		if (!markedRowsData[viewType]) {
-			markedRowsData[viewType] = {};
+		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+
+		if (!markedRowsData[viewerType]) {
+			markedRowsData[viewerType] = {};
 		}
-		if (!markedRowsData[viewType][entityType]) {
-			markedRowsData[viewType][entityType] = {
+
+		if (!markedRowsData[viewerType][entityType]) {
+			markedRowsData[viewerType][entityType] = {
 				row_type_filters: 'none',
 				marked_rows: []
 			}
 		}
-		markedRowsData[viewType][entityType]['row_type_filter'] = color;
+
+		markedRowsData[viewerType][entityType]['row_type_filter'] = color;
+
 		cacheMarkedRowsData(markedRowsData);
+
 	};
 
-	const getMarkedRows = (viewType, entityType) => {
-		const markedRowsData = getMarkedRowsData();
-		if (markedRowsData[viewType] && markedRowsData[viewType][entityType] && markedRowsData[viewType][entityType]['marked_rows']) {
-			return markedRowsData[viewType][entityType]['marked_rows'];
-		}
+	const getMarkedRows = (isReport, entityType) => {
 
-		return [];
-	};
-
-	const cacheMarkedRows = (viewType, entityType, rows) => {
 		const markedRowsData = getMarkedRowsData();
-		if (!markedRowsData[viewType]) {
-			markedRowsData[viewType] = {};
-		}
-		if (!markedRowsData[viewType][entityType]) {
-			markedRowsData[viewType][entityType] = {
-				row_type_filters: 'none',
-				marked_rows: {}
+
+		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+
+		if (markedRowsData[viewerType]) {
+
+			if (isReport && markedRowsData[viewerType]['marked_rows']) {
+				return markedRowsData[viewerType]['marked_rows'];
+
+			} else if (markedRowsData[viewerType][entityType] && markedRowsData[viewerType][entityType]['marked_rows']) {
+
+				return markedRowsData[viewerType][entityType]['marked_rows'];
+
 			}
+
 		}
-		markedRowsData[viewType][entityType]['marked_rows'] = rows;
+
+		return {};
+
+	};
+
+	const cacheMarkedRows = (isReport, entityType, rows) => {
+
+		const markedRowsData = getMarkedRowsData();
+		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+
+		if (!markedRowsData[viewerType]) {
+			markedRowsData[viewerType] = {};
+		}
+
+		if (isReport) {
+			// for report viewer marked rows stored in one place because they area shared across report entityTypes (balance-report, pl-report etc)
+			if (!markedRowsData[viewerType]['marked_rows']) markedRowsData[viewerType]['marked_rows'] = {};
+
+			if (!markedRowsData[viewerType][entityType]) {
+				markedRowsData[viewerType][entityType] = {
+					row_type_filters: 'none',
+				}
+			}
+
+			markedRowsData[viewerType]['marked_rows'] = rows;
+
+		} else {
+
+			if (!markedRowsData[viewerType][entityType]) {
+				markedRowsData[viewerType][entityType] = {
+					row_type_filters: 'none',
+					marked_rows: {}
+				}
+			}
+
+			markedRowsData[viewerType][entityType]['marked_rows'] = rows;
+
+		}
+
 		cacheMarkedRowsData(markedRowsData);
+
 	};
 
 	module.exports = {

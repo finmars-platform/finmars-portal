@@ -3,6 +3,9 @@
     'use strict';
 
 	const evDataHelper = require('../helpers/ev-data.helper');
+	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+
+	const evEvents = require('../services/entityViewerEvents');
 
     module.exports = function () {
 
@@ -300,7 +303,52 @@
 
 		}
 
-		function createRowColorPickerMenu (clickData, evDataService, evEventService, clearDropdownsFn, markRowByColorFn) {
+		function markRowByColor (objectId, parentGroupHashId, evDataService, evEventService, color) {
+
+			var isReport = evDataService.isEntityReport();
+			var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+
+			if (isReport && obj === null) { // row is subtotal
+
+				const markedSubtotals = evDataService.getMarkedSubtotals();
+
+				if (color === 'undo_mark_row') {
+					delete markedSubtotals[objectId];
+				} else {
+					markedSubtotals[objectId] = color;
+				}
+
+				evDataService.setMarkedSubtotals(markedSubtotals);
+				evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+				return;
+
+			}
+
+			// var markedReportRows = localStorage.getItem("marked_report_rows");
+			var entityType = evDataService.getEntityType();
+			var markedReportRows = localStorageService.getMarkedRows(isReport, entityType);
+
+			/* if (markedReportRows) {
+				markedReportRows = JSON.parse(markedReportRows);
+			} else {
+				markedReportRows = {};
+			} */
+
+			if (color === 'undo_mark_row') {
+				delete markedReportRows[obj.id]
+			} else {
+				markedReportRows[obj.id] = {
+					color: color
+				};
+			}
+
+			localStorageService.cacheMarkedRows(isReport, entityType, markedReportRows)
+
+			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+		}
+
+		function createRowColorPickerMenu (clickData, evDataService, evEventService, clearDropdownsFn) {
 
 			// var menuElem = clickData.actionElem;
 			var menuElem = clickData.target;
@@ -332,7 +380,7 @@
 			var onOptionClick = function (event) {
 
 				var rowColor = event.currentTarget.dataset.color;
-				markRowByColorFn(clickData.___id, clickData.___parentId, evDataService, evEventService, rowColor);
+				markRowByColor(clickData.___id, clickData.___parentId, evDataService, evEventService, rowColor);
 
 				clearDropdownsFn();
 
@@ -358,6 +406,7 @@
 			calculateMenuPosition: calculateMenuPosition,
 			calculateStaticMenuPosition: calculateStaticMenuPosition,
 
+			markRowByColor: markRowByColor,
 			createRowColorPickerMenu: createRowColorPickerMenu
 			//endregion
         };

@@ -6,7 +6,7 @@
 
         'use strict';
 
-        var localStorageService = require('../../../../../core/services/localStorageService');
+        var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
         // var usersService = require('../../services/usersService');

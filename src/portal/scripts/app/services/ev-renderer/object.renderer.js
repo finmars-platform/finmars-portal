@@ -367,7 +367,7 @@
 
     };
 
-    var getRowGeneralClasses = function (obj, classList) {
+    var getRowGeneralClasses = function (obj, classList, markedRows) {
 
 		if (obj.___context_menu_is_opened) {
 			classList.push('context-menu-opened');
@@ -387,7 +387,7 @@
 
     }
 
-    var render = function (evDataService, obj, columns, currentMember, viewContext, verticalAdditions) {
+    var render = function (evDataService, obj, columns, currentMember, viewContext, verticalAdditions, markedRows) {
 
         var classList = ['g-row'];
 
@@ -399,8 +399,17 @@
         // rowSelection = '<div class="g-row-selection">' + getIcon(obj, currentMember, classList) + '</div>';
 		rowSelection = renderHelper.getRowSelectionElem(obj);
 
+		var rowColor = 'none';
+
+		if (markedRows.hasOwnProperty(obj.id)) {
+
+			rowColor = markedRows[obj.id].color;
+			classList.push('g-row-marked-' + rowColor);
+
+		}
+
 		var statusIcon = getStatusIcon(obj, currentMember);
-		var rowSettings = renderHelper.getRowSettings(obj.___type, 'none', statusIcon);
+		var rowSettings = renderHelper.getRowSettings(obj.___type, rowColor, statusIcon);
 
         addReconColorization(obj, classList, viewContext, verticalAdditions);
 

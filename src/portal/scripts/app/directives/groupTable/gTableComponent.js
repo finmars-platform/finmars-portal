@@ -9,7 +9,7 @@
 
     var metaService = require('../../services/metaService');
     var rvDataHelper = require('../../helpers/rv-data.helper');
-    var localStorageService = require('../../../../../core/services/localStorageService');
+    var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     module.exports = function () {
         return {

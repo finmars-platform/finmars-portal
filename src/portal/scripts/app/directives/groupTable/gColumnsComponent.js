@@ -16,7 +16,7 @@
     var renderHelper = require('../../helpers/render.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-    const localStorageService = require('../../../../../core/services/localStorageService');
+    const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -37,7 +37,6 @@
 				scope.isReport = scope.evDataService.isEntityReport();
 
                 scope.entityType = scope.evDataService.getEntityType();
-                scope.viewType = scope.evDataService.getViewType();
                 scope.rowStatusFilterIcon = `<span class="material-icons">star_outline</span>`;
 				/**
 				 * What filters are now shown in filter area (front or back)
@@ -378,6 +377,7 @@
 
 					let rowTypeFiltersData = scope.evDataService.getRowTypeFilters();
 
+					scope.rowFilterColor = color;
 					rowTypeFiltersData.markedRowFilters = color;
 
 					scope.evDataService.setRowTypeFilters(rowTypeFiltersData);
@@ -386,7 +386,7 @@
 
                 };
 
-                scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.viewType, scope.entityType);
+                scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.isReport, scope.entityType);
                 scope.changeRowFilterColor(scope.rowFilterColor);
 
                 // <Victor 2020.12.14 #69 New report viewer design>

@@ -18,7 +18,7 @@
     var uiService = require('../../services/uiService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-    const localStorageService = require('../../../../../core/services/localStorageService');
+    const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     var RvScrollManager = require('./rv-scroll.manager');
 
@@ -1058,7 +1058,7 @@
 						case 'open_row_color_picker':
 
 							event.stopPropagation();
-							evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns, markRowByColor);
+							evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns);
 
 							break;
 
@@ -1496,7 +1496,7 @@
 			`<div class="ev-dropdown-option" 
 				  data-ev-dropdown-action="toggle_row"
 				  data-object-id="${groupId}" 
-				  data-parent-group-hash-id="${parentGroupHashId}">${toggleRowName}</div>`
+				  data-parent-group-hash-id="${parentGroupHashId}">${toggleRowName}</div>`;
 
 		return result;
 
@@ -1761,50 +1761,6 @@
 		return result;
 
 	};
-
-    var markRowByColor = function (objectId, parentGroupHashId, evDataService, evEventService, color) {
-
-		var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-        if (obj === null) { // row is subtotal
-
-            const markedSubtotals = evDataService.getMarkedSubtotals();
-
-            if (color === 'undo_mark_row') {
-                delete markedSubtotals[objectId];
-            } else {
-                markedSubtotals[objectId] = color;
-            }
-
-            evDataService.setMarkedSubtotals(markedSubtotals);
-            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-            return;
-
-        }
-
-		var markedReportRows = localStorage.getItem("marked_report_rows");
-
-		if (markedReportRows) {
-			markedReportRows = JSON.parse(markedReportRows);
-		} else {
-			markedReportRows = {};
-		}
-
-		if (color === 'undo_mark_row') {
-			delete markedReportRows[obj.id]
-		} else {
-			markedReportRows[obj.id] = {
-				color: color
-			};
-		}
-
-		const viewType = evDataService.getViewType();
-        const entityType = evDataService.getEntityType();
-        localStorageService.cacheMarkedRows(viewType, entityType, markedReportRows)
-
-		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-	};
 	/**
 	 * transfer data into event listener callback executeContextMenuAction() or executeSubtotalContextMenuAction()
 	 *
@@ -1838,7 +1794,7 @@
 
 			if (objectId && color && parentGroupHashId) {
 
-				markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+				evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
 				/* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 				var markedReportRows = localStorage.getItem("marked_report_rows");
 

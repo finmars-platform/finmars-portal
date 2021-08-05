@@ -113,6 +113,8 @@
 					scope.evContentElement.scrollTop = 0;
 
 					scope.evDataService.setSelectAllRowsState(false);
+
+					scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 					scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)

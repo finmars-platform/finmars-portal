@@ -117,9 +117,9 @@
 			if (!statusIcon) statusIcon = 'star_outline';
 
 			rowStatus =
-				`<div class="g-row-settings-btn position-relative">
+				`<div class="g-row-settings-btn position-relative" disabled>
 					${statusIcon}
-					<span class="material-icons arrow-icon">arrow_drop_down</span>
+					<span class="material-icons arrow-icon visibility-hidden">arrow_drop_down</span>
 					<button class="g-click-catcher gTableActionBtn" data-click-action-type="open_row_status_picker"></button>
 				</div>`;
 		}

@@ -12,7 +12,7 @@
     var DashboardComponentEventService = require('../../services/eventService');
 
 	var dashboardHelper = require('../../helpers/dashboard.helper');
-    const localStorageService = require('../../../../../core/services/localStorageService');
+    const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
 	module.exports = function ($mdDialog) {
         return {

@@ -689,7 +689,7 @@
 							case 'open_row_color_picker':
 
 								event.stopPropagation();
-								evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns, markRowByColor);
+								evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns);
 
 								break;
 
@@ -836,7 +836,18 @@
 
         var dropdownActionData = {};
 
-        if (dropdownAction === 'toggle_row') {
+        if (dropdownAction === 'mark_row') {
+
+        	var color = event.target.dataset.evDropdownActionDataColor;
+
+			if (objectId && color && parentGroupHashId) {
+				evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+			}
+
+			clearDropdownsAndRows(evDataService, evEventService, true);
+
+		}
+        else if (dropdownAction === 'toggle_row') {
 
             var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 			var activeObjChanged = false;
@@ -1052,10 +1063,6 @@
         return innerHTMLString;
 
     };
-
-    var markRowByColor = function (objectId, parentGroupHashId, evDataService, evEventService, color) {
-
-	};
 
     var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
