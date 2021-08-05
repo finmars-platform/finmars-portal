@@ -369,6 +369,66 @@
 
 	};
 
+	const cacheMarkedRowsData = (markedRowsData) => {
+		const key = getPropertyForStoring().concat('_marked_g_rows');
+		localStorage.setItem(key, JSON.stringify(markedRowsData));
+	};
+
+	const getMarkedRowsData = () => {
+		const key = getPropertyForStoring().concat('_marked_g_rows');
+		const storageValue = localStorage.getItem(key);
+
+		return storageValue ? JSON.parse(storageValue) : {};
+	};
+
+	const getRowTypeFilter = (viewType, entityType) => {
+		const markedRowsData = getMarkedRowsData();
+		if (markedRowsData[viewType] && markedRowsData[viewType][entityType] && markedRowsData[viewType][entityType]['row_type_filter']) {
+			return markedRowsData[viewType][entityType]['row_type_filter'];
+		}
+
+		return 'none';
+	};
+
+	const cacheRowTypeFilter = (viewType, entityType, color) => {
+		const markedRowsData = getMarkedRowsData();
+		if (!markedRowsData[viewType]) {
+			markedRowsData[viewType] = {};
+		}
+		if (!markedRowsData[viewType][entityType]) {
+			markedRowsData[viewType][entityType] = {
+				row_type_filters: 'none',
+				marked_rows: []
+			}
+		}
+		markedRowsData[viewType][entityType]['row_type_filter'] = color;
+		cacheMarkedRowsData(markedRowsData);
+	};
+
+	const getMarkedRows = (viewType, entityType) => {
+		const markedRowsData = getMarkedRowsData();
+		if (markedRowsData[viewType] && markedRowsData[viewType][entityType] && markedRowsData[viewType][entityType]['marked_rows']) {
+			return markedRowsData[viewType][entityType]['marked_rows'];
+		}
+
+		return [];
+	};
+
+	const cacheMarkedRows = (viewType, entityType, rows) => {
+		const markedRowsData = getMarkedRowsData();
+		if (!markedRowsData[viewType]) {
+			markedRowsData[viewType] = {};
+		}
+		if (!markedRowsData[viewType][entityType]) {
+			markedRowsData[viewType][entityType] = {
+				row_type_filters: 'none',
+				marked_rows: {}
+			}
+		}
+		markedRowsData[viewType][entityType]['marked_rows'] = rows;
+		cacheMarkedRowsData(markedRowsData);
+	};
+
 	module.exports = {
 
 		setGlobalDataService: setGlobalDataService, // TODO: inject localStorageService into dependencies
@@ -383,7 +443,12 @@
 		cacheReportData: cacheReportData,
 		getReportData: getReportData,
 		getReportDataForLayout: getReportDataForLayout,
-		cacheReportDataForLayout: cacheReportDataForLayout
+		cacheReportDataForLayout: cacheReportDataForLayout,
+
+		getRowTypeFilter: getRowTypeFilter,
+		cacheRowTypeFilter: cacheRowTypeFilter,
+		getMarkedRows: getMarkedRows,
+		cacheMarkedRows: cacheMarkedRows
 
 	}
 // };

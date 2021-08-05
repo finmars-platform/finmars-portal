@@ -31,8 +31,6 @@
 			templateUrl: "views/directives/two-fields-multiselect-view.html",
 			link: function (scope, elem, attr, ngModel) {
 
-				console.log('# scope.model', scope.model)
-
 				scope.inputText = '';
 				scope.error = '';
 				scope.orderOptions = {
