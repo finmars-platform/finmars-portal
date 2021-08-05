@@ -200,7 +200,7 @@
 		const defaultTextFilterType = "contains";
 		const defaultNumberAndDateFilterType = "equal";
 
-		return valueType === 10 ? defaultTextFilterType: defaultNumberAndDateFilterType;
+		return ([10, 30, 'field'].includes(valueType)) ? defaultTextFilterType: defaultNumberAndDateFilterType;
 
 	};
 

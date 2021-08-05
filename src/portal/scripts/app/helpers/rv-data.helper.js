@@ -1,12 +1,12 @@
 (function () {
 
-	var localStorageService = require('../../../../core/services/localStorageService');
+	var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
     var rvSubtotalHelper = require('./rv-subtotal.service');
     var evDataHelper = require('./ev-data.helper');
-    var metaHelper = require('./meta.helper');
+    // var metaHelper = require('./meta.helper');
 
     var getGroupsByParent = function (parentId, evDataService) {
 
@@ -649,13 +649,8 @@
 
 	const getMarkedRowsAndSubtotals = function (color, evDataService) {
 
-		let markedReportRows = localStorage.getItem("marked_report_rows");
-
-		if (markedReportRows) {
-			markedReportRows = JSON.parse(markedReportRows);
-		} else {
-			markedReportRows = {};
-		}
+        const entityType = evDataService.getEntityType();
+        const markedReportRows = localStorageService.getMarkedRows(true, entityType);
 
 		const markedSubtotals = evDataService.getMarkedSubtotals();
 
@@ -670,6 +665,7 @@
 	};
 
 	const filterByRowColor = function (list, evDataService) {
+
 		const rowTypeFilters = evDataService.getRowTypeFilters();
 		const color = rowTypeFilters.markedRowFilters;
 
@@ -678,13 +674,13 @@
 		}
 
 		const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService);
-		const undeletedKeys = [];
+		const notDeletedKeys = [];
 
 		list.forEach(item => {
 
 			if (item.___group_name === 'root') { // root subtotal is present always
 
-				undeletedKeys.push(item.___id)
+				notDeletedKeys.push(item.___id)
 
 			}
 
@@ -693,8 +689,8 @@
 			if (rowColored) {
 
 				const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
-				undeletedKeys.push(item.___id);
-				undeletedKeys.push(...parents.map(parent => parent.___id));
+				notDeletedKeys.push(item.___id);
+				notDeletedKeys.push(...parents.map(parent => parent.___id));
 
 			}
 
@@ -702,12 +698,12 @@
 
 		return list.filter(item => {
 
-			const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && undeletedKeys.includes(item.___parentId);
-			const isRowColored = undeletedKeys.includes(item.___id);
+			const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && notDeletedKeys.includes(item.___parentId);
+			const isRowColored = notDeletedKeys.includes(item.___id);
 
 			if (isSubtotalContainsMarkedRows) {
 
-				item.results = item.results.filter(row => undeletedKeys.includes(row.id));
+				item.results = item.results.filter(row => notDeletedKeys.includes(row.id));
 
 			}
 
@@ -882,27 +878,24 @@
 
     var calculateProjection = function (flatList, evDataService) {
 
-        console.time('Creating projection');
+        // console.time('Creating projection');
 
         var rowHeight = evDataService.getRowHeight();
         var offsetPx = evDataService.getVirtualScrollOffsetPx();
         var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
-
+		console.log("dubugging.rowsToShow calculateProjection data", rowHeight, offsetPx, step);
         evDataService.setProjectionLastFrom(from);
 
         var to = from + (step / 2);
 
-        console.timeEnd('Creating projection');
+        // console.timeEnd('Creating projection');
 
         from = from - (step / 2) // two rows, before viewport
         if (from < 0) {
             from = 0;
         }
-        // console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
-        // console.log('View Context ' + evDataService.getViewContext() + ' from', from);
-        // console.log('View Context ' + evDataService.getViewContext() + ' to', to);
-
+		console.log("dubugging.rowsToShow calculateProjection from to", from, to);
         return flatList.slice(from, to);
 
     };

@@ -6,7 +6,7 @@
 
         'use strict';
 
-        var localStorageService = require('../../../../../core/services/localStorageService');
+        var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
         // var usersService = require('../../services/usersService');
@@ -33,7 +33,7 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, usersService) {
+        module.exports = function ($scope, $mdDialog, usersService, gFiltersHelper) {
 
             var vm = this;
 
@@ -70,8 +70,9 @@
 			//region Functions for context menu
 			var updateTableAfterEntityChanges = function (res) {
 
-                vm.entityViewerDataService.setActiveObjectAction(null);
-                vm.entityViewerDataService.setActiveObjectActionData(null);
+                /*vm.entityViewerDataService.setActiveObjectAction(null);
+                vm.entityViewerDataService.setActiveObjectActionData(null);*/
+				vm.entityViewerDataService.setRowsActionData(null);
 
                 if (res && res.res === 'agree') {
 
@@ -381,7 +382,7 @@
                     });
 
                 } else {
-                    vm.grandTotalValue = val
+                    vm.grandTotalValue = val;
                 }
 
                 // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
@@ -1237,7 +1238,10 @@
 						}
 
 						if (vm.componentData.type === 'report_viewer_grand_total') {
+
+							gFiltersHelper.insertActiveObjectDataIntoFilters(vm.entityViewerDataService, vm.entityViewerEventService);
 							vm.updateGrandTotalComponent();
+
 						}
 
 					});
@@ -1857,7 +1861,9 @@
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.componentData = $scope.$parent.vm.componentData;
                 vm.userSettings = vm.componentData.user_settings;
-                vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
+                vm.dashboardComponentElement = $scope.$parent.vm.componentElement;
+
+				vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
                 vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
                 vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
@@ -2015,16 +2021,18 @@
 
                 console.log('$scope.$parent.vm.contentType', $scope.$parent.vm.contentType)
 
-                vm.entityViewerDataService.setEntityType(vm.entityType);
+                /* vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 				vm.entityViewerDataService.setRowHeight(36);
 				vm.entityViewerDataService.setVirtualScrollStep(500);
 				vm.entityViewerDataService.setCurrentMember(vm.currentMember);
 
-                /* if (vm.componentData.type === 'report_viewer_split_panel') {
+                if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
                 } */
+				rvSharedLogicHelper.setLayoutDataForView();
+				vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setUseFromAbove(true);
 
                 var layoutId = vm.componentData.settings.layout;

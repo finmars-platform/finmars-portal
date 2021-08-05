@@ -9,12 +9,16 @@
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 	var metaHelper = require('../../helpers/meta.helper');
 
+	var EvRvDomManagerService = require('../evRvDomManagerService');
+	var evRvDomManagerService = new EvRvDomManagerService();
+
     var priceHistoryService = require('../../services/priceHistoryService'); // TODO this is temp service here
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var uiService = require('../../services/uiService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     var RvScrollManager = require('./rv-scroll.manager');
 
@@ -120,9 +124,9 @@
         var clickData = {};
         var rowElem = event.target.closest('.g-row');
 
-        clickData.isShiftPressed = event.shiftKey
-        clickData.isCtrlPressed = event.ctrlKey
-		clickData.target = event.target
+        clickData.isShiftPressed = event.shiftKey;
+        clickData.isCtrlPressed = event.ctrlKey;
+		clickData.target = event.target;
 
         if (rowElem) {
 
@@ -139,11 +143,11 @@
 				clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 				if (rowElem.dataset.subtotalType) {
-					clickData.___subtotal_type = rowElem.dataset.subtotalType
+					clickData.___subtotal_type = rowElem.dataset.subtotalType;
 				}
 
 				if (rowElem.dataset.subtotalSubtype) {
-					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype
+					clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
 				}
 
 			}
@@ -154,18 +158,22 @@
 
 				clickData.___parentId = targetElem.dataset.objectId;
 
-			} else {
+			} else if (targetElem.classList.contains('gTableActionBtn')) {
+				// clickData.actionElem = clickedActionBtn;
+				clickData.actionType = targetElem.dataset.clickActionType;
+			}
+			/* else {
 
 				var clickedActionBtn = targetElem.closest(".gTableActionBtn");
 
 				if (clickedActionBtn) {
 
-					clickData.actionElem = clickedActionBtn
-					clickData.actionType = clickedActionBtn.dataset.clickActionType
+					clickData.actionElem = clickedActionBtn;
+					clickData.actionType = clickedActionBtn.dataset.clickActionType;
 
 				}
 
-			}
+			} */
 
             /* if (targetElem.parentElement.classList.contains("gRowColorPicker")) {
 
@@ -328,7 +336,7 @@
 
     var handleShiftSelection = function (evDataService, evEventService, clickData) {
 
-        var lastActiveRow = evDataService.getLastActivatedRow();
+        var lastActiveRow = evDataService.getActiveObjectRow();
 
         console.log('lastActiveRow', lastActiveRow);
 
@@ -340,7 +348,7 @@
 
                 obj.___is_activated = !obj.___is_activated;
                 evDataService.setObject(obj);
-                evDataService.setLastActivatedRow(obj);
+                evDataService.setActiveObjectRow(obj);
 
             } else {
 
@@ -361,7 +369,7 @@
                     parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
                 }
 
-                evDataService.setLastActivatedRow({
+                evDataService.setActiveObjectRow({
                     ___id: clickData.___id,
                     ___parentId: clickData.___parentId
                 });
@@ -505,7 +513,7 @@
 
         objects.forEach(function (item) {
             item.___is_activated = false;
-            item.___is_last_activated = false;
+            item.___is_active_object = false;
 
             evDataService.setObject(item);
 
@@ -564,45 +572,80 @@
 
 	};
 
+    var areAllRowsActive = function (evDataService) {
+
+		var flatList = evDataService.getFlatList();
+
+		for (var item of flatList) {
+
+			if (item.___type === "subtotal") {
+
+				if (item.___level > 0) { // not grandtotal
+
+					var subtotalType = item.___subtotal_subtype ? item.___subtotal_subtype : item.___subtotal_type;
+					var parent = evDataService.getData(item.___parentId);
+
+					if (subtotalType === 'area' && !parent.___is_area_subtotal_activated) {
+						return false;
+					}
+
+					if (subtotalType === 'line' && !parent.___is_line_subtotal_activated) {
+						return false;
+					}
+
+				}
+
+			} else if (item.___type === "object") {
+
+				if (!item.___is_activated) {
+					return false;
+				}
+
+			}
+
+		}
+
+		return true;
+
+	};
+
     var handleSubtotalClick = function (clickData, evDataService, evEventService) {
 
         var parent = Object.assign({}, evDataService.getData(clickData.___parentId));
         //console.log("click group handleSubtotalClick data", clickData, parent);
         var subtotal_type;
+		var activeObjRow = evDataService.getActiveObjectRow();
+		var isActiveObject = activeObjRow && activeObjRow.___id === clickData.___id && activeObjRow.___parentId === clickData.___parentId;
 
-        const isAllRowsCheckboxChecked = parent.___is_area_subtotal_activated && parent.___is_line_subtotal_activated;
+        // const isAllRowsCheckboxChecked = parent.___is_area_subtotal_activated && parent.___is_line_subtotal_activated;
 
         if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
 
             handleShiftSelection(evDataService, evEventService, clickData);
 
         }
-
         else if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             if (clickData.___subtotal_subtype) {
-                subtotal_type = clickData.___subtotal_subtype
+                subtotal_type = clickData.___subtotal_subtype;
             } else {
-                subtotal_type = clickData.___subtotal_type
+                subtotal_type = clickData.___subtotal_type;
             }
 
             if (subtotal_type === 'area') {
                 parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
-                parent.___is_line_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
-
-            if (subtotal_type === 'line') {
+            else if (subtotal_type === 'line') {
                 parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
-                parent.___is_area_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
             }
 
-            evDataService.setLastActivatedRow({
+            /* evDataService.setActiveObjectRow({
                 ___id: clickData.___id,
                 ___parentId: clickData.___parentId
-            });
+            }); */
 
-            if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
-                evDataService.setLastActivatedRow(null);
+            if (isActiveObject && !parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
+                evDataService.setActiveObjectRow(null);
             }
 
             evDataService.setData(parent);
@@ -610,11 +653,13 @@
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         }
-
         else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             clearSubtotalActiveState(evDataService);
             evDataHelper.clearObjectActiveState(evDataService);
+
+			parent.___is_area_subtotal_activated = false;
+			parent.___is_line_subtotal_activated = false;
 
             if (clickData.___subtotal_subtype) {
                 subtotal_type = clickData.___subtotal_subtype
@@ -622,22 +667,44 @@
                 subtotal_type = clickData.___subtotal_type
             }
 
-            if (subtotal_type === 'area') {
-                parent.___is_area_subtotal_activated = isAllRowsCheckboxChecked || !parent.___is_area_subtotal_activated;
-                parent.___is_line_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
-            }
+            /* if (subtotal_type === 'area') {
 
-            if (subtotal_type === 'line') {
-                parent.___is_line_subtotal_activated = isAllRowsCheckboxChecked || !parent.___is_line_subtotal_activated;
-                parent.___is_area_subtotal_activated = false; // Victor #111 if earlier all rows was selected, this click must clear other subtotal type activity
-            }
+            	var subtotalIsActive = isAllRowsCheckboxChecked || !parent.___is_area_subtotal_activated;
+                parent.___is_area_subtotal_activated = subtotalIsActive;
+                parent.___is_line_subtotal_activated = false;
 
-            if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
+            } else if (subtotal_type === 'line') {
+
+            	var subtotalIsActive = isAllRowsCheckboxChecked || !parent.___is_line_subtotal_activated;
+                parent.___is_line_subtotal_activated = subtotalIsActive;
+                parent.___is_area_subtotal_activated = false;
+
+            } */
+
+            // if (!parent.___is_area_subtotal_activated && !parent.___is_line_subtotal_activated) {
+			if (isActiveObject) {
+
+				if (subtotal_type === 'area') {
+					parent.___is_area_subtotal_activated = false;
+
+				} else if (subtotal_type === 'line') {
+					parent.___is_line_subtotal_activated = false;
+
+				}
 
                 evDataService.setActiveObject(null);
-                evDataService.setLastActivatedRow(null);
+                evDataService.setActiveObjectRow(null);
 
-            } else if (parent.___level > 0) {
+            }
+			else if (parent.___level > 0) {
+
+				if (subtotal_type === 'area') {
+					parent.___is_area_subtotal_activated = true;
+
+				} else if (subtotal_type === 'line') {
+					parent.___is_line_subtotal_activated = true;
+
+				}
 
                 var groups = evDataService.getGroups();
                 var groupsActiveObj = Object.assign({}, parent);
@@ -659,23 +726,23 @@
                 }
 
                 evDataService.setActiveObject(groupsActiveObj);
-                evDataService.setLastActivatedRow({
+                evDataService.setActiveObjectRow({
                     ___id: clickData.___id,
                     ___parentId: clickData.___parentId
                 });
-
-                evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-
                 //console.log("click group set group activeobj", groupsActiveObj);
             }
 
             evDataService.setData(parent);
 
+			evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         }
 
-        evDataService.setSelectAllRowsState(false); // Victor #111 every click must clear 'all select' checkbox
+        var allRowsAreActive = areAllRowsActive(evDataService);
+
+        evDataService.setSelectAllRowsState(allRowsAreActive);
         evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
     };
@@ -689,38 +756,38 @@
             obj.___is_activated = !obj.___is_activated;
 
             if (!obj.___is_activated) {
-                obj.___is_last_activated = false;
+                obj.___is_active_object = false;
             }
 
             evDataService.setObject(obj);
-            evDataService.setLastActivatedRow(obj);
+            evDataService.setActiveObjectRow(obj);
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        } else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
-
+        }
+        else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
             handleShiftSelection(evDataService, evEventService, clickData);
-
-        } else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+        }
+        else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             clearSubtotalActiveState(evDataService);
 			evDataHelper.clearObjectActiveState(evDataService);
 
             obj.___is_activated = !obj.___is_activated;
-            obj.___is_last_activated = !obj.___is_last_activated;
+            obj.___is_active_object = !obj.___is_active_object;
 
             evDataService.setObject(obj);
 
-            if (obj.___is_last_activated || obj.___is_activated) {
+            if (obj.___is_active_object || obj.___is_activated) {
                 obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
 
                 evDataService.setActiveObject(obj);
-                evDataService.setLastActivatedRow(obj);
+                evDataService.setActiveObjectRow(obj);
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
             } else {
                 evDataService.setActiveObject(null);
-                evDataService.setLastActivatedRow(null);
+                evDataService.setActiveObjectRow(null);
             }
 
 
@@ -728,8 +795,11 @@
 
         }
 
-        evDataService.setSelectAllRowsState(false); // Victor #111 every click must clear 'all select' checkbox
+		var allRowsAreActive = areAllRowsActive(evDataService);
+
+        evDataService.setSelectAllRowsState(allRowsAreActive); // Victor #111 every click must clear 'all select' checkbox
         evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
+
     };
 
     var updateDataFromCellEdit = function (obj, column, evDataService, evEventService) {
@@ -942,7 +1012,6 @@
             	metaHelper.openLinkInNewTab(event);
 
 			}
-
             else if (event.detail === 2) { // double click handler
 
                 var cellElem;
@@ -976,13 +1045,12 @@
                 }
 
             }
-
             else if (event.detail === 1) {
 
                 if (clickData.isFoldButtonPressed) {
                     handleFoldButtonClick(clickData, evDataService, evEventService);
-                }
 
+                }
                 else if (clickData.actionType) {
 
 					switch (clickData.actionType) {
@@ -990,7 +1058,7 @@
 						case 'open_row_color_picker':
 
 							event.stopPropagation();
-							createRowColorPickerMenu(clickData, evDataService, evEventService);
+							evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns);
 
 							break;
 
@@ -1030,7 +1098,6 @@
 					}
 
                 }
-
                 else {
 
                     var selection = window.getSelection().toString();
@@ -1164,8 +1231,8 @@
 
     var calculateScroll = function (elements, evDataService) {
 
-        rvScrollManager.setViewportElem(elements.viewportElem);
-        rvScrollManager.setContentElem(elements.contentElem);
+        rvScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
+        rvScrollManager.setContentElem(elements.contentElem); // .ev-content
         rvScrollManager.setContentWrapElem(elements.contentWrapElem);
         rvScrollManager.setRootWrapElem(elements.rootWrapElem);
 
@@ -1187,11 +1254,7 @@
         // console.log('calculateScroll components', components);
         // console.log('calculateScroll contentWrapElemWidth', contentWrapElemWidth);
 
-        if (components.sidebar) {
-            viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
-        } else {
-            viewportWidth = contentWrapElemWidth;
-        }
+		viewportWidth = contentWrapElemWidth;
 
         // console.log('viewportWidth', viewportWidth);
 
@@ -1232,7 +1295,7 @@
         rvScrollManager.setContentElemHeight(totalHeight);
         // rvScrollManager.setContentElemPaddingTop(paddingTop);
 
-        // there is another method that calculates contentElemWidth resizeScrollableArea() form gColumnResizerComponent.js
+        // There is another method that calculates contentElemWidth. That is resizeScrollableArea() form gColumnResizerComponent.js
         var areaWidth = 0;
         var i;
         var columnMargins = 16;
@@ -1304,7 +1367,7 @@
     //
     // };
 
-	var popupsToClear = [];
+	/*  var popupsToClear = [];
 
     var clearDropdowns = function () {
 
@@ -1330,7 +1393,7 @@
 
 		});
 
-		//<editor-fold desc="Remove dropdown related listeners">
+		//region Remove dropdown related listeners
 		for (const prop in eventListenerFn2Args) {
 			eventListenerFn2Args[prop] = null;
 		}
@@ -1340,12 +1403,14 @@
 		clearDropdownsAndRowsArgs.evDataService = null;
 		clearDropdownsAndRowsArgs.evEventService = null;
 		window.removeEventListener('contextmenu', callClearDropdownsAndRows);
-		//</editor-fold>
-		/* for (var i = 0; i < dropdowns.length; i = i + 1) {
-            dropdowns[i].remove();
-        } */
+		//endregion
 
-    };
+    }; */
+
+	var clearDropdowns = function () {
+		[eventListenerFn2Args, clearDropdownsAndRowsArgs] = evRvDomManagerService.clearDropdowns(eventListenerFn2Args, clearDropdownsAndRowsArgs, executeContextMenuAction, callClearDropdownsAndRows);
+		window.removeEventListener('click', executeSubtotalContextMenuAction);
+	};
 
 	/**
 	 *
@@ -1431,7 +1496,7 @@
 			`<div class="ev-dropdown-option" 
 				  data-ev-dropdown-action="toggle_row"
 				  data-object-id="${groupId}" 
-				  data-parent-group-hash-id="${parentGroupHashId}">${toggleRowName}</div>`
+				  data-parent-group-hash-id="${parentGroupHashId}">${toggleRowName}</div>`;
 
 		return result;
 
@@ -1696,48 +1761,6 @@
 		return result;
 
 	};
-
-    var markRowByColor = function (objectId, parentGroupHashId, evDataService, evEventService, color) {
-
-		var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-
-        if (obj === null) { // row is subtotal
-
-            const markedSubtotals = evDataService.getMarkedSubtotals();
-
-            if (color === 'undo_mark_row') {
-                delete markedSubtotals[objectId]
-            } else {
-                markedSubtotals[objectId] = color;
-            }
-
-            evDataService.setMarkedSubtotals(markedSubtotals);
-            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-            return;
-
-        }
-
-		var markedReportRows = localStorage.getItem("marked_report_rows");
-
-		if (markedReportRows) {
-			markedReportRows = JSON.parse(markedReportRows);
-		} else {
-			markedReportRows = {};
-		}
-
-		if (color === 'undo_mark_row') {
-			delete markedReportRows[obj.id]
-		} else {
-			markedReportRows[obj.id] = {
-				color: color
-			};
-		}
-
-		localStorage.setItem("marked_report_rows", JSON.stringify(markedReportRows));
-
-		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-	};
 	/**
 	 * transfer data into event listener callback executeContextMenuAction() or executeSubtotalContextMenuAction()
 	 *
@@ -1771,7 +1794,7 @@
 
 			if (objectId && color && parentGroupHashId) {
 
-				markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+				evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
 				/* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 				var markedReportRows = localStorage.getItem("marked_report_rows");
 
@@ -1798,29 +1821,32 @@
 			clearDropdownsAndRows(evDataService, evEventService, true);
 
 		}
-
 		else if (dropdownAction === 'toggle_row') {
 
 			var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+			var activeObjChanged = false;
 
 			if (obj.___is_activated) {
 
+				if (obj.___is_active_object) {
+
+					evDataService.setActiveObject(null);
+					evDataService.setActiveObjectRow(null);
+					activeObjChanged = true;
+
+				}
+
 				obj.___is_activated = false;
-				obj.___is_last_activated = false;
-
-				evDataService.setActiveObject(null);
-				evDataService.setLastActivatedRow(null);
-
+				obj.___is_active_object = false;
 
 			} else {
 
-				evDataHelper.clearLastActiveObject(evDataService);
+				// evDataHelper.clearLastActiveObject(evDataService);
 				// clearObjectActiveState(evDataService);
 				obj.___is_activated = true;
-				obj.___is_last_activated = true;
 
-				evDataService.setActiveObject(obj);
-				evDataService.setLastActivatedRow(obj);
+				// evDataService.setActiveObject(obj);
+				// evDataService.setActiveObjectRow(obj);
 
 			}
 
@@ -1830,25 +1856,35 @@
 			clearDropdowns(); */
 			clearDropdownsAndRows(evDataService, evEventService, true);
 
-		}
+			if (activeObjChanged) evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
+			var allRowsAreActive = areAllRowsActive(evDataService);
+			evDataService.setSelectAllRowsState(allRowsAreActive);
+			evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
+
+		}
 		else {
 
 			if (objectId && dropdownAction && parentGroupHashId) {
 
-				var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+				dropdownActionData.actionKey = dropdownAction;
+				/* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
 				if (!obj) {
 					obj = {}
-				}
+				} */
+				dropdownActionData.object = evDataHelper.getObject(objectId, parentGroupHashId, evDataService) || {};
 
-				obj.event = event;
+				// obj.event = event;
+				dropdownActionData.event = event;
 
-				evDataService.setActiveObject(obj);
+				/* evDataService.setActiveObject(obj);
 				evDataService.setActiveObjectAction(dropdownAction);
-				evDataService.setActiveObjectActionData(dropdownActionData);
+				evDataService.setActiveObjectActionData(dropdownActionData); */
+				evDataService.setRowsActionData(dropdownActionData);
 
-				evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+				// evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+				evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
 
 				// clearDropdowns();
 				clearDropdownsAndRows(evDataService, evEventService, true);
@@ -1871,6 +1907,7 @@
     	var targetElem = event.target;
 		// var groupId = targetElem.dataset.objectId;
 		var parentGroupHashId = targetElem.dataset.parentGroupHashId;
+		var subtotalId = targetElem.dataset.objectId;
 		var dropdownAction = targetElem.dataset.evDropdownAction;
 
 		var evDataService = eventListenerFn2Args.evDataService;
@@ -1882,12 +1919,12 @@
 			var group = evDataService.getData(parentGroupHashId);
 			if (group) group = {...{}, ...group};
 
-			var activatedProperty = subtotalType === 'line' ? '___is_line_subtotal_activated' : '___is_area_subtotal_activated';
+			var activatedProperty = (subtotalType === 'line') ? '___is_line_subtotal_activated' : '___is_area_subtotal_activated';
 
 			/* if (group.___is_activated) {
 
 				group.___is_activated = false;
-				group.___is_last_activated = false;
+				group.___is_active_object = false;
 
 				evDataService.setData(group);
 
@@ -1895,7 +1932,7 @@
 
 				// clearSubtotalActiveState(evDataService);
 				group.___is_activated = true;
-				group.___is_last_activated = true;
+				group.___is_active_object = true;
 
 				evDataService.setData(group);
 
@@ -1903,9 +1940,24 @@
 			group[activatedProperty] = !group[activatedProperty];
 			evDataService.setData(group);
 
+			var activeObjRow = evDataService.getActiveObjectRow();
+
+			if (activeObjRow && activeObjRow.___id === subtotalId && activeObjRow.___parentId === parentGroupHashId) {
+
+				evDataService.setActiveObjectRow(null);
+				evDataService.setActiveObject(null);
+
+				evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+
+			}
+
 			/* evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 			clearDropdowns(); */
 			clearDropdownsAndRows(evDataService, evEventService, true);
+
+			var allRowsAreActive = areAllRowsActive(evDataService);
+			evDataService.setSelectAllRowsState(allRowsAreActive);
+			evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
 		}
 
@@ -1949,14 +2001,14 @@
 
 		clearDropdownsAndRows(evDataService, evEventService);
 
-        var popup = evDataHelper.prepareRowAndGetPopupMenu(objectId, parentGroupHashId, evDataService, true);
+        var popup = evRvDomManagerService.prepareRowAndGetPopupMenu(objectId, parentGroupHashId, evDataService, true);
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
 		if (obj) {
 
 			popup.innerHTML = generateContextMenu(evDataService, contextMenu, ttypes, obj, objectId, parentGroupHashId);
 
-			evDataHelper.calculateMenuPosition(popup, menuPosition);
+			evRvDomManagerService.calculateMenuPosition(popup, menuPosition);
 
 			document.body.appendChild(popup);
 
@@ -1965,7 +2017,6 @@
 		}
 
 		evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
 
     };
 
@@ -1985,13 +2036,13 @@
 		var parent = evDataService.getData(parentGroupHashId);
 		var type = subtotalData.type === 'arealine' ? subtotalData.subType : subtotalData.type;
 
-		var popup = evDataHelper.prepareSubtotalAndGetPopupMenu(groupId, type, parentGroupHashId, evDataService);
+		var popup = evRvDomManagerService.prepareSubtotalAndGetPopupMenu(groupId, type, parentGroupHashId, evDataService);
 
 		if (parent) {
 
 			popup.innerHTML = generateContextMenuForSubtotal(evDataService, type, groupId, parentGroupHashId);
 
-			evDataHelper.calculateMenuPosition(popup, menuPosition);
+			evRvDomManagerService.calculateMenuPosition(popup, menuPosition);
 
 			document.body.appendChild(popup);
 
@@ -2183,9 +2234,9 @@
 
                 }, false);
 
-    };*/
+    }; */
 
-	var addEventListenersForPopupMenuOptions = function (popupMenuElem, optionClickCallback) {
+	/* var addEventListenersForPopupMenuOptions = function (popupMenuElem, optionClickCallback) {
 
 		var colorOpts = popupMenuElem.querySelectorAll('.gPopupMenuOption');
 
@@ -2199,12 +2250,13 @@
 
     var createRowColorPickerMenu = function (clickData, evDataService, evEventService) {
 
-		var menuElem = clickData.actionElem;
-		var popup = evDataHelper.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup']);
+		// var menuElem = clickData.actionElem;
+		var menuElem = clickData.target;
+		var popup = evRvDomManagerService.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup']);
 
         clearDropdowns();
 
-		evDataHelper.calculateStaticMenuPosition(popup, menuElem, 208);
+		evRvDomManagerService.calculateStaticMenuPosition(popup, menuElem, 208);
 
 		//<editor-fold desc="Color picker content div">
 		popup.innerHTML = '<div class="ev-dropdown-content g-row-color-picker-content">' +
@@ -2236,12 +2288,12 @@
 
 		addEventListenersForPopupMenuOptions(popup, onOptionClick);
 
-	};
+	}; */
 
 	/* var createSubtotalSettingsMenu = function (clickData, evDataService, evEventService) {
 
 		var menuElem = clickData.actionElem;
-		var popup = evDataHelper.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup', 'ev-dropdown2']);
+		var popup = evRvDomManagerService.preparePopupMenuType2(clickData.___id, ['ev-dropdown-popup', 'ev-dropdown2']);
 		var reportOptions = evDataService.getReportOptions();
 
 		var getOptionCheckbox = function (subtotalsType) {
@@ -2258,7 +2310,7 @@
 
 		clearDropdowns();
 
-		evDataHelper.calculateStaticMenuPosition(popup, menuElem, 195);
+		evRvDomManagerService.calculateStaticMenuPosition(popup, menuElem, 195);
 
 		//<editor-fold desc="Subtotals options popup content">
 		popup.innerHTML = '<div class="ev-dropdown-content">' +

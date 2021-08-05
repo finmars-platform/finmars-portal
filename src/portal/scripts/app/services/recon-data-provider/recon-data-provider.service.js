@@ -190,6 +190,7 @@
 
                         obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                         obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+                        obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
 
                         obj.count = data.count;
                         obj.next = data.next;
