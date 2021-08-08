@@ -1,6 +1,8 @@
 /**
  * Created by mevstratov on 24.06.2019.
  */
+import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
+
 (function () {
 
     'use strict';
@@ -9,13 +11,13 @@
     var importTransactionService = require('../../services/import/importTransactionService');
 
     var baseUrlService = require('../../services/baseUrlService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
-    var websocketService = require('../../services/websocketService');
+    // var websocketService = require('../../services/websocketService');
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function transactionImportController($scope, $mdDialog) {
+    module.exports = function transactionImportController($scope, $mdDialog, usersService) {
 
         var vm = this;
 

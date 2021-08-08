@@ -7,11 +7,11 @@
 
     var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
     var fieldResolverService = require('../../services/fieldResolverService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ecosystemDefaultSettingsController($scope, $mdDialog) {
+    module.exports = function ecosystemDefaultSettingsController($scope, $mdDialog, usersService) {
 
         var vm = this;
 

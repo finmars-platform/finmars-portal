@@ -130,16 +130,18 @@
                 </div>
             </div>
         </md-tab>
+
+        <!--<editor-fold desc="Deprecated">-->
         <md-tab label="Ecosystem">
 
-            <div data-ng-if="vm.readyStatus.masterUser" class="p-t-24">
+            <div class="p-t-24">
 
                 <div>
 
                     <md-input-container class="md-block" style="width: 200px;">
                         <label>Status</label>
                         <md-select
-                                data-ng-model="vm.masterUser.status">
+                                data-ng-model="vm.currentMasterUserStatus">
                             <div class="select-options-holder">
                                 <md-option ng-value="1">
                                     Online
@@ -154,7 +156,7 @@
                     <div layout="row">
 
                         <md-button ng-click="vm.saveMasterUser($event)"
-                                   class="md-raised">
+                                   class="md-raised" disabled>
                             Save
                         </md-button>
 
@@ -169,12 +171,13 @@
 
             </div>
 
-            <div data-ng-if="!vm.readyStatus.masterUser">
+            <!--<div data-ng-if="!vm.readyStatus.masterUser">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                     <progress-circular diameter="100"></progress-circular>
                 </div>
-            </div>
+            </div>-->
 
         </md-tab>
+        <!--</editor-fold>-->
     </md-tabs>
 </div>

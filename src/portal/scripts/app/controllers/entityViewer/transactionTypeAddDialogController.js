@@ -7,7 +7,7 @@
 
     var fieldResolverService = require('../../services/fieldResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -22,7 +22,7 @@
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var tagService = require('../../services/tagService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
 
@@ -38,7 +38,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data) {
+    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, usersService, usersGroupService) {
 
         var vm = this;
 
@@ -252,7 +252,7 @@
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: vm.entityType, from: vm.entityType};
             }
-            $state.go('app.attributesManager', entityAddress);
+            $state.go('app.portal.attributesManager', entityAddress);
             $mdDialog.hide();*/
 
             $mdDialog.show({
@@ -1978,7 +1978,7 @@
             return result;
         };
 
-        vm.loadRelation = function (field) {
+        /* vm.loadRelation = function (field) {
 
             console.log('field', field);
             field = field.replace(/-/g, "_");
@@ -1999,7 +1999,8 @@
                 }
 
             })
-        };
+        }; */
+		vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
 

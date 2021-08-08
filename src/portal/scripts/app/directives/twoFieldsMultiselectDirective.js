@@ -81,6 +81,8 @@
 
 					if (scope.model) {
 
+						console.log('# scope.model', scope.model)
+
 						selOptionsIdsList = scope.model.map(function (selOption) {
 
 							let optionId = selOption;
@@ -453,7 +455,7 @@
 
 							getAvailableOptions();
 
-							scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						};
 
@@ -481,7 +483,7 @@
 								{chipsList: scope.chipsList, updateScope: true}
 							);
 
-							scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						};
 

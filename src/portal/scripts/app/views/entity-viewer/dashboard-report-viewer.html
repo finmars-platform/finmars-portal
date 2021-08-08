@@ -27,10 +27,6 @@
 
                 <!--<div class="grand-total-title">{{vm.componentData.name}}</div>-->
 
-                <group-dashboard-filter style="display: none"
-                                        ev-data-service="vm.entityViewerDataService"
-                                        ev-event-service="vm.entityViewerEventService"></group-dashboard-filter>
-
                 <div data-ng-if="vm.grandTotalProcessing"  class="dashboard-grand-total-component dashboard-grand-total-component-loading">
                     <div  layout="row" layout-sm="column" layout-align="space-around">
                         <!--<md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>-->
@@ -60,7 +56,48 @@
 
             </div>
 
-            <div ng-if="vm.componentData.type === 'report_viewer_bars_chart'" class="height-100">
+            <div data-ng-if="vm.componentData.type === 'report_viewer_table_chart'" class="height-100">
+                <report-viewer-table-chart class="height-100 display-block"
+                                           table-chart-settings="vm.tableChartSettings"
+                                           ev-data-service="vm.entityViewerDataService"
+                                           ev-event-service="vm.entityViewerEventService"></report-viewer-table-chart>
+            </div>
+
+            <div ng-if="vm.hasFiltersArea()" class="flex-column height-100 overflow-auto">
+
+                <div class="flex-1-0-auto">
+                    <g-filters ev-data-service="vm.entityViewerDataService"
+                               ev-event-service="vm.entityViewerEventService"
+                               attribute-data-service="vm.attributeDataService"
+                               dashboard-component-element="vm.dashboardComponentElement"
+                               hide-filters-block="!showFiltersArea"
+                               hide-use-from-above-filters="!showUseFromAboveFilters"></g-filters>
+                </div>
+
+                <div ng-if="vm.componentData.type === 'report_viewer_bars_chart'" class="flex-0-1-100">
+                    <report-viewer-bars-chart class="height-100 display-block"
+                                              rv-charts-settings="vm.rvChartsSettings"
+                                              ev-data-service="vm.entityViewerDataService"
+                                              ev-event-service="vm.entityViewerEventService"></report-viewer-bars-chart>
+                </div>
+
+                <div ng-if="vm.componentData.type === 'report_viewer_pie_chart'" class="flex-0-1-100">
+                    <report-viewer-pie-chart class="height-100 display-block"
+                                             rv-charts-settings="vm.rvChartsSettings"
+                                             ev-data-service="vm.entityViewerDataService"
+                                             ev-event-service="vm.entityViewerEventService"></report-viewer-pie-chart>
+                </div>
+
+                <div ng-if="vm.componentData.type === 'report_viewer_matrix'" class="flex-0-1-100">
+                    <report-viewer-matrix class="height-100 display-block"
+                                          matrix-settings="vm.matrixSettings"
+                                          ev-data-service="vm.entityViewerDataService"
+                                          ev-event-service="vm.entityViewerEventService"></report-viewer-matrix>
+                </div>
+
+            </div>
+
+            <!-- <div ng-if="vm.componentData.type === 'report_viewer_bars_chart'" class="height-100">
                 <report-viewer-bars-chart class="height-100 display-block"
                                       rv-charts-settings="vm.rvChartsSettings"
                                       ev-data-service="vm.entityViewerDataService"
@@ -89,14 +126,7 @@
                                           ev-data-service="vm.entityViewerDataService"
                                           ev-event-service="vm.entityViewerEventService"></report-viewer-matrix>
                 </div>
-            </div>
-
-            <div data-ng-if="vm.componentData.type === 'report_viewer_table_chart'" class="height-100">
-                <report-viewer-table-chart class="height-100 display-block"
-                                      table-chart-settings="vm.tableChartSettings"
-                                      ev-data-service="vm.entityViewerDataService"
-                                      ev-event-service="vm.entityViewerEventService"></report-viewer-table-chart>
-            </div>
+            </div> -->
 
         </div>
 

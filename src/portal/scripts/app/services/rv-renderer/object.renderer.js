@@ -11,7 +11,7 @@
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
-    var checkIcon = renderHelper.getIconByKey('checkIcon');
+    // var checkIcon = renderHelper.getIconByKey('checkIcon');
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
 
@@ -487,13 +487,13 @@
         var groups = evDataService.getGroups();
         var rowHeight = evDataService.getRowHeight();
 
-        var rowSelection;
+        /* var rowSelection;
 		var rowSelectionBtnContent = '';
 		var rowSelectionBtnClasses = 'g-row-selection-button';
 
-		if (obj.___is_last_activated || obj.___is_activated) {
+		if (obj.___is_active_object || obj.___is_activated) {
 
-			var className = obj.___is_last_activated ? 'last-selected': 'selected';
+			var className = obj.___is_active_object ? 'is-active-object': 'selected';
             classList.push(className);
 
 			rowSelectionBtnClasses += ' checked';
@@ -505,7 +505,26 @@
 			classList.push('context-menu-opened');
 		}
 
-		rowSelection = '<div class="g-row-selection"><div class="' + rowSelectionBtnClasses + '">' + rowSelectionBtnContent + '</div></div>';
+		rowSelection = '<div class="g-row-selection"><div class="' + rowSelectionBtnClasses + '">' + rowSelectionBtnContent + '</div></div>'; */
+		var rowSelection = renderHelper.getRowSelectionElem(obj);
+
+		/*if (obj.___is_active_object || obj.___is_activated) {
+
+			var className = obj.___is_active_object ? 'is-active-object': 'selected';
+			classList.push(className);
+
+		}*/
+		if (obj.___is_active_object) {
+			classList.push('is-active-object');
+		}
+
+		if (obj.___is_activated) {
+			classList.push('selected');
+		}
+
+		if (obj.___context_menu_is_opened) {
+			classList.push('context-menu-opened');
+		}
 
         let color = 'none';
         if (markedReportRows.hasOwnProperty(obj.id)) {
@@ -513,7 +532,7 @@
             classList.push('g-row-marked-' + color);
         }
 
-        var rowSettings = renderHelper.getRowSettings(color, obj.___type);
+        var rowSettings = renderHelper.getRowSettings(obj.___type, color);
 
         var classes = classList.join(' ');
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
