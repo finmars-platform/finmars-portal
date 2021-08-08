@@ -5,9 +5,10 @@
             <span flex></span>
         </div>
     </md-toolbar>
+
     <md-dialog-content data-custom-scroll class="custom-scrollbar">
 
-        <div class="p-24">
+        <div class="p-24" ng-class="{'display-none': !vm.readyStatus}">
 
             <div data-ng-show="vm.currentStep == 1">
 
@@ -32,9 +33,7 @@
                     <li>Use your app to scan the QR code below</li>
                 </ul>
 
-                <div class="code-holder text-center">
-
-                </div>
+                <div class="code-holder text-center"></div>
 
                 <div class="m-t-16 text-center">
 
@@ -115,6 +114,10 @@
                 </div>
 
             </div>
+        </div>
+
+        <div ng-if="!vm.readyStatus" class="flex-row fc-space-around" style="height: 70px;">
+            <progress-circular diameter="50"></progress-circular>
         </div>
 
     </md-dialog-content>

@@ -20,6 +20,7 @@
 
         var page = 1;
         var pageSize = 40;
+		var getEntitiesProm;
         // var lastPageReached = false;
 
         vm.search = {
@@ -411,8 +412,14 @@
                     $(".entity-search-scroll-container").scrollTop(0);
                 }
 
-                entityResolverService
-                    .getListLight(vm.entityType, getTableOptions())
+                if (vm.entityType === 'instrument') { // instruments in light list lack instrument_type property
+					getEntitiesProm = entityResolverService.getList(vm.entityType, getTableOptions());
+
+                } else {
+					getEntitiesProm = entityResolverService.getListLight(vm.entityType, getTableOptions());
+				}
+
+				getEntitiesProm
                     .then(function (data) {
                         if (data.hasOwnProperty("count")) {
                             vm.itemsCount = data.count;
@@ -441,8 +448,14 @@
                 );
             }, 100);
 
-            entityResolverService
-                .getListLight(vm.entityType, getTableOptions())
+			if (vm.entityType === 'instrument') { // instruments in light list lack instrument_type property
+				getEntitiesProm = entityResolverService.getList(vm.entityType, getTableOptions());
+
+			} else {
+				getEntitiesProm = entityResolverService.getListLight(vm.entityType, getTableOptions());
+			}
+
+			getEntitiesProm
                 .then(function (data) {
                     vm.readyStatus.data = true;
 

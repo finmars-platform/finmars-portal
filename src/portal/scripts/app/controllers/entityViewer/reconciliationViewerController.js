@@ -323,8 +323,9 @@
                                 multiple: true
                             }).then(function (res) {
 
-                                vm.entityViewerDataService.setActiveObjectAction(null);
-                                vm.entityViewerDataService.setActiveObjectActionData(null);
+                                /* vm.entityViewerDataService.setActiveObjectAction(null);
+                                vm.entityViewerDataService.setActiveObjectActionData(null); */
+								vm.entityViewerDataService.setRowsActionData(null);
 
                             });
 
@@ -462,8 +463,11 @@
 
                 vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setRootEntityViewer(false);
+				vm.entityViewerDataService.setIsReport(false);
                 vm.entityViewerDataService.setViewContext('reconciliation_viewer');
                 vm.entityViewerDataService.setVirtualScrollStep(500);
+
+				vm.entityViewerDataService.setRowHeight(36);
 
                 var components = {
                     columnArea: true,

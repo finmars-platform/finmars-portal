@@ -26,9 +26,9 @@
                 if (item.key == contentType) {
 
                     if (contentType.indexOf('reports') == 0) {
-                        result = 'app.reports.' + item.entity;
+                        result = 'app.portal.reports.' + item.entity;
                     } else {
-                        result = 'app.data.' + item.entity;
+                        result = 'app.portal.data.' + item.entity;
                     }
                 }
 

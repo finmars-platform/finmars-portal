@@ -19,6 +19,8 @@
         var contentWrapElem;
         var contentWrapElemHeight;
         var contentWrapElemWidth;
+        // Entity viewer exclusive
+        var leftPanelElem;
 
         function setViewportElem(elem) {
             viewportElem = elem
@@ -140,6 +142,14 @@
             return rootWrapElemWidth;
         }
 
+		function setLeftPanelElem (elem) {
+			leftPanelElem = elem;
+		}
+
+		function setLeftPanelElemHeight (height) {
+			leftPanelElem.style.height = height + 'px';
+		}
+
         return {
 
             // viewport elem
@@ -185,7 +195,11 @@
             getRootWrapElemHeight: getRootWrapElemHeight,
 
             setRootWrapElemWidth: setRootWrapElemWidth,
-            getRootWrapElemWidth: getRootWrapElemWidth
+            getRootWrapElemWidth: getRootWrapElemWidth,
+
+			// left panel elem
+			setLeftPanelElem: setLeftPanelElem,
+			setLeftPanelElemHeight: setLeftPanelElemHeight
 
         }
 

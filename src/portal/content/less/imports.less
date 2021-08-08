@@ -3,7 +3,7 @@
 
 @import 'app/main';
 @import 'app/data-constructor';
-@import 'app/group-table';
+@import 'app/group-table'; // should be imported before entity-viewer.less and report-viewer.less
 @import 'app/group-table-filters';
 @import 'app/notifications';
 @import 'app/attributes-manager.less';
@@ -13,8 +13,8 @@
 @import 'app/bookmarks.less';
 @import 'app/custom-field-config-dialog.less';
 @import 'app/dashboard.less';
-@import "app/entity-viewer.less";
-@import "app/report-viewer.less";
+@import "app/entity-viewer.less"; // should be imported after group-table.less
+@import "app/report-viewer.less"; // should be imported after group-table.less
 @import "app/two-fields-multiselector";
 @import "app/actions-block.less";
 @import "app/configuration-import-export";
@@ -43,6 +43,7 @@
 @import "app/reference-table";
 @import "app/pricing-schedules";
 @import 'app/small-dialogs.less';
+@import 'app/classifier.less';
 
 @import "app/configuration-export-page";
 @import "app/loader-dialog";

@@ -50,7 +50,8 @@
 
             resultGroup = {
                 ___group_name: null,
-                ___group_identifier: null
+                ___group_identifier: null,
+                ___items_count: 0
             };
 
             var item_value = item[group.key];

@@ -14,7 +14,7 @@
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
 
-    var middlewareService = require('../../services/middlewareService');
+    // var middlewareService = require('../../services/middlewareService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaService = require('../../services/metaService');
@@ -851,11 +851,11 @@
 								listLayout.modified = updatedLayoutData.modified
 								scope.evDataService.setListLayout(listLayout);
                                 // Give signal to update layout name in the toolbar
-                                if (scope.isRootEntityViewer) {
+                                /*if (scope.isRootEntityViewer) {
                                     middlewareService.setNewEntityViewerLayoutName(listLayout.name);
                                 } else {
                                     middlewareService.setNewSplitPanelLayoutName(listLayout.name);
-                                }
+                                }*/
 
                                 scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
                                 scope.$apply();
@@ -897,7 +897,7 @@
 
                                 if (res.data.layoutUserCode) {
 
-                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                    // middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                                     $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
 
                                 } else {
@@ -906,7 +906,7 @@
                                 }
 
                             } else {
-                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                // middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
 
                                 scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
                                 scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);

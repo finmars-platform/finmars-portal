@@ -1,5 +1,7 @@
 (function () {
 
+	const fieldResolverService = require('../../../services/fieldResolverService');
+
     const referenceTableService = require('../../../services/referenceTablesService');
 
 	const metaHelper = require('../../meta.helper');
@@ -14,8 +16,9 @@
     module.exports = function (viewModel, $scope, $mdDialog) {
 
     	const gridTableHelperService = new GridTableHelperService();
+		const loadedRelationsList = [];
 
-        var valueTypes = [
+        const valueTypes = [
             {
                 "name": "Number",
                 "id": 20
@@ -140,6 +143,35 @@
             }
 
         };
+
+		const loadRelation = function (field, noScopeUpdate) {
+
+			field = field.replace(/-/g, "_"); // replace all '_' with '-'
+
+			// if (!viewModel.relationItems.hasOwnProperty(field)) {
+			if (!loadedRelationsList.includes(field)) {
+
+				return new Promise(function (resolve, reject) {
+
+					fieldResolverService.getFields(field).then(function (data) {
+
+						viewModel.relationItems[field] = data.data;
+						loadedRelationsList.push(field);
+
+						if (noScopeUpdate) {
+							$scope.$apply();
+						}
+
+						resolve(viewModel.relationItems[field]);
+					})
+
+				});
+
+			}
+
+			return {status: 'item_exist', field: field};
+
+		};
 
         const resolveRelation = function (contentType) {
 
@@ -381,6 +413,19 @@
 
         };
 
+        const actionsFieldsMap = {
+			instrument_event_schedule_action: {
+				transaction_type_from_instrument_type: {
+					field_type: 'selector',
+					value_type: 10
+				},
+				event_schedule_phantom: {
+					field_type: 'selector',
+					value_type: 20
+				}
+			}
+		};
+
         const checkActionsForEmptyFields = function (actions) {
 
             var result = [];
@@ -418,7 +463,8 @@
 
                                 }
 
-                            } else {
+                            }
+                            else {
 
                                 if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
 
@@ -454,7 +500,8 @@
                                     }
 
 
-                                } else {
+                                }
+                                else {
 
                                     if (actionItem[actionItemKey] === null ||
                                         actionItem[actionItemKey] === undefined ||
@@ -466,12 +513,19 @@
                                             value: actionItem[actionItemKey]
                                         })
 
-                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // deleted inputs use
+                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // field with expression
 
-                                        fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
-                                                                                             actionItem[actionItemKey],
-                                                                                             actionItemKey,
-                                                                                             action.action_notes);
+                                    	var actionFieldsMap = actionsFieldsMap[actionKey];
+                                    	if (actionFieldsMap) var actionFieldData = actionFieldsMap[actionItemKey];
+
+                                    	if (!actionFieldData || actionFieldData.field_type === 'expression') {
+
+                                    		fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
+												actionItem[actionItemKey],
+												actionItemKey,
+												action.action_notes);
+
+										}
 
                                     }
 
@@ -748,7 +802,7 @@
         }
 
 		const relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
-            return viewModel.loadRelation(resolveRelation(contentType), true);
+            return loadRelation(resolveRelation(contentType), true);
         }
 
 		const onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
@@ -761,13 +815,13 @@
             var loadRelationRes = relationItemsResolver(contentTypeCell.settings.value);
 
             if (loadRelationRes && loadRelationRes.status === 'item_exist') {
-                changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field]
+                changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field];
 
             } else {
 
                 loadRelationRes.then(function (relItem) {
 
-                    changedCell.settings.selectorOptions = relItem
+                    changedCell.settings.selectorOptions = relItem;
                     $scope.$apply();
 
                 });
@@ -824,7 +878,7 @@
                         onInit: onRelationDefaultValueSelInit
                     }
 
-                    defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)] // TODO Victor: this is bug. viewModel.newItem always undefined
+                    // defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)] // TODO Victor: this is bug. viewModel.newItem always undefined
 
                     break;
 
@@ -1198,7 +1252,7 @@
             }
         }
 
-		const createDataForInputsTableGrid = function () {
+		const createDataForInputsGridTable = function () {
 
             var rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
@@ -1338,7 +1392,7 @@
                 return {id: cType.key, name: cType.name};
             });
 
-            createDataForInputsTableGrid();
+            createDataForInputsGridTable();
 
         }
 
@@ -1351,13 +1405,13 @@
             getInputTemplates: getInputTemplates,
 
 			updateEntityBeforeSave: updateEntityBeforeSave,
-            resolveRelation: resolveRelation,
+			loadRelation: loadRelation,
+			resolveRelation: resolveRelation,
             checkActionsForEmptyFields: checkActionsForEmptyFields,
             checkEntityForEmptyFields: checkEntityForEmptyFields,
 			validateInputs: validateInputs,
 
             initGridTableEvents: initGridTableEvents,
-            createDataForInputsTableGrid: createDataForInputsTableGrid,
 
 			getTransactionUserFields: getTransactionUserFields,
             initAfterMainDataLoaded: initAfterMainDataLoaded

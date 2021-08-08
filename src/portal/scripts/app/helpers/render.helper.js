@@ -50,16 +50,34 @@
 
     var getIconByKey = function (key) {
         return icons[key] || '';
-    }
-
+    };
 	/**
-	 * Returns HTML for column with row settings buttons.
-	 *
-	 * @param color {string}
-     * @param rowType {string} can be 'object', 'subtotal', 'blankLine'
+	 * @param object {Object} - data of row
+	 * @returns {HTMLElement} - HTML for column with row selection buttons.
+	 * @memberof module:renderHelper
+	 */
+	var getRowSelectionElem = function (object) {
+
+		var rowSelectionBtnContent = '';
+		var rowSelectionBtnClasses = 'g-row-selection-button';
+
+		if (object.___is_active_object || object.___is_activated) {
+
+			rowSelectionBtnClasses += ' checked';
+			rowSelectionBtnContent = getIconByKey('checkIcon');
+
+		}
+
+		return '<div class="g-row-selection"><div class="' + rowSelectionBtnClasses + '">' + rowSelectionBtnContent + '</div></div>';
+
+	};
+	/**
+	 * @param rowType {string} - can be 'object', 'subtotal', 'blankLine'
+	 * @param color {string|null}
+	 * @param statusIcon {HTMLElement} - status of row inside entity viewer table
 	 * @returns {string} - HTML for column with row settings
 	 */
-    var getRowSettings = function (color, rowType) {
+    var getRowSettings = function (rowType, color, statusIcon) {
 
     	/* return '<div class="g-row-settings g-row-settings-table gRowSettings">' +
 				'<button class="' + classes + '" data-click-action-type="open_row_color_picker">' +
@@ -81,16 +99,33 @@
 
 			contextMenuBtn =
 				`<div class="context-menu-btn-wrapper">
-					<button class="context-menu-btn gTableActionBtn" data-click-action-type="open_context_menu">
+					<div class="context-menu-btn position-relative">
 						<span class="material-icons">more_vert</span>
-					</button>
+						<button class="g-click-catcher gTableActionBtn" data-click-action-type="open_context_menu"></button>
+					</div>
 				</div>`;
 
 		} else {
 			contextMenuBtn = '<div class="context-menu-btn-wrapper"></div>';
 		}
 
-		const icon = ['red', 'yellow', 'green'].includes(color) ? 'label' : 'label_outline';
+		//region for entity viewer
+		let rowStatus = '';
+
+		if (statusIcon !== undefined) {
+
+			if (!statusIcon) statusIcon = 'star_outline';
+
+			rowStatus =
+				`<div class="g-row-settings-btn position-relative" disabled>
+					${statusIcon}
+					<span class="material-icons arrow-icon visibility-hidden">arrow_drop_down</span>
+					<button class="g-click-catcher gTableActionBtn" data-click-action-type="open_row_status_picker"></button>
+				</div>`;
+		}
+		//endregion
+
+		const colorIcon = ['red', 'yellow', 'green'].includes(color) ? 'label' : 'label_outline';
 
 		/* let rowColorpickerClasses = "g-row-color-picker-btn gTableActionBtn";
 
@@ -99,13 +134,16 @@
 		} */
 
 		const rowColorPicker =
-			`<button class="g-row-color-picker-btn gTableActionBtn" data-click-action-type="open_row_color_picker">
-				<span class="material-icons label-icon">${icon}</span>
+			`<div class="g-row-settings-btn g-row-color-picker position-relative">
+				<span class="material-icons label-icon">${colorIcon}</span>
 				<span class="material-icons arrow-icon">arrow_drop_down</span>
-			</button>`;
+				
+				<button class="g-click-catcher gTableActionBtn" data-click-action-type="open_row_color_picker"></button>
+			</div>`;
 
 		return `<div class="g-row-settings g-row-settings-table gRowSettings">
 					${contextMenuBtn}
+					${rowStatus}
 					${rowColorPicker}
 				</div>`;
 
@@ -453,7 +491,7 @@
 		}
 
 	};
-
+	/** @module renderHelper */
     module.exports = {
         isFirstInWholeChain: isFirstInWholeChain,
 
@@ -465,6 +503,7 @@
         getPartiallyVisibleIcon: getPartiallyVisibleIcon, */
         getIconByKey: getIconByKey,
 
+		getRowSelectionElem: getRowSelectionElem,
 		getRowSettings: getRowSettings,
 
         formatRounding: formatRounding,
