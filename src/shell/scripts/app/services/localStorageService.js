@@ -435,7 +435,7 @@
 		} */
 		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
 
-		if (markedRowsData[viewerType][entityType] && markedRowsData[viewerType][entityType]['marked_rows']) {
+		if (markedRowsData[viewerType] && markedRowsData[viewerType][entityType] && markedRowsData[viewerType][entityType]['marked_rows']) {
 			return markedRowsData[viewerType][entityType]['marked_rows'];
 		}
 
