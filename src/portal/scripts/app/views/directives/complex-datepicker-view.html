@@ -63,7 +63,10 @@
                         <button ng-show="modeIsActive(['datepicker', 'expression'])"
                                 class="expression-builder-btn"
                                 ng-click="openEditExpressionDialog($event, 1)"
-                                ng-disabled="dateIsDisabled"><span class="material-icons">functions</span></button>
+                                ng-disabled="dateIsDisabled">
+<!--                            <span class="material-icons">functions</span>-->
+                            <img class="btn-icon" src="shell/content/img/fx-icon.png" alt="function">
+                        </button>
 
                         <date-input model="inputsModels.date"
                                     on-change-callback="onDateInputChange(inputsModels.date)"
@@ -91,7 +94,10 @@
 
                         <button ng-show="modeIsActive(['datepicker', 'expression'])"
                                 class="expression-builder-btn"
-                                ng-click="openEditExpressionDialog($event, 2)"><span class="material-icons">functions</span></button>
+                                ng-click="openEditExpressionDialog($event, 2)">
+<!--                            <span class="material-icons">functions</span>-->
+                            <img class="btn-icon" src="shell/content/img/fx-icon.png" alt="function">
+                        </button>
 
                         <date-input model="inputsModels.secondDate"
                                     on-change-callback="onSecondDateInputChange(inputsModels.secondDate)"
