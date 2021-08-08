@@ -248,6 +248,14 @@
 
 					if (scope.popupTemplateUrl) {
 
+						if (scope.popupTemplateUrl.startsWith('"')) {
+							throw new Error("Use quotes instead of double quotes to encase template url path.");
+						}
+
+						if (!scope.popupTemplateUrl.startsWith("'")) {
+							scope.popupTemplateUrl = "'" + scope.popupTemplateUrl + "'";
+						}
+
 						popupElem.innerHTML = '<div ng-include="' + scope.popupTemplateUrl + '"></div>';
 
 					} else if (scope.popupTemplate) {

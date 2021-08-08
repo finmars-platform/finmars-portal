@@ -346,7 +346,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                    $state.go('app.setup');
+                    $state.go('app.portal.setup');
                 })
 
             })
@@ -356,6 +356,9 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
         vm.init = function () {
             vm.getMasterUsersList();
             vm.getInvites();
+
+
+
             // vm.readyStatus.invites = true;
         };
 

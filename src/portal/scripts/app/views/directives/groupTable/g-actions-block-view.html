@@ -17,12 +17,16 @@
 
                     <div layout="row">
                         <div class="g-tr-btn-holder p-r-0" flex="50">
-                            <md-button data-ng-if="hasCreatePermission && !isBaseTransaction"
+                            <md-button data-ng-if="hasCreatePermission && !isBaseTransaction && !isPortfolioRegisterRecord"
                                        class="md-primary md-raised long-text-btn"
                                        data-ng-click="addEntity($event)">Add {{getEntityNameByState()}}
                             </md-button>
-                        </div>
 
+                            <md-button data-ng-if="isPortfolioRegisterRecord"
+                                       class="md-primary md-raised long-text-btn"
+                                       data-ng-click="calculatePortfolioRegisterRecords($event)">Calculate Records
+                            </md-button>
+                        </div>
                         <div class="g-tr-btn-holder" flex="50">
                             <md-button class="md-raised"
                                        data-ng-click="openEntityViewerSettings($event)">Settings

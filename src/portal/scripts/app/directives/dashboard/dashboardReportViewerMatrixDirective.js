@@ -12,7 +12,7 @@
     var DashboardComponentEventService = require('../../services/eventService');
 
 	var dashboardHelper = require('../../helpers/dashboard.helper');
-    const localStorageService = require('../../../../../core/services/localStorageService');
+    const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
 	module.exports = function ($mdDialog) {
         return {
@@ -38,6 +38,7 @@
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
                 var componentData;
+				var componentElem = elem[0].querySelector('.dashboardComponent');
 
                 if (scope.item && scope.item.data) {
 
@@ -65,6 +66,7 @@
                     columnNumber: scope.columnNumber,
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
+					componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,

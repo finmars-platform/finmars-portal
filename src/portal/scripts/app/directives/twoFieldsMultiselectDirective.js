@@ -31,8 +31,6 @@
 			templateUrl: "views/directives/two-fields-multiselect-view.html",
 			link: function (scope, elem, attr, ngModel) {
 
-				console.log('# scope.model', scope.model)
-
 				scope.inputText = '';
 				scope.error = '';
 				scope.orderOptions = {
@@ -457,7 +455,7 @@
 
 							getAvailableOptions();
 
-							scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						};
 
@@ -485,7 +483,7 @@
 								{chipsList: scope.chipsList, updateScope: true}
 							);
 
-							scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						};
 

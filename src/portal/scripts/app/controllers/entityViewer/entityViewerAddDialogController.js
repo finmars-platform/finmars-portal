@@ -1811,7 +1811,7 @@
 
 			vm.getCurrencies();
 
-            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
+            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history' || vm.entityType === 'portfolio-register' || vm.entityType === 'portfolio-register-record') {
                 vm.readyStatus.permissions = true;
             } else {
                 vm.loadPermissions();
