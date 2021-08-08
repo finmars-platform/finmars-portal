@@ -419,7 +419,7 @@
 
 		const markedRowsData = getMarkedRowsData();
 
-		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+		/* const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
 
 		if (markedRowsData[viewerType]) {
 
@@ -432,6 +432,11 @@
 
 			}
 
+		} */
+		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+
+		if (markedRowsData[viewerType][entityType] && markedRowsData[viewerType][entityType]['marked_rows']) {
+			return markedRowsData[viewerType][entityType]['marked_rows'];
 		}
 
 		return {};
@@ -447,7 +452,7 @@
 			markedRowsData[viewerType] = {};
 		}
 
-		if (isReport) {
+		/* if (isReport) {
 			// for report viewer marked rows stored in one place because they area shared across report entityTypes (balance-report, pl-report etc)
 			if (!markedRowsData[viewerType]['marked_rows']) markedRowsData[viewerType]['marked_rows'] = {};
 
@@ -470,7 +475,16 @@
 
 			markedRowsData[viewerType][entityType]['marked_rows'] = rows;
 
+		} */
+
+		if (!markedRowsData[viewerType][entityType]) {
+			markedRowsData[viewerType][entityType] = {
+				row_type_filters: 'none',
+				marked_rows: {}
+			}
 		}
+
+		markedRowsData[viewerType][entityType]['marked_rows'] = rows;
 
 		cacheMarkedRowsData(markedRowsData);
 
