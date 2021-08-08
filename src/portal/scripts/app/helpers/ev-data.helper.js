@@ -330,7 +330,8 @@
 		}
 
 		var entityType = evDataService.getEntityType();
-		var markedRows = localStorageService.getMarkedRows(false, entityType);
+		// var markedRows = localStorageService.getMarkedRows(false, entityType);
+		var markedRows = {};
 
 		return flatList.filter(item => {
 
