@@ -28,13 +28,14 @@
 
         </div>
 
-<!--        <div class="drop-inside-node-container dropInsideNode"></div>-->
     </div>
+
+<!--    <div class="node-drop-container-1 dropOntoNode"></div>-->
 
     <div class="classifier-node-children" ng-hide="node.frontOptions.closed">
 
         <div ng-if="node.children.length"
-             class="node-drop-container dropAtTheBeginning"
+             class="node-drop-container-2 dropAtTheBeginning"
              data-path-to-node="{{node.frontOptions.pathToNode.join(',')}}"></div>
 
         <div ng-repeat="subNode in node.children track by subNode.id"
@@ -45,9 +46,7 @@
 
     </div>
 
-<!--    <div class="drop-after-node-container dropAfterNode"></div>-->
-
 </div>
 
-<div class="node-drop-container dropAfterNode"
+<div class="node-drop-container-2 dropAfterNode"
      data-path-to-node="{{node.frontOptions.pathToNode.join(',')}}"></div>

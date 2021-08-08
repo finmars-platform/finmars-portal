@@ -27,7 +27,6 @@
 				let vm = this;
 				/** Tree data to render classifier tree */
 				vm.filteredTree = JSON.parse(angular.toJson($scope.treeData));
-				// console.log("testing vm.filteredTree", vm.filteredTree);
 				vm.treeFilterTerms = '';
 				vm.isMultiselector = $scope.multiselector === 'true';
 				vm.editingNode = false;
@@ -48,18 +47,43 @@
 					tree.find(node => node.id === idsList[0]);
 
 				}; */
+				const nodesAreTheSame = function (node, otherNodeData) {
+
+					let otherNodeId = otherNodeData;
+
+					if (otherNodeData && typeof otherNodeData === 'object') {
+
+						if (otherNodeData.id || otherNodeData.id === 0) {
+							otherNodeId = otherNodeData.id
+
+						} else {
+							otherNodeId = otherNodeData.frontOptions.id;
+						}
+
+					}
+
+					if (node.id || node.id === 0) {
+						return node.id === otherNodeId;
+
+					} else if (node.frontOptions.id) {
+						return node.frontOptions.id === otherNodeId;
+					}
+
+					return false;
+
+				};
 
 				const getNode = (tree, idsList) => {
-					console.trace();
-					// console.log("testing.getNode", idsList);
-					const eldestParentId = idsList[0];
-					// console.log("testing.getNode eldestParentId", eldestParentId);
-					let node = tree.find(childNode => childNode.id == eldestParentId);
-					// console.log("testing.getNode eldest node", node);
+
+					const eldestParentId = isNaN(idsList[0]) ? idsList[0] : parseInt(idsList[0]);
+					let node = tree.find(childNode => nodesAreTheSame(childNode, eldestParentId));
 					const idsListWithoutEldest = idsList.slice(1);
-					// console.log("testing.getNode idsListWithoutEldest", idsListWithoutEldest);
+
 					idsListWithoutEldest.forEach(nodeId => {
-						node = node.children.find(childNode => childNode.id == nodeId);
+
+						const parsedNodeId = isNaN(nodeId) ? nodeId : parseInt(nodeId);
+						node = node.children.find(childNode => nodesAreTheSame(childNode, parsedNodeId));
+
 					});
 
 					return node;
@@ -96,45 +120,14 @@
 					return parents;
 
 				};
-				/**
-				 *
-				 * @param tree {Array}
-				 * @param node {Object} - Node data
-				 * @param index {number=} - Index of node inside its parent node. Required if setting node inside a root.
-				 */
-				const setNodeInsideTree = (tree, node, index) => {
-					// console.log("testing.setNodeInsideTree", node, index);
-
-					if (node.level) {
-
-						const parent = getParentNode(tree, node);
-
-						if (!index && index !== 0) {
-							index = parent.children.findIndex(childNode => childNode.id === node.id);
-						}
-						// console.log("testing.setNodeInsideTree nodeIndex", index);
-						parent.children[index] = node;
-
-					} else {
-
-						if (!index && index !== 0) {
-							index = tree.findIndex(childNode => childNode.id === node.id);
-						}
-
-						tree[index] = node;
-
-					}
-
-				};
 
 				const deleteNodeFromTree = (tree, node) => {
-					// console.log("testing.deleteNodeFromTree", node);
+
 					if (node.level > 0) {
 
 						const parent = getParentNode(tree, node);
 
-						const nodeIndex = parent.children.findIndex(childNode => childNode.id === node.id);
-						// console.log("testing.deleteNodeFromTree nodeIndex1", parent, nodeIndex);
+						const nodeIndex = parent.children.findIndex(childNode => nodesAreTheSame(childNode, node));
 
 						if (nodeIndex > -1) {
 							parent.children.splice(nodeIndex, 1);
@@ -145,8 +138,8 @@
 
 					} else { // delete from root
 
-						const nodeIndex = tree.findIndex(childNode => childNode.id === node.id);
-						// console.log("testing.deleteNodeFromTree nodeIndex2", nodeIndex);
+						const nodeIndex = tree.findIndex(childNode => nodesAreTheSame(childNode, node));
+
 						if (nodeIndex > -1) {
 							tree.splice(nodeIndex, 1);
 
@@ -183,7 +176,7 @@
 				const getActiveNode = (tree) => {
 
 					for (let node of tree) {
-						if (node.isActive) {
+						if (node.frontOptions.isActive) {
 							return node;
 						}
 
@@ -200,7 +193,8 @@
 
 				const getShadowClass = (elem) => {
 
-					const noScroll = (elem.scrollHeight - elem.clientHeight) <= -1;
+					const noScroll = (elem.scrollHeight - elem.clientHeight) <= 0;
+
 					if (noScroll) {
 						return '';
 					}
@@ -210,6 +204,7 @@
 					}
 
 					const scrollBottom = elem.scrollHeight - elem.clientHeight - elem.scrollTop;
+
 					if (scrollBottom <= 0) {
 						return 'top-shadow';
 					}
@@ -295,11 +290,11 @@
 
 					if (activeNode) { // current activeNode
 
-						activeNode.isActive = false;
+						activeNode.frontOptions.isActive = false;
 						// In case tree filter is active, update original tree
 						// const activeNodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, activeNode.frontOptions.treePath);
 						const activeNodeFromOriginalTree = getNode($scope.treeData, activeNode.frontOptions.pathToNode);
-						activeNodeFromOriginalTree.isActive = false;
+						activeNodeFromOriginalTree.frontOptions.isActive = false;
 
 						// const parents = getParentsOfNode(vm.filteredTree, activeNode);
 						const parents = getAllParentsOfNode(vm.filteredTree, activeNode);
@@ -311,11 +306,11 @@
 
 					if (activeNode !== clickedNode) {
 
-						clickedNode.isActive = true;
+						clickedNode.frontOptions.isActive = true;
 						// In case tree filter is active, update original tree
 						// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, clickedNode.frontOptions.treePath);
 						const nodeFromOriginalTree = getNode($scope.treeData, clickedNode.frontOptions.pathToNode);
-						nodeFromOriginalTree.isActive = true;
+						nodeFromOriginalTree.frontOptions.isActive = true;
 
 						activeNode = clickedNode;
 
@@ -347,18 +342,19 @@
 
 				vm.selectNode = selectNode;
 
-				let currentShadow = getShadowClass(treeElement);
-				if (currentShadow) {
-					treeElement.classList.add(currentShadow);
-				}
+				let currentShadow;
 
 				const applyShadow = () => {
+
 					const shadow = getShadowClass(treeElement);
 
 					if (currentShadow !== shadow) {
-						currentShadow && treeElement.classList.remove(currentShadow);
-						shadow && treeElement.classList.add(shadow);
+
+						if (currentShadow) treeElement.classList.remove(currentShadow);
+						if (shadow) treeElement.classList.add(shadow);
+
 						currentShadow = shadow;
+
 					}
 
 				};
@@ -372,7 +368,7 @@
 
 				const getFirstActiveNodeFromTree = (tree) => {
 					for (const node of tree) {
-						if(node.isActive) {
+						if(node.frontOptions.isActive) {
 							return node;
 						}
 						if(node.children.length) {
@@ -392,7 +388,7 @@
 					addition = true;
 
 					const parentNodeFromOriginalTree = data.activeNodes[0];
-					const tmpNodeId = 'nodeId' + metaHelper.generateUniqueId('classifierNode');
+					const tmpNodeId = metaHelper.generateUniqueId('classifierNodeId');
 
 					// const parentNode = parentNodeFromOriginalTree ? metaHelper.getObjectNestedPropVal(vm.filteredTree, parentNodeFromOriginalTree.frontOptions.treePath) : null;
 					const parentNode = parentNodeFromOriginalTree ? getNode(vm.filteredTree, parentNodeFromOriginalTree.frontOptions.pathToNode) : null;
@@ -409,7 +405,7 @@
 						order: order,
 						frontOptions: {
 							// treePath: treePath,
-							treePath: pathToNode,
+							pathToNode: pathToNode,
 							hasActiveChild: false,
 							closed: level > 0,
 							editOn: true,
@@ -420,11 +416,13 @@
 					const newNodeForOriginalTree = metaHelper.recursiveDeepCopy(newNode);
 
 					if (parentNode) {
+
 						parentNode.children.push(newNode);
 						parentNode.frontOptions.closed = false;
 
 						parentNodeFromOriginalTree.children.push(newNodeForOriginalTree);
 						parentNodeFromOriginalTree.frontOptions.closed = false;
+
 					} else {
 
 						vm.filteredTree.push(newNode);
@@ -453,6 +451,7 @@
 					vm.editingNode = false;
 					addition = false;
 					vm.editableNode.frontOptions.editOn = false;
+
 					// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, vm.editableNode.frontOptions.treePath);
 					const nodeFromOriginalTree = getNode($scope.treeData, vm.editableNode.frontOptions.pathToNode);
 
@@ -607,19 +606,129 @@
 				};
 
 				//region Node drag and drop
+				let dropInbetweenElemsList = [];
+				let nodeDropElemsList = [];
+				let draggedOverElem;
 
-				const nodeCanBeMovedToTheLocation = (nodeToMove, moveTo) => {
+				/* const onNodeDragenter = function (ev) {
+					// const nodeRowElem = ev.target.parentNode; // .classifierNode
+					dndHoverOverElem = ev.target.parentNode; // .classifierNode
+					console.log("testing onNodeDragenter", ev.target, nodeRowElem);
+					dndHoverOverElem.classList.add('dnd-mouse-hover');
+				}; */
 
-					if (Array.isArray(moveTo)) return true; // move to a root
+				/* const onNodeDragleave = function (ev) {
+					/!* const nodeRowElem = ev.target.parentNode; // .classifierNode
+					nodeRowElem.classList.remove('dnd-mouse-hover'); *!/
+					console.log("testing.onNodeDragleave dndHoverOverElem", dndHoverOverElem);
+					dndHoverOverElem.classList.remove('dnd-mouse-hover');
+				};
+
+				const onDropInbetweenDragenter = function (ev) {
+					// const inbetweenElem = ev.target;
+					dndHoverOverElem = ev.target; // .dropAtTheBeginning or .dropAfterNode
+					console.log("testing.onDropInbetweenDragenter dndHoverOverElem", dndHoverOverElem);
+					dndHoverOverElem.classList.add('dnd-mouse-hover');
+				}; */
+
+				const onDragOver = function (ev) {
+
+					const targetElem = ev.target;
+					let draggedOverNewElem;
+					const mouseBetweenNodes = targetElem.classList.contains('dropAtTheBeginning') || targetElem.classList.contains('dropAfterNode');
+
+					if (mouseBetweenNodes) {
+
+						draggedOverNewElem = draggedOverElem !== targetElem;
+
+						if (draggedOverNewElem) {
+
+							if (draggedOverElem) draggedOverElem.classList.remove('dnd-mouse-hover');
+
+							targetElem.classList.add('dnd-mouse-hover');
+							draggedOverElem = targetElem;
+
+						}
+
+
+					}
+					else {
+
+						const nodeElem = targetElem.closest('.classifierNode');
+
+						if (nodeElem) { // mouse over node
+
+							draggedOverNewElem = draggedOverElem !== nodeElem;
+
+							if (draggedOverNewElem) {
+
+								if (draggedOverElem) draggedOverElem.classList.remove('dnd-mouse-hover');
+
+								nodeElem.classList.add('dnd-mouse-hover');
+								draggedOverElem = nodeElem;
+
+							}
+
+						} else if (draggedOverElem) { // mouse moved outside of tree nodes
+
+							draggedOverElem.classList.remove('dnd-mouse-hover');
+							draggedOverElem = null;
+
+						}
+
+					}
+
+				};
+
+				/* const onDropInbetweenDragleave = function (ev) {
+					const inbetweenElem = ev.target;
+					inbetweenElem.classList.remove('dnd-mouse-hover');
+				}; */
+				/**
+				 *
+				 * @param nodeToMove {Object}
+				 * @param moveTo {Object|Array} - other node or root level
+				 * @param index {number=} - index of location to move
+				 * @returns {boolean}
+				 */
+				const nodeCanBeMovedToTheLocation = (nodeToMove, moveTo, index) => {
+
+					index = index || 0;
+
+					const movingToANewLocation = function (moveToList) {
+
+						const prevNode = moveToList[index];
+						const nextNode = moveToList[index + 1];
+						let movingToNewLocation = !nodesAreTheSame(nodeToMove, prevNode);
+
+						if (index > 0 && nextNode) {
+							movingToNewLocation = movingToNewLocation && !nodesAreTheSame(nodeToMove, nextNode);
+						}
+
+						return movingToNewLocation;
+
+					};
+
+					if (Array.isArray(moveTo)) { // move to the root
+
+						if (moveTo.length > 1) return movingToANewLocation(moveTo);
+
+						return true;
+
+					}
 
 					if (nodeToMove.id === moveTo.id) return false;
-
+					//region Check for moveTo is a child of nodeToMove
 					const moveToParents = getAllParentsOfNode(vm.filteredTree, moveTo);
-					// console.log("testing.nodeCanBeMovedToTheLocation nodeToMove", nodeToMove, moveToParents);
-					const parent = moveToParents.find(parent => parent.id === nodeToMove.id);
+					const parent = moveToParents.find(parent => nodesAreTheSame(parent, nodeToMove));
 
 					if (!!parent) return false; // moveTo is a child of nodeToMove
-					// console.log("testing.nodeCanBeMovedToTheLocation true");
+					//endregion
+
+					if (moveTo.children.length > 1) {
+						return movingToANewLocation(moveTo.children)
+					}
+
 					return true;
 
 				}
@@ -631,7 +740,6 @@
 				 * @param index {number=} - If index not specified, it will be set to the last index of moveTo.
 				 */
 				const moveNode = function (nodeToMove, moveTo, index) {
-					// console.log("testing.moveNode", nodeToMove, moveTo);
 
 					removeNode(nodeToMove);
 					// nodeToMove.id; // actually we are creating copy of node
@@ -642,18 +750,16 @@
 
 						nodeToMove.level = 0;
 						nodeToMove.frontOptions.pathToNode = [nodeToMove.id];
-						// console.log("testing.moveNode index ",index);
+
 						/* if (index >= moveTo.length) {
 							moveTo.push(nodeToMove);
-							console.log("testing.moveNode moveTo", JSON.parse(JSON.stringify(moveTo)));
+
 						} else {
 							moveTo.splice(index, 0, nodeToMove); // moveTo is vm.filteredTree in this case
 						} */
-						moveTo.splice(index, 0, nodeToMove); // moveTo is vm.filteredTree in this case
-						// console.log("testing.moveNode moveTo", JSON.parse(JSON.stringify(moveTo)));
+						moveTo.splice(index, 0, nodeToMove); // moveTo is $scope.treeData or vm.filteredTree in this case
 
-						// setNodeInsideTree($scope.treeData, nodeToMove, index);
-						$scope.treeData.splice(index, 0, nodeToMove);
+						// $scope.treeData.splice(index, 0, nodeToMove);
 
 					}
 					else { // move to another node
@@ -671,10 +777,10 @@
 						}*/
 						moveTo.children.splice(index, 0, nodeToMove);
 
-						setNodeInsideTree($scope.treeData, moveTo);
+						/* const moveToFromOriginalTree = getNode($scope.treeData, moveTo.frontOptions.pathToNode);
+						moveToFromOriginalTree.children.splice(index, 0, nodeToMove); */
 
 					}
-					// console.log("testing.moveNode treeData", $scope.treeData);
 
 					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED);
 
@@ -683,85 +789,110 @@
 				const insertNodeAfterAnotherNode = function (droppedNode, previousNodePath) {
 
 					// const prevNode = metaHelper.getObjectNestedPropVal(vm.filteredTree, previousNodePath);
-					const prevNode = getNode(vm.filteredTree, previousNodePath);
-					const parent = getParentNode(vm.filteredTree, prevNode) || vm.filteredTree;
+					const prevNode = getNode($scope.treeData, previousNodePath);
+					if (nodesAreTheSame(droppedNode, prevNode)) return; // node dropped after itself
+					// const parent = getParentNode(vm.filteredTree, prevNode) || vm.filteredTree;
+					const parent = getParentNode($scope.treeData, prevNode) || $scope.treeData;
 
-					if (!nodeCanBeMovedToTheLocation(droppedNode, parent)) return;
+					// const droppedAfterItself = nodesAreTheSame(droppedNode, prevNode);
+					// if (!nodeCanBeMovedToTheLocation(droppedNode, parent) || droppedAfterItself) return;
 
-					let nodesList = (prevNode.level > 0) ? parent.children : vm.filteredTree;
-					// console.log("testing.insertNodeAfterAnotherNode nodesList", nodesList);
-					const prevNodeIndex = nodesList.findIndex(childNode => childNode.id === prevNode.id);
-					const moveToIndex = prevNodeIndex + 1;
-					// console.log("testing.insertNodeAfterAnotherNode indexes", prevNodeIndex, moveToIndex);
-					moveNode(droppedNode, parent, moveToIndex);
+					// let nodesList = (prevNode.level > 0) ? parent.children : vm.filteredTree;
+					let nodesList = (prevNode.level > 0) ? parent.children : $scope.treeData;
+
+					const prevNodeIndex = nodesList.findIndex(childNode => nodesAreTheSame(childNode, prevNode));
+					let moveToIndex = prevNodeIndex + 1;
+
+					if (droppedNode.level === prevNode.level) {
+						const droppedNodeIndex = nodesList.findIndex(childNode => nodesAreTheSame(childNode, droppedNode));
+						// if droppedNode located before prevNode, moveToIndex will be lesser after removal of droppedNodeIndex from it's current place
+						if (droppedNodeIndex <= prevNodeIndex) moveToIndex = prevNodeIndex;
+					}
+
+					if (nodeCanBeMovedToTheLocation(droppedNode, parent, moveToIndex)) {
+						moveNode(droppedNode, parent, moveToIndex);
+					}
+
+				};
+				/**
+				 * Used to format path to node. If it comes from dataset for example.
+				 *
+				 * @param pathToNode {string} - path to node from dataset
+				 * @returns <Array> - parents ids and id of node itself in the end
+				 */
+				const getPathToNodeFromString = function (pathToNode) {
+
+					if (!pathToNode) return [];
+
+					const pathToNodeAsSubstringsList = pathToNode.split(',');
+
+					return pathToNodeAsSubstringsList.map(nodeId => Number.isNaN(nodeId) ? nodeId : parseInt(nodeId));
 
 				};
 
 				const onNodeDrop = function (ev) {
-					// console.log("testing.onNodeDrop called");
-					const droppedNodePath = ev.dataTransfer.getData("pathToNode").split(',');
+
+					const droppedNodePath = getPathToNodeFromString(ev.dataTransfer.getData("pathToNode"));
 					// const droppedNode = metaHelper.getObjectNestedPropVal(vm.filteredTree, droppedNodePath);
-					const droppedNode = getNode(vm.filteredTree, droppedNodePath);
+					const droppedNode = getNode($scope.treeData, droppedNodePath);
 
 					if (ev.target.classList.contains('dropAfterNode')) { // dropped between nodes
-						// console.log("testing dropAfterNode");
-						const prevNodePath = ev.target.dataset.pathToNode.split(',');
+
+						const prevNodePath = getPathToNodeFromString(ev.target.dataset.pathToNode);
 						insertNodeAfterAnotherNode(droppedNode, prevNodePath);
 
 					}
 					else if (ev.target.classList.contains('dropAtTheBeginning')) {
 						// insertNodeAtTheBeginning(droppedNode, droppedToNodePath);
 						// let moveTo = getMoveTo(ev);
-						let moveToPath = ev.target.dataset.pathToNode;
-						let moveTo = vm.filteredTree;
+						let moveToPath = getPathToNodeFromString(ev.target.dataset.pathToNode);
+						let moveTo = $scope.treeData;
 
-						if (moveToPath) { // not a root level
-							moveToPath = moveToPath.split(',');
-							moveTo = getNode(vm.filteredTree, moveToPath);
+						if (moveToPath.length) { // not a root level
+							// moveToPath = moveToPath.split(',');
+							moveTo = getNode($scope.treeData, moveToPath);
 						}
-						// console.log("testing.onNodeDrop dropAtTheBeginning", droppedNode, moveTo);
-						if (nodeCanBeMovedToTheLocation(droppedNode, moveTo)) {
+
+						if (nodeCanBeMovedToTheLocation(droppedNode, moveTo, 0)) {
 							moveNode(droppedNode, moveTo, 0);
 						}
 
 					}
+					/* else if (ev.target.classList.contains('dropOntoNode')) {
+						console.log("testing.onNodeDrop dropOntoNode");
+						const droppedToNodeElem = ev.target.closest('.classifierNode');
+						const moveToPath = droppedToNodeElem.dataset.pathToNode.split(',');
+
+						let moveTo = getNode(vm.filteredTree, moveToPath);
+
+						if (nodeCanBeMovedToTheLocation(droppedNode, moveTo)) {
+							moveNode(droppedNode, moveTo);
+						}
+
+					} */
 					else {
 
 						const droppedToNodeElem = ev.target.closest('.classifierNode');
-						// console.log("testing.onNodeDrop ev", ev, droppedToNodeElem);
 
 						if (droppedToNodeElem) {
 
-							/* const droppedToNodeId = droppedToNodeElem.dataset.id;
+							const moveToPath = getPathToNodeFromString(droppedToNodeElem.dataset.pathToNode);
 
-							if (droppedToNodeId !== droppedNode.id) {
-
-								const droppedToNodePath = droppedToNodeElem.dataset.pathToNode.split(',');
-								moveNodeInsideAnotherNode(droppedNode, droppedToNodePath);
-
-							} */
-							// let moveTo = getMoveTo(ev);
-							const moveToPath = droppedToNodeElem.dataset.pathToNode.split(',');
-							let moveTo = getNode(vm.filteredTree, moveToPath);
+							let moveTo = getNode($scope.treeData, moveToPath);
 
 							if (nodeCanBeMovedToTheLocation(droppedNode, moveTo)) {
 								moveNode(droppedNode, moveTo);
 							}
 
-						} else { // dropped to the root
-							// console.log("testing.onNodeDrop move to tree");
-							// moveNodeToRoot();
-							moveNode(droppedNode, vm.filteredTree);
+						} else { // dropped on the edge of classifier tree
+							moveNode(droppedNode, $scope.treeData);
 						}
 
 					}
 
 				};
 
-				vm.onDragStart = function (ev) {
-
-					const targetElem = ev.target;
-					// console.log("testing.onDragStart targetElem", targetElem);
+				vm.onNodeDragStart = function (ev) {
 
 					const nodeDndBackdrop = document.createElement('div');
 
@@ -771,12 +902,66 @@
 					ev.dataTransfer.setData("id", ev.target.dataset.nodeId);
 					ev.dataTransfer.setData("pathToNode", ev.target.dataset.pathToNode);
 
+					/* nodeDropElemsList = treeElement.querySelectorAll(".dropOntoNode");
+
+					nodeDropElemsList.forEach(nodeElem => {
+						nodeElem.addEventListener('dragenter', onNodeDragenter);
+						nodeElem.addEventListener('dragleave', onNodeDragleave);
+					}); */
+
+					dropInbetweenElemsList = [];
+					const dropBeforeElemsList = treeElement.querySelectorAll(".dropAtTheBeginning");
+					const dropAfterElemsList = treeElement.querySelectorAll(".dropAfterNode");
+
+					dropBeforeElemsList.forEach(dbElem => dropInbetweenElemsList.push(dbElem));
+					dropAfterElemsList.forEach(daElem => dropInbetweenElemsList.push(daElem));
+
+					/* dropInbetweenElemsList.forEach(dElem => {
+						dElem.addEventListener('dragenter', onDropInbetweenDragenter);
+						// dElem.addEventListener('dragleave', onDropInbetweenDragleave);
+						dElem.addEventListener('dragleave', onNodeDragleave);
+					}); */
+					treeElement.addEventListener('dragover', onDragOver);
+
+					treeElement.classList.add('dnd-in-progress');
+
 					treeElement.addEventListener("drop", onNodeDrop, {once: true});
+
+				};
+
+				vm.onNodeDragEnd = function (ev) {
+
+					nodeDropElemsList.forEach(nodeElem => {
+						nodeElem.removeEventListener('dragenter', onNodeDragenter);
+						nodeElem.removeEventListener('dragleave', onNodeDragleave);
+					});
+
+					/* dropInbetweenElemsList.forEach(dElem => {
+						dElem.removeEventListener('dragenter', onDropInbetweenDragenter);
+						// dElem.removeEventListener('dragleave', onDropInbetweenDragleave);
+						dElem.addEventListener('dragleave', onNodeDragleave);
+					}); */
+
+					treeElement.removeEventListener('dragover', onDragOver);
+					treeElement.removeEventListener("drop", onNodeDrop);
+
+					nodeDropElemsList = [];
+					dropInbetweenElemsList = [];
+
+					// dndHoverOverElem.classList.remove('dnd-mouse-hover');
+					if (draggedOverElem) draggedOverElem.classList.remove('dnd-mouse-hover');
+					treeElement.classList.remove('dnd-in-progress');
 
 				};
 				//endregion
 
 				const init = function () {
+
+					let currentShadow = getShadowClass(treeElement);
+
+					if (currentShadow) {
+						treeElement.classList.add(currentShadow);
+					}
 
 					const activeNodeOnInit = getActiveNode(vm.filteredTree);
 

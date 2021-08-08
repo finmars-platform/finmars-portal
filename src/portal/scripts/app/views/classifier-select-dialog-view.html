@@ -9,9 +9,9 @@
 
     <md-dialog-content>
 
-        <div class="classifier-tree-wrapper">
+        <div class="classifier-sel-tree-wrapper">
 
-            <div ng-if="vm.tree">
+            <div ng-if="vm.tree" class="height-100">
                 <classifier-tree tree-data="vm.tree"
                                  classifier-tree-event-service="vm.classifierTreeEventService"
                                  on-active-nodes-change-callback="vm.onActiveNodesChange(activeNodesList)"></classifier-tree>
