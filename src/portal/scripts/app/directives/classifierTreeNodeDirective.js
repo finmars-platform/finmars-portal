@@ -44,7 +44,8 @@
 					return !scope.currentEdit.name.trim();
 				}
 
-				classifierNodeRowElem.addEventListener('dragstart', cTreeVm.onDragStart);
+				classifierNodeRowElem.addEventListener('dragstart', cTreeVm.onNodeDragStart);
+				classifierNodeRowElem.addEventListener('dragend', cTreeVm.onNodeDragEnd);
 
 				scope.getPathToNodeAsString = function () {
 					return scope.node.frontOptions.treePath.join(',');

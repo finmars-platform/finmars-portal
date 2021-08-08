@@ -217,10 +217,10 @@
 
             vm.readyStatus = false;
             const classifiers = getClearTree(vm.tree);
-			// console.log("testing.updateClassifier ClearTree", JSON.parse(JSON.stringify(classifiers)));
+
             vm.classifier.classifiers = classifiers;
             activeNodesIdsBeforeUpdate = vm.activeNodes.map(({id}) => id);
-			// console.log("testing.updateClassifier classifier", JSON.parse(JSON.stringify(vm.classifier)));
+
             attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier).then(function () {
                 vm.activeNodes = [];
                 vm.getTree();
@@ -301,7 +301,6 @@
 			vm.getTree();
 
 			vm.classifierTreeEventService.addEventListener(classifierEvents.CLASSIFIER_TREE_CHANGED, () => {
-				// console.log("testing CLASSIFIER_TREE_CHANGED tree", JSON.parse(JSON.stringify(vm.tree)));
                 updateClassifier();
             });
 

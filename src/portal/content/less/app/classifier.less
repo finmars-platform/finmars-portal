@@ -1,4 +1,5 @@
 .classifier-select-dialog-view {
+  max-height: 90%;
   overflow: hidden;
 
   .md-toolbar-tools {
@@ -10,7 +11,8 @@
   }
 
   .classifier-tree-filter-container {
-    height: 48px;
+    // height: 48px;
+    flex: 0 0 48px;
 
     padding: 0 15px;
 
@@ -65,8 +67,9 @@
   }
 }
 
-.classifier-tree-wrapper {
+.classifier-sel-tree-wrapper {
   position: relative;
+  height: 395px;
 
   .tree-loader {
     position: absolute;
@@ -86,15 +89,20 @@
 }
 
 .classifier-tree-container {
-  height: 410px;
+  /* height: 410px;
   max-height: 410px;
-  min-height: 410px;
+  min-height: 410px; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 150px;
 }
 
 .classifier-tree {
   width: 100%;
-  max-height: 348px;
-  min-height: 348px;
+  /*max-height: 348px;
+  min-height: 348px;*/
+  flex: 0 1 100%;
   padding: 0 20px;
   box-sizing: border-box;
   overflow: auto;
@@ -112,9 +120,6 @@
   &.bottom-shadow {
     box-shadow: inset 0 -8px 12px -8px rgba(0, 0, 0, 0.25);
   }
-
-
-
 
 
   .classifier-node-holder {
@@ -174,6 +179,20 @@
       }
     }
 
+    /* .node-drop-container-1 {
+      position: absolute;
+      display: none;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    } */
+
+  }
+
+  .classifier-node {
+
     &.active,
     &.edit {
 
@@ -196,10 +215,39 @@
         border: none;
       }
     }
+
   }
 
-  .node-drop-container {
+  .node-drop-container-2 {
+    position: relative;
     height: 10px;
+    z-index: 2;
+
+    &.dnd-mouse-hover {
+      // height: 36px;
+      height: 30px;
+      background-color: #f2f2f2;
+    }
   }
+
+}
+
+.classifier-tree.dnd-in-progress {
+
+  .classifier-node.dnd-mouse-hover {
+
+    > .classifier-node-row {
+      background-color: @paleOrange;
+    }
+
+  }
+
+  /* .classifier-node {
+    .node-drop-container-1 {
+      display: block;
+      z-index: 1;
+    }
+  } */
+
 
 }
