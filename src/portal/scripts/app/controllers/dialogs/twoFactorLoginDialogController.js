@@ -31,7 +31,17 @@
                 twoFactorService.validateCode({code: vm.securityCode, username: vm.username}).then(function (data) {
 
                     if (data.token) {
-                        cookieService.setCookie('authtoken', data.token);
+
+                        var domain = "." +
+                            location.hostname.split('.').reverse()[1] + "." +
+                            location.hostname.split('.').reverse()[0]
+
+                        var options = {
+                            'domain': domain,
+                            'path': '/'
+                        }
+
+                        cookieService.setCookie('authtoken', data.token, options);
                     }
 
 

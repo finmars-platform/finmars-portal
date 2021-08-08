@@ -1,13 +1,11 @@
 (function () {
 
+	var metaService = require('../services/metaService');
+	var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+
     var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
-    var metaService = require('../services/metaService');
-
-    // IMPORTANT: if you are changing popupMenu variables, also change them in 'entity-viewer.less'
-    var popupMenuWidth = 320;
-    var popupMenuOptionHeight = 33;
 
     var getNextPage = function (options, event, entityViewerDataService) {
 
@@ -256,7 +254,6 @@
     var getUnfoldedGroups = function (evDataService) {
 
         var data = evDataService.getData();
-
         var keys = Object.keys(data);
 
         var items = [];
@@ -323,6 +320,28 @@
 
     };
 
+	const filterByRowColor = function (flatList, evDataService) {
+
+		var rowTypeFilters = evDataService.getRowTypeFilters();
+		var filterByColor = rowTypeFilters.markedRowFilters;
+
+		if (filterByColor === 'none') { //  color filter disabled
+			return flatList;
+		}
+
+		var entityType = evDataService.getEntityType();
+		var markedRows = localStorageService.getMarkedRows(false, entityType);
+
+		return flatList.filter(item => {
+
+			if (item.___type !== 'object') return true;
+			// does color of row matches to filter
+			return markedRows.hasOwnProperty(item.id) && markedRows[item.id].color === filterByColor;
+
+		});
+
+	};
+
     var getFlatStructure = function (evDataService) {
 
         var data = JSON.parse(JSON.stringify(evDataService.getData()));
@@ -340,6 +359,8 @@
 
         list = removeItemsFromFoldedGroups(list);
 
+        list = filterByRowColor(list, evDataService);
+
         // console.log('list', list);
 
         return list;
@@ -354,7 +375,7 @@
         var offsetPx = evDataService.getVirtualScrollOffsetPx();
         var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
-
+		console.log("dubugging.rowsToShow calculateProjection data", rowHeight, offsetPx, step);
         evDataService.setProjectionLastFrom(from);
 
         var to = from + (step / 2);
@@ -369,7 +390,7 @@
         // console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
         // console.log('View Context ' + evDataService.getViewContext() + ' from', from);
         // console.log('View Context ' + evDataService.getViewContext() + ' to', to);
-
+		console.log("dubugging.rowsToShow calculateProjection from to", from, to);
         return flatList.slice(from, to);
 
     };
@@ -824,180 +845,6 @@
 
     };
 
-    var calculateMenuPosition = function (popup, menuPosition) {
-
-        var bodyWidth = document.body.clientWidth;
-        var bodyHeight = document.body.clientHeight;
-
-        var menuOptionsContainer = popup.querySelector('.ev-dropdown-container');
-        var submenuItem = menuOptionsContainer.querySelector('.ev-dropdown-submenu');
-
-        if (bodyWidth <= menuPosition.positionX + popupMenuWidth) {
-
-            popup.classList.add('ev-dropdown-opens-left');
-            popup.style.right = 0;
-
-        } else if (submenuItem && bodyWidth <= menuPosition.positionX + (popupMenuWidth * 2)) { // multiplying by 2 because of possibility of at least one submenu
-            popup.classList.add('ev-dropdown-opens-left');
-
-        } else {
-            popup.style.left = menuPosition.positionX + 'px';
-        }
-
-        var firstLevelOptionsNumber = menuOptionsContainer.childElementCount;
-        var menuHeight = firstLevelOptionsNumber * popupMenuOptionHeight;
-
-        if (bodyHeight < menuPosition.positionY + menuHeight) {
-
-            popup.classList.add('ev-dropdown-opens-top');
-            popup.style.bottom = 0
-
-        } else {
-            popup.style.top = menuPosition.positionY + 'px'
-        }
-
-        //popup.style.cssText = menuPosition;
-
-    };
-
-    var calculateStaticMenuPosition = function (popup, menuElem, popupHeight) {
-
-        var menuElemRect = menuElem.getBoundingClientRect();
-        // "-24" to create more space between mouse and popup borders
-		var popupTop = menuElemRect.top - 24;
-        popup.style.left = (menuElemRect.left - 24) + "px"
-
-		var bodyHeight = document.body.clientHeight;
-
-        if (bodyHeight < popupTop + popupHeight) {
-
-            popup.style.bottom = 0;
-
-        } else {
-			popup.style.top = popupTop + 'px'
-		}
-
-    };
-
-    var customizePopup = function (popup, objectId) {
-
-    	popup.id = 'dropdown-' + objectId;
-		popup.classList.add('ev-dropdown', 'fade-in', 'evDropdown');
-
-		popup.style.position = 'absolute';
-
-		return popup;
-
-	};
-
-	/**
-	 * Change row before opening context menu for it
-	 *
-	 * @param objectId {number} - id of row of ev / rv table
-	 * @param parentGroupHashId {number} - id of parent group of row of ev / rv table
-	 * @param evDataService {Object} - entityViewerDataService
-	 * @param isReport {Boolean}
-	 * @returns {HTMLDivElement} - HTML element for context menu of row
-	 */
-    var prepareRowAndGetPopupMenu = function (objectId, parentGroupHashId, evDataService, isReport) {
-
-        var popup = document.createElement('div');
-		// Victor 2021.02.01 #75 On right mouse click row don't need selected
-		/* if (isReport) {
-
-            var objects = evDataService.getObjects();
-
-            objects.forEach(function (item) {
-                item.___is_activated = false;
-                item.___is_last_activated = false;
-
-                evDataService.setObject(item);
-
-            });
-
-        }*/
-
-		var obj = getObject(objectId, parentGroupHashId, evDataService);
-
-		if (obj) {
-
-			// obj.___is_activated = true;
-			obj.___context_menu_is_opened = true;
-			/*if (isReport) {
-				obj.___context_menu_opened = true;
-			}*/
-
-			evDataService.setObject(obj);
-
-		}
-
-        popup = customizePopup(popup);
-
-        return popup;
-
-    };
-
-	/**
-	 *
-	 * @param subtotalId {number}
-	 * @param type {string} - type or subtype of subtotal. Can be 'line' or 'area'
-	 * @param parentGroupHashId {number}
-	 * @param evDataService {Object}
-	 * @returns {HTMLDivElement} - html for context menu popup
-	 */
-	var prepareSubtotalAndGetPopupMenu = function (subtotalId, type, parentGroupHashId, evDataService) {
-
-		var popup = document.createElement('div');
-		// Victor 2021.02.01 #75 On right mouse click row don't need selected
-		/* if (isReport) {
-
-            var objects = evDataService.getObjects();
-
-            objects.forEach(function (item) {
-                item.___is_activated = false;
-                item.___is_last_activated = false;
-
-                evDataService.setObject(item);
-
-            });
-
-        }*/
-
-		var parent = Object.assign({}, evDataService.getData(parentGroupHashId));
-		// var subtotalType = obj.___subtotal_subtype ? obj.___subtotal_subtype : obj.___subtotal_type;
-
-		if (type === 'area') {
-			parent.___area_subtotal_context_menu_is_opened = true;
-
-		} else if (type === 'line') {
-			parent.___line_subtotal_context_menu_is_opened = true;
-		}
-
-		evDataService.setData(parent);
-
-		popup = customizePopup(popup, subtotalId);
-
-		return popup;
-
-	};
-
-    var preparePopupMenuType2 = function (objectId, classesList) {
-
-    	var popup = document.createElement('div');
-
-		popup.id = 'dropdown-' + objectId;
-
-		classesList = classesList || [];
-		classesList = classesList.concat(["fade-in", "evDropdown"]);
-
-		popup.classList.add(...classesList);
-
-		popup.style.position = 'absolute';
-
-		return popup;
-
-	};
-
     var separateNotGroupingColumns = function (columns, groups) {
 
         const notGroupingColumns = [];
@@ -1042,31 +889,102 @@
 
     var clearLastActiveObject = function (evDataService) {
 
-    	var objects = evDataService.getObjects();
+        var objects = evDataService.getObjects();
 
-		objects.forEach(function (item) {
+        objects.forEach(function (item) {
 
-			item.___is_last_activated = false;
-			evDataService.setObject(item);
+            item.___is_active_object = false;
+            evDataService.setObject(item);
 
-		});
+        });
 
-	};
+    };
 
-	var clearObjectActiveState = function (evDataService) {
+    var clearObjectActiveState = function (evDataService) {
 
-		var objects = evDataService.getObjects();
+        var objects = evDataService.getObjects();
 
-		objects.forEach(function (item) {
+        objects.forEach(function (item) {
 
-			item.___is_activated = false;
-			item.___is_last_activated = false;
+            item.___is_activated = false;
+            item.___is_active_object = false;
 
-			evDataService.setObject(item);
+            evDataService.setObject(item);
 
-		});
+        });
 
-	};
+    };
+
+    // MATERIAL DESIGN ENTITY VIEWER LOGIC
+
+    var getObjectsFromSelectedGroups = function (evDataService) {
+
+        var result = [];
+
+        var selectedGroups = evDataService.getSelectedGroups();
+        var multiselectState = evDataService.getSelectedGroupsMultiselectState();
+
+        console.log('getObjectsFromSelectedGroups.selectedGroups', selectedGroups);
+
+
+        var controlObj = null;
+
+        selectedGroups.forEach(function (group) {
+
+            var rawData = evDataService.getData(group.___id)
+
+            if (rawData) {
+                var data = JSON.parse(JSON.stringify(rawData));
+
+                console.log('getObjectsFromSelectedGroups.data', data);
+
+
+                data.results.forEach(function (item) {
+
+                    if (item.___type === 'object') {
+                        result.push(item);
+                    } else if (item.___type === 'placeholder_object') {
+                        result.push(item);
+                    } else if (item.___type === 'control') {
+                        // if (!multiselectState) {
+                        controlObj = item
+                        // }
+                    }
+
+                })
+            }
+
+        })
+
+        if (controlObj) {
+            result.push(controlObj)
+        }
+
+		evDataService.setUnfilteredFlatList(result);
+
+		result = filterByRowColor(result, evDataService);
+
+        console.log('getObjectsFromSelectedGroups.result', result)
+
+        return result;
+
+    }
+
+    var getGroupsAsTree = function (evDataService) {
+
+        var data = JSON.parse(JSON.stringify(evDataService.getData()));
+        var rootGroup = JSON.parse(JSON.stringify(evDataService.getRootGroupData()));
+
+        var tree = utilsHelper.convertToTree(data, rootGroup);
+
+        console.log('getFlatStructure.data', data);
+        console.log('getFlatStructure.rootGroup', rootGroup);
+        console.log('getFlatStructure.tree', tree);
+
+
+        return tree;
+
+    };
 
     module.exports = {
 
@@ -1100,12 +1018,12 @@
 
         calculatePageFromOffset: calculatePageFromOffset,
 
-		prepareRowAndGetPopupMenu: prepareRowAndGetPopupMenu,
-		prepareSubtotalAndGetPopupMenu: prepareSubtotalAndGetPopupMenu,
+        /* prepareRowAndGetPopupMenu: prepareRowAndGetPopupMenu,
+        prepareSubtotalAndGetPopupMenu: prepareSubtotalAndGetPopupMenu,
 
-		preparePopupMenuType2: preparePopupMenuType2,
+        preparePopupMenuType2: preparePopupMenuType2,
         calculateMenuPosition: calculateMenuPosition,
-		calculateStaticMenuPosition: calculateStaticMenuPosition,
+        calculateStaticMenuPosition: calculateStaticMenuPosition, */
 
         setDefaultGroups: setDefaultGroups,
         setDefaultObjects: setDefaultObjects,
@@ -1121,8 +1039,12 @@
         separateNotGroupingColumns: separateNotGroupingColumns,
         importGroupsStylesFromColumns: importGroupsStylesFromColumns,
 
-		clearLastActiveObject: clearLastActiveObject,
-		clearObjectActiveState: clearObjectActiveState
+        clearLastActiveObject: clearLastActiveObject,
+        clearObjectActiveState: clearObjectActiveState,
+
+
+        getObjectsFromSelectedGroups: getObjectsFromSelectedGroups,
+        getGroupsAsTree: getGroupsAsTree
     }
 
 

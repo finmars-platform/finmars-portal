@@ -25,6 +25,7 @@
 
         vm.entityViewerDataService = entityViewerDataService;
         vm.entityViewerEventService = entityViewerEventService;
+		vm.attributeDataService = attributeDataService;
 
         vm.contentWrapElement = contentWrapElement;
 

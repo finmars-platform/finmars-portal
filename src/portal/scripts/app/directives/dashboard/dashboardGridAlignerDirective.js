@@ -59,8 +59,8 @@
                         tab = layout.data.tabs[scope.tabNumber];
                     }
 
-                    var elements = elem.find('.dashboard-cell');
-                    var emptySpace = elem.find('.dashboard-empty-space')[0];
+                    var elements = elem.find('.dashboardCell');
+                    var emptySpace = elem.find('.dashboardEmptySpace')[0];
                     var domElem;
                     var layoutElem;
 
