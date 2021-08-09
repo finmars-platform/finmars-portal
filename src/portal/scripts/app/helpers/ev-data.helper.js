@@ -330,7 +330,8 @@
 		}
 
 		var entityType = evDataService.getEntityType();
-		var markedRows = localStorageService.getMarkedRows(false, entityType);
+		// var markedRows = localStorageService.getMarkedRows(false, entityType);
+		var markedRows = {};
 
 		return flatList.filter(item => {
 
@@ -375,7 +376,7 @@
         var offsetPx = evDataService.getVirtualScrollOffsetPx();
         var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
-
+		console.log("dubugging.rowsToShow calculateProjection data", rowHeight, offsetPx, step);
         evDataService.setProjectionLastFrom(from);
 
         var to = from + (step / 2);
@@ -390,7 +391,7 @@
         // console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
         // console.log('View Context ' + evDataService.getViewContext() + ' from', from);
         // console.log('View Context ' + evDataService.getViewContext() + ' to', to);
-
+		console.log("dubugging.rowsToShow calculateProjection from to", from, to);
         return flatList.slice(from, to);
 
     };
