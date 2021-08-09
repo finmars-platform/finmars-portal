@@ -34,10 +34,20 @@
 		return commonTasks.minAllScripts();
 	});
 
+	gulp.task(appName + '-img-copy', function () {
+
+		var pathToImg = ['src/' + appName + '/content/img/**/*'];
+
+		return gulp.src(pathToImg)
+			.pipe(gulp.dest('dist/' + appName + '/content/img/'));
+
+	});
+
 	gulp.task(appName + '-min-All', gulp.parallel(
 		'main-html-min', // actually mininifies only index.html
 		gulp.series(appName + '-HTML-to-JS', 'js-min'),
 		'portal-less-to-css-min',
+		appName + '-img-copy'
 	));
 
 	 gulp.task(appName + '-watch-All', () => {

@@ -156,7 +156,7 @@
 
             switch (column.report_settings.round_format_id) {
                 case 0:
-                    return value;
+                    return '' + value;
                     break;
                 case 1:
                     //return parseInt(value, 10);
@@ -187,7 +187,7 @@
 
         }
 
-        return value
+        return '' + value; // Must return string
 
     };
 
@@ -302,7 +302,14 @@
 
     };
 
-    var formatPercentage = function (value, column) {
+	/**
+	 * Applies multiplier, rounding and suffix to number.
+	 *
+	 * @param value {number | string}
+	 * @param column {Object}
+	 * @returns {number | string | NaN}
+	 */
+    var formatPercentage = function (value, column, applySuffix) {
 
         var number = value;
 
@@ -312,7 +319,7 @@
                 number = parseFloat(number) * column.report_settings.number_multiplier;
             }
 
-            switch (number) {
+            switch (column.report_settings.percentage_format_id) {
 
                 case 1:
                 case 4:
@@ -327,7 +334,10 @@
                     break;
             }
 
-            /*switch (column.report_settings.percentage_format_id) {
+			if (applySuffix && column.report_settings.number_suffix) {
+				number = number + column.report_settings.number_suffix;
+			}
+            /* switch (column.report_settings.percentage_format_id) {
 
                 case 0:
                     return value;
@@ -369,7 +379,7 @@
             value = '';
         }
 
-        value = formatPercentage(value, column);
+        value = formatPercentage(value, column, false); // also applies multiplier
 
         value = formatRounding(value, column);
 

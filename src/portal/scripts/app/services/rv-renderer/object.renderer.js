@@ -111,7 +111,8 @@
 
                     result.html_result = renderHelper.formatValue(obj, column);
                     result.numeric_result = obj[column.key];
-                    result.raw_text_result = renderHelper.formatValue(obj, column);
+                    // result.raw_text_result = renderHelper.formatValue(obj, column); // Twice process format?
+                    result.raw_text_result = result.html_result;
 
                 }
 
@@ -237,14 +238,14 @@
 
             if (parent.___is_open) {
 
-                if (obj[column.key]) {
+                // if (obj[column.key]) { // Victor if obj[column.key] === 0 ?
+                if (typeof obj[column.key] !== 'undefined' && obj[column.key] !== null) {
                     result = getEntityAttributeValue(obj, column);
 
                 } else {
                     result = getDynamicAttributeValue(obj, column);
 
                 }
-
 
             } else {
 

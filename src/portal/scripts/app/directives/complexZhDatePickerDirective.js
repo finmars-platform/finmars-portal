@@ -473,7 +473,8 @@
 						applyPopupDataToSecondDate(secondDate);
 
 
-					} else {
+					}
+					else {
 
 						/* scope.date = scope.popupData.date;
 
