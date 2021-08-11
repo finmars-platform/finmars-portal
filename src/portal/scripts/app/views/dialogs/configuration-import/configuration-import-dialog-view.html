@@ -53,9 +53,8 @@
                 <span data-ng-bind="vm.getEntityName(item)"
                       data-ng-class="{
                       'used-dynamic-attrs': item.attributeIsUsed__}"></span>
-                <span
-                        class="cie-dependency"
-                        data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
+                <span class="cie-dependency"
+                      data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
 
                 <span data-ng-if="item.is_duplicate" class="cursor-pointer"><ng-md-icon
@@ -86,7 +85,9 @@
                     'child-with-icon': vm.checkForTextIcon(item.entity, child),
                     'text-warning-red': child.is_duplicate && vm.settings.mode == 'overwrite',
                     'text-warning-blue': child.is_duplicate && vm.settings.mode == 'skip'}">
-                        <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)" icon="folder" fill="#000"
+                        <ng-md-icon data-ng-if="vm.checkForTextIcon(item.entity, child)"
+                                    icon="folder"
+                                    fill="#000"
                                     size="20"></ng-md-icon>
                         {{vm.getItemName(child)}}
                         <span data-ng-if="child.countOfUsages__ || child.countOfUsages__ === 0">(<b>{{child.countOfUsages__}}</b>)</span>
