@@ -5,7 +5,10 @@
     var objectRender = require('./object.renderer');
     var subtotalRender = require('./subtotal.renderer');
     var blanlineRender = require('./blankline.renderer');
-    var evEvents = require('../../services/entityViewerEvents');
+
+    var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
+
+	var evEvents = require('../../services/entityViewerEvents');
 
     var render = function (elem, projection, evDataService, evEventService) {
 
@@ -22,12 +25,9 @@
 
         var rows = [];
 
-        var markedReportRows = localStorage.getItem("marked_report_rows");
-        if (markedReportRows) {
-            markedReportRows = JSON.parse(markedReportRows);
-        } else {
-            markedReportRows = {};
-        }
+        const entityType = evDataService.getEntityType();
+        const markedReportRows = localStorageService.getMarkedRows(true, entityType);
+
 
         for (var i = 0; i < projection.length; i = i + 1) {
 

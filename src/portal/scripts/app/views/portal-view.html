@@ -1,15 +1,17 @@
-<div ng-if="vm.readyStatus" class="min-height">
+<div ng-if="vm.readyStatus" class="height-100">
 
-    <div class="page-dnd-wrapper min-height" dnd-files-on-page>
+    <div class="page-dnd-wrapper height-100" dnd-files-on-page>
 
-        <main-header opened-inside="portal" class="portal-header"></main-header>
+        <div class="flex-column height-100">
+            <main-header opened-inside="portal" class="portal-header"></main-header>
+
+            <md-content class="app-md-content flex-0-1-100">
+                <div ui-view class="min-height space-for-sidenav"></div>
+            </md-content>
+        </div>
 
         <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm"
              data-ng-include="'views/side-nav-view.html'"></div>
-
-        <md-content class="app-md-content min-height">
-            <div ui-view class="min-height space-for-sidenav"></div>
-        </md-content>
 
     </div>
 
