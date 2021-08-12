@@ -1,0 +1,31 @@
+<div class="classifier-node" ng-class="{'active': node.isActive, 'edit': node.frontOptions.editOn}">
+    <div class="classifier-node-row flex-row"
+         data-ng-class="{'opened': !node.frontOptions.closed, 'has-active-child': node.frontOptions.hasActiveChild}">
+        <div>
+            <span class="material-icons pointer"
+                  ng-style="{'visibility': node.children.length ? 'visible' : 'hidden'}"
+                  ng-click="closeStatusChange(node)">chevron_right</span>
+
+            <div data-ng-if="!node.frontOptions.editOn" ng-click="selectNode(node)">
+                <span ng-bind="node.name" ></span>
+            </div>
+
+            <input class="classifier-name" data-ng-if="node.frontOptions.editOn" type="text" ng-model="currentEdit.name" data-ng-init="onInputInit()">
+            <button data-ng-if="node.frontOptions.editOn && !isSaveDisabled()" data-ng-click="onSaveNode(currentEdit.name)"><span class="material-icons">done</span></button>
+            <button data-ng-if="node.frontOptions.editOn" data-ng-click="onCancelEdit()"><span class="material-icons" >close</span></button>
+
+        </div>
+
+    </div>
+
+    <div class="classifier-node-children" ng-hide="node.frontOptions.closed">
+
+        <div ng-repeat="subNode in node.children | orderBy:'name':false:emptyLast track by $index"
+             class="classifier-node-holder">
+            <classifier-tree-node parent="node"
+                                  node="subNode"></classifier-tree-node>
+        </div>
+
+    </div>
+
+</div>

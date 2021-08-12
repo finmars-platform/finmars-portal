@@ -1,4 +1,3 @@
-@gRowSelectionWidth: 50px;
 
 .report-viewer-holder {
 
@@ -6,10 +5,55 @@
     display: none;
   }
 
+  .g-filters {
+
+    .md-button.chain-button {
+      color: @orange;
+
+      &.g-use-from-above-filters-hidden {
+        color: @gray;
+
+        ng-md-icon svg {
+          fill: @gray;
+        }
+      }
+    }
+
+  }
+
+  .g-filters .icon-buttons {
+    flex: 0 0 252px;
+    /* display: flex;
+        justify-content: flex-end;
+        flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
+  }
+
   .no-data-block {
     font-size: 24px;
     padding: 120px;
     margin-left: 26vw;
+  }
+
+  .g-content-wrap {
+
+    .g-row-settings {
+      width: 88px;
+    }
+
+    /* &.g-row-settings-collapsed {
+
+      .g-row-settings {
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+        border: none;
+      }
+
+    } */
+
   }
 
   .ev-content {
@@ -19,45 +63,18 @@
     min-width: 100%;
   }
 
-  .g-wrapper .g-row {
+  /* .g-wrapper .g-row {
     border-bottom: 1px solid #ddd;
     overflow: hidden;
 
     height: 23px;
-  }
+  } */
 
-  .g-content-wrap {
-
-    &.g-groups-columns-dnd {
-
-      .g-table-header-cell-wrapper {
-
-        .g-table-header-drop {
-          display: block;
-        }
-
-      }
-
-    }
-
-    &.g-row-settings-collapsed {
-
-      .g-row-settings {
-        width: 0;
-        padding: 0;
-        overflow: hidden;
-        border: none;
-      }
-
-    }
-
-  }
-
-  .g-filters-holder {
+  /* .g-filters-holder {
     float: none;
-  }
+  } */
 
-  .g-wrapper .g-group-holder {
+  /* .g-wrapper .g-group-holder {
     line-height: initial;
     padding-top: 4px;
 
@@ -82,7 +99,7 @@
 
     }
 
-  }
+  } */
 
   .ev-viewport {
     overflow: auto;
@@ -174,18 +191,13 @@
     background: transparent;
   }
 
-  .g-wrapper .g-row-selection {
+  /*.g-wrapper .g-row-selection {
     background: transparent;
-  }
-
-/*  .g-row-settings {
-    padding-right: 6px;
   }*/
 
   .g-row {
 
-    &.selected {
-      // background: #ffeee8;
+     /* &.selected {
 
       .g-row-selection {
         fill: #4C334D;
@@ -196,7 +208,7 @@
       }
     }
 
-    &.last-selected, &.context-menu-opened {
+    &.is-active-object, &.context-menu-opened {
       // background: #e4c1b5;
       .g-row-selection {
         fill: #4C334D;
@@ -207,7 +219,7 @@
       }
     }
 
-    &.last-selected {
+    &.is-active-object {
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
       z-index: 1;
     }
@@ -215,7 +227,7 @@
     &.context-menu-opened {
       outline: 1px solid @orange;
       z-index: 1;
-    }
+    } */
 
     .g-grand-total-first-cell {
       display: flex;
@@ -268,14 +280,6 @@
     }
   }
 
-  .g-wrapper .group-table-body {
-    background: #d6d6d6;
-  }
-
-  .g-wrapper .group-table-body .ev-content {
-    background: #DCDCDC;
-  }
-
   .ev-loader {
     border: 4px solid #f3f3f3; /* Light grey */
     border-top: 4px solid #4C334D; /* Blue */
@@ -300,12 +304,6 @@
     100% {
       transform: rotate(360deg);
     }
-  }
-
-  .ev-progressbar-holder {
-    display: none;
-    height: 4px;
-    background: #4C334D;
   }
 
   .proxyline {
@@ -334,39 +332,39 @@
     margin-right: 8px;
   }
 
-  //.report-bg-level-1 {
-  //  background: #F1D6D6;
-  //}
-  //
-  //.report-bg-level-2 {
-  //  background: #D6E0F1;
-  //}
-  //
-  //.report-bg-level-3 {
-  //  background: #D6F1D8;
-  //}
-  //
-  //.report-bg-level-4 {
-  //  background: #a8e4ff;
-  //}
+  /*.report-bg-level-1 {
+    background: #F1D6D6;
+  }
 
-  //.report-bg-level-1 {
-  //  background: #FC5D3C;
-  //}
-  //
-  //.report-bg-level-2 {
-  //  background: #FF8860;
-  //}
-  //
-  //.report-bg-level-3 {
-  //  background: #F7BFAB;
-  //}
-  //
-  //.report-bg-level-4 {
-  //  background: #FFCDB8;
-  //}
+  .report-bg-level-2 {
+    background: #D6E0F1;
+  }
 
-  .report-grand-total-bg {
+  .report-bg-level-3 {
+    background: #D6F1D8;
+  }
+
+  .report-bg-level-4 {
+    background: #a8e4ff;
+  }
+
+  .report-bg-level-1 {
+    background: #FC5D3C;
+  }
+
+  .report-bg-level-2 {
+    background: #FF8860;
+  }
+
+  .report-bg-level-3 {
+    background: #F7BFAB;
+  }
+
+  .report-bg-level-4 {
+    background: #FFCDB8;
+  }*/
+
+  /* .report-grand-total-bg {
     background: #f08947;
   }
 
@@ -422,10 +420,10 @@
 
   .g-cell {
     border-bottom: 1px solid;
-    border-color: @gCellBroderColor;
-    /*height: 11px;
+    border-color: @gCellBorderColor;
+    !*height: 11px;
     padding: 4px 15px 8px;
-    padding: 3px 15px;*/
+    padding: 3px 15px;*!
     height: 24px;
     font-size: 14px;
     // overflow: hidden;
@@ -439,7 +437,7 @@
   .g-cell-content-wrap {
     text-overflow: ellipsis;
     overflow: hidden;
-  }
+  } */
 
   .g-cell-wrap.g-overflowing-cell {
     position: relative;
@@ -462,12 +460,12 @@
   }
 
 
-  .report-viewer-holder .g-wrapper .g-row-selection {
-    border-bottom: 1px solid @gCellBroderColor;
+  .report-viewer-holder .g-wrapper .g-row-selection { // inside split panel
+    border-bottom: 1px solid @gCellBorderColor;
   }
 
   /* .g-cell:last-child {
-    border-right: 1px solid @gCellBroderColor;
+    border-right: 1px solid @gCellBorderColor;
   } */
 
 }
@@ -490,37 +488,30 @@
   background: rgba(152, 251, 152, 0.6);
 }
 
-.g-wrapper .g-row.g-row-marked-red:not(.selected):not(.last-selected) {
-  background-color: #FDECE5;
-}
-
-.g-wrapper .g-row.g-row-marked-yellow:not(.selected):not(.last-selected) {
-  background-color: #FEF9EF;
-}
-
-.g-wrapper .g-row.g-row-marked-green:not(.selected):not(.last-selected) {
-  background-color: #E1FEF5;
-}
-
-
+// TODO merge with .report-viewer-holder above
 // Report Material Design Interface Start
 
 .report-viewer-holder {
 
+  .g-filters .icon-buttons {
+    flex: 0 0 252px;
+    /* display: flex;
+        justify-content: flex-end;
+        flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
+  }
+
   .g-wrapper {
 
-    .g-row {
+    /* .g-row {
       position: absolute;
-    }
+    } */
 
     .ev-content {
-      position: relative;
 
-      .g-row {
-        height: 36px;
-      }
-
-      .g-cell {
+      /*.g-cell {
         height: 36px;
         font-family: 'Roboto-Regular', 'Roboto', sans-serif;
         font-weight: 400;
@@ -528,56 +519,7 @@
         color: #666666;
         line-height: 36px;
         padding: 0 15px;
-      }
-
-      .g-row-selection {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: @gRowHeight;
-        width: @gRowSelectionWidth;
-        border-bottom: @gCellBorder;
-        border-right: @gCellBorder;
-        box-sizing: border-box;
-      }
-
-      .g-row-selection-button {
-        width: 17px;
-        height: 17px;
-        min-width: 17px;
-        font-size: 15px;
-        line-height: 13px;
-        border: 2px solid @gCellBroderColor;
-        border-radius: 3px;
-        box-sizing: border-box;
-        background: rgba(0,0,0,.01960784);
-        margin: 0;
-        cursor: pointer;
-
-        svg {
-          width: 14px;
-          height: 14px;
-        }
-
-        &.checked {
-          background-color: @orange;
-          border-color: @orange;
-
-          svg {
-            position: relative;
-            width: 19px;
-            height: 19px;
-            bottom: 4px;
-            right: 3px;
-            fill: #fff;
-          }
-        }
-
-        &:hover {
-          border: 2px solid @gray;
-        }
-
-      }
+      }*/
 
       .ev-fold-button {
         width: 17px;
@@ -630,49 +572,21 @@
 
   }
 
-  .g-cell { // have to be here for table font size change to work
-    font-size: 13px;
-  }
+  .g-additions-workarea {
 
-}
-
-// Inside dashboard START
-
-.dashboard-component:not(.dashboard-component-filled-in) {
-
-  .g-filter-settings-big-left-btn {
-    display: none;
-  }
-
-  .g-filter-left-part {
-    flex-basis: 52px;
-  }
-
-  .icon-buttons {
-    display: none;
-  }
-
-}
-
-// Inside dashboard END
-
-// Must be at the bottom
-.report-viewer-holder {
-  .g-wrapper {
-    .g-row {
-
-      .border-right-transparent {
-        border-right: transparent;
+    .g-filters .icon-buttons {
+      flex-basis: 160px;
+      /* display: flex;
+          justify-content: flex-end;
+          flex: 0 0 191px; */
+      & > div {
+        width: 160px;
       }
-
-      .border-bottom-transparent {
-        border-bottom: transparent;
-      }
-
     }
-  }
-}
 
+  }
+
+}
 
 .column-manual-sort-icon {
   width: 10px;

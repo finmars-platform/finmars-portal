@@ -86,9 +86,10 @@
             var i;
             for (i = 0; i < items.length; i++) {
 
-                if (items[i].id === classifierId) {
+                // if (items[i].id === classifierId) {
+				if (items[i].value && items[i].value.id === classifierId) {
 
-                    if (items[i].value_type === 30) {
+                    if (items[i].value.value_type === 30) {
                         return true;
                     }
 

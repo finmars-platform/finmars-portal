@@ -1,11 +1,12 @@
 /**
  * Created by szhitenev on 24.06.2016.
  */
+'use strict';
+import configureRepositoryUrlService from "../../../../shell/scripts/app/repositories/configureRepositoryUrlService";
+
 (function () {
 
-    'use strict';
-
-    function entityPluralToSingular(key) {
+    /*function entityPluralToSingular(key) {
         switch (key) {
             case 'instruments':
                 return 'instrument';
@@ -82,6 +83,7 @@
 
     module.exports = {
         configureUrl: configureUrl
-    }
+    }*/
+	module.exports = configureRepositoryUrlService;
 
 }());

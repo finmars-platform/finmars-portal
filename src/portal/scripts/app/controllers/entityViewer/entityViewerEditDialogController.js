@@ -7,8 +7,8 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersGroupService = require('../../services/usersGroupService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -40,10 +40,11 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entityId, data) {
 
         var vm = this;
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
@@ -316,7 +317,7 @@
 
         vm.getCurrentMasterUser = function () {
 
-            return usersService.getCurrentMasterUser().then(function (data) {
+            return authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;
@@ -574,6 +575,7 @@
 
         }; */
 
+
         vm.getItem = function () {
 
             return new Promise(function (res, rej) {
@@ -608,6 +610,7 @@
 						vm.attributeTypes = formLayoutData.attributeTypes;
 
                     	vm.tabs = formLayoutData.tabs;
+                        console.log('# vm.tabs', vm.tabs)
 						vm.attributesLayout = formLayoutData.attributesLayout;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
@@ -659,6 +662,14 @@
         };
 
         vm.updateEntityBeforeSave = function () {
+
+            if (vm.entityType === 'instrument-type') {
+
+                if (!vm.entity.instrument_factor_schedule_data) {
+                    vm.entity.instrument_factor_schedule_data = ''
+                }
+
+            }
 
             if (vm.entity.attributes) {
 

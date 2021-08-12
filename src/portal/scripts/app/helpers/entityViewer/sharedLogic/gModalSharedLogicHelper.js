@@ -9,7 +9,7 @@
 
         let groups, columns, filters;
 
-        // format data for SELECTED tab
+        //region format data for SELECTED tab
         // Victor 2020.11.30 This block transferred from gModalReportComponent to use in gModalReportTransactionComponent and gModalReportPnlComponent (DRY)
         var selectedGroups = [];
         var selectedColumns = [];
@@ -22,7 +22,7 @@
             if (existingAttrIndex < 0) {
                 selectedAttrs.push(attr);
             } else {
-                selectedAttrs[existingAttrIndex] = attr
+                selectedAttrs[existingAttrIndex] = attr;
             }
 
         };
@@ -161,7 +161,7 @@
 		 * @param attributesVmKeysList {Array.<string>} - 'instrumentAttrs', 'portfolioDynamicAttrs', 'custom' etc.
 		 * @param attrGroups {{groups: Array.<Object>, columns: Array.<Object>, filters: Array.<Object>}} - contains report viewer's groups, columns, filters
 		 */
-		var getSelectedAttrs = function (attributesVmKeysList, attrGroups) {
+		const getSelectedAttrs = function (attributesVmKeysList, attrGroups) {
 
         	groups = attrGroups.groups;
             columns = attrGroups.columns;
@@ -180,9 +180,24 @@
             vm.selectedFilters = organizeSelectedAttrs(filters, selectedFilters, 'filters');
 
         };
-        // < format data for SELECTED tab >
-        return {
-            getSelectedAttrs: getSelectedAttrs
+        //endregion format data for SELECTED tab
+
+		const onDropToSelectedFilter = function (attributesList, attributeKey) {
+
+			var draggedAttribute = attributesList.find(attr => attr.key === attributeKey);
+
+			draggedAttribute.columns = false;
+			draggedAttribute.groups = false;
+			draggedAttribute.filters = true;
+
+			return attributesList;
+
+		};
+
+		return {
+            getSelectedAttrs: getSelectedAttrs,
+
+			onDropToSelectedFilter: onDropToSelectedFilter
         }
     }
 }());

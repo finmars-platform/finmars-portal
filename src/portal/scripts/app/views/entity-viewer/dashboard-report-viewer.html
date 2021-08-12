@@ -27,10 +27,6 @@
 
                 <!--<div class="grand-total-title">{{vm.componentData.name}}</div>-->
 
-                <group-dashboard-filter style="display: none"
-                                        ev-data-service="vm.entityViewerDataService"
-                                        ev-event-service="vm.entityViewerEventService"></group-dashboard-filter>
-
                 <div data-ng-if="vm.grandTotalProcessing"  class="dashboard-grand-total-component dashboard-grand-total-component-loading">
                     <div  layout="row" layout-sm="column" layout-align="space-around">
                         <!--<md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>-->
@@ -73,6 +69,7 @@
                     <g-filters ev-data-service="vm.entityViewerDataService"
                                ev-event-service="vm.entityViewerEventService"
                                attribute-data-service="vm.attributeDataService"
+                               dashboard-component-element="vm.dashboardComponentElement"
                                hide-filters-block="!showFiltersArea"
                                hide-use-from-above-filters="!showUseFromAboveFilters"></g-filters>
                 </div>

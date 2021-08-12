@@ -5,8 +5,7 @@
 
     'use strict';
 
-    var entityResolverService = require('../services/entityResolverService');
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
 
     function uuidv4() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -15,7 +14,7 @@
         });
     }
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, usersService) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/usercode-input-view.html',

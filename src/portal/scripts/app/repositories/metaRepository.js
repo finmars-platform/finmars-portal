@@ -56,6 +56,8 @@
     var getEntityAttrs = function (entity) {
         var entityAttrs = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
+            "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),
@@ -276,6 +278,11 @@
                         label: 'Events',
 						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
+                    },
+                    {
+                        label: 'User attributes',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/user-attributes-view.html'
                     },
                     {
                         label: 'Exposure',

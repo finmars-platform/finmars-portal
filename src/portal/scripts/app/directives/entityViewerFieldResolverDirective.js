@@ -30,7 +30,7 @@
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs) {
 
-                scope.readyStatus = {content: false, tags: false};
+                scope.readyStatus = {content: false};
                 scope.type = 'id';
                 scope.fields = [];
                 scope.sortedFields = [];
@@ -127,7 +127,7 @@
 
                             scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
 
-                            scope.readyStatus.tags = true;
+                            scope.readyStatus.content = true;
 
                             scope.$apply();
                         })

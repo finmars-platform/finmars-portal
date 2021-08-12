@@ -1016,10 +1016,7 @@
 				};
 
 				event.data.items.forEach(validateEventRow);
-
-				if (!event.data.items_blocked) {
-					event.data.blockableItems.forEach(validateEventRow)
-				}
+				if (!event.data.items_blocked) event.data.blockableItems.forEach(validateEventRow);
 
 				if (event.data.actions.length) {
 
@@ -2028,6 +2025,22 @@
         return dcLayoutHasBeenFixed;
 
     };
+
+    const instrumentTypeAttrValueMapper = (entityAttr) => {
+        switch (entityAttr.value_type) {
+            case 10:
+                return entityAttr.value_string;
+            case 20:
+                return entityAttr.value_float;
+            case 30:
+                return +entityAttr.value_classifier; // The string comes from the server. Must be number/
+            case 40:
+                return entityAttr.value_date;
+            default:
+                return null;
+        }
+    };
+
 	/** @module entityEditorHelper */
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
@@ -2049,7 +2062,9 @@
         checkTabsForErrorFields: checkTabsForErrorFields,
 
         generateAttributesFromLayoutFields: generateAttributesFromLayoutFields,
-        fixCustomTabs: fixCustomTabs
+        fixCustomTabs: fixCustomTabs,
+
+        instrumentTypeAttrValueMapper: instrumentTypeAttrValueMapper
     }
 
 }());

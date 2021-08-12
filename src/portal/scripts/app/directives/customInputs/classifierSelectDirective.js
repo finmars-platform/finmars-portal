@@ -18,6 +18,7 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
+                itemName: '=',
                 // Victor 2020.10.23 Next fields setting up classifiers properties
                 classifierAttr: '=',
                 classifierValue: '=',
@@ -104,7 +105,9 @@
                         scope.model = item.id;
                         scope.valueIsValid = true;
 
-                        scope.itemName = item.name;
+                        if (typeof scope.itemName !== 'undefined') {
+                            scope.itemName = item.name;
+                        }
                         scope.inputText = item.name;
 
                         closeDropdownMenu();
@@ -215,9 +218,25 @@
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
-                            scope.model = +res.data.item;
-                            console.log('scope.model', scope.model)
+
+                            scope.model = res.data.item;
+
+                            if (typeof scope.itemName !== 'undefined') {
+                                scope.itemName = res.data.name;
+                            }
+
+                            scope.inputText = res.data.name;
+
                             getTree();
+
+                            setTimeout(function () {
+
+                                if (scope.onChangeCallback) {
+                                    scope.onChangeCallback();
+                                }
+
+                            }, 0);
+
                         }
                     });
                 };
@@ -364,7 +383,9 @@
                         for (var i = 0; i < scope.menuOptions.length; i++) {
                             if (scope.menuOptions[i].id === scope.model) {
 
-                                scope.itemName = scope.menuOptions[i].name;
+                                if (typeof scope.itemName !== 'undefined') {
+                                    scope.itemName = scope.menuOptions[i].name;
+                                }
                                 scope.inputText = scope.menuOptions[i].name;
 
                                 break;
@@ -380,7 +401,9 @@
                 }
 
                 var init = function () {
-                    getTree();
+                    if (scope.classifierAttr && scope.classifierAttr.id) {
+                        getTree();
+                    }
 
                     initScopeWatchers();
 

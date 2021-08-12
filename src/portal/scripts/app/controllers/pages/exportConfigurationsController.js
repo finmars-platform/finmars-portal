@@ -9,9 +9,9 @@
     var uiRepository = require('../../repositories/uiRepository');
     var metaService = require('../../services/metaService');
     var configurationService = require('../../services/configurationService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, usersService) {
 
         var vm = this;
 

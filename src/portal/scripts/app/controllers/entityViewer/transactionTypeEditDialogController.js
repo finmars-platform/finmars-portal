@@ -7,8 +7,8 @@
 
     var fieldResolverService = require('../../services/fieldResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersGroupService = require('../../services/usersGroupService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -37,7 +37,7 @@
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data)
+    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data)
     {
 
         var vm = this;
@@ -88,6 +88,7 @@
         vm.inputsForMultiselector = [];
 
         vm.openedIn = data.openedIn;
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -220,7 +221,7 @@
             if (vm.fromEntityType) {
                 entityType = {entityType: vm.entityType, from: vm.fromEntityType};
             }
-            $state.go('app.attributesManager', entityType);
+            $state.go('app.portal.attributesManager', entityType);
             $mdDialog.hide();*/
 
             $mdDialog.show({
@@ -367,7 +368,7 @@
                     console.log('vm.relationItems', vm.relationItems)
 
                     /*vm.editLayout = function () {
-                        $state.go('app.data-constructor', {
+                        $state.go('app.portal.data-constructor', {
                             entityType: 'complex-transaction',
                             from: vm.entityType,
                             instanceId: data.id
@@ -376,7 +377,7 @@
                     };*/
 
                     /* vm.manageAttrs = function () {
-                        $state.go('app.attributesManager', {
+                        $state.go('app.portal.attributesManager', {
                             entityType: 'transaction-type',
                             from: vm.entityType,
                             instanceId: data.id
@@ -2243,32 +2244,7 @@
             return result;
         };
 
-        vm.loadRelation = function (field, noScopeUpdate) {
-            console.log("loadrelation2");
-            console.log('field', field);
-
-            field = field.replace(/-/g, "_"); // replace all '_' with '-'
-
-            if (!vm.relationItems.hasOwnProperty(field)) {
-
-                return new Promise(function (resolve, reject) {
-
-                    fieldResolverService.getFields(field).then(function (data) {
-                        vm.relationItems[field] = data.data;
-
-                        if (noScopeUpdate) {
-                            $scope.$apply();
-                        }
-
-                        resolve(vm.relationItems[field]);
-                    })
-
-                });
-
-            }
-
-            return {status: 'item_exist', field: field};
-        };
+        vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
 

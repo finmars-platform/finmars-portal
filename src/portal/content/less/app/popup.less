@@ -161,6 +161,15 @@
       &:disabled {
         opacity: .5;
       }
+
+      img.btn-icon {
+        width: 23px;
+        height: 20px;
+        position: relative;
+        top: 2px;
+        opacity: 0.63;
+        image-rendering: -webkit-optimize-contrast;
+      }
     }
 
   }
@@ -296,7 +305,8 @@
           color: #000;
 
           &.pmu-not-in-month {
-            visibility: hidden;
+            // visibility: hidden;
+            opacity: .4;
           }
 
           &.pmu-selected {
@@ -597,10 +607,13 @@
         }
       }
 
-      .layout-menu-text {
+      .layout-menu-a {
+        display: block;
         height: 100%;
         flex-grow: 1;
         line-height: @layout-manager-item-height;
+        text-decoration: none;
+        color: @gray;
 
         &:focus {
           outline: none;

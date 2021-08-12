@@ -70,15 +70,15 @@
     </div>
   </div>
 
-  <div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer">
+  <div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer m-t-8">
     <div class="custom-input-sel-menu-block">
       <div data-ng-repeat="option in selectorOptions" data-ng-mousedown="selectOption(option)"
         data-ng-bind="option.short_name" class="custom-input-sel-option"></div>
       <div class="custom-input-sel-menu-block-btns-pan flex_c">
-        <button class="md-raised md-primary md-button md-ink-ripple" data-ng-click="createEntity($event)">
+        <button class="md-raised md-primary md-button md-ink-ripple m-b-8" data-ng-click="createEntity($event)">
           Create
         </button>
-        <button data-ng-if="entityType === 'instrument'" class="md-raised md-primary md-button md-ink-ripple"  data-ng-click="downloadEntity($event)">
+        <button data-ng-if="entityType === 'instrument'" class="md-raised md-primary md-button md-ink-ripple m-b-8"  data-ng-click="downloadEntity($event)">
           Download
         </button>
         <button data-ng-if="entityType === 'instrument'" class="md-raised md-primary md-button md-ink-ripple">

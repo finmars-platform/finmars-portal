@@ -39,6 +39,7 @@
                 scope.filterAreaHidden = false;
 
                 var componentData;
+				var componentElem = elem[0].querySelector('.dashboardComponent');
 
                 if (scope.item && scope.item.data) {
 
@@ -70,6 +71,7 @@
                     columnNumber: scope.columnNumber,
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
+					componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
@@ -112,7 +114,7 @@
                             }*/
 
                             if (res.action === 'save') {
-								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                             }
 
                             if (scope.fillInModeData) {

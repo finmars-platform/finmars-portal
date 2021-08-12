@@ -8,19 +8,16 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
     var pricingPolicyService = require('../../../services/pricingPolicyService');
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
 
     var fieldResolverService = require('../../../services/fieldResolverService');
 
-    module.exports = function ($scope) {
-
-        logService.controller('ManualPricingFormulasTabController', 'initialized');
+    module.exports = function ($scope, authorizerService) {
 
         var vm = this;
 
-        vm.readyStatus = {content: false};
+		vm.readyStatus = {content: false};
 
         vm.entity = $scope.$parent.vm.entity;
 
@@ -180,7 +177,7 @@
 
         vm.setSystemCurrency = function () {
 
-            usersService.getCurrentMasterUser().then(function (data) {
+			authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.system_currency = data.system_currency;
                 vm.systemCurrencyFields.push(data.system_currency_object);
