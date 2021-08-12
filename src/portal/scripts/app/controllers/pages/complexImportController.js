@@ -10,10 +10,10 @@
     var complexImportService = require('../../services/complex-import/complexImportService');
     var complexImportValidateService = require('../../services/complex-import/complexImportValidateService');
 
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
 
-    module.exports = function complexImportController($scope, $mdDialog) {
+    module.exports = function complexImportController($scope, $mdDialog, usersService) {
 
         var vm = this;
 

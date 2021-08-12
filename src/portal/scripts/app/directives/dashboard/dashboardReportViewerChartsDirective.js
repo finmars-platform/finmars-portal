@@ -37,6 +37,7 @@
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
                 var componentData;
+				var componentElem = elem[0].querySelector('.dashboardComponent');
 
                 if (scope.item && scope.item.data) {
                     componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
@@ -64,6 +65,7 @@
                     rowNumber: scope.rowNumber,
                     columnNumber: scope.columnNumber,
                     componentData: componentData,
+					componentElement: componentElem,
                     entityType: componentData.settings.entity_type,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
@@ -116,7 +118,7 @@
                             }*/
 
                             if (res.action === 'save') {
-								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                             }
 
                             if (scope.fillInModeData) {

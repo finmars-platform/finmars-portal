@@ -1,11 +1,13 @@
 /**
  * Created by szhitenev on 07.12.2016.
  */
+import shellBaseUrlService from '../../../../shell/scripts/app/services/baseUrlService.js';
+
 (function () {
 
     'use strict';
 
-    window.base_api_url = '';
+    /*window.base_api_url = '';
 
     var resolve = function () {
 
@@ -46,6 +48,7 @@
         getMasterUserPrefix: getMasterUserPrefix,
 
         getApiVersion: getApiVersion
-    }
+    } */
+	module.exports = shellBaseUrlService;
 
 }());

@@ -917,7 +917,7 @@
             if (vm.fromEntityType) {
                 entityAddress = {entityType: vm.fromEntityType, from: vm.fromEntityType, instanceId: vm.instanceId};
             }
-            $state.go('app.attributesManager', entityAddress);*/
+            $state.go('app.portal.attributesManager', entityAddress);*/
             $mdDialog.show({
                 controller: 'AttributesManagerDialogController as vm',
                 templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
@@ -969,7 +969,7 @@
                 }
                 entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.instanceId};
             }
-            $state.go('app.data-constructor', entityAddress);
+            $state.go('app.portal.data-constructor', entityAddress);
 
         };
 
@@ -1392,11 +1392,16 @@
             return items;
 
         };
-
+		/**
+		 * Also called inside layoutConstructorFieldDirective.
+		 *
+		 * @param item {Object} - filled sockeet data
+		 * @returns {string} - attribute class
+		 */
         vm.getAttributeClass = function (item) {
 
 			if (item.attribute.frontOptions &&
-				item.attribute.frontOptions.attribute_class) {
+				item.attribute.frontOptions.attribute_class) { // must have for determining userInputs
 
 				var attributeClass = item.attribute.frontOptions.attribute_class;
 				return attributeClass;
@@ -1511,7 +1516,6 @@
 
                     var itemIndex = parseInt(elem.dataset.index, 10);
 					var attr = JSON.parse(JSON.stringify(vm.items[itemIndex]));
-					delete attr.frontOptions;
 
                     field.attribute = attr;
                     field.editable = attr.editable;
@@ -1565,6 +1569,8 @@
                     if (occupiesWholeRow) {
                     	occupyWholeRow(field, targetTab.layout.columns);
                     }
+
+                    if (field.attribute) delete field.attribute.frontOptions;  // have to be after calling vm.getAttributeClass();
 
                     break;
 

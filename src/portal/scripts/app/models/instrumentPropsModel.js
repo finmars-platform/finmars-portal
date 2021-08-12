@@ -46,6 +46,11 @@
                 "value_type": "boolean"
             },
             {
+                "key": "has_linked_with_portfolio",
+                "name": "Has linked with portfolio",
+                "value_type": "boolean"
+            },
+            {
                 "key": "reference_for_pricing",
                 "name": "Reference for pricing",
                 "value_type": 10

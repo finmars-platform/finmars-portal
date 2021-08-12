@@ -474,6 +474,7 @@
                             });
                         }
                     }
+
                 }
             }
 
@@ -759,7 +760,7 @@
 
         };*/
         vm.checkForClassifierMapping = function (classifierId) {
-            importSchemesMethodsService.checkForClassifierMapping(vm.mappedDynamic, classifierId);
+            return importSchemesMethodsService.checkForClassifierMapping(vm.mappedDynamic, classifierId);
         };
 
         /*vm.openClassifierMapping = function (classifierId, $event) {

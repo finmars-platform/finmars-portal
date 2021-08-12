@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -33,7 +33,7 @@
 
 
     module.exports = function complexTransactionAddDialogController(
-    	$scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
+    	$scope, $mdDialog, $bigDrawer, $state, usersGroupService, entityType, entity, data
 	) {
 
         var vm = this;
@@ -436,7 +436,7 @@
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: 'complex-transaction', from: vm.entityType};
             }
-            $state.go('app.data-constructor', entityAddress);
+            $state.go('app.portal.data-constructor', entityAddress);
             $mdDialog.hide();*/
         };
 

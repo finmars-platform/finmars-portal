@@ -5,13 +5,13 @@
 
     'use strict';
 
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
     var entityResolverService = require('../../services/entityResolverService');
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
     var evEvents = require('../../services/entityViewerEvents');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
-    module.exports = function entityViewerPermissionEditorController($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+    module.exports = function entityViewerPermissionEditorController($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, usersService, usersGroupService) {
 
         var vm = this;
 

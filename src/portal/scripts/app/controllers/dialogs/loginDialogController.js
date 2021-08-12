@@ -1,16 +1,18 @@
 /**
  * Created by szhitenev on 20.07.2020.
+ *
+ * Deprecated with creation of separate page of authentication 'app.authentication'.
+ *
  */
 (function(){
 
     'use strict';
 
-    var usersService = require('../../services/usersService');
-    var authorizerService = require('../../services/authorizerService');
+    // var authorizerService = require('../../services/authorizerService');
     var cookieService = require('../../../../../core/services/cookieService');
 
 
-    module.exports = function LoginDialogController($scope, $mdDialog, data){
+    module.exports = function LoginDialogController($scope, $mdDialog, data, authorizerService){
 
         var vm = this;
 
@@ -69,6 +71,8 @@
                 });
 
             }).catch(function(error){
+
+                cookieService.deleteCookie('authtoken');
 
                 vm.processing = false;
 
