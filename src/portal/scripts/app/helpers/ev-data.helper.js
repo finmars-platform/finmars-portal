@@ -330,8 +330,7 @@
 		}
 
 		var entityType = evDataService.getEntityType();
-		// var markedRows = localStorageService.getMarkedRows(false, entityType);
-		var markedRows = {};
+		var markedRows = localStorageService.getMarkedRows(false, entityType);
 
 		return flatList.filter(item => {
 
@@ -926,7 +925,6 @@
         var multiselectState = evDataService.getSelectedGroupsMultiselectState();
 
         console.log('getObjectsFromSelectedGroups.selectedGroups', selectedGroups);
-
 
         var controlObj = null;
 
