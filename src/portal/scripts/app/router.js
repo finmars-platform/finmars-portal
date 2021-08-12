@@ -434,6 +434,11 @@
                 templateUrl: 'views/pages/simple-entity-import-view.html',
                 controller: 'SimpleEntityImportController as vm'
             })
+            .state('app.portal.import.unified-entity', {
+                url: '/unified-entity-import',
+                templateUrl: 'views/pages/unified-entity-import-view.html',
+                controller: 'UnifiedEntityImportController as vm'
+            })
             .state('app.portal.import.transaction', {
                 url: '/transaction-import',
                 templateUrl: 'views/pages/transaction-import-view.html',

@@ -72,6 +72,8 @@
 
             }).catch(function(error){
 
+                cookieService.deleteCookie('authtoken');
+
                 vm.processing = false;
 
                 vm.error = true;
