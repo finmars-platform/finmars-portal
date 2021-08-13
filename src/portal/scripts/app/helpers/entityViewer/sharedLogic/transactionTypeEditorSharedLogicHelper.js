@@ -656,6 +656,8 @@
 
 					var inputsList = hasInputInExprs(viewModel.entity.inputs, input.value);
 
+                    inputsList = [] // why forbbiden?
+
 					if (inputsList.length) {
 
 						defaultExprError = {
