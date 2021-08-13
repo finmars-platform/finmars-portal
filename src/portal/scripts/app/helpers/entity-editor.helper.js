@@ -4,6 +4,8 @@
     var evHelperService = require('../services/entityViewerHelperService');
 	var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 
+	var metaHelper = require('../helpers/meta.helper');
+
     'use strict';
 
     var clearFrontProperties = function (entity, entityType) {
@@ -111,7 +113,8 @@
 
 		clearedEntity = removeNullFields(clearedEntity);
 
-        clearFrontProperties(clearedEntity, entityType);
+        // clearFrontProperties(clearedEntity, entityType);
+		metaHelper.clearFrontendOptions(clearedEntity);
 
         return clearedEntity;
 
@@ -1032,8 +1035,9 @@
 									validatorText: "EVENT #" + eventNumber + " " + eventName,
 									accordionIndex: event.order
 								},
-								tableName: "Actions",
-								rowName: '# ' + (index + 1),
+								// tableName: "Actions",
+								tableName: "",
+								rowName: 'Action # ' + (index + 1),
 								columnName: "Transaction type",
 								message: "Cell should not be empty."
 							});
@@ -1050,8 +1054,9 @@
 									validatorText: "EVENT #" + eventNumber + " " + eventName,
 									accordionIndex: event.order
 								},
-								tableName: "Actions",
-								rowName: '# ' + (index + 1),
+								// tableName: "Actions",
+								tableName: "",
+								rowName: 'Action # ' + (index + 1),
 								columnName: "Text",
 								message: "Cell should not be empty."
 							});

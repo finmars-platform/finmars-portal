@@ -424,6 +424,10 @@
 
         };
 
+        const getTTypesAsSelectorOptions = ttype => {
+        	return {id: ttype.user_code, name: ttype.short_name};
+        };
+
 		const getEventsActionGridTableData = function (item){
 
             const rows = item.data.actions;
@@ -545,7 +549,7 @@
 				if (row.frontOptions && row.frontOptions.gtKey) rowObj.key = row.frontOptions.gtKey;
 
                 rowObj.columns[0].settings.value = row.transaction_type;
-				rowObj.columns[0].settings.selectorOptions = vm.transactionTypes;
+				rowObj.columns[0].settings.selectorOptions = vm.transactionTypes.map(getTTypesAsSelectorOptions);
 
                 rowObj.columns[1].settings.value = row.text;
                 rowObj.columns[2].settings.value = row.is_sent_to_pending;
@@ -920,7 +924,7 @@
             item.data.actions.unshift(newAction);
 
             var transactionType = gridTableHelperService.getCellFromRowByKey(newRow, 'transaction_type');
-            transactionType.settings.selectorOptions = vm.transactionTypes;
+            transactionType.settings.selectorOptions = vm.transactionTypes.map(getTTypesAsSelectorOptions);
 
             /* var buttonPosition = gridTableHelperService.getCellFromRowByKey(newRow, 'button_position');
             buttonPosition.settings.selectorOptions = getRangeOfNumbers(item.data.actions.length); */
@@ -937,10 +941,9 @@
 
 		const onActionsTableDeleteRows = function (data, item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
 
-            var gridTableData = eventActionsGridTableDataService.getTableData()
+            var gridTableData = eventActionsGridTableDataService.getTableData();
 
             item.data.actions = item.data.actions.filter(function (action) {
-
                 var actionId = action.id || action.frontOptions.gtKey;
                 return data.deletedRowsKeys.indexOf(actionId) === -1;
             });
