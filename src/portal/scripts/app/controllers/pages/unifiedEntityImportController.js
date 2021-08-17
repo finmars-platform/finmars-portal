@@ -105,6 +105,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
             } else {
 
                 formData.append('file', vm.config.file);
+                formData.append('mode', vm.config.mode);
 
             }
 
