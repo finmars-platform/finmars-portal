@@ -238,8 +238,8 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 	};
 
-	var getListLayoutTemplate = function () {
-		return [{
+	var getListLayoutTemplate = function (isReport) {
+		const template = {
 			"name": "default",
 			"data": {
 				"entityType": null,
@@ -258,10 +258,14 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 				},
 				"grouping": [],
 				"columns": [],
-				"filters": [],
+				"filters": {backend: [], frontend: []},
 				"additions": {}
 			}
-		}]
+		};
+
+		if (isReport) template.data.filters = [];
+
+		return [template];
 	};
 
 	// Input Form Layout

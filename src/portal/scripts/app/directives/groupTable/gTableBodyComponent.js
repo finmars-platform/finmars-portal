@@ -121,10 +121,7 @@
                     scope.evDataService.setFlatList(flatList);
 
                     projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
-					if (projection) {
-						console.log("dubugging.rowsToShow projection", projection);
-						console.log("dubugging.rowsToShow projection immutable", JSON.parse(JSON.stringify(projection)));
-					}
+
                     scope.evDataService.setProjection(projection);
 
                     // console.log('projection', projection);
@@ -434,7 +431,7 @@
                     } else {
 
                         // evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                        evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
+						// evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                         if (projection) {
                             evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);

@@ -148,27 +148,29 @@
 	 */
 	const applyLayout = function (isRootEntityViewer, evDataService, evEventService, layout) {
 
-		/* if (isRootEntityViewer) {
+		/*if (isRootEntityViewer) {
 
-			// middlewareService.setNewEntityViewerLayoutName(layout.name);
+			evDataService.setListLayout(layout);
+			evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
 
-		} else {
-			evDataService.setSplitPanelDefaultLayout(layout.id);
-			evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-			// middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active split panel layout name in the toolbar
-		} */
+			evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 
-		if (!isRootEntityViewer) {
-			evDataService.setSplitPanelDefaultLayout(layout.id);
-			evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-		}
+			// toastNotificationService.success("New layout with name '" + layout.name + "' created");
 
+			evDataService.setIsNewLayoutState(false);
+
+		} else { // split panel
+			console.log("testing.applyLayout layout", layout);
+			evDataService.setSplitPanelLayoutToOpen(layout.id);
+			evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+		}*/
 		evDataService.setListLayout(layout);
 		evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
 
 		evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 
-		toastNotificationService.success("New layout with name '" + layout.name + "' created");
+		// toastNotificationService.success("New layout with name '" + layout.name + "' created");
 
 		evDataService.setIsNewLayoutState(false);
 
@@ -197,6 +199,7 @@
 	 * @param evDataService {Object} - entityViewerDataService
 	 * @param evEventService {Object} - entityViewerEventService
 	 * @param isReport {boolean}
+	 * @param $mdDialog {Object}
 	 * @param entityType {string}
 	 * @param $event {Object} - event object
 	 * @return {Promise<any>} - saved layout or error
@@ -207,7 +210,6 @@
 
 			const listLayout = evDataService.getLayoutCurrentConfiguration(isReport);
 			const isRootEntityViewer = evDataService.isRootEntityViewer();
-
 			/* $mdDialog.show({
 				controller: 'UiLayoutSaveAsDialogController as vm',
 				templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
@@ -232,7 +234,9 @@
 				targetEvent: $event,
 				preserveScope: false,
 				locals: {
-					data: {}
+					data: {
+						entityType: entityType
+					}
 				}
 			})
 			.then(res => {
@@ -248,12 +252,11 @@
 
 							listLayout.id = data.id;
 							applyLayout(isRootEntityViewer, evDataService, evEventService, listLayout);
-							toastNotificationService.success("Layout " + listLayout.name + " created.");
+							toastNotificationService.success("Layout '" + listLayout.name + "' saved.");
 
 							resolve({status: res.status, layoutData: data});
 
 						}).catch(error => {
-							// toastNotificationService.error("Error occurred");
 							reject({status: res.status, error: error});
 						});
 
@@ -263,19 +266,11 @@
 
 					if (listLayout.id) { // if layout based on another existing layout
 
-						/* if (isRootEntityViewer) {
-							listLayout.is_default = true;
-
-						} else { // for split panel
-							listLayout.is_default = false;
-						} */
 						delete listLayout.id;
 						saveAsLayout();
 
 					} else { // if layout was not based on another layout
-
 						saveAsLayout();
-
 					}
 
 				}
@@ -291,11 +286,11 @@
 						const layoutToOverwrite = layoutToOverwriteData.results[0];
 						overwriteLayout(layoutToOverwrite, listLayout).then(function (updatedLayoutData) {
 
-							listLayout.is_default = true;
+							if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
 							listLayout.modified = updatedLayoutData.modified;
 
 							applyLayout(isRootEntityViewer, evDataService, evEventService, listLayout);
-							toastNotificationService.success("Success. Page was saved.");
+							toastNotificationService.success("Success. Layout " + listLayout.name + " overwritten.");
 
 							resolve({status: res.status});
 
