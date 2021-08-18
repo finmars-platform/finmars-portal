@@ -1162,7 +1162,7 @@
                     var rootGroup = scope.evDataService.getRootGroupData();
                     scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                    var defaultList = uiService.getListLayoutTemplate();
+                    var defaultList = uiService.getListLayoutTemplate(scope.isReport);
 
                     var listLayout = {};
                     listLayout.data = Object.assign({}, defaultList[0].data);
@@ -1643,9 +1643,11 @@
                     }*/
 
                     if (!scope.isRootEntityViewer) {
+
 						scope.evDataService.setSplitPanelDefaultLayout(layout.id);
 						scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-					}
+
+                    }
 
                     scope.evDataService.setListLayout(layout);
                     scope.evDataService.setActiveLayoutConfiguration({layoutConfig: layout});

@@ -385,11 +385,11 @@
 
                 });
 
-                vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
+                /* vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
                     vm.getView();
 
-                });
+                }); */
 
 				vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
 
