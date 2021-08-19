@@ -603,7 +603,7 @@
         vm.deletePane = function (item, $event, _$popup) {
 
             $event.stopPropagation();
-
+			// console.log("testing.deletePane item", item);
 			var description = 'Are you sure to delete this action?';
 
             $mdDialog.show({
@@ -1095,7 +1095,7 @@
 				vm.entity.events.forEach((item, index) => {
 
 					if (item.data) formatExistingEvent(item, index);
-
+					// console.log("testing.init vm.entity", vm.entity);
 				});
 
 				vm.readyStatus.gridTable = true;

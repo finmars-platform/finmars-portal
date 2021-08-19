@@ -132,10 +132,11 @@
 
         var onAccrualTableCellChange = function (data, gtDataService, gtEventService) {
 
-            const tableData = gtDataService.getTableData()
-			const cell = gtDataService.getCellByKey(data.row.order, data.column.key)
+            const tableData = gtDataService.getTableData();
+
+			const cell = gtDataService.getCellByKey(data.row.order, data.column.key);
 			const path = cell.objPath[0];
-            let accrual = vm.entity.accruals.find(accrual => findAccrualById(accrual, tableData.accrualId))
+            let accrual = vm.entity.accruals.find(accrual => findAccrualById(accrual, tableData.accrualId));
 
 			accrual.data.items[data.row.order][path] = cell.settings.value;
 
@@ -410,7 +411,7 @@
 
             var accrualGridTableData = getAccrualsGridTableData(accrual);
 
-            accrualGridTableData.accrualId = metaHelper.generateUniqueId(vm.entity.accruals.length);
+            accrualGridTableData.accrualId = accrual.frontOptions.id;
             accrual.accrualsGridTableDataService.setTableData(accrualGridTableData);
 
             vm.entity.accruals.push(accrual);
