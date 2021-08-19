@@ -33,9 +33,9 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
         vm.dataIsImported = false;
         vm.activeContentType = null;
 
-        vm.config = {};
-        vm.validateConfig = {};
-
+        vm.config = {
+            mode: 'overwrite'
+        };
         vm.processing = false;
         vm.loaderData = {};
 
@@ -105,6 +105,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
             } else {
 
                 formData.append('file', vm.config.file);
+                formData.append('mode', vm.config.mode);
 
             }
 
@@ -203,33 +204,8 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                 $scope.$apply();
 
-                var errors = data.stats.filter(function (item) {
-                    return item.level === 'error'
-                });
 
-                console.log('errors', errors);
-
-                var description;
-
-                if (data.scheme_object.error_handler === 'continue') {
-
-                    description = '<div>' +
-                        '<div>Rows total: ' + (data.total_rows) + '</div>' +
-                        '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
-                        '<div>Rows fail import: ' + errors.length + '</div>' +
-                        '</div><br/>';
-
-                }
-
-                if (data.scheme_object.error_handler === 'break') {
-
-                    description = '<div>' +
-                        '<div>Rows total: ' + (data.total_rows) + '</div>' +
-                        '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
-                        '<div>Rows fail import: ' + errors.length + '</div>' +
-                        '</div><br/>';
-
-                }
+                var description = '';
 
                 description = description + '<div> You have successfully imported csv file </div>';
 
