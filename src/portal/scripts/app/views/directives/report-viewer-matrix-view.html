@@ -1,4 +1,4 @@
-<div class="report-viewer-matrix" data-ng-class="{'matrix-with-fixed-totals': matrixView === 'fixed-totals'}">
+<div class="report-viewer-matrix rvMatrix" data-ng-class="{'matrix-with-fixed-totals': matrixView === 'fixed-totals'}">
     <div data-ng-if="!processing"
          class="height-100 rvMatrixWrap">
 
@@ -33,7 +33,7 @@
 
                 <!--<div class="report-viewer-matrix-column-header-cell report-viewer-empty-header-cell text-{{styles.cell.text_align}} rvMatrixCell"
                      title="{{getTopLeftTitle()}}">-->
-                <div class="report-viewer-matrix-column-header-cell report-viewer-empty-header-cell text-{{styles.cell.text_align}} rvMatrixCell">
+                <div class="report-viewer-matrix-column-header-cell report-viewer-empty-header-cell text-{{styles.cell.text_align}} firstColumnCell rvMatrixCell">
 
                     <div ng-if="canChangeValueAttr"
                          class="selector-button-popup">
