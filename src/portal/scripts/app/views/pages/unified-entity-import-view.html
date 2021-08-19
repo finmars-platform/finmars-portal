@@ -20,6 +20,15 @@
 
         <div layout="row">
 
+            <md-input-container>
+                <label>Mode</label>
+                <md-select data-ng-model="vm.config.mode">
+                    <md-option value="skip">Skip</md-option>
+                    <md-option value="overwrite">Overwrite</md-option>
+                </md-select>
+            </md-input-container>
+
+
             <md-button
                     class="md-raised colored-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                     data-ng-click="vm.startImport($event)">
