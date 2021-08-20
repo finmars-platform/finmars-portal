@@ -160,7 +160,7 @@
 			evDataService.setIsNewLayoutState(false);
 
 		} else { // split panel
-			console.log("testing.applyLayout layout", layout);
+
 			evDataService.setSplitPanelLayoutToOpen(layout.id);
 			evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
 
