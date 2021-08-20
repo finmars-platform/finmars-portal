@@ -37,8 +37,7 @@
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data)
-    {
+    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data) {
 
         var vm = this;
 
@@ -337,27 +336,27 @@
 
                     if (vm.entity.inputs) {
 
-                    	vm.entity.inputs.forEach(function (input) {
+                        vm.entity.inputs.forEach(function (input) {
 
-                    		if (!input.settings) {
-								input.settings = {}
-							}
+                            if (!input.settings) {
+                                input.settings = {}
+                            }
 
-							if (input.settings.linked_inputs_names) {
+                            if (input.settings.linked_inputs_names) {
 
-								input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                                input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
 
-							} else {
-								input.settings.linked_inputs_names = []
-							}
+                            } else {
+                                input.settings.linked_inputs_names = []
+                            }
 
-							if (input.settings.recalc_on_change_linked_inputs) {
+                            if (input.settings.recalc_on_change_linked_inputs) {
 
-								input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
+                                input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
 
-							} else {
-								input.settings.recalc_on_change_linked_inputs = []
-							}
+                            } else {
+                                input.settings.recalc_on_change_linked_inputs = []
+                            }
 
                             vm.resolveDefaultValue(input)
 
@@ -478,8 +477,8 @@
 
             updatedEntity.object_permissions = [];
 
-			// code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
-			return sharedLogic.updateEntityBeforeSave(updatedEntity);
+            // code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
+            return sharedLogic.updateEntityBeforeSave(updatedEntity);
 
         };
 
@@ -739,8 +738,8 @@
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
-				var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
-				actionsErrors = actionsErrors.concat(inputsErrors);
+                var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
+                actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
@@ -2622,6 +2621,18 @@
 
         };*/
 
+
+        vm.recalculateUserFields = function ($event) {
+
+            transactionTypeService.recalculateUserFields(vm.entity.id, {
+                transaction_type_id: vm.entity.id
+            }).then(function (data) {
+
+                toastNotificationService.success("User fields of Transaction Type " + vm.entity.name + ' was successfully recalculated');
+
+            })
+
+        }
 
         vm.init = function () {
 
