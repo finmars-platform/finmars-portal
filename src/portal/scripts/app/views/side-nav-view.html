@@ -312,7 +312,7 @@
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
                                                ui-sref="app.portal.data.price-history-error">
-                                        <span class="side-nav-title">Prices Errors</span>
+                                        <span class="side-nav-title">Prices Journal</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -330,7 +330,7 @@
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
                                                ui-sref="app.portal.data.currency-history-error">
-                                        <span class="side-nav-title">FX Rates Errors</span>
+                                        <span class="side-nav-title">FX Rates Journal</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -347,8 +347,8 @@
                                 <li>
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.portal.run-data-procedure">
-                                        <span class="side-nav-title">Import From Bank</span>
+                                               ui-sref="app.portal.pricing-parent-procedure">
+                                        <span class="side-nav-title">Procedures status</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -436,6 +436,15 @@
                                             Prices/FX<br>
                                             (from provider)
                                         </span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li>
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.run-data-procedure">
+                                        <span class="side-nav-title">Import From Bank</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
