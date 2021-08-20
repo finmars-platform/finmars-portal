@@ -473,7 +473,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/',
-			getRequestParams('PUT', data));
+			getRequestParams('POST', data));
 	};
 
 	var updateTransactionField = function (id, data) {
@@ -502,7 +502,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/',
-			getRequestParams('PUT', data));
+			getRequestParams('POST', data));
 	};
 
 	var updateInstrumentField = function (id, data) {
@@ -560,7 +560,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/',
-			getRequestParams('PUT', data));
+			getRequestParams('POST', data));
 	};
 
 	var updateDashboardLayout = function (id, data) {
@@ -624,7 +624,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/',
-			getRequestParams('PUT', data));
+			getRequestParams('POST', data));
 	};
 
 	var updateTemplateLayout = function (id, data) {
@@ -677,7 +677,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/',
-			getRequestParams('PUT', data));
+			getRequestParams('POST', data));
 	};
 
 	var updateContextMenuLayout = function (id, data) {
@@ -722,7 +722,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/',
-			getRequestParams('PUT', data));
+			getRequestParams('POST', data));
 	};
 
 	var updateEntityTooltip = function (id, data) {
@@ -764,7 +764,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/',
-			getRequestParams('PUT', data));
+			getRequestParams('POST', data));
 	};
 
 	var updateCrossEntityAttributeExtension = function (id, data) {
@@ -819,7 +819,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/',
-			getRequestParams('PUT', data));
+			getRequestParams('POST', data));
 	};
 
 	var updateColumnSortData = function (id, data) {
