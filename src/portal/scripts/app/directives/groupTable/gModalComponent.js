@@ -562,6 +562,11 @@
 
 			sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
 
+			vm.selectedGroups = vm.selectedGroups.filter(group => {
+				const hasNoMatchingColumn = !!!vm.selectedColumns.find(column => column.key === group.key);
+				return hasNoMatchingColumn;
+			});
+
         };
 
         // < format data for SELECTED tab >
