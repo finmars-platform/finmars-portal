@@ -126,6 +126,7 @@
 						nameColWidth = Math.floor(nameColWidth) + cellHorPaddings; */
 						var nameColWidth = 0;
 						var rowNamesList = scope.matrix.map(function (row) {return row.row_name;});
+						rowNamesList.push('TOTAL'); // TOTAL cell at the bottom
 
 						var dummyCellElem = document.createElement("div");
 						dummyCellElem.classList.add('position-absolute', 'visibility-hidden');
@@ -136,11 +137,25 @@
 						dummyCellElem.appendChild(textHolderElem);
 						matrixElem.appendChild(dummyCellElem);
 
-						rowNamesList.forEach(function (rowName) {
-							textHolderElem.innerText = rowName;
+						var valueAttr = scope.valueSelectorData.options.find(valOption => valOption.isActive);
+
+						var getNameColWidth = function (name) {
+							textHolderElem.innerText = name;
 							var dummyCellWidth = Math.ceil(dummyCellElem.clientWidth);
+
 							nameColWidth = Math.max(nameColWidth, dummyCellWidth);
-						});
+						};
+
+						if (valueAttr) {
+
+							textHolderElem.innerText = valueAttr.name;
+							var valueSelectorBtnPadding = 24; // if changing this also change left-padding for .selector-button-popup-btn inside main.less
+
+							nameColWidth = Math.ceil(dummyCellElem.clientWidth) + valueSelectorBtnPadding;
+
+						}
+
+						rowNamesList.forEach(getNameColWidth);
 
 						matrixElem.removeChild(dummyCellElem);
 
