@@ -101,8 +101,10 @@
         vm.typeFieldLabel = 'Type';
 
         if (vm.entityType === 'instrument') {
-            vm.typeFieldName = 'instrument_type';
+
+        	vm.typeFieldName = 'instrument_type';
             vm.typeFieldLabel = 'Instrument type';
+
         } else if (vm.entityType === 'instrument-type') {
             vm.typeFieldName = 'instrument_class';
             vm.typeFieldLabel = 'Instrument class';
@@ -1004,6 +1006,8 @@
                         } else {
 
                             vm.entity = {...vm.entity, ...responseData};
+                            vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
+
                             vm.entity.$_isValid = true;
                             $scope.$apply();
 
@@ -1948,7 +1952,7 @@
         };
 
         vm.onEntityChange = function (fieldKey) {
-        	console.lo
+
             if (fieldKey) {
 
             	var attributes = {
@@ -2061,7 +2065,6 @@
 				};
 
             }
-
             else {
 
                 vm.statusSelectorOptions = [

@@ -12,7 +12,9 @@
 
     var GridTableDataService = require('../../../services/gridTableDataService');
     var GridTableEventService = require('../../../services/gridTableEventService');
+
     var gridTableEvents = require('../../../services/gridTableEvents');
+	var evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
     var metaHelper = require('../../../helpers/meta.helper');
     var md5Helper = require('../../../helpers/md5.helper');
@@ -72,7 +74,7 @@
             vm.entity.event_schedules = [];
         }
 
-        vm.readyStatus.eventSchedulesReady = true;
+        // vm.readyStatus.eventSchedulesReady = true;
 
         var getAttributeByKey = function (key) {
 
@@ -466,7 +468,7 @@
                 order: 'header',
                 columns: []
             },
-            body:[],
+            body: [],
             templateRow: {
                 isActive: false,
                 columns: [
@@ -559,6 +561,8 @@
 
         var formatDataForEventsGridTable = function () {
 
+			vm.eventsGridTableData.body = [];
+
             // assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.eventsGridTableData.templateRow, true);
 
@@ -609,10 +613,24 @@
 
             });
             // < assemble body rows >
+
+			vm.eventSchedulesGridTableDataService.setTableData(vm.eventsGridTableData);
+
         };
 
         var initGridTableEvents = function () {
-            vm.eventSchedulesGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, onEventsTableDeleteRows);
+
+        	vm.eventSchedulesGridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, onEventsTableDeleteRows);
+
+			vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+
+				vm.entity = $scope.$parent.vm.entity;
+				formatDataForEventsGridTable();
+
+				vm.eventSchedulesGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
+
+			});
+
         };
 		//</editor-fold>
 
@@ -626,10 +644,8 @@
             Promise.all([getNotificationClasses, getEventClasses, getInstrumentPeriodicityItems]).then(function () {
 
                 formatDataForEventsGridTable();
-
+				vm.readyStatus.eventSchedulesReady = true;
             });
-
-            vm.eventSchedulesGridTableDataService.setTableData(vm.eventsGridTableData);
 
         };
 

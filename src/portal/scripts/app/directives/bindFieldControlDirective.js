@@ -793,7 +793,6 @@
 					if ($scope.entity[vm.fieldKey] === "") {
 						$scope.entity[vm.fieldKey] = null;
 					}
-
 					$scope.itemChange();
 				};
 

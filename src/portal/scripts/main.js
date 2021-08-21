@@ -349,7 +349,6 @@ export default (function () {
 
 	portal.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersGroupService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
 	portal.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
-	portal.controller('BookTransactionActionsTabController', ['$scope', require('./app/controllers/tabs/complex-transaction/bookTransactionActionsTabController')]);
 	portal.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/complex-transaction/bookTransactionTransactionsTabController')]);
 	portal.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', '$mdDialog', 'entityId', require('./app/controllers/entityViewer/complexTransactionsTransactionEditDialogController')]);
 	portal.controller('BookUniquenessWarningDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bookUniquenessWarningDialogController')]);
@@ -369,8 +368,6 @@ export default (function () {
 	portal.controller('InstrumentTypeUserAttributesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeUserAttributesTabController')]);
 
 	// Currency form - tabs
-
-	portal.controller('PricingTabController', ['$scope', 'authorizerService', require('./app/controllers/tabs/currency/pricingTabController')]);
 
 	portal.controller('InstrumentEventActionsDialogController', ['$scope', '$mdDialog', 'eventActions', require('./app/controllers/dialogs/instrumentEventActionsDialogController')]);
 	portal.controller('GenerateEventScheduleDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/generateEventScheduleDialogController')]);

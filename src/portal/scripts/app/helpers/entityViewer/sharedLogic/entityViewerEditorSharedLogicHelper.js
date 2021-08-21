@@ -29,7 +29,7 @@
 			'instrument-type': 'instrument-class'
         };
 
-        let instrumentTypesList = [];
+        // let instrumentTypesList = [];
 
 		//<editor-fold desc="entityTabsMenuTplt">
 		const entityTabsMenuTplt =
@@ -520,7 +520,7 @@
 
 					return new Promise(async (resolve, reject) => {
 
-						let fullInstrType = instrumentTypesList.find(instrType => instrType.id === activeInstrType.id);
+						let fullInstrType = viewModel.instrumentTypesList.find(instrType => instrType.id === activeInstrType.id);
 
 						if (fullInstrType) { // full instrument type was loaded
 
@@ -532,7 +532,7 @@
 							instrumentTypeService.getByKey(activeInstrType.id).then(instrTypeData => {
 
 								fullInstrType = instrTypeData;
-								instrumentTypesList.push(fullInstrType);
+								viewModel.instrumentTypesList.push(fullInstrType);
 
 								const editLayout = instrumentService.getEditLayoutBasedOnUserCodes(fullInstrType.instrument_form_layouts);
 								resolve(editLayout);
@@ -955,7 +955,7 @@
 
 		};
 
-		const injectUserAttributesFromInstrumentType = async function (instrumentTypeId) {
+		/* const injectUserAttributesFromInstrumentType = async function (instrumentTypeId) {
 
 			return await instrumentTypeService.getByKey(instrumentTypeId).then(data => {
 				const attrs = data.instrument_attributes;
@@ -968,7 +968,7 @@
 				});
 
 			})
-		};
+		}; */
 
         return {
 
@@ -996,7 +996,7 @@
 			isTabWithErrors: isTabWithErrors,
 			getTabBtnClasses: getTabBtnClasses,
 
-			injectUserAttributesFromInstrumentType: injectUserAttributesFromInstrumentType
+			// injectUserAttributesFromInstrumentType: injectUserAttributesFromInstrumentType
 
         }
 

@@ -46,7 +46,8 @@
 				const maxTableColWidth = 400;
 				let columnsNumber = 0;
 				/** Helps to determine which of multiple tables changed */
-				let thisTableChanged = {value: false}
+				let thisTableChanged = false;
+				// let thisTableChanged = {value: false}
 				let entitySpecificData;
 
 				const instrumentAccrualsColumns = {
@@ -302,7 +303,7 @@
 						gridTableData.body[itemIndex].order = itemIndex;
 					});
 
-					thisTableChanged.value = true;
+					thisTableChanged = true;
 					bfcVm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'accrual_calculation_schedules'});
 
 					scope.$apply();
@@ -603,20 +604,28 @@
 					scope.readyStatus = true;
 					if (asyncOperation) scope.$apply();
 
-					instrumentService.initAccrualsScheduleGridTableEvents(
-						scope.gridTableDataService, scope.gridTableEventService, scope.entity, bfcVm.evEditorEventService, thisTableChanged
-					);
+					scope.gridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argObj) {
+						thisTableChanged = true;
+						instrumentService.onAccrualsScheduleGtCellChange(argObj, scope.entity, scope.gridTableDataService, bfcVm.evEditorEventService);
+					});
+
+					scope.gridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (argObj) {
+						thisTableChanged = true;
+						instrumentService.onAccrualsScheduleGtRowDeletion(argObj, scope.entity, bfcVm.evEditorEventService);
+					});
 
 					bfcVm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, argObj => {
 
-						if (argObj && argObj.key === 'accrual_calculation_schedules' && !thisTableChanged.value) {
+						if (argObj && argObj.key === 'accrual_calculation_schedules' && !thisTableChanged) {
 
 							convertDataForGridTable();
+							const tableData = scope.gridTableDataService.getTableData();
+
 							scope.gridTableEventService.dispatchEvent(gtEvents.REDRAW_TABLE);
 
 						}
 
-						thisTableChanged.value = false;
+						thisTableChanged = false;
 
 					});
 

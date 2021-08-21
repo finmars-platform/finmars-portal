@@ -22,6 +22,7 @@
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
+	var instrumentTypeService = require('../../services/instrumentTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
@@ -133,6 +134,10 @@
 
         vm.openedIn = data.openedIn;
         vm.originalFixedAreaPopupFields;
+
+		if (vm.entityType === 'instrument') {
+			vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
+		}
 
 		vm.typeSelectorChange = null;
 
@@ -978,6 +983,57 @@
 
         };
 
+        var setValuesFromInstrumentType = function (entity) {
+
+        	return new Promise(async function (resolve) {
+
+				var activeInstrType = vm.typeSelectorOptions.find(instrType => instrType.id === vm.entity.instrument_type);
+
+				if (activeInstrType) { // if instrument type exist
+
+					var fullInstrType = vm.instrumentTypesList.find(instrType => instrType.id === vm.entity.instrument_type);
+
+					if (!fullInstrType) {
+						fullInstrType = await instrumentTypeService.getByKey(activeInstrType.id);
+					}
+
+					//region Set user attributes
+
+					fullInstrType.instrument_attributes.forEach(attr => {
+
+						const key = attr.attribute_type_user_code;
+						const value = entityEditorHelper.instrumentTypeAttrValueMapper(attr);
+
+						if (!entity[key] && entity[key] !== 0) {
+							entity[key] = value;
+						}
+
+					});
+					//endregion
+
+					//region Set accruals properties
+					var propsToSetList = ['accrued_currency', 'payment_size_detail', 'accrued_multiplier', 'default_accrued'];
+
+					propsToSetList.forEach(function (prop) {
+
+						if (fullInstrType[prop] || fullInstrType[prop] === 0 &&
+							!entity[prop] && entity[prop] !== 0) {
+
+							entity[prop] = fullInstrType[prop];
+
+						}
+
+					});
+					//endregion
+
+				}
+
+				resolve(entity);
+
+			});
+
+		};
+
         /*vm.entityStatusChanged = function () {
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
@@ -1035,7 +1091,7 @@
 
         vm.save = async function ($event, isAutoExitAfterSave) {
 
-            if (vm.entityType === 'instrument') {
+            /* if (vm.entityType === 'instrument') {
 
                 const instrumentTypeId = vm.entity[vm.typeFieldName];
                 if (instrumentTypeId) {
@@ -1043,7 +1099,10 @@
                     await vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
 
                 }
-            }
+            } */
+			if (vm.entityType === 'instrument') {
+				vm.entity = await setValuesFromInstrumentType(vm.entity);
+			}
 
             if (vm.entityType === 'instrument-type') {
 
@@ -1083,11 +1142,11 @@
 					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
 				}
 
-            } else {
+            }
+            else {
 
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
-
                 console.log('resultEntity', resultEntity);
 
                 if (vm.dcLayoutHasBeenFixed) {
@@ -1096,7 +1155,7 @@
 
                 vm.processing = true;
 
-                entityResolverService.create(vm.entityType, resultEntity).then(function (responseData) {
+                /* entityResolverService.create(vm.entityType, resultEntity).then(function (responseData) {
 
                     vm.processing = false;
 
@@ -1127,7 +1186,8 @@
 
                     }
 
-                }).catch(function (data) {
+                })
+				.catch(function (data) {
 
                     vm.processing = false;
 
@@ -1146,7 +1206,7 @@
                         }
                     })
 
-                });
+                }); */
 
             }
 
