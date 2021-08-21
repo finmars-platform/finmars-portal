@@ -53,90 +53,53 @@
     };
 
 	/**
-	 * Initiate accrual table event listeners
 	 *
+	 * @param argObj {{row: Object, column: Object}} - arguments passed when dispatching grid table event CELL_VALUE_CHANGED
+	 * @param entity {Object}
 	 * @param gridTableDataService {Object}
-	 * @param gridTableEventService {Object}
-	 * @param entity {Object} - data of entity
 	 * @param evEditorEventService {Object}
-	 * @param tableChangeObj {Object} - mutating object that helps to determine which of multiple accrual tables changed
 	 */
-	const initAccrualsScheduleGridTableEvents = function (gridTableDataService, gridTableEventService, entity, evEditorEventService, tableChangeObj) {
+	const onAccrualsScheduleGtCellChange = function (argObj, entity, gridTableDataService, evEditorEventService) {
 
-		const tableChangeArgObj = {
-			key: 'accrual_calculation_schedules'
-		};
+		var rowOrder = argObj.row.order,
+			colOrder = argObj.column.order;
 
-		/* gridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
+		gridTableHelperService.onGridTableCellChange(
+			entity.accrual_calculation_schedules,
+			gridTableDataService,
+			rowOrder, colOrder
+		);
 
-			const gridTableData = gridTableDataService.getTableData();
+		/*if (cell.cellType === 'multitypeField') {
 
-			const newRow = gridTableData.body[0];
-			const newSchedule = {
-				"accrual_start_date": '',
-				"first_payment_date": '',
-				"accrual_size": '',
-				"accrual_calculation_model": '',
-				"periodicity": '',
-				"periodicity_n": '',
-				"notes": '',
-				frontOptions: {newRow: true, gtKey: newRow.key}
-			};
+			var activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+			if (!activeType) activeType = cell.settings.fieldTypesData.find(type => type.isDefault);
 
-			entity.accrual_calculation_schedules.unshift(newSchedule);
+			metaHelper
+			entity.accrual_calculation_schedules[rowOrder][cell.key + '_value_type'] = activeType.value_type;
 
-			// Update rows in schedules grid table
-			entity.accrual_calculation_schedules.forEach((schedule, scheduleIndex) => {
-				gridTableData.body[scheduleIndex].order = scheduleIndex;
-			});
+		}*/
 
-			tableChangeObj.value = true;
-			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, tableChangeArgObj);
+		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'accrual_calculation_schedules'});
 
-		}); */
+	};
 
-		gridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argObj) {
+	/**
+	 *
+	 * @param argObj {Object} - arguments passed when dispatching grid table event ROW_DELETED
+	 * @param entity {{deletedRowsKeys: array}}
+	 * @param evEditorEventService {Object}
+	 */
+	const onAccrualsScheduleGtRowDeletion = function (argObj, entity, evEditorEventService) {
 
-			var rowOrder = argObj.row.order,
-				colOrder = argObj.column.order,
-				cell = gridTableDataService.getCell(rowOrder, colOrder);
+		entity.accrual_calculation_schedules = entity.accrual_calculation_schedules.filter(schedule => {
 
-			gridTableHelperService.onGridTableCellChange(
-				entity.accrual_calculation_schedules,
-				gridTableDataService,
-				rowOrder, colOrder
-			);
-
-			/*if (cell.cellType === 'multitypeField') {
-
-				var activeType = cell.settings.fieldTypesData.find(type => type.isActive);
-				if (!activeType) activeType = cell.settings.fieldTypesData.find(type => type.isDefault);
-
-				metaHelper
-				entity.accrual_calculation_schedules[rowOrder][cell.key + '_value_type'] = activeType.value_type;
-
-			}*/
-
-			tableChangeObj.value = true;
-			const cellValChangeArgObj = tableChangeArgObj;
-
-			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, cellValChangeArgObj);
+			var scheduleId = schedule.id || schedule.frontOptions.gtKey;
+			return !argObj.deletedRowsKeys.includes(scheduleId);
 
 		});
 
-		gridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (argObj) {
-
-			entity.accrual_calculation_schedules = entity.accrual_calculation_schedules.filter(schedule => {
-
-				var scheduleId = schedule.id || schedule.frontOptions.gtKey;
-				return !argObj.deletedRowsKeys.includes(scheduleId);
-
-			});
-
-			tableChangeObj.value = true;
-			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, tableChangeArgObj);
-
-		});
+		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'accrual_calculation_schedules'});
 
 	};
 
@@ -430,7 +393,8 @@
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
 
-		initAccrualsScheduleGridTableEvents: initAccrualsScheduleGridTableEvents,
+		onAccrualsScheduleGtCellChange: onAccrualsScheduleGtCellChange,
+		onAccrualsScheduleGtRowDeletion: onAccrualsScheduleGtRowDeletion,
 		getInstrumentAccrualsMultitypeFieldsData: getInstrumentAccrualsMultitypeFieldsData,
 		getInstrumentEventsMultitypeFieldsData: getInstrumentEventsMultitypeFieldsData,
 		updateMultitypeFieldSelectorOptionsInsideGridTable: updateMultitypeFieldSelectorOptionsInsideGridTable,

@@ -7,6 +7,8 @@
 
     var logService = require('../../../../../../core/services/logService');
 
+	var evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
+
     module.exports = function ($scope) {
 
         logService.controller('FactorScheduleTabController', 'initialized');
@@ -14,6 +16,8 @@
         var vm = this;
 
         vm.entity = $scope.$parent.vm.entity;
+
+		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
 
         console.log('----------------------------------', vm.entity);
 
@@ -51,6 +55,10 @@
             vm.newItem.value = null;
             vm.newItem.date = null
         }
+
+		vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+			vm.entity = $scope.$parent.vm.entity;
+		});
 
     }
 

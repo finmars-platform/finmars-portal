@@ -603,7 +603,7 @@
         vm.deletePane = function (item, $event, _$popup) {
 
             $event.stopPropagation();
-			// console.log("testing.deletePane item", item);
+
 			var description = 'Are you sure to delete this action?';
 
             $mdDialog.show({
@@ -1070,6 +1070,16 @@
 			vm.evEditorFieldEvent = { key: "mark_not_valid_fields" };
 		});
 
+		vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, () => {
+
+			vm.entity = $scope.$parent.vm.entity;
+
+			vm.entity.events.forEach((item, index) => {
+				if (item.data) formatExistingEvent(item, index);
+			});
+
+		});
+
         vm.init = function () {
 
         	vm.popupEventService = new EventService();
@@ -1093,9 +1103,7 @@
 				multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
 				vm.entity.events.forEach((item, index) => {
-
 					if (item.data) formatExistingEvent(item, index);
-					// console.log("testing.init vm.entity", vm.entity);
 				});
 
 				vm.readyStatus.gridTable = true;

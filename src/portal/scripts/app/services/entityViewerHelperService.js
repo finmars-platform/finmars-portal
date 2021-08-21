@@ -19,7 +19,12 @@
 	const metaHelper = require('../helpers/meta.helper');
 
     'use strict';
-
+	/**
+	 * Insert dynamic attributes' values into entity's root level
+	 *
+	 * @param entity {Object}
+	 * @param attrs {Array}
+	 */
     let transformItem = function (entity, attrs) {
 
         if (entity.attributes) {

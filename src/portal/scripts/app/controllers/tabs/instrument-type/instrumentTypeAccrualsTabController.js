@@ -7,8 +7,9 @@
     const metaService = require('../../../services/metaService');
 	const GridTableDataService = require('../../../services/gridTableDataService');
 	const GridTableEventService = require('../../../services/gridTableEventService');
+
 	const gridTableEvents = require('../../../services/gridTableEvents');
-	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents')
+	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
     const metaHelper = require('../../../helpers/meta.helper');
 	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
@@ -716,6 +717,16 @@
 
 		vm.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, () => {
 			vm.evEditorFieldEvent = { key: "mark_not_valid_fields" };
+		});
+
+		vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, () => {
+
+			vm.entity = $scope.$parent.vm.entity;
+
+			vm.entity.accruals.forEach(function (item, index) {
+				if (item.data) formatExistingAccrual(item);
+			});
+
 		});
 
         const init = function () {
