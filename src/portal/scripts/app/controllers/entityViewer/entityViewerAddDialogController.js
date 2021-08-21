@@ -1155,7 +1155,7 @@
 
                 vm.processing = true;
 
-                /* entityResolverService.create(vm.entityType, resultEntity).then(function (responseData) {
+                entityResolverService.create(vm.entityType, resultEntity).then(function (responseData) {
 
                     vm.processing = false;
 
@@ -1206,7 +1206,7 @@
                         }
                     })
 
-                }); */
+                });
 
             }
 
