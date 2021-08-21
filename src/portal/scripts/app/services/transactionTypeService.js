@@ -69,6 +69,10 @@
         return transactionTypeRepository.deleteBulk(data);
     };
 
+    var recalculateUserFields = function (id, data){
+        return transactionTypeRepository.recalculateUserFields(id, data);
+    }
+
     module.exports = {
         // getList: getList,
         getListLight: getListLight,
@@ -89,7 +93,9 @@
 
         updateBulkLight: updateBulkLight,
         updateBulk: updateBulk,
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+        recalculateUserFields: recalculateUserFields
 
     }
 
