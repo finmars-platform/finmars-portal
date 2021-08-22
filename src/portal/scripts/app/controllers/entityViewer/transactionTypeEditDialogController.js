@@ -72,7 +72,7 @@
 
         vm.currentMember = null;
 
-        var ecosystemDefaultData = {};
+        // var ecosystemDefaultData = {};
 
         vm.hasEditPermission = false;
         vm.canManagePermissions = false;
@@ -1768,7 +1768,7 @@
         };
 
 
-        var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+        /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
             var relationType = '';
             switch (fieldName) {
@@ -1824,7 +1824,7 @@
             actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
             actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
 
-        };
+        }; */
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 
@@ -2323,7 +2323,7 @@
 
         };
 
-        vm.appendFromTemplate = function ($event, template) {
+        /* vm.appendFromTemplate = function ($event, template) {
 
             //console.log("Append from Template", template);
 
@@ -2397,11 +2397,11 @@
                                 if (action[key].hasOwnProperty(actionItemKey + '_input')) {
 
                                     if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
-                                        /*if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
+                                        /!*if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
                                             action[key][actionItemKey + '_toggle'] = true;
 
                                             setDefaultValueForRelation(action, key, actionItemKey);
-                                        }*/
+                                        }*!/
                                         action[key][actionItemKey + '_toggle'] = true;
 
                                         setDefaultValueForRelation(action, key, actionItemKey);
@@ -2424,7 +2424,8 @@
 
             }
 
-        };
+        }; */
+		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
 
         vm.saveAsTemplate = function ($event, type) {
 
@@ -2645,9 +2646,10 @@
 
             sharedLogic.initGridTableEvents();
 
-            ecosystemDefaultService.getList().then(function (data) {
+            /* ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
-            });
+            }); */
+			sharedLogic.loadEcosystemDefaults();
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();
