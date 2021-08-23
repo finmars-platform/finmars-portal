@@ -120,12 +120,13 @@
                     <div data-ng-if="checkForCrudSelects()">
 
                         <div data-ng-if="readyStatus.content">
-                            <crud-select
-                                    data-label="getName()"
-                                    data-item="entity[fieldKey]"
-                                    data-entity-type="crudEntityType"
-                                    data-options="fields"
-                                    data-ng-click="getData()"
+                            <crud-select data-label="getName()"
+                                         data-item="entity[fieldKey]"
+                                         data-entity-type="crudEntityType"
+                                         data-options="fields"
+                                         data-ng-click="getData()"
+                                         event-signal="ciEventObj.event"
+                                         small-options="{notNull: options.notNull}"
                             ></crud-select>
                         </div>
 

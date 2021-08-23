@@ -2055,7 +2055,6 @@
 				};
 
             }
-
             else {
 
                 vm.statusSelectorOptions = [

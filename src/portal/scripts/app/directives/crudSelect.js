@@ -15,14 +15,12 @@
                 label: '=',
                 item: '=',
                 options: '=',
-                entityType: '='
+                entityType: '=',
+				eventSignal: '=',
+				smallOptions: '=',
+				isDisabled: '='
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
-
-                console.log("crudSelect.label", scope.label);
-                console.log("crudSelect.item", scope.item);
-                console.log("crudSelect.options", scope.options);
-                console.log("crudSelect.entityType", scope.entityType);
 
                 var entityType = scope.entityType;
 
@@ -32,6 +30,13 @@
                     scope.labelName = scope.label;
                 }
 
+				/* TIPS
+				scope.smallOptions probable properties
+					tooltipText: custom tolltip text
+					indicatorBtnIcon: sets icon for indicator button
+					notNull: selector should not be empty
+				*/
+
                 scope.searchTerm = '';
 
                 // Victor 2021.04.21 #93 New crud select design
@@ -39,6 +44,29 @@
                 scope.selectedItem = {
                    item: scope.options.find(option => option.id === scope.item)
                 };
+
+				scope.getInputContainerClasses = function () {
+
+					var classes = '';
+
+					if (scope.isDisabled) {
+						classes += "custom-input-is-disabled";
+
+					} else if (scope.error) {
+						classes = 'custom-input-error';
+
+					} else if (scope.valueIsValid) {
+						classes = 'custom-input-is-valid';
+
+					}
+
+					if (scope.noIndicatorBtn) {
+						classes += " no-indicator-btn";
+					}
+
+					return classes;
+
+				};
 
                 const selectItem = (item, _$popup) => {
 
@@ -256,6 +284,37 @@
                     item.___edit = true
 
                 }
+
+				if (scope.eventSignal) {
+
+					scope.$watch('eventSignal', function () {
+
+						if (scope.eventSignal && scope.eventSignal.key) {
+
+							switch (scope.eventSignal.key) {
+								case 'mark_not_valid_fields':
+									if (scope.smallOptions && scope.smallOptions.notNull &&
+										!scope.item && scope.item !== 0) {
+
+										scope.error = 'Field should not be null';
+
+									}
+
+									break;
+
+								case "error":
+									scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error))
+									break;
+
+							}
+
+							scope.eventSignal = {}; // reset signal
+
+						}
+
+					});
+
+				}
 
             }
         };
