@@ -72,7 +72,7 @@
      * @param {object} layoutCurrentConfig - Object with current
      * @param {boolean} isReport
      * @memberOf module:entityViewerHelperService
-     * @return {boolean} Returns true if layout has been changed, otherwise false
+     * @return {boolean} Returns true if layout has not been changed, otherwise false
      */
     let checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
 
@@ -122,9 +122,9 @@
 
         }
 
-        let layoutChanged = objectComparisonHelper.areObjectsTheSame(activeLayoutConfig, layoutCurrentConfig);
+        let layoutIsNotChanged = objectComparisonHelper.areObjectsTheSame(activeLayoutConfig, layoutCurrentConfig);
 
-        return layoutChanged;
+        return layoutIsNotChanged;
     };
 
     /**

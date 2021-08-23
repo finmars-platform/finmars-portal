@@ -19,8 +19,6 @@
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService) {
 
-        logService.controller('gModalController', 'initialized');
-
         var vm = this;
         vm.readyStatus = {content: false};
 

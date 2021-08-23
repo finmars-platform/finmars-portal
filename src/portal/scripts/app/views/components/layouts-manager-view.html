@@ -16,8 +16,8 @@
                       ng-class="{'default-layout': layout.is_default}"
                       ng-click="setAsDefault(layout)">home</span>
 
-                <a ui-sref="{{getLinkToLayout(layout.user_code)}}"
-                   ng-click="parentPopup.cancel()"
+                <a href="{{getLinkToLayout(layout.user_code)}}"
+                   ng-click="onLayoutLinkClick($event, layout)"
                    class="layout-menu-a">{{layout.name}}</a>
 
             </div>
@@ -88,7 +88,9 @@
         <span>Invites ({{invites.length}})</span>
     </div>
 
-    <div class="layout-menu-item" data-ng-click="renameLayout($event)">
+    <div class="layout-menu-item"
+         data-ng-click="renameLayout($event)"
+         ng-disabled="isNewLayout">
         <span class="material-icons">create</span>
         <span>Rename</span>
     </div>
