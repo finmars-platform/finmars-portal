@@ -235,7 +235,8 @@
 				preserveScope: false,
 				locals: {
 					data: {
-						entityType: entityType
+						entityType: entityType,
+						name: listLayout.name,
 					}
 				}
 			})
