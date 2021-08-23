@@ -38,7 +38,7 @@
 		});
 
         vm.item = {
-            name: ''
+            name: data.name || ''
         }
 
         vm.cancel = function () {
