@@ -1,8 +1,7 @@
-<div class="crud-select">
+<!-- <div class="crud-select">
 
     <md-input-container class="md-block">
-        <div
-             class="crud-input"
+        <div class="crud-input"
              popup
              popup-template-url="'views/popups/crud-select-popup-view.html'"
              popup-data="popupData"
@@ -21,72 +20,82 @@
         </div>
     </md-input-container>
 
-    <!--<md-input-container class="md-block">
-        <label data-ng-bind="labelName"></label>
-        <md-select data-ng-model="item">
-            <div class="md-select-holder crud-select-holder">
+</div> -->
+<div class="custom-input-container crud-select-container crudSelectContainer customInputBackgroundColor"
+     data-ng-class="getInputContainerClasses()">
 
-                <md-select-header>
-                    <input data-ng-model="searchTerm"
-                           type="search"
-                           placeholder="Search for a ..."
-                           class="md-text md-select-search-pattern crud-search"
-                           ng-keydown="$event.stopPropagation()">
+    <!--<div ng-if="label" class="custom-input-top-row">
+        <span class="custom-input-textarea-span-pan">{{label}}</span>
+    </div>-->
 
-                    <md-button data-ng-click="addItem()"
-                               class="float-right crud-add-item crud-select-icon-button md-raised md-primary">
+    <div class="custom-input-main-container">
+        <div class="custom-input-borders">
+            <div class="custom-input-content"
 
-                        <ng-md-icon icon="add_circle" size="16"></ng-md-icon>
+                 popup
+                 popup-template-url="'views/popups/crud-select-popup-view.html'"
+                 popup-data="popupData"
+                 open-on="click"
+                 close-on-click-outside="true"
+                 position-relative-to="element"
+                 relative-popup-x="left"
+                 popup-classes="'rounded-border'"
+                 on-popup-close="onPopupClose()">
 
-                    </md-button>
+                <div class="flex-row">
 
-                </md-select-header>
+                    <button data-ng-if="!noIndicatorBtn"
+                            class="custom-input-indicator-btn position-relative"
+                            data-ng-click="openSelectorDialog($event)"
+                            ng-disabled="isDisabled">
+                        <span class="material-icons">menu</span>
+                    </button>
 
-                <div class="md-select-options-holder">
-
-                    <div data-ng-repeat="item in options | filter:{name: searchTerm} as results track by item.id " class="crud-option">
-
-                        <div data-ng-if="item.___edit" class="crud-edit-option-holder">
-
-                            <md-input-container class="crud-input-container">
-
-                                <input data-ng-model="item.name"
-                                       type="search"
-                                       placeholder="Name"
-                                       class="md-text crud-input"
-                                       ng-keydown="$event.stopPropagation()">
-
-                            </md-input-container>
-
-                            <md-button data-ng-click="saveItem(item, $index, $event)"
-                                       class="crud-save-item crud-select-icon-button md-raised md-primary">
-                                <ng-md-icon icon="save" size="16"></ng-md-icon>
-                            </md-button>
-                            <md-button data-ng-click="deleteItem(item, $index, $event)"
-                                       class="crud-delete-item crud-select-icon-button md-raised md-warn">
-                                <ng-md-icon icon="delete_forever" size="16"></ng-md-icon>
-                            </md-button>
-
-                        </div>
-
-                        <div data-ng-if="!item.___edit" class="crud-option-holder">
-
-                            <md-option ng-value="item.id" class="crud-edit-option">
-                                {{item.name}}
-                            </md-option>
-
-                            <md-button data-ng-click="editItem(item)"
-                                       class="float-right crud-edit-item crud-select-icon-button md-raised">
-                                <ng-md-icon icon="mode_edit" size="16"></ng-md-icon>
-                            </md-button>
-                        </div>
-
-
+                    <div class="crud-input-name-holder">
+                        <span ng-hide="!selectedItem.item" class="crud-input-name" ng-bind="selectedItem.item.name"></span>
+                        <span ng-hide="selectedItem.item || !label" class="crud-input-name" ng-bind="label"></span>
                     </div>
 
                 </div>
+
+                <div class="custom-input-side-items flex-row customInputBackgroundColor">
+
+                    <!-- <div class="custom-input-custom-btns-holder">
+                        <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
+                            <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
+                                    data-ng-click="callFnForCustomBtn(button.action)">
+                                {{button.caption}}
+                                <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
+                                            size="24"
+                                            icon="{{button.iconObj.icon}}"
+                                            class="ci-custom-btn-icon"></ng-md-icon>
+
+                                <md-tooltip data-ng-if="button.tooltip"
+                                            class="tooltip_1"
+                                            md-direction="top">{{button.tooltip}}
+                                </md-tooltip>
+                            </button>
+                        </div>
+                    </div> -->
+
+                    <div data-ng-if="error" class="custom-input-tooltip">
+                        <span class="material-icons">info</span>
+                        <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
+                    </div>
+
+                    <div data-ng-if="tooltipText" data-ng-show="!error" class="custom-input-tooltip">
+                        <span class="material-icons ci-icon-color">info_outline</span>
+                        <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
+                    </div>
+
+                </div>
+
             </div>
-        </md-select>
-    </md-input-container>-->
+        </div>
+    </div>
+
+    <div ng-if="error"
+         ng-bind="error"
+         class="custom-input-bottom-error-text"></div>
 
 </div>

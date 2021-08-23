@@ -435,7 +435,6 @@
 
 					if ($scope.item.options && $scope.item.options.notNull) {
 						$scope.options.notNull = true;
-
 					}
 
 					else if (
