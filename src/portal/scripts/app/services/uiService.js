@@ -167,7 +167,7 @@
 
             const cachedLayout = localStorageService.getCachedLayout(key);
 
-            const fetchDefaultLayout = function () {
+            const fetchLayout = function () {
 
                 uiRepository.getListLayoutByKey(key).then(function (layoutData) {
 
@@ -183,7 +183,7 @@
 
             };
 
-            resolveLayoutByKey(cachedLayout, fetchDefaultLayout, resolve, reject);
+            resolveLayoutByKey(cachedLayout, fetchLayout, resolve, reject);
 
         });
 
@@ -225,6 +225,8 @@
 				if (data.is_default) {
 					localStorageService.cacheDefaultLayout(data);
 				}
+
+				resolve(data);
 
 			}).catch(function (error) {
 				reject(error);
@@ -285,8 +287,8 @@
 		return uiRepository.pingListLayoutByKey(id, xhrOptions);
 	}
 
-	const getListLayoutTemplate = function () {
-        return uiRepository.getListLayoutTemplate();
+	const getListLayoutTemplate = function (isReport) {
+        return uiRepository.getListLayoutTemplate(isReport);
     };
 
 	/**
