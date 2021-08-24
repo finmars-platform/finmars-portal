@@ -1379,31 +1379,46 @@
     var calculateVirtualStep = function (elements, evDataService, evScrollManager) {
 
         var viewportHeight;
-        var isRootEntityViewer = evDataService.isRootEntityViewer();
+        // var isRootEntityViewer = evDataService.isRootEntityViewer();
+		var components = evDataService.getComponents();
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var rowHeight = evDataService.getRowHeight();
         var interfaceLayout = evDataService.getInterfaceLayout();
+		var viewportTop;
 
-        // var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-		var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height;
+        /*if (isRootEntityViewer) {
+			viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height;
+			viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
 
-        if (!isRootEntityViewer) {
-            // viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+        } else {
+			// viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
 			viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height;
 			viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
-        } else {
-            viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
         }
 
+		viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height); */
+		viewportTop = 0;
+
+		if (components.topPart) {
+			viewportTop = viewportTop + interfaceLayout.topPart.height;
+		}
+
+		if (components.filterArea) {
+			viewportTop = viewportTop + interfaceLayout.filterArea.height;
+		}
+
+		if (components.columnArea) {
+			viewportTop = viewportTop + interfaceLayout.columnArea.height;
+		}
+
+		viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         console.log("View context: " + evDataService.getViewContext() + ". viewportHeight", viewportHeight);
         console.log("View context: " + evDataService.getViewContext() + ". contentWrapElemHeight", contentWrapElemHeight);
 
-
         var step = Math.round(viewportHeight / rowHeight);
 
         evDataService.setVirtualScrollStep(step);
-
 
     };
 

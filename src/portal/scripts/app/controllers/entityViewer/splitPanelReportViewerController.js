@@ -426,8 +426,9 @@
                 });
 
                 vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
-
+					// TODO fix when getView finishes too fast, group table directives (gTableComponent, gTopPartDirective etc.) not reinitialized and init methods inside them not called
                     var spActiveLayout = vm.entityViewerDataService.getSplitPanelLayoutToOpen();
+
                     parentEntityViewerDataService.setSplitPanelLayoutToOpen(spActiveLayout);
 
                     vm.getView();
@@ -533,16 +534,14 @@
 						// < Check if there is need to solve report datepicker expression >
 					} else {
 						sharedLogicHelper.onSetLayoutEnd();
+						resolve();
 					}
-
-					resolve();
 
 				});
 
 			};
 
             vm.getView = function () {
-
                 // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false; // switched to true by sharedLogicHelper.onSetLayoutEnd()
@@ -627,6 +626,7 @@
 					var setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
 
 					Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
+						const somelistLayout = vm.entityViewerDataService.getListLayout();
 						$scope.$apply();
 					});
 
