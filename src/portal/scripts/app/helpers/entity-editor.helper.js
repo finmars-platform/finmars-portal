@@ -2,7 +2,7 @@
 
     var metaService = require('../services/metaService');
     var evHelperService = require('../services/entityViewerHelperService');
-	var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
+    var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 
 	var metaHelper = require('../helpers/meta.helper');
 
@@ -22,7 +22,7 @@
 
                 if (entity.event_schedules) { // TODO Victor: may be make a deepClearFrontOptions?
 
-                	entity.event_schedules.forEach(function (event) {
+                    entity.event_schedules.forEach(function (event) {
                         delete event.frontOptions;
                         if (event.actions) {
                             event.actions.forEach(function (action) {
@@ -35,31 +35,31 @@
 
                 break;
 
-			case 'instrument-type':
+            case 'instrument-type':
 
-				if (entity.accruals && entity.accruals.length) {
+                if (entity.accruals && entity.accruals.length) {
 
-					entity.accruals.forEach(accrual => {
-						delete accrual.frontOptions;
-					});
+                    entity.accruals.forEach(accrual => {
+                        delete accrual.frontOptions;
+                    });
 
-				}
+                }
 
-				if (entity.events && entity.events.length) {
+                if (entity.events && entity.events.length) {
 
-					entity.events.forEach(event => {
+                    entity.events.forEach(event => {
 
-						delete event.frontOptions;
+                        delete event.frontOptions;
 
-						event.data.actions.forEach(action => {
-							delete action.frontOptions;
-						});
+                        event.data.actions.forEach(action => {
+                            delete action.frontOptions;
+                        });
 
-					});
+                    });
 
-				}
+                }
 
-				break;
+                break;
 
         }
 
@@ -109,9 +109,9 @@
 
     var clearEntityBeforeSave = function (entity, entityType) {
 
-    	let clearedEntity = JSON.parse(JSON.stringify(entity));
+        let clearedEntity = JSON.parse(JSON.stringify(entity));
 
-		clearedEntity = removeNullFields(clearedEntity);
+        clearedEntity = removeNullFields(clearedEntity);
 
         // clearFrontProperties(clearedEntity, entityType);
 		metaHelper.clearFrontendOptions(clearedEntity);
@@ -153,7 +153,7 @@
 
     var appendAttribute = function (attr, value) {
 
-    	var attribute = {
+        var attribute = {
             attribute_name: attr.name,
             attribute_type: attr.id,
             classifier: null,
@@ -205,7 +205,7 @@
 
     var findAttributeByKey = function (fieldKey, entityAttrs, attrsTypes, userInputs) {
 
-        var i,a,b;
+        var i, a, b;
         for (i = 0; i < entityAttrs.length; i++) {
             if (entityAttrs[i].key === fieldKey) {
                 return entityAttrs[i];
@@ -229,66 +229,62 @@
     }
 
     var systemTabLocationOfAttribute = {
-		'instrument': {
-			'maturity_date': {type: 'system_tab', name: 'Events', validatorText: 'tab: EVENTS'}
-		},
-		'instrument-type': {
-			'accrued_currency': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'},
-			'payment_size_detail': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'},
-			'accrued_multiplier': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'},
-			'default_accrued': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'}
-		}
-	};
+        'instrument': {
+            'maturity_date': {type: 'system_tab', name: 'Events', validatorText: 'tab: EVENTS'}
+        },
+        'instrument-type': {
+            'accrued_currency': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'},
+            'payment_size_detail': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'},
+            'accrued_multiplier': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'},
+            'default_accrued': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'}
+        }
+    };
 
     var getLocationOfAttributeInsideUserTabs = function (attrKey, tabs) {
 
-		var i, a;
-		for (i = 0; i < tabs.length; i++) {
+        var i, a;
+        for (i = 0; i < tabs.length; i++) {
 
-			var tab = tabs[i];
+            var tab = tabs[i];
 
-			for (a = 0; a < tab.layout.fields.length; a++) {
+            for (a = 0; a < tab.layout.fields.length; a++) {
 
-				var socket = tab.layout.fields[a];
+                var socket = tab.layout.fields[a];
 
-				if (socket.type !== 'empty') {
+                if (socket.type !== 'empty') {
 
-					if (socket.attribute_class === 'userInput') {
+                    if (socket.attribute_class === 'userInput') {
 
-						if (socket.attribute.name === attrKey) {
-							var locationMessage = 'tab: ' + tab.name.toUpperCase();
-							return { type: 'user_tab', name: tab.name, validatorText: locationMessage };
-						}
+                        if (socket.attribute.name === attrKey) {
+                            var locationMessage = 'tab: ' + tab.name.toUpperCase();
+                            return {type: 'user_tab', name: tab.name, validatorText: locationMessage};
+                        }
 
-					}
+                    } else if (socket.attribute.hasOwnProperty('key')) {
 
-					else if (socket.attribute.hasOwnProperty('key')) {
+                        if (socket.attribute.key === attrKey) {
+                            var locationMessage = 'tab: ' + tab.name.toUpperCase();
+                            return {type: 'user_tab', name: tab.name, validatorText: locationMessage};
+                        }
 
-						if (socket.attribute.key === attrKey) {
-							var locationMessage = 'tab: ' + tab.name.toUpperCase();
-							return { type: 'user_tab', name: tab.name, validatorText: locationMessage };
-						}
+                    } else if (socket.attribute.hasOwnProperty('user_code')) {
 
-					}
+                        if (socket.attribute.user_code === attrKey) {
+                            var locationMessage = 'tab: ' + tab.name.toUpperCase();
+                            return {type: 'user_tab', name: tab.name, validatorText: locationMessage};
+                        }
 
-					else if (socket.attribute.hasOwnProperty('user_code')) {
+                    }
 
-						if (socket.attribute.user_code === attrKey) {
-							var locationMessage = 'tab: ' + tab.name.toUpperCase();
-							return { type: 'user_tab', name: tab.name, validatorText: locationMessage };
-						}
+                }
 
-					}
+            }
 
-				}
+        }
 
-			}
+        return null;
 
-		}
-
-		return null;
-
-	};
+    };
 
     var getLocationOfAttribute = function (attrKey, tabs, fixedFieldsAttrs, entityType) {
 
@@ -301,7 +297,7 @@
         } else {
 
             if (systemTabLocationOfAttribute.hasOwnProperty(entityType) &&
-				systemTabLocationOfAttribute[entityType].hasOwnProperty(attrKey)) { // attributes inside system tabs
+                systemTabLocationOfAttribute[entityType].hasOwnProperty(attrKey)) { // attributes inside system tabs
 
                 return systemTabLocationOfAttribute[entityType][attrKey] || null;
 
@@ -611,7 +607,7 @@
 
         if (attrData.options && attrData.options.onlyPositive === true) {
 
-        	if (value === null || value === undefined) {
+            if (value === null || value === undefined) {
 
                 errorsList.push({
                     key: key,
@@ -633,7 +629,7 @@
             30: 'Field should not be empty.',
             20: 'Field should contain positive number.',
             40: 'Field should contain date in YYYY-MM-DD format.',
-			100: 'Field should not be empty.'
+            100: 'Field should not be empty.'
         }
 
         if (value && valueType === 40) {
@@ -699,43 +695,40 @@
         if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 10) ||
             attribute.value_type === 10) {
             return 10;
-        }
-        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
-                    attribute.value_type === 20) {
+        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
+            attribute.value_type === 20) {
             return 20;
-        }
-        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 30) ||
-                attribute.value_type === 30) {
+        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 30) ||
+            attribute.value_type === 30) {
             return 30;
-        }
-        else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
-                  attribute.value_type === 40) {
+        } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
+            attribute.value_type === 40) {
             return 40;
         }
 
     }
 
-	/**
-	 * If attribute with error from system tab also inside user tab. Add it second time.
-	 *
-	 * @param attrKey {string} - key of entity attribute
-	 * @param tabs {Object} - tabs from edit layout
-	 * @param error {Object} - object of error inside entity type
-	 * @param errorsList {Array.<Object>}
-	 */
+    /**
+     * If attribute with error from system tab also inside user tab. Add it second time.
+     *
+     * @param attrKey {string} - key of entity attribute
+     * @param tabs {Object} - tabs from edit layout
+     * @param error {Object} - object of error inside entity type
+     * @param errorsList {Array.<Object>}
+     */
     var copySystemTabErrorForUserTab = function (attrKey, tabs, error, errorsList) {
 
-		var locationInsideUserTab = getLocationOfAttributeInsideUserTabs(attrKey, tabs);
+        var locationInsideUserTab = getLocationOfAttributeInsideUserTabs(attrKey, tabs);
 
-		if (locationInsideUserTab) {
+        if (locationInsideUserTab) {
 
-			var errorCopy = JSON.parse(JSON.stringify(error));
-			errorCopy.locationData = locationInsideUserTab;
-			errorsList.push(errorCopy);
+            var errorCopy = JSON.parse(JSON.stringify(error));
+            errorCopy.locationData = locationInsideUserTab;
+            errorsList.push(errorCopy);
 
-		}
+        }
 
-	};
+    };
 
     var validateEvField = function (key, fieldValue, attr, tabs, fixedFieldsAttrs, entityType, errorsList) {
 
@@ -744,20 +737,20 @@
 
         switch (valueType) {
 
-        	case 10:
-			case 30:
-				errorObj = validateFieldWithString(fieldValue, attr);
-				break;
+            case 10:
+            case 30:
+                errorObj = validateFieldWithString(fieldValue, attr);
+                break;
 
-			case 20:
-				errorObj = validateNumberField(fieldValue, attr);
-				break;
+            case 20:
+                errorObj = validateNumberField(fieldValue, attr);
+                break;
 
-			case 40:
-				errorObj = validateDateField(fieldValue, attr);
-				break;
+            case 40:
+                errorObj = validateDateField(fieldValue, attr);
+                break;
 
-		}
+        }
 
         if (errorObj) {
 
@@ -773,16 +766,16 @@
 
     };
 
-	/**
-	 *
-	 * @param entity {Object}
-	 * @param entityType {string}
-	 * @param tabs {Object} - tabs from edit layout
-	 * @param fixedFieldsAttrs
-	 * @param entityAttrs {Array.<Object>} - entity attributes
-	 * @param attrsTypes {Array.<Object>} - attribute types created by user
-	 * @returns {Array.<Object>} - list of errors
-	 */
+    /**
+     *
+     * @param entity {Object}
+     * @param entityType {string}
+     * @param tabs {Object} - tabs from edit layout
+     * @param fixedFieldsAttrs
+     * @param entityAttrs {Array.<Object>} - entity attributes
+     * @param attrsTypes {Array.<Object>} - attribute types created by user
+     * @returns {Array.<Object>} - list of errors
+     */
     var validateEntityFields = (entity, entityType, tabs, fixedFieldsAttrs, entityAttrs, attrsTypes) => {
 
         var dynamicAttrs = entity.attributes;
@@ -811,7 +804,10 @@
                 }
 
             } else {
-                validateEvField(key, fieldValue, entityAttr, tabs, fixedFieldsAttrs, entityType, errors);
+
+                if (['procedure_modified_datetime'].indexOf(key) == -1) {
+                    validateEvField(key, fieldValue, entityAttr, tabs, fixedFieldsAttrs, entityType, errors);
+                }
             }
 
         });
@@ -852,180 +848,180 @@
 
     var validateInstrumentTypeAccruals = function (entity, errorsList) {
 
-    	if (entity.accruals && entity.accruals.length) {
+        if (entity.accruals && entity.accruals.length) {
 
-			/* const accrualRequiredProperties = {
-				"name": "not_empty",
-				"data": {
-					"form_message": "not_empty",
-					"items": [
-						{
-							"override_name": "",
-						}
-					]
-				}
-			}; */
+            /* const accrualRequiredProperties = {
+                "name": "not_empty",
+                "data": {
+                    "form_message": "not_empty",
+                    "items": [
+                        {
+                            "override_name": "",
+                        }
+                    ]
+                }
+            }; */
 
-			entity.accruals.forEach(accrual => {
+            entity.accruals.forEach(accrual => {
 
-				var accrualName = accrual.name || "";
-				var accrualNumber = accrual.order + 1;
+                var accrualName = accrual.name || "";
+                var accrualNumber = accrual.order + 1;
 
-				if (!accrual.name) {
+                if (!accrual.name) {
 
-					errorsList.push({
-						key: 'accruals',
-						locationData: {
-							type: "system_tab",
-							name: 'Accruals',
-							validatorText: "ACCRUAL #" + accrualNumber + " " + accrualName,
-							accordionIndex: accrual.order
-						},
-						fieldName: "Accrual name",
-						message: 'Accrual #' + accrualNumber + ' should be named'
-					});
+                    errorsList.push({
+                        key: 'accruals',
+                        locationData: {
+                            type: "system_tab",
+                            name: 'Accruals',
+                            validatorText: "ACCRUAL #" + accrualNumber + " " + accrualName,
+                            accordionIndex: accrual.order
+                        },
+                        fieldName: "Accrual name",
+                        message: 'Accrual #' + accrualNumber + ' should be named'
+                    });
 
-				}
+                }
 
-				if (!accrual.data.form_message) {
+                if (!accrual.data.form_message) {
 
-					errorsList.push({
-						key: 'accruals',
-						locationData: {
-							type: "system_tab",
-							name: 'Accruals',
-							validatorText: "ACCRUAL #" + accrualNumber + " " + accrualName,
-							accordionIndex: accrual.order
-						},
-						fieldName: "Message on the form",
-						message: 'Field should not be empty.'
-					});
+                    errorsList.push({
+                        key: 'accruals',
+                        locationData: {
+                            type: "system_tab",
+                            name: 'Accruals',
+                            validatorText: "ACCRUAL #" + accrualNumber + " " + accrualName,
+                            accordionIndex: accrual.order
+                        },
+                        fieldName: "Message on the form",
+                        message: 'Field should not be empty.'
+                    });
 
-				}
+                }
 
-				accrual.data.items.forEach(item => {
+                accrual.data.items.forEach(item => {
 
-					if (item.to_show) {
+                    if (item.to_show) {
 
-						if (!item.default_value && item.default_value !== 0) {
+                        if (!item.default_value && item.default_value !== 0) {
 
-							errorsList.push({
-								key: 'accruals',
-								locationData: {
-									type: "system_tab",
-									name: 'Accruals',
-									validatorText: "ACCRUAL #" + accrualNumber + " " + accrualName,
-									accordionIndex: accrual.order
-								},
-								tableName: "",
-								rowName: item.name,
-								columnName: "Default Value",
-								message: "Cell should not be empty."
-							});
+                            errorsList.push({
+                                key: 'accruals',
+                                locationData: {
+                                    type: "system_tab",
+                                    name: 'Accruals',
+                                    validatorText: "ACCRUAL #" + accrualNumber + " " + accrualName,
+                                    accordionIndex: accrual.order
+                                },
+                                tableName: "",
+                                rowName: item.name,
+                                columnName: "Default Value",
+                                message: "Cell should not be empty."
+                            });
 
-						}
+                        }
 
-					}
+                    }
 
-				});
+                });
 
-			});
+            });
 
-		}
+        }
 
-	};
+    };
 
     var validateInstrumentTypeEvents = function (entity, errorsList) {
 
-    	if (entity.events && entity.events.length) {
+        if (entity.events && entity.events.length) {
 
-    		entity.events.forEach(event => {
+            entity.events.forEach(event => {
 
-    			var eventName = event.name || "";
-    			var eventNumber = event.order + 1;
+                var eventName = event.name || "";
+                var eventNumber = event.order + 1;
 
-				if (!event.name) {
+                if (!event.name) {
 
-					errorsList.push({
-						key: 'events',
-						locationData: {
-							type: "system_tab",
-							name: 'Events',
-							validatorText: "EVENT #" + eventNumber + " " + eventName,
-							accordionIndex: event.order
-						},
-						fieldName: "Event name",
-						message: 'Event #' + eventNumber + ' should be named'
-					});
+                    errorsList.push({
+                        key: 'events',
+                        locationData: {
+                            type: "system_tab",
+                            name: 'Events',
+                            validatorText: "EVENT #" + eventNumber + " " + eventName,
+                            accordionIndex: event.order
+                        },
+                        fieldName: "Event name",
+                        message: 'Event #' + eventNumber + ' should be named'
+                    });
 
-				}
+                }
 
-				if (!event.data.form_message) {
+                if (!event.data.form_message) {
 
-					errorsList.push({
-						key: 'events',
-						locationData: {
-							type: "system_tab",
-							name: 'Events',
-							validatorText: "EVENT #" + eventNumber + " " + eventName,
-							accordionIndex: event.order
-						},
-						fieldName: "Message on the form",
-						message: 'Field should not be empty.'
-					});
+                    errorsList.push({
+                        key: 'events',
+                        locationData: {
+                            type: "system_tab",
+                            name: 'Events',
+                            validatorText: "EVENT #" + eventNumber + " " + eventName,
+                            accordionIndex: event.order
+                        },
+                        fieldName: "Message on the form",
+                        message: 'Field should not be empty.'
+                    });
 
-				}
+                }
 
-				if (!event.data.event_class) {
+                if (!event.data.event_class) {
 
-					errorsList.push({
-						key: 'events',
-						locationData: {
-							type: "system_tab",
-							name: 'Events',
-							validatorText: "EVENT #" + eventNumber + " " + eventName,
-							accordionIndex: event.order
-						},
-						fieldName: "Event class",
-						message: 'Field should not be empty.'
-					});
+                    errorsList.push({
+                        key: 'events',
+                        locationData: {
+                            type: "system_tab",
+                            name: 'Events',
+                            validatorText: "EVENT #" + eventNumber + " " + eventName,
+                            accordionIndex: event.order
+                        },
+                        fieldName: "Event class",
+                        message: 'Field should not be empty.'
+                    });
 
-				}
+                }
 
-				var validateEventRow = function (item) {
+                var validateEventRow = function (item) {
 
-					if (item.to_show) {
+                    if (item.to_show) {
 
-						if (!item.default_value && item.default_value !== 0) {
+                        if (!item.default_value && item.default_value !== 0) {
 
-							errorsList.push({
-								key: 'events',
-								locationData: {
-									type: "system_tab",
-									name: 'Events',
-									validatorText: "EVENT #" + eventNumber + " " + eventName,
-									accordionIndex: event.order
-								},
-								tableName: "",
-								rowName: item.name,
-								columnName: "Default Value",
-								message: "Cell should not be empty."
-							});
+                            errorsList.push({
+                                key: 'events',
+                                locationData: {
+                                    type: "system_tab",
+                                    name: 'Events',
+                                    validatorText: "EVENT #" + eventNumber + " " + eventName,
+                                    accordionIndex: event.order
+                                },
+                                tableName: "",
+                                rowName: item.name,
+                                columnName: "Default Value",
+                                message: "Cell should not be empty."
+                            });
 
-						}
+                        }
 
-					}
+                    }
 
-				};
+                };
 
 				event.data.items.forEach(validateEventRow);
 				if (!event.data.items_blocked) event.data.blockableItems.forEach(validateEventRow);
 
-				if (event.data.actions.length) {
+                if (event.data.actions.length) {
 
-					event.data.actions.forEach((action, index) => {
+                    event.data.actions.forEach((action, index) => {
 
-						if (!action.transaction_type) {
+                        if (!action.transaction_type) {
 
 							errorsList.push({
 								key: 'events',
@@ -1042,9 +1038,9 @@
 								message: "Cell should not be empty."
 							});
 
-						}
+                        }
 
-						if (!action.text) {
+                        if (!action.text) {
 
 							errorsList.push({
 								key: 'events',
@@ -1061,17 +1057,17 @@
 								message: "Cell should not be empty."
 							});
 
-						}
+                        }
 
-					});
+                    });
 
-				}
+                }
 
-			});
+            });
 
-		}
+        }
 
-	};
+    };
 
     var validateComplexTransactionUserInput = function (userInput, fieldValue, transactionsTypeActions, tabs, errorsList) {
 
@@ -1087,11 +1083,11 @@
             if (userInput.frontOptions && userInput.frontOptions.usedInExpr) {
 
                 if (
-                	(typeof fieldValue === 'number' && isNaN(fieldValue)) ||
+                    (typeof fieldValue === 'number' && isNaN(fieldValue)) ||
                     fieldValue === undefined ||
                     fieldValue === null ||
                     fieldValue === ''
-				) {
+                ) {
 
                     var errorObj = {
                         key: userInput.name,
@@ -1182,16 +1178,16 @@
 
     };
 
-	/**
-	 *
-	 * @param entity {Object}
-	 * @param transactionsTypeActions
-	 * @param tabs {Object} - tabs from edit layout
-	 * @param entityAttrs {Array.<Object>} - array of entity attributes
-	 * @param attrsTypes {Array.<Object>} - array of attribute types created by user
-	 * @param userInputs {Array.<Object>} - array of user inputs from transaction type
-	 * @returns {Array.<Object>} - array of errors
-	 */
+    /**
+     *
+     * @param entity {Object}
+     * @param transactionsTypeActions
+     * @param tabs {Object} - tabs from edit layout
+     * @param entityAttrs {Array.<Object>} - array of entity attributes
+     * @param attrsTypes {Array.<Object>} - array of attribute types created by user
+     * @param userInputs {Array.<Object>} - array of user inputs from transaction type
+     * @returns {Array.<Object>} - array of errors
+     */
     var validateComplexTransaction = function (entity, transactionsTypeActions, tabs, entityAttrs, attrsTypes, userInputs) {
 
         var errors = validateEntityFields(entity, 'complex-transaction', tabs, [], entityAttrs, attrsTypes);
@@ -1225,14 +1221,14 @@
 	 */
 	const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup) {
 
-		var entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+		const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
-		var locsWithErrors = evEditorDataService.getLocationsWithErrors();
-		var formErrorsList = evEditorDataService.getFormErrorsList();
+		let locsWithErrors = evEditorDataService.getLocationsWithErrors();
+		let formErrorsList = evEditorDataService.getFormErrorsList();
 
-		var fixedAreaPopupChanged = false;
+		let fixedAreaPopupChanged = false;
 
-		errors.forEach(function (errorObj) {
+        errors.forEach(function (errorObj) {
 
 			if (errorObj.locationData) {
 
@@ -1317,7 +1313,7 @@
 		evEditorDataService.setLocationsWithErrors(locsWithErrors);
 		evEditorDataService.setFormErrorsList(formErrorsList);
 
-		evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
+        evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
 		$mdDialog.show({
 			controller: 'EvAddEditValidationDialogController as vm',
@@ -1377,58 +1373,56 @@
 			var tabs = locationsWithErrors[tabType];
 			var tabKeys = Object.keys(tabs);
 
-			var t;
-			for (t = 0; t < tabKeys.length; t++) {
+            var t;
+            for (t = 0; t < tabKeys.length; t++) {
 
-				var tKey = tabKeys[t];
-				var tabErrorsList = tabs[tKey]; // list of errors inside tab
+                var tKey = tabKeys[t];
+                var tabErrorsList = tabs[tKey]; // list of errors inside tab
 
-				var tabErrorIndex = tabErrorsList.indexOf(errorKey);
+                var tabErrorIndex = tabErrorsList.indexOf(errorKey);
 
-				if (tabErrorIndex > -1) {
+                if (tabErrorIndex > -1) {
 
-					tabErrorsList.splice(tabErrorIndex, 1);
+                    tabErrorsList.splice(tabErrorIndex, 1);
 
-					if (!tabErrorsList.length) { // if there is no more errors inside tab, remove error mark
+                    if (!tabErrorsList.length) { // if there is no more errors inside tab, remove error mark
 
-						delete tabs[tKey];
+                        delete tabs[tKey];
 
-						if (tabType === 'user_tab') {
+                        if (tabType === 'user_tab') {
 
-							var selectorString = ".evFormUserTabName[data-tab-name='" + tKey + "']";
-							var tabNameElem = document.querySelector(selectorString);
+                            var selectorString = ".evFormUserTabName[data-tab-name='" + tKey + "']";
+                            var tabNameElem = document.querySelector(selectorString);
 
-							if (tabNameElem) tabNameElem.classList.remove('error-tab');
+                            if (tabNameElem) tabNameElem.classList.remove('error-tab');
 
-						}
-						else if (tabType === 'system_tab' && !Object.keys(tabs).length) {
+                        } else if (tabType === 'system_tab' && !Object.keys(tabs).length) {
 
 							var entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
-							entityTabsMenuBtn.classList.remove('error-tab');
+                            entityTabsMenuBtn.classList.remove('error-tab');
 
-						}
+                        }
 
-					}
+                    }
 
-					break;
+                    break;
 
-				}
+                }
 
-			}
+            }
 
 		};
 
 		removeErrorMarkFromTabs('system_tab');
 		removeErrorMarkFromTabs('user_tab');
 
-	}
+    }
 
 	/**
 	 * Validate single property of entity.
 	 *
 	 * @param errorKey {string} - name of property inside entity object
-	 * @param evEditorDataService {Object}
 	 * @param attributes {{entityAttrs: Array, attrsTypes: Array, [userInputs]: Array}} - userInputs for complex transactions only
 	 * @param entity {Object}
 	 * @param entityType {string}
@@ -1649,9 +1643,9 @@
 
 							}
 
-						}
+                        }
 
-					} */
+                    } */
 
                 }
 
@@ -1666,16 +1660,16 @@
 
     var validateEntity = function (item, entityType, tabs, fixedFieldsAttrs, entityAttrs, attrsTypes) {
 
-		var errors = validateEntityFields(item, entityType, tabs, fixedFieldsAttrs, entityAttrs, attrsTypes);
+        var errors = validateEntityFields(item, entityType, tabs, fixedFieldsAttrs, entityAttrs, attrsTypes);
 
-    	if (entityType === 'instrument-type') {
-    		validateInstrumentTypeAccruals(item, errors);
-    		validateInstrumentTypeEvents(item, errors);
-		}
+        if (entityType === 'instrument-type') {
+            validateInstrumentTypeAccruals(item, errors);
+            validateInstrumentTypeEvents(item, errors);
+        }
 
-		return errors;
+        return errors;
 
-	};
+    };
 
 
     var createFieldsTree = function (tabs) {
@@ -1747,130 +1741,128 @@
 
             if (field) {
 
-            	if (field.type !== 'empty') {
+                if (field.type !== 'empty') {
 
-					var attrFound = false;
+                    var attrFound = false;
 
-					if (field.attribute_class === 'attr') {
+                    if (field.attribute_class === 'attr') {
 
-						for (i = 0; i < dynamicAttrs.length; i = i + 1) {
+                        for (i = 0; i < dynamicAttrs.length; i = i + 1) {
 
-							if (field.key) {
+                            if (field.key) {
 
-								if (field.key === dynamicAttrs[i].user_code) {
+                                if (field.key === dynamicAttrs[i].user_code) {
 
-									dynamicAttrs[i].options = field.options;
-									//fieldResult = dynamicAttrs[i];
-									tabResult[field.row][field.column] = dynamicAttrs[i];
-									attrFound = true;
-									break;
+                                    dynamicAttrs[i].options = field.options;
+                                    //fieldResult = dynamicAttrs[i];
+                                    tabResult[field.row][field.column] = dynamicAttrs[i];
+                                    attrFound = true;
+                                    break;
 
-								}
+                                }
 
-							} else {
+                            } else {
 
-								if (field.attribute.user_code) {
+                                if (field.attribute.user_code) {
 
-									if (field.attribute.user_code === dynamicAttrs[i].user_code) {
+                                    if (field.attribute.user_code === dynamicAttrs[i].user_code) {
 
-										dynamicAttrs[i].options = field.options;
-										fieldResult = dynamicAttrs[i];
-										attrFound = true;
-										break;
+                                        dynamicAttrs[i].options = field.options;
+                                        fieldResult = dynamicAttrs[i];
+                                        attrFound = true;
+                                        break;
 
-									}
+                                    }
 
-								}
+                                }
 
-							}
+                            }
 
-						}
+                        }
 
-						if (!attrFound) {
-							var fieldPath = {
-								tabIndex: tabIndex,
-								fieldIndex: fieldIndex
-							};
+                        if (!attrFound) {
+                            var fieldPath = {
+                                tabIndex: tabIndex,
+                                fieldIndex: fieldIndex
+                            };
 
-							fieldsToEmptyList.push(fieldPath);
-						}
+                            fieldsToEmptyList.push(fieldPath);
+                        }
 
-					}
-					else if (field.attribute_class === 'decorationAttr') {
+                    } else if (field.attribute_class === 'decorationAttr') {
 
-						for (l = 0; l < layoutAttrs.length; l = l + 1) {
+                        for (l = 0; l < layoutAttrs.length; l = l + 1) {
 
-							if (field.name === layoutAttrs[l].name) {
+                            if (field.name === layoutAttrs[l].name) {
 
-								var layoutAttr = {...{}, ...layoutAttrs[l]}; // removing mutation because the same object may be used for another decoration
+                                var layoutAttr = {...{}, ...layoutAttrs[l]}; // removing mutation because the same object may be used for another decoration
 
-								layoutAttr.options = field.options;
-								fieldResult = layoutAttr;
+                                layoutAttr.options = field.options;
+                                fieldResult = layoutAttr;
 
-								attrFound = true;
-								break;
+                                attrFound = true;
+                                break;
 
-							}
+                            }
 
-						}
+                        }
 
-					}
-					else {
+                    } else {
 
-						for (e = 0; e < entityAttrs.length; e = e + 1) {
+                        for (e = 0; e < entityAttrs.length; e = e + 1) {
 
-							if (field.name === entityAttrs[e].name) {
+                            if (field.name === entityAttrs[e].name) {
 
-								entityAttrs[e].options = field.options;
-								fieldResult = entityAttrs[e];
+                                entityAttrs[e].options = field.options;
+                                fieldResult = entityAttrs[e];
 
-								attrFound = true;
-								break;
+                                attrFound = true;
+                                break;
 
-							}
+                            }
 
-						}
+                        }
 
-					}
+                    }
 
-					if (forComplexTransaction) {
+                    if (forComplexTransaction) {
 
-						var userInputs = attributes.userInputs;
+                        var userInputs = attributes.userInputs;
 
-						if (field.attribute_class === 'userInput') {
+                        if (field.attribute_class === 'userInput') {
 
-							for (u = 0; u < userInputs.length; u = u + 1) {
+                            for (u = 0; u < userInputs.length; u = u + 1) {
 
-								if (field.name === userInputs[u].name) {
-									userInputs[u].options = field.options;
+                                if (field.name === userInputs[u].name) {
+                                    userInputs[u].options = field.options;
 
-									fieldResult = userInputs[u];
+                                    fieldResult = userInputs[u];
 
-									attrFound = true;
-									break;
-								}
-							}
+                                    attrFound = true;
+                                    break;
+                                }
+                            }
 
-							if (!attrFound) {
-								var fieldPath = {
-									tabIndex: tabIndex,
-									fieldIndex: fieldIndex
-								};
+                            if (!attrFound) {
+                                var fieldPath = {
+                                    tabIndex: tabIndex,
+                                    fieldIndex: fieldIndex
+                                };
 
-								fieldsToEmptyList.push(fieldPath);
-							}
+                                fieldsToEmptyList.push(fieldPath);
+                            }
 
-						}
+                        }
 
-						fieldResult.editable = field.editable;
+                        fieldResult.editable = field.editable;
 
-					}
+                    }
 
-					if (field.backgroundColor) {
-						fieldResult.backgroundColor = field.backgroundColor;
-					}
+                    if (field.backgroundColor) {
+                        fieldResult.backgroundColor = field.backgroundColor;
+                    }
 
-				}
+                }
 
             }
 
@@ -2046,7 +2038,7 @@
         }
     };
 
-	/** @module entityEditorHelper */
+    /** @module entityEditorHelper */
     module.exports = {
         checkEntityAttrTypes: checkEntityAttrTypes,
         removeNullFields: removeNullFields,
@@ -2061,8 +2053,8 @@
         checkForNegNumsRestriction: checkForNegNumsRestriction,
         validateEntityFields: validateEntityFields,
         validateComplexTransaction: validateComplexTransaction,
-		validateEntity: validateEntity,
-		processTabsErrors: processTabsErrors,
+        validateEntity: validateEntity,
+        processTabsErrors: processTabsErrors,
 
         checkTabsForErrorFields: checkTabsForErrorFields,
 

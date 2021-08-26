@@ -29,8 +29,8 @@
         vm.dashboardEventService = null;
 
         vm.popupData = {
-            evDataService: vm.dashboardDataService,
-            evEventService: vm.dashboardEventService
+			dashboardDataService: vm.dashboardDataService,
+			dashboardEventService: vm.dashboardEventService
         }
 
         vm.processing = false;
@@ -587,8 +587,8 @@
             vm.dashboardEventService = new DashboardEventService();
 
             vm.popupData = {
-                evDataService: vm.dashboardDataService,
-                evEventService: vm.dashboardEventService
+				dashboardDataService: vm.dashboardDataService,
+				dashboardEventService: vm.dashboardEventService
             }
 
             vm.openDashboardLayout();

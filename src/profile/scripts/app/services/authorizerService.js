@@ -199,6 +199,7 @@ export default function (xhrService, cookieService) {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
 				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
 				Accept: 'application/json',
 				'Content-type': 'application/json'
