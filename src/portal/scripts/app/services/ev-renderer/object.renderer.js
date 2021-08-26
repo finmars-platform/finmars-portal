@@ -224,6 +224,27 @@
                         return 'Pending'
                     }
 
+                    // STATUS_ERROR = 'E'
+                    // STATUS_SKIP = 'S'
+                    // STATUS_CREATED = 'C'
+                    // STATUS_OVERWRITTEN = 'O'
+
+                    if (obj[column.key] === 'E') {
+                        return 'Error'
+                    }
+
+                    if (obj[column.key] === 'S') {
+                        return 'Skip'
+                    }
+
+                    if (obj[column.key] === 'C') {
+                        return 'Created'
+                    }
+
+                    if (obj[column.key] === 'Overwritten') {
+                        return 'Created'
+                    }
+
                 }
 
                 return obj[column.key]
