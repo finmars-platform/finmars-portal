@@ -56,7 +56,7 @@
 
             {
                 "key": "procedure_modified_datetime",
-                "name": "Procedure modified datetime",
+                "name": "Modified Date And Time",
                 "value_type": 40
             },
 
