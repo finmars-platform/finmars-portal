@@ -169,8 +169,6 @@
 
 				};
 
-                // scope.
-
                 scope.setAsDefault = (targetLayout) => {
 
                     if (targetLayout.is_default) {
