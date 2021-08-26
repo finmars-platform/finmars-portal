@@ -139,6 +139,10 @@
         vm.openedIn = data.openedIn;
         vm.originalFixedAreaPopupFields;
 
+		if (vm.entityType === 'instrument') {
+			vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
+		}
+
         var formLayoutFromAbove = data.editLayout;
 
         /* var getShowByDefaultOptions = function (columns, entityType) {

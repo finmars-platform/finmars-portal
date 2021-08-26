@@ -12,7 +12,7 @@
 
 	const gtEvents = require('../../services/gridTableEvents');
 
-	module.exports = function entityDataConstructorDialogController($scope, $mdDialog, gridTableHelperService, data) {
+	module.exports = function instrumentTablesSettingsDialogController($scope, $mdDialog, gridTableHelperService, data) {
 
 		const vm = this;
 
@@ -182,7 +182,6 @@
 						column.settings.value = rowData[colProp];
 
 					}
-
 					else { // make cell empty if there is not corresponding property
 						column.cellType = 'empty';
 						delete column.settings;
@@ -194,6 +193,8 @@
 				// const nameColumn = gridTableHelperService.getCellFromRowByKey(rowObj, 'notes');
 
 			});
+
+			return vm.gridTableData;
 
 		};
 
@@ -250,7 +251,7 @@
 
 			} */
 
-			formatDataForGridTable(tableData);
+			vm.gridTableData = formatDataForGridTable(tableData);
 			vm.gridTableDataService.setTableData(vm.gridTableData);
 
 			vm.gridTableEventService.addEventListener(gtEvents.CELL_VALUE_CHANGED, argObj => {

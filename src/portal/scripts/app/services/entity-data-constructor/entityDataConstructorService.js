@@ -2,6 +2,7 @@
 
 	const accrualCalculationModelService = require('../accrualCalculationModelService');
 	const instrumentPeriodicityService = require('../instrumentPeriodicityService');
+	const metaEventClassService = require('../metaEventClassService');
 
 	'use strict';
 
@@ -74,8 +75,94 @@
 							to_show: true,
 						}
 					]
+				},
+				'event_schedules':{
+					'label': '',
+					'tableData': [
+						{
+							key: "name",
+							name: "Name",
+							to_show: true,
+							override_name: "",
+						},
+						{
+							key: "event_class",
+							name: "Event class",
+							to_show: true,
+							override_name: "",
+						},
+						{
+							key: "effective_date",
+							name: "Effective date",
+							to_show: true,
+							override_name: "",
+						},
+						{
+							key: "final_date",
+							name: "Final date",
+							to_show: true,
+							override_name: "",
+						},
+						{
+							key: "description",
+							name: "Description",
+							to_show: true,
+							override_name: "",
+						},
+						{
+							key: "periodicity",
+							name: "Periodicity",
+							to_show: true,
+							override_name: "",
+							options: [],
+						},
+						{
+							key: "periodicity_n",
+							name: "Periodicity N",
+							to_show: true,
+							override_name: "",
+						},
+						{
+							key: "notification_class",
+							name: 'Notification class',
+							to_show: true,
+							override_name: "",
+							options: [],
+						},
+						{
+							key: "notify_in_n_days",
+							name: 'Notify in N days',
+							to_show: true,
+							override_name: "",
+						},
+						{
+							key: "build_events_btn",
+							name: '"Build Events" Button',
+							to_show: true
+						},
+						{
+							key: "rows_addition",
+							name: '"Add" Button',
+							to_show: true
+						},
+						{
+							key: "rows_deletion",
+							name: '"Delete" Button',
+							to_show: true
+						}
+					]
 				}
 			}
+		};
+
+		const mapOptions = function (item) {
+			return {
+				user_code: item.user_code,
+				id: item.id,
+				name: item.name,
+				to_show: true,
+				override_name: "",
+			};
 		};
 
 		const loadOptionsForAccrualsTable = async function () {
@@ -84,16 +171,6 @@
 
 			const calcModelIndex = accrualsTable.findIndex(row => row.key === 'accrual_calculation_model');
 			const periodicityIndex = accrualsTable.findIndex(row => row.key === 'periodicity');
-
-			const mapOptions = function (item) {
-				return {
-					user_code: item.user_code,
-					id: item.id,
-					name: item.name,
-					to_show: true,
-					override_name: "",
-				};
-			};
 
 			const accrualCalcModelsProm = new Promise(async (res, rej) => {
 
@@ -121,12 +198,46 @@
 
 		};
 
+		const loadOptionsForEventsTable = async function () {
+
+			const eventsTable = dataOfAttributes.instrument.event_schedules.tableData;
+
+			const notifClassIndex = eventsTable.findIndex(row => row.key === 'notification_class');
+			const periodicityIndex = eventsTable.findIndex(row => row.key === 'periodicity');
+
+			const eventClassProm = new Promise(async (res, rej) => {
+
+				metaEventClassService.getList().then(data => {
+
+					eventsTable[notifClassIndex].options = data.map(mapOptions);
+					res();
+
+				}).catch(error => rej("error on getting accrual calculation models happened"));
+
+			});
+
+			const periodicityProm = new Promise(async (res, rej) => {
+
+				instrumentPeriodicityService.getList().then(data => {
+
+					eventsTable[periodicityIndex].options = data.map(mapOptions);
+					res();
+
+				}).catch(error => rej("error on getting instrument periodicity happened"));
+
+			});
+
+			return Promise.all([eventClassProm, periodicityProm]);
+
+		};
+
 		return {
 			fullRowUserInputsList: fullRowUserInputsList,
 
 			dataOfAttributes: dataOfAttributes,
 
-			loadOptionsForAccrualsTable: loadOptionsForAccrualsTable
+			loadOptionsForAccrualsTable: loadOptionsForAccrualsTable,
+			loadOptionsForEventsTable: loadOptionsForEventsTable
 		}
 
 	}

@@ -6,6 +6,7 @@
 	const instrumentService = require('../services/instrumentService');
 	const accrualCalculationModelService = require('../services/accrualCalculationModelService');
 	const instrumentPeriodicityService = require('../services/instrumentPeriodicityService');
+	const metaEventClassService = require('../services/metaEventClassService');
 
 	const GridTableDataService = require('../services/gridTableDataService');
 	const EventService = require('../services/eventService');
@@ -27,19 +28,21 @@
 			},
 			templateUrl: "views/directives/bind-field-table-view.html",
 			link: function (scope, elem, attr, bfcVm) {
-
+				// if (scope.item.key === 'event_schedules') console.log("testing bindFieldTable item", scope.item);
 				scope.readyStatus = false;
 
 				scope.entityType = bfcVm.entityType;
 
+				scope.rowAdditionShemes = [];
+
 				scope.popupX = {value: null};
 				scope.popupY = {value: null};
-				scope.popupTemplate =
+				scope.addBtnPopupTemplate =
 					`<div class="accrual-add-row-popup-container">
 						<div data-ng-repeat="item in popupData.items"
 							 class="accrual-add-row-popup-item"
-							 data-ng-click="popupData.onItemClick(item)">{{item.name}}</div>
-						<div data-ng-if="popupData.isBuildButton" class="accrual-add-row-popup-item build-accruals">Build accruals</div>
+							 data-ng-click="popupData.onAddBtnClick(item)">{{item.name}}</div>
+						<div data-ng-if="popupData.showBuildButton" class="accrual-add-row-popup-item build-accruals">Build accruals</div>
 					</div>`;
 
 				const minTableColWidth = 50;
@@ -49,7 +52,63 @@
 				let thisTableChanged = false;
 				// let thisTableChanged = {value: false}
 				let entitySpecificData;
+				let tableColumnsList;
+				/**
+				 * Fill each grid table row's cell with data from entity
+				 *
+				 * @param item {Object} - matching to row data from entity
+				 * @param row {Object} - grid table row data
+				 */
+				let fillGridTableRowCells;
 
+				const gridTableData = {
+					header: {
+						order: 'header',
+						columns: []
+					},
+					templateRow: {
+						isActive: false,
+						columns: []
+					},
+					body: [],
+					components: {}
+				};
+
+				const loadInstrumentPeriodicity = function () {
+
+					return new Promise((res, rej) => {
+
+						instrumentPeriodicityService.getList().then(data => {
+
+							entitySpecificData.selectorOptions.periodicity = data;
+							res();
+
+						}).catch(error => rej(error));
+
+					});
+
+				};
+
+				const loadInstrumentType = function () {
+					return new Promise ((res, rej) => {
+
+						if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
+
+							instrumentTypeService.getByKey(scope.entity.instrument_type).then(instrTypeData => {
+
+								const resData = instrTypeData || [];
+								res(resData);
+
+							}).catch(error => rej(error));
+
+						} else {
+							res();
+						}
+
+					});
+				};
+
+				//region Instrument accruals
 				const instrumentAccrualsColumns = {
 					'notes' :{
 						key: 'notes',
@@ -114,24 +173,9 @@
 					}
 				};
 
-				const gridTableData = {
-					header: {
-						order: 'header',
-						columns: []
-					},
-					templateRow: {
-						isActive: false,
-						columns: []
-					},
-					body: [],
-					components: {}
-				};
-
 				let multitypeFieldsForRows;
 
 				const loadDataForInstrumentAccruals = function () {
-
-					const promises = [];
 
 					entitySpecificData = {
 						selectorOptions: {
@@ -151,24 +195,17 @@
 
 					});
 
-					promises.push(calcModelProm);
+					const periodicityProm = loadInstrumentPeriodicity();
 
-					const periodicityProm = new Promise((res, rej) => {
+					const instrTypeAccrualsProm = new Promise ((res, rej) => {
 
-						instrumentPeriodicityService.getList().then(data => {
-
-							entitySpecificData.selectorOptions.periodicity = data;
+						loadInstrumentType().then(instrTypeData => {
+							scope.rowAdditionShemes = instrTypeData.accruals || [];
 							res();
 
 						}).catch(error => rej(error));
 
-					});
-
-					promises.push(periodicityProm);
-
-					const instrTypeAccrualsProm = new Promise ((res, rej) => {
-
-						if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
+						/* if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
 
 							instrumentTypeService.getByKey(scope.entity.instrument_type).then(instrTypeData => {
 
@@ -179,15 +216,127 @@
 
 						} else {
 							res();
-						}
+						} */
 
 					});
 
-					promises.push(instrTypeAccrualsProm);
-
-					return Promise.allSettled(promises);
+					return Promise.allSettled([calcModelProm, periodicityProm, instrTypeAccrualsProm]);
 
 				};
+				//endregion
+
+				//region Instrument events
+				const instrumentEventsColumns = {
+					'name' :{
+						key: 'name',
+						objPath: ['name'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						},
+					},
+					'event_class': {
+						key: 'event_class',
+						objPath: ['event_class'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						}
+					},
+					'effective_date': {
+						key: 'effective_date',
+						objPath: ['effective_date'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						}
+					},
+					'final_date': {
+						key: 'final_date',
+						objPath: ['final_date'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						}
+					},
+					'description': {
+						key: 'description',
+						objPath: ['description'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						}
+					},
+					'periodicity': {
+						key: 'periodicity',
+						objPath: ['periodicity'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						}
+					},
+					'periodicity_n': {
+						key: 'periodicity_n',
+						objPath: ['periodicity_n'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						}
+					},
+					'notification_class': {
+						key: 'notification_class',
+						objPath: ['notification_class'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						}
+					},
+					'notify_in_n_days': {
+						key: 'notify_in_n_days',
+						objPath: ['notify_in_n_days'],
+						cellType: 'readonly_text',
+						settings: {
+							value: null
+						}
+					},
+				};
+
+				const loadDataForInstrumentEvents = function () {
+
+					entitySpecificData = {
+						selectorOptions: {
+							event_class: [],
+							periodicity: []
+						}
+					};
+
+					const eventClassProm = new Promise(async (res, rej) => {
+
+						metaEventClassService.getList().then(data => {
+
+							entitySpecificData.selectorOptions.event_class = data;
+							res();
+
+						}).catch(error => rej(error));
+
+					});
+
+					const periodicityProm = loadInstrumentPeriodicity();
+
+					const instrTypeEventsProm = new Promise ((res, rej) => {
+
+						loadInstrumentType().then(instrTypeData => {
+							scope.rowAdditionShemes = instrTypeData.events || [];
+							res();
+
+						}).catch(error => rej(error))
+
+					});
+
+					return Promise.allSettled([eventClassProm, periodicityProm, instrTypeEventsProm]);
+
+				};
+				//endregion
 
 				const addSelectedHiddenOption = function (column) {
 
@@ -254,7 +403,7 @@
 
 				const addNewAccrual = function (accrual) {
 
-					const newRowKey = gridTableHelperService.getNewRowUniqueKey(scope.gridTableDataService);
+					const newRowKey = metaHelper.generateUniqueId('instrumentAccrualSchedule');
 
 					accrual.frontOptions = {newRow: true, gtKey: newRowKey};
 
@@ -330,17 +479,17 @@
 					}
 
 				} */
-
+				/** Assembles header and templateRow */
 				const assembleGridTable = function () {
 
 					const tableData = scope.item.options.tableData;
 					if (scope.item.options.label) gridTableData.name = scope.item.options.label;
-
+					// if (scope.item.key === 'event_schedules') console.log("testing.assembleGridTable tableData", tableData);
 					let shownColIndex = 0;
 
 					tableData.forEach(column => {
 
-						var columnData = instrumentAccrualsColumns[column.key];
+						var columnData = tableColumnsList[column.key];
 
 						if (column.to_show && columnData) {
 
@@ -382,7 +531,7 @@
 
 					columnsNumber = gridTableData.templateRow.columns.length;
 
-
+					//region Set widths for columns
 					if (columnsNumber) {
 
 						const averageWidth = (100 / columnsNumber).toFixed(1);
@@ -403,6 +552,7 @@
 						});
 
 					}
+					//endregion
 
 					const rowsAddition = tableData.find(item => item.key === 'rows_addition');
 					const rowsDeletion = tableData.find(item => item.key === 'rows_deletion');
@@ -424,81 +574,99 @@
 
 				};
 
-				/**
-				 * Fill each grid table row's cell with data from entity
-				 *
-				 * @param item {Object} - matching to row data from entity
-				 * @param row {Object} - grid table row data
-				 */
-				const fillGridTableRowCells = function (item, row) {
+				if (scope.entityType === 'instrument' && scope.item.key === "event_schedules") {
 
-					row.columns.forEach((cell, index) => {
+					fillGridTableRowCells = function (item, row) {
 
-						if (cell.cellType === 'multitypeField') {
+						row.columns.forEach((cell, index) => {
 
-							/* const fieldTypesList = multitypeFieldsForRows[cell.key].fieldTypesList;
+							if (['event_class', 'periodicity', 'notification_class'].includes(cell.key)) {
 
-							let valueTypePath = [...[], ...cell.objPath];
-							let valueTypeLastProp = valueTypePath.pop();
+								const itemProp = cell.objPath[0] + '_object';
+								const selectedOptionName = item[itemProp].name;
 
-							valueTypeLastProp = valueTypeLastProp + '_value_type';
-							valueTypePath.push(valueTypeLastProp);
+								cell.settings.value = selectedOptionName;
 
-							const valueType = metaHelper.getObjectNestedPropVal(item, valueTypePath); */
-							if (cell.hasOwnProperty('objPaths')) {
+							} else {
+								cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
+							}
 
-								const fieldTypesList = multitypeFieldsForRows[cell.key].fieldTypesList;
+						});
 
-								const cellValuePath = cell.objPaths[0];
-								const cellValueTypePath = cell.objPaths[1];
+					};
 
-								const cellValue = metaHelper.getObjectNestedPropVal(item, cellValuePath);
-								const valueType = metaHelper.getObjectNestedPropVal(item, cellValueTypePath);
+				}
+				else {
 
-								const cellData = gridTableHelperService.getMultitypeFieldDataForCell(fieldTypesList, cell, cellValue, valueType);
-								row.columns[index] = cellData.cell;
+					fillGridTableRowCells = function (item, row) {
+						// if (scope.item.key === 'event_schedules') console.log("testing bindFieldTable fillGridTableRowCells item", item);
+						row.columns.forEach((cell, index) => {
 
-								// for existing accruals without _value_type
-								if (!valueType && !isNaN(valueType)) {
-									metaHelper.setObjectNestedPropVal(item, cellValueTypePath, cellData.valueType);
+							if (cell.cellType === 'multitypeField') {
+
+								/* const fieldTypesList = multitypeFieldsForRows[cell.key].fieldTypesList;
+
+								let valueTypePath = [...[], ...cell.objPath];
+								let valueTypeLastProp = valueTypePath.pop();
+
+								valueTypeLastProp = valueTypeLastProp + '_value_type';
+								valueTypePath.push(valueTypeLastProp);
+
+								const valueType = metaHelper.getObjectNestedPropVal(item, valueTypePath); */
+								if (cell.hasOwnProperty('objPaths')) {
+
+									const fieldTypesList = multitypeFieldsForRows[cell.key].fieldTypesList;
+
+									const cellValuePath = cell.objPaths[0];
+									const cellValueTypePath = cell.objPaths[1];
+
+									const cellValue = metaHelper.getObjectNestedPropVal(item, cellValuePath);
+									const valueType = metaHelper.getObjectNestedPropVal(item, cellValueTypePath);
+
+									const cellData = gridTableHelperService.getMultitypeFieldDataForCell(fieldTypesList, cell, cellValue, valueType);
+									row.columns[index] = cellData.cell;
+
+									// for existing accruals without _value_type
+									if (!valueType && !isNaN(valueType)) {
+										metaHelper.setObjectNestedPropVal(item, cellValueTypePath, cellData.valueType);
+									}
+
+								}
+
+							}
+							else {
+
+								cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
+
+								if (cell.cellType === 'selector') {
+									/* const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
+
+									if (optionIndex < 0) { // if selected option hidden, add it until another selected
+
+										const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
+											return option.id === column.settings.value;
+										});
+
+										if (optionData) {
+
+											column.settings.selectorOptions.push({
+												id: optionData.id,
+												name: optionData.name
+											});
+
+										}
+
+									} */
+									addSelectedHiddenOption(cell);
 								}
 
 							}
 
-						}
+						});
 
-						else {
+					};
 
-							cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
-
-							if (cell.cellType === 'selector') {
-								/* const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
-
-								if (optionIndex < 0) { // if selected option hidden, add it until another selected
-
-									const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
-										return option.id === column.settings.value;
-									});
-
-									if (optionData) {
-
-										column.settings.selectorOptions.push({
-											id: optionData.id,
-											name: optionData.name
-										});
-
-									}
-
-								} */
-								addSelectedHiddenOption(cell);
-							}
-
-						}
-
-					});
-
-
-				};
+				}
 
 				const convertDataForGridTable = function () {
 
@@ -559,41 +727,70 @@
 
 					if (scope.entityType === 'instrument') {
 
-						multitypeFieldsForRows = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
+						if (scope.item.key === "accrual_calculation_schedules") {
 
-						await loadDataForInstrumentAccruals();
+							tableColumnsList = instrumentAccrualsColumns;
+							multitypeFieldsForRows = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
 
-						scope.popupData = {
-							items: [],
-							isBuildButton: scope.item.options.tableData.find(item => item.key === 'build_accruals_btn').to_show,
-							onItemClick: async (item) => {
+							await loadDataForInstrumentAccruals();
 
-								scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+							scope.popupData = {
+								items: scope.rowAdditionShemes,
+								showBuildButton: scope.item.options.tableData.find(item => item.key === 'build_accruals_btn').to_show,
+								onAddBtnClick: async (item) => {
 
-								const res = await openAccrualEditDialog(item);
+									scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-								if (res.status === 'agree') {
+									const res = await openAccrualEditDialog(item);
 
-									const accrual = res.data.accrual;
-									addNewAccrual(accrual);
+									if (res.status === 'agree') {
+
+										const accrual = res.data.accrual;
+										addNewAccrual(accrual);
+
+									}
 
 								}
+							};
 
-							}
-						};
+							const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
+							multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
-						scope.popupData.items = scope.accrualsShemes;
+							// Update selector options after dynamic attributes change
+							bfcVm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {
+								const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
+								instrumentService.updateMultitypeFieldSelectorOptionsInsideGridTable(instrumentAttrTypes, multitypeFieldsForRows, gridTableData);
+							});
 
-						const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
-						multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
+						}
+						else if (scope.item.key === "event_schedules") {
+
+							tableColumnsList = instrumentEventsColumns;
+
+							await loadDataForInstrumentEvents();
+
+							scope.popupData = {
+								items: scope.rowAdditionShemes,
+								showBuildButton: scope.item.options.tableData.find(item => item.key === 'build_events_btn').to_show,
+								onAddBtnClick: async (item) => {
+
+									scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+
+									const res = await openAccrualEditDialog(item);
+
+									if (res.status === 'agree') {
+
+										const accrual = res.data.accrual;
+										addNewAccrual(accrual);
+
+									}
+
+								}
+							};
+
+						}
 
 						asyncOperation = true;
-
-						// Update selector options after dynamic attributes change
-						bfcVm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {
-							const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
-							instrumentService.updateMultitypeFieldSelectorOptionsInsideGridTable(instrumentAttrTypes, multitypeFieldsForRows, gridTableData);
-						});
 
 					}
 
