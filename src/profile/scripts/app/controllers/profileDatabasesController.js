@@ -348,7 +348,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                    // $state.go('app.portal.setup');
+                    $state.go('app.portal.setup');
                 })
 
             })
