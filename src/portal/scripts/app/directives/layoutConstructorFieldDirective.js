@@ -266,7 +266,8 @@
                 var openEditModeInDialog = function ($event) {
 
                 	$mdDialog.show({
-						controller: 'EvFormInstrumentAccrualsSettingsDialogController as vm',
+						// controller: 'EvFormInstrumentAccrualsSettingsDialogController as vm',
+						controller: 'EvFormInstrumentTableSettingsDialogController as vm',
 						templateUrl: 'views/dialogs/ev-form-instrument-accruals-settings-dialog-view.html',
 						targetEvent: $event,
 						multiple: true,
@@ -282,7 +283,7 @@
 							scope.item.options.tableData = res.data.tableData;
 
 							scope.saveField();
-
+							// console.log("testing.openEditModeInDialog tab", scope.tab);
 						}
 
 					});
@@ -631,8 +632,8 @@
 				};
 
                 scope.bindAttrName = function (item) {
-
-                    if (item.hasOwnProperty('attribute')) { // when adding row between occupied rows, this method triggers for empty rows
+					// if (!item.attribute) console.log("testing.bindAttrName item", item);
+                    if (item.attribute) { // when adding row between occupied rows, this method triggers for empty rows
 
                         if (item.attribute.key === 'subgroup' && item.attribute.name === 'Sub Group') {
 

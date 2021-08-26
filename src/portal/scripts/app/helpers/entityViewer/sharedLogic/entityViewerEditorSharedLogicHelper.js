@@ -262,11 +262,19 @@
 
         	if (viewModel.entityType === 'instrument') {
 
-        		entityAttrs.push({
+        		var accrualsTableData = {
 					name: 'Accruals table',
 					key: 'accrual_calculation_schedules',
 					value_type: 'table',
-				});
+				};
+
+        		var eventsTableData = {
+					name: 'Events table',
+					key: 'event_schedules',
+					value_type: 'table',
+				};
+
+        		entityAttrs.push(accrualsTableData, eventsTableData);
 
 			}
 

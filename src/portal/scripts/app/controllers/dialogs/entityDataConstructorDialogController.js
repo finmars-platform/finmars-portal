@@ -1058,9 +1058,7 @@
         var emptySocketsWithoutAttrFromLayout = function () {
 
             vm.tabs.forEach(function (tab) {
-
                 emptyTabSocketsWithoutAttrs(tab);
-
             });
 
             if (vm.fixedArea.isActive) {
@@ -1238,7 +1236,7 @@
 
 				}
 
-				//<editor-fold desc="Get entity attrs">
+				//region Get entity attrs
 				var entityAttrs = metaService.getEntityAttrs(vm.entityType);
 				var doNotShowAttrs = [];
 
@@ -1293,14 +1291,25 @@
 						}
 					};
 
-					vm.entityAttrs.push(customizableAccrualsTable);
+					var accrualsTableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
 
-					const tableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
+					var customizableEventsTable = {
+						name: 'Events table',
+						key: 'event_schedules',
+						value_type: 'table',
+						frontOptions: {
+							occupiesWholeRow: true
+						}
+					};
 
-					promises.push(tableDataProm);
+					var eventsTableDataProm = entityDataConstructorService.loadOptionsForEventsTable();
+
+					vm.entityAttrs.push(customizableAccrualsTable, customizableEventsTable);
+
+					promises.push(accrualsTableDataProm, eventsTableDataProm);
 
 				}
-				//</editor-fold>
+				//endregion
 
 				vm.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -1481,7 +1490,7 @@
                 }
             }
 
-			//<editor-fold desc="Make socket we dragged from empty">
+			//region Make socket we dragged from empty
 			var i;
             for (i = 0; i < draggedFromTab.layout.fields.length; i++) {
                 var field = draggedFromTab.layout.fields[i];
@@ -1501,7 +1510,7 @@
                     break;
                 }
             }
-			//</editor-fold>
+			//endregion
 
         };
 
