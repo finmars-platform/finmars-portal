@@ -308,8 +308,7 @@
             });
 
             if (data && data.scheme) {
-
-                vm.config.scheme = data.scheme.id;
+                vm.config.instrument_download_scheme = data.scheme.id;
             }
 
 
