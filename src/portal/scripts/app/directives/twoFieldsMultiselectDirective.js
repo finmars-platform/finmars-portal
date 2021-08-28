@@ -14,9 +14,11 @@
 			scope: {
 				items: "=",
 				model: "=",
+				title: "@",
+
 				customButtons: '=',
 				customStyles: "=",
-				title: "@",
+
 				dialogTitle: "@",
 				nothingSelectedText: "@",
 				selectedItemsIndication: "@",
@@ -25,6 +27,8 @@
 				getDataMethod: "&?", // needed for downloading items on opening multiselector
 				strictOrder: "=",
 				optionsCheckboxes: "=",
+
+				multiselectEventService: "=",
 				onChangeCallback: "&?",
 			},
 			require: "?ngModel",
@@ -48,6 +52,7 @@
 				let items;
 				let selOptionsIdsList = [];
 				let chipElem;
+				let customInputContent;
 
 				// TIPS
 				// scope.smallOptions probable properties
@@ -382,6 +387,7 @@
 				let init = function () {
 
 					scope.chipsListEventService = new ChipsListEventService();
+					const parent = elem[0].parentElement;
 
 					if (scope.selectedItemsIndication === 'chips') {
 
@@ -404,10 +410,8 @@
 						}
 
 						scope.getChipsContainerWidth = function () {
-
-							let customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
+							customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
 							scope.chipsContainerWidth = customInputContent.clientWidth - 8; // padding size is '8px'
-
 						};
 
 						scope.addDropdownMenuListeners = function () {
@@ -505,13 +509,21 @@
 						}
 
 					}
-
 					else {
 						$(elem).click(scope.openMultiselectorDialog);
 					}
 
 					if (scope.customStyles) {
 						applyCustomStyles();
+					}
+
+					if (scope.multiselectEventService) {
+
+						scope.multiselectEventService.addEventListener(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED, function () {
+							scope.chipsContainerWidth = customInputContent.clientWidth - 8; // padding size is '8px'
+							scope.chipsListEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
+						});
+
 					}
 
 					scope.$watch('model', function () {
