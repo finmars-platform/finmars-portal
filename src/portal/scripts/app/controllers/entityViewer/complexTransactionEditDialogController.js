@@ -545,6 +545,7 @@
                 }
             });
 
+            /*
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
@@ -557,7 +558,7 @@
             }
 
             dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-            // vm.userInputs = [];
+
 			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
 
 			vm.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
@@ -605,20 +606,24 @@
                                 })
                             }
 
-                            /* if (recalculationInfo && recalculationInfo.recalculatedInputs.includes(userInput.name)) { // mark userInputs that were recalculated
-								// mark userInputs that were recalculated
-								userInput.frontOptions.recalculated = recalculationInfo.recalculationData
-                            } */
-
                         }
 
                     })
 
                 });
 
-            }
+            } */
+			var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
+			vm.tabs = pbraResult.tabs;
+			vm.fixedArea = pbraResult.fixedArea;
+			dataConstructorLayout = pbraResult.dataConstructorLayout;
+			vm.inputsWithCalculations = pbraResult.inputsWithCalculations;
+			vm.userInputs = pbraResult.userInputs;
 
             mapAttributesAndFixFieldsLayout();
+
+			// should be fired after mapAttributesAndFixFieldsLayout()
+			return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
 
         };
 
@@ -811,9 +816,9 @@
                     vm.fillTransactionInputs();
 
 
-                    postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
+                    await postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
 					// Victor 2020.12.01 #64
-					await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+					// await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
 					// <Victor 2020.12.01 #64>
 
                     vm.dataConstructorData = {
@@ -863,10 +868,7 @@
             return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.userFields;
         };
 
-        vm.bindFlex = function (tab, field) {
-            var flexUnit = 100 / tab.layout.columns;
-            return Math.floor(field.colspan * flexUnit);
-        };
+		vm.bindFlex = sharedLogicHelper.bindFlex;
 
         vm.checkFieldRender = function (tab, row, field) {
 

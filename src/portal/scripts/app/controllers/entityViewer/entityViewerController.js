@@ -935,14 +935,17 @@
                 if (activeObject) {
 
                     var filters = vm.entityViewerDataService.getFilters();
+                    var setFilterValue = function (item) {
 
-                    filters.forEach(function (item) {
+						if (activeObject.hasOwnProperty(item.key)) {
+							item.options.filter_values = [activeObject[item.key]]
+						}
 
-                        if (activeObject.hasOwnProperty(item.key)) {
-                            item.options.filter_values = [activeObject[item.key]]
-                        }
+					};
 
-                    })
+                    filters.frontend.forEach(setFilterValue);
+					filters.backend.forEach(setFilterValue);
+
                 }
 
 

@@ -1844,6 +1844,8 @@
 				vm.tabs = formLayoutData.tabs;
 				vm.attributesLayout = formLayoutData.attributesLayout;
 
+				 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+
 				if (vm.entityType === 'instrument') {
 
 					vm.typeSelectorChange = function () {

@@ -793,8 +793,8 @@
 
                 viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
-            } else {
-                viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
+            } else if (viewModel.fixedAreaPopup) { // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
+                viewModel.fixedAreaPopup.tabColumns = 6; // in dialog window there are always 2 fields outside of popup
             }
 
 			const promises = [getAttributeTypes()];
@@ -807,21 +807,22 @@
 
 					entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
 
-					viewModel.getEntityPricingSchemes();
+					if (viewModel.getEntityPricingSchemes) viewModel.getEntityPricingSchemes(); // in entityViewerFormsPreviewDialogController.js there is no pricing tab
 
 					const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
 
-					const fixedAreaData = getFieldsForFixedAreaPopup();
+					let resolveData = {
+						tabs: tabs,
+						attributeTypes: viewModel.attributeTypes,
+						attributesLayout: attributesLayout
+					};
+
+					if (viewModel.fixedAreaPopup) resolveData.fixedAreaData = getFieldsForFixedAreaPopup();  // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
 
 					viewModel.readyStatus.layout = true;
 					viewModel.readyStatus.entity = true;
 
-					resolve({
-						fixedAreaData: fixedAreaData,
-						tabs: tabs,
-						attributeTypes: viewModel.attributeTypes,
-						attributesLayout: attributesLayout
-					});
+					resolve(resolveData);
 
 				});
 
