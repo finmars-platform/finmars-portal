@@ -2675,6 +2675,115 @@
 
         vm.init();
 
+        const some = {
+			"id": 2753,
+			"name": "account_position",
+			"verbose_name": "Account of booking",
+			"value_type": 100,
+			"reference_table": null,
+			"content_type": "accounts.account",
+			"order": 1,
+			"can_recalculate": false,
+			"value_expr": "",
+			"tooltip": "ttyp tooltip here",
+			"is_fill_from_context": false,
+			"context_property": null,
+			"value": "40",
+			"account": null,
+			"instrument_type": null,
+			"instrument": null,
+			"currency": null,
+			"counterparty": null,
+			"responsible": null,
+			"portfolio": null,
+			"strategy1": null,
+			"strategy2": null,
+			"strategy3": null,
+			"daily_pricing_model": null,
+			"payment_size_detail": null,
+			"pricing_policy": null,
+			"periodicity": null,
+			"accrual_calculation_model": null,
+			"settings": {
+				"linked_inputs_names": [
+					"test_account1",
+					"test_account2"
+				],
+				"recalc_on_change_linked_inputs": [
+					"test_account2"
+				]
+			},
+			"button_data": null,
+			"account_object": null,
+			"instrument_object": null,
+			"instrument_type_object": null,
+			"daily_pricing_model_object": null,
+			"payment_size_detail_object": null,
+			"currency_object": null,
+			"counterparty_object": null,
+			"portfolio_object": null,
+			"strategy1_object": null,
+			"strategy2_object": null,
+			"strategy3_object": null,
+			"pricing_policy_object": null,
+			"periodicity_object": null,
+			"accrual_calculation_model_object": null
+		};
+        const another = {
+			"id": 2753,
+			"name": "account_position",
+			"verbose_name": "Account of booking",
+			"value_type": 100,
+			"reference_table": null,
+			"content_type": "accounts.account",
+			"order": 1,
+			"can_recalculate": false,
+			"value_expr": "",
+			"tooltip": "ttyp tooltip here",
+			"is_fill_from_context": false,
+			"context_property": null,
+			"value": 40,
+			"account": null,
+			"instrument_type": null,
+			"instrument": null,
+			"currency": null,
+			"counterparty": null,
+			"responsible": null,
+			"portfolio": null,
+			"strategy1": null,
+			"strategy2": null,
+			"strategy3": null,
+			"daily_pricing_model": null,
+			"payment_size_detail": null,
+			"pricing_policy": null,
+			"periodicity": null,
+			"accrual_calculation_model": null,
+			"settings": {
+				"linked_inputs_names": [
+					"test_account1",
+					"test_account2"
+				],
+				"recalc_on_change_linked_inputs": [
+					"test_account2"
+				]
+			},
+			"button_data": null,
+			"account_object": null,
+			"instrument_object": null,
+			"instrument_type_object": null,
+			"daily_pricing_model_object": null,
+			"payment_size_detail_object": null,
+			"currency_object": null,
+			"counterparty_object": null,
+			"portfolio_object": null,
+			"strategy1_object": null,
+			"strategy2_object": null,
+			"strategy3_object": null,
+			"pricing_policy_object": null,
+			"periodicity_object": null,
+			"accrual_calculation_model_object": null
+		};
+
     }
 
 }());
