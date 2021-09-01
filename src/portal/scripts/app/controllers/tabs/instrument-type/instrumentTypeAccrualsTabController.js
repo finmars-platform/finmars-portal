@@ -241,7 +241,7 @@
 							}
 						},
                         {
-                            key: 'options',
+                            key: 'options_settings',
                             columnName: '',
                             order: 5,
                             cellType: 'empty',
@@ -257,7 +257,7 @@
             };
 
             var optionsColumn = {
-                key: 'options',
+                key: 'options_settings',
                 objPath: ['options_settings'],
                 columnName: '',
                 order: 5,
@@ -395,13 +395,13 @@
                 data: {
                     form_message: "",
                     items: [
-                        {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text', options: false},
-                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'multitypeField', options: false},
-                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'multitypeField', options: false},
-                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'multitypeField', options: false},
+                        {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text'},
+                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'multitypeField'},
+                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'multitypeField'},
+                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'multitypeField'},
                         {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.selectorOptionsMap.periodicity, options_settings: periodicitySelectorOptions},
                         {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.selectorOptionsMap.accrual_calculation_model, options_settings: accrualModelsSelectorOptions},
-                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'multitypeField', options: false},
+                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'multitypeField'},
                     ]
                 }
             };

@@ -1749,7 +1749,7 @@
 
                         for (i = 0; i < dynamicAttrs.length; i = i + 1) {
 
-                            if (field.key) {
+                            if (field.key) { // for legacy input form editor layouts
 
                                 if (field.key === dynamicAttrs[i].user_code) {
 
@@ -1789,7 +1789,8 @@
                             fieldsToEmptyList.push(fieldPath);
                         }
 
-                    } else if (field.attribute_class === 'decorationAttr') {
+                    }
+                    else if (field.attribute_class === 'decorationAttr') {
 
                         for (l = 0; l < layoutAttrs.length; l = l + 1) {
 
@@ -1807,11 +1808,12 @@
 
                         }
 
-                    } else {
+                    }
+                    else {
 
                         for (e = 0; e < entityAttrs.length; e = e + 1) {
 
-                            if (field.name === entityAttrs[e].name) {
+                            if (field.attribute.key === entityAttrs[e].key) {
 
                                 entityAttrs[e].options = field.options;
                                 fieldResult = entityAttrs[e];

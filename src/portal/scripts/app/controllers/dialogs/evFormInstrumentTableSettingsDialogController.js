@@ -42,6 +42,8 @@
 			{key: "rows_deletion", to_show: true}
 		]; */
 
+		vm.dialogLabel = data.dialogLabel;
+
 		vm.gridTableData = {
 			header: {
 				order: 'header',
@@ -179,7 +181,19 @@
 						} else {
 							column.settings.value = settings[colProp];
 						} */
-						column.settings.value = rowData[colProp];
+						if (column.key === 'options_settings') {
+
+							if (rowData.editableOptions) {
+								column.settings.value = rowData[colProp];
+
+							} else {
+								column.cellType = 'empty';
+								delete column.settings;
+							}
+
+						} else {
+							column.settings.value = rowData[colProp];
+						}
 
 					}
 					else { // make cell empty if there is not corresponding property

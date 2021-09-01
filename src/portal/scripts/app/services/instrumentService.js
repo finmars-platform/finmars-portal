@@ -53,19 +53,21 @@
     };
 
 	/**
+	 * Used for grid tables of accruals and events schedules
 	 *
 	 * @param argObj {{row: Object, column: Object}} - arguments passed when dispatching grid table event CELL_VALUE_CHANGED
 	 * @param entity {Object}
 	 * @param gridTableDataService {Object}
 	 * @param evEditorEventService {Object}
+	 * @param tableKey {String}
 	 */
-	const onAccrualsScheduleGtCellChange = function (argObj, entity, gridTableDataService, evEditorEventService) {
+	const onGtCellChange = function (argObj, entity, gridTableDataService, evEditorEventService, tableKey) {
 
 		var rowOrder = argObj.row.order,
 			colOrder = argObj.column.order;
 
 		gridTableHelperService.onGridTableCellChange(
-			entity.accrual_calculation_schedules,
+			entity[tableKey],
 			gridTableDataService,
 			rowOrder, colOrder
 		);
@@ -80,26 +82,28 @@
 
 		}*/
 
-		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'accrual_calculation_schedules'});
+		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
 
 	};
 
 	/**
+	 * Used for grid tables of accruals and events schedules
 	 *
 	 * @param argObj {Object} - arguments passed when dispatching grid table event ROW_DELETED
 	 * @param entity {{deletedRowsKeys: array}}
 	 * @param evEditorEventService {Object}
+	 * @param tableKey {String}
 	 */
-	const onAccrualsScheduleGtRowDeletion = function (argObj, entity, evEditorEventService) {
+	const onGtRowDeletion = function (argObj, entity, evEditorEventService, tableKey) {
 
-		entity.accrual_calculation_schedules = entity.accrual_calculation_schedules.filter(schedule => {
+		entity[tableKey] = entity[tableKey].filter(item => {
 
-			var scheduleId = schedule.id || schedule.frontOptions.gtKey;
+			var scheduleId = item.id || item.frontOptions.gtKey;
 			return !argObj.deletedRowsKeys.includes(scheduleId);
 
 		});
 
-		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'accrual_calculation_schedules'});
+		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
 
 	};
 
@@ -393,8 +397,8 @@
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
 
-		onAccrualsScheduleGtCellChange: onAccrualsScheduleGtCellChange,
-		onAccrualsScheduleGtRowDeletion: onAccrualsScheduleGtRowDeletion,
+		onGtCellChange: onGtCellChange,
+		onGtRowDeletion: onGtRowDeletion,
 		getInstrumentAccrualsMultitypeFieldsData: getInstrumentAccrualsMultitypeFieldsData,
 		getInstrumentEventsMultitypeFieldsData: getInstrumentEventsMultitypeFieldsData,
 		updateMultitypeFieldSelectorOptionsInsideGridTable: updateMultitypeFieldSelectorOptionsInsideGridTable,

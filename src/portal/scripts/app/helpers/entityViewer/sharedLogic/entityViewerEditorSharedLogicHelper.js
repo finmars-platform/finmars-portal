@@ -263,13 +263,13 @@
         	if (viewModel.entityType === 'instrument') {
 
         		var accrualsTableData = {
-					name: 'Accruals table',
+					name: 'Accruals schedules table',
 					key: 'accrual_calculation_schedules',
 					value_type: 'table',
 				};
 
         		var eventsTableData = {
-					name: 'Events table',
+					name: 'Events schedules table',
 					key: 'event_schedules',
 					value_type: 'table',
 				};

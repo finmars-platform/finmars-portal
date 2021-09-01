@@ -3,6 +3,7 @@
 	const accrualCalculationModelService = require('../accrualCalculationModelService');
 	const instrumentPeriodicityService = require('../instrumentPeriodicityService');
 	const metaEventClassService = require('../metaEventClassService');
+	const metaNotificationClassService = require('../metaNotificationClassService');
 
 	'use strict';
 
@@ -44,6 +45,7 @@
 							name: "Calculation model",
 							to_show: true,
 							override_name: "",
+							editableOptions: true,
 							options: []
 						},
 						{
@@ -51,6 +53,7 @@
 							name: "Periodicity",
 							to_show: true,
 							override_name: "",
+							editableOptions: true,
 							options: []
 						},
 						{
@@ -90,6 +93,8 @@
 							name: "Event class",
 							to_show: true,
 							override_name: "",
+							editableOptions: false,
+							options: [],
 						},
 						{
 							key: "effective_date",
@@ -114,6 +119,7 @@
 							name: "Periodicity",
 							to_show: true,
 							override_name: "",
+							editableOptions: true,
 							options: [],
 						},
 						{
@@ -127,6 +133,7 @@
 							name: 'Notification class',
 							to_show: true,
 							override_name: "",
+							editableOptions: true,
 							options: [],
 						},
 						{
@@ -202,12 +209,24 @@
 
 			const eventsTable = dataOfAttributes.instrument.event_schedules.tableData;
 
+			const eventClassIndex = eventsTable.findIndex(row => row.key === 'event_class');
 			const notifClassIndex = eventsTable.findIndex(row => row.key === 'notification_class');
 			const periodicityIndex = eventsTable.findIndex(row => row.key === 'periodicity');
 
 			const eventClassProm = new Promise(async (res, rej) => {
 
 				metaEventClassService.getList().then(data => {
+
+					eventsTable[eventClassIndex].options = data.map(mapOptions);
+					res();
+
+				}).catch(error => rej("error on getting accrual calculation models happened"));
+
+			});
+
+			const notifClassProm = new Promise(async (res, rej) => {
+
+				metaNotificationClassService.getList().then(data => {
 
 					eventsTable[notifClassIndex].options = data.map(mapOptions);
 					res();
@@ -227,7 +246,7 @@
 
 			});
 
-			return Promise.all([eventClassProm, periodicityProm]);
+			return Promise.all([eventClassProm, notifClassProm, periodicityProm]);
 
 		};
 

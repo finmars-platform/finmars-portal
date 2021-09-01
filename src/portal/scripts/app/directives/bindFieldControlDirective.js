@@ -140,7 +140,7 @@
 								var l, e, u;
 
 								for (e = 0; e < entityAttrs.length; e = e + 1) {
-									if ($scope.item.name === entityAttrs[e].name) {
+									if ($scope.item.key === entityAttrs[e].key) {
 										return entityAttrs[e].key;
 									}
 								}
