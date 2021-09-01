@@ -454,6 +454,11 @@
                 templateUrl: 'views/pages/instrument-download-view.html',
                 controller: 'InstrumentDownloadController as vm'
             })
+            .state('app.portal.import.instrument-cbonds', {
+                url: '/instrument-import-cbonds',
+                templateUrl: 'views/pages/instrument-download-cbonds-view.html',
+                controller: 'InstrumentDownloadCbondsController as vm'
+            })
             .state('app.portal.import.prices', {
                 url: '/prices-import',
                 templateUrl: 'views/pages/fill-price-history-view.html',
