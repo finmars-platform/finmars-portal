@@ -297,7 +297,7 @@
 
             var optionsColumn = {
                 key: 'options_settings',
-                objPath: ['options'],
+                objPath: ['options_settings'],
                 columnName: '',
                 order: 5,
                 cellType: 'customPopup',
@@ -407,12 +407,12 @@
                 rowObj.columns[3].settings.value = row.override_name;
                 rowObj.columns[4].settings.value = row.tooltip;
 
-                if (row.options) {
+                if (row.options_settings) {
 
                     const optionsCell = metaHelper.recursiveDeepCopy(optionsColumn, false);
 
                     rowObj.columns[5] = optionsCell;
-                    rowObj.columns[5].settings.value = row.options;
+                    rowObj.columns[5].settings.value = row.options_settings;
 
                 }
 
@@ -754,6 +754,7 @@
             const mapOptions = function (item) {
                 return {
                     user_code: item.user_code,
+					id: item.id,
                     name: item.name,
                     to_show: true,
                     override_name: "",
@@ -786,29 +787,26 @@
                         	key: 'name',
 							name: 'Title',
 							to_show: true,
-							defaultValueType: 'text',
-							options: false
+							defaultValueType: 'text'
 						},
                         {
                             key: 'description',
                             name: 'Message text',
                             to_show: true,
-                            defaultValueType: 'text',
-                            options: false
+                            defaultValueType: 'text'
                         },
                         {
                             key: 'notification_class',
                             name: 'Notification Class',
                             to_show: true,
                             defaultValueType: 'selector',
-                            options: notificationClassesSelectorOptions
+                            options_settings: notificationClassesSelectorOptions
                         },
                         {
                             key: 'notify_in_n_days',
                             name: 'Notify in N days',
                             to_show: true,
-                            defaultValueType: 'number',
-                            options: false
+                            defaultValueType: 'number'
                         }
                     ],
 					blockableItems: [
@@ -816,29 +814,26 @@
                             key: 'effective_date',
                             name: 'Effective Date',
                             to_show: true,
-                            defaultValueType: 'multitypeField',
-                            options: false
+                            defaultValueType: 'multitypeField'
                         },
                         {
                             key: 'final_date',
                             name: 'Final Date',
                             to_show: true,
-                            defaultValueType: 'multitypeField',
-                            options: false
+                            defaultValueType: 'multitypeField'
                         },
                         {
                             key: 'periodicity',
                             name: 'Periodicity',
                             to_show: true,
                             defaultValueType: 'selector',
-                            options: periodicitySelectorOptions
+                            options_settings: periodicitySelectorOptions
                         },
                         {
                             key: 'periodicity_n',
                             name: 'Periodicity N',
                             to_show: true,
-                            defaultValueType: 'multitypeField',
-                            options: false
+                            defaultValueType: 'multitypeField'
                         }
 					],
 					items_blocked: false,

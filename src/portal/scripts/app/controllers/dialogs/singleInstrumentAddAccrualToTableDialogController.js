@@ -10,13 +10,16 @@
     module.exports = function singleInstrumentAddAccrualToTableDialogController ($scope, $mdDialog, gridTableHelperService, multitypeFieldService, data) {
 
         var vm = this;
-
-        vm.title = data.accrualScheme.data.form_message;
-        vm.fields = data.accrualScheme.data.items;
+        // vm.title = data.accrualScheme.data.form_message;
+        // vm.fields = data.accrualScheme.data.items;
+		vm.title = data.schemeData.form_message;
+		vm.fields = data.schemeData.items;
         vm.entity = data.entity;
-        vm.accrual = {};
+        vm.item = {};
 
-        const multitypeFieldsData = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
+        // const multitypeFieldsData = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
+		let multitypeFieldsData = data.multitypeFieldsData;
+
 		const attrTypes = data.attributeTypes;
 
 		vm.fieldsObject = {};
@@ -64,7 +67,7 @@
 				let modelValue = null;
 				let valueType;
 
-				if (vm.fieldsObject[key].to_show) {
+				if (vm.fieldsObject[key] && vm.fieldsObject[key].to_show) {
 
 					const activeType = vm.fieldsObject[key].fieldTypes.find(type => type.isActive);
 
@@ -73,8 +76,8 @@
 
 					const valueTypeKey = `${key}_value_type`;
 
-					vm.accrual[key] = modelValue;
-					vm.accrual[valueTypeKey] = valueType;
+					vm.item[key] = modelValue;
+					vm.item[valueTypeKey] = valueType;
 
 				}
 
@@ -83,7 +86,7 @@
             $mdDialog.hide({
                 status: 'agree',
 				data: {
-                    accrual: vm.accrual
+                    item: vm.item
                 }
             });
 
@@ -169,7 +172,7 @@
 
             vm.fields.forEach(item => {
 
-            	vm.accrual[item.key] = item.default_value || null;
+				vm.item[item.key] = item.default_value || null;
 				vm.fieldsObject[item.key] = item;
 
                 if (item.defaultValueType === 'selector') formatOptionsForSelector(item);
@@ -182,7 +185,7 @@
 					const fieldTypeObj = multitypeFieldsData[item.key];
 					const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect');
 
-					vm.accrual[typeKey] = notSelType.value_type;
+					vm.item[typeKey] = notSelType.value_type;
 
                     setActiveMultiTypeState(item); */
 
@@ -191,7 +194,7 @@
 
 					vm.fieldsObject[item.key].fieldTypes = typesList;
 					// prepareDataForMultitypeField(item);
-					vm.accrual[item.key + '_value_type'] = valueType;
+					vm.item[item.key + '_value_type'] = valueType;
 
                 }
 
