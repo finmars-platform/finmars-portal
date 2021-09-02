@@ -31,9 +31,13 @@
 
                 vm.readyStatus.processing = false;
 
+                $scope.$apply()
 
 
             }).catch(function (reason) {
+
+                vm.readyStatus.processing = false;
+
 
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
@@ -47,6 +51,8 @@
                     autoWrap: true,
                     skipHide: true
                 })
+
+                $scope.$apply()
 
             })
         };
