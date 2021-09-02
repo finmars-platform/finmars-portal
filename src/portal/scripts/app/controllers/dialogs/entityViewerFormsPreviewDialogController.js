@@ -12,12 +12,22 @@
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
     var attributeTypeService = require('../../services/attributeTypeService');
+	var metaContentTypesService = require('../../services/metaContentTypesService');
+	var tooltipsService = require('../../services/tooltipsService');
+	var colorPalettesService = require('../../services/colorPalettesService');
+
+	var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
+	var EntityViewerEditorEventService = require('../../services/eventService');
 
     var uiService = require('../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, inputFormTabs, data) {
+	var EntityViewerEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/entityViewerEditorSharedLogicHelper');
+
+	module.exports = function ($scope, $mdDialog, inputFormTabs, data) {
 
         var vm = this;
+
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, null);
 
         vm.entityType = data.entityType;
 
@@ -25,7 +35,7 @@
 
         vm.tabs = inputFormTabs;
 
-        vm.readyStatus = {attrs: false, userFields: false};
+        vm.readyStatus = false;
 
 
         vm.attrs = [];
@@ -35,8 +45,12 @@
         vm.range = gridHelperService.range;
 
         vm.attributesLayout = [];
+		// needed for vm.sharedLogic methods to work
+        vm.openedIn = 'dialog';
 
-        vm.generateAttributesFromLayoutFields = function () {
+		var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
+
+        /* vm.generateAttributesFromLayoutFields = function () {
 
             vm.attributesLayout = [];
 
@@ -122,7 +136,7 @@
 
             });
 
-        };
+        }; */
 
         /*vm.loadPermissions = function () {
 
@@ -196,7 +210,7 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.getFormLayoutFields = function () {
+        /* vm.getFormLayoutFields = function () {
 
             vm.tabs = vm.tabs.map(function (item, index) {
 
@@ -224,68 +238,21 @@
 
             });
 
-        };
+        }; */
 
-        vm.getAttributeTypes = function () {
+        /* vm.getAttributeTypes = function () {
             return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
                 vm.attrs = data.results;
             });
-        };
+        }; */
+		vm.checkReadyStatus = function () {
+			return vm.readyStatus;
+		};
 
-        vm.checkReadyStatus = function () {
-            return vm.readyStatus.attrs && vm.readyStatus.userFields;
-        };
+        vm.bindFlex = vm.sharedLogic.bindFlex;
+        vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
 
-        vm.bindFlex = function (tab, row, field) {
-            var totalColspans = 0;
-            var i;
-            for (i = 0; i < tab.layout.fields.length; i = i + 1) {
-                if (tab.layout.fields[i].row === row) {
-                    totalColspans = totalColspans + tab.layout.fields[i].colspan;
-                }
-            }
-            var flexUnit = 100 / tab.layout.columns;
-            return Math.floor(field.colspan * flexUnit);
-
-        };
-
-        vm.checkFieldRender = function (tab, row, field) {
-
-            if (field.row === row) {
-                if (field.type !== 'empty') {
-                    return true;
-                } else {
-
-                    var spannedCols = [];
-                    var itemsInRow = tab.layout.fields.filter(function (item) {
-                        return item.row === row
-                    });
-
-                    itemsInRow.forEach(function (item) {
-
-                        if (item.type !== 'empty' && item.colspan > 1) {
-                            var columnsToSpan = item.column + item.colspan - 1;
-
-                            for (var i = item.column; i <= columnsToSpan; i = i + 1) {
-                                spannedCols.push(i);
-                            }
-
-                        }
-
-                    });
-
-                    if (spannedCols.indexOf(field.column) !== -1) {
-                        return false
-                    }
-
-                    return true;
-                }
-            }
-            return false;
-
-        };
-
-        vm.getInstrumentUserFields = function () {
+        /* vm.getInstrumentUserFields = function () {
 
             uiService.getInstrumentFieldList().then(function (data) {
 
@@ -320,12 +287,46 @@
 
             })
 
-        };
+        }; */
+
 
         var init = function () {
-            vm.getAttributeTypes();
+            // vm.getAttributeTypes();
+			vm.evEditorDataService = new EntityViewerEditorDataService();
+			vm.evEditorEventService = new EntityViewerEditorEventService();
 
-            vm.getFormLayoutFields();
+			var tooltipsOptions = {
+				pageSize: 1000,
+				filters: {
+					'content_type': contentType
+				}
+			}
+
+			tooltipsService.getTooltipsList(tooltipsOptions).then(function (data) {
+				var tooltipsList = data.results;
+				vm.evEditorDataService.setTooltipsData(tooltipsList);
+			});
+
+			colorPalettesService.getList({pageSize: 1000}).then(function (data) {
+				var palettesList = data.results;
+				vm.evEditorDataService.setColorPalettesList(palettesList);
+			});
+
+            // vm.getFormLayoutFields();
+			vm.sharedLogic.getFormLayout().then(formLayoutData => {
+
+				vm.attrs = formLayoutData.attributeTypes;
+				vm.tabs = formLayoutData.tabs;
+				vm.attributesLayout = formLayoutData.attributesLayout;
+
+				vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+
+				vm.readyStatus = true;
+
+				$scope.$apply();
+
+			});
+
         };
 
         init();

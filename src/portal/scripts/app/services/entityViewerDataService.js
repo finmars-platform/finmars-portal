@@ -16,8 +16,8 @@
 
         // var groupingAreaHeight = 88;
         var groupingAreaHeight = 98;
-        var columnAreaHeight = 70;
-        var progressBarHeight = 4;
+        var columnAreaHeight = 50;
+        // var progressBarHeight = 4;
         var filterAreaWidth = 239;
         var filterAreaLeft = document.body.clientWidth - filterAreaWidth;
 
@@ -40,21 +40,21 @@
             mainContent: {
                 height: 0
             },
-            groupingArea: {
+            /*groupingArea: {
                 collapsed: false,
                 left: sidebarWidth,
                 top: headerToolbarHeight,
                 height: groupingAreaHeight
-            },
+            },*/
             columnArea: {
                 collapsed: false,
                 left: sidebarWidth,
                 top: headerToolbarHeight + groupingAreaHeight,
                 height: columnAreaHeight
             },
-            progressBar: {
+            /*progressBar: {
                 height: progressBarHeight
-            },
+            },*/
             filterArea: {
                 left: filterAreaLeft,
                 top: headerToolbarHeight,
@@ -65,6 +65,9 @@
             },
             splitPanel: {
                 height: 0
+            },
+            evLeftPanel: {
+                width: 230
             }
         }
 
@@ -263,7 +266,22 @@
         function getContentType() {
             return data.contentType;
         }
-
+		/**
+		 *
+		 * @param isReport {Boolean}
+		 * @memberOf module:entityViewerDataService
+		 */
+		function setIsReport(isReport) {
+			data.isReport = isReport;
+		}
+		/**
+		 *
+		 * @returns {Boolean}
+		 * @memberOf module:entityViewerDataService
+		 */
+		function isEntityReport() {
+			return data.isReport;
+		}
 
         function setColumns(columns) {
 
@@ -321,8 +339,8 @@
 
             if (filters) {
                 data.filters = filters;
+
             } else {
-                console.error("Set filters error", filters);
                 data.filters = [];
             }
 
@@ -332,10 +350,8 @@
             return data.filters;
         }
 
-        function setRowTypeFilters (color) {
-            data.rowTypeFilters = {
-                markedRowFilters: color
-            };
+        function setRowTypeFilters (filtersData) {
+			data.rowTypeFilters = filtersData;
         }
 
         function getRowTypeFilters () {
@@ -389,11 +405,11 @@
         }
 
         function setComponents(components) {
-            data.components = components
+            data.components = components;
         }
 
         function getComponents() {
-            return data.components
+            return data.components;
         }
 
         function setReportOptions(options) {
@@ -742,7 +758,7 @@
             data.activeRequestParametersId = id;
         }
 
-        function resetTableContent () {
+        function resetTableContent (isReport) {
 
         	resetData();
 			resetRequestParameters();
@@ -751,18 +767,20 @@
 
 			setActiveRequestParametersId(rootGroup.___id);
 
+			if (!isReport) setSelectedGroups([]);
+
 		}
 
 
         // Activated Row just for selection purpose
         // Active Object for Split panel,
 
-        function setLastActivatedRow(obj) {
-            data.lastActivatedRow = obj;
+        function setActiveObjectRow(obj) {
+            data.activeObjectRow = obj;
         }
 
-        function getLastActivatedRow() {
-            return data.lastActivatedRow;
+        function getActiveObjectRow() {
+            return data.activeObjectRow;
         }
 
         function setActiveObject(obj) {
@@ -784,7 +802,7 @@
 
         }
 
-        function setActiveObjectAction(action) {
+        /* function setActiveObjectAction(action) {
             data.activeObjectAction = action;
         }
 
@@ -798,23 +816,7 @@
 
         function getActiveObjectActionData() {
             return data.activeObjectActionData;
-        }
-
-        function setActiveColumnSort(column) {
-            data.activeColumnSort = column;
-        }
-
-        function getActiveColumnSort() {
-            return data.activeColumnSort;
-        }
-
-        function setActiveGroupTypeSort(group) {
-            data.activeGroupTypeSort = group;
-        }
-
-        function getActiveGroupTypeSort() {
-            return data.activeGroupTypeSort;
-        }
+        } */
 
         function getActiveObject() {
             return data.activeObject;
@@ -823,6 +825,41 @@
         function getActiveObjectFromAbove() {
             return data.activeObjectFromAbove;
         }
+
+		function setActiveColumnSort(column) {
+			data.activeColumnSort = column;
+		}
+
+		function getActiveColumnSort() {
+			return data.activeColumnSort;
+		}
+
+		function setActiveGroupTypeSort(group) {
+			data.activeGroupTypeSort = group;
+		}
+		/**
+		 *
+		 * @param actionData {Object|null}
+		 * @param {String} actionData.actionKey - edit, delete etc
+		 * @param {Object=} actionData.object - data about table row targeted for action
+		 * @param {string|number=} actionData.id - e.g. transactionType.id, price history error id, etc.
+		 * @memberof module:entityViewerDataService
+		 */
+		function setRowsActionData (actionData) {
+			data.rowsActionData = actionData;
+		}
+		/**
+		 *
+		 * @returns {{actionKey: String, [object]: Object, [id]: string|number} | any}
+		 * @memberof module:entityViewerDataService
+		 */
+		function getRowsActionData () {
+			return data.rowsActionData;
+		}
+
+		function getActiveGroupTypeSort() {
+			return data.activeGroupTypeSort;
+		}
 
         function setRowHeight(height) {
             return data.virtualScroll.rowHeight = height;
@@ -943,7 +980,7 @@
                 interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
                 interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
                 interfaceLayoutToSave.columnArea = {};
-                interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
+                // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
                 interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
 
                 interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
@@ -1020,8 +1057,6 @@
 			listLayout.data.columns.forEach(column => delete column.frontOptions);
 			listLayout.data.grouping.forEach(group => delete group.frontOptions);
 
-            emptyUseFromAboveFilters(listLayout.data.filters);
-
             listLayout.data.rowSettings = getRowSettings();
             listLayout.data.additions = getAdditions();
 
@@ -1032,7 +1067,7 @@
             interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
             interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
             interfaceLayoutToSave.columnArea = {};
-            interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
+            // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
             interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
 
             interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
@@ -1040,6 +1075,8 @@
             listLayout.data.interfaceLayout = interfaceLayoutToSave;
 
             if (isReport) {
+
+				emptyUseFromAboveFilters(listLayout.data.filters);
 
                 listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
                 listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
@@ -1096,10 +1133,9 @@
                 listLayout = Object.assign({}, activeListLayout);
 
             }
-
             else {
 
-                var defaultList = uiService.getListLayoutTemplate();
+                var defaultList = uiService.getListLayoutTemplate(isReport);
 
                 listLayout = {};
                 listLayout.data = Object.assign({}, defaultList[0].data);
@@ -1110,6 +1146,11 @@
 
                 var interfaceLayout = getInterfaceLayout();
                 interfaceLayout = Object.assign(interfaceLayout, listLayout.data.interfaceLayout);
+
+                if (interfaceLayout.columnArea && interfaceLayout.columnArea.height === 70) { // need for work of the old layouts
+                	interfaceLayout.columnArea.height = 50;
+				}
+
                 setInterfaceLayout(interfaceLayout);
 
             }
@@ -1140,8 +1181,9 @@
                     }
                 }
 
-            }
+				emptyUseFromAboveFilters(listLayout.data.filters);
 
+            }
             else {
 
                 setPagination(listLayout.data.pagination);
@@ -1172,7 +1214,7 @@
 
             setColumns(listLayout.data.columns);
             setGroups(listLayout.data.grouping);
-            emptyUseFromAboveFilters(listLayout.data.filters);
+
             setFilters(listLayout.data.filters);
 
             /*if (isRootEntityViewer()) {
@@ -1224,7 +1266,7 @@
             	columnArea: true,
                 viewer: true,
                 sidebar: true,
-                groupingArea: true,
+                // groupingArea: true,
                 columnAreaHeader: true,
                 splitPanel: true,
                 addEntityBtn: true,
@@ -1532,6 +1574,32 @@
 
 		}
 
+        // MATERIAL DESIGN ENTITY VIEWER LOGIC
+
+        function setSelectedGroups(groups) {
+
+			if (!groups || !Array.isArray(groups)) {
+				data.selectedGroups = [];
+
+			} else {
+				data.selectedGroups = groups;
+			}
+
+        }
+
+        function getSelectedGroups(){
+            return data.selectedGroups || [];
+        }
+
+        function setSelectedGroupsMultiselectState(state) {
+            data.selectedGroupsMultiselectState = state
+        }
+
+        function getSelectedGroupsMultiselectState(){
+            return data.selectedGroupsMultiselectState;
+        }
+
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1542,6 +1610,9 @@
 
             setContentType: setContentType,
             getContentType: getContentType,
+
+			setIsReport: setIsReport,
+			isEntityReport: isEntityReport,
 
             setColumns: setColumns,
             getColumns: getColumns,
@@ -1632,11 +1703,14 @@
             setActiveObject: setActiveObject,
             getActiveObject: getActiveObject,
             clearActiveObject: clearActiveObject,
-            setActiveObjectAction: setActiveObjectAction,
+            /* setActiveObjectAction: setActiveObjectAction,
             getActiveObjectAction: getActiveObjectAction,
 
             setActiveObjectActionData: setActiveObjectActionData,
-            getActiveObjectActionData: getActiveObjectActionData,
+            getActiveObjectActionData: getActiveObjectActionData, */
+
+			setRowsActionData: setRowsActionData,
+			getRowsActionData: getRowsActionData,
 
             getRowHeight: getRowHeight,
             setRowHeight: setRowHeight,
@@ -1701,8 +1775,8 @@
             setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,
             getSplitPanelLayoutToOpen: getSplitPanelLayoutToOpen,
 
-            setLastActivatedRow: setLastActivatedRow,
-            getLastActivatedRow: getLastActivatedRow,
+			setActiveObjectRow: setActiveObjectRow,
+			getActiveObjectRow: getActiveObjectRow,
 
             setUseFromAbove: setUseFromAbove,
             getUseFromAbove: getUseFromAbove,
@@ -1772,6 +1846,9 @@
             setMissingCustomFields: setMissingCustomFields,
             getMissingCustomFields: getMissingCustomFields,
 
+            setSelectedGroupsMultiselectState: setSelectedGroupsMultiselectState,
+            getSelectedGroupsMultiselectState: getSelectedGroupsMultiselectState,
+
             dashboard: {
                 setKeysOfColumnsToHide: setKeysOfColumnsToHide,
                 getKeysOfColumnsToHide: getKeysOfColumnsToHide,
@@ -1779,7 +1856,10 @@
                 getColumnsTextAlign: getColumnsTextAlign,
                 setReportDateFromDashboardProp: setReportDateFromDashboardProp,
                 isReportDateFromDashboard: isReportDateFromDashboard
-            }
+            },
+
+            getSelectedGroups: getSelectedGroups,
+            setSelectedGroups: setSelectedGroups
 
         }
     }

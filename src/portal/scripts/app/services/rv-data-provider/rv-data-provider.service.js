@@ -69,7 +69,7 @@
 
         var filters = entityViewerDataService.getFilters();
 
-        var isFilterValid = function (filterItem) {
+        /* var isFilterValid = function (filterItem) {
 
             if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
 
@@ -103,11 +103,11 @@
             }
 
             return false;
-        };
+        }; */
 
         filters.forEach(function (item) {
 
-            if (isFilterValid(item)) {
+            if (evRvCommonHelper.isFilterValid(item)) {
 
                 var key = queryParamsHelper.entityPluralToSingular(item.key);
 

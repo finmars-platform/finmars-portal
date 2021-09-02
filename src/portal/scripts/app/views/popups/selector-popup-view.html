@@ -1,6 +1,6 @@
 <div class="selector-popup popup-menu">
     <md-button ng-repeat="option in popupData.options"
-               ng-click="popupData.selectOption(option, _$popup)"
+               ng-click="popupData.selectOption(option, _$popup, $event)"
                class="popup-menu-item">
         <span class="material-icons" ng-class="{'visibility-hidden': !option.isActive}">done</span>
         <span ng-bind="option.name"></span>

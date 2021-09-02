@@ -17,6 +17,9 @@
 
     function endPointResolver(entity) {
         switch (entity) {
+            case 'portfolio-register':
+                return 'portfolios/' + entity + '-attribute-type/';
+                break;
             case 'counterparty':
                 return 'counterparties/' + entity + '-attribute-type/';
                 break;

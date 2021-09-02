@@ -917,7 +917,7 @@
             if (vm.fromEntityType) {
                 entityAddress = {entityType: vm.fromEntityType, from: vm.fromEntityType, instanceId: vm.instanceId};
             }
-            $state.go('app.attributesManager', entityAddress);*/
+            $state.go('app.portal.attributesManager', entityAddress);*/
             $mdDialog.show({
                 controller: 'AttributesManagerDialogController as vm',
                 templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
@@ -969,7 +969,7 @@
                 }
                 entityAddress = {entityType: entityType, from: vm.fromEntityType, instanceId: vm.instanceId};
             }
-            $state.go('app.data-constructor', entityAddress);
+            $state.go('app.portal.data-constructor', entityAddress);
 
         };
 

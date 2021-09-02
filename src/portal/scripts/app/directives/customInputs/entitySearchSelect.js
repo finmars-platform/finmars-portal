@@ -460,7 +460,7 @@
                             },
                         })
                         .then(function (res) {
-                            if (res && res.res === "agree") {
+                            if (res && res.status === "agree") {
                                 var item = res.data;
                                 scope.selectOption(item);
                             }
