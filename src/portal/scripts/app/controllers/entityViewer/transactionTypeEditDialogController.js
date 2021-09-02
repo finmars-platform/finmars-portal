@@ -252,7 +252,10 @@
                 // targetEvent: $event,
                 locals: {
                     entityType: vm.entityType,
-                    entity: entity
+                    entity: entity,
+					data: {
+                    	openedIn: 'dialog'
+					}
                 }
             });
 
