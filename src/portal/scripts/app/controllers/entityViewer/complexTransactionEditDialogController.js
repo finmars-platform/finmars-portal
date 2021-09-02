@@ -480,13 +480,6 @@
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            if (windowType === 'big_drawer') {
-
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType, isCopy: true}};
-                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
-            }
-
             $mdDialog.show({
                 controller: 'ComplexTransactionAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
@@ -500,8 +493,16 @@
                 }
             });
 
+			if (windowType === 'big_drawer') {
+
+				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true}};
+				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			} else {
+				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+			}
+
             //$mdDialog.hide({status: 'disagree'});
-			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
 
         };
 		/**
@@ -1006,9 +1007,8 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    //$mdDialog.hide({res: 'agree', data: {action: 'delete'}});
 
-					var responseObj = {res: 'agree', data: {action: 'delete'}};
+					var responseObj = {status: 'delete'};
 					metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                 }
@@ -1131,7 +1131,6 @@
                 }) */
 
             }
-
             else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
@@ -1222,7 +1221,7 @@
                                     } */
 
                                     if (response.reaction === 'skip') {
-										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: null});
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
                                     }
 
                                     else if (response.reaction === 'book_without_unique_code') {
@@ -1308,8 +1307,7 @@
                         vm.handleComplexTransactionErrors($event, data);
 
                     } else {
-                        //$mdDialog.hide({res: 'agree', data: data});
-						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: data});
 					}
 
                 }).catch(function (reason) {
@@ -1400,7 +1398,7 @@
                             vm.handleComplexTransactionErrors($event, data);
 
                         } else {
-							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree'});
+							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree'});
                         }
 
                     })
