@@ -31,22 +31,55 @@
 
                 vm.readyStatus.processing = false;
 
+                if (data.errors.length){
+                    $mdDialog.show({
+                        controller: 'InfoDialogController as vm',
+                        templateUrl: 'views/dialogs/info-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        locals: {
+                            info: {
+                                title: 'Error',
+                                description: data.errors[0]
+                            }
+                        },
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true
+                    })
+                }
+
+                $scope.$apply()
 
 
             }).catch(function (reason) {
 
+                console.log('reason %s', reason);
+
                 $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    controller: 'WarningDialogController as vm',
+                    templateUrl: 'views/dialogs/warning-dialog-view.html',
+                    parent: angular.element(document.body),
                     targetEvent: $event,
+                    clickOutsideToClose: false,
                     locals: {
-                        validationData: "An error occurred. Please try again later"
+                        warning: {
+                            title: 'Unhandle Exception',
+                            description: reason
+                        }
                     },
-                    multiple: true,
                     preserveScope: true,
                     autoWrap: true,
-                    skipHide: true
+                    skipHide: true,
+                    multiple: true
                 })
+
+                vm.readyStatus.processing = false;
+
+
+                $scope.$apply()
 
             })
         };

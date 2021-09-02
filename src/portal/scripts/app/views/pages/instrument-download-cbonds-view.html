@@ -5,18 +5,18 @@
 
     <div layout="row">
         <div>
-            <md-input-container flex="40" class="m-b-0 m-l-0">
+            <md-input-container flex="40" class="m-b-0 m-l-0"   >
                 <label for="IIMISINInput">Query</label>
-                <input id="IIMISINInput" type="text" data-ng-model="vm.config.instrument_code">
+                <input id="IIMISINInput" type="text" data-ng-model="vm.config.instrument_code" style="width: 300px">
             </md-input-container>
         </div>
 
         <div layout="row">
             <md-button
-                    class="md-raised colored-btn instrument-load-btn" data-ng-click="vm.load($event)">Download
+                    class="md-raised colored-btn instrument-load-btn m-r-8" data-ng-click="vm.load($event)">Download
             </md-button>
             <div data-ng-if="vm.readyStatus.processing">
-                <progress-circular diameter="50"></progress-circular>
+                <progress-circular diameter="20"></progress-circular>
             </div>
         </div>
     </div>
