@@ -103,7 +103,7 @@
                             autoWrap: true,
                             skipHide: true
                         }).then(function () {
-                            $state.go('app.settings.general.data-providers');
+                            $state.go('app.portal.settings.general.data-providers');
                         });
 
 
@@ -128,7 +128,7 @@
                             autoWrap: true,
                             skipHide: true
                         }).then(function () {
-                            $state.go('app.settings.general.data-providers');
+                            $state.go('app.portal.settings.general.data-providers');
                         });
 
 

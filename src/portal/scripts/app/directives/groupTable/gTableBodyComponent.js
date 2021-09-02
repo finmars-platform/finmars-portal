@@ -42,7 +42,7 @@
 
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
-                var progressBar = elem[0].querySelector('.ev-progressbar');
+                // var progressBar = elem[0].querySelector('.ev-progressbar');
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 
@@ -58,10 +58,14 @@
                 var entityType = scope.evDataService.getEntityType();
                 var viewContext = scope.evDataService.getViewContext();
 
-                var isReport = metaService.isReport(entityType);
+                scope.isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 var activeLayoutConfigIsSet = false;
+
+                if (!scope.isReport) {
+                	elements.leftPanelElem = scope.workareaWrapElement.querySelector('.gEvLeftPanelHolder');
+				}
 
                 const setColorsForSubtotals = function (flatList, coloredSubtotals) {
 
@@ -133,85 +137,26 @@
 
                 }
 
-                var isFilterValid = function (filterItem) {
-
-                    if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
-
-                        var filterType = filterItem.options.filter_type;
-
-                        if (filterType === 'empty' ||
-                            filterItem.options.exclude_empty_cells) { // if filter works for empty cells
-
-                            return true;
-
-                        } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
-
-                            var filterValues = filterItem.options.filter_values;
-
-                            if (filterType === 'from_to') {
-
-                                if ((filterValues.min_value || filterValues.min_value === 0) &&
-                                    (filterValues.max_value || filterValues.max_value === 0)) {
-                                    return true;
-                                }
-
-                            } else if (Array.isArray(filterValues)) {
-
-                                if (filterValues[0] || filterValues[0] === 0) {
-                                    return true;
-                                }
-
-                            }
-                        }
-
-                    }
-
-                    return false;
-                };
-
                 function renderEntityViewer() {
 
-                    var flatList = evDataHelper.getFlatStructure(scope.evDataService);
-                    flatList.shift(); // remove root group
+                    // var flatList = evDataHelper.getFlatStructure(scope.evDataService);
+                    var flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
 
-                    flatList = flatList.map(function (item, i) {
+					console.log('renderEntityViewer.flatlist', flatList);
+                    /* flatList = flatList.map(function (item, i) {
                         item.___flat_list_index = i;
                         return item
                     });
 
-                    console.log('renderEntityViewer.flatlist', flatList);
+                    scope.evDataService.setUnfilteredFlatList(flatList); */
 
-                    scope.evDataService.setUnfilteredFlatList(flatList);
+					var filters = scope.evDataService.getFilters();
+					var regularFilters = evFilterService.convertIntoRegularFilters(filters.frontend);
 
-                    var filters = scope.evDataService.getFilters();
-
-                    var frontEndFilters = [];
-
-                    for (var f = 0; f < filters.length; f++) {
-                        var filter = filters[f];
-
-                        if (filter.options &&
-                            filter.options.is_frontend_filter &&
-                            filter.options.enabled &&
-                            isFilterValid(filter)) {
-
-                            var filterOptions = {
-                                key: filter.key,
-                                filter_type: filter.options.filter_type,
-                                exclude_empty_cells: filter.options.exclude_empty_cells,
-                                value_type: filter.value_type,
-                                value: filter.options.filter_values
-                            };
-
-                            frontEndFilters.push(filterOptions);
-
-                        }
-                    }
-
-                    if (frontEndFilters.length > 0) {
-                        var groups = scope.evDataService.getGroups();
-                        flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
-                    }
+					if (regularFilters.length) {
+						var groups = scope.evDataService.getGroups();
+						flatList = evFilterService.filterTableRows(flatList, regularFilters, groups);
+					}
 
                     var index = 0;
                     flatList = flatList.map(function (item, i) {
@@ -246,7 +191,7 @@
                     });
 
 
-                    scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER)
+                    scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER);
 
                 }
 
@@ -336,7 +281,7 @@
 				}
 
                 function updateTableContent() {
-                    if (isReport) {
+                    if (scope.isReport) {
                         renderReportViewer();
 
                     } else {
@@ -378,7 +323,7 @@
 
                     var flatList = scope.evDataService.getFlatList();
 
-                    if (isReport) {
+                    if (scope.isReport) {
 
                         projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
 
@@ -401,27 +346,26 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-                    progressBar.style.display = 'block';
-                    if (isReport) {
+                    // progressBar.style.display = 'block';
+                    /* if (scope.isReport) {
                         contentElem.style.opacity = '0.7';
-                    }
+                    } */
+					contentElem.style.opacity = '0.7';
 
                     scope.evDataService.setDataLoadStatus(false);
 
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    // progressBar.style.display = 'none';
 
-                    progressBar.style.display = 'none';
-                    if (isReport) {
-                        contentElem.style.opacity = '1';
-                    }
+					contentElem.style.opacity = '1';
 
                     updateTableContent();
 
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
                         activeLayoutConfigIsSet = true;
-                        scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
+                        scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport}); // saving layout for checking for changes
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
                     }
 
@@ -450,7 +394,7 @@
 
                     calculateElemsWrapsSizes();
 
-                    if (isReport) {
+                    if (scope.isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
@@ -476,7 +420,7 @@
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                    if (isReport) {
+                    if (scope.isReport) {
 
                         // rvDomManager.calculateScroll(elements, scope.evDataService);
 
@@ -487,7 +431,7 @@
                     } else {
 
                         // evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                        evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
+						// evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                         if (projection) {
                             evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
@@ -501,45 +445,15 @@
 
                     window.addEventListener('resize', onWindowResize);
 
-                    if (!isReport) {
+                    if (!scope.isReport) {
                         scope.scrollManager = new EvScrollManager();
                     }
-
-					// TO DELETE remove after applying new interface for ev and rv
-                    if (isReport) {
-
-						var components = scope.evDataService.getComponents();
-						var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-						if (components.sidebar) {
-
-							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE after removing sidebar
-
-							interfaceLayout.filterArea.collapsed = true;
-							interfaceLayout.filterArea.width = 0;
-
-						}
-
-						components.groupingArea = false
-
-						if (viewContext !== 'dashboard') {
-							components.topPart = true
-						}
-
-						interfaceLayout.columnArea.height = 50
-						// interfaceLayout.filterArea.height = 50
-
-						scope.evDataService.setInterfaceLayout(interfaceLayout);
-						scope.evDataService.setComponents(components);
-
-					}
-					// < TO DELETE remove after applying new interface for ev and rv >
 
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
                         calculateElemsWrapsSizes();
 
-                        if (isReport) {
+                        if (scope.isReport) {
 
                             rvDomManager.calculateScroll(elements, scope.evDataService);
 
@@ -563,9 +477,9 @@
 
                             if (flatList.length > 1) {
 
-                                progressBar.style.display = 'none';
+                                // progressBar.style.display = 'none';
 
-                                if (isReport) {
+                                if (scope.isReport) {
                                     contentElem.style.opacity = '1';
                                 }
 
@@ -575,12 +489,12 @@
 
                             //  If we already have data (e.g. viewType changed) end
 
-
                             /*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
                                 cellContentOverflow();
                             });*/
 
-                        } else {
+                        }
+                        else {
 
                             evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
@@ -620,7 +534,7 @@
 
                 /* $(window).on('resize', function () { // TODO what?
 
-                    if (isReport) {
+                    if (scope.isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);

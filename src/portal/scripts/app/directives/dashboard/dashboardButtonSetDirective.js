@@ -416,7 +416,7 @@
 
                         if (item.target) {
 
-                            $state.go('app.dashboard', {
+                            $state.go('app.portal.dashboard', {
                                 layoutUserCode: item.target
                             }, {reload: 'app'})
 
@@ -506,9 +506,9 @@
                     if (item.action === 'open_report') {
 
                         var reportViewerRouteMap = {
-                            'reports.balancereport': 'app.reports.balance-report',
-                            'reports.plreport': 'app.reports.pl-report',
-                            'reports.transactionreport': 'app.reports.transaction-report'
+                            'reports.balancereport': 'app.portal.reports.balance-report',
+                            'reports.plreport': 'app.portal.reports.pl-report',
+                            'reports.transactionreport': 'app.portal.reports.transaction-report'
                         };
 
 
@@ -536,22 +536,22 @@
                     if (item.action === 'open_data_viewer') {
 
                         var entityViewerRouteMap = {
-                            'portfolios.portfolio': 'app.data.portfolio',
-                            'accounts.account': 'app.data.account',
-                            'accounts.accounttype': 'app.data.account-type',
-                            'counterparties.counterparty': 'app.data.counterparty',
-                            'counterparties.responsible': 'app.data.responsible',
-                            'instruments.instrument': 'app.data.instrument',
-                            'instruments.instrumenttype': 'app.data.instrument-type',
-                            'transactions.complextransaction': 'app.data.complex-transaction',
-                            'transactions.transaction': 'app.data.transaction',
-                            'transactions.transactiontype': 'app.data.transaction-type',
-                            'currencies.currencyhistory': 'app.data.currency-history',
-                            'instruments.pricehistory': 'app.data.price-history',
-                            'currencies.currency': 'app.data.currency',
-                            'strategies.strategy1': 'app.data.strategy',
-                            'strategies.strategy2': 'app.data.strategy',
-                            'strategies.strategy3': 'app.data.strategy',
+                            'portfolios.portfolio': 'app.portal.data.portfolio',
+                            'accounts.account': 'app.portal.data.account',
+                            'accounts.accounttype': 'app.portal.data.account-type',
+                            'counterparties.counterparty': 'app.portal.data.counterparty',
+                            'counterparties.responsible': 'app.portal.data.responsible',
+                            'instruments.instrument': 'app.portal.data.instrument',
+                            'instruments.instrumenttype': 'app.portal.data.instrument-type',
+                            'transactions.complextransaction': 'app.portal.data.complex-transaction',
+                            'transactions.transaction': 'app.portal.data.transaction',
+                            'transactions.transactiontype': 'app.portal.data.transaction-type',
+                            'currencies.currencyhistory': 'app.portal.data.currency-history',
+                            'instruments.pricehistory': 'app.portal.data.price-history',
+                            'currencies.currency': 'app.portal.data.currency',
+                            'strategies.strategy1': 'app.portal.data.strategy',
+                            'strategies.strategy2': 'app.portal.data.strategy',
+                            'strategies.strategy3': 'app.portal.data.strategy',
                         };
 
                         if (item.target) {

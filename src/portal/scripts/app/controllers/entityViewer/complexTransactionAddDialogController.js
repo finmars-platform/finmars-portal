@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var usersGroupService = require('../../services/usersGroupService');
+    // var usersGroupService = require('../../services/usersGroupService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -33,7 +33,7 @@
 
 
     module.exports = function complexTransactionAddDialogController(
-    	$scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
+    	$scope, $mdDialog, $bigDrawer, $state, usersGroupService, entityType, entity, data
 	) {
 
         var vm = this;
@@ -151,8 +151,9 @@
 
         };
 
-        var postBookComplexTransactionActions = function (transactionData) {
+        var postBookComplexTransactionActions = function (cTransactionData) {
 
+            /*
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
@@ -170,47 +171,7 @@
 
             dataConstructorLayout = JSON.parse(JSON.stringify(transactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
-            // vm.userInputs = [];
-
 			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
-
-            /*vm.tabs.forEach(function (tab) {
-                tab.layout.fields.forEach(function (field) {
-                    if (field.attribute_class === 'userInput') {
-                        vm.userInputs.push(field.attribute);
-                    }
-                });
-            });
-
-            if (vm.fixedArea && vm.fixedArea.isActive) {
-                vm.fixedArea.layout.fields.forEach(function (field) {
-                    if (field.attribute_class === 'userInput') {
-                        vm.userInputs.push(field.attribute);
-                    }
-                });
-            }
-
-            if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) {
-                vm.tabs.forEach(function (tab, index) {
-                    tab.tabOrder = index;
-                });
-            }
-
-            vm.userInputs.forEach(function (userInput) {
-
-                if (!userInput.frontOptions) {
-                    userInput.frontOptions = {};
-                }
-
-                if (transactionHelper.isUserInputUsedInTTypeExpr(userInput, vm.transactionType.actions)) {
-                    userInput.frontOptions.usedInExpr = true;
-                }
-
-                if (notCopiedTransaction && (vm.entity[userInput.name] || vm.entity[userInput.name] === 0)) {
-                    userInput.frontOptions.autocalculated = true;
-                }
-
-            });*/
 
 			vm.inputsWithCalculations = transactionData.transaction_type_object.inputs;
 
@@ -264,11 +225,20 @@
 
                 });
 
-            }
+            } */
+			var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
+			vm.tabs = pbraResult.tabs;
+			vm.fixedArea = pbraResult.fixedArea;
+			dataConstructorLayout = pbraResult.dataConstructorLayout;
+			vm.inputsWithCalculations = pbraResult.inputsWithCalculations;
+			vm.userInputs = pbraResult.userInputs;
 
             mapAttributesAndFixFieldsLayout();
 
-        };
+			// should be fired after mapAttributesAndFixFieldsLayout()
+			return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+
+		};
 
         vm.recalculate = function (paramsObj) {
 
@@ -315,9 +285,9 @@
 
                         vm.missingLayoutError = false;
 
-                        postBookComplexTransactionActions(data);
+                        await postBookComplexTransactionActions(data);
 						// Victor 2020.12.01 #64
-						await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+						// await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
 						// <Victor 2020.12.01 #64>
 
                         /*vm.oldValues = {};
@@ -436,7 +406,7 @@
             if (vm.entityType === 'transaction-type' || vm.entityType === 'complex-transaction') {
                 entityAddress = {entityType: 'complex-transaction', from: vm.entityType};
             }
-            $state.go('app.data-constructor', entityAddress);
+            $state.go('app.portal.data-constructor', entityAddress);
             $mdDialog.hide();*/
         };
 
@@ -469,48 +439,9 @@
 
         vm.range = gridHelperService.range;
 
-        vm.bindFlex = function (tab, field) {
-            var flexUnit = 100 / tab.layout.columns;
-            return Math.floor(field.colspan * flexUnit);
-        };
+        vm.bindFlex = sharedLogicHelper.bindFlex;
 
-        vm.checkFieldRender = function (tab, row, field) {
-
-            if (field.row === row) {
-                if (field.type !== 'empty') {
-                    return true;
-                } else {
-
-                    var spannedCols = [];
-                    var itemsInRow = tab.layout.fields.filter(function (item) {
-                        return item.row === row;
-                    });
-
-
-                    itemsInRow.forEach(function (item) {
-
-                        if (item.type !== 'empty' && item.colspan > 1) {
-                            var columnsToSpan = item.column + item.colspan - 1;
-
-                            for (var i = item.column; i <= columnsToSpan; i = i + 1) {
-                                spannedCols.push(i);
-                            }
-
-                        }
-
-                    });
-
-                    if (spannedCols.indexOf(field.column) !== -1) {
-                        return false;
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
-
-        };
+        vm.checkFieldRender = sharedLogicHelper.checkFieldRender;
 
         vm.checkViewState = function (tab) {
 
@@ -583,7 +514,6 @@
 				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
 			}
-
             else {
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -675,7 +605,7 @@
                                     }
 
                                     if(response.reaction === 'skip') {
-										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: null});
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
 									}
 
                                     if(response.reaction === 'book_without_unique_code') {
@@ -766,7 +696,7 @@
                         })
 
                     } else {
-						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: data});
 					}
 
                 });
@@ -847,7 +777,7 @@
                             })
 
                         } else {
-							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree'});
+							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree'});
 						}
 
                     })

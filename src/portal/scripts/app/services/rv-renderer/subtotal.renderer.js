@@ -424,6 +424,26 @@
 
 	}
 
+	var getRowGeneralClasses = function (obj, classList, isActivated, evDataService) {
+
+		if (obj.___subtotal_type === 'proxyline') {
+			classList.push('proxyline');
+		}
+
+		if (isActivated) {
+			classList.push('selected');
+		}
+
+		var activeObjRow = evDataService.getActiveObjectRow();
+
+		if (activeObjRow && activeObjRow.___id === obj.___id && activeObjRow.___parentId === obj.___parentId) {
+			classList.push('is-active-object');
+		}
+
+		return classList;
+
+	}
+
     var render = function (evDataService, obj) {
 
         var columns = evDataService.getColumns();
@@ -434,10 +454,6 @@
 
         var rowClassList = ['g-row'];
 
-        if (obj.___subtotal_type === 'proxyline') {
-			rowClassList.push('proxyline');
-        }
-
         if (obj.___backgrond_color) {
             rowClassList.push('g-row-marked-' + obj.___backgrond_color)
         }
@@ -447,16 +463,16 @@
         var subtotal_type;
 
         if (obj.___subtotal_subtype) {
-            subtotal_type = obj.___subtotal_subtype
+            subtotal_type = obj.___subtotal_subtype;
         } else {
-            subtotal_type = obj.___subtotal_type
+            subtotal_type = obj.___subtotal_type;
         }
 
         if (subtotal_type === 'line') {
-            is_activated = parent.___is_line_subtotal_activated
+            is_activated = parent.___is_line_subtotal_activated;
 
         } else if (subtotal_type === 'area') {
-            is_activated = parent.___is_area_subtotal_activated
+            is_activated = parent.___is_area_subtotal_activated;
         }
 
 		if (subtotal_type === 'line') {
@@ -465,6 +481,8 @@
 		} else if (subtotal_type === 'area') {
 			contextMenuIsOpened = parent.___area_subtotal_context_menu_is_opened;
 		}
+
+		rowClassList = getRowGeneralClasses(obj, rowClassList, is_activated, evDataService);
 
 		var grandTotalCell = '';
         var rowSelection;
@@ -500,13 +518,9 @@
 				rowClassList.push('context-menu-opened');
 			}
 
-			rowSettings = renderHelper.getRowSettings(obj.___backgrond_color, obj.___type);
+			rowSettings = renderHelper.getRowSettings(obj.___type, obj.___backgrond_color);
 
 		}
-
-        if (is_activated) {
-			rowClassList.push('activated');
-        }
 
         var rowClasses = rowClassList.join(' ');
 

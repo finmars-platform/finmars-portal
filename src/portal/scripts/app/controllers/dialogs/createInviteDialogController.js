@@ -1,15 +1,15 @@
+import authorizerRepository from "../../../../../shell/scripts/app/repositories/authorizerRepository";
+
 (function () {
 
     'use strict';
 
-    var membersAndGroupsService = require('../../services/membersAndGroupsService');
-    var authorizerService = require('../../services/authorizerService');
-    var baseUrlService = require('../../services/baseUrlService');
-    var cookieService = require('../../../../../core/services/cookieService');
+    const membersAndGroupsService = require('../../services/membersAndGroupsService');
+    // var authorizerService = require('../../services/authorizerService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, authorizerService) {
 
-        var vm = this;
+        let vm = this;
 
         vm.username = '';
 
@@ -20,7 +20,7 @@
 
         vm.usernameError = false;
 
-        vm.checkUniqueness = function ($event){
+        /* vm.checkUniqueness = function ($event){
 
             var authorizerUrl = baseUrlService.getAuthorizerUrl();
 
@@ -41,60 +41,74 @@
                 } else {
                     vm.usernameError = true;
                 }
-                
+
                 $scope.$apply();
 
             })
 
 
-        }
+        } */
 
         vm.agree = function ($event) {
 
-            var groups = vm.assignedGroupsList.map(function (group) {
-                return group.name
-            }).join(',')
+			authorizerService.checkUsernameUniqueness(vm.username).then(data => {
 
-            authorizerService.inviteUser({username: vm.username, groups: groups}).then(function (data) {
+				if (data.exist) {
 
-                console.log('data', data);
+					vm.usernameError = false
 
-                $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                    locals: {
-                        success: {
-                            title: "",
-                            description: "You successfully send an invitation"
-                        }
-                    },
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true
-                }).then(function () {
-                    $mdDialog.hide({status: 'agree'});
-                });
+					const groups = vm.assignedGroupsList.map(function (group) {
+						return group.name
+					}).join(',')
 
-            }).catch(function (reason) {
+					authorizerService.inviteUser({username: vm.username, groups: groups}).then(function (data) {
 
-                $mdDialog.show({
-                    controller: 'ValidationDialogController as vm',
-                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                    targetEvent: $event,
-                    locals: {
-                        validationData: data
-                    },
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true
-                }).then(function () {
-                    $mdDialog.hide({status: 'agree'});
-                });
+						$mdDialog.show({
+							controller: 'SuccessDialogController as vm',
+							templateUrl: 'views/dialogs/success-dialog-view.html',
+							locals: {
+								success: {
+									title: "",
+									description: "You successfully send an invitation"
+								}
+							},
+							targetEvent: $event,
+							preserveScope: true,
+							multiple: true,
+							autoWrap: true,
+							skipHide: true
+						}).then(function () {
+							$mdDialog.hide({status: 'agree'});
+						});
 
-            })
+					})
+					.catch(function (reason) {
+
+						$mdDialog.show({
+							controller: 'ValidationDialogController as vm',
+							templateUrl: 'views/dialogs/validation-dialog-view.html',
+							targetEvent: $event,
+							locals: {
+								validationData: data
+							},
+							preserveScope: true,
+							autoWrap: true,
+							skipHide: true,
+							multiple: true
+						}).then(function () {
+							$mdDialog.hide({status: 'agree'});
+						});
+
+					})
+
+				} else {
+
+					vm.usernameError = true;
+					$scope.$apply();
+
+				}
+
+			});
 
         };
 

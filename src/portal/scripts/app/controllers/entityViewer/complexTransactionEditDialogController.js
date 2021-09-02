@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersGroupService = require('../../services/usersGroupService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -30,7 +30,7 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data) {
+    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data) {
 
         var vm = this;
 		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
@@ -460,7 +460,7 @@
             if (vm.fromEntityType) {
                 entityType = {entityType: vm.entityType, from: vm.fromEntityType};
             }
-            $state.go('app.attributesManager', entityType);
+            $state.go('app.portal.attributesManager', entityType);
             $mdDialog.hide();*/
 
             $mdDialog.show({
@@ -480,13 +480,6 @@
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            if (windowType === 'big_drawer') {
-
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType, isCopy: true}};
-                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
-            }
-
             $mdDialog.show({
                 controller: 'ComplexTransactionAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
@@ -500,8 +493,16 @@
                 }
             });
 
+			if (windowType === 'big_drawer') {
+
+				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true}};
+				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			} else {
+				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+			}
+
             //$mdDialog.hide({status: 'disagree'});
-			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
 
         };
 		/**
@@ -545,6 +546,7 @@
                 }
             });
 
+            /*
             // ng-repeat with bindFieldControlDirective may not update without this
             vm.tabs = {};
             vm.fixedArea = {};
@@ -557,7 +559,7 @@
             }
 
             dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-            // vm.userInputs = [];
+
 			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
 
 			vm.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
@@ -605,20 +607,24 @@
                                 })
                             }
 
-                            /* if (recalculationInfo && recalculationInfo.recalculatedInputs.includes(userInput.name)) { // mark userInputs that were recalculated
-								// mark userInputs that were recalculated
-								userInput.frontOptions.recalculated = recalculationInfo.recalculationData
-                            } */
-
                         }
 
                     })
 
                 });
 
-            }
+            } */
+			var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
+			vm.tabs = pbraResult.tabs;
+			vm.fixedArea = pbraResult.fixedArea;
+			dataConstructorLayout = pbraResult.dataConstructorLayout;
+			vm.inputsWithCalculations = pbraResult.inputsWithCalculations;
+			vm.userInputs = pbraResult.userInputs;
 
             mapAttributesAndFixFieldsLayout();
+
+			// should be fired after mapAttributesAndFixFieldsLayout()
+			return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
 
         };
 
@@ -811,9 +817,9 @@
                     vm.fillTransactionInputs();
 
 
-                    postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
+                    await postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
 					// Victor 2020.12.01 #64
-					await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+					// await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
 					// <Victor 2020.12.01 #64>
 
                     vm.dataConstructorData = {
@@ -823,7 +829,7 @@
                     };
 
                     /*vm.manageAttrs = function () {
-                        $state.go('app.attributesManager', {
+                        $state.go('app.portal.attributesManager', {
                             entityType: vm.entityType,
                             from: vm.entityType,
                             instanceId: vm.transactionTypeId
@@ -863,10 +869,7 @@
             return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.userFields;
         };
 
-        vm.bindFlex = function (tab, field) {
-            var flexUnit = 100 / tab.layout.columns;
-            return Math.floor(field.colspan * flexUnit);
-        };
+		vm.bindFlex = sharedLogicHelper.bindFlex;
 
         vm.checkFieldRender = function (tab, row, field) {
 
@@ -1004,9 +1007,8 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    //$mdDialog.hide({res: 'agree', data: {action: 'delete'}});
 
-					var responseObj = {res: 'agree', data: {action: 'delete'}};
+					var responseObj = {status: 'delete'};
 					metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                 }
@@ -1129,7 +1131,6 @@
                 }) */
 
             }
-
             else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity);
@@ -1220,7 +1221,7 @@
                                     } */
 
                                     if (response.reaction === 'skip') {
-										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: null});
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
                                     }
 
                                     else if (response.reaction === 'book_without_unique_code') {
@@ -1306,8 +1307,7 @@
                         vm.handleComplexTransactionErrors($event, data);
 
                     } else {
-                        //$mdDialog.hide({res: 'agree', data: data});
-						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: data});
 					}
 
                 }).catch(function (reason) {
@@ -1398,7 +1398,7 @@
                             vm.handleComplexTransactionErrors($event, data);
 
                         } else {
-							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree'});
+							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree'});
                         }
 
                     })

@@ -7,8 +7,8 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersGroupService = require('../../services/usersGroupService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -44,14 +44,11 @@
         {id: 'user_code', name: 'User Code'},
     ];
 
-    module.exports = function entityViewerAddDialogController(
-        $scope, $mdDialog, $bigDrawer, $state, entityType, entity, data
-    ) {
-
-        console.log('EntityViewerAddDialog entityType, entity', entityType, entity);
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
 
         var vm = this;
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
@@ -464,7 +461,7 @@
 
         vm.getCurrentMasterUser = function () {
 
-            return usersService.getCurrentMasterUser().then(function (data) {
+            return authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;
@@ -751,7 +748,6 @@
         };
 
         vm.cancel = function () {
-            // $mdDialog.hide({status: 'disagree'});
             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
@@ -1104,23 +1100,22 @@
 
                     if (isAutoExitAfterSave) {
 
-                        let responseObj = {res: 'agree', data: responseData};
+                        let responseObj = {status: 'agree', data: responseData};
                         metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     } else {
-
 
                         vm.entity = {...vm.entity, ...responseData};
                         vm.entity.$_isValid = true;
 
                         const responseObj = {
-                            res: 'agree',
+                            status: 'edit',
                             data: {
-                                action: 'edit',
                                 entityType: vm.entityType,
                                 entity: vm.entity
                             }
                         };
+
                         metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     }
@@ -1166,7 +1161,8 @@
 
                     entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
-                        $mdDialog.hide({res: 'agree', data: data});
+                        var responseObj = {res: 'agree', data: data};
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     }).catch(function (data) {
 
@@ -1782,6 +1778,8 @@
 				vm.tabs = formLayoutData.tabs;
 				vm.attributesLayout = formLayoutData.attributesLayout;
 
+				 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+
 				if (vm.entityType === 'instrument') {
 
 					vm.typeSelectorChange = function () {
@@ -1814,7 +1812,7 @@
 
 			vm.getCurrencies();
 
-            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
+            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history' || vm.entityType === 'portfolio-register' || vm.entityType === 'portfolio-register-record') {
                 vm.readyStatus.permissions = true;
             } else {
                 vm.loadPermissions();

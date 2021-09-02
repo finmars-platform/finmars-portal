@@ -1,6 +1,7 @@
 module.exports = {
     'COLUMNS_CHANGE': 'COLUMNS_CHANGE',
     'FILTERS_CHANGE': 'FILTERS_CHANGE',
+	'FILTERS_TO_SHOW_CHANGE': 'FILTERS_TO_SHOW_CHANGE', // entity viewer filters to show (front or back) switched
     'GROUPS_CHANGE': 'GROUPS_CHANGE',
     'CLEAR_USE_FROM_ABOVE_FILTERS': 'CLEAR_USE_FROM_ABOVE_FILTERS',
 	'FILTERS_RENDERED': 'FILTERS_RENDERED',
@@ -31,6 +32,7 @@ module.exports = {
     'USER_REQUEST_AN_ACTION': 'USER_REQUEST_AN_ACTION', // user used a Add menu and want to Add Entity (portfolio, account,  etc)
     'ACTIVE_OBJECT_FROM_ABOVE_CHANGE': 'ACTIVE_OBJECT_FROM_ABOVE_CHANGE', // for active object for split panel from root entity viewer
 
+	'ROWS_ACTION_FIRED': 'ROWS_ACTION_FIRED',
 
     'COLUMN_SORT_CHANGE': 'COLUMN_SORT_CHANGE',
     'GROUP_TYPE_SORT_CHANGE': 'GROUP_TYPE_SORT_CHANGE',
@@ -88,6 +90,8 @@ module.exports = {
 	//</editor-fold>
 
     'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END',
-    'ROW_ACTIVATION_CHANGE': 'ROW_ACTIVATION_CHANGE'
+
+	'ROW_ACTIVATION_CHANGE': 'ROW_ACTIVATION_CHANGE',
+	'HIDE_BULK_ACTIONS_AREA': 'HIDE_BULK_ACTIONS_AREA',
 
 };

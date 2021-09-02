@@ -47,7 +47,15 @@
                 "value_entity": "pricing_policy",
                 "value_content_type": "instruments.pricingpolicy",
                 "code": "user_code"
-            }
+            },
+
+            {
+                "key": "procedure_modified_datetime",
+                "name": "Modified Date And Time",
+                "value_type": 40
+            },
+
+
             //{
             //    "key": "fx_rate_expr",
             //    "name": "fx_rate_expr",

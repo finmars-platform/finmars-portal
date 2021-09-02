@@ -9,7 +9,7 @@
 
                 <div data-ng-repeat="dashboard in vm.dashboardsList">
                     <md-button class="md-raised md-button"
-                               ui-sref="app.dashboard({layoutUserCode: dashboard.user_code})"
+                               ui-sref="app.portal.dashboard({layoutUserCode: dashboard.user_code})"
                                ng-bind="dashboard.name"></md-button>
                 </div>
 
@@ -90,10 +90,10 @@
         <div>
             <div data-ng-include="'views/check-events-schedules-tab-view.html'"></div>
         </div>
-    </div>-->
+    </div>
 
-    <!--<div layout="row">
-        <a data-ui-sref="app.dashboard" class="md-button md-raised md-primary">Dashboard</a>
+    <div layout="row">
+        <a data-ui-sref="app.portal.dashboard" class="md-button md-raised md-primary">Dashboard</a>
     </div>-->
 
 </div>

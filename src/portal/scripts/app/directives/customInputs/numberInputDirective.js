@@ -263,6 +263,8 @@
                 var initScopeWatchers = function () {
                     scope.$watch('model', function () {
 
+                        scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
+
                         if (scope.model || scope.model === 0) {
 
                             scope.error = '';
@@ -271,7 +273,8 @@
                                 scope.error = 'Invalid character used';
                             }
 
-                            scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
+                            // Victor 2021.06.16 #115 I transfer scope.numberToShow changing to  upper because model===null not change scope.numberToShow to 0
+                            // scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
 
                             if (!inputContainer.classList.contains('custom-input-focused')) {
                                 applyNumberFormatToInput();

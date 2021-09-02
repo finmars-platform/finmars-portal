@@ -7,8 +7,8 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersGroupService = require('../../services/usersGroupService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -40,10 +40,11 @@
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entityId, data) {
 
         var vm = this;
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
@@ -316,7 +317,7 @@
 
         vm.getCurrentMasterUser = function () {
 
-            return usersService.getCurrentMasterUser().then(function (data) {
+            return authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;
@@ -370,7 +371,6 @@
 
         vm.cancel = function () {
             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
-            // $mdDialog.hide({status: 'disagree'});
         };
 
         vm.restoreDeleted = function(){
@@ -439,13 +439,6 @@
 
             console.log('copy entity', entity);
 
-            if (windowType === 'big-drawer') {
-
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType}};
-                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
-            }
-
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
@@ -457,7 +450,7 @@
                 }
             }).then(function (res) {
 
-                if (res && res.res === 'agree') {
+                if (res && res.status === 'agree') {
 
                     console.log('res', res);
 
@@ -465,8 +458,14 @@
 
             });
 
-            // $mdDialog.hide();
-            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
+			if (windowType === 'big-drawer') {
+
+				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
+				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			} else {
+				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+			}
 
         };
 
@@ -609,7 +608,7 @@
 						vm.attributeTypes = formLayoutData.attributeTypes;
 
                     	vm.tabs = formLayoutData.tabs;
-                        console.log('# vm.tabs', vm.tabs)
+                        console.log('# vm.tabs', vm.tabs);
 						vm.attributesLayout = formLayoutData.attributesLayout;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
@@ -775,11 +774,7 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-
-                    // $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-                    let responseObj = {res: 'agree', data: {action: 'delete'}};
-                    metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
+                    metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
                 }
 
             })
@@ -991,7 +986,7 @@
 
                         if (isAutoExitAfterSave) {
 
-                            let responseObj = {res: 'agree', data: responseData};
+                            let responseObj = {status: 'agree', data: responseData};
                             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                         } else {
@@ -2054,7 +2049,6 @@
 				};
 
             }
-
             else {
 
                 vm.statusSelectorOptions = [

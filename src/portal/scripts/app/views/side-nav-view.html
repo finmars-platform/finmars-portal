@@ -48,7 +48,7 @@
                     <li>
                         <md-button ui-sref-active="active"
                                    class="sidemenu-btn"
-                                   ui-sref="app.dashboard">
+                                   ui-sref="app.portal.dashboard">
                         <span class="side-nav-icon">
                             <ng-md-icon icon="dashboard" size="24"></ng-md-icon>
                         </span>
@@ -60,7 +60,7 @@
                     <li>
                         <md-button ui-sref-active="active"
                                    class="sidemenu-btn"
-                                   ui-sref="app.home">
+                                   ui-sref="app.portal.home">
                         <span class="side-nav-icon">
                             <ng-md-icon icon="home" size="24"></ng-md-icon>
                         </span>
@@ -84,7 +84,7 @@
                                 <li data-ng-if="vm.accessTable.report_balance">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.reports.balance-report">
+                                               ui-sref="app.portal.reports.balance-report">
                                         <span class="side-nav-title">Balance</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -93,7 +93,7 @@
                                 <li data-ng-if="vm.accessTable.report_pl">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.reports.pl-report">
+                                               ui-sref="app.portal.reports.pl-report">
                                         <span class="side-nav-title">P&L</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -102,7 +102,7 @@
                                 <li data-ng-if="vm.accessTable.report_transaction">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.reports.transaction-report">
+                                               ui-sref="app.portal.reports.transaction-report">
                                         <span class="side-nav-title">Transaction</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -111,7 +111,7 @@
                                 <li data-ng-if="vm.accessTable.report_performance">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.reports.performance-report"
+                                               ui-sref="app.portal.reports.performance-report"
                                                disabled>
                                         <span class="side-nav-title">Performance</span>
                                         <span class="md-visually-hidden"
@@ -121,7 +121,7 @@
                                 <li data-ng-if="vm.accessTable.report_cash_flow">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.reports.cash-flow-projection-report"
+                                               ui-sref="app.portal.reports.cash-flow-projection-report"
                                                disabled>
                                         <span class="side-nav-title">Cash flow</span>
                                         <span class="md-visually-hidden"
@@ -131,7 +131,7 @@
                                 <li data-ng-if="vm.accessTable.report_event">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.reports.check-for-events">
+                                               ui-sref="app.portal.reports.check-for-events">
                                         <span class="side-nav-title">Events</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -157,8 +157,17 @@
                                 <li data-ng-if="vm.accessTable.data_portfolio">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.portfolio">
+                                               ui-sref="app.portal.data.portfolio">
                                         <span class="side-nav-title">Portfolios</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li data-ng-if="vm.accessTable.data_portfolio">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data.portfolio-register">
+                                        <span class="side-nav-title">Registers</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -166,7 +175,7 @@
                                 <li data-ng-if="vm.accessTable.data_account">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.account">
+                                               ui-sref="app.portal.data.account">
                                         <span class="side-nav-title">Accounts</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -175,7 +184,7 @@
                                 <li data-ng-if="vm.accessTable.data_instrument">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.instrument">
+                                               ui-sref="app.portal.data.instrument">
                                         <span class="side-nav-title">Instruments</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -184,7 +193,7 @@
                                 <li data-ng-if="vm.accessTable.data_counterparty">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.counterparty">
+                                               ui-sref="app.portal.data.counterparty">
                                         <span class="side-nav-title">Counterparties</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -193,7 +202,7 @@
                                 <li data-ng-if="vm.accessTable.data_responsible">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.responsible">
+                                               ui-sref="app.portal.data.responsible">
                                         <span class="side-nav-title">Responsibles</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -202,7 +211,7 @@
                                 <li data-ng-if="vm.accessTable.data_currency">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.currency">
+                                               ui-sref="app.portal.data.currency">
                                         <span class="side-nav-title">Currencies</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -211,7 +220,7 @@
                                 <li data-ng-if="vm.accessTable.data_strategies">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.strategy({strategyNumber: 1})">
+                                               ui-sref="app.portal.data.strategy({strategyNumber: 1})">
                                         <span class="side-nav-title">Strategies 1</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -220,7 +229,7 @@
                                 <li data-ng-if="vm.accessTable.data_strategies">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.strategy({strategyNumber: 2})">
+                                               ui-sref="app.portal.data.strategy({strategyNumber: 2})">
                                         <span class="side-nav-title">Strategies 2</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -229,7 +238,7 @@
                                 <li data-ng-if="vm.accessTable.data_strategies">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.strategy({strategyNumber: 3})">
+                                               ui-sref="app.portal.data.strategy({strategyNumber: 3})">
                                         <span class="side-nav-title">Strategies 3</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -253,7 +262,7 @@
                                 <li data-ng-if="vm.accessTable.data_transaction">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.complex-transaction">
+                                               ui-sref="app.portal.data.complex-transaction">
                                         <span class="side-nav-title">Transactions</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -261,8 +270,16 @@
                                 </li>
                                 <li>
                                     <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.transaction">
+                                               ui-sref="app.portal.data.transaction">
                                         <span class="side-nav-title">Base Transactions</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li>
+                                    <md-button class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data.portfolio-register-record">
+                                        <span class="side-nav-title">Register Records</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -285,7 +302,7 @@
                                 <li data-ng-if="vm.accessTable.data_price_history">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.price-history">
+                                               ui-sref="app.portal.data.price-history">
                                         <span class="side-nav-title">Prices</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -294,8 +311,8 @@
                                 <li data-ng-if="vm.accessTable.data_price_history">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.price-history-error">
-                                        <span class="side-nav-title">Prices Errors</span>
+                                               ui-sref="app.portal.data.price-history-error">
+                                        <span class="side-nav-title">Prices Journal</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -303,7 +320,7 @@
                                 <li data-ng-if="vm.accessTable.data_fx_history">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.currency-history">
+                                               ui-sref="app.portal.data.currency-history">
                                         <span class="side-nav-title">FX Rates</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -312,8 +329,8 @@
                                 <li data-ng-if="vm.accessTable.data_fx_history">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.data.currency-history-error">
-                                        <span class="side-nav-title">FX Rates Errors</span>
+                                               ui-sref="app.portal.data.currency-history-error">
+                                        <span class="side-nav-title">FX Rates Journal</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -321,7 +338,7 @@
                                 <li>
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.run-pricing-procedure">
+                                               ui-sref="app.portal.run-pricing-procedure">
                                         <span class="side-nav-title">Run Pricing</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -330,8 +347,8 @@
                                 <li>
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.run-data-procedure">
-                                        <span class="side-nav-title">Import From Bank</span>
+                                               ui-sref="app.portal.pricing-parent-procedure">
+                                        <span class="side-nav-title">Procedures status</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -354,9 +371,21 @@
                                 <li data-ng-if="vm.accessTable.data_simple_import">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn two-line-text"
-                                               ui-sref="app.import.simple-entity">
+                                               ui-sref="app.portal.import.simple-entity">
                                         <span class="side-nav-title">
                                             Data<br>
+                                            (from file)
+                                        </span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li data-ng-if="vm.accessTable.data_simple_import">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn two-line-text"
+                                               ui-sref="app.portal.import.unified-entity">
+                                        <span class="side-nav-title">
+                                            Instrument<br>
                                             (from file)
                                         </span>
                                         <span class="md-visually-hidden"
@@ -366,7 +395,7 @@
                                 <li data-ng-if="vm.accessTable.data_transaction_import">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn two-line-text"
-                                               ui-sref="app.import.transaction">
+                                               ui-sref="app.portal.import.transaction">
                                         <span class="side-nav-title">
                                             Transactions<br>
                                             (from file)
@@ -378,7 +407,7 @@
                                 <li data-ng-if="vm.accessTable.data_complex_import">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn two-line-text"
-                                               ui-sref="app.import.complex-import">
+                                               ui-sref="app.portal.import.complex-import">
                                         <span class="side-nav-title">
                                             Data and Transactions<br>
                                             (from file)
@@ -390,7 +419,7 @@
                                 <li data-ng-if="vm.accessTable.data_instrument_download">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn two-line-text"
-                                               ui-sref="app.import.instrument">
+                                               ui-sref="app.portal.import.instrument">
                                         <span class="side-nav-title">
                                             Instrument<br>
                                             (from provider)
@@ -399,14 +428,35 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li data-ng-if="vm.accessTable.data_instrument_download">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn two-line-text"
+                                               ui-sref="app.portal.import.instrument-cbonds">
+                                        <span class="side-nav-title">
+                                            Instrument<br>
+                                            (from CBONDS)
+                                        </span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                                 <li data-ng-if="vm.accessTable.data_prices_download">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn two-line-text"
-                                               ui-sref="app.import.prices">
+                                               ui-sref="app.portal.import.prices">
                                         <span class="side-nav-title">
                                             Prices/FX<br>
                                             (from provider)
                                         </span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li>
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.run-data-procedure">
+                                        <span class="side-nav-title">Import From Bank</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
@@ -433,7 +483,7 @@
                 <ul class="side-menu" data-ng-if="vm.readyStatus.access">
 
                     <li>
-                        <md-button ui-sref="app.developer-panel"
+                        <md-button ui-sref="app.portal.developer-panel"
                                    class="sidemenu-btn">
                         <span class="side-nav-icon">
                             <ng-md-icon icon="developer_dashboard" size="24"></ng-md-icon>
@@ -466,7 +516,7 @@
                             <ul class="sidenav-dropdown-menu open-upward journal-dropdown-menu-element ng-hide">
                                 <li data-ng-if="vm.accessTable.report_instrument_audit">
                                     <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.system.instruments">
+                                               ui-sref="app.portal.system.instruments">
                                         <span class="side-nav-title">Instruments Audit</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -474,7 +524,7 @@
                                 </li>
                                 <li data-ng-if="vm.accessTable.report_transaction_audit">
                                     <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.system.transactions">
+                                               ui-sref="app.portal.system.transactions">
                                         <span class="side-nav-title">Transactions Audit</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -491,7 +541,7 @@
                                 </li>
                                 <li data-ng-if="vm.accessTable.report_activity_log">
                                     <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.system.file-reports">
+                                               ui-sref="app.portal.system.file-reports">
                                         <span class="side-nav-title">System Files</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -532,14 +582,14 @@
                         <ul class="side-menu">
 <!--                            <li data-ng-if="vm.accessTable.report_dashboard">-->
 <!--                                <md-button class="sidemenu-btn"-->
-<!--                                           ui-sref="app.dashboard-layout-manager">-->
+<!--                                           ui-sref="app.portal.dashboard-layout-manager">-->
 <!--                                    <span class="side-nav-title">Dashboard Layouts</span>-->
 <!--                                    &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
 <!--                                </md-button>-->
 <!--                            </li>-->
 <!--                            <li>-->
 <!--                                <md-button class="sidemenu-btn"-->
-<!--                                           ui-sref="app.settings.forms">-->
+<!--                                           ui-sref="app.portal.settings.forms">-->
 <!--                                    <span class="side-nav-title">Forms</span>-->
 <!--                                    &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
 <!--                                </md-button>-->
@@ -556,7 +606,7 @@
 
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.layouts">
+                                                       ui-sref="app.portal.settings.layouts">
                                                 <span class="side-nav-title">Entity Viewer Layouts</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -564,7 +614,7 @@
                                         </li>
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.dashboard-layout-manager">
+                                                       ui-sref="app.portal.dashboard-layout-manager">
                                                 <span class="side-nav-title">Dashboard Layouts</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -572,7 +622,7 @@
                                         </li>
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.input-form-layouts">
+                                                       ui-sref="app.portal.settings.input-form-layouts">
                                                 <span class="side-nav-title">Input Form Layouts</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -580,7 +630,7 @@
                                         </li>
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.context-menu-layout-manager">
+                                                       ui-sref="app.portal.context-menu-layout-manager">
                                                 <span class="side-nav-title">Context Menu Layouts</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -589,7 +639,7 @@
 
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.manual-sorting-layout-manager">
+                                                       ui-sref="app.portal.manual-sorting-layout-manager">
                                                 <span class="side-nav-title">Manual Sorting</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -604,14 +654,14 @@
 
                             <li>
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.notifications">
+                                           ui-sref="app.portal.settings.notifications">
                                     <span class="side-nav-title">Notifications</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
                             <li>
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.interface-access">
+                                           ui-sref="app.portal.settings.interface-access">
                                     <span class="side-nav-title">Interface Complexity</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
@@ -635,7 +685,7 @@
 
                                         <li data-ng-if="vm.accessTable.configuration_account_type">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.data.account-type">
+                                                       ui-sref="app.portal.data.account-type">
                                                 <span class="side-nav-title">Account Types</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -643,7 +693,7 @@
                                         </li>
                                         <li data-ng-if="vm.accessTable.configuration_instrument_type">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.data.instrument-type">
+                                                       ui-sref="app.portal.data.instrument-type">
                                                 <span class="side-nav-title">Instrument Types</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -651,7 +701,7 @@
                                         </li>
                                         <li data-ng-if="vm.accessTable.configuration_transaction_type">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.data.transaction-type">
+                                                       ui-sref="app.portal.data.transaction-type">
                                                 <span class="side-nav-title">Transaction Types</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -659,7 +709,7 @@
                                         </li>
                                         <!-- <li data-ng-if="vm.accessTable.configuration_pricing_policy">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.data.pricing-policy">
+                                                       ui-sref="app.portal.data.pricing-policy">
                                                 <span class="side-nav-title">Pricing Policies</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -667,7 +717,7 @@
                                         </li> -->
                                         <li data-ng-if="vm.accessTable.configuration_user_attributes">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.entities-custom-attributes">
+                                                       ui-sref="app.portal.settings.entities-custom-attributes">
                                                 <span class="side-nav-title">User Attributes</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -677,7 +727,7 @@
                                         <li data-ng-if="vm.accessTable.configuration_reference_table">
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.import.reference-tables">
+                                                       ui-sref="app.portal.import.reference-tables">
                                                 <span class="side-nav-title">Reference Tables</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -687,7 +737,7 @@
                                         <li data-ng-if="vm.accessTable.configuration_mapping_tables">
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.import.mapping-tables">
+                                                       ui-sref="app.portal.import.mapping-tables">
                                                 <span class="side-nav-title">
                                                     Mapping Tables
                                                 </span>
@@ -698,7 +748,7 @@
 
                                         <li data-ng-if="vm.accessTable.configuration_template">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.template-layout-manager">
+                                                       ui-sref="app.portal.template-layout-manager">
                                                 <span class="side-nav-title">Templates</span>
                                                 <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                             </md-button>
@@ -720,7 +770,7 @@
 
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.pricing-schemes">
+                                                       ui-sref="app.portal.pricing-schemes">
                                                 <span class="side-nav-title">Schemes</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -728,7 +778,7 @@
                                         </li>
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.pricing-policy">
+                                                       ui-sref="app.portal.pricing-policy">
                                                 <span class="side-nav-title">Policies</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -751,7 +801,7 @@
 
                                         <li data-ng-if="vm.accessTable.configuration_price_download_scheme">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.price-download-scheme">
+                                                       ui-sref="app.portal.settings.price-download-scheme">
                                                 <span class="side-nav-title">Price Schemes</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -759,7 +809,7 @@
                                         </li>
                                         <li data-ng-if="vm.accessTable.configuration_instrument_download_scheme">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.instrument-import">
+                                                       ui-sref="app.portal.settings.instrument-import">
                                                 <span class="side-nav-title">Instrument Schemes</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -783,7 +833,7 @@
                                         <li data-ng-if="vm.accessTable.configuration_simple_import_scheme">
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.simple-entity-import">
+                                                       ui-sref="app.portal.settings.simple-entity-import">
                                                 <span class="side-nav-title">Data Import</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -792,7 +842,7 @@
                                         <li data-ng-if="vm.accessTable.configuration_transaction_import_scheme">
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.transaction-import">
+                                                       ui-sref="app.portal.settings.transaction-import">
                                                 <span class="side-nav-title">Transactions Import</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -801,7 +851,7 @@
                                         <li data-ng-if="vm.accessTable.configuration_complex_import_scheme">
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.complex-import">
+                                                       ui-sref="app.portal.settings.complex-import">
                                                 <span class="side-nav-title">Complex Import</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -826,7 +876,7 @@
                                     <ul class="sidenav-dropdown-menu dataTypes-dropdown-menu-element ng-hide">
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.pricing-procedure">
+                                                       ui-sref="app.portal.pricing-procedure">
                                                 <span class="side-nav-title">Pricing Procedures</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -834,7 +884,7 @@
                                         </li>
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.data-procedure">
+                                                       ui-sref="app.portal.data-procedure">
                                                 <span class="side-nav-title">Data Procedures</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -842,7 +892,7 @@
                                         </li>
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.schedules">
+                                                       ui-sref="app.portal.schedules">
                                                 <span class="side-nav-title">Schedules</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -855,7 +905,7 @@
 
                             <li >
                                 <!--<md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.template-fields">
+                                           ui-sref="app.portal.settings.template-fields">
                                     <span class="side-nav-title">Aliases</span>
                                 </md-button>-->
                                 <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="dataTypes">
@@ -869,7 +919,7 @@
                                         <li data-ng-if="vm.accessTable.configuration_aliases">
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.template-fields">
+                                                       ui-sref="app.portal.settings.template-fields">
                                                 <span class="side-nav-title">Aliases</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -879,7 +929,7 @@
                                         <li>
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.tooltips"
+                                                       ui-sref="app.portal.settings.tooltips"
                                             >
                                                 <span class="side-nav-title">Tooltips</span>
                                                 <span class="md-visually-hidden"
@@ -890,7 +940,7 @@
                                         <li>
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.color-palettes">
+                                                       ui-sref="app.portal.settings.color-palettes">
                                                 <span class="side-nav-title">Palettes</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -900,7 +950,7 @@
                                         <li>
                                             <md-button ui-sref-active="active"
                                                        class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.cross-entity-attribute-extensions">
+                                                       ui-sref="app.portal.settings.cross-entity-attribute-extensions">
                                                 <span class="side-nav-title">Reports</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -924,7 +974,7 @@
 
                                         <li data-ng-if="vm.accessTable.settings_import_configuration">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.import-configuration">
+                                                       ui-sref="app.portal.settings.import-configuration">
                                                 <span class="side-nav-title">Import</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -932,7 +982,7 @@
                                         </li>
                                         <li data-ng-if="vm.accessTable.settings_export_configuration">
                                             <md-button class="sidenav-dropdown-menu-btn"
-                                                       ui-sref="app.settings.export-configuration">
+                                                       ui-sref="app.portal.settings.export-configuration">
                                                 <span class="side-nav-title">Export</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
@@ -952,28 +1002,28 @@
                         <ul class="side-menu">
                             <li data-ng-if="vm.accessTable.settings_provider">
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.data-providers">
+                                           ui-sref="app.portal.settings.data-providers">
                                     <span class="side-nav-title">Data providers</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
                             <li data-ng-if="vm.accessTable.settings_init_configuration">
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.init-configuration">
+                                           ui-sref="app.portal.settings.init-configuration">
                                     <span class="side-nav-title">New User Setups</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
                             <li data-ng-if="vm.accessTable.settings_users_groups_permission">
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.users-groups">
+                                           ui-sref="app.portal.settings.users-groups">
                                     <span class="side-nav-title">Permissions</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
                             <li data-ng-if="vm.accessTable.settings_ecosystem_default">
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.settings.ecosystem-default-settings">
+                                           ui-sref="app.portal.settings.ecosystem-default-settings">
                                     <span class="side-nav-title">Default Settings</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
@@ -988,7 +1038,7 @@
                             </li>
                             <li>
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.processes">
+                                           ui-sref="app.portal.processes">
                                     <span class="side-nav-title">Active Processes</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
@@ -1003,4 +1053,4 @@
     </div>
 </md-sidenav>
 
-<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.healthcheck">Build date: __BUILD_DATE__</div>
+<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.portal.healthcheck">Build date: __BUILD_DATE__</div>
