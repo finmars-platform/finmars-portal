@@ -514,7 +514,6 @@
 				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
 			}
-
             else {
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -606,7 +605,7 @@
                                     }
 
                                     if(response.reaction === 'skip') {
-										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: null});
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
 									}
 
                                     if(response.reaction === 'book_without_unique_code') {
@@ -697,7 +696,7 @@
                         })
 
                     } else {
-						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree', data: data});
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: data});
 					}
 
                 });
@@ -778,7 +777,7 @@
                             })
 
                         } else {
-							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {res: 'agree'});
+							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree'});
 						}
 
                     })
