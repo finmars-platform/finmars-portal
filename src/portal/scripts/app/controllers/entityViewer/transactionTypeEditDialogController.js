@@ -245,13 +245,6 @@
 
             console.log('copy entity', entity);
 
-            if (windowType === 'big_drawer') {
-
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType}};
-                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
-            }
-
             $mdDialog.show({
                 controller: 'TransactionTypeAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
@@ -264,7 +257,14 @@
             });
 
             // $mdDialog.hide();
-            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
+			if (windowType === 'big_drawer') {
+
+				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
+				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			} else {
+				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+			}
 
         };
 
@@ -812,8 +812,7 @@
         vm.saveAndExit = function () {
 
             vm.save().then(function (data) {
-                // $mdDialog.hide({res: 'agree', data: data});
-                let responseObj = {res: 'agree', data: data};
+                let responseObj = {status: 'agree', data: data};
                 metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
@@ -1312,8 +1311,7 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    // $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-                    let responseObj = {res: 'agree', data: {action: 'delete'}};
+                    let responseObj = {status: 'delete'};
                     metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
                 }
 
