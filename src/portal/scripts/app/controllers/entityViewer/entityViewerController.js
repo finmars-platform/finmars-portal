@@ -807,7 +807,7 @@
 									vm.entityViewerDataService.setActiveObjectActionData(null); */
 									vm.entityViewerDataService.setRowsActionData(null);
 
-									if (res && res.res === 'agree') {
+									if (res && res.status === 'agree') {
 										vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 									}
 

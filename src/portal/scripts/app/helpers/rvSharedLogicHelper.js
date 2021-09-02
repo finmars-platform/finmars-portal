@@ -1,7 +1,6 @@
 'use strict';
 
 import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
-const commonDialogsService = new CommonDialogsService();
 
 (function () {
 
@@ -15,6 +14,8 @@ const commonDialogsService = new CommonDialogsService();
 	const currencyHistoryService = require('../services/currencyHistoryService');
 
     module.exports = function (viewModel, $scope, $mdDialog) {
+
+		const commonDialogsService = new CommonDialogsService($mdDialog);
 
 		const downloadAttributes = function () {
 
@@ -213,7 +214,7 @@ const commonDialogsService = new CommonDialogsService();
 			vm.entityViewerDataService.setActiveObjectActionData(null); */
 			viewModel.entityViewerDataService.setRowsActionData(null);
 
-			if (res && res.res === 'agree') {
+			if (res && res.status === 'agree') {
 
 				/* viewModel.entityViewerDataService.resetData();
 				viewModel.entityViewerDataService.resetRequestParameters();
@@ -425,10 +426,14 @@ const commonDialogsService = new CommonDialogsService();
 				locals: locals
 			}).then(function (res) {
 
-				viewModel.autoRefreshState = viewModel.entityViewerDataService.getAutoRefreshState();
+				if (res && res.status === 'agree') {
 
-				if (viewModel.autoRefreshState) {
-					viewModel.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+					const autoRefreshState = viewModel.entityViewerDataService.getAutoRefreshState();
+
+					if (autoRefreshState) {
+						viewModel.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+					}
+
 				}
 
 				updateTableAfterEntityChanges(res);
@@ -458,7 +463,9 @@ const commonDialogsService = new CommonDialogsService();
 
 			}).then(function (res) {
 
-				if (viewModel.autoRefreshState) {
+				const autoRefreshState = viewModel.entityViewerDataService.getAutoRefreshState();
+
+				if (autoRefreshState) {
 					viewModel.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 				}
 
@@ -594,7 +601,6 @@ const commonDialogsService = new CommonDialogsService();
 
 					editEntity(actionData.event, locals);
 				}
-
 				else if (action === 'edit_account') {
 
 					var locals = {
@@ -606,7 +612,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_portfolio') {
 
 					var locals = {
@@ -618,7 +623,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_currency') {
 
 					var locals = {
@@ -630,7 +634,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_pricing_currency') {
 
 					var locals = {
@@ -642,7 +645,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_accrued_currency') {
 
 					var locals = {
@@ -654,7 +656,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_price') {
 
 					var filters = {
@@ -707,7 +708,6 @@ const commonDialogsService = new CommonDialogsService();
 
 
 				}
-
 				else if (action === 'edit_fx_rate') {
 
 					var filters = {
@@ -761,7 +761,6 @@ const commonDialogsService = new CommonDialogsService();
 					})
 
 				}
-
 				else if (action === 'edit_pricing_currency_price' && actionData.object.id) {
 
 					var filters = {
@@ -810,7 +809,6 @@ const commonDialogsService = new CommonDialogsService();
 					})
 
 				}
-
 				else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
 
 					var filters = {
@@ -860,7 +858,6 @@ const commonDialogsService = new CommonDialogsService();
 					})
 
 				}
-
 				else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
 
 					var filters = {
@@ -910,7 +907,6 @@ const commonDialogsService = new CommonDialogsService();
 					})
 
 				}
-
 				else if (action === 'book_transaction') {
 
 					var locals = {
@@ -930,7 +926,6 @@ const commonDialogsService = new CommonDialogsService();
 					createEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'book_transaction_specific') {
 
 					const contextData = getContextDataForRowAction(reportOptions, actionData.object);
@@ -950,7 +945,6 @@ const commonDialogsService = new CommonDialogsService();
 					createEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'rebook_transaction') {
 
 					var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']

@@ -501,7 +501,7 @@
                     },
                 })
                 .then(function (res) {
-                    if (res && res.res === "agree") {
+                    if (res.status === "agree") {
                         vm.getEntityItems("reloadTable");
                         var item = res.data;
                         vm.recentlyCreatedItems.push(item);
