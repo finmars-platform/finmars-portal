@@ -466,7 +466,7 @@
 
 							getAvailableOptions();
 
-							scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						};
 
@@ -494,7 +494,7 @@
 								{chipsList: scope.chipsList, updateScope: true}
 							);
 
-							scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						};
 

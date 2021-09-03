@@ -28,9 +28,9 @@ export default function ($mdDialog) {
 	 *
 	 * @memberOf module:commonDialogsService
 	 * @param locals {Object} - locals for dialog settings
-	 * @param options {=Object}
-	 * 	@param {=HTMLElement} options.parent - element that will be parent of dialog element
-	 * 	@param {=Object} options.targetEvent - event object
+	 * @param [options] {Object}
+	 * 	@param {HTMLElement} [options.parent] - element that will be parent of dialog element
+	 * 	@param {Object} [options.targetEvent] - event object
 	 * @returns {Promise<Object|null>} - response after dialog closes
 	 */
 	function warning (locals, options) {

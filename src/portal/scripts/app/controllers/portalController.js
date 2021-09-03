@@ -5,7 +5,7 @@
 'use strict';
 
 import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
-const localStorageService = require('../../../../core/services/localStorageService'); // TODO inject localStorageService into angular dependencies
+const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
 export default function ($scope, authorizerService, usersService, globalDataService) {
 

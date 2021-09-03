@@ -114,6 +114,22 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.portfolio-register', {
+                url: '/portfolio-registers',
+                templateUrl: 'views/data/data-portfolio-register-view.html',
+                controller: 'DataPortfolioRegisterController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
+            .state('app.portal.data.portfolio-register-record', {
+                url: '/portfolio-register-records',
+                templateUrl: 'views/data/data-portfolio-register-record-view.html',
+                controller: 'DataPortfolioRegisterRecordController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
             .state('app.portal.data.tag', {
                 url: '/tags',
                 templateUrl: 'views/data/data-tag-view.html',
@@ -418,6 +434,11 @@
                 templateUrl: 'views/pages/simple-entity-import-view.html',
                 controller: 'SimpleEntityImportController as vm'
             })
+            .state('app.portal.import.unified-entity', {
+                url: '/unified-entity-import',
+                templateUrl: 'views/pages/unified-entity-import-view.html',
+                controller: 'UnifiedEntityImportController as vm'
+            })
             .state('app.portal.import.transaction', {
                 url: '/transaction-import',
                 templateUrl: 'views/pages/transaction-import-view.html',
@@ -432,6 +453,11 @@
                 url: '/instrument-import',
                 templateUrl: 'views/pages/instrument-download-view.html',
                 controller: 'InstrumentDownloadController as vm'
+            })
+            .state('app.portal.import.instrument-cbonds', {
+                url: '/instrument-import-cbonds',
+                templateUrl: 'views/pages/instrument-download-cbonds-view.html',
+                controller: 'InstrumentDownloadCbondsController as vm'
             })
             .state('app.portal.import.prices', {
                 url: '/prices-import',

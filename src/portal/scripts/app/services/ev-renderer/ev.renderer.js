@@ -6,6 +6,9 @@
     var objectRender = require('./object.renderer');
     var controlRender = require('./control.renderer');
     var placeholderRender = require('./placeholder.renderer');
+
+	var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
+
     var evEvents = require('../../services/entityViewerEvents');
 
     var render = function (elem, projection, evDataService, evEventService) {
@@ -19,10 +22,23 @@
         var groups = evDataService.getGroups();
         var currentMember = evDataService.getCurrentMember();
 
-        var previousRow = null;
+        // var previousRow = null;
+		var previousItem = null;
 
         var verticalAdditions = evDataService.getVerticalAdditions();
         var viewContext = evDataService.getViewContext();
+
+        var entityType = evDataService.getEntityType();
+		var markedRows = localStorageService.getMarkedRows(false, entityType);
+
+        var columnsWidthSum = 0;
+		columns.forEach(function (column) {
+
+			if (column.style && column.style.width) {
+				columnsWidthSum += parseFloat(column.style.width);
+			}
+
+		});
 
         var rows = projection.map(function (item, index) {
 
@@ -33,19 +49,20 @@
                 case 'placeholder_object':
                     renderedRow = placeholderRender.render(evDataService, item, columns);
                     break;
-                case 'group':
-                    renderedRow = groupRender.render(evDataService, item, groups);
-                    break;
+                // case 'group':
+                //     renderedRow = groupRender.render(evDataService, item, groups);
+                //     break;
                 case 'object':
-                    renderedRow = objectRender.render(evDataService, item, columns, currentMember, viewContext, verticalAdditions);
+                    renderedRow = objectRender.render(evDataService, item, columns, currentMember, viewContext, verticalAdditions, markedRows);
                     break;
                 case 'control':
-                    renderedRow = controlRender.render(evDataService, item, previousRow);
+                    renderedRow = controlRender.render(evDataService, item, previousItem, columnsWidthSum);
                     break;
             }
 
             if (renderedRow) {
-                previousRow = renderedRow;
+                // previousRow = renderedRow;
+				previousItem = item;
 
                 return renderedRow;
             }
