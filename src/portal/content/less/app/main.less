@@ -1,6 +1,4 @@
 @import "./mixins.less";
-@sidenavWidth: 160px;
-@collapsedSidenavWidth: 65px;
 
 body {
   font-family: 'Roboto-Regular', 'Roboto', sans-serif;
@@ -133,8 +131,11 @@ md-toolbar.header {
 }
 
 .portal-header {
+  display: block;
+  flex: 0 0 53px;
+
   md-toolbar.header {
-    padding-left: @sidenavWidth;
+    padding-left: @leftSidenavWidth;
   }
 }
 
@@ -330,7 +331,7 @@ md-sidenav {
 
 .sidenav-wrapper {
   position: absolute;
-  width: @sidenavWidth;
+  width: @leftSidenavWidth;
   height: 100%;
   top: 0;
   left: 0;
@@ -615,7 +616,7 @@ md-backdrop.md-select-backdrop {
 
 .space-for-sidenav {
   //padding-left: 200px;
-  padding-left: @sidenavWidth;
+  padding-left: @leftSidenavWidth;
 }
 
 .unreaded-notifications-number {
@@ -987,7 +988,7 @@ md-menu-bar.header-logout-menu {
   overflow: visible;
   position: absolute;
   top: 0;
-  left: @sidenavWidth;
+  left: @leftSidenavWidth;
   z-index: 0;
   //background-color: #3b283b;
   background-color: #000;
@@ -1054,7 +1055,7 @@ md-menu-bar.header-logout-menu {
 
   //<editor-fold desc="New sidemenu styles">
   .space-for-sidenav {
-    padding-left: @collapsedSidenavWidth;
+    padding-left: @collapsedLeftSidenavWidth;
   }
 
   .g-table-dial {
@@ -1070,7 +1071,7 @@ md-menu-bar.header-logout-menu {
   }
 
   .sidenav-wrapper {
-    width: @collapsedSidenavWidth;
+    width: @collapsedLeftSidenavWidth;
   }
 
   .side-nav-btn-resize-holder {
@@ -1079,7 +1080,7 @@ md-menu-bar.header-logout-menu {
   }
 
   .side-menu-settings-container {
-    left: @collapsedSidenavWidth;
+    left: @collapsedLeftSidenavWidth;
   }
 
   .md-button.md-raised.expand-sidenav-btn {
@@ -1096,7 +1097,7 @@ md-menu-bar.header-logout-menu {
   }
 
   .sidenav-wrapper {
-    width: @collapsedSidenavWidth;
+    width: @collapsedLeftSidenavWidth;
     position: absolute;
     height: 100%;
     left: 0;
@@ -1112,7 +1113,7 @@ md-menu-bar.header-logout-menu {
   }
 
   .portal-header md-toolbar.header {
-    padding-left: @collapsedSidenavWidth;
+    padding-left: @collapsedLeftSidenavWidth;
   }
   //</editor-fold>
 

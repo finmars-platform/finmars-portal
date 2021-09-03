@@ -91,8 +91,25 @@
 
                 };
 
-				scope.getLinkToLayout = function (userCode) {
+				/* scope.getLinkToLayout = function (userCode) {
 					return $state.current.name + "({layoutUserCode: '" + userCode + "'})";
+				}; */
+				scope.onLayoutLinkClick = function ($event, layout) {
+
+					scope.parentPopup.cancel();
+					$event.preventDefault();
+
+					scope.dashboardDataService.setLayoutToOpen(layout);
+					scope.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_LAYOUT_CHANGE)
+
+				};
+
+				scope.getLinkToLayout = function (userCode) {
+
+					let link = $state.href($state.current.name);
+					if (userCode) link = link + '?layout=' + userCode;
+					return link;
+
 				};
 
                 scope.setAsDefault = (targetLayout) => {

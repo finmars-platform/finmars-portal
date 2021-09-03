@@ -34,6 +34,7 @@
                 entityType: '=',
                 evDataService: '=',
                 evEventService: '=',
+				spExchangeService: '=',
 				parentPopup: '='
             },
             link: function (scope) {
@@ -143,8 +144,29 @@
 
                 };
 
+				scope.onLayoutLinkClick = function ($event, layout) {
+
+					scope.parentPopup.cancel();
+					$event.preventDefault();
+
+					if (!isRootEntityViewer) {
+
+						scope.evDataService.setSplitPanelLayoutToOpen(layout.id);
+						scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
+
+					} else {
+						// const stateToGo = $state.current.name + "({layoutUserCode: '" + layout.user_code + "'})";
+						$state.go($state.current.name, {layoutUserCode: layout.user_code});
+					}
+
+				};
+
                 scope.getLinkToLayout = function (userCode) {
-					return $state.current.name + "({layoutUserCode: '" + userCode + "'})";
+
+                	let link = $state.href($state.current.name);
+					if (userCode) link = link + '?layout=' + userCode;
+					return link;
+
 				};
 
                 scope.setAsDefault = (targetLayout) => {
@@ -265,7 +287,7 @@
                     additions.isOpen = false;
                     additions.type = '';
                     delete additions.layoutData;
-                    /*delete additions.layoutId;*/
+                    /* delete additions.layoutId; */
 
                     scope.evDataService.setSplitPanelStatus(false);
                     scope.evDataService.setAdditions(additions);
@@ -285,7 +307,7 @@
 					const rootGroup = scope.evDataService.getRootGroupData();
 					scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-					const defaultList = uiService.getListLayoutTemplate();
+					const defaultList = uiService.getListLayoutTemplate(scope.isReport);
 
 					const listLayout = {};
 					listLayout.data = Object.assign({}, defaultList[0].data);
@@ -311,7 +333,7 @@
 
 					listLayout.data.components = {
 						sidebar: true,
-						groupingArea: true,
+						// groupingArea: true,
 						columnArea: true,
 						columnAreaHeader: true,
 						splitPanel: true,
@@ -323,7 +345,8 @@
 
 					scope.evDataService.setComponents(listLayout.data.components);
 					scope.evDataService.setEditorTemplateUrl('views/additions-editor-view.html');
-					scope.evDataService.setRootEntityViewer(true);
+					// scope.evDataService.setRootEntityViewer(true);
+					scope.evDataService.setRootEntityViewer(isRootEntityViewer);
 
 					const interfaceLayout = scope.evDataService.getInterfaceLayout();
 
@@ -335,7 +358,7 @@
 					scope.evDataService.setInterfaceLayout(interfaceLayout);
 
 					// middlewareService.setNewSplitPanelLayoutName(false);
-					clearAdditions();
+					if (isRootEntityViewer) clearAdditions();
 
 					if (scope.isReport) {
 
@@ -379,6 +402,7 @@
 							scope.evDataService.setIsNewLayoutState(true);
 
 							scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
+							scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 							// middlewareService.setNewEntityViewerLayoutName(listLayout.name);
 
 							scope.$apply(); // needed to update layout name inside gTopPartDirective
@@ -408,6 +432,12 @@
 
 						if (scope.entityType !== 'transaction-report') {
 
+							reportOptions.report_date = todaysDate;
+
+							reportLayoutOptions.datepickerOptions.reportLastDatepicker = {
+								datepickerMode: 'datepicker'
+							};
+
 							if (scope.entityType === 'pl-report') {
 
 								reportOptions.pl_first_date = todaysDate;
@@ -416,14 +446,9 @@
 									datepickerMode: 'datepicker'
 								};
 
+								reportOptions.report_date = moment(new Date()).add(1, 'day').format('YYYY-MM-DD');
+
 							}
-
-							// For Balance report
-							reportOptions.report_date = todaysDate;
-
-							reportLayoutOptions.datepickerOptions.reportLastDatepicker = {
-								datepickerMode: 'datepicker'
-							};
 
 							ecosystemDefaultService.getList().then(function (data) {
 
@@ -474,7 +499,9 @@
 						// middlewareService.setNewEntityViewerLayoutName(listLayout.name);
 						scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 
-						scope.$apply(); // needed to update layout name inside gTopPartDirective
+						setTimeout(() => {
+							scope.$apply(); // needed to update layout name inside gTopPartDirective
+						}, 0);
 
 						/* uiService.createListLayout(scope.entityType, listLayout).then(() => {
 							toastNotificationService.success("Layout was successfully created");
@@ -485,7 +512,6 @@
 
 					}
 
-					// scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 					scope.parentPopup.cancel();
 
                 };
@@ -507,22 +533,22 @@
 
                     }
 
-                    let layoutIsUnchanged = true;
+                    let layoutChanged = false;
                     let layoutCurrentConfig;
 
                     if (activeLayoutConfig && activeLayoutConfig.data) {
                         layoutCurrentConfig = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
 
-                        layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, scope.isReport);
+						layoutChanged = !evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, scope.isReport);
                     }
 
                     //if (!evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, scope.isReport)) {
-                    if (!layoutIsUnchanged || spChangedLayout) {
+                    if (layoutChanged || spChangedLayout) {
 
                         $mdDialog.show({
                             controller: 'LayoutChangesLossWarningDialogController as vm',
                             templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             preserveScope: false,
                             autoWrap: true,
                             multiple: true,
@@ -574,7 +600,7 @@
                                     });
 
                                 }*/
-                                if (activeLayoutConfig && !layoutIsUnchanged) {
+                                if (activeLayoutConfig && layoutChanged) {
 
                                     const saveLayoutChanges = new Promise(function (saveLayoutRes, saveLayoutRej) {
 
@@ -702,7 +728,7 @@
 
 				}; */
 
-                scope.saveAsLayoutList = async function ($event) {
+                scope.saveAsLayoutList = function ($event) {
 
 					// scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 					scope.parentPopup.cancel();

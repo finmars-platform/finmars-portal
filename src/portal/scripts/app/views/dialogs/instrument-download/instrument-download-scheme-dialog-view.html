@@ -363,7 +363,8 @@
                                                     <expression-editor-button data-item="field.expression"
                                                                               data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
 
-                                                    <md-button class="md-raised md-primary import-mapping-small-btn"
+                                                    <md-button ng-if="!field.value || !vm.checkForClassifierMapping(field.value.id)"
+                                                               class="md-raised md-primary import-mapping-small-btn"
                                                                data-ng-click="vm.openMapping($event, field)">
                                                         <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                     </md-button>

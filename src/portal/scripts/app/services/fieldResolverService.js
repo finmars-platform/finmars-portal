@@ -148,6 +148,12 @@
                         resolve({type: 'id', key: 'pricing_policy', data: data.results});
                     });
                     break;
+
+                case 'valuation_pricing_policy':
+                    pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'valuation_pricing_policy', data: data.results});
+                    });
+                    break;
                 case 'price_download_scheme':
                     importPriceDownloadSchemeRepository.getList({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'price_download_scheme', data: data.results});
@@ -171,6 +177,11 @@
                 case 'pricing_currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'pricing_currency', data: data.results});
+                    });
+                    break;
+                case 'valuation_currency':
+                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'valuation_currency', data: data.results});
                     });
                     break;
                 case 'transaction_currency':

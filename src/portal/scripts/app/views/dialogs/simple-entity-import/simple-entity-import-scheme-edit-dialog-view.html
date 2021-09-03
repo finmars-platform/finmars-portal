@@ -215,48 +215,495 @@
 
                     </div>
                     <div layout="column" flex="66">
-                        <div layout="row">
-                            <h3 style="padding-left: 10px">Data matching</h3>
+
+                        <div data-ng-if="vm.scheme.content_type == 'instruments.instrument'">
+
+                            <md-card>
+                                <md-card-content>
+
+                                    <md-tabs>
+
+                                        <md-tab label="General">
+
+
+                                            <div layout="column">
+                                                <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
+                                                     flex="100">
+                                                    <div class="fields-holder" layout="row"
+                                                         data-ng-if="item.system_property_key">
+                                                        <div class="iscm-item width-100" layout="row">
+                                                            <md-input-container flex="30"
+                                                                                aria-label="select with filter">
+
+                                                                <div data-ng-if="item.system_property_key"
+                                                                     data-ng-bind="item.name"
+                                                                     style="padding-top: 10px">
+                                                                    <!--<input aria-label="attribute name" type="text"
+                                                                           data-ng-model="item.name" readonly>-->
+                                                                </div>
+
+                                                            </md-input-container>
+                                                            <md-input-container flex="50">
+                                                                <!--<label for="">Name</label>-->
+                                                                <input data-ng-model="item.expression"
+                                                                       aria-label="attribute value"
+                                                                       type="text">
+                                                            </md-input-container>
+                                                            <div flex="20" layout="row">
+
+                                                                <expression-editor-button data-item="item.expression"
+                                                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
+                                                                <md-button data-ng-click="vm.openMapping($event, item)"
+                                                                           class="md-raised md-primary import-mapping-small-btn"
+                                                                           data-ng-if="item.value_type === 'field'">
+                                                                    <ng-md-icon icon="import_contacts"
+                                                                                size="20"></ng-md-icon>
+                                                                </md-button>
+
+                                                                <!--<div ng-if="item.dynamic_attribute_id" style="display: inline-block">
+                                                                    <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                               class="md-raised md-primary import-mapping-small-btn"
+                                                                               data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                                        <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>-->
+
+                                                                <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                                     style="display: inline-block">
+                                                                    <md-button
+                                                                            data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                            class="md-raised md-primary import-mapping-small-btn">
+                                                                        <ng-md-icon icon="import_contacts"
+                                                                                    size="20"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+
+                                                                <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                                     style="display: inline-block">
+                                                                    <md-button
+                                                                            data-ng-click="vm.editTreeAttr(item.dynamic_attribute_id, $event)"
+                                                                            class="md-raised md-primary import-mapping-small-btn">
+                                                                        <ng-md-icon icon="format_align_right" size="20">
+                                                                            <md-tooltip md-direction="top">Edit
+                                                                                Classifier tree
+                                                                            </md-tooltip>
+                                                                        </ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+
+                                                                <md-button data-ng-if="!item.system_property_key"
+                                                                           class="custom-small-icon-btn md-raised import-scheme-mapping-btn md-raised m-r-0"
+                                                                           data-ng-click="vm.removeDynamicAttribute(item, $index)"
+                                                                           style="line-height: 1">x
+                                                                </md-button>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </md-tab>
+
+                                        <md-tab label="User Attributes">
+
+                                            <div layout="column">
+                                                <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
+                                                     flex="100">
+                                                    <div class="fields-holder" layout="row"
+                                                         data-ng-if="!item.system_property_key">
+                                                        <div class="iscm-item width-100" layout="row">
+                                                            <md-input-container flex="30"
+                                                                                aria-label="select with filter">
+
+                                                                <div>
+
+                                                                    <!--<md-select data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
+                                                                        <md-option
+                                                                                data-ng-repeat="item in vm.dynamicAttributes"
+                                                                                data-ng-value="item.id">
+                                                                            {{item.name}}
+                                                                        </md-option>
+                                                                    </md-select>-->
+
+                                                                    <label></label>
+                                                                    <md-select ng-model="item.dynamic_attribute_id"
+                                                                               md-container-class="common-select-container"
+                                                                               md-on-open="searchTerm = ''"
+                                                                               ng-change="vm.dynamicAttrPicked = true"
+                                                                               md-on-close="vm.findPickedDynamicAttrs()"
+                                                                               style="margin-top: 0">
+
+                                                                        <md-select-header>
+                                                                            <input data-ng-model="searchTerm"
+                                                                                   type="search"
+                                                                                   placeholder="Search for a ..."
+                                                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                                                   ng-keydown="$event.stopPropagation()">
+                                                                        </md-select-header>
+
+                                                                        <div class="select-options-holder">
+
+                                                                            <md-option
+                                                                                    data-ng-repeat="item in vm.dynamicAttributes | filter: {name: searchTerm}"
+                                                                                    ng-value="item.id"
+                                                                                    ng-disabled="vm.checkForUsedDynamicAttr(item.id)">
+                                                                                {{item.name}}
+                                                                            </md-option>
+
+                                                                        </div>
+
+                                                                    </md-select>
+
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container flex="50">
+                                                                <!--<label for="">Name</label>-->
+                                                                <input data-ng-model="item.expression"
+                                                                       aria-label="attribute value"
+                                                                       type="text">
+                                                            </md-input-container>
+                                                            <div flex="20" layout="row">
+
+                                                                <expression-editor-button data-item="item.expression"
+                                                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
+                                                                <md-button data-ng-click="vm.openMapping($event, item)"
+                                                                           class="md-raised md-primary import-mapping-small-btn"
+                                                                           data-ng-if="item.value_type === 'field'">
+                                                                    <ng-md-icon icon="import_contacts"
+                                                                                size="20"></ng-md-icon>
+                                                                </md-button>
+
+                                                                <!--<div ng-if="item.dynamic_attribute_id" style="display: inline-block">
+                                                                    <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                               class="md-raised md-primary import-mapping-small-btn"
+                                                                               data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                                        <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>-->
+
+                                                                <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                                     style="display: inline-block">
+                                                                    <md-button
+                                                                            data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                            class="md-raised md-primary import-mapping-small-btn">
+                                                                        <ng-md-icon icon="import_contacts"
+                                                                                    size="20"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+
+                                                                <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                                     style="display: inline-block">
+                                                                    <md-button
+                                                                            data-ng-click="vm.editTreeAttr(item.dynamic_attribute_id, $event)"
+                                                                            class="md-raised md-primary import-mapping-small-btn">
+                                                                        <ng-md-icon icon="format_align_right" size="20">
+                                                                            <md-tooltip md-direction="top">Edit
+                                                                                Classifier tree
+                                                                            </md-tooltip>
+                                                                        </ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+
+                                                                <md-button data-ng-if="!item.system_property_key"
+                                                                           class="custom-small-icon-btn md-raised import-scheme-mapping-btn md-raised m-r-0"
+                                                                           data-ng-click="vm.removeDynamicAttribute(item, $index)"
+                                                                           style="line-height: 1">x
+                                                                </md-button>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div>
+                                                <md-button class="md-raised" data-ng-click="vm.addDynamicAttribute()">
+                                                    Add field
+                                                </md-button>
+                                            </div>
+
+                                        </md-tab>
+
+
+                                    </md-tabs>
+
+                                </md-card-content>
+                            </md-card>
+
                         </div>
 
-                        <md-card>
-                            <md-card-content>
-                                <div layout="column">
-                                    <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
-                                         flex="100">
-                                        <div class="fields-holder" layout="row">
-                                            <div class="iscm-item width-100" layout="row">
-                                                <md-input-container flex="30">
+                        <div data-ng-if="vm.scheme.content_type != 'instruments.instrument' && vm.scheme.content_type != 'instruments.pricehistory' && vm.scheme.content_type != 'currencies.currencyhistory'">
 
-                                                    <div data-ng-if="item.system_property_key"
-                                                         data-ng-bind="item.name"
-                                                         style="padding-top: 10px">
-                                                        <!--<input aria-label="attribute name" type="text"
-                                                               data-ng-model="item.name" readonly>-->
+                            <div layout="row">
+                                <h3 style="padding-left: 10px">Data matching</h3>
+                            </div>
 
+                            <md-card>
+                                <md-card-content>
+
+                                    <md-tabs>
+
+                                        <md-tab label="General">
+
+
+                                            <div layout="column">
+                                                <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
+                                                     flex="100">
+                                                    <div class="fields-holder" layout="row"
+                                                         data-ng-if="item.system_property_key">
+                                                        <div class="iscm-item width-100" layout="row">
+                                                            <md-input-container flex="30"
+                                                                                aria-label="select with filter">
+
+                                                                <div data-ng-if="item.system_property_key"
+                                                                     data-ng-bind="item.name"
+                                                                     style="padding-top: 10px">
+                                                                    <!--<input aria-label="attribute name" type="text"
+                                                                           data-ng-model="item.name" readonly>-->
+                                                                </div>
+
+                                                            </md-input-container>
+                                                            <md-input-container flex="50">
+                                                                <!--<label for="">Name</label>-->
+                                                                <input data-ng-model="item.expression"
+                                                                       aria-label="attribute value"
+                                                                       type="text">
+                                                            </md-input-container>
+                                                            <div flex="20" layout="row">
+
+                                                                <expression-editor-button data-item="item.expression"
+                                                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
+                                                                <md-button data-ng-click="vm.openMapping($event, item)"
+                                                                           class="md-raised md-primary import-mapping-small-btn"
+                                                                           data-ng-if="item.value_type === 'field'">
+                                                                    <ng-md-icon icon="import_contacts"
+                                                                                size="20"></ng-md-icon>
+                                                                </md-button>
+
+                                                                <!--<div ng-if="item.dynamic_attribute_id" style="display: inline-block">
+                                                                    <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                               class="md-raised md-primary import-mapping-small-btn"
+                                                                               data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                                        <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>-->
+
+                                                                <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                                     style="display: inline-block">
+                                                                    <md-button
+                                                                            data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                            class="md-raised md-primary import-mapping-small-btn">
+                                                                        <ng-md-icon icon="import_contacts"
+                                                                                    size="20"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+
+                                                                <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                                     style="display: inline-block">
+                                                                    <md-button
+                                                                            data-ng-click="vm.editTreeAttr(item.dynamic_attribute_id, $event)"
+                                                                            class="md-raised md-primary import-mapping-small-btn">
+                                                                        <ng-md-icon icon="format_align_right" size="20">
+                                                                            <md-tooltip md-direction="top">Edit
+                                                                                Classifier tree
+                                                                            </md-tooltip>
+                                                                        </ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+
+                                                                <md-button data-ng-if="!item.system_property_key"
+                                                                           class="custom-small-icon-btn md-raised import-scheme-mapping-btn md-raised m-r-0"
+                                                                           data-ng-click="vm.removeDynamicAttribute(item, $index)"
+                                                                           style="line-height: 1">x
+                                                                </md-button>
+
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                </div>
+                                            </div>
 
-                                                    <div data-ng-if="!item.system_property_key">
 
-                                                        <!--<md-select data-ng-change="vm.extendEntityFields()"
-                                                                   data-ng-model="item.dynamic_attribute_id"
-                                                                   style="margin-top: 0">
-                                                            <md-option
-                                                                    data-ng-repeat="item in vm.dynamicAttributes"
-                                                                    data-ng-value="item.id">
-                                                                {{item.name}}
-                                                            </md-option>
-                                                        </md-select>-->
+                                        </md-tab>
 
-                                                        <md-input-container class="md-block" style="margin:0">
+                                        <md-tab label="User Attributes">
+
+                                            <div layout="column">
+                                                <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
+                                                     flex="100">
+                                                    <div class="fields-holder" layout="row"
+                                                         data-ng-if="!item.system_property_key">
+                                                        <div class="iscm-item width-100" layout="row">
+                                                            <md-input-container flex="30"
+                                                                                aria-label="select with filter">
+
+                                                                <div>
+
+                                                                    <!--<md-select data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
+                                                                        <md-option
+                                                                                data-ng-repeat="item in vm.dynamicAttributes"
+                                                                                data-ng-value="item.id">
+                                                                            {{item.name}}
+                                                                        </md-option>
+                                                                    </md-select>-->
+
+                                                                    <label></label>
+                                                                    <md-select ng-model="item.dynamic_attribute_id"
+                                                                               md-container-class="common-select-container"
+                                                                               md-on-open="searchTerm = ''"
+                                                                               ng-change="vm.dynamicAttrPicked = true"
+                                                                               md-on-close="vm.findPickedDynamicAttrs()"
+                                                                               style="margin-top: 0">
+
+                                                                        <md-select-header>
+                                                                            <input data-ng-model="searchTerm"
+                                                                                   type="search"
+                                                                                   placeholder="Search for a ..."
+                                                                                   class="md-text md-select-search-pattern select-input-filter"
+                                                                                   ng-keydown="$event.stopPropagation()">
+                                                                        </md-select-header>
+
+                                                                        <div class="select-options-holder">
+
+                                                                            <md-option
+                                                                                    data-ng-repeat="item in vm.dynamicAttributes | filter: {name: searchTerm}"
+                                                                                    ng-value="item.id"
+                                                                                    ng-disabled="vm.checkForUsedDynamicAttr(item.id)">
+                                                                                {{item.name}}
+                                                                            </md-option>
+
+                                                                        </div>
+
+                                                                    </md-select>
+
+                                                                </div>
+                                                            </md-input-container>
+                                                            <md-input-container flex="50">
+                                                                <!--<label for="">Name</label>-->
+                                                                <input data-ng-model="item.expression"
+                                                                       aria-label="attribute value"
+                                                                       type="text">
+                                                            </md-input-container>
+                                                            <div flex="20" layout="row">
+
+                                                                <expression-editor-button data-item="item.expression"
+                                                                                          data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
+
+                                                                <md-button data-ng-click="vm.openMapping($event, item)"
+                                                                           class="md-raised md-primary import-mapping-small-btn"
+                                                                           data-ng-if="item.value_type === 'field'">
+                                                                    <ng-md-icon icon="import_contacts"
+                                                                                size="20"></ng-md-icon>
+                                                                </md-button>
+
+                                                                <!--<div ng-if="item.dynamic_attribute_id" style="display: inline-block">
+                                                                    <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                               class="md-raised md-primary import-mapping-small-btn"
+                                                                               data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                                        <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>-->
+
+                                                                <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                                     style="display: inline-block">
+                                                                    <md-button
+                                                                            data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                            class="md-raised md-primary import-mapping-small-btn">
+                                                                        <ng-md-icon icon="import_contacts"
+                                                                                    size="20"></ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+
+                                                                <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                                     style="display: inline-block">
+                                                                    <md-button
+                                                                            data-ng-click="vm.editTreeAttr(item.dynamic_attribute_id, $event)"
+                                                                            class="md-raised md-primary import-mapping-small-btn">
+                                                                        <ng-md-icon icon="format_align_right" size="20">
+                                                                            <md-tooltip md-direction="top">Edit
+                                                                                Classifier tree
+                                                                            </md-tooltip>
+                                                                        </ng-md-icon>
+                                                                    </md-button>
+                                                                </div>
+
+                                                                <md-button data-ng-if="!item.system_property_key"
+                                                                           class="custom-small-icon-btn md-raised import-scheme-mapping-btn md-raised m-r-0"
+                                                                           data-ng-click="vm.removeDynamicAttribute(item, $index)"
+                                                                           style="line-height: 1">x
+                                                                </md-button>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div>
+                                                <md-button class="md-raised" data-ng-click="vm.addDynamicAttribute()">
+                                                    Add field
+                                                </md-button>
+                                            </div>
+
+                                        </md-tab>
+
+
+                                    </md-tabs>
+
+                                </md-card-content>
+                            </md-card>
+
+
+                        </div>
+
+
+                        <div data-ng-if="vm.scheme.content_type == 'instruments.pricehistory' || vm.scheme.content_type == 'currencies.currencyhistory'">
+
+                            <div layout="row">
+                                <h3 style="padding-left: 10px">Data matching</h3>
+                            </div>
+
+                            <md-card>
+                                <md-card-content>
+                                    <div layout="column">
+                                        <div data-ng-repeat="item in vm.scheme.entity_fields | orderBy: item.order as results track by $index"
+                                             flex="100">
+                                            <div class="fields-holder" layout="row">
+                                                <div class="iscm-item width-100" layout="row">
+                                                    <md-input-container flex="30" aria-label="select with filter">
+
+                                                        <div data-ng-if="item.system_property_key"
+                                                             data-ng-bind="item.name"
+                                                             style="padding-top: 10px">
+                                                            <!--<input aria-label="attribute name" type="text"
+                                                                   data-ng-model="item.name" readonly>-->
+                                                        </div>
+
+                                                        <div data-ng-if="!item.system_property_key">
+
+                                                            <!--<md-select data-ng-model="item.dynamic_attribute_id" style="margin-top: 0">
+                                                                <md-option
+                                                                        data-ng-repeat="item in vm.dynamicAttributes"
+                                                                        data-ng-value="item.id">
+                                                                    {{item.name}}
+                                                                </md-option>
+                                                            </md-select>-->
 
                                                             <label></label>
                                                             <md-select ng-model="item.dynamic_attribute_id"
                                                                        md-container-class="common-select-container"
                                                                        md-on-open="searchTerm = ''"
                                                                        ng-change="vm.dynamicAttrPicked = true"
-                                                                       md-on-close="vm.onDynamicAttributePick()"
-                                                                       style="margin-bottom: 24px">
+                                                                       md-on-close="vm.findPickedDynamicAttrs()"
+                                                                       style="margin-top: 0">
+
                                                                 <md-select-header>
                                                                     <input data-ng-model="searchTerm"
                                                                            type="search"
@@ -268,7 +715,7 @@
                                                                 <div class="select-options-holder">
 
                                                                     <md-option
-                                                                            data-ng-repeat="item in vm.dynamicAttributes | filter:{name: searchTerm}"
+                                                                            data-ng-repeat="item in vm.dynamicAttributes | filter: {name: searchTerm}"
                                                                             ng-value="item.id"
                                                                             ng-disabled="vm.checkForUsedDynamicAttr(item.id)">
                                                                         {{item.name}}
@@ -278,67 +725,70 @@
 
                                                             </md-select>
 
-                                                        </md-input-container>
+                                                        </div>
+                                                    </md-input-container>
+                                                    <md-input-container flex="50">
+                                                        <!--<label for="">Name</label>-->
+                                                        <input data-ng-model="item.expression"
+                                                               aria-label="attribute value"
+                                                               type="text">
+                                                    </md-input-container>
+                                                    <div flex="20" layout="row">
 
-                                                    </div>
+                                                        <expression-editor-button data-item="item.expression"
+                                                                                  data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
 
-                                                </md-input-container>
-                                                <md-input-container flex="50">
-                                                    <label data-ng-bind="vm.getContentTypeName(item.value_type)"></label>
-                                                    <input data-ng-model="item.expression" aria-label="attribute value"
-                                                           type="text">
-                                                </md-input-container>
-                                                <div flex="20">
-                                                    <expression-editor-button data-item="item.expression"
-                                                                              data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
-                                                    <md-button data-ng-click="vm.openMapping($event, item)"
-                                                               class="md-raised md-primary import-mapping-small-btn"
-                                                               data-ng-if="item.value_type !== 'empty'">
-                                                        <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
-                                                    </md-button>
-
-                                                    <!--<div ng-if="item.dynamic_attribute_id" style="display: inline-block">
-                                                        <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                        <md-button data-ng-click="vm.openMapping($event, item)"
                                                                    class="md-raised md-primary import-mapping-small-btn"
-                                                                   data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                                   data-ng-if="item.value_type === 'field'">
                                                             <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                         </md-button>
-                                                    </div>-->
 
-                                                    <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)" style="display: inline-block">
-                                                        <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
-                                                                   class="md-raised md-primary import-mapping-small-btn">
-                                                            <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
+                                                        <!--<div ng-if="item.dynamic_attribute_id" style="display: inline-block">
+                                                            <md-button data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                       class="md-raised md-primary import-mapping-small-btn"
+                                                                       data-ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)">
+                                                                <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
+                                                            </md-button>
+                                                        </div>-->
+
+                                                        <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                             style="display: inline-block">
+                                                            <md-button
+                                                                    data-ng-click="vm.openClassifierMapping(item.dynamic_attribute_id, $event)"
+                                                                    class="md-raised md-primary import-mapping-small-btn">
+                                                                <ng-md-icon icon="import_contacts"
+                                                                            size="20"></ng-md-icon>
+                                                            </md-button>
+                                                        </div>
+
+                                                        <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)"
+                                                             style="display: inline-block">
+                                                            <md-button
+                                                                    data-ng-click="vm.editTreeAttr(item.dynamic_attribute_id, $event)"
+                                                                    class="md-raised md-primary import-mapping-small-btn">
+                                                                <ng-md-icon icon="format_align_right" size="20">
+                                                                    <md-tooltip md-direction="top">Edit Classifier tree
+                                                                    </md-tooltip>
+                                                                </ng-md-icon>
+                                                            </md-button>
+                                                        </div>
+
+                                                        <md-button data-ng-if="!item.system_property_key"
+                                                                   class="custom-small-icon-btn md-raised import-scheme-mapping-btn md-raised m-r-0"
+                                                                   data-ng-click="vm.removeDynamicAttribute(item, $index)"
+                                                                   style="line-height: 1">x
                                                         </md-button>
+
                                                     </div>
-
-                                                    <div ng-if="vm.checkForClassifierMapping(item.dynamic_attribute_id)" style="display: inline-block">
-                                                        <md-button data-ng-click="vm.editTreeAttr(item.dynamic_attribute_id, $event)"
-                                                                   class="md-raised md-primary import-mapping-small-btn">
-                                                            <ng-md-icon icon="format_align_right" size="20">
-                                                                <md-tooltip md-direction="top">Edit Classifier tree
-                                                                </md-tooltip>
-                                                            </ng-md-icon>
-                                                        </md-button>
-                                                    </div>
-
-                                                    <md-button data-ng-if="!item.system_property_key"
-                                                               class="custom-small-icon-btn md-raised m-r-0"
-                                                               data-ng-click="vm.removeDynamicAttribute(item, $index)"
-                                                               class="md-raised"
-                                                               style="line-height: 1">x
-                                                    </md-button>
-
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </md-card-content>
-                        </md-card>
+                                </md-card-content>
+                            </md-card>
 
-                        <div>
-                            <md-button class="md-raised" data-ng-click="vm.addDynamicAttribute()">Add field</md-button>
+
                         </div>
                     </div>
                 </div>

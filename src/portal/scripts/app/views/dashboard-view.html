@@ -78,7 +78,6 @@
                                offset-x="-30"
                                popup-classes="'rounded-border'"
                                close-on-click-outside="true"
-                               backdrop-classes="'low-z-index-backdrop'"
                                popup-event-service="vm.dashboardEventService">
 
                         <span class="material-icons">view_quilt</span>
@@ -186,7 +185,7 @@
                     <div class="dashboard-rows-holder"  data-row="{{row.row_number}}" data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
 
                         <div data-ng-repeat="item in row.columns"
-                             class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}} {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
+                             class="dashboard-cell dashboardCell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}} {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
                              data-tab="fixed_area"
                              data-row="{{row.row_number}}"
                              data-column="{{item.column_number}}"
@@ -369,7 +368,7 @@
                                 <div class="dashboard-rows-holder" data-row="{{row.row_number}}"  data-ng-repeat="row in tab.layout.rows">
 
                                     <div data-ng-repeat="item in row.columns"
-                                         class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}  {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
+                                         class="dashboard-cell dashboardCell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}  {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
                                          data-tab="{{tab.tab_number}}"
                                          data-row="{{row.row_number}}"
                                          data-column="{{item.column_number}}"
@@ -537,7 +536,7 @@
 
                                 </div>
 
-                                <div class="dashboard-empty-space"></div>
+                                <div class="dashboard-empty-space dashboardEmptySpace"></div>
 
 
                             </div>
