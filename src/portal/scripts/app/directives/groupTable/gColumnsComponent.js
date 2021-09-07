@@ -16,7 +16,7 @@
     var renderHelper = require('../../helpers/render.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-    const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
+    var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -357,13 +357,6 @@
                     return "rounded-border g-column-context-menu-popup";
                 }
 
-                scope.getRowStatusSelectorIcon = function () {
-
-					let rowTypeFiltersData = scope.evDataService.getRowTypeFilters();
-
-                	renderHelper.getIcon();
-				};
-
                 scope.rowFiltersToggle = function () {
 
                     scope.hideRowSettings = !scope.hideRowSettings;
@@ -408,12 +401,11 @@
 
 					scope.evDataService.setRowTypeFilters(rowTypeFiltersData);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 };
 
                 scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.isReport, scope.entityType);
-                scope.changeRowFilterColor(scope.rowFilterColor);
 
                 // <Victor 2020.12.14 #69 New report viewer design>
 

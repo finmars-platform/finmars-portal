@@ -33,7 +33,7 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, usersService, gFiltersHelper) {
+        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, gFiltersHelper) {
 
             var vm = this;
 

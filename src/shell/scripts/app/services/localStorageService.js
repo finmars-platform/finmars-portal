@@ -371,7 +371,9 @@
 
 	const cacheMarkedRowsData = (markedRowsData) => {
 		const key = getPropertyForStoring().concat('_marked_g_rows');
-		localStorage.setItem(key, JSON.stringify(markedRowsData));
+		const test = JSON.stringify(markedRowsData);
+
+		localStorage.setItem(key, test);
 	};
 
 	const getMarkedRowsData = () => {
@@ -404,8 +406,8 @@
 
 		if (!markedRowsData[viewerType][entityType]) {
 			markedRowsData[viewerType][entityType] = {
-				row_type_filters: 'none',
-				marked_rows: []
+				row_type_filter: 'none',
+				marked_rows: {}
 			}
 		}
 
@@ -458,7 +460,7 @@
 
 			if (!markedRowsData[viewerType][entityType]) {
 				markedRowsData[viewerType][entityType] = {
-					row_type_filters: 'none',
+					row_type_filter: 'none',
 				}
 			}
 
@@ -468,7 +470,7 @@
 
 			if (!markedRowsData[viewerType][entityType]) {
 				markedRowsData[viewerType][entityType] = {
-					row_type_filters: 'none',
+					row_type_filter: 'none',
 					marked_rows: {}
 				}
 			}
@@ -479,7 +481,7 @@
 
 		if (!markedRowsData[viewerType][entityType]) {
 			markedRowsData[viewerType][entityType] = {
-				row_type_filters: 'none',
+				row_type_filter: 'none',
 				marked_rows: {}
 			}
 		}
