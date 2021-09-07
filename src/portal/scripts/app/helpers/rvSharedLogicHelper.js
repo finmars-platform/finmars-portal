@@ -6,6 +6,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
     const rvDataProviderService = require('../services/rv-data-provider/rv-data-provider.service');
 	const pricesCheckerService = require('../services/reports/pricesCheckerService');
+	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
 	const expressionService = require('../services/expression.service');
 	const evEvents = require('../services/entityViewerEvents');
@@ -95,6 +96,12 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 			viewModel.entityViewerDataService.setVirtualScrollStep(500);
 
 			viewModel.entityViewerDataService.setRowHeight(36);
+
+			var rowFilterColor = localStorageService.getRowTypeFilter(true, viewModel.entityType);
+			var rowTypeFiltersData = viewModel.entityViewerDataService.getRowTypeFilters();
+			rowTypeFiltersData.markedRowFilters = rowFilterColor;
+
+			viewModel.entityViewerDataService.setRowTypeFilters(rowTypeFiltersData);
 
 		};
 
