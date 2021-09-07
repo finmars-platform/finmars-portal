@@ -28,7 +28,7 @@
         var expressionService = require('../../services/expression.service');
         // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, middlewareService, usersService) {
+        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, usersService) {
 
             var vm = this;
 
@@ -822,12 +822,12 @@
                                 sortResolve();
                             }
 
-                        })
+                        });
 
 
                         Promise.all([activeColumnSortProm]).then(function () {
                             resolve();
-                        })
+                        });
 
                     } else {
 						vm.readyStatus.layout = sharedLogicHelper.onSetLayoutEnd();
@@ -866,6 +866,16 @@
 				vm.entityViewerDataService.setViewContext(vm.viewContext);
 
                 vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
+
+				/* let rowTypeFilters = localStorage.getItem("row_type_filter");
+
+				if (rowTypeFilters) {
+
+					rowTypeFilters = JSON.parse(rowTypeFilters);
+					const rowFilterColor = rowTypeFilters.markedRowFilters;
+					vm.entityViewerDataService.setRowTypeFilters(rowFilterColor);
+
+				} */
 
                 var downloadAttrsProm = sharedLogicHelper.downloadAttributes();
                 var setLayoutProm;
