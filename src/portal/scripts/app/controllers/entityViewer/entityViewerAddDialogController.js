@@ -750,7 +750,6 @@
         };
 
         vm.cancel = function () {
-            // $mdDialog.hide({status: 'disagree'});
             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
@@ -1103,23 +1102,22 @@
 
                     if (isAutoExitAfterSave) {
 
-                        let responseObj = {res: 'agree', data: responseData};
+                        let responseObj = {status: 'agree', data: responseData};
                         metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     } else {
-
 
                         vm.entity = {...vm.entity, ...responseData};
                         vm.entity.$_isValid = true;
 
                         const responseObj = {
-                            res: 'agree',
+                            status: 'edit',
                             data: {
-                                action: 'edit',
                                 entityType: vm.entityType,
                                 entity: vm.entity
                             }
                         };
+
                         metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     }
@@ -1165,7 +1163,8 @@
 
                     entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
-                        $mdDialog.hide({res: 'agree', data: data});
+                        var responseObj = {res: 'agree', data: data};
+						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     }).catch(function (data) {
 
@@ -1780,6 +1779,8 @@
 
 				vm.tabs = formLayoutData.tabs;
 				vm.attributesLayout = formLayoutData.attributesLayout;
+
+				 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
 				if (vm.entityType === 'instrument') {
 
