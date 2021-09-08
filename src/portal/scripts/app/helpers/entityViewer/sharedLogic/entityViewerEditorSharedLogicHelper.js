@@ -41,6 +41,8 @@
             };
         };
 
+        const noEntityTabs = [''];
+
 		//<editor-fold desc="entityTabsMenuTplt">
 		const entityTabsMenuTplt =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
@@ -422,15 +424,50 @@
 		 */
 		const getTypeSelectorOptions = function (entityType) {
 
+			let options = {pageSize: 1000, page: 1};
+
+			const loadAllPages = (resolve, reject) => {
+
+				entityResolverService.getListLight(entityType, options).then(function (typesData) {
+
+					viewModel.typeSelectorOptions = viewModel.typeSelectorOptions.concat(typesData.results);
+
+					if (typesData.next) {
+
+						options.page = options.page + 1;
+						loadAllPages(resolve, reject);
+
+					} else {
+						resolve();
+					}
+
+				}).catch(error => reject(error));
+
+			};
+
         	return new Promise((res, rej) => {
 
-        		entityResolverService.getListLight(entityType).then(typesData => {
+				entityResolverService.getListLight(entityType, options).then(typesData => {
 
-					const options = Array.isArray(typesData) ? typesData : typesData.results;
+					// const options = Array.isArray(typesData) ? typesData : typesData.results;
+					if (Array.isArray(typesData)) {
 
-					viewModel.typeSelectorOptions = options;
+						viewModel.typeSelectorOptions = typesData;
+						res();
 
-					res();
+					} else {
+
+						viewModel.typeSelectorOptions = typesData.results;
+
+						if (typesData.next) {
+							options.page = options.page + 1;
+							loadAllPages(res, rej);
+
+						} else {
+							res();
+						}
+
+					}
 
 				}).catch(error => {
 					console.error("getFieldsForFixedAreaPopup error", error);
@@ -686,8 +723,8 @@
 
                 viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
-            } else {
-                viewModel.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
+            } else if (viewModel.fixedAreaPopup) { // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
+                viewModel.fixedAreaPopup.tabColumns = 6; // in dialog window there are always 2 fields outside of popup
             }
 
 			const promises = [getAttributeTypes()];
@@ -696,25 +733,26 @@
 
 			return new Promise(resolve => {
 
-				Promise.allSettled(promises).then(async function () {
+				Promise.allSettled(promises).then(async function (testData) {
 
 					entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
 
-					viewModel.getEntityPricingSchemes();
+					if (viewModel.getEntityPricingSchemes) viewModel.getEntityPricingSchemes(); // in entityViewerFormsPreviewDialogController.js there is no pricing tab
 
 					const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
 
-					const fixedAreaData = getFieldsForFixedAreaPopup(formLayoutFromAbove);
+					let resolveData = {
+						tabs: tabs,
+						attributeTypes: viewModel.attributeTypes,
+						attributesLayout: attributesLayout
+					};
+
+					if (viewModel.fixedAreaPopup) resolveData.fixedAreaData = getFieldsForFixedAreaPopup(formLayoutFromAbove);  // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
 
 					viewModel.readyStatus.layout = true;
 					viewModel.readyStatus.entity = true;
 
-					resolve({
-						fixedAreaData: fixedAreaData,
-						tabs: tabs,
-						attributeTypes: viewModel.attributeTypes,
-						attributesLayout: attributesLayout
-					});
+					resolve(resolveData);
 
 				});
 

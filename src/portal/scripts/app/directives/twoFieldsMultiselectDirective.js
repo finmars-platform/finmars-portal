@@ -337,9 +337,20 @@
 
 							});
 
-							return {
-								id: selOptId,
-								text: selOpt[scope.nameProperty]
+							if (selOpt) {
+								return {
+									id: selOptId,
+									text: selOpt[scope.nameProperty]
+								}
+							} else {
+								return {
+									id: selOptId,
+									// text: '<span>&lt;Not found&gt;</span>',
+									text: 'Not found',
+									error_data: {
+										description: ''
+									}
+								}
 							}
 
 						});

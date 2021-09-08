@@ -738,7 +738,8 @@
 
                     reject();
 
-                } else {
+                }
+                else {
 
                     vm.processing = true;
 
@@ -822,16 +823,14 @@
                     vm.entity.$_isValid = true;
 
                     responseObj = {
-                        res: 'agree',
+                        status: 'edit',
                         data: {
-                            action: 'edit',
                             entityType: vm.entityType,
                             entity: vm.entity
                         }
                     };
                 }
 
-                //$mdDialog.hide({res: 'agree', data: data});
                 metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
