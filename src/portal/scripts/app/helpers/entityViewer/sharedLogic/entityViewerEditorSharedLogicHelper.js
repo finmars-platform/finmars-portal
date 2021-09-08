@@ -496,15 +496,50 @@
 		 */
 		const getTypeSelectorOptions = function (entityType) {
 
+			let options = {pageSize: 1000, page: 1};
+
+			const loadAllPages = (resolve, reject) => {
+
+				entityResolverService.getListLight(entityType, options).then(function (typesData) {
+
+					viewModel.typeSelectorOptions = viewModel.typeSelectorOptions.concat(typesData.results);
+
+					if (typesData.next) {
+
+						options.page = options.page + 1;
+						loadAllPages(resolve, reject);
+
+					} else {
+						resolve();
+					}
+
+				}).catch(error => reject(error));
+
+			};
+
         	return new Promise((res, rej) => {
 
-        		entityResolverService.getListLight(entityType).then(typesData => {
+				entityResolverService.getListLight(entityType, options).then(typesData => {
 
-					const options = Array.isArray(typesData) ? typesData : typesData.results;
+					// const options = Array.isArray(typesData) ? typesData : typesData.results;
+					if (Array.isArray(typesData)) {
 
-					viewModel.typeSelectorOptions = options;
+						viewModel.typeSelectorOptions = typesData;
+						res();
 
-					res();
+					} else {
+
+						viewModel.typeSelectorOptions = typesData.results;
+
+						if (typesData.next) {
+							options.page = options.page + 1;
+							loadAllPages(res, rej);
+
+						} else {
+							res();
+						}
+
+					}
 
 				}).catch(error => {
 					console.error("getFieldsForFixedAreaPopup error", error);
@@ -803,7 +838,7 @@
 
 			return new Promise(resolve => {
 
-				Promise.allSettled(promises).then(async function () {
+				Promise.allSettled(promises).then(async function (testData) {
 
 					entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
 

@@ -428,6 +428,18 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li data-ng-if="vm.accessTable.data_instrument_download">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn two-line-text"
+                                               ui-sref="app.portal.import.instrument-cbonds">
+                                        <span class="side-nav-title">
+                                            Instrument<br>
+                                            (from CBONDS)
+                                        </span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                                 <li data-ng-if="vm.accessTable.data_prices_download">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn two-line-text"
