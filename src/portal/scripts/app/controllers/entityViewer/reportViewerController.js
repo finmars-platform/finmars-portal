@@ -28,7 +28,7 @@
         var expressionService = require('../../services/expression.service');
         // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, middlewareService, usersService) {
+        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, usersService) {
 
             var vm = this;
 
@@ -345,9 +345,9 @@
 					locals: locals
 				}).then(function (res) {
 
-					vm.autoRefreshState = vm.entityViewerDataService.getAutoRefreshState();
+					var autoRefreshState = vm.entityViewerDataService.getAutoRefreshState();
 
-					if (vm.autoRefreshState) {
+					if (autoRefreshState) {
 						vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 					}
 
@@ -395,7 +395,6 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.USER_REQUEST_AN_ACTION, function (){
 
-
                     var action = vm.entityViewerDataService.getUserRequestedAction();
 
                     if (action === 'add_portfolio') {
@@ -410,7 +409,7 @@
 
                     }
 
-                    if (action === 'add_instrument') {
+                    else if (action === 'add_instrument') {
 
                         var locals = {
                             entityType: 'instrument',
@@ -422,7 +421,7 @@
 
                     }
 
-                    if (action === 'add_account') {
+					else if (action === 'add_account') {
 
                         var locals = {
                             entityType: 'account',
@@ -434,7 +433,7 @@
 
                     }
 
-                    if (action === 'add_currency') {
+					else if (action === 'add_currency') {
 
                         var locals = {
                             entityType: 'currency',
@@ -447,7 +446,7 @@
                     }
 
 
-                    if (action === 'add_price') {
+					else if (action === 'add_price') {
 
                         var locals = {
                             entityType: 'price-history',
@@ -459,7 +458,7 @@
 
                     }
 
-                    if (action === 'add_fx_rate') {
+					else if (action === 'add_fx_rate') {
 
                         var locals = {
                             entityType: 'currency-history',
@@ -823,12 +822,12 @@
                                 sortResolve();
                             }
 
-                        })
+                        });
 
 
                         Promise.all([activeColumnSortProm]).then(function () {
                             resolve();
-                        })
+                        });
 
                     } else {
 						vm.readyStatus.layout = sharedLogicHelper.onSetLayoutEnd();
@@ -867,6 +866,16 @@
 				vm.entityViewerDataService.setViewContext(vm.viewContext);
 
                 vm.entityViewerDataService.setLayoutChangesLossWarningState(true);
+
+				/* let rowTypeFilters = localStorage.getItem("row_type_filter");
+
+				if (rowTypeFilters) {
+
+					rowTypeFilters = JSON.parse(rowTypeFilters);
+					const rowFilterColor = rowTypeFilters.markedRowFilters;
+					vm.entityViewerDataService.setRowTypeFilters(rowFilterColor);
+
+				} */
 
                 var downloadAttrsProm = sharedLogicHelper.downloadAttributes();
                 var setLayoutProm;

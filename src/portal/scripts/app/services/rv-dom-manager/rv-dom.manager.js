@@ -790,7 +790,6 @@
                 evDataService.setActiveObjectRow(null);
             }
 
-
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         }
