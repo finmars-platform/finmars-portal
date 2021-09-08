@@ -371,7 +371,6 @@
 
         vm.cancel = function () {
             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
-            // $mdDialog.hide({status: 'disagree'});
         };
 
         vm.restoreDeleted = function(){
@@ -440,13 +439,6 @@
 
             console.log('copy entity', entity);
 
-            if (windowType === 'big-drawer') {
-
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType}};
-                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
-            }
-
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
@@ -458,7 +450,7 @@
                 }
             }).then(function (res) {
 
-                if (res && res.res === 'agree') {
+                if (res && res.status === 'agree') {
 
                     console.log('res', res);
 
@@ -466,8 +458,14 @@
 
             });
 
-            // $mdDialog.hide();
-            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
+			if (windowType === 'big-drawer') {
+
+				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
+				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			} else {
+				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+			}
 
         };
 
@@ -610,7 +608,7 @@
 						vm.attributeTypes = formLayoutData.attributeTypes;
 
                     	vm.tabs = formLayoutData.tabs;
-                        console.log('# vm.tabs', vm.tabs)
+                        console.log('# vm.tabs', vm.tabs);
 						vm.attributesLayout = formLayoutData.attributesLayout;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
@@ -776,11 +774,7 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-
-                    // $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-                    let responseObj = {res: 'agree', data: {action: 'delete'}};
-                    metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
+                    metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
                 }
 
             })
@@ -992,7 +986,7 @@
 
                         if (isAutoExitAfterSave) {
 
-                            let responseObj = {res: 'agree', data: responseData};
+                            let responseObj = {status: 'agree', data: responseData};
                             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                         } else {
@@ -2055,7 +2049,6 @@
 				};
 
             }
-
             else {
 
                 vm.statusSelectorOptions = [

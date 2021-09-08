@@ -223,6 +223,13 @@
                     </md-button>
                 </div>
 
+                <div>
+                    <md-button data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'pricing-condition'})"
+                               class="md-primary md-raised">
+                       Pricing Condition mapping
+                    </md-button>
+                </div>
+
             </div>
 
             <div layout="row" layout-align="space-between">
@@ -356,5 +363,9 @@
         </fieldset>
 
     </div>
+
+
+    <instrument-select model="vm.instrument"></instrument-select>
+
 
 </div>

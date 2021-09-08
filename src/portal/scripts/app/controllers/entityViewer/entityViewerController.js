@@ -7,6 +7,7 @@
         'use strict';
 
         var uiService = require('../../services/uiService');
+		var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
         var evEvents = require('../../services/entityViewerEvents');
         var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
@@ -25,7 +26,6 @@
         // var middlewareService = require('../../services/middlewareService');
 
         var transactionTypeService = require('../../services/transactionTypeService');
-
 
         module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService) {
 
@@ -807,7 +807,7 @@
 									vm.entityViewerDataService.setActiveObjectActionData(null); */
 									vm.entityViewerDataService.setRowsActionData(null);
 
-									if (res && res.res === 'agree') {
+									if (res && res.status === 'agree') {
 										vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 									}
 
@@ -935,14 +935,17 @@
                 if (activeObject) {
 
                     var filters = vm.entityViewerDataService.getFilters();
+                    var setFilterValue = function (item) {
 
-                    filters.forEach(function (item) {
+						if (activeObject.hasOwnProperty(item.key)) {
+							item.options.filter_values = [activeObject[item.key]]
+						}
 
-                        if (activeObject.hasOwnProperty(item.key)) {
-                            item.options.filter_values = [activeObject[item.key]]
-                        }
+					};
 
-                    })
+                    filters.frontend.forEach(setFilterValue);
+					filters.backend.forEach(setFilterValue);
+
                 }
 
 
@@ -1042,6 +1045,12 @@
                 vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 vm.entityViewerDataService.setRowHeight(36);
+
+				var rowFilterColor = localStorageService.getRowTypeFilter(false, vm.entityType);
+				var rowTypeFiltersData = vm.entityViewerDataService.getRowTypeFilters();
+				rowTypeFiltersData.markedRowFilters = rowFilterColor;
+
+				vm.entityViewerDataService.setRowTypeFilters(rowTypeFiltersData);
 
                 vm.downloadAttributes();
 
@@ -1313,9 +1322,11 @@
             vm.init = function () {
 
                 if (vm.stateWithLayout) {
-                    initTransitionHooks();
+
+                	initTransitionHooks();
 
                     window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
+
                 }
 
 				onUserChangeIndex = middlewareService.onMasterUserChanged(function () {

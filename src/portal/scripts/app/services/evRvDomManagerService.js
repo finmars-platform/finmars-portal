@@ -333,9 +333,10 @@
 			} else {
 				markedReportRows = {};
 			} */
+			var rowId = typeof obj.id === 'number' ? '' + obj.id : obj;
 
 			if (color === 'undo_mark_row') {
-				delete markedReportRows[obj.id]
+				delete markedReportRows[obj.id];
 			} else {
 				markedReportRows[obj.id] = {
 					color: color
