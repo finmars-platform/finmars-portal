@@ -338,7 +338,9 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                 // vm.getMasterUsersList();
                 // vm.getInvites();
 
-                authorizerService.setMasterUser(item.to_master_user).then(function (data) {
+                localStorage.setItem('goToSetup', 'true')
+
+                profileAuthorizerService.setCurrentMasterUser(item.to_master_user).then(function (data) {
 
                     console.log('vm.activateDatabase.data', data);
 
@@ -346,7 +348,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                    $state.go('app.portal.setup');
+                    $state.go('app.setup');
                 })
 
             })

@@ -117,7 +117,6 @@
             </md-tab>
 
             <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)" md-active="vm.activeTab === tab">
-
                 <!-- Victor 2020.10.28 EntityTabs labels move to md-menu-->
                 <!--                         <md-tab-label>
                                             <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">
@@ -278,6 +277,7 @@
 
         <div class="entity-tabs-menu entityTabsMenu"
              data-ng-class="{'active': vm.isEntityTabActive()}"
+
              popup
              popup-template="{{vm.entityTabsMenuTplt}}"
              popup-data="vm.entityTabsMenuPopupData"
@@ -287,7 +287,8 @@
              close-on-click-outside="true"
              popup-classes="vm.entityTablePopupClasses">
 
-            <md-button aria-label="open entity tabs"
+            <md-button ng-if="vm.entityType !== 'price-history'"
+                       aria-label="open entity tabs"
                        class="md-icon-button entity-tabs-menu-btn">
                 <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
             </md-button>

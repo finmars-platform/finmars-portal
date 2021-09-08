@@ -5,10 +5,12 @@
 
     'use strict';
 
+    var uiService = require('../../services/uiService');
+    var metaService = require('../../services/metaService');
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
     var customFieldService = require('../../services/reports/customFieldService');
-    const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
+    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     var portfolioService = require('../../services/portfolioService');
     var accountService = require('../../services/accountService');
@@ -341,9 +343,28 @@
 
         vm.init = async function () {
 
-            await Promise.allSettled([vm.getPricingPolicies(), vm.getCurrencies()])
+            await Promise.allSettled([vm.getPricingPolicies(), vm.getCurrencies()]);
 
-            if (!vm.currencies.length) {
+            if (vm.entityType === 'transaction-report') {
+
+				vm.transactionsUserDates = [];
+
+				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [{pageSize: 1000}]).then(function (transactionFields) {
+
+					vm.transactionsUserDates = transactionFields.filter(function (field) {
+						return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].includes(field.key);
+
+					}).map(function (dateField) {
+						return {name: dateField.name, id: dateField.key};
+					});
+
+					vm.transactionsUserDates.push({name: "Transaction date", id: null});
+
+				});
+
+			}
+
+			if (!vm.currencies.length) {
                 await getEcosystemDefaultCurrencies();
             }
 

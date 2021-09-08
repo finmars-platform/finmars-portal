@@ -141,6 +141,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 						authorizerService.logout().then(function (data) {
 
+							cookieService.deleteCookie('authtoken');
+							cookieService.deleteCookie('csrftoken');
+
 							sessionStorage.removeItem('afterLoginEvents');
 
 							/* if (window.location.pathname !== '/') {
@@ -150,7 +153,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 							} */
 							$state.go('app.authentication');
 
-							cookieService.deleteCookie('authtoken');
+							// cookieService.deleteCookie('authtoken');
 
 						});
 

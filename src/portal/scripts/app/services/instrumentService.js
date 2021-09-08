@@ -167,7 +167,10 @@
 
 				}
 
-				uiService.getDefaultEditLayout('instrument').then(data => resolve(data)).catch(error => reject(error));
+				uiService.getDefaultEditLayout('instrument').then(data => {
+					resolve(data);
+
+				}).catch(error => reject(error));
 
 			});
 

@@ -1135,7 +1135,7 @@
             }
             else {
 
-                var defaultList = uiService.getListLayoutTemplate();
+                var defaultList = uiService.getListLayoutTemplate(isReport);
 
                 listLayout = {};
                 listLayout.data = Object.assign({}, defaultList[0].data);
