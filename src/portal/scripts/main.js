@@ -15,6 +15,9 @@ import portalController from './app/controllers/portalController.js';
 
 import mainHeaderDirective from "./app/directives/mainHeaderDirective.js";
 
+import complexDropdownSelectDirective from "./app/directives/customInputs/complexDropdownSelectDirective";
+import complexDropdownSelectMenuDirective from "./app/directives/customInputs/complexDropdownSelectMenuDirective";
+
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
 
@@ -205,9 +208,9 @@ export default (function () {
 	portal.controller('ItemsSelectorWithGroupsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/selectors/itemsSelectorWithGroupsDialogController')]);
 
 	// Common - unknown
-	portal.controller('NumberFormatSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/numberFormatSettingsDialogController')]);
+	portal.controller('NumberFormatSettingsDialogController', ['$scope', '$element', '$mdDialog', 'data', require('./app/controllers/dialogs/numberFormatSettingsDialogController')]);
 	// Victor 20210601 #115 new design for number format dialog
-	portal.controller('NumberFormatDialogController', ['$scope', '$element', '$mdDialog', 'data', require('./app/controllers/dialogs/numberFormatDialogController')]);
+	// portal.controller('NumberFormatDialogController', ['$scope', '$element', '$mdDialog', 'data', require('./app/controllers/dialogs/numberFormatDialogController')]);
 	portal.controller('ReportViewerMatrixSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reportViewerMatrixSettingsDialogController')]);
 
 	portal.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
@@ -737,7 +740,7 @@ export default (function () {
 	portal.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
 	portal.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
-	//<editor-fold desc="Custom inputs">
+	//<editor-fold desc="Custom inputs"
 	portal.directive('textInput', ['$mdDialog', require('./app/directives/customInputs/textInputDirective.js')]);
 	portal.directive('numberInput', ['$mdDialog', require('./app/directives/customInputs/numberInputDirective.js')]);
 	portal.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
@@ -746,6 +749,8 @@ export default (function () {
 	portal.directive('instrumentSelect', ['$mdDialog', require('./app/directives/customInputs/instrumentSelectDirective')]);
 	portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
 	portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
+	portal.directive('complexDropdownSelect', [complexDropdownSelectDirective]);
+	portal.directive('complexDropdownSelectMenu', [complexDropdownSelectMenuDirective]);
 	//</editor-fold>
 
 	//<editor-fold desc="Grid Table">

@@ -147,34 +147,6 @@
 
                 };
 
-                scope.openColumnNumbersRenderingSettings = function ($event) {
-
-                    $mdDialog.show({
-                        controller: 'gColumnNumbersRenderingSettingsDialogController as vm',
-                        templateUrl: 'views/dialogs/g-column-numbers-rendering-settings-dialog-view.html',
-                        targetEvent: $event,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                column: scope.column
-                            }
-                        }
-
-                    }).then(function (res) {
-
-                        if (res.status === 'agree') {
-
-                            scope.column.report_settings = res.data.report_settings;
-                            updateColumn();
-
-                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                            scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
-
-                        }
-
-                    });
-                };
-
                 scope.selectSubtotalType = function (type) {
 
                     if (!scope.column.hasOwnProperty('report_settings')) {
@@ -204,6 +176,32 @@
                     return false;
 
                 };
+
+                scope.openNumberFormatDialog = function ($event) {
+
+					$mdDialog.show({
+						controller: 'NumberFormatSettingsDialogController as vm',
+						templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
+						targetEvent: $event,
+						multiple: true,
+						locals: {
+							data: scope.column
+						}
+					}).then(res => {
+
+						if (res.status === 'agree') {
+
+							scope.column.report_settings = res.data;
+							updateColumn();
+
+							scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+							scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+
+						}
+
+					})
+
+				};
 
                  /* scope.reportHideSubtotal = function () {
 

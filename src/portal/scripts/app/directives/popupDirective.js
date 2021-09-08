@@ -41,8 +41,8 @@
 				popupX: '=',
 				popupY: '=',
 
-				offsetX: '@', // add offset to the left
-				offsetY: '@', // add offset to the top
+				offsetX: '@', // add offset to the left in pixels
+				offsetY: '@', // add offset to the top in pixels
 
 				onCancel: '&?',
 				onSave: '&?',
@@ -133,11 +133,13 @@
 					}
 
 					// Prevents popup from creeping out of window
-					const popupHeight = popupElem.clientHeight;
+					let popupHeight = popupElem.clientHeight;
 					const popupWidth = popupElem.clientWidth;
 
 					const windowHeight = document.body.clientHeight;
 					const windowWidth = document.body.clientWidth;
+
+					if (popupHeight > windowHeight) popupHeight = windowHeight;
 
 					if (positionX + popupWidth > windowWidth) {
 						popupElem.style.right = '0';
