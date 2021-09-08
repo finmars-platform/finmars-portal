@@ -226,8 +226,8 @@
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
-                        controller: 'NumberFormatDialogController as vm',
-                        templateUrl: 'views/dialogs/number-format-dialog-view.html',
+                        controller: 'NumberFormatSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
                         parent: angular.element(document.body),
                         locals: {
                             data: column
@@ -1251,11 +1251,7 @@
 
                 };
 
-                scope.showColSettingsInsideDashboard = function () {
-
-                };
-
-                scope.openColumnNumbersRenderingSettings = function (column, $event) {
+                /* scope.openColumnNumbersRenderingSettings = function (column, $event) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
@@ -1282,7 +1278,7 @@
                         }
 
                     });
-                };
+                }; */
 
                 scope.activateColumnNumberRenderingPreset = function (column, rendPreset) {
 
