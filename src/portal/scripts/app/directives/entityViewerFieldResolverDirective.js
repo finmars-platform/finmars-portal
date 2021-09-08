@@ -17,6 +17,7 @@
     module.exports = function () {
 
         return {
+        	require: '^^bindFieldControl',
             scope: {
                 item: '=',
                 entity: '=',
@@ -28,10 +29,12 @@
                 itemChange: '&?'
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
-            link: function (scope, elem, attrs) {
+            link: function (scope, elem, attrs, bfcVm) {
 
-                scope.readyStatus = {content: false};
-                scope.type = 'id';
+                // scope.readyStatus = {content: false};
+				scope.readyStatus = bfcVm.readyStatus;
+
+				scope.type = 'id';
                 scope.fields = [];
                 scope.sortedFields = [];
                 scope.schemeSortedFields = []
@@ -127,7 +130,7 @@
 
                             scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
 
-                            scope.readyStatus.content = true;
+							scope.readyStatus.content = true;
 
                             scope.$apply();
                         })
@@ -248,10 +251,12 @@
 
                 scope.getListWithBindFields = function (items) {
                     return items.map(function (item) {
-                        return {
+                        /* return {
                             ...item,
                             bindFieldsName: scope.bindListFields(item)
-                        }
+                        } */
+						item.bindFieldsName = scope.bindListFields(item);
+						return item;
                     })
                 };
 
@@ -338,9 +343,12 @@
                                 scope.type = res.type;
                                 scope.fields = res.data;
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
 
-                                scope.readyStatus.content = true;
+                                if ('price_download_scheme') {
+                                	scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+								}
+
+								scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
 
                                 scope.getFieldsGrouped();
@@ -356,9 +364,12 @@
                                 scope.type = res.type;
                                 scope.fields = res.data;
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
 
-                                scope.readyStatus.content = true;
+                                if ('price_download_scheme') {
+									scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+								}
+
+								scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
 
                                 scope.getFieldsGrouped();
@@ -382,7 +393,7 @@
                     });
                 };
 
-                var prepareDataForSelector = function () {
+                /* var prepareDataForSelector = function () {
 
 					scope.fields = [];
 
@@ -396,11 +407,11 @@
 
 					if (item_object) {
 
-                            if (Array.isArray(item_object)) { // For multiselector
-                                scope.fields = item_object;
-                                var items = scope.fields.slice(0);
-                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
-                                scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
+                        if (Array.isArray(item_object)) { // For multiselector
+							scope.fields = item_object;
+							var items = scope.fields.slice(0);
+							scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
+							scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
 
 						} else {
 							scope.fields.push(item_object);
@@ -413,7 +424,7 @@
 
 					scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-				};
+				}; */
 
 				scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
@@ -421,7 +432,8 @@
 
 					fieldsDataIsLoaded = false;
 
-					prepareDataForSelector();
+					// prepareDataForSelector();
+					scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
 				});
 
@@ -475,7 +487,8 @@
                             (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
                             setItemSpecificSettings();
-							prepareDataForSelector();
+							// prepareDataForSelector();
+							scope.inputTextObj.value = scope.getInputTextForEntitySearch();
                             /* if (scope.item.frontOptions.recalculated) {
 
 								// setTimeout removes delay before applying preset1 to custom input
