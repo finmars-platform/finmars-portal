@@ -112,7 +112,10 @@
 
                                 if (data.results.length) {
 
-                                    var transactionType = data.results[0];
+                                    // var transactionType = data.results[0];
+									var transactionType = data.results.find(function (ttype) {
+										return ttype.user_code === item.target;
+									});
 
                                     $mdDialog.show({
                                         controller: 'ComplexTransactionAddDialogController as vm',
@@ -130,7 +133,8 @@
                                         }
                                     });
 
-                                } else {
+                                }
+                                else {
 
                                     toastNotificationService.error('Transaction Type is not found');
 
