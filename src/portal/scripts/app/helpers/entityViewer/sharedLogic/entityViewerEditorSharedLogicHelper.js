@@ -41,6 +41,8 @@
             };
         };
 
+        const noEntityTabs = [''];
+
 		//<editor-fold desc="entityTabsMenuTplt">
 		const entityTabsMenuTplt =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
