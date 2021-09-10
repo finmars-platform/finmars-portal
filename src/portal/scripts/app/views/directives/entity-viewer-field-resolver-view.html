@@ -8,6 +8,7 @@
             <div data-ng-if="modelKeyEntity == 'instrument'">
 
                 <instrument-select
+                        label="{{getName()}}"
                         model="entity[fieldKey]"
                         on-change-callback="changeHandler()"
 

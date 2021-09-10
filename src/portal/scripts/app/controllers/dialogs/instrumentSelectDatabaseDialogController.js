@@ -21,6 +21,8 @@
         vm.databaseInstruments = [];
         vm.localInstruments = [];
 
+        vm.inputText = data.inputText;
+
         vm.clearHoverInstrument = function () {
 
             setTimeout(function () {
@@ -214,6 +216,7 @@
 
 
                     instrumentService.getListForSelect({
+                        pageSize: 1000,
                         filters: {
                             name: vm.inputText
                         }
@@ -254,6 +257,8 @@
         }
 
         vm.init = function () {
+
+            vm.getList();
 
         }
 
