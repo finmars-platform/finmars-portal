@@ -420,7 +420,7 @@
                             // })
 
 
-                            fetch('http://3.67.194.145:8080/instr/find/name/' + scope.inputText).then(function (data) {
+                            fetch('https://finmars.com/instrument-database/instr/find/name/' + scope.inputText).then(function (data) {
                                 return data.json()
                             }).then(function (data) {
 
