@@ -3,16 +3,30 @@
     <div data-ng-if="type === 'id'">
 
         <div data-ng-if="isSpecialSearchRelation()">
-            <entity-search-select item="entity[fieldKey]"
-                                  label="getName()"
-                                  item-name="inputTextObj.value"
-                                  on-change-callback="changeHandler()"
-                                  custom-buttons="item.buttons"
-                                  custom-styles="customStyles"
-                                  event-signal="ciEventObj.event"
-                                  small-options="{notNull: options.notNull, tooltipText: tooltipText}"
-                                  entity-type="modelKeyEntity"
-                                  on-change-callback="changeHandler()"></entity-search-select>
+
+
+            <div data-ng-if="modelKeyEntity == 'instrument'">
+
+                <instrument-select
+                        model="entity[fieldKey]"
+                        on-change-callback="changeHandler()"
+
+                ></instrument-select>
+
+            </div>
+
+            <div data-ng-if="modelKeyEntity != 'instrument'">
+                <entity-search-select item="entity[fieldKey]"
+                                      label="getName()"
+                                      item-name="inputTextObj.value"
+                                      on-change-callback="changeHandler()"
+                                      custom-buttons="item.buttons"
+                                      custom-styles="customStyles"
+                                      event-signal="ciEventObj.event"
+                                      small-options="{notNull: options.notNull, tooltipText: tooltipText}"
+                                      entity-type="modelKeyEntity"
+                                      on-change-callback="changeHandler()"></entity-search-select>
+            </div>
         </div>
 
         <div data-ng-if="!isSpecialSearchRelation()">
