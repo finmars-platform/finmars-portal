@@ -318,6 +318,7 @@
                         multiple: true,
                         locals: {
                             data: {
+                                inputText: scope.inputText
                             }
                         }
 
@@ -424,15 +425,9 @@
                                 return data.json()
                             }).then(function (data) {
 
-                                scope.databaseInstrumentsTotal = data.length
+                                scope.databaseInstrumentsTotal = data.length;
 
-                                scope.databaseInstruments = []
-
-                                data.forEach(function (item, index) {
-                                    if (index < 4) {
-                                        scope.databaseInstruments.push(item);
-                                    }
-                                })
+                                scope.databaseInstruments = data;
 
                                 scope.databaseInstruments = scope.databaseInstruments.map(function (item){
 
@@ -460,6 +455,7 @@
 
 
                             instrumentService.getListForSelect({
+                                pageSize: 1000,
                                 filters: {
                                     name: scope.inputText
                                 }
