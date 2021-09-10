@@ -279,6 +279,7 @@
 
         <div class="entity-tabs-menu entityTabsMenu"
              data-ng-class="{'active': vm.isEntityTabActive()}"
+
              popup
              popup-template="{{vm.entityTabsMenuTplt}}"
              popup-data="vm.entityTabsMenuPopupData"
@@ -288,7 +289,8 @@
              close-on-click-outside="true"
              popup-classes="vm.entityTablePopupClasses">
 
-            <md-button aria-label="open entity tabs"
+            <md-button ng-if="vm.entityType !== 'price-history'"
+                       aria-label="open entity tabs"
                        class="md-icon-button entity-tabs-menu-btn">
                 <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
             </md-button>
