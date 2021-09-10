@@ -38,12 +38,17 @@
 				scope.popupX = {value: null};
 				scope.popupY = {value: null};
 				scope.addBtnPopupTemplate =
-					`<div class="accrual-add-row-popup-container">
+					`<div class="ev-user-tab-add-row-popup-container">
 						<div data-ng-repeat="item in popupData.items | orderBy: 'order'"
-							 class="accrual-add-row-popup-item"
+							 class="add-row-item"
 							 data-ng-click="popupData.onAddBtnClick(item)">{{item.name}}</div>
-						<div data-ng-if="popupData.showBuildButton" class="accrual-add-row-popup-item build-accruals">Build accruals</div>
+						<div ng-if="popupData.buttons.length" class="buttons-holder">
+							<div ng-repeat="button in popupData.buttons"
+							 	 ng-bind="button.name"
+							 	 ng-click="button.onClick($event, _$popup)" class="add-row-item"></div>
+						</div>
 					</div>`;
+				// <div data-ng-if="popupData.showBuildButton" class="add-row-item build-accruals">Build accruals</div>
 
 				const minTableColWidth = 50;
 				const maxTableColWidth = 400;
@@ -872,9 +877,21 @@
 
 							await loadDataForInstrumentAccruals();
 
+							let buttonsList = [];
+							const buildBtn = scope.item.options.tableData.find(item => item.key === 'build_accruals_btn');
+
+							if (buildBtn.to_show) {
+								buttonsList.push({
+									key: buildBtn.key,
+									name: "Build accruals",
+									onClick: function ($event, _$popup) {_$popup.cancel();console.log("build accruals");}
+								});
+							}
+
 							scope.popupData = {
 								items: scope.rowAdditionSchemes,
-								showBuildButton: scope.item.options.tableData.find(item => item.key === 'build_accruals_btn').to_show,
+								buttons: buttonsList,
+								// showBuildButton: scope.item.options.tableData.find(item => item.key === 'build_accruals_btn').to_show,
 								onAddBtnClick: async (item) => {
 
 									scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
@@ -901,9 +918,21 @@
 
 							await loadDataForInstrumentEvents();
 
+							let buttonsList = [];
+							const buildBtn = scope.item.options.tableData.find(item => item.key === 'build_events_btn');
+
+							if (buildBtn.to_show) {
+								buttonsList.push({
+									key: buildBtn.key,
+									name: "Build events",
+									onClick: function ($event, _$popup) {_$popup.cancel();console.log("build events");}
+								});
+							}
+
 							scope.popupData = {
 								items: scope.rowAdditionSchemes,
-								showBuildButton: scope.item.options.tableData.find(item => item.key === 'build_events_btn').to_show,
+								buttons: buttonsList,
+								// showBuildButton: scope.item.options.tableData.find(item => item.key === 'build_events_btn').to_show,
 								onAddBtnClick: async (item) => {
 
 									scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
