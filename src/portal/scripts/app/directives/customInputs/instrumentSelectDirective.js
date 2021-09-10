@@ -83,7 +83,7 @@
 
                 }
 
-                scope.setHoverInstrument = function ($event, option){
+                scope.setHoverInstrument = function ($event, option) {
 
                     setTimeout(function () {
 
@@ -171,7 +171,6 @@
 
                     stylePreset = '';
                     scope.error = '';
-
 
 
                     var config = {
@@ -377,12 +376,12 @@
 
                 scope.getList = function () {
 
+
+                    scope.processing = true;
+
+                    var promises = []
+
                     if (scope.inputText.length > 2) {
-
-                        scope.processing = true;
-
-                        var promises = []
-
                         promises.push(new Promise(function (resolve, reject) {
 
                             // scope.databaseInstruments = [{
@@ -429,7 +428,7 @@
 
                                 scope.databaseInstruments = data;
 
-                                scope.databaseInstruments = scope.databaseInstruments.map(function (item){
+                                scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
 
                                     item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
 
@@ -450,53 +449,52 @@
                             })
 
                         }))
+                    }
 
-                        promises.push(new Promise(function (resolve, reject) {
+                    promises.push(new Promise(function (resolve, reject) {
 
 
-                            instrumentService.getListForSelect({
-                                pageSize: 1000,
-                                filters: {
-                                    name: scope.inputText
+                        instrumentService.getListForSelect({
+                            pageSize: 500,
+                            filters: {
+                                name: scope.inputText
+                            }
+
+                        }).then(function (data) {
+
+                            scope.localInstrumentsTotal = data.count;
+
+                            scope.localInstruments = []
+
+                            data.results.forEach(function (item, index) {
+                                if (index < 4) {
+                                    scope.localInstruments.push(item);
                                 }
+                            })
 
-                            }).then(function (data) {
+                            scope.localInstruments = scope.localInstruments.map(function (item) {
 
-                                scope.localInstrumentsTotal = data.count;
+                                item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
 
-                                scope.localInstruments = []
-
-                                data.results.forEach(function (item, index) {
-                                    if (index < 4) {
-                                        scope.localInstruments.push(item);
-                                    }
-                                })
-
-                                scope.localInstruments = scope.localInstruments.map(function (item){
-
-                                    item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
-
-                                    return item;
-
-                                })
-
-                                resolve()
-
+                                return item;
 
                             })
 
-                        }))
+                            resolve()
 
-
-                        Promise.all(promises).then(function (data) {
-
-                            scope.processing = false;
-
-                            scope.$apply();
 
                         })
 
-                    }
+                    }))
+
+
+                    Promise.all(promises).then(function (data) {
+
+                        scope.processing = false;
+
+                        scope.$apply();
+
+                    })
 
 
                 }
