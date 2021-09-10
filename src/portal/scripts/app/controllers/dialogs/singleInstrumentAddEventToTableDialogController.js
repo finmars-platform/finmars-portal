@@ -164,9 +164,11 @@
                         objPath:['text'],
                         columnName: 'Text',
                         order: 1,
-                        cellType: 'text',
+                        cellType: 'expression',
                         settings: {
-                            value: null
+                            value: null,
+							exprData: null,
+							closeOnMouseOut: false
                         },
                         styles: {
                             'grid-table-cell': {'width': '220px'}
@@ -258,6 +260,12 @@
                 transactionType.settings.selectorOptions = vm.transactionTypes.map(getTTypesAsSelectorOptions);
 
                 var text = gridTableHelperService.getCellFromRowByKey(rowObj, 'text');
+
+				text.settings.exprData = {
+					groups: [],
+					functions: [],
+				};
+
                 text.settings.value = action.text;
 
                 var isSendToPending = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_sent_to_pending');

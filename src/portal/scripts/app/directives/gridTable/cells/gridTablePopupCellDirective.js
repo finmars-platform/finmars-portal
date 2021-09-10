@@ -168,6 +168,10 @@
 
 						}
 
+						if (scope.column.cellType === 'text') {
+							popupValue = '';
+						}
+
 						scope.column.settings.value = popupValue;
 						scope.column.settings.cellText = popupValue;
 

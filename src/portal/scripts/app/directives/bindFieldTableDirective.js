@@ -48,6 +48,7 @@
 				const minTableColWidth = 50;
 				const maxTableColWidth = 400;
 				let columnsNumber = 0;
+				const useIdForOptions = ['periodicity', 'accrual_calculation_model', 'event_class', 'notification_class'];
 				/** Helps to determine which of multiple tables changed */
 				let thisTableChanged = false;
 				// let thisTableChanged = {value: false}
@@ -83,7 +84,6 @@
 
 							entitySpecificData.selectorOptions.periodicity = data.map(periodicity => {
 								return {
-									// id: periodicity.user_code,
 									id: periodicity.id,
 									name: periodicity.name
 								}
@@ -198,7 +198,6 @@
 
 							entitySpecificData.selectorOptions.accrual_calculation_model = data.map(cModel => {
 								return {
-									// id: cModel.user_code,
 									id: cModel.id,
 									name: cModel.name
 								}
@@ -375,9 +374,10 @@
 
 								let fields = scheme.data.items;
 
-								if (!scheme.data.items_blocked) {
+								/*if (!scheme.data.items_blocked) {
 									fields = fields.concat(scheme.data.blockableItems);
-								}
+								}*/
+								fields = fields.concat(scheme.data.items2);
 
 								return {
 									id: scheme.id,
@@ -408,6 +408,7 @@
 
 					const columnSelector = entitySpecificData.selectorOptions.hasOwnProperty(column.key);
 					const optionSelectedInCustomizableSelector = (column.settings.value || column.settings.value === 0) && columnSelector;
+					const idProp = useIdForOptions.includes(column.key) ? 'id' : 'user_code';
 
 					if (optionSelectedInCustomizableSelector) {
 
@@ -416,11 +417,11 @@
 						if (optionIndex < 0) { // if selected option hidden, add it until another selected
 
 							const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
-								return option.id === column.settings.value;
+								return option[idProp] === column.settings.value;
 							});
 
 							column.settings.selectorOptions.push({
-								id: optionData.id,
+								id: optionData[idProp],
 								name: optionData.name
 							});
 
@@ -435,7 +436,7 @@
 					const instrAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
 
 					return $mdDialog.show({
-						controller: 'SingleInstrumentAddAccrualToTableDialogController as vm',
+						controller: 'AddRowToTableInsideEvUserTabDialogController as vm',
 						templateUrl: templateUrl,
 						parent: angular.element(document.body),
 						clickOutsideToClose: false,
@@ -567,17 +568,18 @@
 
 							if (column.options) {
 
+								const idProp = useIdForOptions.includes(column.key) ? 'id' : 'user_code';
 								columnData.settings.selectorOptions = [];
 
 								column.options.forEach(option => {
 
 									if (option.to_show) {
 
-										// const convertedOpts = {id: option.user_code};
-										const convertedOpts = {id: option.id};
-										convertedOpts.name = option.override_name ? option.override_name : option.name;
+										let convertedOpt = {};
+										convertedOpt.id = option[idProp];
+										convertedOpt.name = option.override_name ? option.override_name : option.name;
 
-										columnData.settings.selectorOptions.push(convertedOpts);
+										columnData.settings.selectorOptions.push(convertedOpt);
 
 									}
 

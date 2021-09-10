@@ -461,9 +461,11 @@
                             objPath:['text'],
                             columnName: 'Text',
                             order: 1,
-                            cellType: 'text',
+                            cellType: 'expression',
                             settings: {
-                                value: null
+                                value: null,
+								exprData: null,
+								closeOnMouseOut: false
                             },
                             styles: {
                                 'grid-table-cell': {'width': '506px'}
@@ -551,7 +553,15 @@
                 rowObj.columns[0].settings.value = row.transaction_type;
 				rowObj.columns[0].settings.selectorOptions = vm.transactionTypes.map(getTTypesAsSelectorOptions);
 
-                rowObj.columns[1].settings.value = row.text;
+                // rowObj.columns[1].settings.value = row.text;
+				let textCol = gridTableHelperService.getCellFromRowByKey(rowObj, 'text');
+				textCol.settings.value = row.text;
+
+				textCol.settings.exprData = {
+					groups: [],
+					functions: [],
+				};
+
                 rowObj.columns[2].settings.value = row.is_sent_to_pending;
                 rowObj.columns[3].settings.value = row.is_book_automatic;
                 // rowObj.columns[4].settings.value = row.button_position;
@@ -733,9 +743,9 @@
 
 		};
 
-		vm.toggleEventBlockableItems = function (item) {
+		/* vm.toggleEventBlockableItems = function (item) {
 
-			const tableData = item.eventBlockableItemsGridTableDataService.getTableData();
+			const tableData = item.eventItems2GridTableDataService.getTableData();
 
 			tableData.body.forEach(row => {
 
@@ -745,8 +755,11 @@
 
 			});
 
-			item.eventBlockableItemsGridTableDataService.setTableData(tableData);
+			item.eventItems2GridTableDataService.setTableData(tableData);
 
+		}; */
+		vm.onAutogenerateToggle = function ($event, item) {
+			if (!item.autogenerate) item.data.get_items2_from_accruals = false;
 		};
 
         vm.createInstrumentTypeEvent = function () {
@@ -770,8 +783,8 @@
                 eventItemsGridTableDataService: new GridTableDataService(),
                 eventItemsGridTableEventService: new EventService(),
 
-				eventBlockableItemsGridTableDataService: new GridTableDataService(),
-				eventBlockableItemsGridTableEventService: new EventService(),
+				eventItems2GridTableDataService: new GridTableDataService(),
+				eventItems2GridTableEventService: new EventService(),
 
                 eventActionsGridTableDataService: new GridTableDataService(),
                 eventActionsGridTableEventService: new EventService(),
@@ -809,7 +822,8 @@
                             defaultValueType: 'number'
                         }
                     ],
-					blockableItems: [
+					// blockableItems: [
+					items2: [
 						{
                             key: 'effective_date',
                             name: 'Effective Date',
@@ -836,7 +850,8 @@
                             defaultValueType: 'multitypeField'
                         }
 					],
-					items_blocked: false,
+					// items_blocked: false,
+					get_items2_from_accruals: false,
                     actions: []
                 }
             };
@@ -854,7 +869,7 @@
 			formatDataForEventGridTable(event, event.data.items, event.eventItemsGridTableDataService, event.eventItemsGridTableEventService, 'items');
 
 			// for event blockable rows
-			formatDataForEventGridTable(event, event.data.blockableItems, event.eventBlockableItemsGridTableDataService, event.eventBlockableItemsGridTableEventService, 'blockableItems');
+			formatDataForEventGridTable(event, event.data.items2, event.eventItems2GridTableDataService, event.eventItems2GridTableEventService, 'items2');
 
             /* var eventsActionGridTableData = getEventsActionGridTableData(event);
             event.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
@@ -1035,12 +1050,12 @@
 			formatDataForEventGridTable(event, event.data.items, event.eventItemsGridTableDataService, event.eventItemsGridTableEventService, 'items');
 
 			// for event blockable rows
-			event.eventBlockableItemsGridTableDataService = new GridTableDataService();
-			event.eventBlockableItemsGridTableEventService = new EventService();
+			event.eventItems2GridTableDataService = new GridTableDataService();
+			event.eventItems2GridTableEventService = new EventService();
 
-			if (!event.data.blockableItems) event.data.blockableItems = [];
+			if (!event.data.items2) event.data.items2 = [];
 
-			formatDataForEventGridTable(event, event.data.blockableItems, event.eventBlockableItemsGridTableDataService, event.eventBlockableItemsGridTableEventService, 'blockableItems');
+			formatDataForEventGridTable(event, event.data.items2, event.eventItems2GridTableDataService, event.eventItems2GridTableEventService, 'items2');
 			//</editor-fold>
 
 			//<editor-fold desc="Actions grid table">
