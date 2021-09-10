@@ -98,7 +98,8 @@
         vm.currencies = []; // need for instrument pricing tab;
 
         // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
-        vm.action = 'add';
+		//region Fixed area popup
+		vm.action = 'add';
         vm.typeFieldName = 'type';
         vm.typeFieldLabel = 'Type';
 
@@ -129,10 +130,11 @@
             {id: 2, name: "Run Valuation: if non-zero position"},
             {id: 3, name: "Run Valuation: always"},
         ];
+		//endregion
 
         vm.activeTab = null;
 
-        vm.openedIn = data.openedIn;
+        vm.openedIn = data.openedIn; // 'big-drawer', 'dialog'
         vm.originalFixedAreaPopupFields;
 
 		if (vm.entityType === 'instrument') {

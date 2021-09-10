@@ -265,7 +265,7 @@
                 var initScopeWatchers = function () {
                     scope.$watch('model', function () {
 
-						scope.numberToShow = scope.model;
+                        scope.numberToShow = scope.model;
 
                         if (scope.model || scope.model === 0) {
 

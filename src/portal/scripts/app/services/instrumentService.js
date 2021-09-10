@@ -24,6 +24,10 @@
         return instrumentRepository.getListLight(options);
     };
 
+	const getListForSelect = function (options) {
+		return instrumentRepository.getListForSelect(options);
+	};
+
 	const getByKey = function (id) {
         return instrumentRepository.getByKey(id);
     };
@@ -388,6 +392,7 @@
     module.exports = {
         getList: getList,
         getListLight: getListLight,
+        getListForSelect: getListForSelect,
         getByKey: getByKey,
         create: create,
         update: update,

@@ -112,7 +112,10 @@
 
                                 if (data.results.length) {
 
-                                    var transactionType = data.results[0];
+                                    // var transactionType = data.results[0];
+									var transactionType = data.results.find(function (ttype) {
+										return ttype.user_code === item.target;
+									});
 
                                     $mdDialog.show({
                                         controller: 'ComplexTransactionAddDialogController as vm',
@@ -128,12 +131,10 @@
                                                 contextData: contextData
                                             }
                                         }
-                                    }).then(function (res) {
+                                    });
 
-
-                                    })
-
-                                } else {
+                                }
+                                else {
 
                                     toastNotificationService.error('Transaction Type is not found');
 
@@ -148,13 +149,14 @@
                                             data: {}
 
                                         }
-                                    })
+                                    });
 
                                 }
 
                             })
 
-                        } else {
+                        }
+                        else {
 
                             $mdDialog.show({
                                 controller: 'ComplexTransactionAddDialogController as vm',
@@ -172,8 +174,7 @@
                         }
 
                     }
-
-                    if (item.action === 'create_new_record') {
+                    else if (item.action === 'create_new_record') {
 
                         $mdDialog.show({
                             controller: 'EntityViewerAddDialogController as vm',
@@ -182,16 +183,13 @@
                             targetEvent: $event,
                             locals: {
                                 entityType: item.target,
-                                entity: {}
+                                entity: {},
+								data: {openedIn: 'dialog'}
                             }
-                        }).then(function (res) {
-
-
                         })
 
                     }
-
-                    if (item.action === 'run_valuation_procedure') {
+					else if (item.action === 'run_valuation_procedure') {
 
                         pricingProcedureService.getList({
                             filters: {
@@ -233,8 +231,7 @@
                         })
 
                     }
-
-                    if (item.action === 'import_data_from_file') {
+					else if (item.action === 'import_data_from_file') {
 
                         if (item.target) {
 
@@ -293,8 +290,7 @@
 
 
                     }
-
-                    if (item.action === 'import_transactions_from_file') {
+					else if (item.action === 'import_transactions_from_file') {
 
                         if (item.target) {
 
@@ -306,7 +302,9 @@
 
                                 if (data.results.length) {
 
-                                    var scheme = data.results[0];
+                                    var scheme = data.results.find(function (schemeData) {
+                                    	return schemeData.user_code === item.target;
+									});
 
                                     $mdDialog.show({
                                         controller: 'TransactionImportDialogController as vm',
@@ -350,8 +348,7 @@
 
                         }
                     }
-
-                    if (item.action === 'complex_import_from_file') {
+					else if (item.action === 'complex_import_from_file') {
 
                         if (item.target) {
 
@@ -411,24 +408,24 @@
                         }
 
                     }
-
-                    if (item.action === 'open_dashboard') {
+					else if (item.action === 'open_dashboard') {
 
                         if (item.target) {
 
-                            $state.go('app.portal.dashboard', {
+                            /*$state.go('app.portal.dashboard', {
                                 layoutUserCode: item.target
-                            }, {reload: 'app'})
+                            }, {reload: 'app'})*/
+							var dashboardUrl = $state.href('app.portal.dashboard');
+							dashboardUrl = dashboardUrl + '?layout=' + item.target;
+
+							window.open(dashboardUrl, '_bland');
 
                         } else {
-
                             toastNotificationService.error('Dashboard Layout is not set');
-
                         }
 
                     }
-
-                    if (item.action === 'download_instrument') {
+					else if (item.action === 'download_instrument') {
 
                         if (item.target) {
 
@@ -488,8 +485,7 @@
 
 
                     }
-
-                    if (item.action === 'go_to') {
+					else if (item.action === 'go_to') {
 
                         if (item.target) {
 
@@ -502,8 +498,7 @@
                         }
 
                     }
-
-                    if (item.action === 'open_report') {
+					else if (item.action === 'open_report') {
 
                         var reportViewerRouteMap = {
                             'reports.balancereport': 'app.portal.reports.balance-report',
@@ -511,29 +506,28 @@
                             'reports.transactionreport': 'app.portal.reports.transaction-report'
                         };
 
-
                         if (item.target) {
 
                             if (item.target_specific) {
 
-                                $state.go(reportViewerRouteMap[item.target], {
+                                /* $state.go(reportViewerRouteMap[item.target], {
                                     layoutUserCode: item.target_specific
-                                }, {reload: 'app'})
+                                }, {reload: 'app'}) */
+								var reportUrl = $state.href(reportViewerRouteMap[item.target]);
+								reportUrl = reportUrl + '?layout=' + item.target_specific;
+
+								window.open(reportUrl, '_bland');
 
                             } else {
                                 toastNotificationService.error('Report Viewer Layout is not set');
                             }
 
-
                         } else {
-
                             toastNotificationService.error('Entity is not set');
-
                         }
 
                     }
-
-                    if (item.action === 'open_data_viewer') {
+					else if (item.action === 'open_data_viewer') {
 
                         var entityViewerRouteMap = {
                             'portfolios.portfolio': 'app.portal.data.portfolio',
@@ -558,9 +552,13 @@
 
                             if (item.target_specific) {
 
-                                $state.go(entityViewerRouteMap[item.target], {
+                                /* $state.go(entityViewerRouteMap[item.target], {
                                     layoutUserCode: item.target_specific
-                                }, {reload: 'app'})
+                                }, {reload: 'app'}) */
+								var entityViewerUrl = $state.href(entityViewerRouteMap[item.target]);
+								entityViewerUrl = entityViewerUrl + '?layout=' + item.target_specific;
+
+								window.open(entityViewerUrl, '_bland');
 
                             } else {
                                 toastNotificationService.error('Entity Viewer Layout is not set');
@@ -574,6 +572,7 @@
                         }
 
                     }
+
                 };
 
 
