@@ -1015,7 +1015,8 @@
                 };
 
 				event.data.items.forEach(validateEventRow);
-				if (!event.data.items_blocked) event.data.blockableItems.forEach(validateEventRow);
+				// if (!event.data.items_blocked) event.data.blockableItems.forEach(validateEventRow);
+				event.data.items2.forEach(validateEventRow);
 
                 if (event.data.actions.length) {
 

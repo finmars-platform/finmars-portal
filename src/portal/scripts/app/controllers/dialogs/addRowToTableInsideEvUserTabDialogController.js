@@ -7,7 +7,7 @@
     const metaHelper = require('../../helpers/meta.helper');
     const instrumentService = require('../../services/instrumentService');
 
-    module.exports = function singleInstrumentAddAccrualToTableDialogController ($scope, $mdDialog, gridTableHelperService, multitypeFieldService, data) {
+    module.exports = function addRowToTableInsideEvUserTabDialogController ($scope, $mdDialog, gridTableHelperService, multitypeFieldService, data) {
 
         var vm = this;
         // vm.title = data.accrualScheme.data.form_message;
