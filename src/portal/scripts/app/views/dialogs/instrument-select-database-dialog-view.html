@@ -43,12 +43,12 @@
 
             <div class="instrument-select-database-dialog-table-body">
 
-                <div data-ng-if="!vm.processing">
+                <div data-ng-if="!vm.processing" style="height: 359px; overflow-y: auto">
+
+                    <b data-ng-if="vm.localInstruments.length" class="instrument-select-options-group-title">Local Instruments
+                        ({{vm.localInstrumentsTotal}})</b>
 
                     <div data-ng-if="vm.localInstruments.length">
-
-                        <b class="instrument-select-options-group-title">Local Instruments
-                            ({{vm.localInstrumentsTotal}})</b>
 
                         <div
                                 data-ng-repeat="option in vm.localInstruments"
@@ -74,10 +74,10 @@
 
                     </div>
 
-                    <div data-ng-if="vm.databaseInstruments.length">
+                    <b data-ng-if="vm.databaseInstruments.length" style=" bottom: 0px;"  class="instrument-select-options-group-title">Global Instruments
+                        ({{vm.databaseInstrumentsTotal}})</b>
 
-                        <b class="instrument-select-options-group-title">Global Instruments
-                            ({{vm.databaseInstrumentsTotal}})</b>
+                    <div data-ng-if="vm.databaseInstruments.length">
 
                         <div
                                 data-ng-repeat="option in vm.databaseInstruments"
