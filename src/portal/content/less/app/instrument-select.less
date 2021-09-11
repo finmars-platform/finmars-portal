@@ -66,6 +66,7 @@ instrument-select {
   z-index: 52;
   box-shadow: 0 0 2px #000;
   padding: 11px 16px 2px 16px;
+  box-sizing: border-box;
 }
 
 .instrument-select-options-group-title {
@@ -75,6 +76,12 @@ instrument-select {
   display: block;
   margin: 8px;
   padding-left: 10px;
+  position: sticky;
+  background: #fff;
+  cursor: pointer;
+  height: 30px;
+  padding-top: 9px;
+  box-sizing: border-box;
 }
 
 .instrument-select-option-detail-label {
@@ -183,7 +190,7 @@ instrument-select {
 
 
 .instrument-select-database-dialog-view .instrument-select-option-detail-box {
-  width: 190px;
+  width: 224px;
   right: 0;
   left: inherit;
   top: 123px;
@@ -194,11 +201,12 @@ instrument-select {
   box-shadow: none;
   border: 1px solid #ddd;
   padding: 11px 16px 2px;
+  box-sizing: border-box;
 }
 
 .instrument-select-database-dialog-table-head {
   display: flex;
-  width: 513px;
+  width: 713px;
   padding: 0 10px;
   font-size: 13px;
   color: #666;
@@ -243,6 +251,9 @@ instrument-select {
     height: 46px;
     box-sizing: border-box;
     padding-top: 15px;
+    position: sticky;
+    background: #fff;
+    cursor: pointer;
   }
 
   .instrument-select-database-dialog-view-close-button {

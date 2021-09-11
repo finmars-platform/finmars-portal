@@ -71,11 +71,11 @@
 
         <div class="custom-input-sel-menu-block"  data-ng-if="inputText.length > 2" >
 
-            <div data-ng-if="!processing">
+            <div data-ng-if="!processing" style="height: 369px; overflow-y: auto">
+
+                <b data-ng-if="localInstruments.length" class="instrument-select-options-group-title">Local Instruments ({{localInstrumentsTotal}})</b>
 
                 <div data-ng-if="localInstruments.length">
-
-                    <b class="instrument-select-options-group-title">Local Instruments ({{localInstrumentsTotal}})</b>
 
                     <div
                             data-ng-repeat="option in localInstruments"
@@ -100,9 +100,11 @@
 
                 </div>
 
-                <div data-ng-if="databaseInstruments.length">
 
-                    <b class="instrument-select-options-group-title">Global Instruments ({{databaseInstrumentsTotal}})</b>
+                <b data-ng-if="databaseInstruments.length" style=" bottom: 0px;" class="instrument-select-options-group-title">Global Instruments ({{databaseInstrumentsTotal}})</b>
+
+
+                <div data-ng-if="databaseInstruments.length">
 
                     <div
                             data-ng-repeat="option in databaseInstruments"

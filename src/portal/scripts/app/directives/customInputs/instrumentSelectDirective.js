@@ -502,6 +502,15 @@
 
                         scope.$apply();
 
+                        setTimeout(function (){
+
+                            $('.instrument-select-options-group-title').on('click', function(){
+
+                                $(this).next()[0].scrollIntoView({ block: 'start', behavior: 'smooth' });
+                            });
+
+                        }, 100)
+
                     })
 
 
