@@ -81,16 +81,15 @@
                             data-ng-repeat="option in localInstruments"
                             data-ng-click="selectLocalInstrument(option)"
                             class="instrument-select-input-sel-option"
-                            ng-mouseleave="clearHoverInstrument()"
                             ng-mouseover="setHoverInstrument($event, option)"
 
                     >
 
-                        <div class="instrument-select-instrument-name">
-                            {{option.name}}
+                        <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.name)">
+
                         </div>
-                        <div class="instrument-select-instrument-isin">
-                            {{option.user_code}}
+                        <div class="instrument-select-instrument-isin" data-ng-bind-html="getHighlighted(option.user_code)">
+
                         </div>
 
                         <div class="instrument-select-instrument-ticker" data-ng-if="option.reference_for_pricing">
@@ -109,16 +108,15 @@
                             data-ng-repeat="option in databaseInstruments"
                             data-ng-click="selectDatabaseInstrument(option)"
                             class="instrument-select-input-sel-option"
-                            ng-mouseleave="clearHoverInstrument()"
                             ng-mouseover="setHoverInstrument($event, option)"
                             >
 
 
-                        <div class="instrument-select-instrument-name">
-                            {{option.issueName}}
+                        <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.issueName)">
+
                         </div>
-                        <div class="instrument-select-instrument-isin">
-                            {{option.referenceId}}
+                        <div class="instrument-select-instrument-isin" data-ng-bind-html="getHighlighted(option.referenceId)">
+
                         </div>
 
                         <div class="instrument-select-instrument-ticker" data-ng-if="option.bloombergTicker">

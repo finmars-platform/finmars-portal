@@ -374,8 +374,22 @@
 
                 };
 
-                scope.getList = function () {
+                scope.getHighlighted = function (value) {
 
+                    var inputTextPieces = scope.inputText.split(' ')
+
+                    var resultValue;
+
+                    // Regular expression for multiple highlighting case insensitive results
+                    var reg  =  new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+
+                    resultValue = value.replace(reg, '<span class="highlight">$1</span>');
+
+                    return resultValue
+
+                }
+
+                scope.getList = function () {
 
                     scope.processing = true;
 
@@ -457,20 +471,14 @@
                         instrumentService.getListForSelect({
                             pageSize: 500,
                             filters: {
-                                name: scope.inputText
+                                query: scope.inputText
                             }
 
                         }).then(function (data) {
 
                             scope.localInstrumentsTotal = data.count;
 
-                            scope.localInstruments = []
-
-                            data.results.forEach(function (item, index) {
-                                if (index < 4) {
-                                    scope.localInstruments.push(item);
-                                }
-                            })
+                            scope.localInstruments = data.results;
 
                             scope.localInstruments = scope.localInstruments.map(function (item) {
 
