@@ -54,16 +54,15 @@
                                 data-ng-repeat="option in vm.localInstruments"
                                 data-ng-click="vm.selectLocalInstrument(option)"
                                 class="instrument-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
-                                ng-mouseleave="vm.clearHoverInstrument()"
                                 ng-mouseover="vm.setHoverInstrument($event, option)"
 
                         >
 
-                            <div class="instrument-select-instrument-name" title="{{option.name}}">
-                                {{option.name}}
+                            <div class="instrument-select-instrument-name" title="{{option.name}}" ng-bind-html="vm.getHighlighted(option.name)">
+
                             </div>
-                            <div class="instrument-select-instrument-isin" title="{{option.user_code}}">
-                                {{option.user_code}}
+                            <div class="instrument-select-instrument-isin" title="{{option.user_code}}" ng-bind-html="vm.getHighlighted(option.user_code)">
+
                             </div>
 
                             <div class="instrument-select-instrument-type"
@@ -84,17 +83,16 @@
                                 data-ng-repeat="option in vm.databaseInstruments"
                                 data-ng-click="vm.selectDatabaseInstrument(option)"
                                 class="instrument-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
-                                ng-mouseleave="vm.clearHoverInstrument()"
                                 ng-mouseover="vm.setHoverInstrument($event, option)"
                         >
 
 
-                            <div class="instrument-select-instrument-name" title="{{option.issueName}}">
-                                {{option.issueName}}
+                            <div class="instrument-select-instrument-name" title="{{option.issueName}}" ng-bind-html="vm.getHighlighted(option.issueName)">
+
                             </div>
 
-                            <div class="instrument-select-instrument-isin" title="{{option.referenceId}}">
-                                {{option.referenceId}}
+                            <div class="instrument-select-instrument-isin" title="{{option.referenceId}}" ng-bind-html="vm.getHighlighted(option.referenceId)">
+
                             </div>
 
                             <div class="instrument-select-instrument-type" title="{{option.instrumentType}}">
