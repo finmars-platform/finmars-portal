@@ -155,7 +155,8 @@
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-                obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                // obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                obj.___items_count = data.count;
 
                 obj.count = data.count;
                 obj.next = data.next;
@@ -173,7 +174,8 @@
                 obj.___group_name = event.groupName ? event.groupName : '-';
                 obj.___group_id = event.groupId ? event.groupId : '-';
                 obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
-                obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                // obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                obj.___items_count = data.count;
                 obj.___is_open = true;
                 obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -301,7 +303,8 @@
 
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-                obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                // obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                obj.___items_count = data.count;
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                 obj.count = data.count;
@@ -321,7 +324,8 @@
                 obj = Object.assign({}, data);
                 obj.___group_name = event.groupName ? event.groupName : '-';
                 obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
-                obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                // obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                obj.___items_count = data.count;
                 obj.___group_id = event.groupId ? event.groupId : '-';
                 // obj.___group_identifier = event.groupId;
                 obj.___is_open = true;
