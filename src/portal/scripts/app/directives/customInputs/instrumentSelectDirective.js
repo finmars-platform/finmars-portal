@@ -438,9 +438,9 @@
                                 return data.json()
                             }).then(function (data) {
 
-                                scope.databaseInstrumentsTotal = data.length;
+                                scope.databaseInstrumentsTotal = data.resultCount;
 
-                                scope.databaseInstruments = data;
+                                scope.databaseInstruments = data.foundItems
 
                                 scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
 

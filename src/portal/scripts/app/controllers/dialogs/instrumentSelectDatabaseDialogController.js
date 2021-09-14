@@ -200,9 +200,9 @@
                         return data.json()
                     }).then(function (data) {
 
-                        vm.databaseInstrumentsTotal = data.length
+                        vm.databaseInstrumentsTotal = data.resultCount
 
-                        vm.databaseInstruments = data
+                        vm.databaseInstruments = data.foundItems
 
                         vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
