@@ -132,6 +132,8 @@
 
             obj = Object.assign({}, rootGroupData);
 
+            obj.___items_count = data.count;
+
             obj.count = data.count;
             obj.next = data.next;
             obj.previous = data.previous;
@@ -278,6 +280,8 @@
             var rootGroupData = entityViewerDataService.getRootGroupData();
 
             obj = Object.assign({}, rootGroupData);
+
+            obj.___items_count = data.count;
 
             obj.count = data.count;
             obj.next = data.next;
