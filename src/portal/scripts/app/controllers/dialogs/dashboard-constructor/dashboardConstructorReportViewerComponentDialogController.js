@@ -13,7 +13,7 @@
     var portfolioService = require('../../../services/portfolioService');
     var strategyService = require('../../../services/strategyService');
 
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService, data) {
+    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService, multitypeFieldService, data) {
 
         var vm = this;
 
@@ -23,6 +23,9 @@
         vm.smallRvSelectedCols = [];
 
         vm.launchedFromDashboard = data.openedFromDashboard;
+        vm.readyStatus = {
+        	layouts: false
+		};
 
         vm.componentsForMultiselector = [];
         var componentsForLinking = dashboardHelper.getComponentsForLinking();
@@ -74,6 +77,12 @@
 
         }
 
+		vm.layoutsByEntityType = {
+			'balance-report': [],
+			'pl-report': [],
+			'transaction-report': [],
+		};
+
         vm.deleteFilterLink = function (item, $index) {
 
             vm.item.settings.linked_components.filter_links = vm.item.settings.linked_components.filter_links.filter(function (item, index) {
@@ -108,7 +117,7 @@
 
         vm.layouts = [];
 
-        vm.reportTypeChange = function() {
+        /* vm.reportTypeChange = function() {
 
             vm.item.settings.layout = null;
             vm.item.settings.linked_components = {};
@@ -123,15 +132,55 @@
 
             });
 
-        };
+        }; */
+
+		vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
+			type.custom = {
+				menuOptionsNotLoaded: true
+			}
+			return type;
+		});
 
         vm.getAttributes = function() {
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
-
             /*vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
                 return {id: attribute.key, name: attribute.name};
             });*/
         };
+
+		vm.onLayoutEntityTypeChange = function (activeType) {
+
+			dashboardConstructorMethodsService.onReportTypeChange(activeType, vm.item, vm.getLayouts, $scope).then(function (item) {
+
+				vm.layouts = vm.layoutsByEntityType[vm.item.settings.entity_type];
+				vm.item = item;
+
+				vm.item.settings.linked_components = {};
+
+				vm.item.settings.abscissa = null;
+				vm.item.settings.ordinate = null;
+				vm.item.settings.value_key = null;
+
+				vm.item.user_settings = {};
+
+				vm.getAttributes();
+
+				vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
+				vm.smallRvColumnsChanged();
+
+			});
+
+		};
+
+		vm.onLayoutChange = function () {
+
+			var activeType = vm.layoutsSelectorsList.find(function (type) {
+				return type.isActive;
+			});
+
+			vm.item.settings.layout = activeType.model;
+
+		};
 
         vm.getLayouts = function () {
 
@@ -141,9 +190,11 @@
 
                 uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
 
+					vm.layoutsByEntityType[vm.item.settings.entity_type] = data.results;
                     vm.layouts = data.results;
 
-                    vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                    var layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+
                     extractDataFromSelectedLayout();
 
                     // for small rv columns multiselector
@@ -164,9 +215,12 @@
 
                     $scope.$apply();
 
-                    resolve();
+                    resolve(layoutsWithLinkToFilters);
 
-                })
+                }).catch(function (error) {
+					console.error(error);
+					resolve([]);
+				});
 
             });
 
@@ -414,7 +468,8 @@
         };
 
         vm.init = function () {
-            setTimeout(function () {
+
+        	setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.dcReportViewerElemToDrag');
             }, 100);
 
@@ -488,9 +543,18 @@
             console.log('vm', vm);
 
             if (vm.item.id) {
-                vm.getLayouts();
+                // vm.getLayouts();
                 vm.getAttributes();
-            }
+
+				dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
+					vm.layoutsSelectorsList = layoutsSelectorsList;
+					vm.readyStatus.layouts = true;
+					$scope.$apply();
+				});
+
+            } else {
+				vm.readyStatus.layouts = true;
+			}
 
         };
 
