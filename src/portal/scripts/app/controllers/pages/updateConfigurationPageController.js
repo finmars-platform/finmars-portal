@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../../../portal/scripts/app/services/uiService');
+    var uiService = require('../../services/uiService');
     // var usersService = require('../services/usersService');
     // var usersGroupService = require('../services/usersGroupService');
 
@@ -20,18 +20,10 @@
         vm.readyStatus = {content: false, member: false, groups: false};
         vm.processing = false;
 
-        vm.activeConfig = null;
-
         vm.setActiveConfig = function ($event, id) {
 
-            if (vm.activeConfig !== id) {
-                vm.activeConfig = id
-            } else {
-                vm.activeConfig = null;
-            }
-
             var item = vm.items.find(function (item) {
-                return item.id === vm.activeConfig
+                return item.id === id
             });
 
             vm.applyItem($event, item)
@@ -97,20 +89,24 @@
 
             backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
 
-                vm.processing = false;
-
                 vm.importConfig = data;
 
                 vm.counter = data.processed_rows;
                 vm.activeItemTotal = data.total_rows;
 
-                $scope.$apply();
+
 
                 if (vm.importConfig.task_status === 'SUCCESS') {
+
+                    vm.processing = false;
+                    
+                    $scope.$apply();
 
                     resolve()
 
                 } else {
+
+                    $scope.$apply();
 
                     setTimeout(function () {
                         vm.importConfiguration(resolve);
