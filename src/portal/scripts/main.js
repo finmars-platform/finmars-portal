@@ -199,6 +199,10 @@ export default (function () {
 	portal.directive('contextMenuConstructorOption', [require('./app/directives/contextMenuConstructorOptionDirective')]);
 
 
+	portal.controller('InstrumentSelectDatabaseDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrumentSelectDatabaseDialogController')]);
+
+
+
 	portal.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);
 
 	// Dialog selectors
