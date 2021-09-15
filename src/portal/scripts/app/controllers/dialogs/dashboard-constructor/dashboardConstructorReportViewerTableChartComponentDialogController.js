@@ -10,13 +10,16 @@
 
     var dashboardHelper = require('../../../helpers/dashboard.helper');
 
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
+    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService, multitypeFieldService, data) {
 
         var vm = this;
 
         vm.newFilter = {};
 
         vm.filterLinks = [];
+		vm.readyStatus = {
+			layouts: false
+		};
 
         vm.componentsForMultiselector = [];
         var componentsForLinking = dashboardHelper.getComponentsForLinking();
@@ -56,6 +59,11 @@
 
         vm.componentType = dataService.getComponentById(vm.item.id);
 
+		vm.layoutsByEntityType = {
+			'balance-report': [],
+			'pl-report': [],
+			'transaction-report': [],
+		};
         vm.layouts = [];
 
         vm.cancel = function () {
@@ -103,7 +111,7 @@
 
         };
 
-        vm.reportTypeChange = function(){
+        /* vm.reportTypeChange = function(){
 
             vm.item.settings.layout = null;
             vm.item.settings.linked_components= {};
@@ -117,20 +125,76 @@
             vm.getAttributes();
             vm.getLayouts();
 
-        };
+        }; */
+
+		vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
+			type.custom = {
+				menuOptionsNotLoaded: true,
+			}
+			return type;
+		});
+
+		vm.onLayoutEntityTypeChange = function (activeType) {
+			/*vm.item.settings.entity_type = activeType.key;
+
+			if (activeType.custom.menuOptionsNotLoaded) {
+
+				activeType.fieldData.menuOptions = await vm.getLayouts();
+				activeType.custom.menuOptionsNotLoaded = false;
+
+				$scope.$apply();
+
+			}*/
+			dashboardConstructorMethodsService.onReportTypeChange(activeType, vm.item, vm.getLayouts, $scope).then(function (item) {
+
+				vm.layouts = vm.layoutsByEntityType[vm.item.settings.entity_type];
+				vm.item = item;
+
+				vm.item.settings.linked_components= {};
+
+				vm.item.settings.title_column = null;
+				vm.item.settings.value_column = null;
+				vm.item.settings.percent_column = null;
+
+				vm.item.user_settings = {};
+
+				vm.getAttributes();
+
+			});
+
+		};
+
+		vm.onLayoutChange = function () {
+			var activeType = vm.layoutsSelectorsList.find(function (type) {
+				return type.isActive;
+			});
+
+			vm.item.settings.layout = activeType.model;
+		};
 
         vm.getLayouts = function () {
 
-            uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
+			return new Promise(function (resolve) {
 
-                vm.layouts = data.results;
+				uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
 
-                vm.layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
-                vm.showLinkingToFilters();
+					vm.layoutsByEntityType[vm.item.settings.entity_type] = data.results;
+					vm.layouts = data.results;
 
-                $scope.$apply();
+					var layoutsForMultitypeSelector = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
 
-            })
+					vm.showLinkingToFilters();
+
+					$scope.$apply();
+
+					resolve(layoutsForMultitypeSelector);
+
+				}).catch(function (error) {
+					console.error(error);
+					resolve([]);
+				});
+
+			});
 
         };
 
@@ -229,9 +293,17 @@
 
             if (vm.item.id) {
 
-                vm.getLayouts();
-                vm.getAttributes();
-            }
+				vm.getAttributes();
+                // vm.getLayouts();
+				dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
+					vm.layoutsSelectorsList = layoutsSelectorsList;
+					vm.readyStatus.layouts = true;
+					$scope.$apply();
+				});
+
+            } else {
+				vm.readyStatus.layouts = true;
+			}
 
         };
 

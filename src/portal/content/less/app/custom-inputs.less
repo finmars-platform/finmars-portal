@@ -515,6 +515,38 @@
     outline: none;
   }
 }
+
+.multitype-field-type-selector-popup {
+  padding: 8px 0;
+
+  .field-type-option {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: @optionHoverColor;
+    }
+  }
+
+  .active-type-sign {
+    flex: 0 0 24px;
+  }
+
+  .field-type-name {
+    padding-left: 4px;
+    padding-right: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .multitype-field-type-letter:hover {
+    opacity: 1;
+  }
+
+}
 //</editor-fold>
 
 // should always be at the bottom

@@ -87,9 +87,58 @@
 
 		};
 
+		const getReportLayoutsSelectorData = () => {
+			return [
+				{
+					'key': 'balance-report',
+					'model': "",
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': false,
+					'sign': '<div class="multitype-field-type-letter">B</div>',
+					'name': 'Balance',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': []
+					}
+				},
+				{
+					'key': 'pl-report',
+					'model': '',
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': false,
+					'sign': '<div class="multitype-field-type-letter">P</div>',
+					'name': 'Profit & Loss',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': []
+					}
+				},
+				{
+					'key': 'transaction-report',
+					'model': '',
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': false,
+					'sign': '<div class="multitype-field-type-letter">T</div>',
+					'name': 'Transactions',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': []
+					}
+				}
+			];
+		};
+
 		return {
 			fillSelectorOptionsBasedOnValueType: fillSelectorOptionsBasedOnValueType,
-			setActiveTypeByValueType: setActiveTypeByValueType
+			setActiveTypeByValueType: setActiveTypeByValueType,
+
+			getReportLayoutsSelectorData: getReportLayoutsSelectorData
 		};
 
 	};

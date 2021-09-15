@@ -73,6 +73,7 @@
 
             var layoutObj = {
                 id: layout.id,
+				user_code: layout.user_code,
                 name: layout.name,
                 content: []
             };
