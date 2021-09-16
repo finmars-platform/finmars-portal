@@ -152,6 +152,10 @@
 
         const init = function () {
 
+			vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+				vm.entity = $scope.$parent.vm.entity;
+			});
+
             getList();
 
         }

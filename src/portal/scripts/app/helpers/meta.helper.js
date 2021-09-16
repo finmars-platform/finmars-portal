@@ -210,6 +210,18 @@
 		return md5Helper.md5(currentDate, key);
 	}
 
+	const clearFrontendOptions = function (object) {
+
+		delete object.frontOptions;
+
+		for (const prop in object) {
+
+			if (object[prop] && typeof object[prop] === 'object') clearFrontendOptions(object[prop]);
+
+		}
+
+	};
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
@@ -221,7 +233,9 @@
         closeComponent: closeComponent,
 		getDefaultFilterType: getDefaultFilterType,
 
-		generateUniqueId: generateUniqueId
+		generateUniqueId: generateUniqueId,
+
+		clearFrontendOptions: clearFrontendOptions,
     }
 
 }());

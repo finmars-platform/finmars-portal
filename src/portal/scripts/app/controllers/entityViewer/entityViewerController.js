@@ -438,7 +438,7 @@
 
 							$bigDrawer.show({
 								controller: 'EntityViewerEditDialogController as vm',
-								templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+								templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
 								addResizeButton: true,
 								drawerWidth: bigDrawerWidthPercent,
 								locals: {
@@ -793,7 +793,7 @@
 
 								$bigDrawer.show({
 									controller: 'EntityViewerEditDialogController as vm',
-									templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+									templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
 									locals: {
 										entityType: 'instrument',
 										entityId: actionData.object.instrument,
