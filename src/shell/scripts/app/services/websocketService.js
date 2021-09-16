@@ -8,6 +8,8 @@ let callbacks = {}
 
 const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
+const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+
 const send = function (data) {
 
     console.log('websocket send', data);
@@ -105,7 +107,7 @@ function connect(isReconnect) {
             window.ws.onerror = function (err) {
                 console.log("WEBSOCKET_ERROR: Error", new Error(err.message));
 
-                toastNotificationService.error("Websocket connection is closed")
+                if (PROJECT_ENV !== 'local') toastNotificationService.error("Websocket connection is closed");
 
                 window.openedSocket = false;
             }
