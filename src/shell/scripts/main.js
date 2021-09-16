@@ -91,35 +91,31 @@ app.run([function () {
 
 	// developerConsoleService.init();
 
-	try {
+	// try {
 
-		window.ws = new WebSocket("__WS_HOST__");
+		// window.ws = new WebSocket("__WS_HOST__");
 
-		websocketService.addEventListener('simple_message', function (data) {
-			toastNotificationService.info(data.message)
-		})
+	websocketService.connect();
+	websocketService.reconnectIfError();
 
-		window.ws.onopen = function () {
-			console.log("Websocket. Initial Auth");
-			window.ws.send(JSON.stringify({action: "initial_auth"}));
-		}
+	websocketService.addEventListener('simple_message', function (data) {
+		toastNotificationService.info(data.message)
+	})
 
-	} catch (error) {
+		// window.ws.onopen = function () {
+		// 	console.log("Websocket. Initial Auth");
+		// 	window.ws.send(JSON.stringify({action: "initial_auth"}));
+		// }
 
-		console.error("Can't connect to Websocket server. Error ", error);
+	// } catch (error) {
+	//
+	// 	console.error("Can't connect to Websocket server. Error ", error);
+	//
+	// 	window.ws = null;
+	//
+	// }
 
-		window.ws = null;
 
-	}
-
-	if (window.ws) {
-		ws.onerror = function (error) {
-
-			console.error("Can't connect to Websocket server. Error ", error);
-
-			window.ws = null;
-		};
-	}
 
 }]);
 //</editor-fold>
