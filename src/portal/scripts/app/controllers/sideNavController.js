@@ -519,9 +519,20 @@
 
         };
 
+        vm.getWsStatus = function (){
+            if (window.ws && window.ws.readyState === WebSocket.OPEN) {
+                return 'open'
+            }
+            if (window.ws && window.ws.readyState === WebSocket.CLOSED) {
+                return 'closed'
+            }
+        }
+
         vm.init = function () {
 
             vm.getMember();
+
+
 
         };
 

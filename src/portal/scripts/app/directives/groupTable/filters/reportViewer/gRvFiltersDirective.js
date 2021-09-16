@@ -454,38 +454,6 @@
 
 						if (useFromAboveFilters.length) {
 
-							/* let filterChangedFromAbove = false;
-
-							useFromAboveFilters.forEach((useFromAboveFilter) => {
-
-								let filter = filters[useFromAboveFilter.filtersListIndex];
-								let key = filter.options.use_from_above; // for old layouts
-
-								if (typeof filter.options.use_from_above === 'object') {
-									key = filter.options.use_from_above.key;
-								}
-
-								var activeObjectFromAbove = scope.evDataService.getActiveObjectFromAbove();
-
-								if (activeObjectFromAbove && typeof activeObjectFromAbove === 'object') {
-
-									var value = activeObjectFromAbove[key];
-									filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
-
-									filterChangedFromAbove = true;
-
-								}
-
-							});
-
-							if (filterChangedFromAbove) {
-
-								scope.evDataService.setFilters(scope.filters);
-
-								formatFiltersForChips();
-								scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-							} */
 							const filtersChangedFromAbove = gFiltersHelper.insertActiveObjectDataIntoFilters(scope.evDataService, scope.evEventService);
 							if (filtersChangedFromAbove) formatFiltersForChips();
 
@@ -495,21 +463,6 @@
 
 					scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
 
-						/* var hasUseFromAboveFilter = false;
-
-						scope.filters.forEach(function (filter) {
-
-							if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length > 0) {
-
-								if (filter.options.filter_values.length) {
-									hasUseFromAboveFilter = true;
-									filter.options.filter_values = [];
-								}
-
-							}
-
-						}); */
-
 						if (useFromAboveFilters.length) {
 
 							useFromAboveFilters.forEach(ufaFilter => {
@@ -518,7 +471,7 @@
 
 							});
 
-							scope.evDataService.setFilters(scope.filters);
+							scope.evDataService.setFilters(filters);
 
 							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 

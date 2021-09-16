@@ -219,11 +219,13 @@
                             scope.numberToShow = res.numberValue;
                             applyNumberFormatToInput();
 
-                            if (scope.onChangeCallback) {
+							if (scope.onChangeCallback) {
 
-                                setTimeout(() => scope.onChangeCallback())
+								setTimeout(() => {
+									scope.onChangeCallback();
+								}, 0);
 
-                            }
+							}
 
                         }
 
@@ -263,7 +265,7 @@
                 var initScopeWatchers = function () {
                     scope.$watch('model', function () {
 
-                        scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
+                        scope.numberToShow = scope.model;
 
                         if (scope.model || scope.model === 0) {
 
@@ -346,7 +348,7 @@
                         inputContainer.classList.add('custom-input-focused');
 
                         if (!scope.error && (scope.model || scope.model === 0)) {
-                            scope.numberToShow = JSON.parse(JSON.stringify(scope.model));
+                            scope.numberToShow = scope.model;
                             scope.$apply();
                         }
                     });
