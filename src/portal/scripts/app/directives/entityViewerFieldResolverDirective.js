@@ -33,6 +33,7 @@
 
                 // scope.readyStatus = {content: false};
 				scope.readyStatus = bfcVm.readyStatus;
+				scope.readyStatus.content = false;
 
 				scope.type = 'id';
                 scope.fields = [];
