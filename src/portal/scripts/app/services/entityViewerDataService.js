@@ -96,7 +96,7 @@
 
     var emptyUseFromAboveFilters = function (filters) {
 
-        if (filters) {
+        if (filters && Array.isArray(filters)) {
             filters.forEach(function (filter) {
                 if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length > 0) {
                     filter.options.filter_values = [];
