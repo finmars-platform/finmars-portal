@@ -35,6 +35,8 @@ import warningDialogController from "./app/controllers/dialogs/warningDialogCont
 
 import dndFilesOnPageDirective from "./app/directives/dndFilesOnPageDirective.js";
 
+const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+
 const app = angular.module('finmars', [
 	'ngAria',
 	'ngMaterial',
@@ -95,12 +97,16 @@ app.run([function () {
 
 		// window.ws = new WebSocket("__WS_HOST__");
 
-	websocketService.connect();
-	websocketService.reconnectIfError();
+	if (PROJECT_ENV !== 'local') {
 
-	websocketService.addEventListener('simple_message', function (data) {
-		toastNotificationService.info(data.message)
-	})
+		websocketService.connect();
+		websocketService.reconnectIfError();
+
+		websocketService.addEventListener('simple_message', function (data) {
+			toastNotificationService.info(data.message)
+		})
+
+	}
 
 		// window.ws.onopen = function () {
 		// 	console.log("Websocket. Initial Auth");
