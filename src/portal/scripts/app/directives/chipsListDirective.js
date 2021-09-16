@@ -100,9 +100,9 @@
 
 						// remove "; " from the end
 						let endIndex = scope.hiddenChipsTexts.length - 2;
-						scope.hiddenChipsTexts = scope.hiddenChipsTexts.substring(0, endIndex)
+						scope.hiddenChipsTexts = scope.hiddenChipsTexts.substring(0, endIndex);
 
-						scope.hiddenChipsTexts = "Hidden chips: " + scope.hiddenChipsTexts + "."
+						scope.hiddenChipsTexts = "Hidden chips: " + scope.hiddenChipsTexts + ".";
 
 					}
 

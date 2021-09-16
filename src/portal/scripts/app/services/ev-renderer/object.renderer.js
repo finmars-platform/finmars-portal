@@ -204,7 +204,13 @@
                         return 'Created'
                     }
 
-                } else {
+                }
+                else if(column.key === 'procedure_modified_datetime') {
+
+                    return moment(obj[column.key]).format('YYYY-MM-DD HH:mm:ss')
+
+                }
+                else {
 
                     return stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
 

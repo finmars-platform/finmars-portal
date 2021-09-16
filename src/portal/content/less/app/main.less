@@ -3124,7 +3124,9 @@ button.md-raised.md-warn.md-button {
 
       span.error {
         color:  #f05a22;
+        margin-right: 8px;
         margin-bottom: 2px;
+        font-size: 16px;
       }
     }
   }
@@ -3338,4 +3340,22 @@ button.missing-prices-warning-button.md-button {
     }
   }
 
+}
+
+span.websocket-connection-status {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  float: right;
+  margin-left: 3px;
+  margin-top: 2px;
+
+  &.open {
+    background: green;
+  }
+  &.closed {
+    background: red;
+  }
 }

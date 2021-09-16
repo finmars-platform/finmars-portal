@@ -120,6 +120,7 @@
                 <text-input label="{{vm.entityTypeSlug()}}"
                             model="vm.getEntityPropertyByDefault()"
                             placeholder-text="{{vm.getPlaceholderByDefault()}}"
+                            event-signal="vm.fixedAreaPopup.event"
                             small-options="{dialogParent: '.dialog-containers-wrap', readonly: true}"
                             style="pointer-events: none;">
                 </text-input>
@@ -355,7 +356,7 @@
 
     <div ng-if="vm.readyStatus.layout" class="position-relative">
 
-        <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
+        <md-tabs md-dynamic-height md-border-bottom class="tabs-colored entity-editor-tabs">
 
             <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" md-on-select="vm.activeTab = tab">
 
@@ -513,7 +514,8 @@
              close-on-click-outside="true"
              popup-classes="vm.entityTablePopupClasses">
 
-            <md-button aria-label="open entity tabs"
+            <md-button ng-if="vm.entityType !== 'price-history'"
+                       aria-label="open entity tabs"
                        class="md-icon-button entity-tabs-menu-btn">
                 <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
             </md-button>
