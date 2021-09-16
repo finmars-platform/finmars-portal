@@ -520,10 +520,10 @@
         };
 
         vm.getWsStatus = function (){
-            if (ws && ws.readyState === WebSocket.OPEN) {
+            if (window.ws && window.ws.readyState === WebSocket.OPEN) {
                 return 'open'
             }
-            if (ws && ws.readyState === WebSocket.CLOSED) {
+            if (window.ws && window.ws.readyState === WebSocket.CLOSED) {
                 return 'closed'
             }
         }
