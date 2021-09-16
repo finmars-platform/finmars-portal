@@ -217,8 +217,6 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 		var updateTableAfterEntityChanges = function (res) {
 
-			/* vm.entityViewerDataService.setActiveObjectAction(null);
-			vm.entityViewerDataService.setActiveObjectActionData(null); */
 			viewModel.entityViewerDataService.setRowsActionData(null);
 
 			if (res && res.status === 'agree') {
@@ -518,44 +516,6 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 			commonDialogsService.warning(warningLocals).then(function (res) {
 				if (res.status === 'agree') {
 
-					/*$mdDialog.show({
-						controller: 'EntityViewerAddDialogController as vm',
-						templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-						parent: angular.element(document.body),
-						targetEvent: activeObject.event,
-						locals: {
-							entityType: 'price-history',
-							entity: {
-								instrument: activeObject['instrument.id'],
-								instrument_object: {
-									id: activeObject['instrument.id'],
-									name: activeObject['instrument.name'],
-									user_code: activeObject['instrument.user_code'],
-									short_name: activeObject['instrument.short_name']
-								},
-								pricing_policy: reportOptions.pricing_policy,
-								pricing_policy_object: reportOptions.pricing_policy_object,
-								date: reportOptions.report_date
-							}
-						}
-					}).then(function (res) {
-
-						vm.entityViewerDataService.setActiveObjectAction(null);
-						vm.entityViewerDataService.setActiveObjectActionData(null);
-
-						if (res && res.res === 'agree') {
-
-							vm.entityViewerDataService.resetData();
-							vm.entityViewerDataService.resetRequestParameters();
-
-							var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-							vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-							vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-						}
-					});*/
-
 					createEntity(event, createEntityLocals);
 
 				}
@@ -566,9 +526,6 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 		const executeRowAction = function () {
 
-			/* var activeObject = vm.entityViewerDataService.getActiveObject();
-			var action = vm.entityViewerDataService.getActiveObjectAction();
-			var actionData = vm.entityViewerDataService.getActiveObjectActionData(); */
 			const actionData = viewModel.entityViewerDataService.getRowsActionData();
 			const action = actionData.actionKey;
 			const reportOptions = viewModel.entityViewerDataService.getReportOptions();
@@ -922,7 +879,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 						data: {}
 					};
 
-					if (vm.entityType === 'transaction-report') {
+					if (viewModel.entityType === 'transaction-report') {
 
 						const contextData = getContextDataForRowAction(reportOptions, actionData.object);
 						locals.entity.transaction_type = actionData.object['complex_transaction.transaction_type.id'];

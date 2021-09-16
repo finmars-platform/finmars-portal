@@ -445,32 +445,26 @@
 
             console.log('copy entity', entity);
 
-            $mdDialog.show({
-                controller: 'EntityViewerAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                parent: angular.element(document.body),
-                locals: {
-                    entityType: vm.entityType,
-                    entity: entity,
-                    data: {}
-                }
-            }).then(function (res) {
-
-                if (res && res.status === 'agree') {
-
-                    console.log('res', res);
-
-                }
-
-            });
-
 			if (windowType === 'big-drawer') {
 
 				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
 				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
 			} else {
+
+				$mdDialog.show({
+					controller: 'EntityViewerAddDialogController as vm',
+					templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+					parent: angular.element(document.body),
+					locals: {
+						entityType: vm.entityType,
+						entity: entity,
+						data: {}
+					}
+				});
+
 				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+
 			}
 
         };
