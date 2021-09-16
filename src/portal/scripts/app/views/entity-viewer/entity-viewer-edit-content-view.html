@@ -33,7 +33,9 @@
                 <text-input label="{{vm.entityTypeSlug()}}"
                             model="vm.getEntityPropertyByDefault()"
                             placeholder-text="{{vm.getPlaceholderByDefault()}}"
+                            event-signal="vm.fixedAreaPopup.event"
                             small-options="{dialogParent: '.dialog-containers-wrap', readonly: true}"
+                            class="ee-fixed-area-popup entityEditorFixedAreaPopup"
                             style="pointer-events: none;">
                 </text-input>
 

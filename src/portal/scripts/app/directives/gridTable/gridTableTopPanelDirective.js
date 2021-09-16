@@ -27,7 +27,7 @@
                 var assembleNewRow = function () {
 
                     var newRow = metaHelper.recursiveDeepCopy(scope.gridTableData.templateRow, true);
-                    var newRowKey = gridTableHelperService.getNewRowUniqueKey(scope.gtDataService);
+                    var newRowKey = metaHelper.generateUniqueId('newGridTableRow');
 
                     newRow.key = newRowKey;
 					newRow.newRow = true;

@@ -46,7 +46,6 @@
                         </div>
                         <div data-ng-if="attr.value_type === 40">
                             <date-input model="attr.value"
-                                        small-options="{noIndicatorBtn: true}"
                                         is-disabled="attr.___isDisabled"
                                         on-change-callback="vm.attrChange()"></date-input>
 
@@ -104,7 +103,6 @@
                     <div data-ng-if="attr.value_type === 40">
                         <date-input model="vm.entity[attr.user_code]"
                                     label="{{attr.name}}"
-                                    small-options="{noIndicatorBtn: true}"
                                     on-change-callback=""></date-input>
 
                     </div>

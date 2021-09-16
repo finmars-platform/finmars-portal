@@ -116,7 +116,7 @@
 
                     if (!attrFound) {
                         for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
-                            if (scope.entityAttrs[e].name === scope.item.name) {
+                            if (scope.entityAttrs[e].key === scope.item.key) {
                                 scope.item.attribute = scope.entityAttrs[e];
                                 attrFound = true;
                                 break;
@@ -265,12 +265,17 @@
                 var openEditModeInDialog = function ($event) {
 
                 	$mdDialog.show({
-						controller: 'EvFormInstrumentAccrualsSettingsDialogController as vm',
-						templateUrl: 'views/dialogs/ev-form-instrument-accruals-settings-dialog-view.html',
+						// controller: 'EvFormInstrumentAccrualsSettingsDialogController as vm',
+						controller: 'EvFormInstrumentTableSettingsDialogController as vm',
+						templateUrl: 'views/dialogs/ev-form-instrument-table-settings-dialog-view.html',
 						targetEvent: $event,
 						multiple: true,
 						locals: {
-							data: {label: scope.item.options.label, tableData: scope.item.options.tableData}
+							data: {
+								dialogLabel: editModeDialogLabel,
+								label: scope.item.options.label,
+								tableData: scope.item.options.tableData,
+							}
 						}
 
                 	}).then(res => {
@@ -631,7 +636,7 @@
 
                 scope.bindAttrName = function (item) {
 
-                    if (item.hasOwnProperty('attribute')) { // when adding row between occupied rows, this method triggers for empty rows
+                    if (item.attribute) { // when adding row between occupied rows, this method triggers for empty rows
 
                         if (item.attribute.key === 'subgroup' && item.attribute.name === 'Sub Group') {
 
@@ -837,6 +842,8 @@
 					entityDataConstructorVm.palettesList = scope.palettesList;
                 }
 
+				var editModeDialogLabel;
+
                 scope.$watch('tabFieldsTree', function () {
 
                     if (scope.tabFieldsTree) {
@@ -844,7 +851,21 @@
                     	findItem();
 
 						if (scope.item.type === 'table') {
+
 							scope.toggleEditMode = openEditModeInDialog;
+
+							switch (scope.item.attribute.key) {
+								case 'event_schedules':
+									editModeDialogLabel = 'Instrument events schedules table settings';
+									break;
+								case 'accrual_calculation_schedules':
+									editModeDialogLabel = 'Instrument accruals schedules table settings';
+									break;
+								default:
+									editModeDialogLabel = 'Table settings';
+									break;
+							}
+
 
 						} else {
 							scope.toggleEditMode = toggleGeneralEditMode;

@@ -254,7 +254,8 @@
                 Manage attributes
             </md-button>
             <md-button class="md-raised manage-attrs-btn"
-                       data-ng-click="vm.openFormPreview($event)">
+                       data-ng-click="vm.openFormPreview($event)"
+                       ng-disabled="!vm.readyStatus.constructor">
                 Preview Form
             </md-button>
         </div>
