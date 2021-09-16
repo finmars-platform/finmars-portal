@@ -106,13 +106,15 @@
                           </md-option>
                         </md-select>
                       </md-input-container>-->
-
                 <classifier-select label="{{getName()}}"
                                    placeholder-text="{{getName()}}"
                                    model="entity[vm.fieldKey]"
                                    classifier-attr="item"
                                    classifier-value="entity[vm.fieldKey]"
+                                   event-signal="ciEventObj.event"
                                    entity-type="vm.entityType"
+                                   small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                                   on-change-callback="itemChange()"
                 ></classifier-select>
 
             </div>

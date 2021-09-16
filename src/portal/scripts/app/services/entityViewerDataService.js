@@ -2,7 +2,7 @@
 
     'use strict';
 
-	var stringHelper = require('../helpers/stringHelper');
+    var stringHelper = require('../helpers/stringHelper');
     var metaHelper = require('../helpers/meta.helper');
     var reportHelper = require('../helpers/reportHelper');
 
@@ -34,9 +34,9 @@
                 width: headerToolbarWidth,
                 height: headerToolbarHeight
             },
-			topPart: {
-				height: 50
-			},
+            topPart: {
+                height: 50
+            },
             mainContent: {
                 height: 0
             },
@@ -96,14 +96,16 @@
 
     var emptyUseFromAboveFilters = function (filters) {
 
-        filters.forEach(function (filter) {
-            if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length > 0) {
-                filter.options.filter_values = [];
-            }
-        });
+        if (filters && Array.isArray(filters)) {
+            filters.forEach(function (filter) {
+                if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length > 0) {
+                    filter.options.filter_values = [];
+                }
+            });
+        }
 
     };
-	/** @module entityViewerDataService */
+    /** @module entityViewerDataService */
     module.exports = function () {
 
         var data = {
@@ -116,7 +118,7 @@
             rowTypeFilters: {
                 markedRowFilters: 'none'
             },
-			useFromAboveFilters: [],
+            useFromAboveFilters: [],
             pagination: {
                 page_size: 60
             },
@@ -167,13 +169,13 @@
             activeObjectsCount: 0,
             dataLoadEnded: false,
             markedSubtotals: {},
-			rowSettings: {},
+            rowSettings: {},
             missingCustomFields: {
                 forFilters: [],
                 forColumns: [],
             },
-			warnAboutLayoutChangesLoss: true,
-			isNewLayout: false, // does layout exist on server,
+            warnAboutLayoutChangesLoss: true,
+            isNewLayout: false, // does layout exist on server,
             autoRefreshState: true
         };
 
@@ -199,9 +201,9 @@
             data.interfaceLayout = interfaceLayout;
         }
 
-        function toggleRightSidebar (collapse) {
+        function toggleRightSidebar(collapse) {
 
-        	var interfaceLayout = getInterfaceLayout();
+            var interfaceLayout = getInterfaceLayout();
 
             if (collapse || interfaceLayout.filterArea.width === 239) {
 
@@ -266,22 +268,24 @@
         function getContentType() {
             return data.contentType;
         }
-		/**
-		 *
-		 * @param isReport {Boolean}
-		 * @memberOf module:entityViewerDataService
-		 */
-		function setIsReport(isReport) {
-			data.isReport = isReport;
-		}
-		/**
-		 *
-		 * @returns {Boolean}
-		 * @memberOf module:entityViewerDataService
-		 */
-		function isEntityReport() {
-			return data.isReport;
-		}
+
+        /**
+         *
+         * @param isReport {Boolean}
+         * @memberOf module:entityViewerDataService
+         */
+        function setIsReport(isReport) {
+            data.isReport = isReport;
+        }
+
+        /**
+         *
+         * @returns {Boolean}
+         * @memberOf module:entityViewerDataService
+         */
+        function isEntityReport() {
+            return data.isReport;
+        }
 
         function setColumns(columns) {
 
@@ -350,11 +354,11 @@
             return data.filters;
         }
 
-        function setRowTypeFilters (filtersData) {
-			data.rowTypeFilters = filtersData;
+        function setRowTypeFilters(filtersData) {
+            data.rowTypeFilters = filtersData;
         }
 
-        function getRowTypeFilters () {
+        function getRowTypeFilters() {
             return data.rowTypeFilters;
         }
 
@@ -758,18 +762,18 @@
             data.activeRequestParametersId = id;
         }
 
-        function resetTableContent (isReport) {
+        function resetTableContent(isReport) {
 
-        	resetData();
-			resetRequestParameters();
+            resetData();
+            resetRequestParameters();
 
-			var rootGroup = getRootGroupData();
+            var rootGroup = getRootGroupData();
 
-			setActiveRequestParametersId(rootGroup.___id);
+            setActiveRequestParametersId(rootGroup.___id);
 
-			if (!isReport) setSelectedGroups([]);
+            if (!isReport) setSelectedGroups([]);
 
-		}
+        }
 
 
         // Activated Row just for selection purpose
@@ -826,40 +830,42 @@
             return data.activeObjectFromAbove;
         }
 
-		function setActiveColumnSort(column) {
-			data.activeColumnSort = column;
-		}
+        function setActiveColumnSort(column) {
+            data.activeColumnSort = column;
+        }
 
-		function getActiveColumnSort() {
-			return data.activeColumnSort;
-		}
+        function getActiveColumnSort() {
+            return data.activeColumnSort;
+        }
 
-		function setActiveGroupTypeSort(group) {
-			data.activeGroupTypeSort = group;
-		}
-		/**
-		 *
-		 * @param actionData {Object|null}
-		 * @param {String} actionData.actionKey - edit, delete etc
-		 * @param {Object=} actionData.object - data about table row targeted for action
-		 * @param {string|number=} actionData.id - e.g. transactionType.id, price history error id, etc.
-		 * @memberof module:entityViewerDataService
-		 */
-		function setRowsActionData (actionData) {
-			data.rowsActionData = actionData;
-		}
-		/**
-		 *
-		 * @returns {{actionKey: String, [object]: Object, [id]: string|number} | any}
-		 * @memberof module:entityViewerDataService
-		 */
-		function getRowsActionData () {
-			return data.rowsActionData;
-		}
+        function setActiveGroupTypeSort(group) {
+            data.activeGroupTypeSort = group;
+        }
 
-		function getActiveGroupTypeSort() {
-			return data.activeGroupTypeSort;
-		}
+        /**
+         *
+         * @param actionData {Object|null}
+         * @param {String} actionData.actionKey - edit, delete etc
+         * @param {Object=} actionData.object - data about table row targeted for action
+         * @param {string|number=} actionData.id - e.g. transactionType.id, price history error id, etc.
+         * @memberof module:entityViewerDataService
+         */
+        function setRowsActionData(actionData) {
+            data.rowsActionData = actionData;
+        }
+
+        /**
+         *
+         * @returns {{actionKey: String, [object]: Object, [id]: string|number} | any}
+         * @memberof module:entityViewerDataService
+         */
+        function getRowsActionData() {
+            return data.rowsActionData;
+        }
+
+        function getActiveGroupTypeSort() {
+            return data.activeGroupTypeSort;
+        }
 
         function setRowHeight(height) {
             return data.virtualScroll.rowHeight = height;
@@ -955,13 +961,13 @@
             return data.listLayout;
         }
 
-		function setIsNewLayoutState (state) {
-			data.isNewLayout = state;
-		}
+        function setIsNewLayoutState(state) {
+            data.isNewLayout = state;
+        }
 
-		function isLayoutNew () {
-			return data.isNewLayout;
-		}
+        function isLayoutNew() {
+            return data.isNewLayout;
+        }
 
         function setActiveLayoutConfiguration(options) {
 
@@ -1028,7 +1034,7 @@
                         delete listLayout.data.reportOptions.item_currency_fx_rates;
                         delete listLayout.data.reportOptions.item_currencies;
                         delete listLayout.data.reportOptions.item_accounts; */
-						listLayout.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(listLayout.data.reportOptions);
+                        listLayout.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(listLayout.data.reportOptions);
 
                     } else {
                         listLayout.data.pagination = getPagination();
@@ -1054,8 +1060,8 @@
             listLayout.data.grouping = getGroups();
             listLayout.data.filters = getFilters();
 
-			listLayout.data.columns.forEach(column => delete column.frontOptions);
-			listLayout.data.grouping.forEach(group => delete group.frontOptions);
+            listLayout.data.columns.forEach(column => delete column.frontOptions);
+            listLayout.data.grouping.forEach(group => delete group.frontOptions);
 
             listLayout.data.rowSettings = getRowSettings();
             listLayout.data.additions = getAdditions();
@@ -1076,7 +1082,7 @@
 
             if (isReport) {
 
-				emptyUseFromAboveFilters(listLayout.data.filters);
+                emptyUseFromAboveFilters(listLayout.data.filters);
 
                 listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
                 listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
@@ -1110,11 +1116,9 @@
 				delete listLayout.data.reportOptions.item_currency_fx_rates;
 				delete listLayout.data.reportOptions.item_currencies;
 				delete listLayout.data.reportOptions.item_accounts; */
-				listLayout.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(listLayout.data.reportOptions);
+                listLayout.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(listLayout.data.reportOptions);
 
-			}
-
-            else {
+            } else {
 
                 listLayout.data.pagination = getPagination();
                 listLayout.data.ev_options = getEntityViewerOptions();
@@ -1132,8 +1136,7 @@
 
                 listLayout = Object.assign({}, activeListLayout);
 
-            }
-            else {
+            } else {
 
                 var defaultList = uiService.getListLayoutTemplate(isReport);
 
@@ -1148,8 +1151,8 @@
                 interfaceLayout = Object.assign(interfaceLayout, listLayout.data.interfaceLayout);
 
                 if (interfaceLayout.columnArea && interfaceLayout.columnArea.height === 70) { // need for work of the old layouts
-                	interfaceLayout.columnArea.height = 50;
-				}
+                    interfaceLayout.columnArea.height = 50;
+                }
 
                 setInterfaceLayout(interfaceLayout);
 
@@ -1181,10 +1184,9 @@
                     }
                 }
 
-				emptyUseFromAboveFilters(listLayout.data.filters);
+                emptyUseFromAboveFilters(listLayout.data.filters);
 
-            }
-            else {
+            } else {
 
                 setPagination(listLayout.data.pagination);
 
@@ -1197,13 +1199,13 @@
                         entity_filters: ['enabled', 'disabled', 'active', 'inactive']
                     }
 
-                // } else if (!entityViewerOptions.complex_transaction_filters) {
-                //
-                //     entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
-                //
-                //
-                // } else if (!entityViewerOptions.entity_filters){
-                } else if (!entityViewerOptions.entity_filters){
+                    // } else if (!entityViewerOptions.complex_transaction_filters) {
+                    //
+                    //     entityViewerOptions.complex_transaction_filters = ['ignored', 'locked', 'partially_visible'];
+                    //
+                    //
+                    // } else if (!entityViewerOptions.entity_filters){
+                } else if (!entityViewerOptions.entity_filters) {
 
                     entityViewerOptions.entity_filters = ['enabled', 'disabled', 'active', 'inactive'];
                 }
@@ -1228,7 +1230,7 @@
 
                 if (column.options && column.options.sort) {
 
-					var columnWithGroup = !!listLayout.data.grouping.find(group => group.key === column.key);
+                    var columnWithGroup = !!listLayout.data.grouping.find(group => group.key === column.key);
 
                     if (columnWithGroup) {
                         setActiveGroupTypeSort(column);
@@ -1261,9 +1263,9 @@
             data.groups.forEach(setActiveColumn);
 
             listLayout.data.components = {
-				filterArea: true,
-				topPart: true,
-            	columnArea: true,
+                filterArea: true,
+                topPart: true,
+                columnArea: true,
                 viewer: true,
                 sidebar: true,
                 // groupingArea: true,
@@ -1276,8 +1278,8 @@
             };
 
             if (isReport) {
-				listLayout.data.components.groupingArea = false
-			}
+                listLayout.data.components.groupingArea = false
+            }
 
             setComponents(listLayout.data.components);
             setEditorTemplateUrl('views/additions-editor-view.html');
@@ -1291,19 +1293,21 @@
         function getSplitPanelDefaultLayout() {
             return data.splitPanelDefaultLayout;
         }
-		/**
-		 * Set layout to open inside split panel not by default.
-		 *
-		 * @param layoutName {number} - id of layout
-		 */
+
+        /**
+         * Set layout to open inside split panel not by default.
+         *
+         * @param layoutName {number} - id of layout
+         */
         function setSplitPanelLayoutToOpen(layoutName) {
             data.splitPanelLayoutToOpen = layoutName;
         }
-		/**
-		 * Get layout to open inside split panel not by default.
-		 *
-		 * @returns {number|void} - id of layout to open
-		 */
+
+        /**
+         * Get layout to open inside split panel not by default.
+         *
+         * @returns {number|void} - id of layout to open
+         */
         function getSplitPanelLayoutToOpen() {
             var splitPanelActiveLayoutName = data.splitPanelLayoutToOpen;
             data.splitPanelLayoutToOpen = false;
@@ -1329,8 +1333,6 @@
         }
 
 
-
-
         function setAutoRefreshState(state) {
             return data.autoRefreshState = state;
         }
@@ -1338,7 +1340,6 @@
         function getAutoRefreshState() {
             return data.autoRefreshState;
         }
-
 
 
         function setViewSettings(viewType, settings) {
@@ -1387,11 +1388,11 @@
         function getReconciliationData() {
             return data.reconciliation
         }
-        
-        function setReconciliationFile(parsedFile){
+
+        function setReconciliationFile(parsedFile) {
             data.reconciliationParsedFile = parsedFile
         }
-        
+
         function getReconciliationFile() {
             return data.reconciliationParsedFile;
         }
@@ -1445,11 +1446,11 @@
         }
 
         // START: Methods for dashboard
-        function setKeysOfColumnsToHide (keys) {
+        function setKeysOfColumnsToHide(keys) {
             dashboardData.keysOfColumnsToHide = keys;
         }
 
-        function getKeysOfColumnsToHide () {
+        function getKeysOfColumnsToHide() {
             if (!Array.isArray(dashboardData.keysOfColumnsToHide)) {
                 return [];
             }
@@ -1457,21 +1458,22 @@
             return dashboardData.keysOfColumnsToHide
         }
 
-        function setColumnsTextAlign (alignDirection) {
+        function setColumnsTextAlign(alignDirection) {
             dashboardData.columnsTextAlign = alignDirection;
         }
 
-        function getColumnsTextAlign () {
+        function getColumnsTextAlign() {
             return dashboardData.columnsTextAlign;
         }
 
-        function isReportDateFromDashboard () {
+        function isReportDateFromDashboard() {
             return dashboardData.reportDataFromDashboard;
         }
 
-        function setReportDateFromDashboardProp (fromDashboard) {
+        function setReportDateFromDashboardProp(fromDashboard) {
             dashboardData.reportDataFromDashboard = fromDashboard;
         }
+
         // END: Methods for dashboard
 
         function setMissingPrices(prices) {
@@ -1482,7 +1484,7 @@
             return data.missingPrices;
         }
 
-        function setMarkedSubtotals (markedSubtotals) {
+        function setMarkedSubtotals(markedSubtotals) {
             data.markedSubtotals = markedSubtotals;
         }
 
@@ -1500,7 +1502,7 @@
 
         function setColumnSortData(key, item) {
 
-            if(!data.columnSortData) {
+            if (!data.columnSortData) {
                 data.columnSortData = {}
             }
 
@@ -1516,13 +1518,13 @@
             return null;
         }
 
-		function setRowSettings (rowSettings) {
-			data.rowSettings = rowSettings;
-		}
+        function setRowSettings(rowSettings) {
+            data.rowSettings = rowSettings;
+        }
 
-        function getRowSettings () {
-			return data.rowSettings || {};
-		}
+        function getRowSettings() {
+            return data.rowSettings || {};
+        }
 
         function setMissingCustomFields(options) {
 
@@ -1546,48 +1548,48 @@
             return data.missingCustomFields;
         }
 
-		/**
-		 * Setting status to false allows to skip layout changes loss warning once
-		 *
-		 * @param status {boolean}
-		 * @memberOf module:entityViewerDataService
-		 */
-		function setLayoutChangesLossWarningState (status) {
-        	data.warnAboutLayoutChangesLoss = status;
-		}
+        /**
+         * Setting status to false allows to skip layout changes loss warning once
+         *
+         * @param status {boolean}
+         * @memberOf module:entityViewerDataService
+         */
+        function setLayoutChangesLossWarningState(status) {
+            data.warnAboutLayoutChangesLoss = status;
+        }
 
-		/**
-		 * If warnAboutLayoutChangesLoss === false, turns warning back on before returning false
-		 *
-		 *@memberOf module:entityViewerDataService
-		 */
-		function isLayoutChangesLossWarningNeeded() {
+        /**
+         * If warnAboutLayoutChangesLoss === false, turns warning back on before returning false
+         *
+         *@memberOf module:entityViewerDataService
+         */
+        function isLayoutChangesLossWarningNeeded() {
 
-			if (!data.warnAboutLayoutChangesLoss) {
+            if (!data.warnAboutLayoutChangesLoss) {
 
-				data.warnAboutLayoutChangesLoss = true;
-				return false;
+                data.warnAboutLayoutChangesLoss = true;
+                return false;
 
-			}
+            }
 
-			return data.warnAboutLayoutChangesLoss;
+            return data.warnAboutLayoutChangesLoss;
 
-		}
+        }
 
         // MATERIAL DESIGN ENTITY VIEWER LOGIC
 
         function setSelectedGroups(groups) {
 
-			if (!groups || !Array.isArray(groups)) {
-				data.selectedGroups = [];
+            if (!groups || !Array.isArray(groups)) {
+                data.selectedGroups = [];
 
-			} else {
-				data.selectedGroups = groups;
-			}
+            } else {
+                data.selectedGroups = groups;
+            }
 
         }
 
-        function getSelectedGroups(){
+        function getSelectedGroups() {
             return data.selectedGroups || [];
         }
 
@@ -1595,7 +1597,7 @@
             data.selectedGroupsMultiselectState = state
         }
 
-        function getSelectedGroupsMultiselectState(){
+        function getSelectedGroupsMultiselectState() {
             return data.selectedGroupsMultiselectState;
         }
 
@@ -1611,8 +1613,8 @@
             setContentType: setContentType,
             getContentType: getContentType,
 
-			setIsReport: setIsReport,
-			isEntityReport: isEntityReport,
+            setIsReport: setIsReport,
+            isEntityReport: isEntityReport,
 
             setColumns: setColumns,
             getColumns: getColumns,
@@ -1695,7 +1697,7 @@
             resetRequestParameters: resetRequestParameters,
             getAllRequestParameters: getAllRequestParameters,
 
-			resetTableContent: resetTableContent,
+            resetTableContent: resetTableContent,
 
             setActiveObjectFromAbove: setActiveObjectFromAbove,
             getActiveObjectFromAbove: getActiveObjectFromAbove,
@@ -1709,8 +1711,8 @@
             setActiveObjectActionData: setActiveObjectActionData,
             getActiveObjectActionData: getActiveObjectActionData, */
 
-			setRowsActionData: setRowsActionData,
-			getRowsActionData: getRowsActionData,
+            setRowsActionData: setRowsActionData,
+            getRowsActionData: getRowsActionData,
 
             getRowHeight: getRowHeight,
             setRowHeight: setRowHeight,
@@ -1729,8 +1731,8 @@
 
             setActiveColumnSort: setActiveColumnSort,
             getActiveColumnSort: getActiveColumnSort,
-			setColumnSortData: setColumnSortData,
-			getColumnSortData: getColumnSortData,
+            setColumnSortData: setColumnSortData,
+            getColumnSortData: getColumnSortData,
 
             setActiveGroupTypeSort: setActiveGroupTypeSort,
             getActiveGroupTypeSort: getActiveGroupTypeSort,
@@ -1757,14 +1759,14 @@
 
             setListLayout: setListLayout,
             getListLayout: getListLayout,
-			setIsNewLayoutState: setIsNewLayoutState,
-			isLayoutNew: isLayoutNew,
+            setIsNewLayoutState: setIsNewLayoutState,
+            isLayoutNew: isLayoutNew,
             getActiveLayoutConfiguration: getActiveLayoutConfiguration,
             setActiveLayoutConfiguration: setActiveLayoutConfiguration,
             getLayoutCurrentConfiguration: getLayoutCurrentConfiguration,
             setLayoutCurrentConfiguration: setLayoutCurrentConfiguration,
-			setLayoutChangesLossWarningState: setLayoutChangesLossWarningState,
-			isLayoutChangesLossWarningNeeded: isLayoutChangesLossWarningNeeded,
+            setLayoutChangesLossWarningState: setLayoutChangesLossWarningState,
+            isLayoutChangesLossWarningNeeded: isLayoutChangesLossWarningNeeded,
 
             setSplitPanelStatus: setSplitPanelStatus,
             isSplitPanelActive: isSplitPanelActive,
@@ -1775,8 +1777,8 @@
             setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,
             getSplitPanelLayoutToOpen: getSplitPanelLayoutToOpen,
 
-			setActiveObjectRow: setActiveObjectRow,
-			getActiveObjectRow: getActiveObjectRow,
+            setActiveObjectRow: setActiveObjectRow,
+            getActiveObjectRow: getActiveObjectRow,
 
             setUseFromAbove: setUseFromAbove,
             getUseFromAbove: getUseFromAbove,
@@ -1840,8 +1842,8 @@
             setCrossEntityAttributeExtensions: setCrossEntityAttributeExtensions,
             getCrossEntityAttributeExtensions: getCrossEntityAttributeExtensions,
 
-			setRowSettings: setRowSettings,
-			getRowSettings: getRowSettings,
+            setRowSettings: setRowSettings,
+            getRowSettings: getRowSettings,
 
             setMissingCustomFields: setMissingCustomFields,
             getMissingCustomFields: getMissingCustomFields,

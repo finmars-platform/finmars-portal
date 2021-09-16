@@ -254,7 +254,8 @@
                 Manage attributes
             </md-button>
             <md-button class="md-raised manage-attrs-btn"
-                       data-ng-click="vm.openFormPreview($event)">
+                       data-ng-click="vm.openFormPreview($event)"
+                       ng-disabled="!vm.readyStatus.constructor">
                 Preview Form
             </md-button>
         </div>
@@ -265,7 +266,8 @@
                 Cancel
             </md-button>
             <md-button ng-click="vm.saveLayout()" class="md-raised">
-                Save & Return
+                <span>Save & Return</span>
+                <span></span>
             </md-button>
         </div>
 

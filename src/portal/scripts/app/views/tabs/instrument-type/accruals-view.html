@@ -42,7 +42,7 @@
 
         <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" control="vm.accrualsAccordion">
 
-            <v-pane data-ng-repeat="item in vm.entity.accruals"
+            <v-pane data-ng-repeat="item in vm.entity.accruals | orderBy: 'order'"
                     expanded="item.isPaneExpanded">
 
                 <v-pane-header ng-class="{'m-b-0': !$pane.isExpanded()}">

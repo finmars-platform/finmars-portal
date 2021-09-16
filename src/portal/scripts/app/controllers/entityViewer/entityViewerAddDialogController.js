@@ -22,6 +22,7 @@
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
+	var instrumentTypeService = require('../../services/instrumentTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
@@ -97,7 +98,8 @@
         vm.currencies = []; // need for instrument pricing tab;
 
         // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
-        vm.action = 'add';
+		//region Fixed area popup
+		vm.action = 'add';
         vm.typeFieldName = 'type';
         vm.typeFieldLabel = 'Type';
 
@@ -128,11 +130,16 @@
             {id: 2, name: "Run Valuation: if non-zero position"},
             {id: 3, name: "Run Valuation: always"},
         ];
+		//endregion
 
         vm.activeTab = null;
 
-        vm.openedIn = data.openedIn;
+        vm.openedIn = data.openedIn; // 'big-drawer', 'dialog'
         vm.originalFixedAreaPopupFields;
+
+		if (vm.entityType === 'instrument') {
+			vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
+		}
 
 		vm.typeSelectorChange = null;
 
@@ -977,6 +984,57 @@
 
         };
 
+        var setValuesFromInstrumentType = function (entity) {
+
+        	return new Promise(async function (resolve) {
+
+				var activeInstrType = vm.typeSelectorOptions.find(instrType => instrType.id === vm.entity.instrument_type);
+
+				if (activeInstrType) { // if instrument type exist
+
+					var fullInstrType = vm.instrumentTypesList.find(instrType => instrType.id === vm.entity.instrument_type);
+
+					if (!fullInstrType) {
+						fullInstrType = await instrumentTypeService.getByKey(activeInstrType.id);
+					}
+
+					//region Set user attributes
+
+					fullInstrType.instrument_attributes.forEach(attr => {
+
+						const key = attr.attribute_type_user_code;
+						const value = entityEditorHelper.instrumentTypeAttrValueMapper(attr);
+
+						if (!entity[key] && entity[key] !== 0) {
+							entity[key] = value;
+						}
+
+					});
+					//endregion
+
+					//region Set accruals properties
+					var propsToSetList = ['accrued_currency', 'payment_size_detail', 'accrued_multiplier', 'default_accrued'];
+
+					propsToSetList.forEach(function (prop) {
+
+						if (fullInstrType[prop] || fullInstrType[prop] === 0 &&
+							!entity[prop] && entity[prop] !== 0) {
+
+							entity[prop] = fullInstrType[prop];
+
+						}
+
+					});
+					//endregion
+
+				}
+
+				resolve(entity);
+
+			});
+
+		};
+
         /*vm.entityStatusChanged = function () {
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
@@ -1034,7 +1092,7 @@
 
         vm.save = async function ($event, isAutoExitAfterSave) {
 
-            if (vm.entityType === 'instrument') {
+            /* if (vm.entityType === 'instrument') {
 
                 const instrumentTypeId = vm.entity[vm.typeFieldName];
                 if (instrumentTypeId) {
@@ -1042,7 +1100,10 @@
                     await vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
 
                 }
-            }
+            } */
+			if (vm.entityType === 'instrument') {
+				vm.entity = await setValuesFromInstrumentType(vm.entity);
+			}
 
             if (vm.entityType === 'instrument-type') {
 
@@ -1075,13 +1136,18 @@
             if (errors.length) {
 
                 // vm.sharedLogic.processTabsErrors(errors, $event);
-				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
 
-            } else {
+				if (processResult) {
+					vm.fixedAreaPopup = processResult;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
+				}
+
+            }
+            else {
 
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
-
                 console.log('resultEntity', resultEntity);
 
                 if (vm.dcLayoutHasBeenFixed) {
@@ -1120,7 +1186,8 @@
 
                     }
 
-                }).catch(function (data) {
+                })
+				.catch(function (data) {
 
                     vm.processing = false;
 
@@ -1743,7 +1810,7 @@
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EventService();
 
-			vm.evEditorDataService.setTabsWithErrors({"system_tab": {}, "user_tab": {}});
+			vm.evEditorDataService.setLocationsWithErrors(null);
 			vm.evEditorDataService.setFormErrorsList([]);
 
             var tooltipsOptions = {
