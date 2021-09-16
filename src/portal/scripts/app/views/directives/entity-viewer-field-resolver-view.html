@@ -1,4 +1,4 @@
-<div>
+<div ng-if="readyStatus.content">
 
     <div data-ng-if="type === 'id'">
 
@@ -135,7 +135,7 @@
 
                     <div data-ng-if="checkForCrudSelects()">
 
-                        <div data-ng-if="readyStatus.content">
+                        <div>
                             <crud-select
                                     data-label="getName()"
                                     data-item="entity[fieldKey]"
@@ -196,7 +196,7 @@
 
     </div>
 
-    <div data-ng-if="type === 'multiple-ids' && readyStatus.content">
+    <div data-ng-if="type === 'multiple-ids'">
 
         <div data-ng-if="checkComplexEntityType()">
             <!--      <md-input-container class="md-block no-error-spacer">-->
