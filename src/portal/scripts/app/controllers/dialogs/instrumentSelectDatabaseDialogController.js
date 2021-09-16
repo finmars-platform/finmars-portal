@@ -21,6 +21,8 @@
         vm.databaseInstruments = [];
         vm.localInstruments = [];
 
+        vm.inputText = data.inputText;
+
         vm.clearHoverInstrument = function () {
 
             setTimeout(function () {
@@ -33,7 +35,7 @@
 
         }
 
-        vm.setHoverInstrument = function ($event, option){
+        vm.setHoverInstrument = function ($event, option) {
 
             setTimeout(function () {
 
@@ -79,7 +81,6 @@
                     vm.isDisabled = true;
 
                     importInstrumentCbondsService.download(config).then(function (data) {
-
 
 
                         if (data.errors.length) {
@@ -152,6 +153,21 @@
 
         }
 
+        vm.getHighlighted = function (value) {
+
+            var inputTextPieces = vm.inputText.split(' ')
+
+            var resultValue;
+
+            // Regular expression for multiple highlighting case insensitive results
+            var reg  =  new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+
+            resultValue = value.replace(reg, '<span class="highlight">$1</span>');
+
+            return resultValue
+
+        }
+
         vm.selectDatabaseInstrument = function (item) {
 
             vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
@@ -172,21 +188,21 @@
 
         vm.getList = function () {
 
+            vm.processing = true;
+
+            var promises = []
+
             if (vm.inputText.length > 2) {
-
-                vm.processing = true;
-
-                var promises = []
 
                 promises.push(new Promise(function (resolve, reject) {
 
-                    fetch('http://3.67.194.145:8080/instr/find/name/' + vm.inputText).then(function (data) {
+                    fetch('https://finmars.com/instrument-database/instr/find/name/' + vm.inputText).then(function (data) {
                         return data.json()
                     }).then(function (data) {
 
-                        vm.databaseInstrumentsTotal = data.length
+                        vm.databaseInstrumentsTotal = data.resultCount
 
-                        vm.databaseInstruments = data
+                        vm.databaseInstruments = data.foundItems
 
                         vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
@@ -210,50 +226,61 @@
 
                 }))
 
-                promises.push(new Promise(function (resolve, reject) {
+            }
+
+            promises.push(new Promise(function (resolve, reject) {
 
 
-                    instrumentService.getListForSelect({
-                        filters: {
-                            name: vm.inputText
-                        }
+                instrumentService.getListForSelect({
+                    pageSize: 1000,
+                    filters: {
+                        query: vm.inputText
+                    }
 
-                    }).then(function (data) {
+                }).then(function (data) {
 
-                        vm.localInstrumentsTotal = data.count;
+                    vm.localInstrumentsTotal = data.count;
 
-                        vm.localInstruments = data.results;
+                    vm.localInstruments = data.results;
 
-                        vm.localInstruments = vm.localInstruments.map(function (item) {
+                    vm.localInstruments = vm.localInstruments.map(function (item) {
 
-                            item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
+                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
 
-                            return item;
-
-                        })
-
-                        resolve()
-
+                        return item;
 
                     })
 
-                }))
+                    resolve()
 
-
-                Promise.all(promises).then(function (data) {
-
-                    vm.processing = false;
-
-                    $scope.$apply();
 
                 })
 
-            }
+            }))
+
+            Promise.all(promises).then(function (data) {
+
+                vm.processing = false;
+
+                $scope.$apply();
+                
+                setTimeout(function (){
+
+                    $('.instrument-select-options-group-title').on('click', function(){
+
+                        $(this).next()[0].scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    });
+                    
+                }, 100)
+
+            })
 
 
         }
 
         vm.init = function () {
+
+            vm.getList();
 
         }
 

@@ -552,9 +552,9 @@
 
 		};
 
-        const resolveEditLayout = function () {
+		const resolveEditLayout = function () {
 
-            if (viewModel.entityType === 'instrument' &&
+			if (viewModel.entityType === 'instrument' &&
 				viewModel.entity.instrument_type || viewModel.entity.instrument_type === 0) {
 
             	const activeInstrType = viewModel.typeSelectorOptions.find(instrType => {
@@ -590,73 +590,73 @@
 
 				}
 
-                /* if (viewModel.entity.instrument_type) {
+				/* if (viewModel.entity.instrument_type) {
 
-                     return instrumentTypeService.getByKey(viewModel.entity.instrument_type).then(function (data) {
+					 return instrumentTypeService.getByKey(viewModel.entity.instrument_type).then(function (data) {
 
-                        if (data.instrument_form_layouts) {
+						if (data.instrument_form_layouts) {
 
-                            return new Promise(function (resolve, reject) {
+							return new Promise(function (resolve, reject) {
 
-                                var layouts = data.instrument_form_layouts.split(',');
+								var layouts = data.instrument_form_layouts.split(',');
 
-                                console.log('Resolving Edit Layout. Layouts', layouts)
+								console.log('Resolving Edit Layout. Layouts', layouts)
 
-                                uiService.getListEditLayout(viewModel.entityType).then(function (data) {
+								uiService.getListEditLayout(viewModel.entityType).then(function (data) {
 
-                                    var result;
-                                    var lastMatchedIndex;
+									var result;
+									var lastMatchedIndex;
 
-                                    data.results.forEach(function (item) {
+									data.results.forEach(function (item) {
 
-                                        if (layouts.indexOf(item.user_code) !== -1) {
+										if (layouts.indexOf(item.user_code) !== -1) {
 
-                                            if (!lastMatchedIndex && lastMatchedIndex !== 0) {
-                                                lastMatchedIndex = layouts.indexOf(item.user_code)
-                                                result = item
-                                            }
+											if (!lastMatchedIndex && lastMatchedIndex !== 0) {
+												lastMatchedIndex = layouts.indexOf(item.user_code)
+												result = item
+											}
 
-                                            if (layouts.indexOf(item.user_code) < lastMatchedIndex) {
-                                                lastMatchedIndex = layouts.indexOf(item.user_code)
-                                                result = item
-                                            }
+											if (layouts.indexOf(item.user_code) < lastMatchedIndex) {
+												lastMatchedIndex = layouts.indexOf(item.user_code)
+												result = item
+											}
 
-                                        }
+										}
 
-                                    })
+									})
 
-                                    console.log('result', result);
+									console.log('result', result);
 
-                                    if (result) {
-                                        resolve({ // Array?
-                                            results: [
-                                                result
-                                            ]
-                                        })
-                                    } else {
-                                        resolve(uiService.getDefaultEditLayout(viewModel.entityType))
-                                    }
+									if (result) {
+										resolve({ // Array?
+											results: [
+												result
+											]
+										})
+									} else {
+										resolve(uiService.getDefaultEditLayout(viewModel.entityType))
+									}
 
-                                })
+								})
 
-                            });
+							});
 
-                        } else {
-                            return uiService.getDefaultEditLayout(viewModel.entityType);
-                        }
-                    })
+						} else {
+							return uiService.getDefaultEditLayout(viewModel.entityType);
+						}
+					})
 
-                } else {
-                    return uiService.getDefaultEditLayout(viewModel.entityType);
-                } */
+				} else {
+					return uiService.getDefaultEditLayout(viewModel.entityType);
+				} */
 
-            }
+			}
 
 			return uiService.getDefaultEditLayout(viewModel.entityType);
 
-        }
+		};
 
-        const getUserTabsAndFixedAreaData = formLayoutFromAbove => {
+		const getUserTabsAndFixedAreaData = formLayoutFromAbove => {
 
         	return new Promise(async resolve => {
 
