@@ -1019,7 +1019,8 @@
                             }
                         }
 
-                    } else if (field.attribute_class === 'userInput') {
+                    }
+                    else if (field.attribute_class === 'userInput') {
 
                         for (u = 0; u < vm.userInputs.length; u = u + 1) {
 
@@ -1056,9 +1057,7 @@
         var emptySocketsWithoutAttrFromLayout = function () {
 
             vm.tabs.forEach(function (tab) {
-
                 emptyTabSocketsWithoutAttrs(tab);
-
             });
 
             if (vm.fixedArea.isActive) {
@@ -1236,7 +1235,7 @@
 
 				}
 
-				//<editor-fold desc="Get entity attrs">
+				//region Get entity attrs
 				var entityAttrs = metaService.getEntityAttrs(vm.entityType);
 				var doNotShowAttrs = [];
 
@@ -1283,7 +1282,7 @@
 				if (vm.entityType === 'instrument') {
 
 					var customizableAccrualsTable = {
-						name: 'Accruals table',
+						name: 'Accruals schedules table',
 						key: 'accrual_calculation_schedules',
 						value_type: 'table',
 						frontOptions: {
@@ -1291,14 +1290,25 @@
 						}
 					};
 
-					vm.entityAttrs.push(customizableAccrualsTable);
+					var accrualsTableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
 
-					const tableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
+					var customizableEventsTable = {
+						name: 'Events schedules table',
+						key: 'event_schedules',
+						value_type: 'table',
+						frontOptions: {
+							occupiesWholeRow: true
+						}
+					};
 
-					promises.push(tableDataProm);
+					var eventsTableDataProm = entityDataConstructorService.loadOptionsForEventsTable();
+
+					vm.entityAttrs.push(customizableAccrualsTable, customizableEventsTable);
+
+					promises.push(accrualsTableDataProm, eventsTableDataProm);
 
 				}
-				//</editor-fold>
+				//endregion
 
 				vm.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -1402,7 +1412,7 @@
 				item.attribute.frontOptions.attribute_class) { // must have for determining userInputs
 
 				var attributeClass = item.attribute.frontOptions.attribute_class;
-				return attributeClass;
+				return attributeClass; // returns: 'userInput'
 
 			// } else if (attrsKeys.includes(item.attribute.key)) {
 			} else if (vm.attrs.findIndex(dAttr => dAttr.user_code === item.attribute.user_code) > -1) {
@@ -1479,7 +1489,7 @@
                 }
             }
 
-			//<editor-fold desc="Make socket we dragged from empty">
+			//region Make socket we dragged from empty
 			var i;
             for (i = 0; i < draggedFromTab.layout.fields.length; i++) {
                 var field = draggedFromTab.layout.fields[i];
@@ -1499,7 +1509,7 @@
                     break;
                 }
             }
-			//</editor-fold>
+			//endregion
 
         };
 
@@ -1719,57 +1729,151 @@
 
         };
 
+        /**
+		 *
+		 * @param attr {Object} - is an entity attribute, dynamic attribute, user input or decoration attribute
+		 * @param attributeClass {String} - can be 'entityAttr', 'attr', 'userInput', 'decorationAttr'
+		 * @param socket {Object} - data of socket inside tab
+		 * @returns {boolean}
+		 */
+        var attributeOccupiesThisSocket = function (attr, attributeClass, socket) {
+
+        	if (socket.attribute_class !== attributeClass) {
+        		return false;
+			}
+
+        	switch (socket.attribute_class) {
+
+        		case 'entityAttr':
+					return socket.attribute.key === attr.key;
+
+				case 'attr': // dynamic attribute
+
+					if (socket.key) { // legacy input form editor layout
+						return socket.key === attr.user_code;
+
+					} else {
+
+						if (socket.attribute.user_code) {
+							return socket.attribute.user_code === attr.user_code;
+						}
+
+						return false;
+
+					}
+
+				case 'userInput':
+					return socket.name === attr.name;
+
+				case 'decorationAttr':
+					if (socket.attribute.hasOwnProperty('key')) {
+						return socket.attribute.key === attr.key;
+					}
+
+					return socket.name === attr.name; // for legacy input form editor layouts
+
+			}
+
+        	return false;
+
+		};
+
         vm.syncItems = function () {
 
             vm.items = [];
 
-            vm.items = vm.items.concat(vm.attrs);
-            vm.items = vm.items.concat(vm.entityAttrs);
-            vm.items = vm.items.concat(vm.userInputs);
-            vm.items = vm.items.concat(vm.layoutAttrs);
+            var showItemInAttrsList = function (item, attributeClass) {
 
-            vm.items = vm.items.filter(function (item) {
+				if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
+					return false;
+				}
 
-                var result = true;
+            	var i,a;
+            	for (i = 0; i < vm.tabs.length; i++) {
 
-                vm.tabs.forEach(function (tab) {
-                    tab.layout.fields.forEach(function (field) {
-                        if (field.name === item.name) {
-                            result = false;
+            		var tab = vm.tabs[i];
 
-                            if (item.hasOwnProperty('key')) {
-                                if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel' || item.key === 'layoutPlainText') {
-                                    result = true;
-                                }
-                            }
+					for (a = 0; a < tab.layout.fields.length; a++) {
 
-                        }
-                    })
-                });
+						var field = tab.layout.fields[a];
 
-                if (vm.fixedArea.isActive) {
+						if (attributeOccupiesThisSocket(item, attributeClass, field)) {
+							return false;
+						}
 
-                    var i;
-                    for (i = 0; i < vm.fixedArea.layout.fields.length; i++) {
-                        var field = vm.fixedArea.layout.fields[i];
+					}
 
-                        if (field.type !== 'empty' && field.name === item.name) {
-                            result = false;
-                            break;
-                        }
+				}
 
-                    }
+            	return true;
 
-                }
+			};
 
-                if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
-                    result = false;
-                }
+			/* vm.items = vm.items.concat(vm.attrs);
+			vm.items = vm.items.concat(vm.entityAttrs);
+			vm.items = vm.items.concat(vm.userInputs);
+			vm.items = vm.items.concat(vm.layoutAttrs);
 
-                return result;
+			vm.items = vm.items.filter(function (item) {
 
-            });
+				var result = true;
 
+				vm.tabs.forEach(function (tab) {
+					tab.layout.fields.forEach(function (field) {
+						if (field.name === item.name) {
+
+							result = false;
+
+							if (item.hasOwnProperty('key')) {
+								if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel' || item.key === 'layoutPlainText') {
+									result = true;
+								}
+							}
+
+						}
+
+					})
+				});
+
+				if (vm.fixedArea.isActive) {
+
+					var i;
+					for (i = 0; i < vm.fixedArea.layout.fields.length; i++) {
+						var field = vm.fixedArea.layout.fields[i];
+
+						if (field.type !== 'empty' && field.name === item.name) {
+							result = false;
+							break;
+						}
+
+					}
+
+				}
+
+				if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
+					result = false;
+				}
+
+				return result;
+
+			}); */
+
+			var availableAttrs = vm.attrs.filter(function (attr) {
+				return showItemInAttrsList(attr, 'attr');
+			});
+
+			var availableEntityAttrs = vm.entityAttrs.filter(function (eAttr) {
+				return showItemInAttrsList(eAttr, 'entityAttr');
+			});
+
+			var availableUserInputs = vm.userInputs.filter(function (input) {
+				return showItemInAttrsList(input, 'userInput');
+			});
+
+			vm.items = vm.items.concat(availableAttrs);
+			vm.items = vm.items.concat(availableEntityAttrs);
+			vm.items = vm.items.concat(availableUserInputs);
+			vm.items = vm.items.concat(vm.layoutAttrs);
 
             // set all items to Editable = True state by default
             vm.items = vm.items.map(function (item) {

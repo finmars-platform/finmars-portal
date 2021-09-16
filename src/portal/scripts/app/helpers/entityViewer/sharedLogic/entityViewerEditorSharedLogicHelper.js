@@ -29,17 +29,7 @@
 			'instrument-type': 'instrument-class'
         };
 
-        const getFixedAreaPopup = function () {
-            return {
-                fields: {
-                    showByDefault: {
-                        value: viewModel.showByDefault
-                    }
-                },
-                entityType: viewModel.entityType,
-                tabColumns: null
-            };
-        };
+        // let instrumentTypesList = [];
 
         const noEntityTabs = [''];
 
@@ -61,6 +51,19 @@
 				'</md-button>' +
             '</div>';
 		//</editor-fold>
+
+		const getFixedAreaPopup = function () {
+			return {
+				fields: {
+					showByDefault: {
+						value: viewModel.showByDefault
+					}
+				},
+				entityType: viewModel.entityType,
+				tabColumns: null,
+				event: {}
+			};
+		};
 
         const getEditFormFieldsInFixedArea = function () {
 
@@ -120,10 +123,14 @@
         const onPopupSaveCallback = async function () {
 
             const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
+            // Fixating showByDefault because viewModel.fixedAreaPopup.fields.showByDefault.value can be changed by getAndFormatUserTabs();
+            const showByDefaultAfterSave = viewModel.fixedAreaPopup.fields.showByDefault.value;
 
 			if (viewModel.entityType === 'instrument') {
 
-				if (viewModel.fixedAreaPopup.fields.type.value !== viewModel.entity.instrument_type) {
+				// On change of instrument type for instrument
+				if (viewModel.fixedAreaPopup.tabColumns < 3 &&
+					viewModel.fixedAreaPopup.fields.type.value !== viewModel.entity.instrument_type) {
 
 					viewModel.entity.instrument_type = viewModel.fixedAreaPopup.fields.type.value;
 					// const showByDefaultValue = viewModel.showByDefault;
@@ -139,18 +146,18 @@
 
 			}
 
-            viewModel.keysOfFixedFieldsAttrs.forEach(key => {
+            viewModel.keysOfFixedFieldsAttrs.forEach(key => { // transfer changes from popup to entity
 
                 if (!key || fieldsInFixedArea.includes(key)) {
                     return;
                 }
 
                 const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
-                viewModel.entity[key] = viewModel.fixedAreaPopup.fields[fieldKey].value; // save from popup to fixed area
+                viewModel.entity[key] = viewModel.fixedAreaPopup.fields[fieldKey].value;
 
             });
 
-            if (viewModel.fixedAreaPopup.tabColumns <= 5) {
+            if (viewModel.fixedAreaPopup.tabColumns <= 5) { // if status selector inside popup
 
                 if (viewModel.entityStatus !== viewModel.fixedAreaPopup.fields.status.value) {
                     viewModel.entityStatus = viewModel.fixedAreaPopup.fields.status.value;
@@ -159,21 +166,79 @@
 
             }
 
-            if (viewModel.showByDefault !== viewModel.fixedAreaPopup.fields.showByDefault.value) {
+            if (viewModel.showByDefault !== showByDefaultAfterSave) {
 
-                viewModel.showByDefault = viewModel.fixedAreaPopup.fields.showByDefault.value;
+                viewModel.showByDefault = showByDefaultAfterSave;
+				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
                 // save layout settings
                 viewModel.dataConstructorLayout.data.fixedArea.showByDefault = viewModel.showByDefault;
-                uiService.updateEditLayout(viewModel.dataConstructorLayout.id, viewModel.dataConstructorLayout);
+                uiService.updateEditLayout(viewModel.dataConstructorLayout.id, viewModel.dataConstructorLayout).then(layoutData => {
+                	viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(layoutData));
+				});
 
             }
+
+            if (viewModel.fixedAreaPopup.error) {
+
+            	let popupHasNoErrors = true;
+
+				const attributes = {
+					entityAttrs: viewModel.entityAttrs,
+					attrsTypes: viewModel.attributeTypes
+				}
+
+            	for (const fieldKey in viewModel.originalFixedAreaPopupFields) {
+
+					const fieldError = viewModel.originalFixedAreaPopupFields[fieldKey].error;
+
+					if (fieldError) {
+
+						entityEditorHelper.checkTabsForErrorFields(fieldKey, viewModel.evEditorDataService, attributes, viewModel.entity, viewModel.entityType, viewModel.tabs);
+						const formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
+
+						const fieldErrorNotCorrected = formErrorsList.includes(fieldKey);
+
+						if (fieldErrorNotCorrected) {
+
+							viewModel.fixedAreaPopup.fields[fieldKey].event = {key: 'error', error: fieldError};
+							popupHasNoErrors = false;
+
+						} else {
+							delete viewModel.fixedAreaPopup.fields[fieldKey].event;
+						}
+
+					}
+
+				}
+
+            	if (popupHasNoErrors) {
+            		delete viewModel.fixedAreaPopup.error;
+					viewModel.fixedAreaPopup.event = {key: 'reset'};
+				}
+
+			}
 
             viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
         };
 
         const onFixedAreaPopupCancel = function () {
-            viewModel.fixedAreaPopup.fields = JSON.parse(JSON.stringify(viewModel.originalFixedAreaPopupFields));
+
+        	viewModel.fixedAreaPopup.fields = JSON.parse(JSON.stringify(viewModel.originalFixedAreaPopupFields));
+
+			for (const fieldKey in viewModel.fixedAreaPopup.fields) { // turn on error mode of fields when popup opens
+
+				const fieldData = viewModel.fixedAreaPopup.fields[fieldKey];
+
+				if (fieldData.error) {
+
+					viewModel.fixedAreaPopup.fields[fieldKey].event = {key: 'error', error: fieldData.error};
+					viewModel.fixedAreaPopup.fields[fieldKey].event1 = {key: 'error', error: fieldData.error};
+
+				}
+
+			}
+
         };
 
         const fixFieldsLayoutWithMissingSockets = function (tabs) {
@@ -199,11 +264,19 @@
 
         	if (viewModel.entityType === 'instrument') {
 
-        		entityAttrs.push({
-					name: 'Accruals table',
+        		var accrualsTableData = {
+					name: 'Accruals schedules table',
 					key: 'accrual_calculation_schedules',
 					value_type: 'table',
-				});
+				};
+
+        		var eventsTableData = {
+					name: 'Events schedules table',
+					key: 'event_schedules',
+					value_type: 'table',
+				};
+
+        		entityAttrs.push(accrualsTableData, eventsTableData);
 
 			}
 
@@ -365,7 +438,8 @@
         const onBigDrawerResizeButtonClick = function () {
 
         	viewModel.fixedAreaPopup.tabColumns = 6;
-            viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
+			viewModel.fixedAreaPopup.fields = getFieldsForFixedAreaPopup();
+            // viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
             $scope.$apply();
             const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(6);
@@ -483,7 +557,7 @@
 			if (viewModel.entityType === 'instrument' &&
 				viewModel.entity.instrument_type || viewModel.entity.instrument_type === 0) {
 
-				const activeInstrType = viewModel.typeSelectorOptions.find(instrType => {
+            	const activeInstrType = viewModel.typeSelectorOptions.find(instrType => {
 					return instrType.id === viewModel.entity.instrument_type;
 				});
 
@@ -617,8 +691,8 @@
 
 						// viewModel.tabs = editLayout.results[0].data.tabs
 						tabs = editLayout.results[0].data.tabs;
-						/** @type {{showByDefault: string=}} - Received by getUserTabsAndFixedAreaData() */
-						viewModel.fixedArea = editLayout.results[0].data.fixedArea;
+						// viewModel.fixedArea = editLayout.results[0].data.fixedArea;
+						viewModel.showByDefault = editLayout.results[0].data.fixedArea.showByDefault || viewModel.showByDefaultOptions[0].id;
 
 					}
 
@@ -657,11 +731,14 @@
 
         	entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
-			if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
+			/* if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
 
 				viewModel.showByDefault = viewModel.fixedArea.showByDefault;
 				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
 
+			} */
+			if (viewModel.showByDefault) {
+				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
 			}
 
 			const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
@@ -714,11 +791,14 @@
 
             if (viewModel.openedIn === 'big-drawer') {
 
-                // viewModel.fixedArea received by getUserTabsAndFixedAreaData()
-                if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
-                    viewModel.showByDefault = viewModel.fixedArea.showByDefault;
-                    viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
-                }
+				/* // viewModel.fixedArea received by getUserTabsAndFixedAreaData()
+				if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
+					viewModel.showByDefault = viewModel.fixedArea.showByDefault;
+					viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
+				} */
+				if (viewModel.showByDefault) {
+					viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
+				}
 
                 // Instrument-type always open in max big drawer window
                 let columns = entityViewerHelperService.getEditLayoutMaxColumns(tabs);
@@ -746,7 +826,7 @@
                     }
 
                 }
-                // <Victor 2020.11.20 #59 Fixed area popup>
+                // <Victor 2020.11.20 #59 Fixed area popup>e
 
                 viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
 
@@ -774,7 +854,7 @@
 						attributesLayout: attributesLayout
 					};
 
-					if (viewModel.fixedAreaPopup) resolveData.fixedAreaData = getFieldsForFixedAreaPopup(formLayoutFromAbove);  // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
+					if (viewModel.fixedAreaPopup) resolveData.fixedAreaData = getFieldsForFixedAreaPopup();  // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
 
 					viewModel.readyStatus.layout = true;
 					viewModel.readyStatus.entity = true;
@@ -899,9 +979,9 @@
         const isTabWithErrors = (tab) => {
 
         	const tabName = tab.label.toLowerCase();
-			const tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+			const locsWithErrors = viewModel.evEditorDataService.getLocationsWithErrors();
 
-			return tabsWithErrors[tab.type].hasOwnProperty(tabName);
+			return locsWithErrors[tab.type].hasOwnProperty(tabName);
 
 		};
 
@@ -921,7 +1001,7 @@
 
 		};
 
-		const injectUserAttributesFromInstrumentType = async function (instrumentTypeId) {
+		/* const injectUserAttributesFromInstrumentType = async function (instrumentTypeId) {
 
 			return await instrumentTypeService.getByKey(instrumentTypeId).then(data => {
 				const attrs = data.instrument_attributes;
@@ -934,7 +1014,7 @@
 				});
 
 			})
-		};
+		}; */
 
         return {
 
@@ -962,7 +1042,7 @@
 			isTabWithErrors: isTabWithErrors,
 			getTabBtnClasses: getTabBtnClasses,
 
-			injectUserAttributesFromInstrumentType: injectUserAttributesFromInstrumentType
+			// injectUserAttributesFromInstrumentType: injectUserAttributesFromInstrumentType
 
         }
 
