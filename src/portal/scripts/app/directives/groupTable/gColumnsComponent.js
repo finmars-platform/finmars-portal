@@ -164,7 +164,6 @@
                 scope.columnAreaCollapsed = false;
 
 
-
                 scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
                 scope.isAllStarsSelected = false;
                 scope.hideRowSettings = !!scope.evDataService.getRowSettings().folded;
