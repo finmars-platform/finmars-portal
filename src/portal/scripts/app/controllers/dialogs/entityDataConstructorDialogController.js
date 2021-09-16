@@ -786,15 +786,15 @@
                 if (!notSavedTabExist) {
 
                     vm.tabs.push({
-                        name: '',
-                        editState: true,
-                        tabOrder: vm.tabs.length,
-                        layout: {
-                            rows: 0,
-                            columns: 1,
-                            fields: []
-                        }
-                    });
+						name: '',
+						editState: true,
+						tabOrder: vm.tabs.length,
+						layout: {
+							rows: 0,
+							columns: 1,
+							fields: []
+						}
+					});
 
                     addRows(vm.tabs[vm.tabs.length - 1]);
 
@@ -821,15 +821,15 @@
             } else {
 
                 vm.tabs.push({
-                    name: '',
-                    editState: true,
-                    tabOrder: vm.tabs.length,
-                    layout: {
-                        rows: 0,
-                        columns: 1,
-                        fields: []
-                    }
-                });
+					name: '',
+					editState: true,
+					tabOrder: vm.tabs.length,
+					layout: {
+						rows: 0,
+						columns: 1,
+						fields: []
+					}
+				});
 
                 addRows(vm.tabs[0]);
 
@@ -1657,13 +1657,11 @@
 							})
 
 						}
-
 						else {
 
 							if (elem.classList.contains('ec-attr-occupied')) {
 								onDropFromSocket(elem, targetTab, targetRow, targetColumn, targetColspan, occupiesWholeRow);
 							}
-
 							else {
 								onDropFromAttributesList(elem, targetTab, targetRow, targetColumn, occupiesWholeRow);
 							}
