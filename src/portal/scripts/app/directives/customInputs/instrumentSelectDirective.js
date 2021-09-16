@@ -19,7 +19,9 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 sorted: '=',
-                onChangeCallback: '&?'
+                onChangeCallback: '&?',
+                itemName: '=',
+                itemObject: '=',
             },
             templateUrl: 'views/directives/customInputs/instrument-select-view.html',
             link: function (scope, elem, attr) {
