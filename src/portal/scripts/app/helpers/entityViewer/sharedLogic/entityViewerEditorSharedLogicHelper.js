@@ -478,84 +478,111 @@
 
 		};
 
-        const resolveEditLayout = function () {
+		const resolveEditLayout = function () {
 
-            if (viewModel.entityType === 'instrument' &&
+			if (viewModel.entityType === 'instrument' &&
 				viewModel.entity.instrument_type || viewModel.entity.instrument_type === 0) {
 
 				const activeInstrType = viewModel.typeSelectorOptions.find(instrType => {
 					return instrType.id === viewModel.entity.instrument_type;
 				});
 
-				if (activeInstrType) return instrumentService.getEditLayoutBasedOnUserCodes(activeInstrType.instrument_form_layouts);
+				if (activeInstrType) { // if instrument type exist
 
-                /* if (viewModel.entity.instrument_type) {
+					return new Promise(async (resolve, reject) => {
 
-                     return instrumentTypeService.getByKey(viewModel.entity.instrument_type).then(function (data) {
+						let fullInstrType = viewModel.instrumentTypesList.find(instrType => instrType.id === activeInstrType.id);
 
-                        if (data.instrument_form_layouts) {
+						if (fullInstrType) { // full instrument type was loaded
 
-                            return new Promise(function (resolve, reject) {
+							const editLayout = instrumentService.getEditLayoutBasedOnUserCodes(fullInstrType.instrument_form_layouts);
+							resolve(editLayout);
 
-                                var layouts = data.instrument_form_layouts.split(',');
+						} else {
 
-                                console.log('Resolving Edit Layout. Layouts', layouts)
+							instrumentTypeService.getByKey(activeInstrType.id).then(instrTypeData => {
 
-                                uiService.getListEditLayout(viewModel.entityType).then(function (data) {
+								fullInstrType = instrTypeData;
+								viewModel.instrumentTypesList.push(fullInstrType);
 
-                                    var result;
-                                    var lastMatchedIndex;
+								const editLayout = instrumentService.getEditLayoutBasedOnUserCodes(fullInstrType.instrument_form_layouts);
+								resolve(editLayout);
 
-                                    data.results.forEach(function (item) {
+							});
 
-                                        if (layouts.indexOf(item.user_code) !== -1) {
+						}
 
-                                            if (!lastMatchedIndex && lastMatchedIndex !== 0) {
-                                                lastMatchedIndex = layouts.indexOf(item.user_code)
-                                                result = item
-                                            }
+					});
 
-                                            if (layouts.indexOf(item.user_code) < lastMatchedIndex) {
-                                                lastMatchedIndex = layouts.indexOf(item.user_code)
-                                                result = item
-                                            }
+				}
 
-                                        }
+				/* if (viewModel.entity.instrument_type) {
 
-                                    })
+					 return instrumentTypeService.getByKey(viewModel.entity.instrument_type).then(function (data) {
 
-                                    console.log('result', result);
+						if (data.instrument_form_layouts) {
 
-                                    if (result) {
-                                        resolve({ // Array?
-                                            results: [
-                                                result
-                                            ]
-                                        })
-                                    } else {
-                                        resolve(uiService.getDefaultEditLayout(viewModel.entityType))
-                                    }
+							return new Promise(function (resolve, reject) {
 
-                                })
+								var layouts = data.instrument_form_layouts.split(',');
 
-                            });
+								console.log('Resolving Edit Layout. Layouts', layouts)
 
-                        } else {
-                            return uiService.getDefaultEditLayout(viewModel.entityType);
-                        }
-                    })
+								uiService.getListEditLayout(viewModel.entityType).then(function (data) {
 
-                } else {
-                    return uiService.getDefaultEditLayout(viewModel.entityType);
-                } */
+									var result;
+									var lastMatchedIndex;
 
-            }
+									data.results.forEach(function (item) {
+
+										if (layouts.indexOf(item.user_code) !== -1) {
+
+											if (!lastMatchedIndex && lastMatchedIndex !== 0) {
+												lastMatchedIndex = layouts.indexOf(item.user_code)
+												result = item
+											}
+
+											if (layouts.indexOf(item.user_code) < lastMatchedIndex) {
+												lastMatchedIndex = layouts.indexOf(item.user_code)
+												result = item
+											}
+
+										}
+
+									})
+
+									console.log('result', result);
+
+									if (result) {
+										resolve({ // Array?
+											results: [
+												result
+											]
+										})
+									} else {
+										resolve(uiService.getDefaultEditLayout(viewModel.entityType))
+									}
+
+								})
+
+							});
+
+						} else {
+							return uiService.getDefaultEditLayout(viewModel.entityType);
+						}
+					})
+
+				} else {
+					return uiService.getDefaultEditLayout(viewModel.entityType);
+				} */
+
+			}
 
 			return uiService.getDefaultEditLayout(viewModel.entityType);
 
-        }
+		};
 
-        const getUserTabsAndFixedAreaData = formLayoutFromAbove => {
+		const getUserTabsAndFixedAreaData = formLayoutFromAbove => {
 
         	return new Promise(async resolve => {
 
