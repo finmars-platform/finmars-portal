@@ -19,7 +19,9 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 sorted: '=',
-                onChangeCallback: '&?'
+                onChangeCallback: '&?',
+                itemName: '=',
+                itemObject: '=',
             },
             templateUrl: 'views/directives/customInputs/instrument-select-view.html',
             link: function (scope, elem, attr) {
@@ -238,6 +240,8 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
+                    console.trace();
+
                     inputContainer.classList.remove('custom-input-focused');
 
                     if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
@@ -265,11 +269,13 @@
 
                 var onTabKeyPress = function (event) {
 
-                    var pressedKey = event.key;
-
-                    if (pressedKey === "Tab") {
-                        closeDropdownMenu(true);
-                    }
+                    // TODO fix ALT + TAB closes
+                    // var pressedKey = event.key;
+                    // console.log('pressedKey', pressedKey)
+                    //
+                    // if (pressedKey === "Tab") {
+                    //     closeDropdownMenu(true);
+                    // }
 
                 }
 
@@ -347,7 +353,7 @@
 
                     inputElem.addEventListener('focus', function () {
 
-                        scope.inputText = "";
+                        // scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         scope.dropdownMenuShown = true;
