@@ -186,69 +186,67 @@
 
 					resolveLayout();
 
-				}
+				} else {
 
-				// for complex transaction edit layout stored inside transaction type object
-				if (vm.entityType === "complex-transaction") {
+					// for complex transaction edit layout stored inside transaction type object
+					if (vm.entityType === "complex-transaction") {
 
-					if (vm.instanceId || vm.instanceId === 0) {
+						if (vm.instanceId || vm.instanceId === 0) {
 
-						transactionTypeService.getByKey(vm.instanceId).then(data => {
+							transactionTypeService.getByKey(vm.instanceId).then(data => {
 
-							if (data.book_transaction_layout) {
-								vm.ui = data.book_transaction_layout;
-							} else {
+								if (data.book_transaction_layout) {
+									vm.ui = data.book_transaction_layout;
+								} else {
 
-								vm.formLayoutIsNew = true;
+									vm.formLayoutIsNew = true;
 
-								vm.ui = {
-									data: {}
+									vm.ui = {
+										data: {}
+									}
+									// vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
 								}
-								// vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
-							}
 
-							resolveLayout();
+								resolveLayout();
 
-						}).catch(error => reject(error));
+							}).catch(error => reject(error));
+
+						}
 
 					}
+					else { // For not complex-transaction entities
 
-				}
+						if (vm.layoutId || vm.layoutId === 0) {
 
-				// For not complex-transaction entities
-				else {
+							uiService.getEditLayoutByKey(vm.layoutId).then(data => {
 
-					if (vm.layoutId || vm.layoutId === 0) {
+								vm.ui = data;
+								resolveLayout();
 
-						uiService.getEditLayoutByKey(vm.layoutId).then(data => {
+							}).catch(error => reject(error));
 
-							vm.ui = data;
-							resolveLayout();
+						}
+						else { // if no edit layout id was specified, get default edit layout
 
-						}).catch(error => reject(error));
+							uiService.getDefaultEditLayout(vm.entityType).then(data => {
 
-					}
-
-					// if no edit layout id was specified, get default edit layout
-					else {
-
-						uiService.getDefaultEditLayout(vm.entityType).then(data => {
-
-							if (data.results.length) {
-								vm.ui = data.results[0];
-							}
-
-							// There is no layout yet, so create one
-							else {
-								vm.formLayoutIsNew = true;
-								vm.ui = {
-									data: {}
+								if (data.results.length) {
+									vm.ui = data.results[0];
 								}
-							}
 
-							resolveLayout();
+								// There is no layout yet, so create one
+								else {
+									vm.formLayoutIsNew = true;
+									vm.ui = {
+										data: {}
+									}
+								}
 
-						}).catch(error => reject(error));
+								resolveLayout();
+
+							}).catch(error => reject(error));
+
+						}
 
 					}
 

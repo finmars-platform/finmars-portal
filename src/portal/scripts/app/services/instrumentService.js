@@ -171,10 +171,15 @@
 
 				}
 
-				uiService.getDefaultEditLayout('instrument').then(data => {
-					resolve(data);
+				if (!editLayoutData.results.length) { // did not found edit layout by user codes
 
-				}).catch(error => reject(error));
+					uiService.getDefaultEditLayout('instrument').then(data => {
+						resolve(data);
+
+					}).catch(error => reject(error));
+
+				}
+
 
 			});
 
