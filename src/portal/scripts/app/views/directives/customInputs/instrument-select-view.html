@@ -20,7 +20,7 @@
 
                     <input
                         type="text"
-                        placeholder="{{placeholderText}}"
+                        placeholder="{{label}}"
                         data-ng-model="inputText"
                         data-ng-model-options="{debounce: 1000}"
                         data-ng-change="onInputTextChange()"
@@ -71,26 +71,25 @@
 
         <div class="custom-input-sel-menu-block"  data-ng-if="inputText.length > 2" >
 
-            <div data-ng-if="!processing">
+            <div data-ng-if="!processing" style="height: 369px; overflow-y: auto">
+
+                <b data-ng-if="localInstruments.length" class="instrument-select-options-group-title">Local Instruments ({{localInstrumentsTotal}})</b>
 
                 <div data-ng-if="localInstruments.length">
-
-                    <b class="instrument-select-options-group-title">Local Instruments ({{localInstrumentsTotal}})</b>
 
                     <div
                             data-ng-repeat="option in localInstruments"
                             data-ng-click="selectLocalInstrument(option)"
                             class="instrument-select-input-sel-option"
-                            ng-mouseleave="clearHoverInstrument()"
                             ng-mouseover="setHoverInstrument($event, option)"
 
                     >
 
-                        <div class="instrument-select-instrument-name">
-                            {{option.name}}
+                        <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.name)">
+
                         </div>
-                        <div class="instrument-select-instrument-isin">
-                            {{option.user_code}}
+                        <div class="instrument-select-instrument-isin" data-ng-bind-html="getHighlighted(option.user_code)">
+
                         </div>
 
                         <div class="instrument-select-instrument-ticker" data-ng-if="option.reference_for_pricing">
@@ -101,24 +100,25 @@
 
                 </div>
 
-                <div data-ng-if="databaseInstruments.length">
 
-                    <b class="instrument-select-options-group-title">Global Instruments ({{databaseInstrumentsTotal}})</b>
+                <b data-ng-if="databaseInstruments.length" style=" bottom: 0px;" class="instrument-select-options-group-title">Global Instruments ({{databaseInstrumentsTotal}})</b>
+
+
+                <div data-ng-if="databaseInstruments.length">
 
                     <div
                             data-ng-repeat="option in databaseInstruments"
                             data-ng-click="selectDatabaseInstrument(option)"
                             class="instrument-select-input-sel-option"
-                            ng-mouseleave="clearHoverInstrument()"
                             ng-mouseover="setHoverInstrument($event, option)"
                             >
 
 
-                        <div class="instrument-select-instrument-name">
-                            {{option.issueName}}
+                        <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.issueName)">
+
                         </div>
-                        <div class="instrument-select-instrument-isin">
-                            {{option.referenceId}}
+                        <div class="instrument-select-instrument-isin" data-ng-bind-html="getHighlighted(option.referenceId)">
+
                         </div>
 
                         <div class="instrument-select-instrument-ticker" data-ng-if="option.bloombergTicker">

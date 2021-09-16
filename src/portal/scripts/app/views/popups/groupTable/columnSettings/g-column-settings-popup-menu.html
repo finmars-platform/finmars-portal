@@ -11,25 +11,7 @@
         </md-button>
     </div>
 
-    <div data-ng-if="popupData.data.isReport && !popupData.data.columnHasCorrespondingGroup(popupData.data.item.key)">
-        <md-button data-ng-click="popupData.data.addColumnEntityToGrouping(popupData.data.item)"
-                   ng-disabled="popupData.data.item.error_data"
-                   class="popup-menu-item">
-            <span class="material-icons" style="visibility: hidden;">done</span>
-            <span>Add to grouping</span>
-        </md-button>
-    </div>
-    <!-- In entity viewer grouping does not work for date attributes. So "Add to grouping" is hidden for them. -->
-    <div data-ng-if="!popupData.data.isReport && !popupData.data.columnHasCorrespondingGroup(popupData.data.item.key) && popupData.data.item.value_type !== 40">
-        <md-button data-ng-click="popupData.data.addColumnEntityToGrouping(popupData.data.item)"
-                   ng-disabled="popupData.data.item.error_data"
-                   class="popup-menu-item">
-            <span class="material-icons" style="visibility: hidden;">done</span>
-            <span>Add to grouping</span>
-        </md-button>
-    </div>
-
-    <div data-ng-if="!popupData.data.columnHasCorrespondingGroup(popupData.data.item.key) && popupData.data.item.value_type !== 40">
+    <div data-ng-if="!popupData.data.columnHasCorrespondingGroup(popupData.data.item.key)">
         <md-button data-ng-click="popupData.data.addColumnEntityToGrouping(popupData.data.item)"
                    ng-disabled="popupData.data.item.error_data"
                    class="popup-menu-item">

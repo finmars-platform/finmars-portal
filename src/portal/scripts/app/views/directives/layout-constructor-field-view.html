@@ -4,7 +4,7 @@
             <md-card class="ec-attr-card ec-attr-occupied"
                      data-col="{{column}}"
                      data-row="{{row}}"
-                     data-tab-order="{{tabOrder}}">
+                     data-tab-order="{{tab.tabOrder}}">
                 <div layout="row">
                     <div ng-if="item.type !== 'table'"
                          class="ec-extend-btns-holder flex-row">
@@ -37,7 +37,7 @@
             <div class="ec-attr-card ec-attr-empty"
                  data-col="{{column}}"
                  data-row="{{row}}"
-                 data-tab-order="{{tabOrder}}"
+                 data-tab-order="{{tab.tabOrder}}"
                  data-colspan="{{item.colspan}}">
                 <md-button aria-label="add field" ng-click="toggleEditMode($event)" class="width-100 ec-attr-empty-btn">
                     <ng-md-icon icon="add_circle"></ng-md-icon>

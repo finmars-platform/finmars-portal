@@ -31,7 +31,6 @@
                     editMode: false
                 };
 
-                scope.tabOrder = scope.tab.tabOrder;
                 scope.colsInTotal = scope.tab.layout.columns;
 
                 scope.fieldUsesBackgroundColor = false;

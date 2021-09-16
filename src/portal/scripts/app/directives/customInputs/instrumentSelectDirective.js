@@ -19,7 +19,9 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 sorted: '=',
-                onChangeCallback: '&?'
+                onChangeCallback: '&?',
+                itemName: '=',
+                itemObject: '=',
             },
             templateUrl: 'views/directives/customInputs/instrument-select-view.html',
             link: function (scope, elem, attr) {
@@ -83,7 +85,7 @@
 
                 }
 
-                scope.setHoverInstrument = function ($event, option){
+                scope.setHoverInstrument = function ($event, option) {
 
                     setTimeout(function () {
 
@@ -173,7 +175,6 @@
                     scope.error = '';
 
 
-
                     var config = {
                         instrument_code: item.referenceId,
                         mode: 1
@@ -239,6 +240,8 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
+                    console.trace();
+
                     inputContainer.classList.remove('custom-input-focused');
 
                     if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
@@ -266,11 +269,13 @@
 
                 var onTabKeyPress = function (event) {
 
-                    var pressedKey = event.key;
-
-                    if (pressedKey === "Tab") {
-                        closeDropdownMenu(true);
-                    }
+                    // TODO fix ALT + TAB closes
+                    // var pressedKey = event.key;
+                    // console.log('pressedKey', pressedKey)
+                    //
+                    // if (pressedKey === "Tab") {
+                    //     closeDropdownMenu(true);
+                    // }
 
                 }
 
@@ -318,6 +323,7 @@
                         multiple: true,
                         locals: {
                             data: {
+                                inputText: scope.inputText
                             }
                         }
 
@@ -347,7 +353,7 @@
 
                     inputElem.addEventListener('focus', function () {
 
-                        scope.inputText = "";
+                        // scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         scope.dropdownMenuShown = true;
@@ -374,14 +380,28 @@
 
                 };
 
+                scope.getHighlighted = function (value) {
+
+                    var inputTextPieces = scope.inputText.split(' ')
+
+                    var resultValue;
+
+                    // Regular expression for multiple highlighting case insensitive results
+                    var reg  =  new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+
+                    resultValue = value.replace(reg, '<span class="highlight">$1</span>');
+
+                    return resultValue
+
+                }
+
                 scope.getList = function () {
 
+                    scope.processing = true;
+
+                    var promises = []
+
                     if (scope.inputText.length > 2) {
-
-                        scope.processing = true;
-
-                        var promises = []
-
                         promises.push(new Promise(function (resolve, reject) {
 
                             // scope.databaseInstruments = [{
@@ -420,21 +440,15 @@
                             // })
 
 
-                            fetch('http://3.67.194.145:8080/instr/find/name/' + scope.inputText).then(function (data) {
+                            fetch('https://finmars.com/instrument-database/instr/find/name/' + scope.inputText).then(function (data) {
                                 return data.json()
                             }).then(function (data) {
 
-                                scope.databaseInstrumentsTotal = data.length
+                                scope.databaseInstrumentsTotal = data.resultCount;
 
-                                scope.databaseInstruments = []
+                                scope.databaseInstruments = data.foundItems
 
-                                data.forEach(function (item, index) {
-                                    if (index < 4) {
-                                        scope.databaseInstruments.push(item);
-                                    }
-                                })
-
-                                scope.databaseInstruments = scope.databaseInstruments.map(function (item){
+                                scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
 
                                     item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
 
@@ -455,52 +469,55 @@
                             })
 
                         }))
+                    }
 
-                        promises.push(new Promise(function (resolve, reject) {
+                    promises.push(new Promise(function (resolve, reject) {
 
 
-                            instrumentService.getListForSelect({
-                                filters: {
-                                    name: scope.inputText
-                                }
+                        instrumentService.getListForSelect({
+                            pageSize: 500,
+                            filters: {
+                                query: scope.inputText
+                            }
 
-                            }).then(function (data) {
+                        }).then(function (data) {
 
-                                scope.localInstrumentsTotal = data.count;
+                            scope.localInstrumentsTotal = data.count;
 
-                                scope.localInstruments = []
+                            scope.localInstruments = data.results;
 
-                                data.results.forEach(function (item, index) {
-                                    if (index < 4) {
-                                        scope.localInstruments.push(item);
-                                    }
-                                })
+                            scope.localInstruments = scope.localInstruments.map(function (item) {
 
-                                scope.localInstruments = scope.localInstruments.map(function (item){
+                                item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
 
-                                    item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
-
-                                    return item;
-
-                                })
-
-                                resolve()
-
+                                return item;
 
                             })
 
-                        }))
+                            resolve()
 
-
-                        Promise.all(promises).then(function (data) {
-
-                            scope.processing = false;
-
-                            scope.$apply();
 
                         })
 
-                    }
+                    }))
+
+
+                    Promise.all(promises).then(function (data) {
+
+                        scope.processing = false;
+
+                        scope.$apply();
+
+                        setTimeout(function (){
+
+                            $('.instrument-select-options-group-title').on('click', function(){
+
+                                $(this).next()[0].scrollIntoView({ block: 'start', behavior: 'smooth' });
+                            });
+
+                        }, 100)
+
+                    })
 
 
                 }

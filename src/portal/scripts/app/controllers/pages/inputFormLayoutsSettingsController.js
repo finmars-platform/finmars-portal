@@ -378,6 +378,8 @@
 
         vm.createLayout = function ($event, entityType) {
 
+			$event.stopPropagation();
+
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
@@ -387,7 +389,6 @@
                     data: {
                         entityType: entityType,
                         isCreateNew: true
-
                     }
                 }
             }).then(function (res) {

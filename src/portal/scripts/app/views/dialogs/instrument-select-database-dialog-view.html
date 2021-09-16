@@ -31,11 +31,11 @@
                     Instrument
                 </div>
 
-                <div style="width: 20%; padding: 5px;">
+                <div style="width: 30%; padding: 5px;">
                     ISIN
                 </div>
 
-                <div style="width: 30%; padding: 5px;">
+                <div style="width: 20%; padding: 5px;">
                     Instrument Type
                 </div>
 
@@ -43,27 +43,26 @@
 
             <div class="instrument-select-database-dialog-table-body">
 
-                <div data-ng-if="!vm.processing">
+                <div data-ng-if="!vm.processing" style="height: 359px; overflow-y: auto">
+
+                    <b data-ng-if="vm.localInstruments.length" class="instrument-select-options-group-title">Local Instruments
+                        ({{vm.localInstrumentsTotal}})</b>
 
                     <div data-ng-if="vm.localInstruments.length">
-
-                        <b class="instrument-select-options-group-title">Local Instruments
-                            ({{vm.localInstrumentsTotal}})</b>
 
                         <div
                                 data-ng-repeat="option in vm.localInstruments"
                                 data-ng-click="vm.selectLocalInstrument(option)"
                                 class="instrument-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
-                                ng-mouseleave="vm.clearHoverInstrument()"
                                 ng-mouseover="vm.setHoverInstrument($event, option)"
 
                         >
 
-                            <div class="instrument-select-instrument-name" title="{{option.name}}">
-                                {{option.name}}
+                            <div class="instrument-select-instrument-name" title="{{option.name}}" ng-bind-html="vm.getHighlighted(option.name)">
+
                             </div>
-                            <div class="instrument-select-instrument-isin" title="{{option.user_code}}">
-                                {{option.user_code}}
+                            <div class="instrument-select-instrument-isin" title="{{option.user_code}}" ng-bind-html="vm.getHighlighted(option.user_code)">
+
                             </div>
 
                             <div class="instrument-select-instrument-type"
@@ -75,26 +74,25 @@
 
                     </div>
 
-                    <div data-ng-if="vm.databaseInstruments.length">
+                    <b data-ng-if="vm.databaseInstruments.length" style=" bottom: 0px;"  class="instrument-select-options-group-title">Global Instruments
+                        ({{vm.databaseInstrumentsTotal}})</b>
 
-                        <b class="instrument-select-options-group-title">Global Instruments
-                            ({{vm.databaseInstrumentsTotal}})</b>
+                    <div data-ng-if="vm.databaseInstruments.length">
 
                         <div
                                 data-ng-repeat="option in vm.databaseInstruments"
                                 data-ng-click="vm.selectDatabaseInstrument(option)"
                                 class="instrument-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
-                                ng-mouseleave="vm.clearHoverInstrument()"
                                 ng-mouseover="vm.setHoverInstrument($event, option)"
                         >
 
 
-                            <div class="instrument-select-instrument-name" title="{{option.issueName}}">
-                                {{option.issueName}}
+                            <div class="instrument-select-instrument-name" title="{{option.issueName}}" ng-bind-html="vm.getHighlighted(option.issueName)">
+
                             </div>
 
-                            <div class="instrument-select-instrument-isin" title="{{option.referenceId}}">
-                                {{option.referenceId}}
+                            <div class="instrument-select-instrument-isin" title="{{option.referenceId}}" ng-bind-html="vm.getHighlighted(option.referenceId)">
+
                             </div>
 
                             <div class="instrument-select-instrument-type" title="{{option.instrumentType}}">
