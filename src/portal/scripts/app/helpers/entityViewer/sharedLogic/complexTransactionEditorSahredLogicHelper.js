@@ -414,7 +414,7 @@
 			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
 			let formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
-			let tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+			let tabsWithErrors = viewModel.evEditorDataService.getLocationsWithErrors();
 
 			errors.forEach(errorObj => {
 
