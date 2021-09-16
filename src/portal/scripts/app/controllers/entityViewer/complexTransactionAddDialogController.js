@@ -907,7 +907,6 @@
 				var ttypeItem = {
 					id: item.id,
 					name: item.name,
-					description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod'
 				};
 
 				if (item.group_object) {
