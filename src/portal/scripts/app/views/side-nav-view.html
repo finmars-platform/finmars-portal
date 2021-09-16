@@ -1062,4 +1062,8 @@
     </div>
 </md-sidenav>
 
-<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.portal.healthcheck">Build date: __BUILD_DATE__</div>
+<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.portal.healthcheck">Build date: __BUILD_DATE__
+
+    <span class="websocket-connection-status {{vm.getWsStatus()}}" title="Websocket status: {{vm.getWsStatus()}}"></span>
+
+</div>

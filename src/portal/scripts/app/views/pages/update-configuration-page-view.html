@@ -1,6 +1,17 @@
 <div>
 
+
+    <div data-ng-if="vm.processing" style="margin-bottom: 100px; margin-top: 50px" class="text-center">
+        <div  layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+
+        <p class="overlay-text"><b>Applying Configuration</b></p>
+
+    </div>
+
     <p class="text-center">Configurations</p>
+
 
     <div class="margin-auto setup-wrapper">
 
@@ -18,7 +29,7 @@
                 <div class="setup-item-footer">
 
                     <md-button class="md-raised m-0 float-right {{vm.processing ? 'disabled-btn' : ''}}"
-                               data-ng-click="vm.setActiveConfig($event, tem.id)">
+                               data-ng-click="vm.setActiveConfig($event, item.id)">
                         Apply
                     </md-button>
 
@@ -31,16 +42,5 @@
 
     </div>
 
-
-</div>
-
-<div class="overlay" data-ng-if="vm.processing">
-    <!--<div class="overlay">-->
-
-    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
-        <progress-circular diameter="100"></progress-circular>
-    </div>
-
-    <p class="overlay-text">Checking for Events</p>
 
 </div>
