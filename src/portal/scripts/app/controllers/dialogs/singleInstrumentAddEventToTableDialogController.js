@@ -64,7 +64,7 @@
             vm.event.actions.unshift(newAction);
 
             var transactionType = gridTableHelperService.getCellFromRowByKey(newRow, 'transaction_type');
-            transactionType.settings.selectorOptions = vm.transactionTypes;
+            transactionType.settings.selectorOptions = vm.transactionTypes.map(getTTypesAsSelectorOptions);
 
             // Update rows in actions grid table
             vm.event.actions.forEach(function (action, actionIndex) {
@@ -131,6 +131,10 @@
 
         };
 
+        const getTTypesAsSelectorOptions = ttype => {
+			return {id: ttype.user_code, name: ttype.short_name};
+		};
+
         // Event actions grid table
         vm.eventActionsGridTableData = {
             header: {
@@ -160,9 +164,11 @@
                         objPath:['text'],
                         columnName: 'Text',
                         order: 1,
-                        cellType: 'text',
+                        cellType: 'expression',
                         settings: {
-                            value: null
+                            value: null,
+							exprData: null,
+							closeOnMouseOut: false
                         },
                         styles: {
                             'grid-table-cell': {'width': '220px'}
@@ -251,9 +257,15 @@
 
                 var transactionType = gridTableHelperService.getCellFromRowByKey(rowObj, 'transaction_type');
                 transactionType.settings.value = action.transaction_type;
-                transactionType.settings.selectorOptions = vm.transactionTypes || [];
+                transactionType.settings.selectorOptions = vm.transactionTypes.map(getTTypesAsSelectorOptions);
 
                 var text = gridTableHelperService.getCellFromRowByKey(rowObj, 'text');
+
+				text.settings.exprData = {
+					groups: [],
+					functions: [],
+				};
+
                 text.settings.value = action.text;
 
                 var isSendToPending = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_sent_to_pending');
@@ -367,7 +379,7 @@
 			getTransactionTypes().then(data => {
 
             	// vm.transactionTypes = data.results;
-				vm.transactionTypes = data;
+				vm.transactionTypes = data || [];
 
 				formatDataForActionsGridTable();
 

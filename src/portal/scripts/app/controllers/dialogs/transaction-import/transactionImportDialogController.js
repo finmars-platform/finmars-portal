@@ -574,10 +574,8 @@
             vm.getMember();
 
             if (data && data.scheme) {
-
                 vm.config.scheme = data.scheme.id;
             }
-
 
         };
 

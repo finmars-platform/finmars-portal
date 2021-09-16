@@ -33,11 +33,11 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, usersService, gFiltersHelper) {
+        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, gFiltersHelper) {
 
             var vm = this;
 
-            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {
                 attributes: false,
@@ -74,7 +74,7 @@
                 vm.entityViewerDataService.setActiveObjectActionData(null);*/
 				vm.entityViewerDataService.setRowsActionData(null);
 
-                if (res && res.res === 'agree') {
+                if (res && res.status === 'agree') {
 
                     vm.entityViewerDataService.resetData();
                     vm.entityViewerDataService.resetRequestParameters();
@@ -515,7 +515,7 @@
                             noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
                         }
 
-                        await rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
+                        await sharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
 
                         var activeColumnSortProm = new Promise(function (resolve, reject) {
 
@@ -1145,6 +1145,11 @@
 				});
 
 				switch (vm.componentData.type) {
+
+					case 'report_viewer':
+						vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
+						break;
+
 					case 'report_viewer_grand_total':
 
 						vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -1186,6 +1191,7 @@
 
 
 						break;
+
 				}
 
 				if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
@@ -1286,7 +1292,7 @@
 					});
 				}
 
-				vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+				/* vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
 					var activeObject = vm.entityViewerDataService.getActiveObject();
 					var action = vm.entityViewerDataService.getActiveObjectAction();
@@ -1665,7 +1671,7 @@
 						}
 					}
 
-				});
+				}); */
 
                 vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
@@ -2016,7 +2022,7 @@
 
                 vm.entityViewerDataService.setViewContext('dashboard');
 
-                var downloadAttrsPromise = rvSharedLogicHelper.downloadAttributes();
+                var downloadAttrsPromise = sharedLogicHelper.downloadAttributes();
                 vm.setEventListeners();
 
                 console.log('$scope.$parent.vm.contentType', $scope.$parent.vm.contentType)
@@ -2031,7 +2037,7 @@
                 if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
                 } */
-				rvSharedLogicHelper.setLayoutDataForView();
+				sharedLogicHelper.setLayoutDataForView();
 				vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setUseFromAbove(true);
 
@@ -2129,7 +2135,7 @@
                             /* vm.readyStatus.layout = true;
 
                             $scope.$apply(); */
-							rvSharedLogicHelper.onSetLayoutEnd();
+							sharedLogicHelper.onSetLayoutEnd();
 
                             resolve();
 

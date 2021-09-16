@@ -137,7 +137,7 @@
 
                     <md-tab-body>
                         <md-content class="md-padding p-t-26 "
-                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
+                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked}" style="min-height: 50vh">
                             <div data-ng-repeat="row in vm.range(tab.layout.rows)"
                                  layout="row"
                                  class="entity-editor-row" data-row-number="{{row}}">
