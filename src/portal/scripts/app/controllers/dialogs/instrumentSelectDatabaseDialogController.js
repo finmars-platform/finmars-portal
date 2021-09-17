@@ -260,6 +260,27 @@
 
             Promise.all(promises).then(function (data) {
 
+                scope.databaseInstruments = vm.databaseInstruments.filter(function (databaseInstrument) {
+
+                    var exist = false;
+
+                    vm.localInstruments.forEach(function (localInstrument) {
+
+                        if (localInstrument.user_code === databaseInstrument.referenceId) {
+                            exist = true
+                        }
+
+                        if (localInstrument.reference_for_pricing === databaseInstrument.referenceId) {
+                            exist = true
+                        }
+
+
+                    })
+
+                    return !exist;
+
+                })
+
                 vm.processing = false;
 
                 $scope.$apply();

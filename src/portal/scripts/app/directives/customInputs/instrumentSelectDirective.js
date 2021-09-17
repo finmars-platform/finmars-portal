@@ -504,6 +504,27 @@
 
                     Promise.all(promises).then(function (data) {
 
+                        scope.databaseInstruments = scope.databaseInstruments.filter(function (databaseInstrument) {
+
+                            var exist = false;
+
+                            scope.localInstruments.forEach(function (localInstrument) {
+
+                                if (localInstrument.user_code === databaseInstrument.referenceId) {
+                                    exist = true
+                                }
+
+                                if (localInstrument.reference_for_pricing === databaseInstrument.referenceId) {
+                                    exist = true
+                                }
+
+
+                            })
+
+                            return !exist;
+
+                        })
+
                         scope.processing = false;
 
                         scope.$apply();
