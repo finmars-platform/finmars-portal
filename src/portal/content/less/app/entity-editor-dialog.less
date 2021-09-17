@@ -1,4 +1,5 @@
-@import "variables";
+@evTabsMenuBtnWidth: 40px;
+
 .entity-editor-dialog {
   padding-bottom: 52px;
   width: 100%;
@@ -55,6 +56,17 @@
 
   .fa-field3 {
     flex: 1 2 33%;
+  }
+}
+
+.entity-editor-tabs {
+
+  md-tabs-canvas.md-paginated {
+    margin-right: 72px;
+  }
+
+  md-tabs-wrapper md-next-button {
+    right: @evTabsMenuBtnWidth;
   }
 }
 
@@ -119,6 +131,7 @@
     right: 0;
 
     button.entity-tabs-menu-btn {
+      width: @evTabsMenuBtnWidth;
       margin-top: 5px;
 
       &.error-tab {
