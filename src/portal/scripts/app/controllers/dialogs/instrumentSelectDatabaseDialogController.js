@@ -186,6 +186,37 @@
 
         }
 
+        vm.updateLocalInstrument = function (item) {
+
+            var config = {
+                instrument_code: item.user_code,
+                mode: 1
+            };
+
+            vm.isUpdatingInstrument = true;
+
+            importInstrumentCbondsService.download(config).then(function (data) {
+
+                vm.isUpdatingInstrument = false;
+
+                $scope.$apply();
+
+
+                if (data.errors.length) {
+
+                    toastNotificationService.error(data.errors[0])
+
+
+                } else {
+
+                    toastNotificationService.error('Instrument ' + item.user_code + ' was updated')
+
+                }
+
+            })
+
+        }
+
         vm.getList = function () {
 
             vm.processing = true;
@@ -260,7 +291,7 @@
 
             Promise.all(promises).then(function (data) {
 
-                scope.databaseInstruments = vm.databaseInstruments.filter(function (databaseInstrument) {
+                vm.databaseInstruments = vm.databaseInstruments.filter(function (databaseInstrument) {
 
                     var exist = false;
 
