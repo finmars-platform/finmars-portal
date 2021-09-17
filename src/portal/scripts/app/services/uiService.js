@@ -5,6 +5,7 @@
 
     'use strict';
 
+    const metaService = require('./metaService');
 	const metaContentTypesService = require('./metaContentTypesService');
 	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
     const ecosystemDefaultService = require('./ecosystemDefaultService');
@@ -371,7 +372,9 @@
 
 					} else {
 
-						defaultLayout = uiRepository.getListLayoutTemplate();
+						const isReport = metaService.isReport(entityType);
+
+						defaultLayout = uiRepository.getListLayoutTemplate(isReport);
 						defaultLayout = await applyDefaultSettingsToLayoutTemplate(defaultLayout);
 						defaultLayoutData = {results: defaultLayout};
 
