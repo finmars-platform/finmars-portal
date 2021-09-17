@@ -6,8 +6,10 @@
     var metaContentTypeService = require('../../services/metaContentTypesService');
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+	var directivesEvents = require('../../services/events/directivesEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
+    var EventService = require('../../services/eventService');
     var uiService = require('../../services/uiService');
 
 
@@ -27,10 +29,16 @@
 
                 scope.fields = [];
                 scope.entityType = null;
+                scope.readyStatus = {
+                	componentWidthCalculated: false
+				};
 
                 scope.attribute = {
                     key: 'value'
                 }
+
+				var dashboardControlElem = elem[0].querySelector(".dashboardControl");
+				var cellWidth;
 
                 scope.getEntityTypeByContentType = function (contentType) {
 
@@ -172,6 +180,23 @@
                         }
 
                     });
+
+                    if (scope.componentData.settings.multiple) {
+
+                    	scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENTS_SIZES_CHANGED, function () {
+
+							var componentUIData = scope.dashboardDataService.getComponentUIData(scope.item.data.id);
+
+							if (componentUIData && componentUIData.width !== undefined && componentUIData.width !== null) {
+								dashboardControlElem.style.width = componentUIData.width;
+								scope.readyStatus.componentWidthCalculated = true; // needed so that multiselector chips can get actual component width
+							}
+
+							scope.multiselectEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
+
+						});
+
+					}
 
                 };
 
@@ -358,7 +383,6 @@
                         .format("YYYY-MM-DD");
                 };
 
-
                 scope.init = function () {
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
@@ -402,7 +426,6 @@
                         });
 
                     }
-
                     else {
 
                         scope.item.data.store = {};
@@ -423,6 +446,18 @@
 							scope.item.data.store.value = [];
 						}
 
+                    	scope.multiselectEventService = new EventService();
+
+						var componentUIData = scope.dashboardDataService.getComponentUIData(scope.item.data.id);
+						var componentSizeCalculated = componentUIData && componentUIData.width;
+
+						if (componentSizeCalculated) {
+							dashboardControlElem.style.width = componentUIData.width; // needed so that multiselector chips can get actual component width
+							scope.readyStatus.componentWidthCalculated = true;
+						}
+
+					} else {
+						scope.readyStatus.componentWidthCalculated = true;
 					}
 
                     if (scope.componentData.custom_component_name) {
