@@ -31,17 +31,16 @@
 
                     var tabWidth = elem.width();
 
-                    scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal)
+                    scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal);
 
                 };
 
                 scope.calculateSingleCellHeight = function () {
-
-                    var tabHeight = elem.height();
-
+                    // var tabHeight = elem.height();
                     // scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
 
                     scope.cellHeight = 64; // var it be fixed value
+
                 };
 
                 scope.resizeGridCells = function () {
@@ -72,6 +71,7 @@
                     var hiddenRowsBefore = 0;
                     var domElemOffsetTop;
                     var domElemOffsetLeft;
+                    var domElemHorizontalPaddings = 8; // if changed also change @dashboardCellPaddingRight inside dashboard.less
 
                     var rowsToFold = []
                     var foldedAccordionsRows = []
@@ -147,16 +147,6 @@
 
                         }
 
-                        if (layoutElem.cell_type === 'component') {
-
-                            if (rowsToFold.indexOf(rowNumber) !== -1) {
-                                domElem.style.display = 'none';
-                            } else {
-                                domElem.style.display = 'block';
-                            }
-
-                        }
-
                         var offset = 0;
 
                         for (var x = 0; x < rowsToFold.length ; x = x + 1) {
@@ -167,19 +157,42 @@
 
                         }
 
+                        var domElemWidth = layoutElem.colspan * scope.cellWidth;
+						var domElemHeight = layoutElem.rowspan * scope.cellHeight;
 
-                        domElem.style.width = (layoutElem.colspan * scope.cellWidth) + 'px';
-                        domElem.style.height = (layoutElem.rowspan * scope.cellHeight) + 'px';
+                        domElem.style.width = domElemWidth + 'px';
+                        domElem.style.height = domElemHeight + 'px';
 
                         domElem.style.position = 'absolute';
 
-                        domElemOffsetTop =  (rowNumber * scope.cellHeight + scope.tabPaddingTop - (offset * scope.cellHeight))
-                        domElemOffsetLeft =  (columnNumber * scope.cellWidth + scope.tabPaddingLeft)
+                        domElemOffsetTop = (rowNumber * scope.cellHeight + scope.tabPaddingTop - (offset * scope.cellHeight));
+                        domElemOffsetLeft = (columnNumber * scope.cellWidth + scope.tabPaddingLeft);
 
                         domElem.style.top = domElemOffsetTop + 'px';
                         domElem.style.left = domElemOffsetLeft + 'px';
 
+						if (layoutElem.cell_type === 'component') {
+
+							var componentUIData = scope.dashboardDataService.getComponentUIData(layoutElem.data.id) || {};
+
+							componentUIData.width = domElemWidth - domElemHorizontalPaddings + 'px';
+							componentUIData.height = domElemHeight + 'px';
+							componentUIData.colspan = layoutElem.colspan;
+							componentUIData.rowspan = layoutElem.rowspan;
+
+							scope.dashboardDataService.setComponentUIData(layoutElem.data.id, componentUIData);
+
+							if (rowsToFold.indexOf(rowNumber) !== -1) {
+								domElem.style.display = 'none';
+							} else {
+								domElem.style.display = 'block';
+							}
+
+						}
+
                     }
+
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENTS_SIZES_CHANGED);
 
                     if (emptySpace) {
                         emptySpace.style.position = 'absolute';
@@ -188,7 +201,6 @@
                         emptySpace.style.height = '200px';
                         emptySpace.style.width = '100%';
                     }
-
 
                 };
 
@@ -232,7 +244,6 @@
                 };
 
                 scope.init();
-
 
             }
         }
