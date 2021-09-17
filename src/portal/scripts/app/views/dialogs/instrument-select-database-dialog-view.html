@@ -122,12 +122,16 @@
 
                     <div data-ng-if="vm.hoverInstrument">
 
+                        <div data-ng-if="vm.hoverInstrument.id" class="instrument-select-update-instrument-button">
+                            <span class="material-icons  {{vm.isUpdatingInstrument ? 'disabled-btn' : ''}}" ng-click="vm.updateLocalInstrument(vm.hoverInstrument)">autorenew</span>
+                        </div>
+
                         <div class="instrument-select-option-detail-field">
 
                             <div class="instrument-select-option-detail-label">
                                 Instrument
                             </div>
-                            <div class="instrument-select-option-detail-value">
+                            <div class="instrument-select-option-detail-value" style="width: 140px">
 
                                 <span data-ng-if="vm.hoverInstrument.id">{{vm.hoverInstrument.name}}</span>
                                 <span data-ng-if="!vm.hoverInstrument.id">{{vm.hoverInstrument.issueName}}</span>
