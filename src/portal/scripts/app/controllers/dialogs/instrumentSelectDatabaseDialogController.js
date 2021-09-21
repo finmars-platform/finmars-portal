@@ -209,7 +209,7 @@
 
                 } else {
 
-                    toastNotificationService.error('Instrument ' + item.user_code + ' was updated')
+                    toastNotificationService.success('Instrument ' + item.user_code + ' was updated')
 
                 }
 
