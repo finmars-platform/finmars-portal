@@ -266,6 +266,8 @@
 
     };
 
+    var set
+
     var deserializeGroups = function (entityViewerDataService, entityViewerEventService, data, requestParameters, page) {
 
         var step = requestParameters.pagination.page_size;
@@ -343,13 +345,13 @@
             }
         }
 
-        obj.results = obj.results.filter(function (item) {
+        /* obj.results = obj.results.filter(function (item) {
             if (item && item.___type !== 'control') {
                 return true;
             }
 
             return false;
-        });
+        }); */
 
         var groups = entityViewerDataService.getGroups();
         var parents = [];
@@ -362,7 +364,7 @@
 
         // evDataHelper.setDefaultGroups(obj);
         obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
+            return item.___type !== 'control';
         });
 
         obj.results = obj.results.map(function (item, index) {
@@ -388,14 +390,14 @@
                 }
 
                 item.___id = evRvCommonHelper.getId(item);
-                item.___index = index
+                item.___index = index;
 
             }
 
-            return item
+            return item;
         });
 
-        var controlObj = {
+        /* var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
             ___level: obj.___level + 1
@@ -403,7 +405,7 @@
 
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results.push(controlObj);
+        obj.results.push(controlObj); */
 
         console.log('DESERIALIZE GROUPS', obj.results);
 

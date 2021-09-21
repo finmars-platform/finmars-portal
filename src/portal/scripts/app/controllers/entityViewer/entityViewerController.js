@@ -702,8 +702,8 @@
                     if (actionData.object && actionData.object.id || activeRowExist) {
 
                         switch (actionData.actionKey) {
-                            case 'delete':
-								// in case of deleting row with ___is_active === false from context menu
+							case 'delete':
+								// in case of deleting row with ___is_active === false from context menu, add it's id manually
                             	var idsToDelete = [];
                             	if (actionData.object && actionData.object.id) idsToDelete.push(actionData.object.id);
 
