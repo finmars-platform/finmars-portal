@@ -144,7 +144,8 @@
                 }
             }
 
-        } else {
+        }
+        else {
 
             var groupData = entityViewerDataService.getData(event.___id);
 
@@ -170,7 +171,8 @@
                     }
                 }
 
-            } else {
+            }
+            else {
 
                 obj = Object.assign({}, data);
                 obj.___group_name = event.groupName ? event.groupName : '-';
@@ -221,7 +223,7 @@
             return item
         });
 
-        var controlObj = {
+    	/*var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
             ___level: obj.___level + 1
@@ -229,7 +231,7 @@
 
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results.push(controlObj);
+        obj.results.push(controlObj);*/
 
         console.log('attributeDataService', attributeDataService);
 
@@ -265,8 +267,6 @@
         entityViewerDataService.setData(obj);
 
     };
-
-    var set
 
     var deserializeGroups = function (entityViewerDataService, entityViewerEventService, data, requestParameters, page) {
 

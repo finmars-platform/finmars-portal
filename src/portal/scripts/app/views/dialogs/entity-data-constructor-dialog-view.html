@@ -149,7 +149,7 @@
                                     <div data-ng-if="tab.editState">
                                         <md-input-container class="ec-tab-item-edit">
                                             <label>Tab name</label>
-                                            <input ng-model="tab.captionName">
+                                            <input ng-model="tab.captionName" class="tabNameInput" data-tab-id="{{tab.id}}">
                                         </md-input-container>
                                         <md-button class="ec-tab-btn"
                                                    data-ng-click="vm.saveEditedTab(tab)">
