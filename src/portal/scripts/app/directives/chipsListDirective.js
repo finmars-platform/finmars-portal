@@ -8,7 +8,6 @@
 		return {
 			restrict: "E",
 			scope: {
-				testing: '=',
 				chipsList: "=",
 
 				eventService: "=",
