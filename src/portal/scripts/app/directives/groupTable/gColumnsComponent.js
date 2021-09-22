@@ -43,6 +43,7 @@
                  * @type {Boolean}
                  */
                 var showFrontEvFilters = true;
+                var data = scope.evDataService.getData();
 
                 /* const setFiltersLayoutNames = () => {
 

@@ -20,6 +20,8 @@
     var colorPalettesService = require('../../services/colorPalettesService');
 	var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+	var metaHelper = require('../../helpers/meta.helper');
+
 	var scrollHelper = new ScrollHelper();
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
@@ -838,7 +840,45 @@
 
             }
 
+			setTimeout(function () {
+				allowSpacesInTabName();
+			}, 100);
+
         };
+
+		var tabNameInput = null;
+
+		var removeKeydownListener = function () {
+			document.removeEventListener('keydown', addSpaceIntoTabName);
+		};
+
+		var addSpaceIntoTabName = function (kDownEv) {
+
+			if (kDownEv.key === ' ') {
+
+				var tabNewName = metaHelper.insertSpaceIntoElementText(tabNameInput);
+
+				for (var i = 0; i < vm.tabs.length; i++) {
+					if (vm.tabs[i].name === tabNewName) {
+						vm.tabs[i].captionName = tabNewName;
+						break;
+					}
+				}
+
+			}
+
+		};
+
+		var allowSpacesInTabName = function () {
+
+			tabNameInput = document.querySelector('input.tabNameInput');
+
+			tabNameInput.addEventListener('focus', function () {
+				document.addEventListener('keydown', addSpaceIntoTabName);
+				tabNameInput.addEventListener('blur', removeKeydownListener, {once: true});
+			});
+
+		};
 
         vm.toggleEditTab = function (tab, action, $index) {
             if (!tab.editState) {
@@ -859,6 +899,15 @@
             }
 
             tab.editState = !tab.editState;
+
+			if (tab.editState) {
+
+				setTimeout(function () {
+					allowSpacesInTabName();
+				}, 100);
+
+			}
+
         };
 
         vm.saveEditedTab = function (tab) {
