@@ -23,7 +23,7 @@
     </div>
 
     <div data-ng-if="item.___is_open">
-        <div data-ng-repeat="child in item.results" class="ev-left-panel-children-holder" >
+        <div data-ng-repeat="child in item.results track by $index" class="ev-left-panel-children-holder" >
 
             <g-ev-left-panel-tree-elem item="child"
                                        ev-data-service="evDataService"

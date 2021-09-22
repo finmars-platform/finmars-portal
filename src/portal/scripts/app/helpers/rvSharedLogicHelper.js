@@ -1,12 +1,12 @@
 'use strict';
 
 import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
-const commonDialogsService = new CommonDialogsService();
 
 (function () {
 
     const rvDataProviderService = require('../services/rv-data-provider/rv-data-provider.service');
 	const pricesCheckerService = require('../services/reports/pricesCheckerService');
+	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
 	const expressionService = require('../services/expression.service');
 	const evEvents = require('../services/entityViewerEvents');
@@ -15,6 +15,8 @@ const commonDialogsService = new CommonDialogsService();
 	const currencyHistoryService = require('../services/currencyHistoryService');
 
     module.exports = function (viewModel, $scope, $mdDialog) {
+
+		const commonDialogsService = new CommonDialogsService($mdDialog);
 
 		const downloadAttributes = function () {
 
@@ -94,6 +96,12 @@ const commonDialogsService = new CommonDialogsService();
 			viewModel.entityViewerDataService.setVirtualScrollStep(500);
 
 			viewModel.entityViewerDataService.setRowHeight(36);
+
+			var rowFilterColor = localStorageService.getRowTypeFilter(true, viewModel.entityType);
+			var rowTypeFiltersData = viewModel.entityViewerDataService.getRowTypeFilters();
+			rowTypeFiltersData.markedRowFilters = rowFilterColor;
+
+			viewModel.entityViewerDataService.setRowTypeFilters(rowTypeFiltersData);
 
 		};
 
@@ -209,11 +217,9 @@ const commonDialogsService = new CommonDialogsService();
 
 		var updateTableAfterEntityChanges = function (res) {
 
-			/* vm.entityViewerDataService.setActiveObjectAction(null);
-			vm.entityViewerDataService.setActiveObjectActionData(null); */
 			viewModel.entityViewerDataService.setRowsActionData(null);
 
-			if (res && res.res === 'agree') {
+			if (res && res.status === 'agree') {
 
 				/* viewModel.entityViewerDataService.resetData();
 				viewModel.entityViewerDataService.resetRequestParameters();
@@ -425,10 +431,14 @@ const commonDialogsService = new CommonDialogsService();
 				locals: locals
 			}).then(function (res) {
 
-				viewModel.autoRefreshState = viewModel.entityViewerDataService.getAutoRefreshState();
+				if (res && res.status === 'agree') {
 
-				if (viewModel.autoRefreshState) {
-					viewModel.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+					const autoRefreshState = viewModel.entityViewerDataService.getAutoRefreshState();
+
+					if (autoRefreshState) {
+						viewModel.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+					}
+
 				}
 
 				updateTableAfterEntityChanges(res);
@@ -458,7 +468,9 @@ const commonDialogsService = new CommonDialogsService();
 
 			}).then(function (res) {
 
-				if (viewModel.autoRefreshState) {
+				const autoRefreshState = viewModel.entityViewerDataService.getAutoRefreshState();
+
+				if (autoRefreshState) {
 					viewModel.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 				}
 
@@ -504,44 +516,6 @@ const commonDialogsService = new CommonDialogsService();
 			commonDialogsService.warning(warningLocals).then(function (res) {
 				if (res.status === 'agree') {
 
-					/*$mdDialog.show({
-						controller: 'EntityViewerAddDialogController as vm',
-						templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-						parent: angular.element(document.body),
-						targetEvent: activeObject.event,
-						locals: {
-							entityType: 'price-history',
-							entity: {
-								instrument: activeObject['instrument.id'],
-								instrument_object: {
-									id: activeObject['instrument.id'],
-									name: activeObject['instrument.name'],
-									user_code: activeObject['instrument.user_code'],
-									short_name: activeObject['instrument.short_name']
-								},
-								pricing_policy: reportOptions.pricing_policy,
-								pricing_policy_object: reportOptions.pricing_policy_object,
-								date: reportOptions.report_date
-							}
-						}
-					}).then(function (res) {
-
-						vm.entityViewerDataService.setActiveObjectAction(null);
-						vm.entityViewerDataService.setActiveObjectActionData(null);
-
-						if (res && res.res === 'agree') {
-
-							vm.entityViewerDataService.resetData();
-							vm.entityViewerDataService.resetRequestParameters();
-
-							var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-							vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-							vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-						}
-					});*/
-
 					createEntity(event, createEntityLocals);
 
 				}
@@ -552,9 +526,6 @@ const commonDialogsService = new CommonDialogsService();
 
 		const executeRowAction = function () {
 
-			/* var activeObject = vm.entityViewerDataService.getActiveObject();
-			var action = vm.entityViewerDataService.getActiveObjectAction();
-			var actionData = vm.entityViewerDataService.getActiveObjectActionData(); */
 			const actionData = viewModel.entityViewerDataService.getRowsActionData();
 			const action = actionData.actionKey;
 			const reportOptions = viewModel.entityViewerDataService.getReportOptions();
@@ -594,7 +565,6 @@ const commonDialogsService = new CommonDialogsService();
 
 					editEntity(actionData.event, locals);
 				}
-
 				else if (action === 'edit_account') {
 
 					var locals = {
@@ -606,7 +576,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_portfolio') {
 
 					var locals = {
@@ -618,7 +587,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_currency') {
 
 					var locals = {
@@ -630,7 +598,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_pricing_currency') {
 
 					var locals = {
@@ -642,7 +609,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_accrued_currency') {
 
 					var locals = {
@@ -654,7 +620,6 @@ const commonDialogsService = new CommonDialogsService();
 					editEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'edit_price') {
 
 					var filters = {
@@ -707,7 +672,6 @@ const commonDialogsService = new CommonDialogsService();
 
 
 				}
-
 				else if (action === 'edit_fx_rate') {
 
 					var filters = {
@@ -761,7 +725,6 @@ const commonDialogsService = new CommonDialogsService();
 					})
 
 				}
-
 				else if (action === 'edit_pricing_currency_price' && actionData.object.id) {
 
 					var filters = {
@@ -810,7 +773,6 @@ const commonDialogsService = new CommonDialogsService();
 					})
 
 				}
-
 				else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
 
 					var filters = {
@@ -860,7 +822,6 @@ const commonDialogsService = new CommonDialogsService();
 					})
 
 				}
-
 				else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
 
 					var filters = {
@@ -910,7 +871,6 @@ const commonDialogsService = new CommonDialogsService();
 					})
 
 				}
-
 				else if (action === 'book_transaction') {
 
 					var locals = {
@@ -919,7 +879,7 @@ const commonDialogsService = new CommonDialogsService();
 						data: {}
 					};
 
-					if (vm.entityType === 'transaction-report') {
+					if (viewModel.entityType === 'transaction-report') {
 
 						const contextData = getContextDataForRowAction(reportOptions, actionData.object);
 						locals.entity.transaction_type = actionData.object['complex_transaction.transaction_type.id'];
@@ -930,7 +890,6 @@ const commonDialogsService = new CommonDialogsService();
 					createEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'book_transaction_specific') {
 
 					const contextData = getContextDataForRowAction(reportOptions, actionData.object);
@@ -950,7 +909,6 @@ const commonDialogsService = new CommonDialogsService();
 					createEntity(actionData.event, locals);
 
 				}
-
 				else if (action === 'rebook_transaction') {
 
 					var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']

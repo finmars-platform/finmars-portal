@@ -49,9 +49,9 @@
                         scope.item.user_code = scope.selectedGroupPrefix + '@' + scope.usercode;
                     }
 
-                    console.log('usercodeInputDirective.updateUserCode.selectedGroupPrefix', scope.selectedGroupPrefix);
+                    /* console.log('usercodeInputDirective.updateUserCode.selectedGroupPrefix', scope.selectedGroupPrefix);
                     console.log('usercodeInputDirective.updateUserCode.item', scope.item);
-                    console.log('usercodeInputDirective.updateUserCode.usercode', scope.usercode);
+                    console.log('usercodeInputDirective.updateUserCode.usercode', scope.usercode); */
 
                 }
 

@@ -1,7 +1,7 @@
 (function () {
 
-	var metaService = require('../services/metaService');
-	var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+    var metaService = require('../services/metaService');
+    var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
     var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
@@ -320,28 +320,27 @@
 
     };
 
-	const filterByRowColor = function (flatList, evDataService) {
+    const filterByRowColor = function (flatList, evDataService) {
 
-		var rowTypeFilters = evDataService.getRowTypeFilters();
-		var filterByColor = rowTypeFilters.markedRowFilters;
+        var rowTypeFilters = evDataService.getRowTypeFilters();
+        var filterByColor = rowTypeFilters.markedRowFilters;
 
-		if (filterByColor === 'none') { //  color filter disabled
-			return flatList;
-		}
+        if (filterByColor === 'none') { //  color filter disabled
+            return flatList;
+        }
 
-		var entityType = evDataService.getEntityType();
-		// var markedRows = localStorageService.getMarkedRows(false, entityType);
-		var markedRows = {};
+        var entityType = evDataService.getEntityType();
+        var markedRows = localStorageService.getMarkedRows(false, entityType);
 
-		return flatList.filter(item => {
+        return flatList.filter(item => {
 
-			if (item.___type !== 'object') return true;
-			// does color of row matches to filter
-			return markedRows.hasOwnProperty(item.id) && markedRows[item.id].color === filterByColor;
+            if (item.___type !== 'object') return true;
+            // does color of row matches to filter
+            return markedRows.hasOwnProperty(item.id) && markedRows[item.id].color === filterByColor;
 
-		});
+        });
 
-	};
+    };
 
     var getFlatStructure = function (evDataService) {
 
@@ -376,14 +375,13 @@
         var offsetPx = evDataService.getVirtualScrollOffsetPx();
         var from = Math.ceil(offsetPx / rowHeight);
         var step = evDataService.getVirtualScrollStep();
-		console.log("dubugging.rowsToShow calculateProjection data", rowHeight, offsetPx, step);
+        console.log("dubugging.rowsToShow calculateProjection data", rowHeight, offsetPx, step);
         evDataService.setProjectionLastFrom(from);
 
         var to = from + (step / 2);
 
         console.timeEnd('Creating projection');
-
-        from = from - (step / 2) // two rows, before viewport
+        from = from - (step / 2); // two rows, before viewport
 
         if (from < 0) {
             from = 0;
@@ -391,7 +389,7 @@
         // console.log('View Context ' + evDataService.getViewContext() + ' flatList length', flatList.length);
         // console.log('View Context ' + evDataService.getViewContext() + ' from', from);
         // console.log('View Context ' + evDataService.getViewContext() + ' to', to);
-		console.log("dubugging.rowsToShow calculateProjection from to", from, to);
+        console.log("dubugging.rowsToShow calculateProjection from to", from, to);
         return flatList.slice(from, to);
 
     };
@@ -426,34 +424,34 @@
 
     var getColumnWidth = function (column) {
 
-    	var defaultWidth = 100 + 'px';
+        var defaultWidth = 100 + 'px';
 
-    	if (column.hasOwnProperty('id')) {
+        if (column.hasOwnProperty('id')) {
 
-    		var groupsWidth = metaService.columnsWidthGroups();
+            var groupsWidth = metaService.columnsWidthGroups();
 
-			switch (column.value_type) {
-				case 10:
-					return groupsWidth.groupThree;
-					break;
-				case 40:
-					return groupsWidth.groupFive;
-					break;
-				case 30:
-					return groupsWidth.groupFive;
-					break;
-				default:
-					return defaultWidth;
-					break;
-			}
+            switch (column.value_type) {
+                case 10:
+                    return groupsWidth.groupThree;
+                    break;
+                case 40:
+                    return groupsWidth.groupFive;
+                    break;
+                case 30:
+                    return groupsWidth.groupFive;
+                    break;
+                default:
+                    return defaultWidth;
+                    break;
+            }
 
-		} else if (column.hasOwnProperty('key')) {
-    		return defaultWidth;
-		}
+        } else if (column.hasOwnProperty('key')) {
+            return defaultWidth;
+        }
 
-    	return undefined;
+        return undefined;
 
-	};
+    };
 
     var setColumnsDefaultWidth = function (evDataService) {
 
@@ -471,29 +469,29 @@
 
             if (!column.style.width) {
 
-				/* if (column.hasOwnProperty('key')) {
-					column.style.width = defaultWidth + 'px';
-				}
+                /* if (column.hasOwnProperty('key')) {
+                    column.style.width = defaultWidth + 'px';
+                }
 
-				if (column.hasOwnProperty('id')) {
+                if (column.hasOwnProperty('id')) {
 
-					switch (column.value_type) {
-						case 10:
-							column.style.width = groupsWidth.groupThree;
-							break;
-						case 20:
-							column.style.width = defaultWidth + 'px';
-							break;
-						case 40:
-							column.style.width = groupsWidth.groupFive;
-							break;
-						case 30:
-							column.style.width = groupsWidth.groupFive;
-							break;
-					}
+                    switch (column.value_type) {
+                        case 10:
+                            column.style.width = groupsWidth.groupThree;
+                            break;
+                        case 20:
+                            column.style.width = defaultWidth + 'px';
+                            break;
+                        case 40:
+                            column.style.width = groupsWidth.groupFive;
+                            break;
+                        case 30:
+                            column.style.width = groupsWidth.groupFive;
+                            break;
+                    }
 
-				} */
-				column.style.width = getColumnWidth(column);
+                } */
+                column.style.width = getColumnWidth(column);
 
             }
 
@@ -563,10 +561,10 @@
         }
 
         obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
+            return item.___type !== 'control';
         });
 
-        var controlObj = {
+        /* var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
             ___level: obj.___level + 1
@@ -574,7 +572,7 @@
 
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results.push(controlObj);
+        obj.results.push(controlObj); */
 
         entityViewerDataService.setData(obj);
 
@@ -604,23 +602,19 @@
         }
 
         obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
+            return item.___type !== 'control' && item.___type !== 'placeholder_object';
         });
 
-        var controlObj = {
-            ___errorMessage: errorMessage,
-            ___parentId: obj.___id,
-            ___type: 'control',
-            ___level: obj.___level + 1
-        };
+		/* var controlObj = {
+			___errorMessage: errorMessage,
+			___parentId: obj.___id,
+			___type: 'control',
+			___level: obj.___level + 1
+		};
 
-        controlObj.___id = evRvCommonHelper.getId(controlObj);
+		controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'placeholder_object';
-        });
-
-        obj.results.push(controlObj);
+        obj.results.push(controlObj); */
 
         entityViewerDataService.setData(obj);
 
@@ -927,12 +921,42 @@
 
         console.log('getObjectsFromSelectedGroups.selectedGroups', selectedGroups);
 
-
         var controlObj = null;
 
-        selectedGroups.forEach(function (group) {
 
-            var rawData = evDataService.getData(group.___id)
+        if (selectedGroups.length) {
+
+            selectedGroups.forEach(function (group) {
+
+                var rawData = evDataService.getData(group.___id)
+
+                if (rawData) {
+                    var data = JSON.parse(JSON.stringify(rawData));
+
+                    console.log('getObjectsFromSelectedGroups.data', data);
+
+
+                    data.results.forEach(function (item) {
+
+                        if (item.___type === 'object') {
+                            result.push(item);
+                        } else if (item.___type === 'placeholder_object') {
+                            result.push(item);
+                        } else if (item.___type === 'control') {
+                            // if (!multiselectState) {
+                            controlObj = item
+                            // }
+                        }
+
+                    })
+                }
+
+            })
+
+        } else {
+
+
+            var rawData = evDataService.getRootGroupData()
 
             if (rawData) {
                 var data = JSON.parse(JSON.stringify(rawData));
@@ -955,15 +979,15 @@
                 })
             }
 
-        })
+        }
 
         if (controlObj) {
             result.push(controlObj)
         }
 
-		evDataService.setUnfilteredFlatList(result);
+        evDataService.setUnfilteredFlatList(result);
 
-		result = filterByRowColor(result, evDataService);
+        result = filterByRowColor(result, evDataService);
 
         console.log('getObjectsFromSelectedGroups.result', result)
 
@@ -1013,7 +1037,7 @@
         getGroupsValues: getGroupsValues,
         calculateProjection: calculateProjection,
 
-		getColumnWidth: getColumnWidth,
+        getColumnWidth: getColumnWidth,
         setColumnsDefaultWidth: setColumnsDefaultWidth,
         updateColumnsIds: updateColumnsIds,
 

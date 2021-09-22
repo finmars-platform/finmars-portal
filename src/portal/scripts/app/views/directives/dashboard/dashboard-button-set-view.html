@@ -2,7 +2,7 @@
 
     <div data-ng-if="showAsDropdown">
 
-        <md-select ng-model="lastSelectedOption" class="dashboard-buttonset-dropdown"  md-selected-text="getSelectedText()">
+        <md-select ng-model="lastSelectedOption" class="dashboard-buttonset-dropdown" md-selected-text="getSelectedText()">
             <md-option data-ng-repeat="item in itemsList" ng-click="handleAction($event, item)">
                 {{item.name}}
             </md-option>

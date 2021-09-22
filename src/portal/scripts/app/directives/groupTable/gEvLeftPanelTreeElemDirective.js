@@ -59,42 +59,69 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 }
 
+                var deselectChildrenObjs = function (item) {
+
+                	item.results.forEach(function (child) { // deactivate objects from previously selected group
+
+						if (child.___type === 'object') {
+							child.___is_activated = false;
+						}
+
+					});
+
+                	return item;
+
+				};
+
                 scope.toggleGroupSelection = function ($event) {
 
                     if (!scope.isLastLevel) {
                         return;
                     }
 
-                    var selectedGroups = []
+                    var selectedGroups = [];
 
-                    var selected = scope.item.___is_selected
-
-                    scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState()
+                    scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState();
 
                     if (!scope.multiselectIsActive) {
 
+						var selected = scope.item.___is_selected;
                     	var items = scope.evDataService.getDataAsList();
 
                         items.forEach(function (item) {
-                            item.___is_selected = false;
+
+                        	item.___is_selected = false;
+
+							if (item.results && item.results.length) {
+								item = deselectChildrenObjs(item);
+							}
+
                             scope.evDataService.setData(item);
+
                         })
 
-                        selectedGroups = []
+                        scope.evDataService.setSelectedGroups([]);
 
-                        scope.evDataService.setSelectedGroups(selectedGroups);
+						scope.item.___is_selected = selected; // return ___is_selected status of clicked group after resetting statuses of all groups
 
                     }
-
-                    scope.item.___is_selected = selected;
 
                     selectedGroups = scope.evDataService.getSelectedGroups();
 
                     if (scope.item.___is_selected) {
 
+						if (scope.item.results && scope.item.results.length) {
+
+							var item = scope.evDataService.getData(scope.item.___id);
+							item = deselectChildrenObjs(item);
+
+							scope.evDataService.setData(item);
+
+						}
+
                         selectedGroups = selectedGroups.filter(function (group) {
                             return group.___id !== scope.item.___id;
-                        })
+                        });
 
                     } else {
 
@@ -106,7 +133,7 @@
 
                     scope.item.___is_selected = !scope.item.___is_selected;
 
-                    scope.evDataService.setData(scope.item)
+                    scope.evDataService.setData(scope.item);
 
                     scope.evDataService.setSelectedGroups(selectedGroups);
 
@@ -117,9 +144,7 @@
 					scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 					scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
 
-                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
-
-                    console.log('scope.item', scope.item);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 }
 

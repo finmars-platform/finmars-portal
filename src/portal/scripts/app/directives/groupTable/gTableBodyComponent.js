@@ -121,10 +121,7 @@
                     scope.evDataService.setFlatList(flatList);
 
                     projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
-					if (projection) {
-						console.log("dubugging.rowsToShow projection", projection);
-						console.log("dubugging.rowsToShow projection immutable", JSON.parse(JSON.stringify(projection)));
-					}
+
                     scope.evDataService.setProjection(projection);
 
                     // console.log('projection', projection);
@@ -161,6 +158,24 @@
 						flatList = evFilterService.filterTableRows(flatList, regularFilters, groups);
 					}
 
+					var selGroupsList = scope.evDataService.getSelectedGroups();
+
+					if (selGroupsList.length) {
+
+						var lastSelGroup = selGroupsList[selGroupsList.length - 1];
+
+						var controlObj = {
+							___parentId: lastSelGroup.___id,
+							___type: 'control',
+							___level: lastSelGroup.___level + 1
+						};
+
+						controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+						flatList.push(controlObj);
+
+					}
+
                     var index = 0;
                     flatList = flatList.map(function (item, i) {
                         item.___flat_list_index = i;
@@ -176,6 +191,16 @@
 
                         return item
                     });
+
+					/* var controlObj = {
+						___parentId: obj.___id,
+						___type: 'control',
+						___level: obj.___level + 1
+					};
+
+					controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+					obj.results.push(controlObj); */
 
                     scope.evDataService.setFlatList(flatList);
 
@@ -434,7 +459,7 @@
                     } else {
 
                         // evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                        evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
+						// evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                         if (projection) {
                             evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
