@@ -37,8 +37,7 @@
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data)
-    {
+    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data) {
 
         var vm = this;
 
@@ -246,26 +245,31 @@
 
             console.log('copy entity', entity);
 
-            if (windowType === 'big_drawer') {
-
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType}};
-                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
-            }
-
-            $mdDialog.show({
-                controller: 'TransactionTypeAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-                parent: angular.element(document.body),
-                // targetEvent: $event,
-                locals: {
-                    entityType: vm.entityType,
-                    entity: entity
-                }
-            });
-
             // $mdDialog.hide();
-            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
+			if (windowType === 'big_drawer') {
+
+				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
+				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			} else {
+
+				$mdDialog.show({
+					controller: 'TransactionTypeAddDialogController as vm',
+					templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
+					parent: angular.element(document.body),
+					// targetEvent: $event,
+					locals: {
+						entityType: vm.entityType,
+						entity: entity,
+						data: {
+							openedIn: 'dialog'
+						}
+					}
+				});
+
+				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+
+			}
 
         };
 
@@ -337,27 +341,27 @@
 
                     if (vm.entity.inputs) {
 
-                    	vm.entity.inputs.forEach(function (input) {
+                        vm.entity.inputs.forEach(function (input) {
 
-                    		if (!input.settings) {
-								input.settings = {}
-							}
+                            if (!input.settings) {
+                                input.settings = {}
+                            }
 
-							if (input.settings.linked_inputs_names) {
+                            if (input.settings.linked_inputs_names) {
 
-								input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                                input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
 
-							} else {
-								input.settings.linked_inputs_names = []
-							}
+                            } else {
+                                input.settings.linked_inputs_names = []
+                            }
 
-							if (input.settings.recalc_on_change_linked_inputs) {
+                            if (input.settings.recalc_on_change_linked_inputs) {
 
-								input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
+                                input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
 
-							} else {
-								input.settings.recalc_on_change_linked_inputs = []
-							}
+                            } else {
+                                input.settings.recalc_on_change_linked_inputs = []
+                            }
 
                             vm.resolveDefaultValue(input)
 
@@ -478,8 +482,8 @@
 
             updatedEntity.object_permissions = [];
 
-			// code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
-			return sharedLogic.updateEntityBeforeSave(updatedEntity);
+            // code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
+            return sharedLogic.updateEntityBeforeSave(updatedEntity);
 
         };
 
@@ -739,8 +743,8 @@
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
-				var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
-				actionsErrors = actionsErrors.concat(inputsErrors);
+                var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
+                actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
@@ -813,8 +817,7 @@
         vm.saveAndExit = function () {
 
             vm.save().then(function (data) {
-                // $mdDialog.hide({res: 'agree', data: data});
-                let responseObj = {res: 'agree', data: data};
+                let responseObj = {status: 'agree', data: data};
                 metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
@@ -1313,8 +1316,7 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    // $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-                    let responseObj = {res: 'agree', data: {action: 'delete'}};
+                    let responseObj = {status: 'delete'};
                     metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
                 }
 
@@ -2623,6 +2625,18 @@
         };*/
 
 
+        vm.recalculateUserFields = function ($event) {
+
+            transactionTypeService.recalculateUserFields(vm.entity.id, {
+                transaction_type_id: vm.entity.id
+            }).then(function (data) {
+
+                toastNotificationService.success("User fields of Transaction Type " + vm.entity.name + ' was successfully recalculated');
+
+            })
+
+        }
+
         vm.init = function () {
 
             setTimeout(function () {
@@ -2663,6 +2677,115 @@
         };
 
         vm.init();
+
+        const some = {
+			"id": 2753,
+			"name": "account_position",
+			"verbose_name": "Account of booking",
+			"value_type": 100,
+			"reference_table": null,
+			"content_type": "accounts.account",
+			"order": 1,
+			"can_recalculate": false,
+			"value_expr": "",
+			"tooltip": "ttyp tooltip here",
+			"is_fill_from_context": false,
+			"context_property": null,
+			"value": "40",
+			"account": null,
+			"instrument_type": null,
+			"instrument": null,
+			"currency": null,
+			"counterparty": null,
+			"responsible": null,
+			"portfolio": null,
+			"strategy1": null,
+			"strategy2": null,
+			"strategy3": null,
+			"daily_pricing_model": null,
+			"payment_size_detail": null,
+			"pricing_policy": null,
+			"periodicity": null,
+			"accrual_calculation_model": null,
+			"settings": {
+				"linked_inputs_names": [
+					"test_account1",
+					"test_account2"
+				],
+				"recalc_on_change_linked_inputs": [
+					"test_account2"
+				]
+			},
+			"button_data": null,
+			"account_object": null,
+			"instrument_object": null,
+			"instrument_type_object": null,
+			"daily_pricing_model_object": null,
+			"payment_size_detail_object": null,
+			"currency_object": null,
+			"counterparty_object": null,
+			"portfolio_object": null,
+			"strategy1_object": null,
+			"strategy2_object": null,
+			"strategy3_object": null,
+			"pricing_policy_object": null,
+			"periodicity_object": null,
+			"accrual_calculation_model_object": null
+		};
+        const another = {
+			"id": 2753,
+			"name": "account_position",
+			"verbose_name": "Account of booking",
+			"value_type": 100,
+			"reference_table": null,
+			"content_type": "accounts.account",
+			"order": 1,
+			"can_recalculate": false,
+			"value_expr": "",
+			"tooltip": "ttyp tooltip here",
+			"is_fill_from_context": false,
+			"context_property": null,
+			"value": 40,
+			"account": null,
+			"instrument_type": null,
+			"instrument": null,
+			"currency": null,
+			"counterparty": null,
+			"responsible": null,
+			"portfolio": null,
+			"strategy1": null,
+			"strategy2": null,
+			"strategy3": null,
+			"daily_pricing_model": null,
+			"payment_size_detail": null,
+			"pricing_policy": null,
+			"periodicity": null,
+			"accrual_calculation_model": null,
+			"settings": {
+				"linked_inputs_names": [
+					"test_account1",
+					"test_account2"
+				],
+				"recalc_on_change_linked_inputs": [
+					"test_account2"
+				]
+			},
+			"button_data": null,
+			"account_object": null,
+			"instrument_object": null,
+			"instrument_type_object": null,
+			"daily_pricing_model_object": null,
+			"payment_size_detail_object": null,
+			"currency_object": null,
+			"counterparty_object": null,
+			"portfolio_object": null,
+			"strategy1_object": null,
+			"strategy2_object": null,
+			"strategy3_object": null,
+			"pricing_policy_object": null,
+			"periodicity_object": null,
+			"accrual_calculation_model_object": null
+		};
 
     }
 

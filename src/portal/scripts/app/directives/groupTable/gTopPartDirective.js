@@ -21,7 +21,7 @@
                 evDataService: '=',
                 evEventService: '=',
                 attributeDataService: '=',
-                spExchangeService: '=', // TODO may be not need
+                spExchangeService: '=',
             },
             link: function (scope, ) {
 
@@ -44,6 +44,7 @@
                     entityType: scope.entityType,
                     evDataService: scope.evDataService,
                     evEventService: scope.evEventService,
+					spExchangeService: scope.spExchangeService
                 }
 
 				scope.saveLayoutList = function ($event) {
@@ -275,6 +276,10 @@
 
 
                     });
+
+					scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+						scope.reportOptions = scope.evDataService.getReportOptions();
+					});
 
                 };
 

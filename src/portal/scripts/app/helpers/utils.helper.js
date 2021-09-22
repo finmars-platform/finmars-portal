@@ -8,14 +8,6 @@
 
     // var metaHelper = require('./meta.helper');
 
-    /**
-     * Get list of expressions for Expression Builder.
-     * @callback - The first color, in hexadecimal format.
-     * @param {number} wait - The second color, in hexadecimal format.
-     * @param {any} immediate - ?
-     * @return {number} The blended color.
-     * @memberof module:UtilsHelper
-     */
     function debounce(func, wait, immediate) {
 
         var timeout;
@@ -33,7 +25,7 @@
 
     }
 
-    function throttle(fn, wait) {
+    /* function throttle(fn, wait) {
         var time = Date.now();
         return function () {
             if ((time + wait - Date.now()) < 0) {
@@ -41,7 +33,39 @@
                 time = Date.now();
             }
         }
-    }
+    } */
+	/**
+	 *
+	 * @param fn {Function}
+	 * @param wait {number} - milliseconds to wait
+	 * @param [options] {Object}
+	 * @param {boolean} [options.trailing=true] - execute fn on its last call after wait time
+	 * @returns {(function(): void)|*}
+	 */
+    function throttle(fn, wait, options) {
+
+    	var time = Date.now();
+		var timeout = null;
+		options = options || {};
+
+		return function () {
+			var waitRemains = time + wait - Date.now();
+
+			if (waitRemains < 0) {
+				if (timeout) {
+					clearTimeout(timeout);
+					timeout = null;
+				}
+				fn();
+				time = Date.now();
+			} else if (options.trailing !== false && !timeout && waitRemains > 0) {
+				timeout = setTimeout(function () {
+					timeout = null;
+					fn();
+				}, waitRemains);
+			}
+		};
+	}
 
     function floor10(value, exp) {
         return decimalAdjust('floor', value, exp);

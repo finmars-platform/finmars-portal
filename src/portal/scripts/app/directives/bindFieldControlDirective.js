@@ -140,7 +140,7 @@
 								var l, e, u;
 
 								for (e = 0; e < entityAttrs.length; e = e + 1) {
-									if ($scope.item.name === entityAttrs[e].name) {
+									if ($scope.item.key === entityAttrs[e].key) {
 										return entityAttrs[e].key;
 									}
 								}
@@ -645,7 +645,7 @@
 						var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
 
 						if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
-							vm.readyStatus.content = true
+							vm.readyStatus.content = true;
 						}
 
 						if ($scope.item &&
@@ -697,6 +697,26 @@
 
 					}
 
+				};
+
+				$scope.itemChange = function () {
+					if ($scope.entityChange) {
+						$scope.entityChange({fieldKey: vm.fieldKey});
+					}
+				};
+
+				$scope.inputBlur = function () {
+					if ($scope.onFieldBlur) {
+						$scope.onFieldBlur();
+					}
+				};
+
+				$scope.onDateChange = function () {
+					if ($scope.entity[vm.fieldKey] === "") {
+						$scope.entity[vm.fieldKey] = null;
+					}
+
+					$scope.itemChange();
 				};
 
 				$scope.init = function () {
@@ -775,26 +795,6 @@
 						}
 
 					} */
-				};
-
-				$scope.itemChange = function () {
-					if ($scope.entityChange) {
-						$scope.entityChange({fieldKey: vm.fieldKey});
-					}
-				};
-
-				$scope.inputBlur = function () {
-					if ($scope.onFieldBlur) {
-						$scope.onFieldBlur();
-					}
-				};
-
-				$scope.onDateChange = function () {
-					if ($scope.entity[vm.fieldKey] === "") {
-						$scope.entity[vm.fieldKey] = null;
-					}
-
-					$scope.itemChange();
 				};
 
 				$scope.init();

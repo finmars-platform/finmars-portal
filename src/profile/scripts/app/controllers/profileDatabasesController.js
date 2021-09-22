@@ -27,7 +27,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             vm.readyStatus.masterUsers = false;
 
-			profileAuthorizerService.getMasterUsersList().then(function (data) {
+            profileAuthorizerService.getMasterUsersList().then(function (data) {
                 vm.masterUsers = data.results;
                 vm.readyStatus.masterUsers = true;
                 $scope.$apply();
@@ -41,7 +41,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             var status = 0; // 0 - SENT, 1 - ACCEPTED, 2 - DECLINED
 
-			profileAuthorizerService.getInviteFromMasterUserList(status).then(function (data) {
+            profileAuthorizerService.getInviteFromMasterUserList(status).then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;
@@ -99,18 +99,32 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             // console.log('item', item);
 
-			profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
+            profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
 
-                baseUrlService.setMasterUserPrefix(data.base_api_url);
-                // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+                if (data.base_api_url) {
 
-				if (broadcastChannelService.isAvailable) {
-					broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
-				}
+                    baseUrlService.setMasterUserPrefix(data.base_api_url);
+                    // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                $state.go('app.portal.home');
+                    if (broadcastChannelService.isAvailable) {
+                        broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
+                    }
 
-            });
+                    $state.go('app.portal.home');
+
+                } else {
+
+                    console.log("Error activate", data)
+
+                    toastNotificationService.error("Something went wrong. Please, try again later")
+
+                }
+
+
+            }).catch(function (error){
+                console.log("Error activate catch", error)
+                toastNotificationService.error("Something went wrong. Please, try again later")
+            })
 
         };
 
@@ -122,8 +136,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                 templateUrl: 'views/dialogs/create-master-user-from-dump-dialog-view.html',
                 parent: angular.element(document.body),
                 locals: {
-                    data: {
-                    }
+                    data: {}
                 },
                 targetEvent: $event
             }).then(function (res) {
@@ -137,7 +150,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
         vm.exportMasterUserBackup = function ($event, item) {
 
-        	profileAuthorizerService.exportToBackup(item.id).then(function (data) {
+            profileAuthorizerService.exportToBackup(item.id).then(function (data) {
 
                 if (data.status !== 200) {
                     throw Error("Something went wrong")
@@ -145,7 +158,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
                 return data.blob()
 
-			}).then(function (blob) {
+            }).then(function (blob) {
 
                 console.log('blob ', blob);
 
@@ -187,18 +200,18 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                 },
                 targetEvent: $event
             }) */
-			const locals = {
-				warning: {
-					title: 'Warning!',
-					description: "Are you sure to leave from " + item.name + ' database?'
-				}
-			};
+            const locals = {
+                warning: {
+                    title: 'Warning!',
+                    description: "Are you sure to leave from " + item.name + ' database?'
+                }
+            };
 
-			commonDialogsService.warning(locals, {targetEvent: $event}).then(res => {
+            commonDialogsService.warning(locals, {targetEvent: $event}).then(res => {
 
                 if (res.status === 'agree') {
 
-					profileAuthorizerService.leaveMasterUser(item.id).then(function () {
+                    profileAuthorizerService.leaveMasterUser(item.id).then(function () {
 
                         vm.getMasterUsersList();
 
@@ -226,9 +239,9 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             }).then(res => {
 
-            	if (res.status === 'agree') {
-					$state.go('app.profile', {}, {reload: 'app'})
-				}
+                if (res.status === 'agree') {
+                    $state.go('app.profile', {}, {reload: 'app'})
+                }
 
             });
 
@@ -248,8 +261,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                 },
                 targetEvent: $event
             });
-			/* Master user copy starts inside CopyMasterUserDialogController
-			.then(function (res) {
+            /* Master user copy starts inside CopyMasterUserDialogController
+            .then(function (res) {
 
                 if (res.status === 'agree') {
 
@@ -276,7 +289,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
         vm.getTaskInfo = function () {
 
-			profileAuthorizerService.copyMasterUser(vm.copyMasterUserTask).then(function (data) {
+            profileAuthorizerService.copyMasterUser(vm.copyMasterUserTask).then(function (data) {
 
                 vm.copyMasterUserTask = data;
 
@@ -306,7 +319,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             item.description = item.description_tmp;
 
-			profileAuthorizerService.updateMasterUser(item.id, item).then(function (data) {
+            profileAuthorizerService.updateMasterUser(item.id, item).then(function (data) {
 
                 item.description_tmp = '';
                 item.descriptionEdit = false;
@@ -321,7 +334,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             item.status = 2; // Decline code
 
-			profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getInvites();
 
@@ -333,12 +346,14 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             item.status = 1; // Accept code
 
-			profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 // vm.getMasterUsersList();
                 // vm.getInvites();
 
-                authorizerService.setMasterUser(item.to_master_user).then(function (data) {
+                localStorage.setItem('goToSetup', 'true')
+
+                profileAuthorizerService.setCurrentMasterUser(item.to_master_user).then(function (data) {
 
                     console.log('vm.activateDatabase.data', data);
 
@@ -346,7 +361,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                    $state.go('app.portal.setup');
+                    $state.go('app.setup');
                 })
 
             })
@@ -356,7 +371,6 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
         vm.init = function () {
             vm.getMasterUsersList();
             vm.getInvites();
-
 
 
             // vm.readyStatus.invites = true;

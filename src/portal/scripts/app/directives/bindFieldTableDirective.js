@@ -6,6 +6,8 @@
 	const instrumentService = require('../services/instrumentService');
 	const accrualCalculationModelService = require('../services/accrualCalculationModelService');
 	const instrumentPeriodicityService = require('../services/instrumentPeriodicityService');
+	const metaEventClassService = require('../services/metaEventClassService');
+	const metaNotificationClassService = require('../services/metaNotificationClassService');
 
 	const GridTableDataService = require('../services/gridTableDataService');
 	const EventService = require('../services/eventService');
@@ -29,26 +31,97 @@
 			link: function (scope, elem, attr, bfcVm) {
 
 				scope.readyStatus = false;
-
 				scope.entityType = bfcVm.entityType;
+				/* Scheme object: {form_message: string, items: Array} */
+				scope.rowAdditionSchemes = [];
 
 				scope.popupX = {value: null};
 				scope.popupY = {value: null};
-				scope.popupTemplate =
-					`<div class="accrual-add-row-popup-container">
-						<div data-ng-repeat="item in popupData.items"
-							 class="accrual-add-row-popup-item"
-							 data-ng-click="popupData.onItemClick(item)">{{item.name}}</div>
-						<div data-ng-if="popupData.isBuildButton" class="accrual-add-row-popup-item build-accruals">Build accruals</div>
+				scope.addBtnPopupTemplate =
+					`<div class="ev-user-tab-add-row-popup-container">
+						<div data-ng-repeat="item in popupData.items | orderBy: 'order'"
+							 class="add-row-item"
+							 data-ng-click="popupData.onAddBtnClick(item)">{{item.name}}</div>
+						<div ng-if="popupData.buttons.length" class="buttons-holder">
+							<div ng-repeat="button in popupData.buttons"
+							 	 ng-bind="button.name"
+							 	 ng-click="button.onClick($event, _$popup)" class="add-row-item"></div>
+						</div>
 					</div>`;
+				// <div data-ng-if="popupData.showBuildButton" class="add-row-item build-accruals">Build accruals</div>
 
 				const minTableColWidth = 50;
 				const maxTableColWidth = 400;
 				let columnsNumber = 0;
+				const useIdForOptions = ['periodicity', 'accrual_calculation_model', 'event_class', 'notification_class'];
 				/** Helps to determine which of multiple tables changed */
-				let thisTableChanged = {value: false}
+				let thisTableChanged = false;
+				// let thisTableChanged = {value: false}
 				let entitySpecificData;
+				let tableColumnsList;
+				/**
+				 * Fill each grid table row's cell with data from entity
+				 *
+				 * @param item {Object} - matching to row data from entity
+				 * @param row {Object} - grid table row data
+				 */
+				let fillGridTableRowCells;
+				let tableKey = scope.item.key;
 
+				const gridTableData = {
+					header: {
+						order: 'header',
+						columns: []
+					},
+					templateRow: {
+						isActive: false,
+						columns: []
+					},
+					body: [],
+					components: {}
+				};
+
+				const loadInstrumentPeriodicity = function () {
+
+					return new Promise((res, rej) => {
+
+						instrumentPeriodicityService.getList().then(data => {
+
+							entitySpecificData.selectorOptions.periodicity = data.map(periodicity => {
+								return {
+									id: periodicity.id,
+									name: periodicity.name
+								}
+							});
+
+							res();
+
+						}).catch(error => rej(error));
+
+					});
+
+				};
+
+				const loadInstrumentType = function () {
+					return new Promise ((res, rej) => {
+
+						if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
+
+							instrumentTypeService.getByKey(scope.entity.instrument_type).then(instrTypeData => {
+
+								const resData = instrTypeData || [];
+								res(resData);
+
+							}).catch(error => rej(error));
+
+						} else {
+							res();
+						}
+
+					});
+				};
+
+				//region Instrument accruals
 				const instrumentAccrualsColumns = {
 					'notes' :{
 						key: 'notes',
@@ -113,24 +186,9 @@
 					}
 				};
 
-				const gridTableData = {
-					header: {
-						order: 'header',
-						columns: []
-					},
-					templateRow: {
-						isActive: false,
-						columns: []
-					},
-					body: [],
-					components: {}
-				};
-
 				let multitypeFieldsForRows;
 
 				const loadDataForInstrumentAccruals = function () {
-
-					const promises = [];
 
 					entitySpecificData = {
 						selectorOptions: {
@@ -143,31 +201,39 @@
 
 						accrualCalculationModelService.getList().then(data => {
 
-							entitySpecificData.selectorOptions.accrual_calculation_model = data;
+							entitySpecificData.selectorOptions.accrual_calculation_model = data.map(cModel => {
+								return {
+									id: cModel.id,
+									name: cModel.name
+								}
+							});
 							res();
 
 						}).catch(error => rej(error));
 
 					});
 
-					promises.push(calcModelProm);
-
-					const periodicityProm = new Promise((res, rej) => {
-
-						instrumentPeriodicityService.getList().then(data => {
-
-							entitySpecificData.selectorOptions.periodicity = data;
-							res();
-
-						}).catch(error => rej(error));
-
-					});
-
-					promises.push(periodicityProm);
+					const periodicityProm = loadInstrumentPeriodicity();
 
 					const instrTypeAccrualsProm = new Promise ((res, rej) => {
 
-						if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
+						loadInstrumentType().then(instrTypeData => {
+							const accrualsScheme = instrTypeData.accruals || [];
+
+							scope.rowAdditionSchemes = accrualsScheme.map(scheme => {
+								return {
+									id: scheme.id,
+									name: scheme.name,
+									order: scheme.order,
+									data: scheme.data
+								};
+							});
+
+							res();
+
+						}).catch(error => rej(error));
+
+						/* if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
 
 							instrumentTypeService.getByKey(scope.entity.instrument_type).then(instrTypeData => {
 
@@ -178,20 +244,176 @@
 
 						} else {
 							res();
-						}
+						} */
 
 					});
 
-					promises.push(instrTypeAccrualsProm);
-
-					return Promise.allSettled(promises);
+					return Promise.allSettled([calcModelProm, periodicityProm, instrTypeAccrualsProm]);
 
 				};
+				//endregion
+
+				//region Instrument events
+				const instrumentEventsColumns = {
+					'name' :{
+						key: 'name',
+						objPath: ['name'],
+						cellType: 'text',
+						settings: {
+							value: null
+						},
+					},
+					'event_class': {
+						key: 'event_class',
+						objPath: ['event_class'],
+						cellType: 'selector',
+						settings: {
+							value: null,
+							selectorOptions: []
+						}
+					},
+					'effective_date': {
+						key: 'effective_date',
+						objPaths: [['effective_date'], ['effective_date_value_type']],
+						cellType: 'multitypeField',
+						settings: {
+							value: [null, null],
+							fieldTypesData: null,
+						}
+					},
+					'final_date': {
+						key: 'final_date',
+						objPaths: [['final_date'], ['final_date_value_type']],
+						cellType: 'multitypeField',
+						settings: {
+							value: [null, null],
+							fieldTypesData: null,
+						}
+					},
+					'description': {
+						key: 'description',
+						objPath: ['description'],
+						cellType: 'text',
+						settings: {
+							value: null
+						}
+					},
+					'periodicity': {
+						key: 'periodicity',
+						objPath: ['periodicity'],
+						cellType: 'selector',
+						settings: {
+							value: null,
+							selectorOptions: []
+						}
+					},
+					'periodicity_n': {
+						key: 'periodicity_n',
+						objPaths: [['periodicity_n'], ['periodicity_n_value_type']],
+						cellType: 'multitypeField',
+						settings: {
+							value: [null, null],
+							fieldTypesData: null,
+						}
+					},
+					'notification_class': {
+						key: 'notification_class',
+						objPath: ['notification_class'],
+						cellType: 'selector',
+						settings: {
+							value: null,
+							selectorOptions: []
+						}
+					},
+					'notify_in_n_days': {
+						key: 'notify_in_n_days',
+						objPath: ['notify_in_n_days'],
+						cellType: 'number',
+						settings: {
+							value: null
+						}
+					},
+				};
+
+				const loadDataForInstrumentEvents = function () {
+
+					entitySpecificData = {
+						selectorOptions: {
+							event_class: [],
+							periodicity: [],
+							notification_class: []
+						}
+					};
+
+					const eventClassProm = new Promise(async (res, rej) => {
+
+						metaEventClassService.getList().then(data => {
+
+							entitySpecificData.selectorOptions.event_class = data;
+							res();
+
+						}).catch(error => rej(error));
+
+					});
+
+					const periodicityProm = loadInstrumentPeriodicity();
+
+					const notifClassProm = new Promise(async (res, rej) => {
+
+						metaNotificationClassService.getList().then(data => {
+
+							entitySpecificData.selectorOptions.notification_class = data;
+							res();
+
+						}).catch(error => rej(error));
+
+					});
+
+					const instrTypeEventsProm = new Promise ((res, rej) => {
+
+						loadInstrumentType().then(instrTypeData => {
+
+							const eventsSchemes = instrTypeData.events || [];
+
+							scope.rowAdditionSchemes = eventsSchemes.map(scheme => {
+
+								let fields = scheme.data.items;
+
+								/*if (!scheme.data.items_blocked) {
+									fields = fields.concat(scheme.data.blockableItems);
+								}*/
+								fields = fields.concat(scheme.data.items2);
+
+								return {
+									id: scheme.id,
+									name: scheme.name,
+									order: scheme.order,
+									data: {
+										actions: scheme.data.actions,
+										form_message: scheme.data.form_message,
+										event_class: scheme.data.event_class,
+										items: fields
+									}
+								}
+
+							});
+
+							res();
+
+						}).catch(error => rej(error))
+
+					});
+
+					return Promise.allSettled([eventClassProm, periodicityProm, notifClassProm, instrTypeEventsProm]);
+
+				};
+				//endregion
 
 				const addSelectedHiddenOption = function (column) {
 
 					const columnSelector = entitySpecificData.selectorOptions.hasOwnProperty(column.key);
 					const optionSelectedInCustomizableSelector = (column.settings.value || column.settings.value === 0) && columnSelector;
+					const idProp = useIdForOptions.includes(column.key) ? 'id' : 'user_code';
 
 					if (optionSelectedInCustomizableSelector) {
 
@@ -200,11 +422,11 @@
 						if (optionIndex < 0) { // if selected option hidden, add it until another selected
 
 							const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
-								return option.id === column.settings.value;
+								return option[idProp] === column.settings.value;
 							});
 
 							column.settings.selectorOptions.push({
-								id: optionData.id,
+								id: optionData[idProp],
 								name: optionData.name
 							});
 
@@ -214,20 +436,22 @@
 
 				};
 
-				const openAccrualEditDialog = async function (accrualScheme) {
+				const openRowAdditionDialog = async function (scheme, templateUrl, multitypeFieldsData) {
 
 					const instrAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
 
 					return $mdDialog.show({
-						controller: 'SingleInstrumentAddAccrualToTableDialogController as vm',
-						templateUrl: 'views/dialogs/single-instrument-add-accrual-to-table-dialog-view.html',
+						controller: 'AddRowToTableInsideEvUserTabDialogController as vm',
+						templateUrl: templateUrl,
 						parent: angular.element(document.body),
 						clickOutsideToClose: false,
 						multiple: true,
 						locals: {
 							data: {
-								accrualScheme: accrualScheme,
+								// accrualScheme: scheme,
+								schemeData: scheme.data,
 								entity: scope.entity,
+								multitypeFieldsData: multitypeFieldsData,
 								attributeTypes: instrAttrTypes
 							}
 						}
@@ -251,11 +475,11 @@
 
 				}; */
 
-				const addNewAccrual = function (accrual) {
+				const addNewRow = function (rowData) {
 
-					const newRowKey = gridTableHelperService.getNewRowUniqueKey(scope.gridTableDataService);
+					const newRowKey = metaHelper.generateUniqueId('user_tabs_' + tableKey);
 
-					accrual.frontOptions = {newRow: true, gtKey: newRowKey};
+					rowData.frontOptions = {newRow: true, gtKey: newRowKey};
 
 					const rowObj = metaHelper.recursiveDeepCopy(gridTableData.templateRow);
 					rowObj.key = newRowKey;
@@ -292,9 +516,9 @@
 						}
 
 					}); */
-					fillGridTableRowCells(accrual, rowObj);
+					fillGridTableRowCells(rowData, rowObj);
 
-					scope.entity[bfcVm.fieldKey].unshift(accrual);
+					scope.entity[bfcVm.fieldKey].unshift(rowData);
 					gridTableData.body.unshift(rowObj);
 
 					// Update rows in grid table
@@ -302,8 +526,8 @@
 						gridTableData.body[itemIndex].order = itemIndex;
 					});
 
-					thisTableChanged.value = true;
-					bfcVm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'accrual_calculation_schedules'});
+					thisTableChanged = true;
+					bfcVm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
 
 					scope.$apply();
 
@@ -329,7 +553,7 @@
 					}
 
 				} */
-
+				/** Assembles header and templateRow */
 				const assembleGridTable = function () {
 
 					const tableData = scope.item.options.tableData;
@@ -339,7 +563,7 @@
 
 					tableData.forEach(column => {
 
-						var columnData = instrumentAccrualsColumns[column.key];
+						var columnData = tableColumnsList[column.key];
 
 						if (column.to_show && columnData) {
 
@@ -349,16 +573,18 @@
 
 							if (column.options) {
 
+								const idProp = useIdForOptions.includes(column.key) ? 'id' : 'user_code';
 								columnData.settings.selectorOptions = [];
 
 								column.options.forEach(option => {
 
 									if (option.to_show) {
 
-										const convertedOpts = {id: option.id};
-										convertedOpts.name = option.override_name ? option.override_name : option.name;
+										let convertedOpt = {};
+										convertedOpt.id = option[idProp];
+										convertedOpt.name = option.override_name ? option.override_name : option.name;
 
-										columnData.settings.selectorOptions.push(convertedOpts);
+										columnData.settings.selectorOptions.push(convertedOpt);
 
 									}
 
@@ -381,7 +607,7 @@
 
 					columnsNumber = gridTableData.templateRow.columns.length;
 
-
+					//region Set widths for columns
 					if (columnsNumber) {
 
 						const averageWidth = (100 / columnsNumber).toFixed(1);
@@ -402,6 +628,7 @@
 						});
 
 					}
+					//endregion
 
 					const rowsAddition = tableData.find(item => item.key === 'rows_addition');
 					const rowsDeletion = tableData.find(item => item.key === 'rows_deletion');
@@ -423,13 +650,100 @@
 
 				};
 
-				/**
-				 * Fill each grid table row's cell with data from entity
-				 *
-				 * @param item {Object} - matching to row data from entity
-				 * @param row {Object} - grid table row data
-				 */
-				const fillGridTableRowCells = function (item, row) {
+				/* if (scope.entityType === 'instrument' && scope.item.key === "event_schedules") {
+
+					fillGridTableRowCells = function (item, row) {
+
+						row.columns.forEach((cell, index) => {
+
+							if (['event_class', 'periodicity', 'notification_class'].includes(cell.key)) {
+
+								const itemProp = cell.objPath[0] + '_object';
+								const selectedOptionName = item[itemProp].name;
+
+								cell.settings.value = selectedOptionName;
+
+							} else {
+								cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
+							}
+
+						});
+
+					};
+
+				}
+				else {
+
+					fillGridTableRowCells = function (item, row) {
+
+						row.columns.forEach((cell, index) => {
+
+							if (cell.cellType === 'multitypeField') {
+
+								/!* const fieldTypesList = multitypeFieldsForRows[cell.key].fieldTypesList;
+
+								let valueTypePath = [...[], ...cell.objPath];
+								let valueTypeLastProp = valueTypePath.pop();
+
+								valueTypeLastProp = valueTypeLastProp + '_value_type';
+								valueTypePath.push(valueTypeLastProp);
+
+								const valueType = metaHelper.getObjectNestedPropVal(item, valueTypePath); *!/
+								if (cell.hasOwnProperty('objPaths')) {
+
+									const fieldTypesList = multitypeFieldsForRows[cell.key].fieldTypesList;
+
+									const cellValuePath = cell.objPaths[0];
+									const cellValueTypePath = cell.objPaths[1];
+
+									const cellValue = metaHelper.getObjectNestedPropVal(item, cellValuePath);
+									const valueType = metaHelper.getObjectNestedPropVal(item, cellValueTypePath);
+
+									const cellData = gridTableHelperService.getMultitypeFieldDataForCell(fieldTypesList, cell, cellValue, valueType);
+									row.columns[index] = cellData.cell;
+
+									// for existing accruals without _value_type
+									if (!valueType && !isNaN(valueType)) {
+										metaHelper.setObjectNestedPropVal(item, cellValueTypePath, cellData.valueType);
+									}
+
+								}
+
+							}
+							else {
+
+								cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
+
+								if (cell.cellType === 'selector') {
+									/!* const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
+
+									if (optionIndex < 0) { // if selected option hidden, add it until another selected
+
+										const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
+											return option.id === column.settings.value;
+										});
+
+										if (optionData) {
+
+											column.settings.selectorOptions.push({
+												id: optionData.id,
+												name: optionData.name
+											});
+
+										}
+
+									} *!/
+									addSelectedHiddenOption(cell);
+								}
+
+							}
+
+						});
+
+					};
+
+				} */
+				fillGridTableRowCells = function (item, row) {
 
 					row.columns.forEach((cell, index) => {
 
@@ -465,7 +779,6 @@
 							}
 
 						}
-
 						else {
 
 							cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
@@ -495,7 +808,6 @@
 						}
 
 					});
-
 
 				};
 
@@ -558,41 +870,110 @@
 
 					if (scope.entityType === 'instrument') {
 
-						multitypeFieldsForRows = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
+						if (tableKey === "accrual_calculation_schedules") {
 
-						await loadDataForInstrumentAccruals();
+							tableColumnsList = instrumentAccrualsColumns;
+							multitypeFieldsForRows = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
 
-						scope.popupData = {
-							items: [],
-							isBuildButton: scope.item.options.tableData.find(item => item.key === 'build_accruals_btn').to_show,
-							onItemClick: async (item) => {
+							await loadDataForInstrumentAccruals();
 
-								scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+							let buttonsList = [];
+							const buildBtn = scope.item.options.tableData.find(item => item.key === 'build_accruals_btn');
 
-								const res = await openAccrualEditDialog(item);
+							if (buildBtn.to_show) {
+								buttonsList.push({
+									key: buildBtn.key,
+									name: "Build accruals",
+									onClick: function ($event, _$popup) {_$popup.cancel();console.log("build accruals");}
+								});
+							}
 
-								if (res.status === 'agree') {
+							scope.popupData = {
+								items: scope.rowAdditionSchemes,
+								buttons: buttonsList,
+								// showBuildButton: scope.item.options.tableData.find(item => item.key === 'build_accruals_btn').to_show,
+								onAddBtnClick: async (item) => {
 
-									const accrual = res.data.accrual;
-									addNewAccrual(accrual);
+									scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+									const accrMultitypeFieldsData = instrumentService.getInstrumentAccrualsMultitypeFieldsData();
+									const templateUrl = 'views/dialogs/bindFieldTable/bft-add-accrual-row-dialog-view.html';
+
+									const res = await openRowAdditionDialog(item, templateUrl, accrMultitypeFieldsData);
+
+									if (res.status === 'agree') {
+
+										const accrual = res.data.item;
+										addNewRow(accrual);
+
+									}
 
 								}
+							};
 
+						}
+						else if (tableKey === "event_schedules") {
+
+							tableColumnsList = instrumentEventsColumns;
+							multitypeFieldsForRows = instrumentService.getInstrumentEventsMultitypeFieldsData();
+
+							await loadDataForInstrumentEvents();
+
+							let buttonsList = [];
+							const buildBtn = scope.item.options.tableData.find(item => item.key === 'build_events_btn');
+
+							if (buildBtn.to_show) {
+								buttonsList.push({
+									key: buildBtn.key,
+									name: "Build events",
+									onClick: function ($event, _$popup) {_$popup.cancel();console.log("build events");}
+								});
 							}
-						};
 
-						scope.popupData.items = scope.accrualsShemes;
+							scope.popupData = {
+								items: scope.rowAdditionSchemes,
+								buttons: buttonsList,
+								// showBuildButton: scope.item.options.tableData.find(item => item.key === 'build_events_btn').to_show,
+								onAddBtnClick: async (item) => {
+
+									scope.gridTableEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+									const eventsMultitypeFieldsData = instrumentService.getInstrumentEventsMultitypeFieldsData();
+									const templateUrl = 'views/dialogs/bindFieldTable/bft-add-event-row-dialog-view.html';
+
+									const res = await openRowAdditionDialog(item, templateUrl, eventsMultitypeFieldsData);
+
+									if (res.status === 'agree') {
+
+										const event = res.data.item;
+										event.event_class = item.data.event_class;
+										event.actions = item.data.actions || [];
+
+										event.actions.forEach(action => {
+
+											action.frontOptions = {
+												gtKey: metaHelper.generateUniqueId('eventScheduleAction' + action.button_position)
+											};
+
+										});
+
+										addNewRow(event);
+
+									}
+
+								}
+							};
+
+						}
 
 						const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
 						multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
-
-						asyncOperation = true;
 
 						// Update selector options after dynamic attributes change
 						bfcVm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {
 							const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
 							instrumentService.updateMultitypeFieldSelectorOptionsInsideGridTable(instrumentAttrTypes, multitypeFieldsForRows, gridTableData);
 						});
+
+						asyncOperation = true;
 
 					}
 
@@ -603,20 +984,28 @@
 					scope.readyStatus = true;
 					if (asyncOperation) scope.$apply();
 
-					instrumentService.initAccrualsScheduleGridTableEvents(
-						scope.gridTableDataService, scope.gridTableEventService, scope.entity, bfcVm.evEditorEventService, thisTableChanged
-					);
+					scope.gridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argObj) {
+						thisTableChanged = true;
+						instrumentService.onGtCellChange(argObj, scope.entity, scope.gridTableDataService, bfcVm.evEditorEventService, tableKey);
+					});
+
+					scope.gridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (argObj) {
+						thisTableChanged = true;
+						instrumentService.onGtRowDeletion(argObj, scope.entity, bfcVm.evEditorEventService, tableKey);
+					});
 
 					bfcVm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, argObj => {
 
-						if (argObj && argObj.key === 'accrual_calculation_schedules' && !thisTableChanged.value) {
+						if (argObj && argObj.key === tableKey && !thisTableChanged) {
 
 							convertDataForGridTable();
+							// const tableData = scope.gridTableDataService.getTableData();
+
 							scope.gridTableEventService.dispatchEvent(gtEvents.REDRAW_TABLE);
 
 						}
 
-						thisTableChanged.value = false;
+						thisTableChanged = false;
 
 					});
 

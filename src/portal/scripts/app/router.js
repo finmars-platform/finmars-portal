@@ -366,6 +366,12 @@
                 controller: 'CheckEventsController as vm'
             })
 
+            .state('app.portal.update-configuration', {
+                url: '/update-configuration',
+                templateUrl: 'views/pages/update-configuration-page-view.html',
+                controller: 'UpdateConfigurationPageController as vm'
+            })
+
             .state('app.portal.processes', {
                 url: '/processes',
                 templateUrl: 'views/pages/processes-view.html',
@@ -434,6 +440,11 @@
                 templateUrl: 'views/pages/simple-entity-import-view.html',
                 controller: 'SimpleEntityImportController as vm'
             })
+            .state('app.portal.import.unified-entity', {
+                url: '/unified-entity-import',
+                templateUrl: 'views/pages/unified-entity-import-view.html',
+                controller: 'UnifiedEntityImportController as vm'
+            })
             .state('app.portal.import.transaction', {
                 url: '/transaction-import',
                 templateUrl: 'views/pages/transaction-import-view.html',
@@ -448,6 +459,11 @@
                 url: '/instrument-import',
                 templateUrl: 'views/pages/instrument-download-view.html',
                 controller: 'InstrumentDownloadController as vm'
+            })
+            .state('app.portal.import.instrument-cbonds', {
+                url: '/instrument-import-cbonds',
+                templateUrl: 'views/pages/instrument-download-cbonds-view.html',
+                controller: 'InstrumentDownloadCbondsController as vm'
             })
             .state('app.portal.import.prices', {
                 url: '/prices-import',
