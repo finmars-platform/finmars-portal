@@ -20,7 +20,7 @@
 			link: function (scope, elem, attrs, cTreeVm) {
 
 				scope.selectNode = cTreeVm.selectNode;
-				scope.closeStatusChange = cTreeVm.closeStatusChange;
+				scope.toggleNodeFolding = cTreeVm.toggleNodeFolding;
 				scope.onCancelEdit = cTreeVm.onCancelEdit;
 				scope.onSaveNode = cTreeVm.onSaveNode;
 				scope.editableNode = cTreeVm.editableNode;
@@ -49,6 +49,16 @@
 
 				scope.getPathToNodeAsString = function () {
 					return scope.node.frontOptions.treePath.join(',');
+				};
+
+				scope.callFnForCustomBtn = function ($event, actionData) {
+
+					if (actionData.parameters) {
+						actionData.callback($event, scope.node, actionData.parameters);
+					} else {
+						actionData.callback($event, scope.node);
+					}
+
 				};
 
 			}
