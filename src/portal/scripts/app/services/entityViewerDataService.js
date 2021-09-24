@@ -616,7 +616,7 @@
             var keysLen = keys.length;
 
             for (i = 0; i < keysLen; i = i + 1) {
-                result[i] = data.data[keys[i]]
+				result.push(data.data[keys[i]]);
             }
 
             return result;

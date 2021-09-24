@@ -2,10 +2,11 @@
  * Module contains different useful functions
  * @module UtilsHelper
  */
-
 (function () {
 
-    var metaHelper = require('./meta.helper');
+	'use strict';
+
+    // var metaHelper = require('./meta.helper');
 
     function debounce(func, wait, immediate) {
 
@@ -90,10 +91,6 @@
     }
 
     function insertItemInNode(list, map, node, data) {
-// Victor 2021.02.09 filter by row color get error
-/*        if (!data[node.___parentId]) {
-            return
-        }*/
 
         var index = 0;
 
@@ -292,7 +289,7 @@
 
     }
 
-    var sortItems = function (items, property) {
+    const sortItems = function (items, property) {
 
         var sortOrder = 1;
         if (property[0] === "-") {
@@ -306,7 +303,7 @@
 
     // comparator for orderBy which set empty item last
     const emptyLastComparator = (v1, v2) => {
-        // console.log('# emptyLast', v1, v2)
+
         // If we don't get strings, just compare by index
         if (v1.type !== 'string' || v2.type !== 'string') {
             return (v1.index < v2.index) ? -1 : 1;

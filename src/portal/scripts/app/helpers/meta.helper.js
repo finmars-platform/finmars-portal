@@ -204,6 +204,21 @@
 
 	};
 
+	const insertSpaceIntoElementText = function (elem) {
+
+		var selStart = elem.selectionStart;
+		var firstStringPart = elem.value.substring(0, selStart);
+		var selEnd = elem.selectionEnd;
+		var lastStringPart = elem.value.substring(selEnd, elem.value.length);
+		var tabNewName = firstStringPart + ' ' + lastStringPart;
+
+		elem.value = tabNewName;
+		elem.selectionEnd = selStart + 1; // set text cursor after added space
+
+		return tabNewName;
+
+	};
+
 	/** @param key {*=} - can be usefull if multiple ids needed at once */
 	const generateUniqueId = (key) => {
 		const currentDate = Date.now().toString();
@@ -232,6 +247,8 @@
 
         closeComponent: closeComponent,
 		getDefaultFilterType: getDefaultFilterType,
+
+		insertSpaceIntoElementText: insertSpaceIntoElementText,
 
 		generateUniqueId: generateUniqueId,
 
