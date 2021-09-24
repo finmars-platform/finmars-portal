@@ -166,9 +166,7 @@
 								popupValue = JSON.parse(angular.toJson(scope.popupModel.value));
 							}
 
-						}
-
-						if (scope.column.cellType === 'text') {
+						} else if (scope.column.cellType === 'text') {
 							popupValue = '';
 						}
 

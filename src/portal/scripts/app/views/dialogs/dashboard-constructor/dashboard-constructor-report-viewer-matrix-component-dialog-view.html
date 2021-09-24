@@ -227,12 +227,23 @@
 
                     </div>
 
-                    <md-input-container style="height: 58px">
-                        <md-checkbox data-ng-model="vm.item.settings.auto_scaling"
-                                     aria-label="matrix autoscaling">
-                            Scale matrix
-                        </md-checkbox>
-                    </md-input-container>
+                    <div>
+                        <md-input-container style="height: 58px">
+                            <md-checkbox data-ng-model="vm.item.settings.auto_scaling"
+                                         aria-label="matrix autoscaling">
+                                Scale matrix
+                            </md-checkbox>
+                        </md-input-container>
+                    </div>
+
+                    <div>
+                        <md-input-container style="height: 58px">
+                            <md-checkbox data-ng-model="vm.item.settings.calculate_name_column_width"
+                                         aria-label="matrix autoscaling">
+                                Calculate width for column with names
+                            </md-checkbox>
+                        </md-input-container>
+                    </div>
 
                 </md-content>
             </md-tab>
