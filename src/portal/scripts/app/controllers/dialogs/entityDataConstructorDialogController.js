@@ -20,6 +20,8 @@
     var colorPalettesService = require('../../services/colorPalettesService');
 	var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+	var metaHelper = require('../../helpers/meta.helper');
+
 	var scrollHelper = new ScrollHelper();
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
@@ -186,69 +188,67 @@
 
 					resolveLayout();
 
-				}
+				} else {
 
-				// for complex transaction edit layout stored inside transaction type object
-				if (vm.entityType === "complex-transaction") {
+					// for complex transaction edit layout stored inside transaction type object
+					if (vm.entityType === "complex-transaction") {
 
-					if (vm.instanceId || vm.instanceId === 0) {
+						if (vm.instanceId || vm.instanceId === 0) {
 
-						transactionTypeService.getByKey(vm.instanceId).then(data => {
+							transactionTypeService.getByKey(vm.instanceId).then(data => {
 
-							if (data.book_transaction_layout) {
-								vm.ui = data.book_transaction_layout;
-							} else {
+								if (data.book_transaction_layout) {
+									vm.ui = data.book_transaction_layout;
+								} else {
 
-								vm.formLayoutIsNew = true;
+									vm.formLayoutIsNew = true;
 
-								vm.ui = {
-									data: {}
+									vm.ui = {
+										data: {}
+									}
+									// vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
 								}
-								// vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
-							}
 
-							resolveLayout();
+								resolveLayout();
 
-						}).catch(error => reject(error));
+							}).catch(error => reject(error));
+
+						}
 
 					}
+					else { // For not complex-transaction entities
 
-				}
+						if (vm.layoutId || vm.layoutId === 0) {
 
-				// For not complex-transaction entities
-				else {
+							uiService.getEditLayoutByKey(vm.layoutId).then(data => {
 
-					if (vm.layoutId || vm.layoutId === 0) {
+								vm.ui = data;
+								resolveLayout();
 
-						uiService.getEditLayoutByKey(vm.layoutId).then(data => {
+							}).catch(error => reject(error));
 
-							vm.ui = data;
-							resolveLayout();
+						}
+						else { // if no edit layout id was specified, get default edit layout
 
-						}).catch(error => reject(error));
+							uiService.getDefaultEditLayout(vm.entityType).then(data => {
 
-					}
-
-					// if no edit layout id was specified, get default edit layout
-					else {
-
-						uiService.getDefaultEditLayout(vm.entityType).then(data => {
-
-							if (data.results.length) {
-								vm.ui = data.results[0];
-							}
-
-							// There is no layout yet, so create one
-							else {
-								vm.formLayoutIsNew = true;
-								vm.ui = {
-									data: {}
+								if (data.results.length) {
+									vm.ui = data.results[0];
 								}
-							}
 
-							resolveLayout();
+								// There is no layout yet, so create one
+								else {
+									vm.formLayoutIsNew = true;
+									vm.ui = {
+										data: {}
+									}
+								}
 
-						}).catch(error => reject(error));
+								resolveLayout();
+
+							}).catch(error => reject(error));
+
+						}
 
 					}
 
@@ -788,15 +788,15 @@
                 if (!notSavedTabExist) {
 
                     vm.tabs.push({
-                        name: '',
-                        editState: true,
-                        tabOrder: vm.tabs.length,
-                        layout: {
-                            rows: 0,
-                            columns: 1,
-                            fields: []
-                        }
-                    });
+						name: '',
+						editState: true,
+						tabOrder: vm.tabs.length,
+						layout: {
+							rows: 0,
+							columns: 1,
+							fields: []
+						}
+					});
 
                     addRows(vm.tabs[vm.tabs.length - 1]);
 
@@ -823,15 +823,15 @@
             } else {
 
                 vm.tabs.push({
-                    name: '',
-                    editState: true,
-                    tabOrder: vm.tabs.length,
-                    layout: {
-                        rows: 0,
-                        columns: 1,
-                        fields: []
-                    }
-                });
+					name: '',
+					editState: true,
+					tabOrder: vm.tabs.length,
+					layout: {
+						rows: 0,
+						columns: 1,
+						fields: []
+					}
+				});
 
                 addRows(vm.tabs[0]);
 
@@ -840,7 +840,45 @@
 
             }
 
+			setTimeout(function () {
+				allowSpacesInTabName();
+			}, 100);
+
         };
+
+		var tabNameInput = null;
+
+		var removeKeydownListener = function () {
+			document.removeEventListener('keydown', addSpaceIntoTabName);
+		};
+
+		var addSpaceIntoTabName = function (kDownEv) {
+
+			if (kDownEv.key === ' ') {
+
+				var tabNewName = metaHelper.insertSpaceIntoElementText(tabNameInput);
+
+				for (var i = 0; i < vm.tabs.length; i++) {
+					if (vm.tabs[i].name === tabNewName) {
+						vm.tabs[i].captionName = tabNewName;
+						break;
+					}
+				}
+
+			}
+
+		};
+
+		var allowSpacesInTabName = function () {
+
+			tabNameInput = document.querySelector('input.tabNameInput');
+
+			tabNameInput.addEventListener('focus', function () {
+				document.addEventListener('keydown', addSpaceIntoTabName);
+				tabNameInput.addEventListener('blur', removeKeydownListener, {once: true});
+			});
+
+		};
 
         vm.toggleEditTab = function (tab, action, $index) {
             if (!tab.editState) {
@@ -861,6 +899,15 @@
             }
 
             tab.editState = !tab.editState;
+
+			if (tab.editState) {
+
+				setTimeout(function () {
+					allowSpacesInTabName();
+				}, 100);
+
+			}
+
         };
 
         vm.saveEditedTab = function (tab) {
@@ -1021,7 +1068,8 @@
                             }
                         }
 
-                    } else if (field.attribute_class === 'userInput') {
+                    }
+                    else if (field.attribute_class === 'userInput') {
 
                         for (u = 0; u < vm.userInputs.length; u = u + 1) {
 
@@ -1058,9 +1106,7 @@
         var emptySocketsWithoutAttrFromLayout = function () {
 
             vm.tabs.forEach(function (tab) {
-
                 emptyTabSocketsWithoutAttrs(tab);
-
             });
 
             if (vm.fixedArea.isActive) {
@@ -1238,7 +1284,7 @@
 
 				}
 
-				//<editor-fold desc="Get entity attrs">
+				//region Get entity attrs
 				var entityAttrs = metaService.getEntityAttrs(vm.entityType);
 				var doNotShowAttrs = [];
 
@@ -1285,7 +1331,7 @@
 				if (vm.entityType === 'instrument') {
 
 					var customizableAccrualsTable = {
-						name: 'Accruals table',
+						name: 'Accruals schedules table',
 						key: 'accrual_calculation_schedules',
 						value_type: 'table',
 						frontOptions: {
@@ -1293,14 +1339,25 @@
 						}
 					};
 
-					vm.entityAttrs.push(customizableAccrualsTable);
+					var accrualsTableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
 
-					const tableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
+					var customizableEventsTable = {
+						name: 'Events schedules table',
+						key: 'event_schedules',
+						value_type: 'table',
+						frontOptions: {
+							occupiesWholeRow: true
+						}
+					};
 
-					promises.push(tableDataProm);
+					var eventsTableDataProm = entityDataConstructorService.loadOptionsForEventsTable();
+
+					vm.entityAttrs.push(customizableAccrualsTable, customizableEventsTable);
+
+					promises.push(accrualsTableDataProm, eventsTableDataProm);
 
 				}
-				//</editor-fold>
+				//endregion
 
 				vm.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -1404,7 +1461,7 @@
 				item.attribute.frontOptions.attribute_class) { // must have for determining userInputs
 
 				var attributeClass = item.attribute.frontOptions.attribute_class;
-				return attributeClass;
+				return attributeClass; // returns: 'userInput'
 
 			// } else if (attrsKeys.includes(item.attribute.key)) {
 			} else if (vm.attrs.findIndex(dAttr => dAttr.user_code === item.attribute.user_code) > -1) {
@@ -1481,7 +1538,7 @@
                 }
             }
 
-			//<editor-fold desc="Make socket we dragged from empty">
+			//region Make socket we dragged from empty
 			var i;
             for (i = 0; i < draggedFromTab.layout.fields.length; i++) {
                 var field = draggedFromTab.layout.fields[i];
@@ -1501,7 +1558,7 @@
                     break;
                 }
             }
-			//</editor-fold>
+			//endregion
 
         };
 
@@ -1659,13 +1716,11 @@
 							})
 
 						}
-
 						else {
 
 							if (elem.classList.contains('ec-attr-occupied')) {
 								onDropFromSocket(elem, targetTab, targetRow, targetColumn, targetColspan, occupiesWholeRow);
 							}
-
 							else {
 								onDropFromAttributesList(elem, targetTab, targetRow, targetColumn, occupiesWholeRow);
 							}
@@ -1723,57 +1778,151 @@
 
         };
 
+        /**
+		 *
+		 * @param attr {Object} - is an entity attribute, dynamic attribute, user input or decoration attribute
+		 * @param attributeClass {String} - can be 'entityAttr', 'attr', 'userInput', 'decorationAttr'
+		 * @param socket {Object} - data of socket inside tab
+		 * @returns {boolean}
+		 */
+        var attributeOccupiesThisSocket = function (attr, attributeClass, socket) {
+
+        	if (socket.attribute_class !== attributeClass) {
+        		return false;
+			}
+
+        	switch (socket.attribute_class) {
+
+        		case 'entityAttr':
+					return socket.attribute.key === attr.key;
+
+				case 'attr': // dynamic attribute
+
+					if (socket.key) { // legacy input form editor layout
+						return socket.key === attr.user_code;
+
+					} else {
+
+						if (socket.attribute.user_code) {
+							return socket.attribute.user_code === attr.user_code;
+						}
+
+						return false;
+
+					}
+
+				case 'userInput':
+					return socket.name === attr.name;
+
+				case 'decorationAttr':
+					if (socket.attribute.hasOwnProperty('key')) {
+						return socket.attribute.key === attr.key;
+					}
+
+					return socket.name === attr.name; // for legacy input form editor layouts
+
+			}
+
+        	return false;
+
+		};
+
         vm.syncItems = function () {
 
             vm.items = [];
 
-            vm.items = vm.items.concat(vm.attrs);
-            vm.items = vm.items.concat(vm.entityAttrs);
-            vm.items = vm.items.concat(vm.userInputs);
-            vm.items = vm.items.concat(vm.layoutAttrs);
+            var showItemInAttrsList = function (item, attributeClass) {
 
-            vm.items = vm.items.filter(function (item) {
+				if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
+					return false;
+				}
 
-                var result = true;
+            	var i,a;
+            	for (i = 0; i < vm.tabs.length; i++) {
 
-                vm.tabs.forEach(function (tab) {
-                    tab.layout.fields.forEach(function (field) {
-                        if (field.name === item.name) {
-                            result = false;
+            		var tab = vm.tabs[i];
 
-                            if (item.hasOwnProperty('key')) {
-                                if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel' || item.key === 'layoutPlainText') {
-                                    result = true;
-                                }
-                            }
+					for (a = 0; a < tab.layout.fields.length; a++) {
 
-                        }
-                    })
-                });
+						var field = tab.layout.fields[a];
 
-                if (vm.fixedArea.isActive) {
+						if (attributeOccupiesThisSocket(item, attributeClass, field)) {
+							return false;
+						}
 
-                    var i;
-                    for (i = 0; i < vm.fixedArea.layout.fields.length; i++) {
-                        var field = vm.fixedArea.layout.fields[i];
+					}
 
-                        if (field.type !== 'empty' && field.name === item.name) {
-                            result = false;
-                            break;
-                        }
+				}
 
-                    }
+            	return true;
 
-                }
+			};
 
-                if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
-                    result = false;
-                }
+			/* vm.items = vm.items.concat(vm.attrs);
+			vm.items = vm.items.concat(vm.entityAttrs);
+			vm.items = vm.items.concat(vm.userInputs);
+			vm.items = vm.items.concat(vm.layoutAttrs);
 
-                return result;
+			vm.items = vm.items.filter(function (item) {
 
-            });
+				var result = true;
 
+				vm.tabs.forEach(function (tab) {
+					tab.layout.fields.forEach(function (field) {
+						if (field.name === item.name) {
+
+							result = false;
+
+							if (item.hasOwnProperty('key')) {
+								if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel' || item.key === 'layoutPlainText') {
+									result = true;
+								}
+							}
+
+						}
+
+					})
+				});
+
+				if (vm.fixedArea.isActive) {
+
+					var i;
+					for (i = 0; i < vm.fixedArea.layout.fields.length; i++) {
+						var field = vm.fixedArea.layout.fields[i];
+
+						if (field.type !== 'empty' && field.name === item.name) {
+							result = false;
+							break;
+						}
+
+					}
+
+				}
+
+				if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
+					result = false;
+				}
+
+				return result;
+
+			}); */
+
+			var availableAttrs = vm.attrs.filter(function (attr) {
+				return showItemInAttrsList(attr, 'attr');
+			});
+
+			var availableEntityAttrs = vm.entityAttrs.filter(function (eAttr) {
+				return showItemInAttrsList(eAttr, 'entityAttr');
+			});
+
+			var availableUserInputs = vm.userInputs.filter(function (input) {
+				return showItemInAttrsList(input, 'userInput');
+			});
+
+			vm.items = vm.items.concat(availableAttrs);
+			vm.items = vm.items.concat(availableEntityAttrs);
+			vm.items = vm.items.concat(availableUserInputs);
+			vm.items = vm.items.concat(vm.layoutAttrs);
 
             // set all items to Editable = True state by default
             vm.items = vm.items.map(function (item) {

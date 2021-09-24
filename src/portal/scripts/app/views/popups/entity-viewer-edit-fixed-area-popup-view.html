@@ -1,10 +1,10 @@
 <div class="fixed-area-popup-content">
     <div data-ng-if="popupData.fields.name">
-        <text-input
-                label="Name"
-                placeholder-text="Name"
-                model="popupData.fields.name.value"
-                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+        <text-input label="Name"
+                    placeholder-text="Name"
+                    model="popupData.fields.name.value"
+                    event-signal="popupData.fields.name.event"
+                    small-options="{dialogParent: '.dialog-containers-wrap', notNull: true}"></text-input>
     </div>
 
     <div data-ng-if="popupData.fields.public_name">
@@ -17,11 +17,10 @@
 
 
     <div data-ng-if="popupData.fields.short_name && (popupData.tabColumns < 3 || popupData.entityType === 'instrument' || popupData.entityType === 'account')">
-        <text-input
-                label="Short name"
-                placeholder-text="Short name"
-                model="popupData.fields.short_name.value"
-                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+        <text-input label="Short name"
+                    placeholder-text="Short name"
+                    model="popupData.fields.short_name.value"
+                    small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
     <div data-ng-if="popupData.fields.user_code">
@@ -63,7 +62,7 @@
                          model="popupData.fields.type.value"
                          placeholder-text="{{popupData.fields.type.name}}"
                          menu-options="popupData.fields.type.options"
-                         small-options="{tooltipText: '{{popupData.fields.type.name}}', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
+                         small-options="{tooltipText: '{{popupData.fields.type.name}}', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap', notNull: true}"
                          class="ev-editor-field"></dropdown-select>
     </div>
 

@@ -245,20 +245,6 @@
 
             console.log('copy entity', entity);
 
-            $mdDialog.show({
-                controller: 'TransactionTypeAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-                parent: angular.element(document.body),
-                // targetEvent: $event,
-                locals: {
-                    entityType: vm.entityType,
-                    entity: entity,
-					data: {
-                    	openedIn: 'dialog'
-					}
-                }
-            });
-
             // $mdDialog.hide();
 			if (windowType === 'big_drawer') {
 
@@ -266,7 +252,23 @@
 				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
 			} else {
+
+				$mdDialog.show({
+					controller: 'TransactionTypeAddDialogController as vm',
+					templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
+					parent: angular.element(document.body),
+					// targetEvent: $event,
+					locals: {
+						entityType: vm.entityType,
+						entity: entity,
+						data: {
+							openedIn: 'dialog'
+						}
+					}
+				});
+
 				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+
 			}
 
         };

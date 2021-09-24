@@ -1043,6 +1043,15 @@
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
+                            <li>
+                                <md-button class="sidemenu-btn"
+                                           ui-sref="app.portal.update-configuration">
+                                    <span class="side-nav-title">Update</span>
+                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                </md-button>
+                            </li>
+
+
                         </ul>
                     </div>
                 </div>
@@ -1053,4 +1062,8 @@
     </div>
 </md-sidenav>
 
-<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.portal.healthcheck">Build date: __BUILD_DATE__</div>
+<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.portal.healthcheck">Build date: __BUILD_DATE__
+
+    <span class="websocket-connection-status {{vm.getWsStatus()}}" title="Websocket status: {{vm.getWsStatus()}}"></span>
+
+</div>

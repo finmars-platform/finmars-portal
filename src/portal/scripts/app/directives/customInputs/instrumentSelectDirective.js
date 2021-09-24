@@ -2,6 +2,11 @@
 
     'use strict';
 
+    var instrumentService = require('../../services/instrumentService')
+    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
+
     module.exports = function ($mdDialog) {
 
         return {
@@ -13,11 +18,12 @@
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
-                isDisabled: '=',
                 sorted: '=',
-                onChangeCallback: '&?'
+                onChangeCallback: '&?',
+                itemName: '=',
+                itemObject: '=',
             },
-            templateUrl: 'views/directives/customInputs/dropdown-select-view.html',
+            templateUrl: 'views/directives/customInputs/instrument-select-view.html',
             link: function (scope, elem, attr) {
 
                 scope.error = '';
@@ -25,6 +31,13 @@
                 //scope.placeholderText = 'Relation';
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
+                scope.processing = false;
+
+                scope.localInstrumentsTotal = 0;
+                scope.databaseInstrumentsTotal = 0;
+                scope.hoverInstrument = null;
+
+                scope.inputText = '';
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
@@ -58,6 +71,30 @@
                         icon: 'fas fa-align-justify'
                     }
                 }*/
+
+
+                scope.clearHoverInstrument = function () {
+
+                    setTimeout(function () {
+
+                        scope.hoverInstrument = null
+                        console.log('scope.hoverInstrument', scope.hoverInstrument)
+
+                        scope.$apply();
+                    }, 0)
+
+                }
+
+                scope.setHoverInstrument = function ($event, option) {
+
+                    setTimeout(function () {
+
+                        scope.hoverInstrument = option
+                        console.log('scope.hoverInstrument', scope.hoverInstrument)
+
+                        scope.$apply();
+                    }, 0)
+                }
 
                 scope.getInputContainerClasses = function () {
 
@@ -95,9 +132,13 @@
 
                 };
 
-                scope.selectOption = function (item) {
+                scope.selectLocalInstrument = function (item) {
+
+                    console.log('selectLocalInstrument.item', item);
 
                     closeDropdownMenu();
+
+                    // Local instrument, just put ID
 
                     if (item.id !== scope.model) {
 
@@ -120,13 +161,86 @@
 
                     }
 
+                }
+
+                scope.selectDatabaseInstrument = function (item) {
+
+                    console.log('selectDatabaseInstrument.item', item);
+
+                    closeDropdownMenu();
+
+                    // Download here?
+
+                    stylePreset = '';
+                    scope.error = '';
+
+
+                    var config = {
+                        instrument_code: item.referenceId,
+                        mode: 1
+                    };
+
+                    scope.itemName = item.issueName;
+                    scope.inputText = item.issueName;
+
+                    scope.processing = true;
+                    scope.isDisabled = true;
+
+                    importInstrumentCbondsService.download(config).then(function (data) {
+
+                        scope.isDisabled = false;
+
+                        if (data.errors.length) {
+
+                            toastNotificationService.error(data.errors[0])
+
+                            scope.model = null;
+
+                            scope.itemName = ''
+                            scope.inputText = ''
+
+                            setTimeout(function () {
+
+                                if (scope.onChangeCallback) scope.onChangeCallback();
+
+                                scope.$apply();
+
+                            }, 0);
+
+
+                        } else {
+
+                            scope.model = data.result_id;
+
+                            scope.processing = false;
+
+                            scope.valueIsValid = true;
+
+                            setTimeout(function () {
+
+                                if (scope.onChangeCallback) scope.onChangeCallback();
+
+                                scope.$apply();
+
+                            }, 0);
+
+                        }
+
+                    })
+
+
                 };
 
                 scope.onInputTextChange = function () {
-                    scope.dropdownMenuFilter = scope.inputText;
+                    // scope.dropdownMenuFilter = scope.inputText;
+
+                    scope.getList();
+
                 };
 
                 var closeDropdownMenu = function (updateScope) {
+
+                    console.trace();
 
                     inputContainer.classList.remove('custom-input-focused');
 
@@ -155,11 +269,13 @@
 
                 var onTabKeyPress = function (event) {
 
-                    var pressedKey = event.key;
-
-                    if (pressedKey === "Tab") {
-                        closeDropdownMenu(true);
-                    }
+                    // TODO fix ALT + TAB closes
+                    // var pressedKey = event.key;
+                    // console.log('pressedKey', pressedKey)
+                    //
+                    // if (pressedKey === "Tab") {
+                    //     closeDropdownMenu(true);
+                    // }
 
                 }
 
@@ -182,6 +298,37 @@
 
                 };
 
+                scope.updateLocalInstrument = function (item) {
+
+                    var config = {
+                        instrument_code: item.user_code,
+                        mode: 1
+                    };
+
+                    scope.isUpdatingInstrument = true;
+
+                    importInstrumentCbondsService.download(config).then(function (data) {
+
+                        scope.isUpdatingInstrument = false;
+
+                        scope.$apply();
+
+
+                        if (data.errors.length) {
+
+                            toastNotificationService.error(data.errors[0])
+
+
+                        } else {
+
+                            toastNotificationService.success('Instrument ' + item.user_code + ' was updated')
+
+                        }
+
+                    })
+
+                }
+
                 scope.openSelectorDialog = function ($event) {
 
                     closeDropdownMenu();
@@ -200,112 +347,28 @@
                     }
 
                     $mdDialog.show({
-                        controller: "ExpandableItemsSelectorDialogController as vm",
-                        templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
+                        controller: "InstrumentSelectDatabaseDialogController as vm",
+                        templateUrl: "views/dialogs/instrument-select-database-dialog-view.html",
                         targetEvent: $event,
                         parent: dialogParent,
                         multiple: true,
                         locals: {
                             data: {
-                                dialogTitle: 'Choose layout to open Split Panel with',
-                                items: scope.menuOptions
+                                inputText: scope.inputText
                             }
                         }
 
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            scope.selectOption(res.selected);
+
+                            scope.model = res.data.item.id;
+
+                            scope.itemName = res.data.item.name;
+                            scope.inputText = res.data.item.name;
                         }
 
                     })
-
-                };
-
-
-                var initScopeWatchers = function () {
-
-                    scope.$watch('model', function () {
-
-                        if (scope.model && scope.menuOptions) {
-
-                            for (var i = 0; i < scope.menuOptions.length; i++) {
-
-                                if (scope.menuOptions[i].id === scope.model) {
-
-                                    scope.inputText = scope.menuOptions[i].name
-                                    // scope.valueIsValid = true
-                                    break;
-
-                                }
-
-                            }
-
-                        } else {
-                            scope.inputText = ""
-                            // scope.valueIsValid = false
-                        }
-
-                    });
-
-                    if (scope.eventSignal) {
-
-                        scope.$watch('eventSignal', function () {
-
-                            if (scope.eventSignal && scope.eventSignal.key) {
-
-                                switch (scope.eventSignal.key) {
-                                    case 'mark_not_valid_fields':
-                                        if (scope.smallOptions && scope.smallOptions.notNull &&
-                                            !scope.model && scope.model !== 0) {
-
-                                            scope.error = 'Field should not be null';
-
-                                        }
-
-                                        break;
-
-                                    case "error":
-                                        scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error))
-                                        break;
-
-                                    case 'set_style_preset1':
-                                        stylePreset = 1;
-
-                                        if (scope.item) {
-                                            scope.error = ''
-                                        }
-
-                                        break;
-
-                                    case 'set_style_preset2':
-                                        stylePreset = 2;
-
-                                        if (scope.item) {
-                                            scope.error = ''
-                                        }
-
-                                        break;
-                                }
-
-                                scope.eventSignal = {}; // reset signal
-
-                            }
-
-                        });
-
-                    }
-
-                    scope.$watch('itemName', function () {
-
-                        if (scope.itemName) {
-                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
-
-                        } else {
-                            scope.inputText = '';
-                        }
-
-                    });
 
                 };
 
@@ -321,7 +384,7 @@
 
                     inputElem.addEventListener('focus', function () {
 
-                        scope.inputText = "";
+                        // scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         scope.dropdownMenuShown = true;
@@ -348,48 +411,161 @@
 
                 };
 
+                scope.getHighlighted = function (value) {
+
+                    var inputTextPieces = scope.inputText.split(' ')
+
+                    var resultValue;
+
+                    // Regular expression for multiple highlighting case insensitive results
+                    var reg  =  new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+
+                    resultValue = value.replace(reg, '<span class="highlight">$1</span>');
+
+                    return resultValue
+
+                }
+
                 scope.getList = function () {
 
-                    return new Promise(function (resolve, reject) {
+                    scope.processing = true;
 
-                        setTimeout(function () {
+                    var promises = []
 
-                            scope.menuOptions = [{
-                                "referenceId": "RU000A0JRCM0",
-                                "instrumentType": "Equity",
-                                "last_cbnnds_update": "2021-01-25T00:00:00",
-                                "issueName": "Penzkompressormash, ord."
-                            }, {
-                                "referenceId": "RU000A0JRWG0",
-                                "instrumentType": "Bond",
-                                "last_cbnnds_update": "2020-08-04T00:00:00",
-                                "issueName": "TransFin-M, 16"
-                            }, {
-                                "referenceId": "RU000A0JRZA6",
-                                "instrumentType": "Equity",
-                                "last_cbnnds_update": "2021-01-25T00:00:00",
-                                "issueName": "Karelgaz, ord."
-                            }, {
-                                "referenceId": "RU000A0JRJV6",
-                                "instrumentType": "Bond",
-                                "last_cbnnds_update": "2021-06-29T00:00:00",
-                                "issueName": "NNK, 04"
-                            }, {
-                                "referenceId": "RU000A0JRPE9",
-                                "instrumentType": "Equity",
-                                "last_cbnnds_update": "2021-01-25T00:00:00",
-                                "issueName": "Chernogorenergo, ord."
-                            }, {
-                                "referenceId": "RU000A0JRJS2",
-                                "instrumentType": "Bond",
-                                "last_cbnnds_update": "2021-06-29T00:00:00",
-                                "issueName": "Mechel, 17"
-                            }].filter(function (item){
+                    if (scope.inputText.length > 2) {
+                        promises.push(new Promise(function (resolve, reject) {
 
-                                return item.referenceId.indexOf(scope.inputText) !== -1
+                            // scope.databaseInstruments = [{
+                            //     "referenceId": "RU000A0JRCM0",
+                            //     "instrumentType": "Equity",
+                            //     "last_cbnnds_update": "2021-01-25T00:00:00",
+                            //     "issueName": "Penzkompressormash, ord."
+                            // }, {
+                            //     "referenceId": "RU000A0JRWG0",
+                            //     "instrumentType": "Bond",
+                            //     "last_cbnnds_update": "2020-08-04T00:00:00",
+                            //     "issueName": "TransFin-M, 16"
+                            // }, {
+                            //     "referenceId": "RU000A0JRZA6",
+                            //     "instrumentType": "Equity",
+                            //     "last_cbnnds_update": "2021-01-25T00:00:00",
+                            //     "issueName": "Karelgaz, ord."
+                            // }, {
+                            //     "referenceId": "RU000A0JRJV6",
+                            //     "instrumentType": "Bond",
+                            //     "last_cbnnds_update": "2021-06-29T00:00:00",
+                            //     "issueName": "NNK, 04"
+                            // }, {
+                            //     "referenceId": "RU000A0JRPE9",
+                            //     "instrumentType": "Equity",
+                            //     "last_cbnnds_update": "2021-01-25T00:00:00",
+                            //     "issueName": "Chernogorenergo, ord."
+                            // }, {
+                            //     "referenceId": "RU000A0JRJS2",
+                            //     "instrumentType": "Bond",
+                            //     "last_cbnnds_update": "2021-06-29T00:00:00",
+                            //     "issueName": "Mechel, 17"
+                            // }].filter(function (item) {
+                            //
+                            //     return item.referenceId.indexOf(scope.inputText) !== -1
+                            // })
+
+
+                            fetch('https://finmars.com/instrument-database/instr/find/name/' + scope.inputText).then(function (data) {
+                                return data.json()
+                            }).then(function (data) {
+
+                                scope.databaseInstrumentsTotal = data.resultCount;
+
+                                scope.databaseInstruments = data.foundItems
+
+                                scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
+
+                                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+
+                                    return item;
+
+                                })
+
+                                resolve()
+
+                            }).catch(function (error) {
+
+                                console.log("Instrument Database error occurred", error)
+
+                                scope.databaseInstruments = []
+
+                                resolve()
+
                             })
 
-                            scope.$apply();
+                        }))
+                    }
+
+                    promises.push(new Promise(function (resolve, reject) {
+
+
+                        instrumentService.getListForSelect({
+                            pageSize: 500,
+                            filters: {
+                                query: scope.inputText
+                            }
+
+                        }).then(function (data) {
+
+                            scope.localInstrumentsTotal = data.count;
+
+                            scope.localInstruments = data.results;
+
+                            scope.localInstruments = scope.localInstruments.map(function (item) {
+
+                                item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
+
+                                return item;
+
+                            })
+
+                            resolve()
+
+
+                        })
+
+                    }))
+
+
+                    Promise.all(promises).then(function (data) {
+
+                        scope.databaseInstruments = scope.databaseInstruments.filter(function (databaseInstrument) {
+
+                            var exist = false;
+
+                            scope.localInstruments.forEach(function (localInstrument) {
+
+                                if (localInstrument.user_code === databaseInstrument.referenceId) {
+                                    exist = true
+                                }
+
+                                if (localInstrument.reference_for_pricing === databaseInstrument.referenceId) {
+                                    exist = true
+                                }
+
+
+                            })
+
+                            return !exist;
+
+                        })
+
+                        scope.processing = false;
+
+                        scope.$apply();
+
+                        setTimeout(function (){
+
+                            $('.instrument-select-options-group-title').on('click', function(){
+
+                                $(this).next()[0].scrollIntoView({ block: 'start', behavior: 'smooth' });
+                            });
 
                         }, 100)
 
@@ -400,31 +576,10 @@
 
                 var init = function () {
 
-                    scope.menuOptions = []
-
-                    scope.getList()
-
-                    if (scope.menuOptions) {
-
-                        for (var i = 0; i < scope.menuOptions.length; i++) {
-                            if (scope.menuOptions[i].id === scope.model) {
-
-                                scope.itemName = scope.menuOptions[i].name;
-                                scope.inputText = scope.menuOptions[i].name;
-
-                                break;
-
-                            }
-
-                        }
-
-                    }
-
-                    initScopeWatchers();
+                    scope.databaseInstruments = []
+                    scope.localInstruments = []
 
                     initEventListeners();
-
-                    /*scope.iconData = entityIndicatorIcons[indicatorBtnIcon];*/
 
                     if (scope.customStyles) {
                         applyCustomStyles();

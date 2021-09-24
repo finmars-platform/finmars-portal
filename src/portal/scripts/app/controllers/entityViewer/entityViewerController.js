@@ -438,7 +438,7 @@
 
 							$bigDrawer.show({
 								controller: 'EntityViewerEditDialogController as vm',
-								templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+								templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
 								addResizeButton: true,
 								drawerWidth: bigDrawerWidthPercent,
 								locals: {
@@ -702,8 +702,8 @@
                     if (actionData.object && actionData.object.id || activeRowExist) {
 
                         switch (actionData.actionKey) {
-                            case 'delete':
-								// in case of deleting row with ___is_active === false from context menu
+							case 'delete':
+								// in case of deleting row with ___is_active === false from context menu, add it's id manually
                             	var idsToDelete = [];
                             	if (actionData.object && actionData.object.id) idsToDelete.push(actionData.object.id);
 
@@ -793,7 +793,7 @@
 
 								$bigDrawer.show({
 									controller: 'EntityViewerEditDialogController as vm',
-									templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+									templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
 									locals: {
 										entityType: 'instrument',
 										entityId: actionData.object.instrument,
