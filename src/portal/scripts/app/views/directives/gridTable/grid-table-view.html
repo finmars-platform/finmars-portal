@@ -10,8 +10,8 @@
 
         <div class="grid-table-row-actions-wrap">
             <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
-                <md-checkbox ng-checked="row.isActive"
-                             ng-click="toggleRowSelection(row)"></md-checkbox>
+                <md-checkbox ng-checked="allRowsAreActive"
+                             ng-click="toggleAllRows()"></md-checkbox>
             </div>
 
             <div ng-if="gridTableData.components.dragAndDropElement" class="grid-table-row-dnd-elem"></div>

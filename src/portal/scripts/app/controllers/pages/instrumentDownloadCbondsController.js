@@ -7,7 +7,7 @@
 
 
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
-
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function instrumentDownloadCbondsController($scope, $mdDialog) {
 
@@ -49,6 +49,10 @@
                         skipHide: true,
                         multiple: true
                     })
+                } else {
+
+                    toastNotificationService.success('Instrument ' + vm.config.instrument_code + ' was imported')
+
                 }
 
                 $scope.$apply()

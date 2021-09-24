@@ -5,7 +5,7 @@
 
         <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" control="vm.eventsAccordion">
 
-            <v-pane ng-repeat="item in vm.entity.events"
+            <v-pane ng-repeat="item in vm.entity.events | orderBy: 'order'"
                     expanded="item.isPaneExpanded">
 
                 <v-pane-header ng-class="{'m-b-0': !$pane.isExpanded()}">
@@ -45,6 +45,7 @@
                             <md-checkbox ng-model="item.autogenerate"
                                          id="{{'event_autogenerate_' + $index}}"
                                          aria-lable="instrument type events autogenerate"
+                                         ng-change="vm.onAutogenerateToggle($event, item)"
                                          ng-click="$event.stopPropagation();">Auto-generate</md-checkbox>
 
                             <div class="accordion-actions m-l-35">
@@ -131,13 +132,16 @@
                                     gt-event-service="item.eventItemsGridTableEventService"></grid-table>
 
                         <div class="instrument-type-event-block-items-container">
-                            <md-checkbox ng-model="item.data.items_blocked"
-                                         ng-change="vm.toggleEventBlockableItems(item)">Receive the below data from Accruals Schedule</md-checkbox>
+                            <!--<md-checkbox ng-model="item.data.items_blocked"
+                                         ng-change="vm.toggleEventBlockableItems(item)">Receive the below data from Accruals Schedule</md-checkbox>-->
+                            <md-checkbox ng-model="item.data.get_items2_from_accruals" ng-disabled="!item.autogenerate">Receive the below data from Accruals Schedule (in case of autogenerate, for each accrual entry)</md-checkbox>
                         </div>
 
-                        <grid-table gt-data-service="item.eventBlockableItemsGridTableDataService"
+                        <!--<grid-table gt-data-service="item.eventBlockableItemsGridTableDataService"
                                     gt-event-service="item.eventBlockableItemsGridTableEventService"
-                                    ng-class="{'disabled-grid-table': item.data.items_blocked}"></grid-table>
+                                    ng-class="{'disabled-grid-table': item.data.items_blocked}"></grid-table>-->
+                        <grid-table gt-data-service="item.eventItems2GridTableDataService"
+                                    gt-event-service="item.eventItems2GridTableEventService"></grid-table>
                     </div>
 
                     <div class="instrument-type-accordion-grid-table grid-table-bordered-rows m-b-16">
