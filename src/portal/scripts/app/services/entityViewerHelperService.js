@@ -19,7 +19,12 @@
 	const metaHelper = require('../helpers/meta.helper');
 
     'use strict';
-
+	/**
+	 * Insert dynamic attributes' values into entity's root level
+	 *
+	 * @param entity {Object}
+	 * @param attrs {Array}
+	 */
     let transformItem = function (entity, attrs) {
 
         if (entity.attributes) {
@@ -1252,7 +1257,7 @@
         }); */
         $bigDrawer.show({
             controller: 'EntityViewerEditDialogController as vm',
-            templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+            templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
             addResizeButton: true,
             drawerWidth: bigDrawerOptions.width,
             locals: {
