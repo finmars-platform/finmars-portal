@@ -26,16 +26,17 @@
 
 				let vm = this;
 				/** Tree data to render classifier tree */
-				vm.filteredTree = JSON.parse(angular.toJson($scope.treeData));
+				// vm.filteredTree = JSON.parse(angular.toJson($scope.treeData));
+				vm.filteredTree = metaHelper.recursiveDeepCopy($scope.treeData, true);
+
 				vm.treeFilterTerms = '';
 				vm.isMultiselector = $scope.multiselector === 'true';
 				vm.editingNode = false;
-				vm.editableNode = null;
+				vm.nodeInEditMode = null;
 
 				let activeNode = null;
 
 				const treeElement = document.querySelector('.classifierTree');
-
 				/* const getNodeByParents = (tree, idsList) => {
 
 					let node = tree.find(node => node.id === idsList[0]);
@@ -214,7 +215,7 @@
 
 				const filterNode = (node, filterTerms) => {
 
-					const nodeToFilter = JSON.parse(angular.toJson(node));
+					const nodeToFilter = metaHelper.recursiveDeepCopy(node, true);
 					let nodeValuesPassesFilter = false;
 
 					if (nodeToFilter.name) {
@@ -243,7 +244,7 @@
 
 				vm.filterTree = function (filterTerms) {
 
-					vm.filteredTree = JSON.parse(angular.toJson($scope.treeData));
+					vm.filteredTree = metaHelper.recursiveDeepCopy($scope.treeData, true);
 
 					if (filterTerms) {
 
@@ -255,6 +256,8 @@
 						.filter(node => node);
 
 					}
+
+					if (activeNode) activeNode = getActiveNode(vm.filteredTree);
 
 				};
 
@@ -359,14 +362,20 @@
 
 				};
 
-				const closeStatusChange = function (clickedNode) {
+				vm.toggleNodeFolding = function ($event, clickedNode) {
+
+					$event.stopPropagation();
+
 					clickedNode.frontOptions.closed = !clickedNode.frontOptions.closed;
+
+					const originalNode = getNode($scope.treeData, clickedNode.frontOptions.pathToNode);
+					originalNode.frontOptions.closed = clickedNode.frontOptions.closed;
+
 					setTimeout(() => applyShadow());
+
 				};
 
-				vm.closeStatusChange = closeStatusChange;
-
-				const getFirstActiveNodeFromTree = (tree) => {
+				const getFirstActiveNodeFromTree = tree => {
 					for (const node of tree) {
 						if(node.frontOptions.isActive) {
 							return node;
@@ -430,7 +439,7 @@
 					}
 
 					vm.editingNode = true;
-					vm.editableNode = newNode;
+					vm.nodeInEditMode = newNode;
 
 				};
 
@@ -440,48 +449,50 @@
 						return;
 					}
 
-					vm.editableNode = activeNode;
-					vm.editableNode.frontOptions.editOn = true;
+					vm.nodeInEditMode = activeNode;
+					vm.nodeInEditMode.frontOptions.editOn = true;
 					vm.editingNode = true;
 
 				};
 
-				const onSaveNode = (newName) => {
+				vm.onSaveNode = function ($event, newName) {
+
+					$event.stopPropagation();
 
 					vm.editingNode = false;
 					addition = false;
-					vm.editableNode.frontOptions.editOn = false;
+					vm.nodeInEditMode.frontOptions.editOn = false;
 
-					// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, vm.editableNode.frontOptions.treePath);
-					const nodeFromOriginalTree = getNode($scope.treeData, vm.editableNode.frontOptions.pathToNode);
+					// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, vm.nodeInEditMode.frontOptions.treePath);
+					const nodeFromOriginalTree = getNode($scope.treeData, vm.nodeInEditMode.frontOptions.pathToNode);
 
 					if (nodeFromOriginalTree.name !== newName) {
 
 						nodeFromOriginalTree.name = newName;
-						vm.editableNode.name = newName;
+						vm.nodeInEditMode.name = newName;
 						$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED);
 
 					}
 
-					vm.editableNode = null;
+					vm.nodeInEditMode = null;
 					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
 				};
 
-				vm.onSaveNode = onSaveNode;
+				vm.onCancelEdit = function ($event) {
 
-				const onCancelEdit = () => {
+					$event.stopPropagation();
 
-					// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData,vm.editableNode.frontOptions.treePath);
-					const nodeFromOriginalTree = getNode($scope.treeData,vm.editableNode.frontOptions.pathToNode);
+					// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData,vm.nodeInEditMode.frontOptions.treePath);
+					const nodeFromOriginalTree = getNode($scope.treeData,vm.nodeInEditMode.frontOptions.pathToNode);
 
-					vm.editableNode.name = nodeFromOriginalTree.name;
+					vm.nodeInEditMode.name = nodeFromOriginalTree.name;
 
 					if (addition) {
 
 						/* const parentNodeFromOriginalTree = getNearestParentOfNode($scope.treeData, nodeFromOriginalTree);
-						const parent = getNearestParentOfNode(vm.filteredTree, vm.editableNode); */
+						const parent = getNearestParentOfNode(vm.filteredTree, vm.nodeInEditMode); */
 						const parentNodeFromOriginalTree = getParentNode($scope.treeData, nodeFromOriginalTree);
-						const parent = getParentNode(vm.filteredTree, vm.editableNode);
+						const parent = getParentNode(vm.filteredTree, vm.nodeInEditMode);
 
 						if (Array.isArray(parentNodeFromOriginalTree.children)) {
 							parentNodeFromOriginalTree.children.pop();
@@ -496,13 +507,11 @@
 					}
 
 					vm.editingNode = false;
-					vm.editableNode.frontOptions.editOn = false;
-					vm.editableNode = null;
+					vm.nodeInEditMode.frontOptions.editOn = false;
+					vm.nodeInEditMode = null;
 					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
 
-				}
-
-				vm.onCancelEdit = onCancelEdit;
+				};
 
 				/**
 				 * Update properties "order" and "frontOptions.treePath" of children nodes.
@@ -593,7 +602,7 @@
 
 				const onTreeChangedFromOutside = () => {
 
-					vm.filteredTree = JSON.parse(angular.toJson($scope.treeData));
+					vm.filteredTree = metaHelper.recursiveDeepCopy($scope.treeData, true);
 					activeNode = getFirstActiveNodeFromTree(vm.filteredTree);
 
 					if (vm.treeFilterTerms) vm.filterTree(vm.treeFilterTerms);
@@ -601,8 +610,12 @@
 					vm.editingNode = false;
 					applyShadow();
 
-					$scope.$apply();
+					// $scope.$apply();
 
+				};
+
+				const emptyFilter = function () {
+					vm.treeFilterTerms = "";
 				};
 
 				//region Node drag and drop
@@ -613,21 +626,18 @@
 				/* const onNodeDragenter = function (ev) {
 					// const nodeRowElem = ev.target.parentNode; // .classifierNode
 					dndHoverOverElem = ev.target.parentNode; // .classifierNode
-					console.log("testing onNodeDragenter", ev.target, nodeRowElem);
 					dndHoverOverElem.classList.add('dnd-mouse-hover');
 				}; */
 
 				/* const onNodeDragleave = function (ev) {
 					/!* const nodeRowElem = ev.target.parentNode; // .classifierNode
 					nodeRowElem.classList.remove('dnd-mouse-hover'); *!/
-					console.log("testing.onNodeDragleave dndHoverOverElem", dndHoverOverElem);
 					dndHoverOverElem.classList.remove('dnd-mouse-hover');
 				};
 
 				const onDropInbetweenDragenter = function (ev) {
 					// const inbetweenElem = ev.target;
 					dndHoverOverElem = ev.target; // .dropAtTheBeginning or .dropAfterNode
-					console.log("testing.onDropInbetweenDragenter dndHoverOverElem", dndHoverOverElem);
 					dndHoverOverElem.classList.add('dnd-mouse-hover');
 				}; */
 
@@ -743,7 +753,6 @@
 
 					removeNode(nodeToMove);
 					// nodeToMove.id; // actually we are creating copy of node
-
 					if (Array.isArray(moveTo)) { // moved to root
 
 						if (!index && index !== 0) index = moveTo.length;
@@ -859,7 +868,7 @@
 
 					}
 					/* else if (ev.target.classList.contains('dropOntoNode')) {
-						console.log("testing.onNodeDrop dropOntoNode");
+
 						const droppedToNodeElem = ev.target.closest('.classifierNode');
 						const moveToPath = droppedToNodeElem.dataset.pathToNode.split(',');
 
@@ -931,10 +940,10 @@
 
 				vm.onNodeDragEnd = function (ev) {
 
-					nodeDropElemsList.forEach(nodeElem => {
+					/* nodeDropElemsList.forEach(nodeElem => {
 						nodeElem.removeEventListener('dragenter', onNodeDragenter);
 						nodeElem.removeEventListener('dragleave', onNodeDragleave);
-					});
+					}); */
 
 					/* dropInbetweenElemsList.forEach(dElem => {
 						dElem.removeEventListener('dragenter', onDropInbetweenDragenter);
@@ -981,18 +990,17 @@
 					if ($scope.classifierTreeEventService) {
 
 						const treeChangedFromOutsideId = $scope.classifierTreeEventService.addEventListener(classifierEvents.TREE_CHANGED_FROM_OUTSIDE, onTreeChangedFromOutside);
-
 						const editNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.EDIT_NODE, onEditNode);
-
 						const deleteNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.DELETE_NODE, onDeleteNode);
-
 						const addNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.ADD_NODE, onAddNode);
+						const emptyFilterId = $scope.classifierTreeEventService.addEventListener(classifierEvents.EMPTY_FILTER, emptyFilter);
 
 						$scope.$on("$destroy", function () {
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.TREE_CHANGED_FROM_OUTSIDE, treeChangedFromOutsideId);
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.EDIT_NODE, editNodeId);
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.ADD_NODE, addNodeId);
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.DELETE_NODE, deleteNodeId);
+							$scope.classifierTreeEventService.removeEventListener(classifierEvents.EMPTY_FILTER, emptyFilterId);
 						});
 
 					}
