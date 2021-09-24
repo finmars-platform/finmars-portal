@@ -47,7 +47,7 @@
 					return count;
 				};
 
-				const clearAllRowsSelection = () => {
+				/* const clearAllRowsSelection = () => {
 
 					const dataList = $scope.evDataService.getDataAsList();
 
@@ -75,7 +75,7 @@
 					$scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 					$scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
-				};
+				}; */
 
 				$scope.closeSelectedRowsActions = function () {
 

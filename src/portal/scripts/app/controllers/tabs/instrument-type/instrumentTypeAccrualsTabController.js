@@ -7,8 +7,9 @@
     const metaService = require('../../../services/metaService');
 	const GridTableDataService = require('../../../services/gridTableDataService');
 	const GridTableEventService = require('../../../services/gridTableEventService');
+
 	const gridTableEvents = require('../../../services/gridTableEvents');
-	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents')
+	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
     const metaHelper = require('../../../helpers/meta.helper');
 	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
@@ -132,10 +133,11 @@
 
         var onAccrualTableCellChange = function (data, gtDataService, gtEventService) {
 
-            const tableData = gtDataService.getTableData()
-			const cell = gtDataService.getCellByKey(data.row.order, data.column.key)
+            const tableData = gtDataService.getTableData();
+
+			const cell = gtDataService.getCellByKey(data.row.order, data.column.key);
 			const path = cell.objPath[0];
-            let accrual = vm.entity.accruals.find(accrual => findAccrualById(accrual, tableData.accrualId))
+            let accrual = vm.entity.accruals.find(accrual => findAccrualById(accrual, tableData.accrualId));
 
 			accrual.data.items[data.row.order][path] = cell.settings.value;
 
@@ -239,7 +241,7 @@
 							}
 						},
                         {
-                            key: 'options',
+                            key: 'options_settings',
                             columnName: '',
                             order: 5,
                             cellType: 'empty',
@@ -255,7 +257,7 @@
             };
 
             var optionsColumn = {
-                key: 'options',
+                key: 'options_settings',
                 objPath: ['options_settings'],
                 columnName: '',
                 order: 5,
@@ -393,13 +395,13 @@
                 data: {
                     form_message: "",
                     items: [
-                        {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text', options: false},
-                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'multitypeField', options: false},
-                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'multitypeField', options: false},
-                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'multitypeField', options: false},
+                        {key: 'notes', name: 'Notes', to_show: true, defaultValueType: 'text'},
+                        {key: 'accrual_start_date', name: 'First accrual date', to_show: true, defaultValueType: 'multitypeField'},
+                        {key: 'first_payment_date', name: 'First payment date', to_show: true,  defaultValueType: 'multitypeField'},
+                        {key: 'accrual_size', name: 'Accrual size', to_show: true, defaultValueType: 'multitypeField'},
                         {key: 'periodicity', name: 'Periodicity', to_show: true, defaultValueType: 'selector', selectorOptions: vm.selectorOptionsMap.periodicity, options_settings: periodicitySelectorOptions},
                         {key: 'accrual_calculation_model', name: 'Accrual model', to_show: true, defaultValueType: 'selector', selectorOptions: vm.selectorOptionsMap.accrual_calculation_model, options_settings: accrualModelsSelectorOptions},
-                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'multitypeField', options: false},
+                        {key: 'periodicity_n', name: 'Periodic N', to_show: true, defaultValueType: 'multitypeField'},
                     ]
                 }
             };
@@ -410,7 +412,7 @@
 
             var accrualGridTableData = getAccrualsGridTableData(accrual);
 
-            accrualGridTableData.accrualId = metaHelper.generateUniqueId(vm.entity.accruals.length);
+            accrualGridTableData.accrualId = accrual.frontOptions.id;
             accrual.accrualsGridTableDataService.setTableData(accrualGridTableData);
 
             vm.entity.accruals.push(accrual);
@@ -543,9 +545,9 @@
 
 		vm.onRequiredFieldChange = function (fieldKey) {
 
-			const tabsWithErrors = vm.evEditorDataService.getTabsWithErrors();
+			const locsWithErrors = vm.evEditorDataService.getLocationsWithErrors();
 
-			if (tabsWithErrors['system_tab'].hasOwnProperty('accruals')) {
+			if (locsWithErrors['system_tab'].hasOwnProperty('accruals')) {
 				$scope.$parent.vm.onEntityChange(fieldKey);
 			}
 
@@ -715,6 +717,16 @@
 
 		vm.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, () => {
 			vm.evEditorFieldEvent = { key: "mark_not_valid_fields" };
+		});
+
+		vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, () => {
+
+			vm.entity = $scope.$parent.vm.entity;
+
+			vm.entity.accruals.forEach(function (item, index) {
+				if (item.data) formatExistingAccrual(item);
+			});
+
 		});
 
         const init = function () {

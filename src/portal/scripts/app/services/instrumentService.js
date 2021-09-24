@@ -24,6 +24,10 @@
         return instrumentRepository.getListLight(options);
     };
 
+	const getListForSelect = function (options) {
+		return instrumentRepository.getListForSelect(options);
+	};
+
 	const getByKey = function (id) {
         return instrumentRepository.getByKey(id);
     };
@@ -53,93 +57,65 @@
     };
 
 	/**
-	 * Initiate accrual table event listeners
+	 * Used for grid tables of accruals and events schedules
 	 *
+	 * @param argObj {{row: Object, column: Object}} - arguments passed when dispatching grid table event CELL_VALUE_CHANGED
+	 * @param entity {Object}
 	 * @param gridTableDataService {Object}
-	 * @param gridTableEventService {Object}
-	 * @param entity {Object} - data of entity
 	 * @param evEditorEventService {Object}
-	 * @param tableChangeObj {Object} - mutating object that helps to determine which of multiple accrual tables changed
+	 * @param tableKey {String}
 	 */
-	const initAccrualsScheduleGridTableEvents = function (gridTableDataService, gridTableEventService, entity, evEditorEventService, tableChangeObj) {
+	const onGtCellChange = function (argObj, entity, gridTableDataService, evEditorEventService, tableKey) {
 
-		const tableChangeArgObj = {
-			key: 'accrual_calculation_schedules'
-		};
+		var rowOrder = argObj.row.order,
+			colOrder = argObj.column.order;
 
-		/* gridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
+		gridTableHelperService.onGridTableCellChange(
+			entity[tableKey],
+			gridTableDataService,
+			rowOrder, colOrder
+		);
 
-			const gridTableData = gridTableDataService.getTableData();
+		/*if (cell.cellType === 'multitypeField') {
 
-			const newRow = gridTableData.body[0];
-			const newSchedule = {
-				"accrual_start_date": '',
-				"first_payment_date": '',
-				"accrual_size": '',
-				"accrual_calculation_model": '',
-				"periodicity": '',
-				"periodicity_n": '',
-				"notes": '',
-				frontOptions: {newRow: true, gtKey: newRow.key}
-			};
+			var activeType = cell.settings.fieldTypesData.find(type => type.isActive);
+			if (!activeType) activeType = cell.settings.fieldTypesData.find(type => type.isDefault);
 
-			entity.accrual_calculation_schedules.unshift(newSchedule);
+			metaHelper
+			entity.accrual_calculation_schedules[rowOrder][cell.key + '_value_type'] = activeType.value_type;
 
-			// Update rows in schedules grid table
-			entity.accrual_calculation_schedules.forEach((schedule, scheduleIndex) => {
-				gridTableData.body[scheduleIndex].order = scheduleIndex;
-			});
+		}*/
 
-			tableChangeObj.value = true;
-			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, tableChangeArgObj);
-
-		}); */
-
-		gridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argObj) {
-
-			var rowOrder = argObj.row.order,
-				colOrder = argObj.column.order,
-				cell = gridTableDataService.getCell(rowOrder, colOrder);
-
-			gridTableHelperService.onGridTableCellChange(
-				entity.accrual_calculation_schedules,
-				gridTableDataService,
-				rowOrder, colOrder
-			);
-
-			/*if (cell.cellType === 'multitypeField') {
-
-				var activeType = cell.settings.fieldTypesData.find(type => type.isActive);
-				if (!activeType) activeType = cell.settings.fieldTypesData.find(type => type.isDefault);
-
-				metaHelper
-				entity.accrual_calculation_schedules[rowOrder][cell.key + '_value_type'] = activeType.value_type;
-
-			}*/
-
-			tableChangeObj.value = true;
-			const cellValChangeArgObj = tableChangeArgObj;
-
-			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, cellValChangeArgObj);
-
-		});
-
-		gridTableEventService.addEventListener(gridTableEvents.ROW_DELETED, function (argObj) {
-
-			entity.accrual_calculation_schedules = entity.accrual_calculation_schedules.filter(schedule => {
-
-				var scheduleId = schedule.id || schedule.frontOptions.gtKey;
-				return !argObj.deletedRowsKeys.includes(scheduleId);
-
-			});
-
-			tableChangeObj.value = true;
-			evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, tableChangeArgObj);
-
-		});
+		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
 
 	};
 
+	/**
+	 * Used for grid tables of accruals and events schedules
+	 *
+	 * @param argObj {Object} - arguments passed when dispatching grid table event ROW_DELETED
+	 * @param entity {{deletedRowsKeys: array}}
+	 * @param evEditorEventService {Object}
+	 * @param tableKey {String}
+	 */
+	const onGtRowDeletion = function (argObj, entity, evEditorEventService, tableKey) {
+
+		entity[tableKey] = entity[tableKey].filter(item => {
+
+			var scheduleId = item.id || item.frontOptions.gtKey;
+			return !argObj.deletedRowsKeys.includes(scheduleId);
+
+		});
+
+		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
+
+	};
+
+	/**
+	 *
+	 * @param userCodes {Array<string>}
+	 * @returns {Promise<Object>}
+	 */
 	const getEditLayoutBasedOnUserCodes = function (userCodes) {
 
 		if (userCodes && userCodes.length) {
@@ -149,15 +125,18 @@
 			return new Promise(async (resolve, reject) => {
 
 				var userCode;
+				var editLayoutData
 
 				for (userCode of userCodesList) {
 
 					try {
-						var editLayoutData = await uiService.getEditLayoutByUserCode('instrument', userCode);
+						editLayoutData = await uiService.getEditLayoutByUserCode('instrument', userCode);
 
 					} catch (error) {
+
 						reject(error);
 						break;
+
 					}
 
 					if (editLayoutData.results.length) {
@@ -167,10 +146,14 @@
 
 				}
 
-				uiService.getDefaultEditLayout('instrument').then(data => {
-					resolve(data);
+				if (!editLayoutData.results.length) {
 
-				}).catch(error => reject(error));
+					uiService.getDefaultEditLayout('instrument').then(data => {
+						resolve(data);
+
+					}).catch(error => reject(error));
+
+				}
 
 			});
 
@@ -409,6 +392,7 @@
     module.exports = {
         getList: getList,
         getListLight: getListLight,
+        getListForSelect: getListForSelect,
         getByKey: getByKey,
         create: create,
         update: update,
@@ -418,7 +402,8 @@
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
 
-		initAccrualsScheduleGridTableEvents: initAccrualsScheduleGridTableEvents,
+		onGtCellChange: onGtCellChange,
+		onGtRowDeletion: onGtRowDeletion,
 		getInstrumentAccrualsMultitypeFieldsData: getInstrumentAccrualsMultitypeFieldsData,
 		getInstrumentEventsMultitypeFieldsData: getInstrumentEventsMultitypeFieldsData,
 		updateMultitypeFieldSelectorOptionsInsideGridTable: updateMultitypeFieldSelectorOptionsInsideGridTable,

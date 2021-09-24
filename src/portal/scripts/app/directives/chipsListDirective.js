@@ -320,7 +320,13 @@
 
 						scope.eventService.addEventListener(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED, function () {
 
-							chipsContainerWidth = chipsContainer.clientWidth - addChipWidth;
+							if (scope.chipsContainerWidth) {
+								chipsContainerWidth = scope.chipsContainerWidth - addChipWidth;
+
+							} else {
+								chipsContainerWidth = chipsContainer.clientWidth - addChipWidth;
+							}
+
 							scope.concealOverflowingChips();
 
 						});

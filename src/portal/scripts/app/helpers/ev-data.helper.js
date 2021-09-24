@@ -561,10 +561,10 @@
         }
 
         obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
+            return item.___type !== 'control';
         });
 
-        var controlObj = {
+        /* var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
             ___level: obj.___level + 1
@@ -572,7 +572,7 @@
 
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results.push(controlObj);
+        obj.results.push(controlObj); */
 
         entityViewerDataService.setData(obj);
 
@@ -602,23 +602,19 @@
         }
 
         obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
+            return item.___type !== 'control' && item.___type !== 'placeholder_object';
         });
 
-        var controlObj = {
-            ___errorMessage: errorMessage,
-            ___parentId: obj.___id,
-            ___type: 'control',
-            ___level: obj.___level + 1
-        };
+		/* var controlObj = {
+			___errorMessage: errorMessage,
+			___parentId: obj.___id,
+			___type: 'control',
+			___level: obj.___level + 1
+		};
 
-        controlObj.___id = evRvCommonHelper.getId(controlObj);
+		controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'placeholder_object';
-        });
-
-        obj.results.push(controlObj);
+        obj.results.push(controlObj); */
 
         entityViewerDataService.setData(obj);
 
