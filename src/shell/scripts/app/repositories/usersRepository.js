@@ -405,7 +405,7 @@ const updateMember = function (id, user) {
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
 
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/' + id, {
+	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/' + id + '/', {
 		method: 'PUT',
 		credentials: 'include',
 		headers: {

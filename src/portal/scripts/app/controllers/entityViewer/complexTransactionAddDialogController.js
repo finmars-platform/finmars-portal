@@ -32,9 +32,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function complexTransactionAddDialogController(
-    	$scope, $mdDialog, $bigDrawer, $state, usersGroupService, entityType, entity, data
-	) {
+    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, globalDataService, entityType, entity, data) {
 
         var vm = this;
 		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
@@ -73,6 +71,7 @@
 
         var notCopiedTransaction = true;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
+		var ttypesList;
         //var tooltipsList = [];
 
         vm.rearrangeMdDialogActions = function () {
@@ -898,7 +897,7 @@
 			return groupsList;
 
 		} */
-		var getTransactionGroups = function (ttypesList) {
+		var getTransactionGroups = function () {
 
 			var groups = {};
 
@@ -949,6 +948,58 @@
 
 		};
 
+		var getFavoriteTTypeOptions = function () {
+
+			var favTTypeOpts = [];
+			var member = globalDataService.getMember();
+
+			if (member.data && member.favorites && member.favorites.transaction_type) {
+
+				favTTypeOpts = member.favorites.transaction_type.map(function (ttypeUserCode) {
+
+					var ttype = ttypesList.find(function (ttype) {
+						return ttype.user_code === ttypeUserCode;
+					});
+
+					if (!ttype) {return ttype;}
+
+					return {
+						id: ttype.id,
+						name: ttype.name
+					};
+
+				})
+				.filter(function (fTttype) {
+					return !!fTttype;
+				});
+
+			}
+
+			return favTTypeOpts;
+
+		};
+
+		vm.saveFavoriteTTypeOptions = function () {
+
+			var member = globalDataService.getMember();
+
+			if (!member.data) {
+				member.data = {};
+			}
+
+			if (!member.data.favorites) {
+				member.data.favorites = {};
+			}
+
+			member.data.favorites.transaction_type = vm.favTTypeOpts.map(function (ttypeOpt) {
+				var ttype = ttypesList.find(ttype => ttype.id === ttypeOpt.id);
+				return ttype.user_code;
+			});
+
+			usersService.updateMember(member.id, member);
+
+		};
+
         vm.loadTransactionTypes = function () {
 
             var options = {
@@ -959,7 +1010,10 @@
             // transactionTypeService.getList(options).then(function (data) {
             transactionTypeService.getListLight(options).then(function (data) {
 
-                vm.transactionGroups = getTransactionGroups(data.results);
+            	ttypesList = data.results;
+                vm.transactionGroups = getTransactionGroups(ttypesList);
+
+				vm.favTTypeOpts = getFavoriteTTypeOptions();
 
                 vm.readyStatus.transactionTypes = true;
 
