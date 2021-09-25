@@ -174,7 +174,7 @@
 				let keyUpHandler = function (event) {
 
 					if (scope.isPopupOpen && event.key === "Escape") {
-						removePopUp();
+						cancelPopup();
 					}
 
 				};
@@ -208,18 +208,18 @@
 
 					if (scope.popupEventService) {
 
-						closePopupListenerIndex = scope.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, removePopUp);
+						closePopupListenerIndex = scope.popupEventService.addEventListener(popupEvents.CLOSE_POPUP, cancelPopup);
 
 					}
 
 					if (scope.closeOnClickOutside) {
-						popupBackdropElem.addEventListener("click", removePopUp);
+						popupBackdropElem.addEventListener("click", scope.cancel);
 					}
 
 					if (scope.closeOnMouseLeave) {
 
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
-						popupBackdropElem.addEventListener('mouseenter', removePopUp);
+						popupBackdropElem.addEventListener('mouseenter', scope.cancel);
 
 					}
 				};
@@ -235,13 +235,13 @@
 					}
 
 					if (scope.closeOnClickOutside) {
-						popupBackdropElem.removeEventListener("click", removePopUp);
+						popupBackdropElem.removeEventListener("click", scope.cancel);
 					}
 
 					if (scope.closeOnMouseLeave) {
 
 						elem[0].removeEventListener('mouseleave', onElementMouseLeave);
-						popupBackdropElem.removeEventListener('mouseenter', removePopUp);
+						popupBackdropElem.removeEventListener('mouseenter', scope.cancel);
 
 					}
 
@@ -395,19 +395,23 @@
 
 				};
 
-				scope.cancel = function () {
+				const cancelPopup = function () {
 
-					if (scope.popupEventService) {
-
-						scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-
-					} else {
-						removePopUp();
-					}
+					removePopUp();
 
 					if (scope.onCancel) {
 						scope.onCancel();
 					}
+
+				}
+
+				scope.cancel = function () {
+
+					if (scope.popupEventService) {
+						scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+					}
+
+					cancelPopup();
 
 				};
 

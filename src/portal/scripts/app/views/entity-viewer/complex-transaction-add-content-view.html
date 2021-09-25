@@ -40,7 +40,9 @@
                 <complex-dropdown-select label="Transaction type"
                                          model="vm.transactionTypeId"
                                          menu-options="vm.transactionGroups"
-                                         on-change="vm.transactionTypeChange()"></complex-dropdown-select>
+                                         favorite-options="vm.favTTypeOpts"
+                                         on-favorite-options-change="vm.saveFavoriteTTypeOptions()"
+                                         on-selected-option-change="vm.transactionTypeChange()"></complex-dropdown-select>
             </div>
 
             <div flex="50">

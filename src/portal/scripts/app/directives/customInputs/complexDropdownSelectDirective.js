@@ -9,10 +9,13 @@ export default function () {
 			model: '=',
 			menuOptions: '=',
 			favoriteOptions: '=',
-			onChange: '&?'
+			onSelectedOptionChange: '&?',
+			onFavoriteOptionsChange: '&?',
 		},
 		templateUrl: "views/directives/customInputs/complex-dropdown-select-view.html",
 		link: function (scope, elem, attrs) {
+
+			if (!scope.favoriteOptions) scope.favoriteOptions = [];
 
 			scope.selectedOption = null;
 
@@ -32,6 +35,8 @@ export default function () {
 				}
 
 			}
+
+			let originalFavoriteOptsList = JSON.parse(angular.toJson(scope.favoriteOptions));
 
 			const selectOption = function (groupName, option, _$popup) {
 
@@ -68,10 +73,37 @@ export default function () {
 
 			};
 
+			const didFavoriteOptionsChange = function () {
+
+				if (scope.favoriteOptions.length !== originalFavoriteOptsList.length) return true;
+
+				for (let i = 0; i < scope.favoriteOptions.length; i++) {
+
+					if (scope.favoriteOptions[i].id !== originalFavoriteOptsList[i].id) {
+						return true;
+					}
+
+				}
+
+				return false;
+
+			};
+
+			scope.onPopupClose = function () {
+
+				if (didFavoriteOptionsChange()) {
+
+					originalFavoriteOptsList = JSON.parse(angular.toJson(scope.favoriteOptions));
+					if (scope.onFavoriteOptionsChange) scope.onFavoriteOptionsChange();
+
+				}
+
+			};
+
 			scope.popupData = {
 				selectedOptions: scope.model,
 				menuOptions: scope.menuOptions,
-				favoriteOptions: scope.favoriteOptions || [],
+				favoriteOptions: scope.favoriteOptions,
 				showDescriptions: false,
 				selectOptionCallback: selectOption
 			}
