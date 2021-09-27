@@ -45,8 +45,7 @@
 				offsetY: '@', // add offset to the top in pixels
 
 				onCancel: '&?',
-				onSave: '&?',
-				onPopupClose: '&?'
+				onSave: '&?'
 
             },
             link: function (scope, elem, attrs) {
@@ -311,10 +310,6 @@
 
 					if (popupContentScope) popupContentScope.$destroy();
 
-					if (scope.onPopupClose) {
-						scope.onPopupClose();
-					}
-
 				}
 
                 /* scope.onBackdropClick = function () {
@@ -363,7 +358,8 @@
 
 					}
 
-					removePopUp();
+					// removePopUp();
+					scope.cancel();
 
 				};
 
@@ -409,9 +405,10 @@
 
 					if (scope.popupEventService) {
 						scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-					}
 
-					cancelPopup();
+					} else {
+						cancelPopup();
+					}
 
 				};
 
