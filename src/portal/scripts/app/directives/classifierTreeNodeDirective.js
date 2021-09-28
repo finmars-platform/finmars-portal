@@ -20,7 +20,7 @@
 			link: function (scope, elem, attrs, cTreeVm) {
 
 				scope.selectNode = cTreeVm.selectNode;
-				scope.closeStatusChange = cTreeVm.closeStatusChange;
+				scope.toggleNodeFolding = cTreeVm.toggleNodeFolding;
 				scope.onCancelEdit = cTreeVm.onCancelEdit;
 				scope.onSaveNode = cTreeVm.onSaveNode;
 				scope.editableNode = cTreeVm.editableNode;
@@ -28,7 +28,7 @@
 					name: ''
 				}
 
-				scope.emptyLast = utilsHelper.emptyLastComparator;
+				const classifierNodeRowElem = elem[0].querySelector('.classifierNodeRow');
 
 				const focusInput = () => {
 					const inputElement = elem[0].querySelector('input.classifier-name');
@@ -43,6 +43,23 @@
 				scope.isSaveDisabled = () => {
 					return !scope.currentEdit.name.trim();
 				}
+
+				classifierNodeRowElem.addEventListener('dragstart', cTreeVm.onNodeDragStart);
+				classifierNodeRowElem.addEventListener('dragend', cTreeVm.onNodeDragEnd);
+
+				scope.getPathToNodeAsString = function () {
+					return scope.node.frontOptions.treePath.join(',');
+				};
+
+				scope.callFnForCustomBtn = function ($event, actionData) {
+
+					if (actionData.parameters) {
+						actionData.callback($event, scope.node, actionData.parameters);
+					} else {
+						actionData.callback($event, scope.node);
+					}
+
+				};
 
 			}
 		}

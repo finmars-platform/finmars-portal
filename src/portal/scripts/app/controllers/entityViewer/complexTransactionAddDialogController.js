@@ -840,47 +840,6 @@
 
         };
 
-        function getGroupsFromItems(items) {
-
-            var groups = {};
-
-            items.forEach(function (item) {
-
-                if (item.group_object) {
-
-                    if (!groups[item.group_object.id]) {
-                        groups[item.group_object.id] = item.group_object;
-                        groups[item.group_object.id].items = [];
-                    }
-
-                    groups[item.group_object.id].items.push(item);
-
-                } else {
-
-                    if (!groups['ungrouped']) {
-                        groups['ungrouped'] = {name: 'Ungrouped'};
-                        groups['ungrouped'].items = [];
-                    }
-
-                    groups['ungrouped'].items.push(item);
-
-                }
-
-
-            });
-
-            var groupsList = Object.keys(groups).map(function (key) {
-                return groups[key]
-            });
-
-            groupsList = groupsList.filter(function (item) {
-                return !!item
-            });
-
-            return groupsList;
-
-        }
-
         vm.getPortfolios = function () {
 
             portfolioService.getListLight().then(function (data) {
@@ -899,6 +858,97 @@
 
         };
 
+		/* function getGroupsFromItems(items) {
+
+			var groups = {};
+
+			items.forEach(function (item) {
+
+				if (item.group_object) {
+
+					if (!groups[item.group_object.id]) {
+						groups[item.group_object.id] = item.group_object;
+						groups[item.group_object.id].items = [];
+					}
+
+					groups[item.group_object.id].items.push(item);
+
+				} else {
+
+					if (!groups['ungrouped']) {
+						groups['ungrouped'] = {name: 'Ungrouped'};
+						groups['ungrouped'].items = [];
+					}
+
+					groups['ungrouped'].items.push(item);
+
+				}
+
+
+			});
+
+			var groupsList = Object.keys(groups).map(function (key) {
+				return groups[key]
+			});
+
+			groupsList = groupsList.filter(function (item) {
+				return !!item
+			});
+
+			return groupsList;
+
+		} */
+		var getTransactionGroups = function (ttypesList) {
+
+			var groups = {};
+
+			ttypesList.forEach(function (item) {
+
+				var ttypeItem = {
+					id: item.id,
+					name: item.name,
+				};
+
+				if (item.group_object) {
+
+					if (!groups[item.group_object.id]) {
+						groups[item.group_object.id] = {
+							name: item.group_object.name,
+							children: [],
+						};
+					}
+
+					groups[item.group_object.id].children.push(ttypeItem);
+
+				} else {
+
+					if (!groups['ungrouped']) {
+
+						groups['ungrouped'] = {
+							name: 'Ungrouped',
+							children: [],
+						};
+
+					}
+
+					groups['ungrouped'].children.push(ttypeItem);
+
+				}
+
+			});
+
+			var groupsList = Object.keys(groups).map(function (key) {
+				return groups[key];
+			});
+
+			groupsList = groupsList.filter(function (item) {
+				return !!item
+			});
+
+			return groupsList;
+
+		};
+
         vm.loadTransactionTypes = function () {
 
             var options = {
@@ -909,7 +959,7 @@
             // transactionTypeService.getList(options).then(function (data) {
             transactionTypeService.getListLight(options).then(function (data) {
 
-                vm.transactionGroups = getGroupsFromItems(data.results);
+                vm.transactionGroups = getTransactionGroups(data.results);
 
                 vm.readyStatus.transactionTypes = true;
 
@@ -933,13 +983,19 @@
 
         vm.transactionTypeChange = function () {
 
-            notCopiedTransaction = true;
+			// vm.transactionTypeId = selectedTType.id;
+
+			notCopiedTransaction = true;
             vm.entity.transaction_type = vm.transactionTypeId;
 
             vm.dataConstructorData = {
                 entityType: vm.entityType,
                 instanceId: vm.transactionTypeId
             };
+
+            // show loader while vm.getFormLayout performs
+            vm.readyStatus.layout = false;
+			$scope.$apply();
 
             vm.getFormLayout().then(function () {
                 $scope.$apply();

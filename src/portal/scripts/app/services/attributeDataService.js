@@ -128,6 +128,11 @@
             var allocationDynamicAttrsFormatted = formatAttributeTypes(allocationDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             var linkedInstrumentDynamicAttrsFormatted = formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
 
+			// remove attributes that area already inside currency from balance
+			balanceAttrs = balanceAttrs.filter(function (bAttr) {
+				return !!!currencyAttrs.find(function (cAttr) {return cAttr.key === bAttr.key});
+			});
+
             result = result.concat(balanceAttrs);
             result = result.concat(balanceMismatchAttrs);
             result = result.concat(balancePerformanceAttrs);
