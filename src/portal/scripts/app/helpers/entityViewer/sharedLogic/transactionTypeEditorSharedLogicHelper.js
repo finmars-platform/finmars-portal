@@ -2,6 +2,7 @@
 
 	const fieldResolverService = require('../../../services/fieldResolverService');
 
+	const ecosystemDefaultService = require('../../../services/ecosystemDefaultService');
     const referenceTableService = require('../../../services/referenceTablesService');
 
 	const metaHelper = require('../../meta.helper');
@@ -44,6 +45,7 @@
                 "id": 120
             },
         ];
+        let ecosystemDefaultData = {};
 
         const getValueTypes = function() {
             return valueTypes;
@@ -323,7 +325,7 @@
 
 		};
 
-		//<editor-fold desc="TRANSACTION VALIDATION">
+		//region desc="TRANSACTION VALIDATION"
 		const hasInputInExprs = function (inputs, expr, namesOnly) {
 
 			var inputsList = [];
@@ -697,9 +699,9 @@
         	return errors;
 
 		};
-		//</editor-fold>
+		//endregion
 
-		//<editor-fold desc="INPUTS GRID TABLE">
+		//region desc="INPUTS GRID TABLE"
 		const onInputsGridTableRowAddition = function () {
 
             var newRow = viewModel.inputsGridTableData.body[0];
@@ -1256,9 +1258,11 @@
 
 		const createDataForInputsGridTable = function () {
 
+			viewModel.inputsGridTableData.body = [];
+
             var rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
-			//<editor-fold desc="Assemble header columns">
+			//region desc="Assemble header columns">
 			var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
 
             viewModel.inputsGridTableData.header.columns = rowObj.columns.map(function (column) {
@@ -1274,9 +1278,9 @@
                 }
 
             });
-			//</editor-fold>
+			//endregion
 
-            // assemble body rows
+            //region assemble body rows
             viewModel.entity.inputs.forEach(function (input, index) {
 
                 rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
@@ -1350,11 +1354,19 @@
                 viewModel.inputsGridTableData.body.push(rowObj)
 
             });
-            // < assemble body rows >
+            //endregion assemble body rows >
             viewModel.inputsGridTableDataService.setTableData(viewModel.inputsGridTableData);
 
         }
-		//</editor-fold>
+		//endregion
+
+		const loadEcosystemDefaults = function () {
+
+        	ecosystemDefaultService.getList().then(function (data) {
+				ecosystemDefaultData = data.results[0];
+			});
+
+		};
 
 		const getTransactionUserFields = function () {
 
@@ -1396,7 +1408,177 @@
 
             createDataForInputsGridTable();
 
-        }
+        };
+
+		const setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+
+			var relationType = '';
+			switch (fieldName) {
+				case 'linked_instrument':
+				case 'allocation_pl':
+				case 'allocation_balance':
+					relationType = 'instrument';
+					break;
+				default:
+					relationType = fieldName;
+			}
+
+			var nameProperty = 'name';
+			if (fieldName === 'price_download_scheme') {
+				nameProperty = 'user_code';
+			}
+
+			var defaultValueKey = '';
+			switch (relationType) {
+				case 'account_position':
+				case 'account_cash':
+				case 'account_interim':
+					defaultValueKey = 'account';
+					break;
+				case 'settlement_currency':
+				case 'transaction_currency':
+				case 'accrued_currency':
+				case 'pricing_currency':
+					defaultValueKey = 'currency';
+					break;
+				case 'strategy1_position':
+				case 'strategy1_cash':
+					defaultValueKey = 'strategy1';
+					break;
+				case 'strategy2_position':
+				case 'strategy2_cash':
+					defaultValueKey = 'strategy2';
+					break;
+				case 'strategy3_position':
+				case 'strategy3_cash':
+					defaultValueKey = 'strategy3';
+					break;
+				default:
+					defaultValueKey = relationType;
+			}
+
+			if (ecosystemDefaultData.hasOwnProperty(defaultValueKey)) {
+
+				var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
+
+				actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
+
+				// needed for displaying default value after turning on 'relation' field
+				actionData[propertyName][fieldName + '_object'] = {};
+				actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
+				actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+
+			}
+
+		};
+
+        const appendFromTemplate = function ($event, template) {
+
+			console.log("Append from Template", template);
+
+			if (template.type === 'input_template') {
+
+				$mdDialog.show({
+					controller: 'InputTemplateLayoutViewerDialogController as vm',
+					templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+					targetEvent: $event,
+					locals: {
+						data: {
+							template: template
+						}
+					},
+					preserveScope: true,
+					autoWrap: true,
+					skipHide: true,
+					multiple: true
+				}).then(function (res) {
+
+					if (res.status === 'agree') {
+
+						var template = res.data.template;
+
+						template.data.inputs.forEach(function (input) {
+
+							if (!input.settings) input.settings = {};
+							if (!input.settings.linked_inputs_names) input.settings.linked_inputs_names = [];
+							if (!input.settings.recalc_on_change_linked_inputs) input.settings.recalc_on_change_linked_inputs = [];
+
+							viewModel.entity.inputs.push(input);
+
+						});
+
+						getInputsForLinking();
+						createDataForInputsGridTable();
+
+						viewModel.inputsGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
+
+					}
+
+				})
+
+			}
+			else if (template.type === 'field_template') {
+
+				Object.keys(viewModel.entity).forEach(function (key) {
+
+					if (key.indexOf('user_text_') !== -1) {
+						viewModel.entity[key] = '';
+					}
+
+					if (key.indexOf('user_number_') !== -1) {
+						viewModel.entity[key] = '';
+					}
+
+					if (key.indexOf('user_date_') !== -1) {
+						viewModel.entity[key] = '';
+					}
+
+				});
+
+				Object.keys(template.data.fields).forEach(function (key) {
+
+					viewModel.entity[key] = template.data.fields[key];
+
+				})
+
+			}
+			else if (template.type === 'action_template') {
+
+				var actionsToAdd = template.data.actions.map(function (action) {
+
+					Object.keys(action).forEach(function (key) {
+
+						if (typeof action[key] === 'object' && action[key] !== null) {
+
+							Object.keys(action[key]).forEach(function (actionItemKey) {
+
+								if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+
+									if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
+
+										action[key][actionItemKey + '_toggle'] = true;
+
+										setDefaultValueForRelation(action, key, actionItemKey);
+
+										delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
+									}
+
+								}
+
+							})
+
+						}
+
+					});
+
+					return action;
+				});
+
+				viewModel.entity.actions = viewModel.entity.actions.concat(actionsToAdd);
+
+			}
+
+		};
 
         return {
             getValueTypes: getValueTypes,
@@ -1415,7 +1597,10 @@
 
             initGridTableEvents: initGridTableEvents,
 
+			loadEcosystemDefaults: loadEcosystemDefaults,
 			getTransactionUserFields: getTransactionUserFields,
+
+			appendFromTemplate: appendFromTemplate,
             initAfterMainDataLoaded: initAfterMainDataLoaded
         }
 

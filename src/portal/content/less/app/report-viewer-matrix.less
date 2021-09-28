@@ -15,12 +15,12 @@
   white-space: pre;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 5px 8px 0;
+  padding: 5px 8px 0; // variable cellHorPaddings inside reportViewerMatrixDirective.js based on this
   /*padding-left: 8px;
   padding-right: 8px;*/
   box-sizing: border-box;
   color: #333;
-  font-size: 14px;
+  font-size: 14px; // context.font inside reportViewerMatrixDirective.js based on this
 
   border-right: 1px solid rgba(224, 224, 224, 1);
   border-bottom: 1px solid rgba(224, 224, 224, 1);
@@ -360,6 +360,10 @@
 .report-viewer-matrix-holder.has-y-scroll {
   .rv-matrix-header {
     padding-right: 14px;
+  }
+
+  .rv-matrix-value-cells-container {
+    overflow-y: scroll;
   }
 
   .rv-matrix-header-total-cell {

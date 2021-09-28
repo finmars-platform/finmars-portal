@@ -125,11 +125,60 @@
             }
         });
 
-    }
+    };
+
+    const onReportTypeChange = async function (activeType, item, getLayoutsFn, $scope) {
+
+    	return new Promise(async res => {
+
+    		item.settings.entity_type = activeType.key;
+			item.settings.layout = null;
+
+			if (activeType.custom.menuOptionsNotLoaded) {
+
+				activeType.fieldData.menuOptions = await getLayoutsFn();
+				activeType.custom.menuOptionsNotLoaded = false;
+
+				$scope.$apply();
+
+			}
+
+			res(item);
+
+		});
+
+	};
+
+    const prepareDataForReportLayoutSelector = function (layoutsSelectorsList, reportEntityType, selectedLayout, getLayoutsRes) {
+
+    	let activeSel = layoutsSelectorsList.find(function (selector) {
+			return selector.key === reportEntityType;
+		});
+
+		activeSel.isActive = true;
+
+		return new Promise((res) => {
+
+			getLayoutsRes.then(function (layoutsList) {
+
+				activeSel.model = selectedLayout;
+				activeSel.custom.menuOptionsNotLoaded = false;
+				activeSel.fieldData.menuOptions = layoutsList;
+
+				res(layoutsSelectorsList);
+
+			});
+
+		});
+
+	};
 
     module.exports = {
         getDataForComponentsSelector: getDataForComponentsSelector,
-        exportComponentToDashboards: exportComponentToDashboards
+        exportComponentToDashboards: exportComponentToDashboards,
+
+		onReportTypeChange: onReportTypeChange,
+		prepareDataForReportLayoutSelector: prepareDataForReportLayoutSelector,
     }
 
 }());

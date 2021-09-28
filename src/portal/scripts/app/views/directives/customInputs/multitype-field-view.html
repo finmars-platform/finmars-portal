@@ -47,7 +47,26 @@
                              popup-data="vm.fixedAreaPopup">
                             <div ng-bind-html="activeType.sign"></div>
                         </div>-->
-                    <div class="multitype-field-type-sign-wrap" ng-click="switchType()" ng-bind-html="activeType.sign"></div>
+                    <div ng-if="typeSwitch === 'button'"
+                         class="multitype-field-type-sign-wrap"
+                         ng-click="switchType()"
+                         ng-bind-html="activeType.sign"></div>
+
+                    <div ng-if="typeSwitch === 'selector'"
+                         popup
+                         popup-data="typeSelPopupData"
+                         popup-template="{{typeSelPopupTpl}}"
+                         open-on="click"
+                         position-relative-to="element"
+                         relative-popup-x="right"
+                         close-on-click-outside="true"
+                         offset-x="10"
+                         offset-y="2"
+                         popup-classes="'rounded-border'"
+
+                         class="multitype-field-type-sign-wrap">
+                        <div ng-bind-html="activeType.sign"></div>
+                    </div>
 
                 </div>
 
