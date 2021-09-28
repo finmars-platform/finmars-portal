@@ -47,6 +47,7 @@
                 name: '',
                 custom_component_name: '',
                 settings: {
+                	entity_type: 'balance-report',
                     components: {
                     	topPart: false,
                         addEntityBtn: false,
@@ -157,9 +158,9 @@
 
 				vm.item.settings.linked_components = {};
 
-				vm.item.settings.abscissa = null;
+				/*vm.item.settings.abscissa = null;
 				vm.item.settings.ordinate = null;
-				vm.item.settings.value_key = null;
+				vm.item.settings.value_key = null;*/
 
 				vm.item.user_settings = {};
 
@@ -188,7 +189,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
+                uiService.getListLayout(vm.item.settings.entity_type, {pageSize: 1000}).then(function (data) {
 
 					vm.layoutsByEntityType[vm.item.settings.entity_type] = data.results;
                     vm.layouts = data.results;
@@ -542,19 +543,19 @@
 
             console.log('vm', vm);
 
-            if (vm.item.id) {
+            /* if (vm.item.id) {
                 // vm.getLayouts();
                 vm.getAttributes();
 
-				dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
-					vm.layoutsSelectorsList = layoutsSelectorsList;
-					vm.readyStatus.layouts = true;
-					$scope.$apply();
-				});
+            } */
 
-            } else {
+			vm.getAttributes();
+
+			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
+				vm.layoutsSelectorsList = layoutsSelectorsList;
 				vm.readyStatus.layouts = true;
-			}
+				$scope.$apply();
+			});
 
         };
 

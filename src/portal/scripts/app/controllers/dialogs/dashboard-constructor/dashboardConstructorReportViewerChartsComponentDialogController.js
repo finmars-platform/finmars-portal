@@ -33,6 +33,7 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
+					entity_type: 'balance-report',
                     auto_refresh: false,
                     linked_components: {
                         report_settings: {}
@@ -433,19 +434,20 @@
 
             dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
 
-            if (vm.item.id) {
+            /* if (vm.item.id) {
 
                 vm.getAttributes();
 				// vm.getLayouts();
-				dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
-					vm.layoutsSelectorsList = layoutsSelectorsList;
-					vm.readyStatus.layouts = true;
-					$scope.$apply();
-				});
 
-            } else {
+            } */
+
+			vm.getAttributes();
+			// vm.getLayouts();
+			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
+				vm.layoutsSelectorsList = layoutsSelectorsList;
 				vm.readyStatus.layouts = true;
-			}
+				$scope.$apply();
+			});
 
         };
 

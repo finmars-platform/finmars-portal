@@ -31,6 +31,7 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
+					entity_type: 'balance-report',
                     components: {
                         addEntityBtn: false,
                         autoReportRequest: false,
@@ -159,7 +160,7 @@
 
 			return new Promise(function (resolve) {
 
-				uiService.getListLayout(vm.item.settings.entity_type).then(function (data) {
+				uiService.getListLayout(vm.item.settings.entity_type, {pageSize: 1000}).then(function (data) {
 
 					vm.layoutsByEntityType[vm.item.settings.entity_type] = data.results;
 					vm.layouts = data.results;
@@ -296,19 +297,20 @@
 
             console.log('vm', vm);
 
-            if (vm.item.id) {
+            /* if (vm.item.id) {
 
-                vm.getAttributes();
+				vm.getAttributes();
                 // vm.getLayouts();
-				dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
-					vm.layoutsSelectorsList = layoutsSelectorsList;
-					vm.readyStatus.layouts = true;
-					$scope.$apply();
-				});
 
-			} else {
+			} */
+
+			vm.getAttributes();
+
+			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
+				vm.layoutsSelectorsList = layoutsSelectorsList;
 				vm.readyStatus.layouts = true;
-			}
+				$scope.$apply();
+			});
 
         };
 
