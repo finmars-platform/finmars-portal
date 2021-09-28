@@ -141,7 +141,6 @@
 
 					// Prevents popup from creeping out of window
 					let popupHeight = popupElem.clientHeight;
-					const popupWidth = popupElem.clientWidth;
 
 					const windowHeight = document.body.clientHeight;
 					const windowWidth = document.body.clientWidth;
