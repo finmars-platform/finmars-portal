@@ -101,8 +101,10 @@
         vm.typeFieldLabel = 'Type';
 
         if (vm.entityType === 'instrument') {
-            vm.typeFieldName = 'instrument_type';
+
+        	vm.typeFieldName = 'instrument_type';
             vm.typeFieldLabel = 'Instrument type';
+
         } else if (vm.entityType === 'instrument-type') {
             vm.typeFieldName = 'instrument_class';
             vm.typeFieldLabel = 'Instrument class';
@@ -136,6 +138,10 @@
 
         vm.openedIn = data.openedIn;
         vm.originalFixedAreaPopupFields;
+
+		if (vm.entityType === 'instrument') {
+			vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
+		}
 
         var formLayoutFromAbove = data.editLayout;
 
@@ -439,32 +445,26 @@
 
             console.log('copy entity', entity);
 
-            $mdDialog.show({
-                controller: 'EntityViewerAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                parent: angular.element(document.body),
-                locals: {
-                    entityType: vm.entityType,
-                    entity: entity,
-                    data: {}
-                }
-            }).then(function (res) {
-
-                if (res && res.status === 'agree') {
-
-                    console.log('res', res);
-
-                }
-
-            });
-
 			if (windowType === 'big-drawer') {
 
 				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
 				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
 			} else {
+
+				$mdDialog.show({
+					controller: 'EntityViewerAddDialogController as vm',
+					templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+					parent: angular.element(document.body),
+					locals: {
+						entityType: vm.entityType,
+						entity: entity,
+						data: {}
+					}
+				});
+
 				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+
 			}
 
         };
@@ -958,7 +958,13 @@
 
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
-				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
+
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+
+				if (processResult) {
+					vm.fixedAreaPopup = processResult;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
+				}
 
             }
         	else {
@@ -992,6 +998,8 @@
                         } else {
 
                             vm.entity = {...vm.entity, ...responseData};
+                            vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
+
                             vm.entity.$_isValid = true;
                             $scope.$apply();
 
@@ -1994,7 +2002,7 @@
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
-			vm.evEditorDataService.setTabsWithErrors({"system_tab": {}, "user_tab": {}});
+			vm.evEditorDataService.setLocationsWithErrors(null);
 			vm.evEditorDataService.setFormErrorsList([]);
 
             var tooltipsOptions = {

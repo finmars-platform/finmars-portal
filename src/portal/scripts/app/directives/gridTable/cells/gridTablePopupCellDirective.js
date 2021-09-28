@@ -58,8 +58,8 @@
 
                     if (poupHtmlContentByCellType.hasOwnProperty(scope.column.cellType)) {
 						popupMain = poupHtmlContentByCellType[scope.column.cellType];
-					}
 
+                    }
                     else if (scope.column.cellType === 'customPopup') {
 
                     	if (scope.popupSettings.contentHtml.hasOwnProperty('main')) {
@@ -156,10 +156,9 @@
 						}
 
 					}
-
                 	else {
 
-						if (scope.popupModel.value) {
+						if (scope.popupModel.value || scope.popupModel.value === 0) {
 
 							popupValue = scope.popupModel.value;
 
@@ -167,6 +166,8 @@
 								popupValue = JSON.parse(angular.toJson(scope.popupModel.value));
 							}
 
+						} else if (scope.column.cellType === 'text') {
+							popupValue = '';
 						}
 
 						scope.column.settings.value = popupValue;

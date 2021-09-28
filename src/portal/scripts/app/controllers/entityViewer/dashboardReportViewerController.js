@@ -1907,6 +1907,7 @@
 
 						styles: vm.componentData.settings.styles,
                         auto_scaling: vm.componentData.settings.auto_scaling,
+						calculate_name_column_width: vm.componentData.settings.calculate_name_column_width,
                         hide_empty_lines: vm.componentData.settings.hide_empty_lines
 
                     };

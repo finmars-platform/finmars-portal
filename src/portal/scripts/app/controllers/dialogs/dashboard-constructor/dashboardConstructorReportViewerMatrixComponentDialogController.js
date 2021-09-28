@@ -47,6 +47,7 @@
                     },
                     auto_refresh: false,
                     auto_scaling: false,
+					calculate_name_column_width: false,
                     linked_components: {},
                     hide_empty_lines: '',
                     filters: {

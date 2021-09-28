@@ -4,7 +4,11 @@
 
 	module.exports = function () {
 
-		const fillSelectorOptionsBasedOnValueType = function (instrumentAttrTypes, multitypeFields) {
+		/**
+		 * @param attrTypesList {Array} - dynamic attributes
+		 * @param multitypeFields {Object} - data for multitypeFieldDirective
+		 */
+		const fillSelectorOptionsBasedOnValueType = function (attrTypesList, multitypeFields) {
 
 			Object.keys(multitypeFields).forEach(key => {
 
@@ -14,7 +18,7 @@
 				const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect'); */
 				const selectorType = fieldData.fieldTypesList.find(type => type.fieldType === 'dropdownSelect');
 
-				const formattedAttrTypes = instrumentAttrTypes
+				const formattedAttrTypes = attrTypesList
 					.filter(attrType => {
 						return attrType.value_type === fieldData.value_type && !attrType.can_recalculate;
 					})

@@ -480,26 +480,28 @@
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            $mdDialog.show({
-                controller: 'ComplexTransactionAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                parent: angular.element(document.body),
-                locals: {
-                    entityType: vm.entityType,
-                    entity: entity,
-                    data: {
-                        isCopy: true
-                    }
-                }
-            });
-
 			if (windowType === 'big_drawer') {
 
 				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true}};
 				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
 			} else {
+
+				$mdDialog.show({
+					controller: 'ComplexTransactionAddDialogController as vm',
+					templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
+					parent: angular.element(document.body),
+					locals: {
+						entityType: vm.entityType,
+						entity: entity,
+						data: {
+							isCopy: true
+						}
+					}
+				});
+
 				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+
 			}
 
             //$mdDialog.hide({status: 'disagree'});

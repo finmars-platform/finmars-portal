@@ -19,7 +19,9 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 sorted: '=',
-                onChangeCallback: '&?'
+                onChangeCallback: '&?',
+                itemName: '=',
+                itemObject: '=',
             },
             templateUrl: 'views/directives/customInputs/instrument-select-view.html',
             link: function (scope, elem, attr) {
@@ -238,6 +240,8 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
+                    console.trace();
+
                     inputContainer.classList.remove('custom-input-focused');
 
                     if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
@@ -265,11 +269,13 @@
 
                 var onTabKeyPress = function (event) {
 
-                    var pressedKey = event.key;
-
-                    if (pressedKey === "Tab") {
-                        closeDropdownMenu(true);
-                    }
+                    // TODO fix ALT + TAB closes
+                    // var pressedKey = event.key;
+                    // console.log('pressedKey', pressedKey)
+                    //
+                    // if (pressedKey === "Tab") {
+                    //     closeDropdownMenu(true);
+                    // }
 
                 }
 
@@ -291,6 +297,37 @@
                     });
 
                 };
+
+                scope.updateLocalInstrument = function (item) {
+
+                    var config = {
+                        instrument_code: item.user_code,
+                        mode: 1
+                    };
+
+                    scope.isUpdatingInstrument = true;
+
+                    importInstrumentCbondsService.download(config).then(function (data) {
+
+                        scope.isUpdatingInstrument = false;
+
+                        scope.$apply();
+
+
+                        if (data.errors.length) {
+
+                            toastNotificationService.error(data.errors[0])
+
+
+                        } else {
+
+                            toastNotificationService.success('Instrument ' + item.user_code + ' was updated')
+
+                        }
+
+                    })
+
+                }
 
                 scope.openSelectorDialog = function ($event) {
 
@@ -347,7 +384,7 @@
 
                     inputElem.addEventListener('focus', function () {
 
-                        scope.inputText = "";
+                        // scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         scope.dropdownMenuShown = true;
@@ -497,6 +534,27 @@
 
 
                     Promise.all(promises).then(function (data) {
+
+                        scope.databaseInstruments = scope.databaseInstruments.filter(function (databaseInstrument) {
+
+                            var exist = false;
+
+                            scope.localInstruments.forEach(function (localInstrument) {
+
+                                if (localInstrument.user_code === databaseInstrument.referenceId) {
+                                    exist = true
+                                }
+
+                                if (localInstrument.reference_for_pricing === databaseInstrument.referenceId) {
+                                    exist = true
+                                }
+
+
+                            })
+
+                            return !exist;
+
+                        })
 
                         scope.processing = false;
 
