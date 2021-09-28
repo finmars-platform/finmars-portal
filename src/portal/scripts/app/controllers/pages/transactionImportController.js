@@ -13,7 +13,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
     var baseUrlService = require('../../services/baseUrlService');
     // var usersService = require('../../services/usersService');
 
-    // var websocketService = require('../../services/websocketService');
+    // var websocketService = require('../../../../../shell/scripts/app/services/websocketService.js');
 
     var baseUrl = baseUrlService.resolve();
 

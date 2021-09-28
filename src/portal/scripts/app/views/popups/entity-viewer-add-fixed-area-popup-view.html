@@ -4,7 +4,8 @@
                 label="Name"
                 placeholder-text="Name"
                 model="popupData.fields.name.value"
-                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+                event-signal="popupData.fields.name.event"
+                small-options="{dialogParent: '.dialog-containers-wrap', notNull: true}"></text-input>
     </div>
 
     <div data-ng-if="popupData.fields.public_name">

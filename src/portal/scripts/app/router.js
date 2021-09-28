@@ -366,6 +366,12 @@
                 controller: 'CheckEventsController as vm'
             })
 
+            .state('app.portal.update-configuration', {
+                url: '/update-configuration',
+                templateUrl: 'views/pages/update-configuration-page-view.html',
+                controller: 'UpdateConfigurationPageController as vm'
+            })
+
             .state('app.portal.processes', {
                 url: '/processes',
                 templateUrl: 'views/pages/processes-view.html',
