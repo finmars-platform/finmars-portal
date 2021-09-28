@@ -10,11 +10,15 @@
     var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
 
     var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
+	var dashboardHelper = require('../../../helpers/dashboard.helper');
 
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService) {
+    module.exports = function ($scope, $mdDialog, item, dataService, multitypeFieldService, data) {
 
         var vm = this;
         vm.processing = false;
+		vm.readyStatus = {
+			layouts: false
+		};
 
         if (item) {
             vm.item = item;
@@ -29,6 +33,12 @@
                 }
             }
         }
+
+		vm.layoutsByEntityType = {
+			'balance-report': [],
+			'pl-report': [],
+			'transaction-report': [],
+		};
 
         vm.layouts = [];
         vm.layoutsWithLinkToFilters = [];
@@ -123,6 +133,8 @@
             {code: 100, name: 'Relation' },
         ];
 
+        var layoutsSelectorDataNotReady = true;
+
         vm.isRequiredDefaultValue = function () {
 
             if (vm.item.settings.value_type === 100) {
@@ -170,32 +182,52 @@
             vm.defaultValue.setValue = null;
             vm.defaultValue.setValueName = null;
             vm.defaultValue.setValueObject ={};
-        }
+        };
 
-        vm.onReportTypeChange = function() {
+		vm.isTransactionReportDisabled = function () {
+
+			if (!vm.currentContentType) {
+				return false;
+			}
+
+			return vm.currentContentType.key === 'currencies.currency' || vm.currentContentType.key === 'instruments.pricingpolicy';
+
+		};
+
+        /* vm.onReportTypeChange = function() {
 
             vm.defaultValue.layout = null;
             vm.defaultValue.report_field = null;
             vm.layoutsWithLinkToFilters = [];
             vm.reportFields = [];
 
-            vm.getLayoutsList();
+            vm.getLayouts();
 
-        };
+        }; */
 
-        vm.isTransactionReportDisabled = function () {
+		vm.onLayoutEntityTypeChange = async function (activeType) {
 
-            if (!vm.currentContentType) {
+			vm.defaultValue.entity_type = activeType.key;
 
-                return false;
+			vm.defaultValue.layout = null;
+			vm.defaultValue.report_field = null;
+			vm.layoutsWithLinkToFilters = [];
+			vm.reportFields = [];
 
-            }
+			if (activeType.custom.menuOptionsNotLoaded) {
 
-            return vm.currentContentType.key === 'currencies.currency' || vm.currentContentType.key === 'instruments.pricingpolicy';
+				activeType.fieldData.menuOptions = await vm.getLayouts();
+				activeType.custom.menuOptionsNotLoaded = false;
 
-        };
+				$scope.$apply();
 
-        vm.onLayoutChange = function () {
+			} else {
+				vm.layouts = vm.layoutsByEntityType[vm.defaultValue.entity_type];
+			}
+
+		};
+
+        /* vm.onLayoutChange = function () {
 
             if (!vm.defaultValue.layout) {
 
@@ -215,7 +247,27 @@
 
             $scope.$apply();
 
-        };
+        }; */
+
+		vm.onLayoutChange = function () {
+
+			var activeType = vm.layoutsSelectorsList.find(function (type) {
+				return type.isActive;
+			});
+
+			vm.defaultValue.layout = activeType.model;
+
+			if (vm.defaultValue.layout && vm.item.settings.value_type === 40) {
+
+				vm.defaultValue.report_field = null;
+
+				vm.extractReportFieldsFromLayout(vm.defaultValue.layout);
+
+				// $scope.$apply();
+
+			}
+
+		};
 
         vm.extractReportFieldsFromLayout = function (layoutUserCode) {
 
@@ -225,7 +277,7 @@
 
             });
 
-            if (!layout) { // may be layout saved as ID in old version
+            if (!layout) { // needed for old components where layout was stored as ID
                 layout = vm.layouts.find(item => item.id === layoutUserCode);
                 if (layout) {
                     vm.defaultValue.layout = layout.user_code;
@@ -234,7 +286,6 @@
             }
 
             vm.reportFields = getReportFields(vm.defaultValue.entity_type, layout);
-
 
             if (vm.defaultValue.reportOptionsKey) {
 
@@ -277,6 +328,7 @@
                     value: layout.data.reportOptions[field.key]
                 };
             });
+
         };
 
         var getItemDefaultValue = function (defaultValue) {
@@ -334,31 +386,69 @@
 
         };
 
-        vm.getLayoutsList = function () {
-            vm.processing = true;
+        vm.getLayouts = function () {
 
-            return uiService.getListLayout(vm.defaultValue.entity_type).then(function (data) {
+        	vm.processing = true;
 
-                vm.layouts = data.results;
+			/*return uiService.getListLayout(vm.defaultValue.entity_type).then(function (data) {
 
-                vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts).map(function (item){
+				vm.layouts = data.results;
 
-                    item.id = item.user_code;
+				vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts).map(function (item){
 
-                    return item
-                })
-                
-                console.log('layoutsWithLinkToFilters', vm.layoutsWithLinkToFilters);
+					item.id = item.user_code;
 
-                vm.processing = false;
-                $scope.$apply();
+					return item
+				})
 
-            }).catch(function() {
+				console.log('layoutsWithLinkToFilters', vm.layoutsWithLinkToFilters);
 
-                vm.processing = false;
-                $scope.$apply();
+				vm.processing = false;
+				$scope.$apply();
 
-            });
+			}).catch(function() {
+
+				vm.processing = false;
+				$scope.$apply();
+
+			});*/
+
+			return new Promise(function (resolve) {
+
+				uiService.getListLayout(vm.defaultValue.entity_type).then(function (data) {
+
+					vm.layoutsByEntityType[vm.defaultValue.entity_type] = data.results;
+					vm.layouts = data.results;
+
+					var layoutsForMultitypeSelector = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts).map(function (item){
+						item.id = item.user_code;
+						return item
+					});
+
+					/* vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts).map(function (item){
+
+						item.id = item.user_code;
+
+						return item
+					}); */
+
+					vm.processing = false;
+					$scope.$apply();
+
+					resolve(layoutsForMultitypeSelector);
+
+				}).catch(function(error) {
+
+					console.error(error);
+
+					vm.processing = false;
+					$scope.$apply();
+
+					resolve([]);
+
+				});
+
+			});
 
         };
 
@@ -454,6 +544,39 @@
             dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
         };
 
+        vm.onGetDefaultValueFromLayoutMode = function () {
+
+        	if (vm.defaultValue.mode === 0 && layoutsSelectorDataNotReady) {
+
+				vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
+					type.custom = {
+						menuOptionsNotLoaded: true,
+					}
+					return type;
+				});
+
+				vm.defaultValue.entity_type = vm.defaultValue.entity_type || 'balance-report';
+
+				vm.readyStatus.layouts = false;
+
+				dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.defaultValue.entity_type, vm.defaultValue.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
+
+					vm.layoutsSelectorsList = layoutsSelectorsList;
+					vm.readyStatus.layouts = true;
+					layoutsSelectorDataNotReady = false;
+
+					if (vm.defaultValue.layout) {
+						vm.extractReportFieldsFromLayout(vm.defaultValue.layout);
+					}
+
+					$scope.$apply();
+
+				});
+
+			}
+
+		};
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
@@ -533,23 +656,22 @@
                 vm.defaultValue.setValueObject = {};
             }
 
+            /* if (vm.defaultValue.mode === 0) { // user selected NOT 'Get default value'
 
-            if (vm.defaultValue.mode !== 0) { // user selected NOT 'Get default value'
+				return;
 
-                return;
-
-            }
-
-            vm.getLayoutsList().then(function () {
+            } */
+            /* vm.getLayouts().then(function () {
 
                 vm.extractReportFieldsFromLayout(vm.defaultValue.layout);
 
-            });
-
+            }) ;*/
+			vm.onGetDefaultValueFromLayoutMode();
 
         };
 
         vm.init();
+
     }
 
 }());

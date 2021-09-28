@@ -93,7 +93,7 @@
 
         vm.openedIn = data.openedIn;
 
-        var ecosystemDefaultData = {};
+        // var ecosystemDefaultData = {};
 
         vm.loadPermissions = function () {
 
@@ -1537,7 +1537,7 @@
 
         });
 
-        var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+        /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
             var relationType = '';
             switch (fieldName) {
@@ -1593,7 +1593,7 @@
             actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
             actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
 
-        };
+        }; */
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 
@@ -2070,7 +2070,7 @@
 
         };
 
-        vm.appendFromTemplate = function ($event, template) {
+        /* vm.appendFromTemplate = function ($event, template) {
 
             console.log("Append from Template", template);
 
@@ -2106,8 +2106,7 @@
                 })
 
             }
-
-            if (template.type === 'field_template') {
+            else if (template.type === 'field_template') {
 
                 Object.keys(vm.entity).forEach(function (key) {
 
@@ -2132,8 +2131,7 @@
                 })
 
             }
-
-            if (template.type === 'action_template') {
+            else if (template.type === 'action_template') {
 
                 var actionsToAdd = template.data.actions.map(function (action) {
 
@@ -2169,7 +2167,8 @@
 
             }
 
-        };
+        }; */
+		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
 
         vm.saveAsTemplate = function ($event, type) {
 
@@ -2341,9 +2340,10 @@
 
             sharedLogic.initGridTableEvents();
 
-            ecosystemDefaultService.getList().then(function (data) {
+            /* ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
-            });
+            }); */
+			sharedLogic.loadEcosystemDefaults();
 
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();
@@ -2372,7 +2372,7 @@
 
             Promise.all(allDataPromises).then(function () {
 
-                sharedLogic.initAfterMainDataLoaded();
+                sharedLogic.initAfterMainDataLoaded(); // grid table assembled here
 
                 vm.readyStatus.entity = true;
                 vm.readyStatus.inputs = true;
