@@ -205,7 +205,7 @@
                     }
 
                 }
-                else if(column.key === 'procedure_modified_datetime') {
+                else if(column.key === 'procedure_modified_datetime' || colum.key === 'created' || column.key === 'modified') {
 
                     return moment(obj[column.key]).format('YYYY-MM-DD HH:mm:ss')
 
