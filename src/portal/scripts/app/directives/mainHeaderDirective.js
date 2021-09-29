@@ -286,6 +286,12 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 					scope.$apply();
 				});
 
+				websocketService.addEventListener('master_user_change', function (data) {
+
+					scope.currentMasterUser = globalDataService.getMasterUser();
+					console.log("Header master user change")
+				})
+
 			};
 
 			init();
