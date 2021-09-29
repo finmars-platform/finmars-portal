@@ -78,7 +78,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                 })
                     .then(res => {
-                        if (res.status === 'agree') onLogInSuccess(data.token);
+                        if (res.status === 'agree') onLogInSuccess(res.token);
                     });
 
             } else {
