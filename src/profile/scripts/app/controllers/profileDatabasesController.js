@@ -15,7 +15,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $state, $mdDialog, profileAuthorizerService, broadcastChannelService, commonDialogsService) {
+    module.exports = function ($scope, $state, $mdDialog, profileAuthorizerService, broadcastChannelService, commonDialogsService, globalDataService) {
 
         var vm = this;
 
@@ -102,6 +102,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
             profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
 
                 if (data.base_api_url) {
+
+                    globalDataService.setMasterUser(item);
 
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
