@@ -190,6 +190,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 					middlewareService.masterUserChanged();
 
+					globalDataService.setMasterUser(master);
+
 					authorizerService.setCurrentMasterUser(master.id).then(function (data) {
 
 						if (data.base_api_url) {
