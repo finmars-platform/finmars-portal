@@ -52,10 +52,17 @@
             };
 
             var item_value = item[group.key];
+            var identifier_value = item[group.key];
+            var identifier_key = null;
 
             if (item_value !== null && item_value !== undefined && item_value !== '-') {
 
-                resultGroup.___group_identifier = item_value.toString();
+                if (['short_name', 'name', 'public_name'].indexOf(group.key) !== -1) {
+                    identifier_key = group.key.split('.').pop().push('user_code')
+                    identifier_value = item[identifier_key];
+                }
+
+                resultGroup.___group_identifier = identifier_value.toString();
                 resultGroup.___group_name = item_value.toString();
 
             }
