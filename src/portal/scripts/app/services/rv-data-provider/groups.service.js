@@ -31,6 +31,32 @@
         return exist;
     }
 
+    var convertNameKeyToUserCodeKey = function (key) {
+
+        var result = key
+
+        var pieces = key.split('.');
+
+        var last_key;
+        if (pieces.length > 1) {
+            last_key = pieces.pop()
+        } else {
+            last_key = pieces[0]
+        }
+
+        if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
+
+            pieces.push('user_code')
+
+            result = pieces.join('.')
+
+        }
+
+
+        return result
+
+    }
+
     /**
      * Get list of unique groups
      * @param {object[]} items - collection of items
@@ -55,24 +81,10 @@
             var identifier_value = item[group.key];
             var identifier_key = null;
 
-            if (item_value !== null && item_value !== undefined && item_value !== '-') {
+            identifier_key = convertNameKeyToUserCodeKey(group.key)
+            identifier_value = item[identifier_key];
 
-                var pieces = group.key.split('.');
-
-                var last_key;
-                if (pieces.length > 1) {
-                    last_key = pieces.pop()
-                } else {
-                    last_key = pieces[0]
-                }
-
-                if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
-
-                    pieces.push('user_code')
-
-                    identifier_key = pieces.join('.')
-                    identifier_value = item[identifier_key];
-                }
+            if (identifier_value !== null && identifier_value !== undefined && identifier_value !== '-') {
 
                 resultGroup.___group_identifier = identifier_value.toString();
                 resultGroup.___group_name = item_value.toString();
