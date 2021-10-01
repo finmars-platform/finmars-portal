@@ -250,6 +250,16 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
+
+        <div class="instrument-select-database-footer">
+
+            <span class="material-icons" data-ng-click="vm.unlock = true" data-ng-if="!vm.unlock">lock</span>
+
+            <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.addInstrument($event)">add</span>
+            <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.importBloomberg($event)">upgrade</span>
+
+        </div>
+
         <md-button class="link-button md-button md-ink-ripple" ng-click="vm.cancel()">
             Cancel
         </md-button>
