@@ -361,6 +361,32 @@
 
     };
 
+    var convertNameKeyToUserCodeKey = function (key) {
+
+        var result = key
+
+        var pieces = key.split('.');
+
+        var last_key;
+        if (pieces.length > 1) {
+            last_key = pieces.pop()
+        } else {
+            last_key = pieces[0]
+        }
+
+        if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
+
+            pieces.push('user_code')
+
+            result = pieces.join('.')
+
+        }
+
+
+        return result
+
+    }
+
     var filterByGroupsFilters = function (items, options, groupTypes) {
 
         var i;
@@ -380,9 +406,11 @@
 
                     key = options.groups_types[i].key;
 
+                    // console.log('key', key)
+
                     value = options.groups_values[i];
 
-                    match = getFilterMatch(item, key, value);
+                    match = getFilterMatch(item, convertNameKeyToUserCodeKey(key), value);
 
                     if (match === false) {
                         break;
