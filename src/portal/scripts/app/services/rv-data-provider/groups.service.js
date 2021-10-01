@@ -58,7 +58,13 @@
             if (item_value !== null && item_value !== undefined && item_value !== '-') {
 
                 if (['short_name', 'name', 'public_name'].indexOf(group.key) !== -1) {
-                    identifier_key = group.key.split('.').pop().push('user_code')
+
+                    var pieces = group.key.split('.');
+                    if (pieces.length > 1) {
+                        pieces.pop()
+                    }
+
+                    identifier_key = pieces.push('user_code')
                     identifier_value = item[identifier_key];
                 }
 
@@ -117,13 +123,13 @@
 
                 // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js
 
-/*				const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+                /*				const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
-				if (rowTypeFilters) {
+                                if (rowTypeFilters) {
 
-					items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
+                                    items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
 
-				}*/
+                                }*/
 
                 var group = options.groups_types[options.groups_types.length - 1];
 
@@ -147,11 +153,11 @@
 
                 }
 
-/*                if (options.groups_order === 'desc') {
-                    groups = sortService.sortItems(groups, '-___group_name');
-                } else {
-                    groups = sortService.sortItems(groups, '___group_name');
-                }*/
+                /*                if (options.groups_order === 'desc') {
+                                    groups = sortService.sortItems(groups, '-___group_name');
+                                } else {
+                                    groups = sortService.sortItems(groups, '___group_name');
+                                }*/
 
                 result.count = groups.length;
                 result.results = groups;
