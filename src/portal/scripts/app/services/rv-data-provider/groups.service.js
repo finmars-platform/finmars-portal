@@ -57,14 +57,20 @@
 
             if (item_value !== null && item_value !== undefined && item_value !== '-') {
 
-                if (['short_name', 'name', 'public_name'].indexOf(group.key) !== -1) {
+                var pieces = group.key.split('.');
 
-                    var pieces = group.key.split('.');
-                    if (pieces.length > 1) {
-                        pieces.pop()
-                    }
+                var last_key;
+                if (pieces.length > 1) {
+                    last_key = pieces.pop()
+                } else {
+                    last_key = pieces[0]
+                }
 
-                    identifier_key = pieces.push('user_code')
+                if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
+
+                    pieces.push('user_code')
+
+                    identifier_key = pieces.join('.')
                     identifier_value = item[identifier_key];
                 }
 
