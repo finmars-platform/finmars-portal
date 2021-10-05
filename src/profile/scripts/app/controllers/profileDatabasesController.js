@@ -154,37 +154,41 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             profileAuthorizerService.exportToBackup(item.id).then(function (data) {
 
-                if (data.status !== 200) {
-                    throw Error("Something went wrong")
-                }
 
-                return data.blob()
+                toastNotificationService.info(data.message)
 
-            }).then(function (blob) {
+                // if (data.status !== 200) {
+                //     throw Error("Something went wrong")
+                // }
+                //
+                // return data.blob()
 
-                console.log('blob ', blob);
-
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                // the filename you want
-
-                var name = item.name.split(' ').join('_');
-                var date = new Date().toISOString().split('T')[0];
-                date = date.split('-').join('_');
-
-                a.download = name + '_' + date + '_backup.sql';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                a.parentNode.removeChild(a);
-
-            }).catch(function (data) {
-                console.log("data?", data);
-
-                toastNotificationService.error("Something went wrong. Please, try again later")
-            });
+            })
+            // }).then(function (blob) {
+            //
+            //     console.log('blob ', blob);
+            //
+            //     const url = window.URL.createObjectURL(blob);
+            //     const a = document.createElement('a');
+            //     a.style.display = 'none';
+            //     a.href = url;
+            //     // the filename you want
+            //
+            //     var name = item.name.split(' ').join('_');
+            //     var date = new Date().toISOString().split('T')[0];
+            //     date = date.split('-').join('_');
+            //
+            //     a.download = name + '_' + date + '_backup.sql';
+            //     document.body.appendChild(a);
+            //     a.click();
+            //     window.URL.revokeObjectURL(url);
+            //     a.parentNode.removeChild(a);
+            //
+            // }).catch(function (data) {
+            //     console.log("data?", data);
+            //
+            //     toastNotificationService.error("Something went wrong. Please, try again later")
+            // });
 
         };
 
