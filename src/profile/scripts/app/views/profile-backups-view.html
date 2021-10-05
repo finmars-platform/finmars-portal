@@ -1,0 +1,66 @@
+<div>
+
+    <div data-ng-if="vm.readyStatus.data">
+
+        <div style="max-width: 960px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">
+
+            <div class="overflow-hidden max-width" layout="column" data-ng-if="vm.items.length">
+
+                <div class="m-t-8 m-b-8">
+
+                    <md-input-container class="md-block">
+                        <label>Filter</label>
+                        <input data-ng-model="vm.query">
+                    </md-input-container>
+
+                </div>
+
+                <md-card data-ng-repeat="item in vm.items | filter: {name: vm.query}" class="mm-card">
+                    <md-card-title>
+                        <md-card-title-text>
+                            <div class="md-headline m-b-8">{{item.name}}</div>
+
+                            <div class="m-b-8 mm-description">
+                                {{item.description}}
+                            </div>
+
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-actions layout="row" layout-align="space-between center">
+
+                        <md-button class="md-raised md-warn"
+                                   data-ng-click="vm.deleteBackup($event, item)">Delete
+                        </md-button>
+
+                        <a href="{{item.file_url}}" class="download-backup-link">Download</a>
+
+
+                        <md-button class="md-raised"
+                                   data-ng-click="vm.renameBackup($event, item)">Rename
+                        </md-button>
+
+                        <md-button class="md-raised md-primary" data-ng-click="vm.activateBackup($event, item)">Restore
+                        </md-button>
+                    </md-card-actions>
+
+                </md-card>
+
+            </div>
+
+            <div data-ng-if="!vm.items.length">
+
+                <h4 class="text-center m-8">No backups found</h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data" class="dialog-loader m-t-16">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular data-diameter="100"></progress-circular>
+        </div>
+    </div>
+
+</div>
