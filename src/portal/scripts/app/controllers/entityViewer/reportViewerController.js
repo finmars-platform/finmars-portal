@@ -45,7 +45,7 @@
 
             // Functions for context menu
 
-			/* var updateTableAfterEntityChanges = function (res) {
+			var updateTableAfterEntityChanges = function (res) {
 
 				vm.entityViewerDataService.setRowsActionData(null);
 
@@ -64,7 +64,7 @@
 
 			};
 
-			var getContextData = function (reportOptions, activeObject) {
+			/*var getContextData = function (reportOptions, activeObject) {
 
 				var report_date = null;
 				var report_start_date = null;
@@ -228,8 +228,8 @@
 
 				return contextData;
 			};
-
-			var editEntity = function (event, locals) {
+*/
+			/*var editEntity = function (event, locals) {
 
 				var dialogController = 'EntityViewerEditDialogController as vm';
 				var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
@@ -283,7 +283,7 @@
 				}).then(function (res) {
 					if (res.status === 'agree') {
 
-						/!* $mdDialog.show({
+						$mdDialog.show({
 							controller: 'EntityViewerAddDialogController as vm',
 							templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
 							parent: angular.element(document.body),
@@ -319,15 +319,17 @@
 
 								vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 							}
-						}); *!/
+						});
 
 						createEntity(event, createEntityLocals);
 
 					}
 				});
 
-			}; */
-			var createEntity = function (event, locals) {
+			};
+*/
+
+			/*var createEntity = function (event, locals) {
 
 				var dialogController = 'EntityViewerAddDialogController as vm';
 				var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-add-dialog-view.html';
@@ -356,7 +358,7 @@
 				});
 
 			};
-
+*/
             // < Functions for context menu >
 
             vm.setEventListeners = function () {
@@ -393,105 +395,7 @@
 
 				vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
 
-                vm.entityViewerEventService.addEventListener(evEvents.USER_REQUEST_AN_ACTION, function (){
-
-                    var action = vm.entityViewerDataService.getUserRequestedAction();
-
-                    if (action === 'add_portfolio') {
-
-                        var locals = {
-                            entityType: 'portfolio',
-                            entity: {},
-                            data: {}
-                        };
-
-                        createEntity({}, locals);
-
-                    }
-
-                    else if (action === 'add_instrument') {
-
-                        var locals = {
-                            entityType: 'instrument',
-                            entity: {},
-                            data: {}
-                        };
-
-                        createEntity({}, locals);
-
-                    }
-
-					else if (action === 'add_account') {
-
-                        var locals = {
-                            entityType: 'account',
-                            entity: {},
-                            data: {}
-                        };
-
-                        createEntity({}, locals);
-
-                    }
-
-					else if (action === 'add_currency') {
-
-                        var locals = {
-                            entityType: 'currency',
-                            entity: {},
-                            data: {}
-                        };
-
-                        createEntity({}, locals);
-
-                    }
-
-
-					else if (action === 'add_price') {
-
-                        var locals = {
-                            entityType: 'price-history',
-                            entity: {},
-                            data: {}
-                        };
-
-                        createEntity({}, locals);
-
-                    }
-
-					else if (action === 'add_fx_rate') {
-
-                        var locals = {
-                            entityType: 'currency-history',
-                            entity: {},
-                            data: {}
-                        };
-
-                        createEntity({}, locals);
-
-                    }
-
-                    /* if (action === 'book_transaction') {
-
-                        var locals = {
-                            entityType: 'complex-transaction',
-                            entity: {},
-                            data: {}
-                        };
-
-                        if (vm.entityType === 'transaction-report') {
-
-                            var contextData = getContextData(reportOptions, activeObject);
-                            locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
-                            locals.data.contextData = contextData;
-
-                        }
-
-                        createEntity({}, locals);
-
-                    } */
-
-
-                })
+                vm.entityViewerEventService.addEventListener(evEvents.USER_REQUEST_AN_ACTION, sharedLogicHelper.executeUserRequestedAction)
 
 
             };

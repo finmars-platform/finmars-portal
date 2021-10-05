@@ -881,11 +881,13 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 					if (viewModel.entityType === 'transaction-report') {
 
-						const contextData = getContextDataForRowAction(reportOptions, actionData.object);
 						locals.entity.transaction_type = actionData.object['complex_transaction.transaction_type.id'];
-						locals.data.contextData = contextData;
 
 					}
+
+					const contextData = getContextDataForRowAction(reportOptions, actionData.object);
+					locals.data.contextData = contextData;
+
 
 					createEntity(actionData.event, locals);
 
@@ -926,6 +928,98 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 		};
 
+		const executeUserRequestedAction = function (){
+
+			var action = viewModel.entityViewerDataService.getUserRequestedAction();
+
+			console.log('USER_REQUEST_AN_ACTION action', action)
+
+			if (action === 'add_portfolio') {
+
+				var locals = {
+					entityType: 'portfolio',
+					entity: {},
+					data: {}
+				};
+
+				createEntity({}, locals);
+
+			}
+
+			else if (action === 'add_instrument') {
+
+				var locals = {
+					entityType: 'instrument',
+					entity: {},
+					data: {}
+				};
+
+				createEntity({}, locals);
+
+			}
+
+			else if (action === 'add_account') {
+
+				var locals = {
+					entityType: 'account',
+					entity: {},
+					data: {}
+				};
+
+				createEntity({}, locals);
+
+			}
+
+			else if (action === 'add_currency') {
+
+				var locals = {
+					entityType: 'currency',
+					entity: {},
+					data: {}
+				};
+
+				createEntity({}, locals);
+
+			}
+
+
+			else if (action === 'add_price') {
+
+				var locals = {
+					entityType: 'price-history',
+					entity: {},
+					data: {}
+				};
+
+				createEntity({}, locals);
+
+			}
+
+			else if (action === 'add_fx_rate') {
+
+				var locals = {
+					entityType: 'currency-history',
+					entity: {},
+					data: {}
+				};
+
+				createEntity({}, locals);
+
+			}
+
+			if (action === 'book_transaction') {
+
+				var locals = {
+					entityType: 'complex-transaction',
+					entity: {},
+					data: {}
+				};
+
+				createEntity({}, locals);
+
+			}
+		}
+
         return {
 			setLayoutDataForView: setLayoutDataForView,
 			downloadAttributes: downloadAttributes,
@@ -934,6 +1028,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 			updateTableAfterEntityChanges: updateTableAfterEntityChanges,
 			executeRowAction: executeRowAction,
+			executeUserRequestedAction: executeUserRequestedAction
         }
 
     }
