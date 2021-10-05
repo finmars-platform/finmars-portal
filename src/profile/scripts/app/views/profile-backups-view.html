@@ -8,14 +8,14 @@
 
                 <div class="m-t-8 m-b-8">
 
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block p-t-16">
                         <label>Filter</label>
-                        <input data-ng-model="vm.query">
+                        <input data-ng-model="vm.query" autocomplete="off">
                     </md-input-container>
 
                 </div>
 
-                <md-card data-ng-repeat="item in vm.items | filter: {name: vm.query}" class="mm-card">
+                <md-card data-ng-repeat="item in vm.items | filter: {name: vm.query}" class="mm-card" style="width: 100%">
                     <md-card-title>
                         <md-card-title-text>
                             <div class="md-headline m-b-8">{{item.name}}</div>
