@@ -85,7 +85,7 @@
 		const authorizerUrl = baseUrlService.getAuthorizerUrl();
 
 		return window.fetch(authorizerUrl + '/master-user-backups/' + id + '/restore-from-backup/', {
-			method: 'POST',
+			method: 'PUT',
 			credentials: 'include',
 			headers: {
 				'X-CSRFToken': cookieService.getCookie('csrftoken'),
