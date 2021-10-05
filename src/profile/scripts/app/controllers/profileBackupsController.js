@@ -22,12 +22,28 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
         vm.readyStatus = {data: false};
 
+        vm.getFileUrl = function (id) {
+
+            const authorizerUrl = baseUrlService.getAuthorizerUrl();
+
+            return authorizerUrl + '/master-user-backups/' + id + '/view/';
+
+        };
+
         vm.getBackupsList = function () {
 
             vm.readyStatus.masterUsers = false;
 
             masterUserBackupsService.getMasterUserBackupsList().then(function (data) {
                 vm.items = data.results;
+
+                vm.items = vm.items.map(function (item){
+
+                    item.download_url = vm.getFileUrl(item.id)
+
+                    return item;
+                })
+
                 vm.readyStatus.data = true;
                 $scope.$apply();
             });
