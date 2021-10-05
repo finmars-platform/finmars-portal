@@ -76,8 +76,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
             console.log("Create Database");
 
             $mdDialog.show({
-                controller: 'CreateMasterUserFromDumpDialogController as vm',
-                templateUrl: 'views/dialogs/create-master-user-from-dump-dialog-view.html',
+                controller: 'RestoreMasterUserFromBackupDialogController as vm',
+                templateUrl: 'views/dialogs/restore-master-user-from-backup-dialog-view.html',
                 parent: angular.element(document.body),
                 locals: {
                     data: {
