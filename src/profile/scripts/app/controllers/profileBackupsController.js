@@ -37,9 +37,10 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
             masterUserBackupsService.getMasterUserBackupsList().then(function (data) {
                 vm.items = data.results;
 
-                vm.items = vm.items.map(function (item){
+                vm.items = vm.items.map(function (item) {
 
                     item.download_url = vm.getFileUrl(item.id)
+                    item.file_size_mb = item.file_size / 1024 / 1024
 
                     return item;
                 })
@@ -88,6 +89,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
             }).then(function (res) {
 
                 if (res.status === 'agree') {
+
+                    toastNotificationService.success(res.data.message)
                     vm.getBackupsList();
                 }
 
