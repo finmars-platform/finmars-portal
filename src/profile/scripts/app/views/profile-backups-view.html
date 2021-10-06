@@ -6,22 +6,26 @@
 
             <div class="overflow-hidden max-width" layout="column" data-ng-if="vm.items.length">
 
-                <div class="m-t-8 m-b-8">
+                <div class="m-t-16 m-b-8">
 
-                    <md-input-container class="md-block p-t-16">
+                    <md-input-container class="md-block p-t-16" style="width: 90%">
                         <label>Filter</label>
-                        <input data-ng-model="vm.query" autocomplete="off">
+                        <textarea  data-ng-model="vm.query" resize="none"></textarea>
                     </md-input-container>
 
                 </div>
 
-                <md-card data-ng-repeat="item in vm.items | filter: {name: vm.query}" class="mm-card" style="width: 100%">
+                <md-card data-ng-repeat="item in vm.items | filter: {name: vm.query}" class="mm-card p-8" style="width: 100%">
                     <md-card-title>
                         <md-card-title-text>
                             <div class="md-headline m-b-8">{{item.name}}</div>
 
                             <div class="m-b-8 mm-description">
                                 {{item.description}}
+                            </div>
+
+                            <div>
+                                File size: <b>{{item.file_size_mb}}</b> MB
                             </div>
 
                         </md-card-title-text>

@@ -29,7 +29,7 @@
 
                 console.log('data success', data);
 
-                $mdDialog.hide({status: 'agree'});
+                $mdDialog.hide({status: 'agree', data: data});
 
             }).catch(function (reason) {
 
