@@ -253,6 +253,10 @@
                         return 'Pending'
                     }
 
+                    if (obj[column.key] === 3) {
+                        return 'Ignored'
+                    }
+
                 }
 
                 return obj[column.key]
