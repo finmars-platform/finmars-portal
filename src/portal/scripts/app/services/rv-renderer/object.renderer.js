@@ -107,7 +107,24 @@
 
                     result.raw_text_result = obj[column.key + '_object'].name;
 
-                } else {
+                } else if (column.key === 'complex_transaction.status') {
+
+                        if (obj[column.key] === 1) {
+                            result.html_result =  'Booked'
+                            result.raw_text_result =  'Booked'
+                        }
+
+                        if (obj[column.key] === 2) {
+                            result.html_result =  'Pending'
+                            result.raw_text_result =  'Pending'
+                        }
+
+                        if (obj[column.key] === 3) {
+                            result.html_result =  'Ignored'
+                            result.raw_text_result =  'Ignored'
+                        }
+
+                }else {
 
                     result.html_result = renderHelper.formatValue(obj, column);
                     result.numeric_result = obj[column.key];
