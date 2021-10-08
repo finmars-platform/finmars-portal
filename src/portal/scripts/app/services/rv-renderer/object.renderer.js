@@ -124,6 +124,70 @@
                             result.raw_text_result =  'Ignored'
                         }
 
+                } else if (column.key === 'transaction_class') {
+
+                    // BUY = 1
+                    // SELL = 2
+                    // FX_TRADE = 3
+                    // INSTRUMENT_PL = 4
+                    // TRANSACTION_PL = 5
+                    // TRANSFER = 6
+                    // FX_TRANSFER = 7
+                    // CASH_INFLOW = 8
+                    // CASH_OUTFLOW = 9
+                    //
+                    // DEFAULT = 10
+
+                    if (obj[column.key] === 1) {
+                        result.html_result =  'Buy'
+                        result.raw_text_result =  'Buy'
+                    }
+
+                    if (obj[column.key] === 2) {
+                        result.html_result =  'Sell'
+                        result.raw_text_result =  'Sell'
+                    }
+
+                    if (obj[column.key] === 3) {
+                        result.html_result =  'FX Trade'
+                        result.raw_text_result =  'Fx Trade'
+                    }
+
+                    if (obj[column.key] === 4) {
+                        result.html_result =  'Instrument PL'
+                        result.raw_text_result =  'Instrument PL'
+                    }
+
+                    if (obj[column.key] === 5) {
+                        result.html_result =  'Transaction PL'
+                        result.raw_text_result =  'Transaction PL'
+                    }
+
+                    if (obj[column.key] === 6) {
+                        result.html_result =  'Transfer'
+                        result.raw_text_result =  'Transfer'
+                    }
+
+                    if (obj[column.key] === 7) {
+                        result.html_result =  'FX Transfer'
+                        result.raw_text_result =  'FX Transfer'
+                    }
+
+                    if (obj[column.key] === 8) {
+                        result.html_result =  'Cash Inflow'
+                        result.raw_text_result =  'Cash Inflow'
+                    }
+
+                    if (obj[column.key] === 9) {
+                        result.html_result =  'Cash Outflow'
+                        result.raw_text_result =  'Cash Outflow'
+                    }
+
+                    if (obj[column.key] === 10) {
+                        result.html_result =  'Default'
+                        result.raw_text_result =  'Default'
+                    }
+
                 }else {
 
                     result.html_result = renderHelper.formatValue(obj, column);
