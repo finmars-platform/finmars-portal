@@ -15,10 +15,7 @@
             {
                 "key": "transaction_class",
                 "name": "Transaction class",
-                "value_content_type": "transactions.transactionclass",
-                "value_entity": "transaction_class",
-                "code": "user_code",
-                "value_type": "field"
+                "value_type": 20 // Its actually a relation
             },
             {
                 "key": "position_size_with_sign",
