@@ -188,6 +188,11 @@
                         result.raw_text_result =  'Default'
                     }
 
+                    if (obj[column.key] === 11) {
+                        result.html_result =  'Placeholder'
+                        result.raw_text_result =  'Placeholder'
+                    }
+
                 }else {
 
                     result.html_result = renderHelper.formatValue(obj, column);
