@@ -13,7 +13,7 @@
 
         <div>
 
-            <div>
+            <div layout="row">
 
                 <div style="width: 383px; padding-left: 20px;">
                     <text-input
@@ -21,6 +21,20 @@
                             placeholder-text="Search"
                             model="vm.inputText"
                             class="m-r-8"></text-input>
+                </div>
+
+                <div class="m-l-8">
+
+                    <dropdown-select class="p-r-8"
+                                     model="vm.instrument_type"
+                                     placeholder-text="Instrument Type"
+                                     menu-options="vm.instrumentTypeOptions"
+                                     small-options="{tooltipText: 'Instrument Type'}"
+                                     class="custom-input-bottom-space"
+                                     on-change-callback="vm.onInputTextChange()"
+                                     style="width: 50%">
+                    </dropdown-select>
+
                 </div>
 
             </div>
@@ -32,7 +46,7 @@
                 </div>
 
                 <div style="width: 30%; padding: 5px;">
-                    ISIN
+                    ISIN / Code
                 </div>
 
                 <div style="width: 20%; padding: 5px;">
