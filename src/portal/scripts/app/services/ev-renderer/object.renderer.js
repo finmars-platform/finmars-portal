@@ -455,7 +455,7 @@
 
         result = result + rowSelection + rowSettings;
 
-        console.log('render.columns', columns);
+        // console.log('render.columns', columns);
 
         columns.forEach(function (column, columnIndex) {
 

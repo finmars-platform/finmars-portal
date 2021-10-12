@@ -8,8 +8,8 @@
     var metaHelper = require('../../helpers/meta.helper');
     var evEvents = require('../../services/entityViewerEvents');
 
-	var EvRvDomManagerService = require('../evRvDomManagerService');
-	var evRvDomManagerService = new EvRvDomManagerService();
+    var EvRvDomManagerService = require('../evRvDomManagerService');
+    var evRvDomManagerService = new EvRvDomManagerService();
 
     var metaService = require('../../services/metaService');
 
@@ -202,8 +202,7 @@
 
             }
 
-        }
-        else {
+        } else {
 
             var list = evDataService.getFlatList();
 
@@ -280,25 +279,25 @@
 
     };
 
-	var areAllRowsActive = function (evDataService) {
+    var areAllRowsActive = function (evDataService) {
 
-		var selGroups = evDataService.getSelectedGroups();
-		var allItemsCount = 0;
+        var selGroups = evDataService.getSelectedGroups();
+        var allItemsCount = 0;
 
-		selGroups.forEach(function (group) {
-			allItemsCount += group.___items_count;
-		});
+        selGroups.forEach(function (group) {
+            allItemsCount += group.___items_count;
+        });
 
-		var flatList = evDataService.getFlatList();
-		var loadedObjects = flatList.length - 1; // -1 because of control at the end
+        var flatList = evDataService.getFlatList();
+        var loadedObjects = flatList.length - 1; // -1 because of control at the end
 
-		if (loadedObjects !== allItemsCount) return false;
+        if (loadedObjects !== allItemsCount) return false;
 
-		var inactiveRowDoesNotExist = !!!flatList.find(item => item.___type === "object" && !item.___is_activated);
+        var inactiveRowDoesNotExist = !!!flatList.find(item => item.___type === "object" && !item.___is_activated);
 
-		return inactiveRowDoesNotExist;
+        return inactiveRowDoesNotExist;
 
-	};
+    };
 
     /* var handleGroupClick = function (clickData, evDataService, evEventService) {
 
@@ -423,11 +422,9 @@
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        }
-        else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
+        } else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
             handleShiftSelection(evDataService, evEventService, clickData);
-        }
-        else if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
+        } else if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
 
             evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
@@ -455,10 +452,10 @@
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
         }
 
-		var allRowsAreActive = areAllRowsActive(evDataService);
-		evDataService.setSelectAllRowsState(allRowsAreActive);
+        var allRowsAreActive = areAllRowsActive(evDataService);
+        evDataService.setSelectAllRowsState(allRowsAreActive);
 
-		evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
+        evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
     };
 
@@ -508,11 +505,58 @@
 
         var selectedGroups = evDataService.getSelectedGroups();
 
-        selectedGroups.forEach(function (selectedGroup) {
+        if (selectedGroups && selectedGroups.length) {
+            selectedGroups.forEach(function (selectedGroup) {
 
-            console.log('selectedGroup', selectedGroup);
+                console.log('selectedGroup', selectedGroup);
 
-            var groupHashId = selectedGroup.___id;
+                var groupHashId = selectedGroup.___id;
+
+
+                var requestParameters = evDataService.getRequestParameters(groupHashId);
+
+
+                var total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
+
+                if (requestParameters.body.page < total_pages) {
+
+                    if (!requestParameters.body.page) {
+                        requestParameters.body.page = 1;
+                        requestParameters.requestedPages = [1]
+                    }
+
+                    var isLoadMoreButtonPressed = clickData.target.classList.contains('load-more');
+                    var isLoadAllButtonPressed = clickData.target.classList.contains('load-all');
+
+                    if (isLoadMoreButtonPressed) {
+
+                        requestParameters.body.page = requestParameters.body.page + 1;
+                        requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                        requestParameters.requestedPages.push(requestParameters.body.page);
+
+                        evDataService.setRequestParameters(requestParameters);
+                        evDataService.setActiveRequestParametersId(requestParameters.id);
+
+                    }
+
+                    if (isLoadAllButtonPressed) {
+
+                        requestParameters.loadAll = true;
+
+                        requestParameters.body.page = requestParameters.body.page + 1;
+                        requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                        requestParameters.requestedPages.push(requestParameters.body.page);
+
+                        evDataService.setRequestParameters(requestParameters);
+
+                    }
+
+                }
+
+            })
+        } else {
+
+            var groupHashId = clickData.___parentId;
 
 
             var requestParameters = evDataService.getRequestParameters(groupHashId);
@@ -555,8 +599,7 @@
 
             }
 
-        })
-
+        }
         evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
     };
@@ -599,9 +642,9 @@
             }
 
             if (clickData.target.classList.contains('gTableActionBtn')) {
-				// clickData.actionElem = clickedActionBtn;
-				clickData.actionType = clickData.target.dataset.clickActionType;
-			}
+                // clickData.actionElem = clickedActionBtn;
+                clickData.actionType = clickData.target.dataset.clickActionType;
+            }
 
         }
 
@@ -627,8 +670,7 @@
 
                 metaHelper.openLinkInNewTab(event);
 
-            }
-            else if (event.detail === 2) { // double click handler
+            } else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -641,20 +683,19 @@
 
                     evDataService.setActiveObject(obj);
                     // evDataService.setActiveObjectAction(dropdownAction);
-					evDataService.setRowsActionData({actionKey: 'edit', object: obj});
+                    evDataService.setRowsActionData({actionKey: 'edit', object: obj});
 
                     evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-					evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
+                    evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
 
-					var allRowsAreActive = areAllRowsActive(evDataService);
-					evDataService.setSelectAllRowsState(allRowsAreActive);
+                    var allRowsAreActive = areAllRowsActive(evDataService);
+                    evDataService.setSelectAllRowsState(allRowsAreActive);
 
-					evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
+                    evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
                 }
 
-            }
-            else if (clickData.isShiftPressed) {
+            } else if (clickData.isShiftPressed) {
 
                 if (event.detail === 1) {
 
@@ -674,52 +715,49 @@
 
                 }
 
-            }
-            else if (!selection.length) {
+            } else if (!selection.length) {
 
                 if (event.detail === 1) {
 
                     /*if (clickData.___type === 'group') {
                         handleGroupClick(clickData, evDataService, evEventService);
                     } else*/
-					if (clickData.actionType) {
+                    if (clickData.actionType) {
 
-						switch (clickData.actionType) {
+                        switch (clickData.actionType) {
 
-							case 'open_row_color_picker':
+                            case 'open_row_color_picker':
 
-								event.stopPropagation();
-								evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns);
+                                event.stopPropagation();
+                                evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns);
 
-								break;
+                                break;
 
-							case 'open_context_menu':
+                            case 'open_context_menu':
 
-								const gRowElem = event.target.closest('.g-row');
+                                const gRowElem = event.target.closest('.g-row');
 
-								if (gRowElem) {
+                                if (gRowElem) {
 
-									const objectId = clickData.___id;
-									const parentGroupHashId = clickData.___parentId;
-									const contextMenuPosition = {positionX: event.pageX, positionY: event.pageY};
+                                    const objectId = clickData.___id;
+                                    const parentGroupHashId = clickData.___parentId;
+                                    const contextMenuPosition = {positionX: event.pageX, positionY: event.pageY};
 
-									event.stopPropagation();
+                                    event.stopPropagation();
 
-									createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                                    createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
 
-								}
+                                }
 
-								break;
+                                break;
 
-						}
+                        }
 
-					}
-					else if (clickData.___type === 'control') {
+                    } else if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
-					}
-					else if (clickData.___type === 'object') {
+                    } else if (clickData.___type === 'object') {
                         handleObjectClick(clickData, evDataService, evEventService);
-					}
+                    }
 
                 }
 
@@ -751,48 +789,48 @@
 
     };
 
-	/*  var popupsToClear = [];
+    /*  var popupsToClear = [];
 
-	var clearDropdowns = function () {
+    var clearDropdowns = function () {
 
-		var dropdowns = document.querySelectorAll('.ev-dropdown');
+        var dropdowns = document.querySelectorAll('.ev-dropdown');
 
-		dropdowns.forEach(dropdown => {
-			// remove popup after animation
-			if (!popupsToClear.includes(dropdown.id)) {
+        dropdowns.forEach(dropdown => {
+            // remove popup after animation
+            if (!popupsToClear.includes(dropdown.id)) {
 
-				dropdown.classList.add("fade-out");
+                dropdown.classList.add("fade-out");
 
-				popupsToClear.push(dropdown.id);
-				var dropdownIndex = popupsToClear.length - 1;
+                popupsToClear.push(dropdown.id);
+                var dropdownIndex = popupsToClear.length - 1;
 
-				setTimeout(function () {
+                setTimeout(function () {
 
-					dropdown.parentElement.removeChild(dropdown);
-					popupsToClear.splice(dropdownIndex, 1);
+                    dropdown.parentElement.removeChild(dropdown);
+                    popupsToClear.splice(dropdownIndex, 1);
 
-				}, 200); // duration of animation
+                }, 200); // duration of animation
 
-			}
+            }
 
-		});
+        });
 
-		//<editor-fold desc="Remove dropdown related listeners">
-		for (const prop in eventListenerFn2Args) {
-			eventListenerFn2Args[prop] = null;
-		}
-		window.removeEventListener('click', executeContextMenuAction);
+        //<editor-fold desc="Remove dropdown related listeners">
+        for (const prop in eventListenerFn2Args) {
+            eventListenerFn2Args[prop] = null;
+        }
+        window.removeEventListener('click', executeContextMenuAction);
 
-		clearDropdownsAndRowsArgs.evDataService = null;
-		clearDropdownsAndRowsArgs.evEventService = null;
-		window.removeEventListener('contextmenu', callClearDropdownsAndRows);
-		//</editor-fold>
+        clearDropdownsAndRowsArgs.evDataService = null;
+        clearDropdownsAndRowsArgs.evEventService = null;
+        window.removeEventListener('contextmenu', callClearDropdownsAndRows);
+        //</editor-fold>
 
 
-	}; */
-	var clearDropdowns = function () {
-		[eventListenerFn2Args, clearDropdownsAndRowsArgs] = evRvDomManagerService.clearDropdowns(eventListenerFn2Args, clearDropdownsAndRowsArgs, executeContextMenuAction, callClearDropdownsAndRows);
-	};
+    }; */
+    var clearDropdowns = function () {
+        [eventListenerFn2Args, clearDropdownsAndRowsArgs] = evRvDomManagerService.clearDropdowns(eventListenerFn2Args, clearDropdownsAndRowsArgs, executeContextMenuAction, callClearDropdownsAndRows);
+    };
 
     var clearDropdownsAndRows = function (evDataService, evEventService, redrawTable) {
 
@@ -838,29 +876,28 @@
 
         if (dropdownAction === 'mark_row') {
 
-        	var color = event.target.dataset.evDropdownActionDataColor;
+            var color = event.target.dataset.evDropdownActionDataColor;
 
-			if (objectId && color && parentGroupHashId) {
-				evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
-			}
+            if (objectId && color && parentGroupHashId) {
+                evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+            }
 
-			clearDropdownsAndRows(evDataService, evEventService, true);
+            clearDropdownsAndRows(evDataService, evEventService, true);
 
-		}
-        else if (dropdownAction === 'toggle_row') {
+        } else if (dropdownAction === 'toggle_row') {
 
             var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
-			var activeObjChanged = false;
+            var activeObjChanged = false;
 
             if (obj.___is_activated) {
 
-            	if (obj.___is_active_object) {
+                if (obj.___is_active_object) {
 
-            		evDataService.setActiveObjectRow(null);
-					evDataService.setActiveObject(null);
-					activeObjChanged = true;
+                    evDataService.setActiveObjectRow(null);
+                    evDataService.setActiveObject(null);
+                    activeObjChanged = true;
 
-				}
+                }
 
                 obj.___is_activated = false;
                 obj.___is_active_object = false;
@@ -883,41 +920,40 @@
 
             clearDropdownsAndRows(evDataService, evEventService, true);
 
-			if (activeObjChanged) evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+            if (activeObjChanged) evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
-			var allRowsAreActive = areAllRowsActive(evDataService);
-			evDataService.setSelectAllRowsState(allRowsAreActive);
+            var allRowsAreActive = areAllRowsActive(evDataService);
+            evDataService.setSelectAllRowsState(allRowsAreActive);
 
-			evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
+            evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
-        }
-        else {
+        } else {
 
             if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
                 dropdownActionData.id = event.target.dataset.evDropdownActionDataId
             }
 
             if (objectId && dropdownAction && parentGroupHashId) {
-				dropdownActionData.actionKey = dropdownAction;
+                dropdownActionData.actionKey = dropdownAction;
                 /* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
                 if (!obj) {
                     obj = {}
                 } */
-				dropdownActionData.object = evDataHelper.getObject(objectId, parentGroupHashId, evDataService) || {};
+                dropdownActionData.object = evDataHelper.getObject(objectId, parentGroupHashId, evDataService) || {};
 
                 // obj.event = event;
-				dropdownActionData.event = event;
+                dropdownActionData.event = event;
 
                 console.log('dropdownActionData', dropdownActionData);
 
                 // evDataService.setActiveObject(obj);
                 /* evDataService.setActiveObjectAction(dropdownAction);
                 evDataService.setActiveObjectActionData(dropdownActionData); */
-				evDataService.setRowsActionData(dropdownActionData);
+                evDataService.setRowsActionData(dropdownActionData);
 
                 // evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-				evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
+                evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
 
                 clearDropdownsAndRows(evDataService, evEventService, true);
 
@@ -1292,7 +1328,7 @@
         evScrollManager.setContentElem(elements.contentElem); // .ev-content
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
         evScrollManager.setRootWrapElem(elements.rootWrapElem);
-		evScrollManager.setLeftPanelElem(elements.leftPanelElem);
+        evScrollManager.setLeftPanelElem(elements.leftPanelElem);
 
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
@@ -1313,25 +1349,25 @@
         //     viewportWidth = contentWrapElemWidth;
         // }
 
-        console.log("Calculate scroll", interfaceLayout.evLeftPanel.width);
+        // console.log("Calculate scroll", interfaceLayout.evLeftPanel.width);
 
         viewportWidth = contentWrapElemWidth;
 
         viewportWidth = viewportWidth - interfaceLayout.evLeftPanel.width;
 
         // viewportTop = interfaceLayout.progressBar.height;
-		viewportTop = 0;
+        viewportTop = 0;
 
-		if (components.topPart) {
-			viewportTop = viewportTop + interfaceLayout.topPart.height
-		}
+        if (components.topPart) {
+            viewportTop = viewportTop + interfaceLayout.topPart.height
+        }
 
-		if (components.filterArea) {
-			viewportTop = viewportTop + interfaceLayout.filterArea.height
-		}
+        if (components.filterArea) {
+            viewportTop = viewportTop + interfaceLayout.filterArea.height
+        }
 
-		var leftPanelHeight = Math.floor(contentWrapElemHeight - viewportTop); // should be calculated before adding column area height to viewportTop
-		evScrollManager.setLeftPanelElemHeight(leftPanelHeight);
+        var leftPanelHeight = Math.floor(contentWrapElemHeight - viewportTop); // should be calculated before adding column area height to viewportTop
+        evScrollManager.setLeftPanelElemHeight(leftPanelHeight);
 
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height
@@ -1380,11 +1416,11 @@
 
         var viewportHeight;
         // var isRootEntityViewer = evDataService.isRootEntityViewer();
-		var components = evDataService.getComponents();
+        var components = evDataService.getComponents();
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var rowHeight = evDataService.getRowHeight();
         var interfaceLayout = evDataService.getInterfaceLayout();
-		var viewportTop;
+        var viewportTop;
 
         /*if (isRootEntityViewer) {
 			viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height;
@@ -1397,21 +1433,21 @@
         }
 
 		viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height); */
-		viewportTop = 0;
+        viewportTop = 0;
 
-		if (components.topPart) {
-			viewportTop = viewportTop + interfaceLayout.topPart.height;
-		}
+        if (components.topPart) {
+            viewportTop = viewportTop + interfaceLayout.topPart.height;
+        }
 
-		if (components.filterArea) {
-			viewportTop = viewportTop + interfaceLayout.filterArea.height;
-		}
+        if (components.filterArea) {
+            viewportTop = viewportTop + interfaceLayout.filterArea.height;
+        }
 
-		if (components.columnArea) {
-			viewportTop = viewportTop + interfaceLayout.columnArea.height;
-		}
+        if (components.columnArea) {
+            viewportTop = viewportTop + interfaceLayout.columnArea.height;
+        }
 
-		viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
+        viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         console.log("View context: " + evDataService.getViewContext() + ". viewportHeight", viewportHeight);
         console.log("View context: " + evDataService.getViewContext() + ". contentWrapElemHeight", contentWrapElemHeight);
