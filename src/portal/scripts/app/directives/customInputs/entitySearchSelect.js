@@ -169,7 +169,7 @@
 
                     var options = {
                         page: 1,
-                        pageSize: 20,
+                        pageSize: 1000,
                     };
 
                 	if (scope.inputText) {
@@ -397,6 +397,9 @@
                     scope.$watch('itemName', function () {
 
                         if (scope.itemName) {
+                            
+                            console.log('itemName', scope.itemName);
+                            
                             scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
 
                         } else {

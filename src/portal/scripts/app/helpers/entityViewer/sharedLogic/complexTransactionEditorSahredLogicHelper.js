@@ -80,6 +80,9 @@
 
 			recalculationPromise.then(function (data) {
 
+				console.log('data', data);
+				console.log('inputs', inputs);
+
 				inputs.forEach(inputName => {
 
 					viewModel.entity[inputName] = data.values[inputName]
