@@ -22,6 +22,13 @@
         vm.localInstruments = [];
 
         vm.inputText = data.inputText;
+        vm.instrument_type = '';
+
+        vm.instrumentTypeOptions = [
+            {id: 'bonds', name: 'Bonds'},
+            {id: 'stocks', name: 'Stocks'}
+        ]
+
 
         vm.clearHoverInstrument = function () {
 
@@ -271,7 +278,7 @@
 
                 promises.push(new Promise(function (resolve, reject) {
 
-                    fetch('https://finmars.com/instrument-database/instr/find/name/' + vm.inputText).then(function (data) {
+                    fetch('https://finmars.com/instrument-database/instr/find/name/' + vm.inputText + '?instrument_type=' + vm.instrument_type).then(function (data) {
                         return data.json()
                     }).then(function (data) {
 
@@ -309,7 +316,8 @@
                 instrumentService.getListForSelect({
                     pageSize: 1000,
                     filters: {
-                        query: vm.inputText
+                        query: vm.inputText,
+                        instrument_type: vm.instrument_type
                     }
 
                 }).then(function (data) {
