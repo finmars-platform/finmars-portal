@@ -162,8 +162,10 @@
 
 				vm.getActiveFilterType = (filterTypesList) => {
 
-					if (vm.filter.options.use_from_above &&
-						Object.keys(vm.filter.options.use_from_above).length) {
+					console.log('vm.getActiveFilterType vm.filter', vm.filter)
+
+					if ((vm.filter.options.use_from_above &&
+						Object.keys(vm.filter.options.use_from_above).length) || vm.filter.options.filter_type == 'use_from_above') {
 
 						return 'use_from_above';
 
