@@ -59,7 +59,7 @@
                             <ng-md-icon class="am-attr-card__status" data-ng-if="item.is_hidden"
                                         icon="visibility_off"></ng-md-icon>
 
-                            <b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>)
+                            <b data-ng-bind="item.name"></b> (<span data-ng-bind="vm.bindType(item)"></span>) <span data-ng-if="item.kind = 2"> System</span>
                         </div>
                         <div class="am-attr-misc">
 
@@ -101,7 +101,7 @@
                                 </ng-md-icon>
                             </md-button>
                             <md-button class="am-attr-btn"
-                                       data-ng-click="vm.deleteAttr($event, item)">
+                                       data-ng-click="vm.deleteAttr($event, item)" data-ng-if="item.kind == 1">
                                 <ng-md-icon icon="delete">
                                     <md-tooltip md-direction="top">Delete Attribute</md-tooltip>
                                 </ng-md-icon>
