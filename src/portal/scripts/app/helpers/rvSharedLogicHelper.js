@@ -81,6 +81,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 			});
 
+			console.log('putUseFromAboveFiltersFirst.filters', filters);
+
 			allFilters = useFromAboveFiters.concat(filters);
 
 			viewModel.entityViewerDataService.setFilters(allFilters);

@@ -40,6 +40,9 @@
                         }
                     }).then(function (res) {
 
+                        console.log('openUseFromAboveDialog.res', res)
+                        console.log('openUseFromAboveDialog.scope.item', scope.item)
+
                         if (res.status === 'agree') {
 
                             if (scope.item !== res.data.item ||
