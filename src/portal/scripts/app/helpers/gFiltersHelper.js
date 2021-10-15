@@ -131,6 +131,8 @@
 		 */
 		const filterUseFromAboveFilters = function (filters) {
 
+			console.log('filterUseFromAboveFilters.filters', filters)
+
 			const useFromAboveFilters = filters.filter((filter, index) => {
 
 				if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
@@ -155,6 +157,9 @@
 
 			let useFromAboveFilters = filterUseFromAboveFilters(filters);
 			const activeObjectFromAbove = evDataService.getActiveObjectFromAbove();
+
+			console.log('insertActiveObjectDataIntoFilters.useFromAboveFilters', useFromAboveFilters)
+			console.log('insertActiveObjectDataIntoFilters.activeObjectFromAbove', activeObjectFromAbove)
 
 			useFromAboveFilters.forEach(ufaFilter => {
 
@@ -199,17 +204,17 @@
 
 				useFromAboveDialogPromise.then(ufaData => {
 
-					let activeFilterType = ufaData;
+					// let activeFilterType = ufaData;
 
-					if (activeFilterType === 'use_from_above') {
+					// if (activeFilterType === 'use_from_above') {
+					//
+					// 	filterOptions.use_from_above = {};
+					// 	filterOptions.filter_type = activeFilterType;
+					// 	filterOptions.filter_values = [];
+					//
+					// }
 
-						filterOptions.use_from_above = {};
-						filterOptions.filter_type = activeFilterType;
-						filterOptions.filter_values = [];
-
-					}
-
-					resolve([activeFilterType, filterOptions]);
+					resolve([ufaData.options.filter_type, ufaData.options]);
 
 				});
 
