@@ -132,22 +132,30 @@
 
 						}).then(function (res) {
 
+							console.log('openUseFromAboveSettings.res', res)
+							console.log('openUseFromAboveSettings.vm.filter', vm.filter)
+
 							if (res.status === 'agree') {
+
 
 								if (vm.filter.options.use_from_above.key !== res.data.item ||
 									vm.filter.options.filter_type !== res.data.filterType) {
+
+									vm.filter.options.use_from_above = {}
 
 									vm.filter.options.use_from_above.key = res.data.item
 									vm.filter.options.filter_type = res.data.filterType
 									vm.filter.options.use_from_above.attrs_entity_type = res.data.attrsEntityType
 
-									resolve('use_from_above');
+									// resolve('use_from_above');
+									resolve(vm.filter);
 
 								}
 
 							} else {
 
-								resolve(vm.filter.options.filter_type);
+								// resolve(vm.filter.options.filter_type);
+								resolve(vm.filter);
 							}
 
 						});
@@ -164,8 +172,8 @@
 
 					console.log('vm.getActiveFilterType vm.filter', vm.filter)
 
-					if ((vm.filter.options.use_from_above &&
-						Object.keys(vm.filter.options.use_from_above).length) || vm.filter.options.filter_type == 'use_from_above') {
+					if (vm.filter.options.use_from_above &&
+						Object.keys(vm.filter.options.use_from_above).length) {
 
 						return 'use_from_above';
 
