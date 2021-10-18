@@ -218,10 +218,13 @@
                         return true;
                     }
 
-                } else if (doesStringContainsSubstrings(valueToFilter, filterBy)) {
+                } else if (valueToFilter.indexOf(filterBy) !== -1) {
                     return true;
-
                 }
+                // else if (doesStringContainsSubstrings(valueToFilter, filterBy)) {
+                //     return true;
+                //
+                // }
 
                 break;
 
