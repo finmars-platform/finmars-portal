@@ -69,8 +69,11 @@
                 };
 
                 scope.getModelKeyEntity = function () {
+
+                    console.log('scope.getModelKeyEntity scope.item.key', scope.item.key)
+
                     //var key;
-                    var modelKeyEntity;
+                    var modelKeyEntity = scope.item.key;
 
                     if (scope.entityType === 'complex-transaction') {
 

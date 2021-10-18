@@ -240,6 +240,7 @@ export default (function () {
 	// portal.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/warningDialogController')]);
 	portal.controller('SuccessDialogController', ['$scope', '$mdDialog', 'success', require('./app/controllers/dialogs/successDialogController')]);
 	portal.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
+	portal.controller('SystemErrorLogDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/systemErrorLogDialogController')]);
 
 	// Actions
 
@@ -786,5 +787,20 @@ export default (function () {
 	String.prototype.capitalizeFirstLetter = function () {
 		return this.charAt(0).toUpperCase() + this.slice(1);
 	};
+	
+	
+	window.onerror = function(error){
+
+		if (!window.system_errors) {
+			window.system_errors = []
+		}
+
+		window.system_errors.push({
+			created: new Date().toISOString(),
+			location: window.location.href,
+			text: JSON.stringify(error)
+		})
+
+	}
 
 })();

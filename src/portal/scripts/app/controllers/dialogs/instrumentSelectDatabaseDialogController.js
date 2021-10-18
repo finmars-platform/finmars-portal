@@ -24,6 +24,9 @@
         vm.inputText = data.inputText;
         vm.instrument_type = '';
 
+        vm.globalPage = 1;
+        vm.totalPages = 1;
+
         vm.instrumentTypeOptions = [
             {id: 'bonds', name: 'Bonds'},
             {id: 'stocks', name: 'Stocks'}
@@ -268,6 +271,57 @@
 
         }
 
+        vm.loadMoreGlobalInstruments = function (){
+
+            vm.globalProcessing = true;
+
+            vm.globalPage = vm.globalPage + 1
+
+            var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
+
+            if (vm.instrument_type){
+                instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
+
+                instrumentDatabaseUrl = instrumentDatabaseUrl + '&page=' + vm.globalPage
+            } else {
+
+                instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + vm.globalPage
+            }
+
+
+
+            fetch(instrumentDatabaseUrl).then(function (data) {
+                return data.json()
+            }).then(function (data) {
+
+                vm.globalProcessing = false;
+
+                vm.databaseInstrumentsTotal = data.resultCount
+
+                data.foundItems.forEach(function (item) {
+
+                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+
+                    vm.databaseInstruments.push(item)
+
+                })
+
+                vm.totalPages = Math.round(data.resultCount / data.pageSize)
+
+                $scope.$apply();
+
+            }).catch(function (error) {
+
+                vm.globalProcessing = false;
+
+                console.log("Instrument Database error occurred", error)
+
+                $scope.$apply();
+
+            })
+
+        }
+
         vm.getList = function () {
 
             vm.processing = true;
@@ -278,7 +332,13 @@
 
                 promises.push(new Promise(function (resolve, reject) {
 
-                    fetch('https://finmars.com/instrument-database/instr/find/name/' + vm.inputText + '?instrument_type=' + vm.instrument_type).then(function (data) {
+                    var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
+
+                    if (vm.instrument_type){
+                        instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
+                    }
+
+                    fetch(instrumentDatabaseUrl).then(function (data) {
                         return data.json()
                     }).then(function (data) {
 
@@ -295,6 +355,8 @@
                         })
 
                         resolve()
+
+                        vm.totalPages = Math.round(data.resultCount / data.pageSize)
 
                     }).catch(function (error) {
 
