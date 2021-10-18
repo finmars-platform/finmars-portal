@@ -115,6 +115,8 @@
 
                         </div>
 
+                        <button class="control-button load-more {{vm.globalProcessing ? 'disabled-btn' : ''}}" data-ng-if="vm.globalPage < vm.totalPages" data-ng-click="vm.loadMoreGlobalInstruments($event)">Load more</button>
+
                     </div>
 
                     <div data-ng-if="!vm.localInstruments.length && !vm.databaseInstruments.length">
