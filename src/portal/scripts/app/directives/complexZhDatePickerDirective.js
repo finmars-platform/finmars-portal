@@ -504,6 +504,9 @@
 						scope.popupData.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.secondDatepickerOptions));
 
 					}
+					setTimeout(() => {
+						if (scope.callbackMethod) scope.callbackMethod();
+					}, 0);
 
 				};
 

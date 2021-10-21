@@ -141,16 +141,16 @@
                 "name": "Reference fx rate",
                 "value_type": 'float'
             },
-            {
-                "key": "is_locked",
-                "name": "Is locked",
-                "value_type": 'boolean'
-            },
-            {
-                "key": "is_canceled",
-                "name": "Is canceled",
-                "value_type": 'boolean'
-            },
+            // {
+            //     "key": "is_locked",
+            //     "name": "Is locked",
+            //     "value_type": 'boolean'
+            // },
+            // {
+            //     "key": "is_canceled",
+            //     "name": "Is canceled",
+            //     "value_type": 'boolean'
+            // },
             {
                 "key": "factor",
                 "name": "Factor",

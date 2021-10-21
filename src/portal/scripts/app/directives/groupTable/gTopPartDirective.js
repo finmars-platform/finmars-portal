@@ -241,6 +241,8 @@
                     var reportOptions = scope.evDataService.getReportOptions();
                     var reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 
+                    console.log('updateReportOptions.scope.reportOptions', scope.reportOptions);
+
                     var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
                     var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, scope.reportLayoutOptions);
                     // TODO Delete in future
