@@ -23,6 +23,16 @@
                 "value_type": 10 // actually field
             },
             {
+                "key": "is_locked",
+                "name": "Is locked",
+                "value_type": 'boolean'
+            },
+            {
+                "key": "is_canceled",
+                "name": "Is canceled",
+                "value_type": 'boolean'
+            },
+            {
                 "key": "transaction_unique_code",
                 "name": "Transaction Unique Code",
                 "value_type": 10
