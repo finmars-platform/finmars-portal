@@ -52,7 +52,8 @@
         $('body').addClass('drag-dialog'); // hide backdrop
 
         var complexTransactionAttrsComp = [
-            'complex_transaction.code', 'complex_transaction.date', 'complex_transaction.status', 'complex_transaction.text', 'complex_transaction.transaction_unique_code'
+            'complex_transaction.code', 'complex_transaction.date', 'complex_transaction.status', 'complex_transaction.text', 'complex_transaction.transaction_unique_code',
+            'complex_transaction.is_canceled', 'complex_transaction.is_locked',
         ];
 
         var userFieldsComp = [
