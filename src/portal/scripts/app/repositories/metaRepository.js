@@ -163,6 +163,10 @@
 				"value": 110,
 				"display_name": "Selector"
         	},
+            {
+                "value": 80,
+                "display_name": "Datetime"
+            },
 			{
 				"value": 120,
 				"display_name": "Button"

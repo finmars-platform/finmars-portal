@@ -176,7 +176,7 @@
             return "Deleted";
         }
 
-        if (obj[column.key]) {
+        if (obj[column.key] != null && obj[column.key] !== undefined) {
 
             if (typeof obj[column.key] === 'string') {
 
@@ -264,6 +264,30 @@
 
             if (Array.isArray(obj[column.key])) {
                 return '[' + obj[column.key].length + ']';
+            }
+
+            if (typeof obj[column.key] === 'boolean') {
+
+                if (column.key === 'is_locked') {
+
+                    if (obj[column.key]) {
+                        return 'Locked'
+                    } else {
+                        return 'Unlocked'
+                    }
+
+                }
+
+                if (column.key === 'is_canceled') {
+
+                    if (obj[column.key]) {
+                        return 'Canceled'
+                    } else {
+                        return 'Not Canceled'
+                    }
+
+                }
+
             }
 
         }
