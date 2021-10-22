@@ -16,11 +16,11 @@
 				isReadonly: '=',
 				onChangeCallback: "&?",
 			},
-			templateUrl: "views/directives/customInputs/date-input-view.html",
+			templateUrl: "views/directives/customInputs/datetime-input-view.html",
 			link: function (scope, elem, attr) {
 
 				scope.error = "";
-				scope.placeholderText = "yyyy-mm-dd";
+				scope.placeholderText = "";
 
 				scope.dateValue = ""; // prevents from calling on change method when date changed to the same date
 
@@ -59,7 +59,7 @@
 
 					var classes = "";
 
-					if (scope.isDisabled) {
+					if (scope.isDisabled || scope.isReadonly) {
 						classes += "custom-input-is-disabled";
 
 					} else if (scope.error) {
@@ -112,18 +112,23 @@
 
 						if (dateValue !== scope.model) {
 
-							if (moment(dateValue, "YYYY-MM-DD", true).isValid()) {
 
-								valueIsValid = true;
-								model = dateValue;
+							valueIsValid = true;
+							model = dateValue;
 
-							} else {
 
-								valueIsValid = false;
-								error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
-								model = null;
-
-							}
+							// if (moment(dateValue, "YYYY-MM-DD", true).isValid()) {
+							//
+							// 	valueIsValid = true;
+							// 	model = dateValue;
+							//
+							// } else {
+							//
+							// 	valueIsValid = false;
+							// 	error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
+							// 	model = null;
+							//
+							// }
 
 							/* if (scope.onChangeCallback) {
 
@@ -338,13 +343,13 @@
 									scope.error = "";
 									scope.dateValue = JSON.parse(JSON.stringify(scope.model));
 
-									if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
-
-										scope.valueIsValid = false;
-										scope.error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
-										scope.model = null;
-
-									}
+									// if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
+									//
+									// 	scope.valueIsValid = false;
+									// 	scope.error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
+									// 	scope.model = null;
+									//
+									// }
 
 								}
 
