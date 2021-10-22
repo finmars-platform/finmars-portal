@@ -74,6 +74,19 @@
             </date-input>
         </div>
 
+        <div ng-if="fieldType['display_name'] === 'Datetime'" class="field-date-pick">
+            <datetime-input
+                    label="{{getName()}}"
+                    model="entity[vm.fieldKey]"
+                    custom-buttons="item.buttons"
+                    is-readonly="item.readonly"
+                    custom-styles="customStyles"
+                    event-signal="ciEventObj.event"
+                    small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                    on-change-callback="onDateChange()">
+            </datetime-input>
+        </div>
+
         <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
             <md-checkbox
                     class="checkbox-bind-field"

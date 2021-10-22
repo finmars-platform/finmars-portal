@@ -747,6 +747,7 @@ export default (function () {
 	portal.directive('textInput', ['$mdDialog', require('./app/directives/customInputs/textInputDirective.js')]);
 	portal.directive('numberInput', ['$mdDialog', require('./app/directives/customInputs/numberInputDirective.js')]);
 	portal.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
+	portal.directive('datetimeInput', [require('./app/directives/customInputs/datetimeInputDirective.js')]);
 	portal.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
 	portal.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
 	portal.directive('instrumentSelect', ['$mdDialog', require('./app/directives/customInputs/instrumentSelectDirective')]);
