@@ -29,6 +29,16 @@
             </div>
         </md-button>
 
+        <div class="global-table-filter-container">
+
+            <input type="text" ng-model="globalTableSearch" ng-change="onGlobalTableSearchChange()" placeholder="Search for a ..."
+                   class="global-table-filter-search" aria-invalid="false"
+                   data-ng-model-options="{debounce: 500}"
+                   style="">
+
+
+        </div>
+
     </div>
 
     <div class="p-r-24 flex-row flex-i-center">

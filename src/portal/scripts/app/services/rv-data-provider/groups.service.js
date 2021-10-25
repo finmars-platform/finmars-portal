@@ -165,6 +165,7 @@
             var regularFilters = filterService.getRegularFilters(options);
 
             var reportOptions = entityViewerDataService.getReportOptions();
+            var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
 
             var groups = [];
 
@@ -176,6 +177,11 @@
 
                 items = filterService.filterTableRows(items, regularFilters);
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
+
+                if (globalTableSearch) {
+                    items = filterService.filterByGlobalTableSearch(items, globalTableSearch)
+                }
+
 
                 // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js
 

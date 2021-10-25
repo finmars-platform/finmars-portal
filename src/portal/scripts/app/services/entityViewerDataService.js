@@ -1601,6 +1601,17 @@
             return data.selectedGroupsMultiselectState;
         }
 
+        function setGlobalTableSearch(query) {
+            data.globalTableSearch = query
+        }
+
+        function getGlobalTableSearch() {
+            return data.globalTableSearch;
+        }
+
+
+
+
 
         return {
 
@@ -1861,7 +1872,10 @@
             },
 
             getSelectedGroups: getSelectedGroups,
-            setSelectedGroups: setSelectedGroups
+            setSelectedGroups: setSelectedGroups,
+
+            setGlobalTableSearch: setGlobalTableSearch,
+            getGlobalTableSearch: getGlobalTableSearch
 
         }
     }
