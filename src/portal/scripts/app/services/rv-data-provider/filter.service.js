@@ -149,11 +149,11 @@
 
                             }
 
-                             /* TODO delete as deprecated
-                             if (valueType === 100) {
-                                valueFromTable = valueFromTable;
-                                filterArgument = filterArgument[0];
-                             } */
+                            /* TODO delete as deprecated
+                            if (valueType === 100) {
+                               valueFromTable = valueFromTable;
+                               filterArgument = filterArgument[0];
+                            } */
 
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
@@ -268,7 +268,7 @@
 
             case 'less_equal':
 
-            	if (valueToFilter <= filterBy) {
+                if (valueToFilter <= filterBy) {
                     return true;
                 }
 
@@ -288,7 +288,7 @@
 
             case 'from_to':
 
-            	var minValue = filterBy.min_value;
+                var minValue = filterBy.min_value;
                 var maxValue = filterBy.max_value;
 
                 if (valueToFilter >= minValue && valueToFilter <= maxValue) {
@@ -328,11 +328,11 @@
                 }
                 break;
 
-			default:
+            default:
 
-				return false;
+                return false;
 
-				break;
+                break;
 
         }
 
@@ -505,12 +505,57 @@
         return result;
     };
 
+    var filterByGlobalTableSearch = function (items, query) {
+
+        var match;
+
+        var keys
+
+        var pieces = query.split(' ')
+
+        pieces = pieces.map(function (piece) {
+            return piece.toLowerCase()
+        })
+
+        items = items.filter(function (item) {
+
+            match = false;
+
+            keys = Object.keys(item)
+
+            keys.forEach(function (key) {
+
+                if (item[key] !== null && item[key] !== undefined) {
+
+                    pieces.forEach(function (piece) {
+
+                        if (item[key].toString().toLowerCase().indexOf(piece) !== -1) {
+                            match = true
+                        }
+
+                    })
+
+                }
+
+            })
+
+            return match;
+
+        });
+
+
+        return items;
+
+    };
+
+
     module.exports = {
         filterTableRows: filterTableRows,
         filterByGroupsFilters: filterByGroupsFilters,
         // filterByRowType: filterByRowType,
         getRegularFilters: getRegularFilters,
-        convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters
+        convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters,
+        filterByGlobalTableSearch: filterByGlobalTableSearch
     }
 
 }());

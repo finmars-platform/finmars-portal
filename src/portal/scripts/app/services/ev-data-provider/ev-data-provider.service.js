@@ -14,6 +14,20 @@
         entityViewerDataService.setRequestParameters(requestParameters);
     };
 
+    var injectGlobalTableSearch = function (entityViewerDataService) {
+        var requestParameters = entityViewerDataService.getActiveRequestParameters();
+
+        requestParameters.body['global_table_search'] = ''
+
+        var query = entityViewerDataService.getGlobalTableSearch();
+
+        if (query) {
+            requestParameters.body['global_table_search'] = query
+        }
+
+        entityViewerDataService.setRequestParameters(requestParameters);
+    };
+
     var injectRegularFilters = function (entityViewerDataService) {
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
@@ -705,6 +719,7 @@
         console.time('Updating data structure');
         injectEntityViewerOptions(entityViewerDataService);
         injectRegularFilters(entityViewerDataService);
+        injectGlobalTableSearch(entityViewerDataService)
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
