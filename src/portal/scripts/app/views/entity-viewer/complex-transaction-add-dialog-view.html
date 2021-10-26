@@ -191,7 +191,7 @@
 
                   <md-tab-body>
                     <md-content class="md-padding p-t-26"
-                                ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
+                                ng-class="{'locked-tab-overlay': vm.entity.is_locked, 'canceled-tab-overlay': vm.entity.is_canceled}">
                       <div
                         data-ng-repeat="row in vm.range(tab.layout.rows)"
                         layout="row"
@@ -357,12 +357,7 @@
       >
         Book as pending
       </md-button>
-      <md-button class="md-raised"
-                 data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
-                 ng-click="vm.bookAsIgnored()"
-                 style="margin-right:20px;">
-        Book as ignored
-      </md-button>
+
       <md-button
         class="md-raised"
         data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
