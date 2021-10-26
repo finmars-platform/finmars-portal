@@ -49,7 +49,7 @@
 
                     <md-tab-body>
                         <md-content class="md-padding p-t-26"
-                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked}" style="min-height: 50vh">
+                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked, 'canceled-tab-overlay': vm.entity.is_canceled}" style="min-height: 50vh">
                             <div ng-repeat="row in vm.range(tab.layout.rows)"
                                  layout="row"
                                  class="entity-editor-row">
@@ -202,14 +202,6 @@
                        ng-click="vm.rebookAsPending()">
                 Rebook as pending
             </md-button>
-
-            <md-button class="md-raised"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
-                       ng-click="vm.rebookAsIgnored()"
-                       style="margin-right:20px;">
-                Rebook as ignored
-            </md-button>
-
 
             <md-button class="md-raised"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
