@@ -15,7 +15,11 @@
             {
                 "key": "transaction_class",
                 "name": "Transaction class",
-                "value_type": 20 // Its actually a relation
+                "value_type": "field",
+                "value_entity": "transaction-class",
+                "code": "user_code",
+                "value_content_type": "transactions.transactionclass",
+                "allow_null": false
             },
             {
                 "key": "position_size_with_sign",
@@ -65,12 +69,12 @@
             {
                 "key": "is_locked",
                 "name": "Is locked",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "is_canceled",
                 "name": "Is canceled",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "factor",

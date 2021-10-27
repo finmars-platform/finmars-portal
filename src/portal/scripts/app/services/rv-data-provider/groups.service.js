@@ -90,25 +90,25 @@
                 resultGroup.___group_name = item_value.toString();
 
 
-                if (group.key === 'complex_transaction.is_canceled') {
-
-                    if (item_value) {
-                        resultGroup.___group_name = 'Canceled'
-                    } else {
-                        resultGroup.___group_name = 'Not Canceled'
-                    }
-
-                }
-
-                if (group.key === 'complex_transaction.is_locked') {
-
-                    if (item_value) {
-                        resultGroup.___group_name = 'Locked'
-                    } else {
-                        resultGroup.___group_name = 'Unlocked'
-                    }
-
-                }
+                // if (group.key === 'complex_transaction.is_canceled') {
+                //
+                //     if (item_value) {
+                //         resultGroup.___group_name = 'Canceled'
+                //     } else {
+                //         resultGroup.___group_name = 'Not Canceled'
+                //     }
+                //
+                // }
+                //
+                // if (group.key === 'complex_transaction.is_locked') {
+                //
+                //     if (item_value) {
+                //         resultGroup.___group_name = 'Locked'
+                //     } else {
+                //         resultGroup.___group_name = 'Unlocked'
+                //     }
+                //
+                // }
 
                 if (group.key === 'complex_transaction.status') {
 
