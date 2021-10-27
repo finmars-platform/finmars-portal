@@ -52,7 +52,7 @@
         $('body').addClass('drag-dialog'); // hide backdrop
 
         var complexTransactionAttrsComp = [
-            'complex_transaction.code', 'complex_transaction.date', 'complex_transaction.status', 'complex_transaction.text', 'complex_transaction.transaction_unique_code',
+            'complex_transaction.code', 'complex_transaction.date', 'complex_transaction.text', 'complex_transaction.transaction_unique_code',
             'complex_transaction.is_canceled', 'complex_transaction.is_locked',
         ];
 
@@ -70,9 +70,18 @@
         ];
 
         var transactionAttrsComp = [
-            'transaction_class', 'transaction_code', 'transaction_class.name', 'position_size_with_sign', 'cash_consideration', 'principal_with_sign', 'carry_with_sign', 'overheads_with_sign',
+            'transaction_code', 'transaction_class.name', 'position_size_with_sign', 'cash_consideration', 'principal_with_sign', 'carry_with_sign', 'overheads_with_sign',
             'accounting_date', 'cash_date', 'reference_fx_rate', 'is_locked', 'is_canceled', 'factor', 'trade_price'
         ];
+
+        var transactionClassAttrsComp = [
+            'transaction_class.name',
+        ];
+
+        var complexTransactionStatusAttrsComp = [
+            'complex_transaction.status.name',
+        ];
+
 
         var transactionTypeAttrsComp = [
             'complex_transaction.transaction_type.name', 'complex_transaction.transaction_type.short_name', 'complex_transaction.transaction_type.user_code',
@@ -131,6 +140,7 @@
             // contains attributes to show inside tab
             vm.transactionAttrsFiltered= [];
             vm.complexTransactionAttrsFiltered = [];
+            vm.complexTransactionStatusAttrsFiltered = [];
             vm.transactionTypeAttrsFiltered = [];
             vm.userFieldsFiltered = [];
             vm.portfolioAttrsFiltered = [];
@@ -158,7 +168,11 @@
 
             vm.transactionAttrs = attributeDataService.getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
 
+            vm.transactionClassAttrs = attributeDataService.getAllAttributesAsFlatList('transactions.transactionclass', '', 'Transaction Class', {maxDepth: 1});
+
             vm.complexTransactionAttrs = attributeDataService.getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
+
+            vm.complexTransactionStatusAttrs = attributeDataService.getAllAttributesAsFlatList('transactions.complextransactionstatus', 'complex_transaction', 'Complex Transaction status', {maxDepth: 1});
 
             vm.portfolioAttrs = attributeDataService.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
 
@@ -221,6 +235,9 @@
             });
 
             vm.transactionTypeAttrs = [];
+            vm.complexTransactionStatusAttrs = []
+
+            console.log('vm.complexTransactionAttrs', vm.complexTransactionAttrs);
 
             vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
 
@@ -236,11 +253,19 @@
 
                     return false;
 
+                } else if (entityAttr.key.indexOf('complex_transaction.status.name') !== -1 ) {
+
+                    vm.complexTransactionStatusAttrs.push(entityAttr);
+
+                    return false;
+
                 } else {
                     return true;
                 }
 
             });
+
+            console.log('complexTransactionStatusAttrs', vm.complexTransactionStatusAttrs);
 
             var instrumentUserFields = attributeDataService.getInstrumentUserFields();
 
@@ -332,6 +357,7 @@
             vm.attrsList = vm.attrsList.concat(vm.transactionAttrs);
             vm.attrsList = vm.attrsList.concat(vm.complexTransactionAttrs);
             vm.attrsList = vm.attrsList.concat(vm.transactionTypeAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.complexTransactionStatusAttrs);
             vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
             vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
             vm.attrsList = vm.attrsList.concat(vm.responsibleAttrs);
@@ -382,7 +408,9 @@
             composeAttrsInsideTab('complexTransactionAttrs', complexTransactionAttrsComp);
             composeAttrsInsideTab('complexTransactionAttrs', userFieldsComp, 'userFieldsFiltered');
             composeAttrsInsideTab('transactionAttrs', transactionAttrsComp);
+            composeAttrsInsideTab('transactionClassAttrs', transactionClassAttrsComp);
             composeAttrsInsideTab('transactionTypeAttrs', transactionTypeAttrsComp);
+            composeAttrsInsideTab('complexTransactionStatusAttrs', complexTransactionStatusAttrsComp);
             // instrument
             composeAttrsInsideTab('instrumentAttrs', instrumentAttrsComp);
             composeAttrsInsideTab('linkedInstrumentAttrs', linkedInstrumentAttrsComp);
@@ -427,6 +455,7 @@
             vm.attrsList = vm.attrsList.concat(vm.transactionAttrs);
             vm.attrsList = vm.attrsList.concat(vm.complexTransactionAttrs);
             vm.attrsList = vm.attrsList.concat(vm.transactionTypeAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.complexTransactionStatusAttrs);
             vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
             vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
             vm.attrsList = vm.attrsList.concat(vm.responsibleAttrs);
@@ -497,6 +526,7 @@
             syncTypeAttrs(vm.transactionAttrs);
             syncTypeAttrs(vm.complexTransactionAttrs);
             syncTypeAttrs(vm.transactionTypeAttrs);
+            syncTypeAttrs(vm.complexTransactionStatusAttrs);
             syncTypeAttrs(vm.complexTransactionDynamicAttrs);
             syncTypeAttrs(vm.transactionTypeDynamicAttrs);
 
@@ -706,6 +736,7 @@
                'transactionAttrs',
                'complexTransactionAttrs',
                'transactionTypeAttrs',
+                'complexTransactionStatusAttrs',
                'complexTransactionDynamicAttrs',
                'transactionTypeDynamicAttrs',
 

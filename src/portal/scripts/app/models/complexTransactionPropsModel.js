@@ -20,17 +20,21 @@
             {
                 "key": "status",
                 "name": "Status",
-                "value_type": 10 // actually field
+                "value_type": "field",
+                "value_entity": "complex-transaction-status",
+                "code": "user_code",
+                "value_content_type": "transactions.complextransactionstatus",
+                "allow_null": false
             },
             {
                 "key": "is_locked",
                 "name": "Is locked",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "is_canceled",
                 "name": "Is canceled",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "transaction_unique_code",

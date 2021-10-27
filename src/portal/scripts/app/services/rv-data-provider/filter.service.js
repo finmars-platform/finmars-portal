@@ -218,15 +218,32 @@
                         return true;
                     }
 
+                    // } else if (valueToFilter.indexOf(filterBy) !== -1) {
+                    //     return true;
+                    // }
+                }else if (doesStringContainsSubstrings(valueToFilter, filterBy)) {
+                    return true;
+
+                }
+
+                break;
+
+            case 'contains_has_substring':
+
+                if (/^".*"$/.test(filterBy)) { // if string inside of double quotes
+
+                    var formattedFilterBy = filterBy.replace(/^"|"$/g, ''); // removing first and last double quotes
+
+                    if (valueToFilter.indexOf(formattedFilterBy) > -1) {
+                        return true;
+                    }
+
                 } else if (valueToFilter.indexOf(filterBy) !== -1) {
                     return true;
                 }
-                // else if (doesStringContainsSubstrings(valueToFilter, filterBy)) {
-                //     return true;
-                //
-                // }
 
                 break;
+
 
             case 'does_not_contains':
                 if (valueToFilter.indexOf(filterBy) === -1) {

@@ -973,11 +973,21 @@
 
         };
 
+
+
         vm.toggleCancelStatus = function ($event) {
 
             vm.entity.is_canceled = !vm.entity.is_canceled;
 
-            complexTransactionService.updateProperties(vm.entity.id, {is_canceled: vm.entity.is_canceled}).then(function () {
+            var status = 1;
+            // Can't return to Pending state in that case
+            if (vm.entity.is_canceled) {
+                status = 3
+            } else {
+                status = 1
+            }
+
+            complexTransactionService.updateProperties(vm.entity.id, {is_canceled: vm.entity.is_canceled, status: status}).then(function () {
 
                 // console.log('here');
                 vm.updateTableOnClose.cancelStatusChanged = !vm.updateTableOnClose.cancelStatusChanged;

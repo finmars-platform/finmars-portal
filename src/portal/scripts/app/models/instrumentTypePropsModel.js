@@ -40,7 +40,7 @@
             {
                 "key": "is_active",
                 "name": "Is active",
-                "value_type": "boolean",
+                "value_type": 50,
                 "allow_null": true
             },
             {
@@ -100,7 +100,7 @@
             {
                 "key": "has_second_exposure_currency",
                 "name": "Has second exposure currency",
-                "value_type": "boolean"
+                "value_type": 50
             },
             {
                 "key": "object_permissions",
