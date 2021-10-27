@@ -11,7 +11,7 @@
 			require: '^^evFilter',
 			restrict: 'E',
 			scope: {},
-			templateUrl: 'views/directives/groupTable/filters/ev-rv-text-filter-view.html',
+			templateUrl: 'views/directives/groupTable/filters/ev-rv-boolean-filter-view.html',
 			link: function (scope, elem, attrs, filterVm) {
 
 				scope.filter = filterVm.filter;
@@ -21,13 +21,8 @@
 				};
 
 				scope.filterTypes = [
-					{name: 'Equal', value: 'equal'},
-					{name: 'Contains', value: 'contains'},
-					{name: 'Contains has substring', value: 'contains_has_substring'},
-					// {name: 'Does not contains', value: 'does_not_contains'},
 					{name: 'Select', value: 'selector'},
 					{name: 'Multiple Select', value: 'multiselector'},
-					{name: 'Empty cells', value: 'empty'}
 				];
 
 				scope.columnRowsContent = null;
@@ -38,25 +33,18 @@
 
 				const getDataForSelects = function () {
 
-					scope.readyStatus = false;
-
-					specificDataService.getValuesForSelect(contentType, scope.filter.key, scope.filter.value_type).then(function (data) {
-
-						// var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
-
-						scope.columnRowsContent = data.results.map(cRowsContent => {
-							return {
-								id: cRowsContent, // for text multiselector
-								value: cRowsContent, // for text selector
-								active: false // for date multiselector
-							}
-						});
-
-						scope.readyStatus = true;
-
-						scope.$apply();
-
-					})
+					scope.columnRowsContent = [
+						{
+							id: true, // for text multiselector
+							value: 'True', // for text selector
+							active: false // for date multiselector
+						},
+						{
+							id: false, // for text multiselector
+							value: 'False', // for text selector
+							active: false // for date multiselector
+						}
+					]
 
 				};
 

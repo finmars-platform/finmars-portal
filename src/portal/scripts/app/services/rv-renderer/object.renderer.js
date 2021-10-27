@@ -207,26 +207,14 @@
 
                     if (typeof obj[column.key] === 'boolean') {
 
-                        if (column.key === 'complex_transaction.is_locked') {
-                            if (obj[column.key]) {
+                        if (obj[column.key]) {
 
-                                result.html_result = 'Locked'
-                                result.raw_text_result =  'Locked'
+                            result.html_result = 'True'
+                            result.raw_text_result =  'True'
 
-                            } else {
-                                result.html_result = 'Unlocked'
-                                result.raw_text_result =  'Unlocked'
-                            }
-                        }
-
-                        if (column.key === 'complex_transaction.is_canceled') {
-                            if (obj[column.key]) {
-                                result.html_result = 'Canceled'
-                                result.raw_text_result =  'Canceled'
-                            } else {
-                                result.html_result = 'Not Canceled'
-                                result.raw_text_result =  'Not Canceled'
-                            }
+                        } else {
+                            result.html_result = 'False'
+                            result.raw_text_result =  'False'
                         }
 
                     }

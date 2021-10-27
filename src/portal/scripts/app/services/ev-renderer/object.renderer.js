@@ -268,24 +268,10 @@
 
             if (typeof obj[column.key] === 'boolean') {
 
-                if (column.key === 'is_locked') {
-
-                    if (obj[column.key]) {
-                        return 'Locked'
-                    } else {
-                        return 'Unlocked'
-                    }
-
-                }
-
-                if (column.key === 'is_canceled') {
-
-                    if (obj[column.key]) {
-                        return 'Canceled'
-                    } else {
-                        return 'Not Canceled'
-                    }
-
+                if (obj[column.key]) {
+                    return 'True'
+                } else {
+                    return 'False'
                 }
 
             }
