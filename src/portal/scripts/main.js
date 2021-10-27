@@ -644,11 +644,13 @@ export default (function () {
 	portal.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
 	portal.directive('evFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evFilterDirective')]);
 	portal.directive('evTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
+	portal.directive('evBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evBooleanFilterDirective')]);
 	portal.directive('evNumberFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evNumberFilterDirective')]);
 	portal.directive('evDateFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evDateFilterDirective')]);
 	portal.directive('gRvFilters', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/gRvFiltersDirective')]);
 	portal.directive('rvFilter', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvFilterDirective')]);
 	portal.directive('rvTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterDirective')]);
+	portal.directive('rvBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvBooleanFilterDirective')]);
 	portal.directive('rvNumberFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvNumberFilterDirective')]);
 	portal.directive('rvDateFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvDateFilterDirective')]);
 	/* portal.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldTextFilterDirective')]);

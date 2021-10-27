@@ -9,7 +9,7 @@
 			require: '^^rvFilter',
 			restrict: 'E',
 			scope: {},
-			templateUrl: 'views/directives/groupTable/filters/ev-rv-text-filter-view.html',
+			templateUrl: 'views/directives/groupTable/filters/ev-rv-boolean-filter-view.html',
 			link: function (scope, elem, attrs, rvFilterVm) {
 
 				scope.filter = rvFilterVm.filter;
@@ -19,13 +19,8 @@
 				};
 
 				scope.filterTypes = [
-					{name: 'Equal', value: 'equal'},
-					{name: 'Contains', value: 'contains'},
-					{name: 'Contains has substring', value: 'contains_has_substring'},
-					// {name: 'Does not contains', value: 'does_not_contains'},
 					{name: 'Select', value: 'selector'},
-					{name: 'Multiple Select', value: 'multiselector'},
-					{name: 'Empty cells', value: 'empty'}
+					{name: 'Multiple Select', value: 'multiselector'}
 				];
 
 				scope.readyStatus = true;
@@ -71,17 +66,29 @@
 					return scope.filter.name + ". " + "Regime = " + scope.filter.options.filter_type;
 				};
 
+				const getDataForSelects = function () {
+
+					scope.columnRowsContent = [
+						{
+							id: true, // for text multiselector
+							value: 'True', // for text selector
+							active: false // for date multiselector
+						},
+						{
+							id: false, // for text multiselector
+							value: 'False', // for text selector
+							active: false // for date multiselector
+						}
+					]
+
+				};
+
+
 				const init = function () {
 
 					scope.activeFilter.type = rvFilterVm.getActiveFilterType(scope.filterTypes);
 
-					if (!rvFilterVm.columnRowsContent || !rvFilterVm.columnRowsContent.length) {
-
-						rvFilterVm.getDataForSelects();
-
-					}
-
-					scope.columnRowsContent = rvFilterVm.columnRowsContent
+					getDataForSelects();
 
 				};
 

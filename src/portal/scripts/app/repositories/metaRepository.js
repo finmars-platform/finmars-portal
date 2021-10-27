@@ -184,7 +184,7 @@
 				"display_name": "Multiple choice field"
         	},
 			{
-				"value": "boolean",
+				"value": 50,
 				"display_name": "Boolean"
         	},
 			{

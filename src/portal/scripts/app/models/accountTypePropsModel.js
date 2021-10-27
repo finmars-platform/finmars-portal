@@ -41,7 +41,7 @@
             {
                 "key": "show_transaction_details",
                 "name": "Show transaction details",
-                "value_type": "boolean",
+                "value_type": 50,
                 "allow_null": true
             },
             {

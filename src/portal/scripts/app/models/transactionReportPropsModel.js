@@ -65,12 +65,12 @@
             {
                 "key": "is_locked",
                 "name": "Is locked",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "is_canceled",
                 "name": "Is canceled",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "factor",
