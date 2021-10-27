@@ -348,6 +348,18 @@
                 entity: 'performance-report',
                 key: "reports.performancereport"
             },
+
+            {
+                name: 'Transaction Class',
+                entity: 'transaction-class',
+                key: 'transactions.transactionclass'
+            },
+
+            {
+                name: 'Status',
+                entity: 'complex-transaction-status',
+                key: 'transactions.complextransactionstatus'
+            },
         ]
     };
 
