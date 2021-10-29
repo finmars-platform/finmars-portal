@@ -71,7 +71,7 @@
 
         var transactionAttrsComp = [
             'transaction_code', 'transaction_class.name', 'position_size_with_sign', 'cash_consideration', 'principal_with_sign', 'carry_with_sign', 'overheads_with_sign',
-            'accounting_date', 'cash_date', 'reference_fx_rate', 'is_locked', 'is_canceled', 'factor', 'trade_price'
+            'accounting_date', 'cash_date', 'reference_fx_rate', 'is_locked', 'is_canceled', 'factor', 'trade_price', 'notes'
         ];
 
         var transactionClassAttrsComp = [

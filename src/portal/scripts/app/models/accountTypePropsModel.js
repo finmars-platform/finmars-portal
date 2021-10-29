@@ -21,8 +21,8 @@
                 "allow_null": true
             },
             {
-                "key": "notes",
-                "name": "Notes",
+                "key": "user_code",
+                "name": "User code",
                 "value_type": 10,
                 "allow_null": true
             },
@@ -33,8 +33,8 @@
                 "allow_null": true
             },
             {
-                "key": "user_code",
-                "name": "User code",
+                "key": "notes",
+                "name": "Notes",
                 "value_type": 10,
                 "allow_null": true
             },

@@ -38,8 +38,16 @@
                 var attrPathKeys = tAttr.name.split(". ");
 
                 if (tAttr.hasOwnProperty('attribute_type')) { // place all dynamic attributes into separate group
-                    attrPathKeys.splice(1, 0, 'User Attributes');
+
+                    if (tAttr.key.indexOf('pricing_policy_') !== -1 ) {
+                        attrPathKeys.splice(1, 0, 'Pricing');
+                    } else {
+                        attrPathKeys.splice(1, 0, 'User Attributes');
+                    }
+
                 }
+
+
 
                 var attrName = attrPathKeys.pop();
                 var attrObjPath = tableAttrsTree.items;

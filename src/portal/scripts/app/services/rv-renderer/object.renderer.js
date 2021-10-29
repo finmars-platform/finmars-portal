@@ -92,14 +92,14 @@
 
             if (typeof obj[column.key] === 'number') {
 
-                if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
+                if (obj[column.key + '_object'] && obj[column.key + '_object'].short_name) {
 
                     result.html_result = stringHelper.parseAndInsertHyperlinks(
-                        obj[column.key + '_object'].name,
+                        obj[column.key + '_object'].short_name,
                         "class='openLinkInNewTab'"
                     );
 
-                    result.raw_text_result = obj[column.key + '_object'].name;
+                    result.raw_text_result = obj[column.key + '_object'].short_name;
 
                 } else if (column.key === 'complex_transaction.status') {
 
