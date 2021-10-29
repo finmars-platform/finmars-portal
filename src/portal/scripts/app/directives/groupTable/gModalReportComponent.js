@@ -61,11 +61,13 @@
             'total_fixed_opened', 'total_fx_opened', 'principal_opened', 'principal_fixed_opened', 'principal_fx_opened', 'carry_opened', 'carry_fixed_opened',
             'carry_fx_opened', 'overheads_opened', 'overheads_fixed_opened', 'overheads_fx_opened', 'total_opened_loc', 'total_fixed_opened_loc', 'total_fx_opened_loc',
             'principal_opened_loc', 'principal_fixed_opened_loc', 'principal_fx_opened_loc', 'carry_opened_loc', 'carry_fixed_opened_loc', 'carry_fx_opened_loc',
-            'overheads_opened_loc', 'overheads_fixed_opened_loc', 'overheads_fx_opened_loc', 'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
-            'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
-            'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
-            'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
-            'overheads_fx_closed_loc',
+            'overheads_opened_loc', 'overheads_fixed_opened_loc', 'overheads_fx_opened_loc',
+
+            // 'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
+            // 'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
+            // 'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
+            // 'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
+            // 'overheads_fx_closed_loc',
 
             'time_invested', 'position_return', 'net_position_return'
         ];
