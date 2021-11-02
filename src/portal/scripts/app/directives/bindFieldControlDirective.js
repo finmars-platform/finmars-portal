@@ -64,6 +64,22 @@
 
 				$scope.getName = function () {
 
+					if ($scope.item.name === 'name') {
+						return 'Report Name (Name)'
+					}
+
+					if ($scope.item.name === 'short_name') {
+						return 'System Name (Short Name)'
+					}
+
+					if ($scope.item.name === 'user_code') {
+						return 'Unique Code (User Code)'
+					}
+
+					if ($scope.item.name === 'public_name') {
+						return 'Name if Hidden (Public Name)'
+					}
+
 					if ($scope.item.options && $scope.item.options.fieldName) {
 						return $scope.item.options.fieldName;
 
