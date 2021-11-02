@@ -39,10 +39,10 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     var SHOW_BY_DEFAULT_OPTIONS = [
-        {id: 'name', name: 'Name'},
-        {id: 'public_name', name: 'Public Name'},
-        {id: 'short_name', name: 'Short Name'},
-        {id: 'user_code', name: 'User Code'},
+        {id: 'name', name: 'Name', visible_name: 'Report Name (Name)'},
+        {id: 'public_name', name: 'Public Name', visible_name: 'System Name (Short Name)'},
+        {id: 'short_name', name: 'Short Name', visible_name: 'Unique Code (User Code)'},
+        {id: 'user_code', name: 'User Code', visible_name: 'Name if Hidden (Public Name)'},
     ];
 
     module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
@@ -168,7 +168,7 @@
         };
 
         vm.getPlaceholderByDefault = function () {
-            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).name;
+            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).visible_name;
         };
 
         vm.isEntityTabActive = function () {

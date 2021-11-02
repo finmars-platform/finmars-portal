@@ -111,10 +111,10 @@
         }
 
         vm.showByDefaultOptions = [
-            {id: 'name', name: 'Name'},
-            {id: 'public_name', name: 'Public Name'},
-            {id: 'short_name', name: 'Short Name'},
-            {id: 'user_code', name: 'User Code'},
+            {id: 'name', name: 'Name', visible_name: 'Report Name (Name)'},
+            {id: 'public_name', name: 'Public Name', visible_name: 'System Name (Short Name)'},
+            {id: 'short_name', name: 'Short Name', visible_name: 'Unique Code (User Code)'},
+            {id: 'user_code', name: 'User Code', visible_name: 'Name if Hidden (Public Name)'},
         ];
 
         if (vm.entityType === 'currency') {
@@ -163,7 +163,7 @@
         };
 
         vm.getPlaceholderByDefault = function () {
-            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).name;
+            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).visible_name;
         };
 
         vm.entityTabsMenuTplt = vm.sharedLogic.entityTabsMenuTplt;
