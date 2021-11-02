@@ -13,7 +13,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $state, usersService, usersGroupService, backendConfigurationImportService) {
+    module.exports = function ($scope, $state, $mdDialog, usersService, usersGroupService, backendConfigurationImportService) {
 
         var vm = this;
 
@@ -83,38 +83,59 @@
 
         };
 
-        vm.importConfiguration = function (resolve) {
+        vm.importConfiguration = function ($event, resolve) {
+            
+            console.log('vm.importConfig', vm.importConfig);
 
-            vm.processing = true;
+            var blob = new Blob([JSON.stringify(vm.importConfig.data)], {type: 'application/json'})
+            var fileOfBlob = new File([blob], 'configuration.fcfg');
 
-            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
-
-                vm.importConfig = data;
-
-                vm.counter = data.processed_rows;
-                vm.activeItemTotal = data.total_rows;
-
-
-
-                if (vm.importConfig.task_status === 'SUCCESS') {
-
-                    vm.processing = false;
-                    
-                    $scope.$apply();
-
-                    resolve()
-
-                } else {
-
-                    $scope.$apply();
-
-                    setTimeout(function () {
-                        vm.importConfiguration(resolve);
-                    }, 1000)
-
+            $mdDialog.show({
+                controller: 'ConfigurationImportDialogController as vm',
+                templateUrl: 'views/dialogs/configuration-import/configuration-import-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        file: vm.importConfig.data,
+                        rawFile: fileOfBlob
+                    }
                 }
-
             })
+
+            // vm.processing = true;
+            //
+            // backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+            //
+            //     vm.importConfig = data;
+            //
+            //     vm.counter = data.processed_rows;
+            //     vm.activeItemTotal = data.total_rows;
+            //
+            //
+            //
+            //     if (vm.importConfig.task_status === 'SUCCESS') {
+            //
+            //         vm.processing = false;
+            //
+            //         $scope.$apply();
+            //
+            //         resolve()
+            //
+            //     } else {
+            //
+            //         $scope.$apply();
+            //
+            //         setTimeout(function () {
+            //             vm.importConfiguration($event, resolve);
+            //         }, 1000)
+            //
+            //     }
+            //
+            // })
 
         };
 
@@ -127,7 +148,7 @@
 
             new Promise(function (resolve, reject) {
 
-                vm.importConfiguration(resolve)
+                vm.importConfiguration($event, resolve)
 
             }).then(function (value) {
 

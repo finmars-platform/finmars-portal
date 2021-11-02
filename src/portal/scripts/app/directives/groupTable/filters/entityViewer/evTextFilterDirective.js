@@ -23,7 +23,7 @@
 				scope.filterTypes = [
 					{name: 'Equal', value: 'equal'},
 					{name: 'Contains', value: 'contains'},
-					{name: 'Contains has substring', value: 'contains_has_substring'},
+					{name: 'Has substring', value: 'contains_has_substring'},
 					// {name: 'Does not contains', value: 'does_not_contains'},
 					{name: 'Select', value: 'selector'},
 					{name: 'Multiple Select', value: 'multiselector'},
