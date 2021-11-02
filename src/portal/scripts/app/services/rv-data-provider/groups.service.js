@@ -113,7 +113,7 @@
                 if (group.key === 'complex_transaction.status') {
 
                     if (item_value === 1) {
-                        resultGroup.___group_name = 'Production'
+                        resultGroup.___group_name = 'Booked'
                     }
 
                     if (item_value === 2) {
