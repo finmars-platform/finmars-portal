@@ -155,7 +155,7 @@
                         if (scope.groupType.key === 'status') {
 
                             if (scope.item.___group_name === 1) {
-                                scope.item.___group_name_pretty = 'Production'
+                                scope.item.___group_name_pretty = 'Booked'
                             } else if (scope.item.___group_name === 2) {
                                 scope.item.___group_name_pretty = 'Pending'
                             } else if (scope.item.___group_name === 3) {

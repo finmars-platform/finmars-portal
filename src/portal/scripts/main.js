@@ -536,7 +536,7 @@ export default (function () {
 	portal.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
 	portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
 	portal.controller('SystemMessagesController', ['$scope', '$mdDialog', require('./app/controllers/pages/systemMessagesController')]);
-	portal.controller('UpdateConfigurationPageController', ['$scope', '$state', 'usersService', 'usersGroupService', 'backendConfigurationImportService', require('./app/controllers/pages/updateConfigurationPageController')]);
+	portal.controller('UpdateConfigurationPageController', ['$scope', '$state', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', require('./app/controllers/pages/updateConfigurationPageController')]);
 
 	// Procedures
 
