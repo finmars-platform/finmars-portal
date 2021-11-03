@@ -569,7 +569,8 @@
 								locals: {
 									data: {
 										availableAttrs: availableAttrs,
-										title: 'Choose filter to add'
+										title: 'Choose filter to add',
+                                        isReport: $scope.isReport
 									}
 								}
 
