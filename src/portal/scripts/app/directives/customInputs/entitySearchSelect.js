@@ -38,9 +38,9 @@
 
                 // TIPS
                 // scope.smallOptions probable properties
-                    // tooltipText: custom tolltip text
-                    // notNull: turn on error mode if field is not filled
-                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
+                // tooltipText: custom tolltip text
+                // notNull: turn on error mode if field is not filled
+                // dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
                 if (scope.smallOptions) {
 
@@ -172,7 +172,7 @@
                         pageSize: 1000,
                     };
 
-                	if (scope.inputText) {
+                    if (scope.inputText) {
 
                         var inputText = scope.inputText;
 
@@ -180,7 +180,7 @@
                             'short_name': inputText
                         }
 
-                	}
+                    }
 
                     entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
@@ -331,7 +331,7 @@
 
                     inputElem.addEventListener('focus', function () {
 
-						scope.inputText = "";
+                        scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
                         getOptionsList();
@@ -397,9 +397,9 @@
                     scope.$watch('itemName', function () {
 
                         if (scope.itemName) {
-                            
+
                             console.log('itemName', scope.itemName);
-                            
+
                             scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
 
                         } else {
@@ -471,7 +471,7 @@
                 };
 
                 scope.downloadEntity = function ($event) {
-                  $event.stopPropagation();
+                    $event.stopPropagation();
 
                     console.log('scope.downloadEntity');
 
@@ -488,6 +488,13 @@
                         scope.selectOption(item);
                     })
                 };
+
+                scope.selectFirst = function ($event) {
+
+                    if ($event.which === 13) {
+                        scope.selectOption(scope.selectorOptions[0])
+                    }
+                }
 
                 init();
 

@@ -1578,7 +1578,8 @@
                 locals: {
                     data: {
                         availableAttrs: availableAttrs,
-                        title: dialogTitle
+                        title: dialogTitle,
+                        isReport: false
                     }
                 }
             }).then(function (res) {
