@@ -137,7 +137,7 @@
                         //scope.item.value = item.id;
                         scope.item = item.id;
 
-                        if (scope.itemObject !== undefined) {
+                        if (!scope.itemObject) {
                             scope.itemObject = item;
                         }
 
