@@ -70,7 +70,7 @@
 
                 scope.getModelKeyEntity = function () {
 
-                    console.log('scope.getModelKeyEntity scope.item.key', scope.item.key)
+                    // console.log('scope.getModelKeyEntity scope.item.key', scope.item.key)
 
                     //var key;
                     var modelKeyEntity = scope.item.key;

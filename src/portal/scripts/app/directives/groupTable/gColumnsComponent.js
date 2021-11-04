@@ -2114,7 +2114,8 @@
                         locals: {
                             data: {
                                 availableAttrs: availableAttrs,
-                                title: 'Choose column to add'
+                                title: 'Choose column to add',
+                                isReport: scope.isReport
                             }
                         }
                     }).then(function (res) {

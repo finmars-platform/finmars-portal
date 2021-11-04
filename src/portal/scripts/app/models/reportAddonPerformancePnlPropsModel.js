@@ -237,86 +237,86 @@
                 "name": "Total (Pricing Currency)",
                 "value_type": 20
             },
-            //{
-            //    "key": "principal_closed",
-            //    "name": "Principal closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "carry_closed",
-            //    "name": "Carry closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "overheads_closed",
-            //    "name": "Overheads closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_closed",
-            //    "name": "Total closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "principal_closed_loc",
-            //    "name": "Principal closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "carry_closed_loc",
-            //    "name": "Carry closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "overheads_closed_loc",
-            //    "name": "Overheads closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_closed_loc",
-            //    "name": "Total closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "principal_opened",
-            //    "name": "Principal opened",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "carry_opened",
-            //    "name": "Carry opened",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "overheads_opened",
-            //    "name": "Overheads opened",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_opened",
-            //    "name": "Total opened",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "principal_opened_loc",
-            //    "name": "Principal opened (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "carry_opened_loc",
-            //    "name": "Carry opened (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "overheads_opened_loc",
-            //    "name": "Overheads opened (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_opened_loc",
-            //    "name": "Total opened (Pricing Currency)",
-            //    "value_type": 20
-            //},
+            {
+               "key": "principal_closed",
+               "name": "Principal closed",
+               "value_type": 20
+            },
+            {
+               "key": "carry_closed",
+               "name": "Carry closed",
+               "value_type": 20
+            },
+            {
+               "key": "overheads_closed",
+               "name": "Overheads closed",
+               "value_type": 20
+            },
+            {
+               "key": "total_closed",
+               "name": "Total closed",
+               "value_type": 20
+            },
+            {
+               "key": "principal_closed_loc",
+               "name": "Principal closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "carry_closed_loc",
+               "name": "Carry closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "overheads_closed_loc",
+               "name": "Overheads closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "total_closed_loc",
+               "name": "Total closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "principal_opened",
+               "name": "Principal opened",
+               "value_type": 20
+            },
+            {
+               "key": "carry_opened",
+               "name": "Carry opened",
+               "value_type": 20
+            },
+            {
+               "key": "overheads_opened",
+               "name": "Overheads opened",
+               "value_type": 20
+            },
+            {
+               "key": "total_opened",
+               "name": "Total opened",
+               "value_type": 20
+            },
+            {
+               "key": "principal_opened_loc",
+               "name": "Principal opened (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "carry_opened_loc",
+               "name": "Carry opened (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "overheads_opened_loc",
+               "name": "Overheads opened (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "total_opened_loc",
+               "name": "Total opened (Pricing Currency)",
+               "value_type": 20
+            },
 
             {
                 "key": "total_fx",
@@ -329,56 +329,56 @@
                 "value_type": 20
             },
 
-            //{
-            //    "key": "principal_fx_closed",
-            //    "name": "Principal FX closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "carry_fx_closed",
-            //    "name": "Carry FX closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "overheads_fx_closed",
-            //    "name": "Overheads FX closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_fx_closed",
-            //    "name": "Total FX closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "principal_fx_closed_loc",
-            //    "name": "Principal FX closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "carry_fx_closed_loc",
-            //    "name": "Carry FX closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "overheads_fx_closed_loc",
-            //    "name": "Overheads FX closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_fx_closed_loc",
-            //    "name": "Total FX closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_fx_opened",
-            //    "name": "Total FX opened",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_fx_opened_loc",
-            //    "name": "Total FX opened (Pricing Currency)",
-            //    "value_type": 20
-            //},
+            {
+               "key": "principal_fx_closed",
+               "name": "Principal FX closed",
+               "value_type": 20
+            },
+            {
+               "key": "carry_fx_closed",
+               "name": "Carry FX closed",
+               "value_type": 20
+            },
+            {
+               "key": "overheads_fx_closed",
+               "name": "Overheads FX closed",
+               "value_type": 20
+            },
+            {
+               "key": "total_fx_closed",
+               "name": "Total FX closed",
+               "value_type": 20
+            },
+            {
+               "key": "principal_fx_closed_loc",
+               "name": "Principal FX closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "carry_fx_closed_loc",
+               "name": "Carry FX closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "overheads_fx_closed_loc",
+               "name": "Overheads FX closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "total_fx_closed_loc",
+               "name": "Total FX closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "total_fx_opened",
+               "name": "Total FX opened",
+               "value_type": 20
+            },
+            {
+               "key": "total_fx_opened_loc",
+               "name": "Total FX opened (Pricing Currency)",
+               "value_type": 20
+            },
             {
                 "key": "total_fixed",
                 "name": "Total fixed",
@@ -388,57 +388,57 @@
                 "key": "total_fixed_loc",
                 "name": "Total fixed (Pricing Currency)",
                 "value_type": 20
+            },
+            {
+               "key": "principal_fixed_closed",
+               "name": "Principal fixed closed",
+               "value_type": 20
+            },
+            {
+               "key": "carry_fixed_closed",
+               "name": "Carry fixed closed",
+               "value_type": 20
+            },
+            {
+               "key": "overheads_fixed_closed",
+               "name": "Overheads fixed closed",
+               "value_type": 20
+            },
+            {
+               "key": "total_fixed_closed",
+               "name": "Total fixed closed",
+               "value_type": 20
+            },
+            {
+               "key": "principal_fixed_closed_loc",
+               "name": "Principal fixed closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "carry_fixed_closed_loc",
+               "name": "Carry fixed closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "overheads_fixed_closed_loc",
+               "name": "Overheads fixed closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "total_fixed_closed_loc",
+               "name": "Total fixed closed (Pricing Currency)",
+               "value_type": 20
+            },
+            {
+               "key": "total_fixed_opened",
+               "name": "Total fixed opened",
+               "value_type": 20
+            },
+            {
+               "key": "total_fixed_opened_loc",
+               "name": "Total fixed opened (Pricing Currency)",
+               "value_type": 20
             }
-            //{
-            //    "key": "principal_fixed_closed",
-            //    "name": "Principal fixed closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "carry_fixed_closed",
-            //    "name": "Carry fixed closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "overheads_fixed_closed",
-            //    "name": "Overheads fixed closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_fixed_closed",
-            //    "name": "Total fixed closed",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "principal_fixed_closed_loc",
-            //    "name": "Principal fixed closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "carry_fixed_closed_loc",
-            //    "name": "Carry fixed closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "overheads_fixed_closed_loc",
-            //    "name": "Overheads fixed closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_fixed_closed_loc",
-            //    "name": "Total fixed closed (Pricing Currency)",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_fixed_opened",
-            //    "name": "Total fixed opened",
-            //    "value_type": 20
-            //},
-            //{
-            //    "key": "total_fixed_opened_loc",
-            //    "name": "Total fixed opened (Pricing Currency)",
-            //    "value_type": 20
-            //}
 
 
         ]
