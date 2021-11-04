@@ -137,9 +137,7 @@
                         //scope.item.value = item.id;
                         scope.item = item.id;
 
-                        if (!scope.itemObject) {
-                            scope.itemObject = item;
-                        }
+                        scope.itemObject = item;
 
                         scope.valueIsValid = true;
 
