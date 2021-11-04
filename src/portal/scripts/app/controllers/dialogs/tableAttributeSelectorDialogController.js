@@ -50,7 +50,13 @@
                             attrPathKeys.splice(1, 0, 'User Attributes');
                         }
                     } else {
-                        attrPathKeys.splice(0, 0, 'User Attributes');
+
+                        if (tAttr.key.indexOf('pricing_policy_') !== -1) {
+                            attrPathKeys.splice(0, 0, 'Pricing');
+                        } else {
+                            attrPathKeys.splice(0, 0, 'User Attributes');
+                        }
+
                     }
 
                 }
