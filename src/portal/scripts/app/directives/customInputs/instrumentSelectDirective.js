@@ -146,6 +146,7 @@
                         scope.error = '';
 
                         scope.model = item.id;
+                        scope.itemObject = item;
                         scope.valueIsValid = true;
 
                         scope.itemName = item.name;
@@ -211,6 +212,7 @@
                         } else {
 
                             scope.model = data.result_id;
+                            scope.itemObject = {id: data.result_id, name: item.issueName, user_code: item.issueName}
 
                             scope.processing = false;
 
@@ -363,6 +365,7 @@
                         if (res.status === 'agree') {
 
                             scope.model = res.data.item.id;
+                            scope.itemObject = res.data.item;
 
                             scope.itemName = res.data.item.name;
                             scope.inputText = res.data.item.name;
