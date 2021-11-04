@@ -395,7 +395,14 @@
                     vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
                     vm.getAttributeTypes();
 
+                    var entityState = JSON.parse(JSON.stringify(vm.entity))
+
                     vm.getFormLayout().then(function (value) {
+
+                        vm.entity = entityState;
+
+                        console.log('entityState', entityState);
+
                         $scope.$apply();
                     })
 

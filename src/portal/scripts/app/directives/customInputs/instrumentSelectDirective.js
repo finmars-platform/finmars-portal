@@ -418,11 +418,28 @@
                     var resultValue;
 
                     // Regular expression for multiple highlighting case insensitive results
-                    var reg  =  new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+                    var reg = new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
 
                     resultValue = value.replace(reg, '<span class="highlight">$1</span>');
 
                     return resultValue
+
+                }
+
+                scope.selectFirst = function ($event) {
+
+                    if ($event.which === 13) {
+
+                        if (scope.localInstruments.length) {
+                            scope.selectLocalInstrument(scope.localInstruments[0])
+                        } else {
+
+                            if (scope.databaseInstruments.length) {
+                                scope.selectDatabaseInstrument(scope.databaseInstruments[0])
+                            }
+                        }
+
+                    }
 
                 }
 
@@ -560,11 +577,11 @@
 
                         scope.$apply();
 
-                        setTimeout(function (){
+                        setTimeout(function () {
 
-                            $('.instrument-select-options-group-title').on('click', function(){
+                            $('.instrument-select-options-group-title').on('click', function () {
 
-                                $(this).next()[0].scrollIntoView({ block: 'start', behavior: 'smooth' });
+                                $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
                             });
 
                         }, 100)
