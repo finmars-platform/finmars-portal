@@ -1587,15 +1587,29 @@
 
         vm.rebookAsPending = async function ($event) {
 
+            console.log('vm.rebookAsPending')
+
             transactionHelper.updateEntityBeforeSave(vm);
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            // vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            //
+            // var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
 
-            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
+            var errors = entityEditorHelper.validateComplexTransaction(vm.entity,
+                vm.transactionType.actions,
+                vm.tabs,
+                vm.entityAttrs,
+                vm.attrs,
+                vm.userInputs);
 
-            if (vm.entity.$_isValid) {
 
-                if (hasProhibitNegNums.length === 0) {
+            if (errors.length){
+
+                entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
+
+            } else {
+
+                // if (hasProhibitNegNums.length === 0) {
 
                     var result = entityEditorHelper.removeNullFields(vm.entity);
 
@@ -1618,6 +1632,7 @@
 
                     result.store = true;
                     result.calculate = true;
+
 
                     new Promise(function (resolve, reject) {
 
@@ -1674,37 +1689,37 @@
 
                         });
 
-                } else {
-
-                    var warningDescription = '<p>Next fields should have positive number value to proceed:';
-
-                    hasProhibitNegNums.forEach(function (field) {
-                        warningDescription = warningDescription + '<br>' + field;
-                    });
-
-                    warningDescription = warningDescription + '</p>';
-
-                    $mdDialog.show({
-                        controller: "WarningDialogController as vm",
-                        templateUrl: "views/dialogs/warning-dialog-view.html",
-                        multiple: true,
-                        clickOutsideToClose: false,
-                        locals: {
-                            warning: {
-                                title: "Warning",
-                                description: warningDescription,
-                                actionsButtons: [
-                                    {
-                                        name: "CLOSE",
-                                        response: {status: 'disagree'}
-                                    }
-                                ]
-                            }
-                        }
-
-                    });
-
-                }
+                // } else {
+                //
+                //     var warningDescription = '<p>Next fields should have positive number value to proceed:';
+                //
+                //     hasProhibitNegNums.forEach(function (field) {
+                //         warningDescription = warningDescription + '<br>' + field;
+                //     });
+                //
+                //     warningDescription = warningDescription + '</p>';
+                //
+                //     $mdDialog.show({
+                //         controller: "WarningDialogController as vm",
+                //         templateUrl: "views/dialogs/warning-dialog-view.html",
+                //         multiple: true,
+                //         clickOutsideToClose: false,
+                //         locals: {
+                //             warning: {
+                //                 title: "Warning",
+                //                 description: warningDescription,
+                //                 actionsButtons: [
+                //                     {
+                //                         name: "CLOSE",
+                //                         response: {status: 'disagree'}
+                //                     }
+                //                 ]
+                //             }
+                //         }
+                //
+                //     });
+                //
+                // }
 
             }
 
