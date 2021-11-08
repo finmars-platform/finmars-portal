@@ -20,7 +20,8 @@
 				evEditorDataService: "=",
 				evEditorEventService: "=",
 				entityChange: "&?",
-				onFieldBlur: "&?", // for now implemented only for textInputDirective
+				onFieldBlur: "&?", // for now implemented only for textInputDirective,
+				fieldsDataStore: '='
 			},
 			templateUrl: "views/directives/bind-field-control-view.html",
 			controllerAs: 'vm',

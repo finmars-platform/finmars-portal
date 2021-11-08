@@ -33,6 +33,7 @@
                                 ev-editor-event-service="vm.evEditorEventService"
                                 ev-editor-data-service="vm.evEditorDataService"
                                 item="vm.fixedAreaAttributesLayout[$index]"
+                                fields-data-store="vm.fieldsDataStore"
                                 entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                     </div>
                 </div>
@@ -63,6 +64,7 @@
                                             ev-editor-event-service="vm.evEditorEventService"
                                             ev-editor-data-service="vm.evEditorDataService"
                                             item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
+                                            fields-data-store="vm.fieldsDataStore"
                                             entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                                 </div>
                             </div>

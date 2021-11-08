@@ -71,6 +71,8 @@
 
 		vm.openedIn = data.openedIn;
 
+		vm.fieldsDataStore = {}
+
         var notCopiedTransaction = true;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
         //var tooltipsList = [];
