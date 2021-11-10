@@ -4,6 +4,7 @@
 
     var instrumentService = require('../../services/instrumentService')
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
+    var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
@@ -455,45 +456,7 @@
                     if (scope.inputText.length > 2) {
                         promises.push(new Promise(function (resolve, reject) {
 
-                            // scope.databaseInstruments = [{
-                            //     "referenceId": "RU000A0JRCM0",
-                            //     "instrumentType": "Equity",
-                            //     "last_cbnnds_update": "2021-01-25T00:00:00",
-                            //     "issueName": "Penzkompressormash, ord."
-                            // }, {
-                            //     "referenceId": "RU000A0JRWG0",
-                            //     "instrumentType": "Bond",
-                            //     "last_cbnnds_update": "2020-08-04T00:00:00",
-                            //     "issueName": "TransFin-M, 16"
-                            // }, {
-                            //     "referenceId": "RU000A0JRZA6",
-                            //     "instrumentType": "Equity",
-                            //     "last_cbnnds_update": "2021-01-25T00:00:00",
-                            //     "issueName": "Karelgaz, ord."
-                            // }, {
-                            //     "referenceId": "RU000A0JRJV6",
-                            //     "instrumentType": "Bond",
-                            //     "last_cbnnds_update": "2021-06-29T00:00:00",
-                            //     "issueName": "NNK, 04"
-                            // }, {
-                            //     "referenceId": "RU000A0JRPE9",
-                            //     "instrumentType": "Equity",
-                            //     "last_cbnnds_update": "2021-01-25T00:00:00",
-                            //     "issueName": "Chernogorenergo, ord."
-                            // }, {
-                            //     "referenceId": "RU000A0JRJS2",
-                            //     "instrumentType": "Bond",
-                            //     "last_cbnnds_update": "2021-06-29T00:00:00",
-                            //     "issueName": "Mechel, 17"
-                            // }].filter(function (item) {
-                            //
-                            //     return item.referenceId.indexOf(scope.inputText) !== -1
-                            // })
-
-
-                            fetch('https://finmars.com/instrument-database/instr/find/name/' + scope.inputText).then(function (data) {
-                                return data.json()
-                            }).then(function (data) {
+                            instrumentDatabaseSearchService.getList(scope.inputText).then(function (data) {
 
                                 scope.databaseInstrumentsTotal = data.resultCount;
 

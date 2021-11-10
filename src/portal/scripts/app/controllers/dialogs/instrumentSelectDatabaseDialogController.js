@@ -7,6 +7,7 @@
 
     var instrumentService = require('../../services/instrumentService');
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
+    var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
@@ -277,22 +278,20 @@
 
             vm.globalPage = vm.globalPage + 1
 
-            var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
+            // var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
+            //
+            // if (vm.instrument_type){
+            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
+            //
+            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '&page=' + vm.globalPage
+            // } else {
+            //
+            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + vm.globalPage
+            // }
+            //
 
-            if (vm.instrument_type){
-                instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
 
-                instrumentDatabaseUrl = instrumentDatabaseUrl + '&page=' + vm.globalPage
-            } else {
-
-                instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + vm.globalPage
-            }
-
-
-
-            fetch(instrumentDatabaseUrl).then(function (data) {
-                return data.json()
-            }).then(function (data) {
+            instrumentDatabaseSearchService.getList(vm.inputText, vm.globalPage, vm.instrument_type).then(function (data) {
 
                 vm.globalProcessing = false;
 
@@ -332,15 +331,13 @@
 
                 promises.push(new Promise(function (resolve, reject) {
 
-                    var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
+                    // var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
+                    //
+                    // if (vm.instrument_type){
+                    //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
+                    // }
 
-                    if (vm.instrument_type){
-                        instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
-                    }
-
-                    fetch(instrumentDatabaseUrl).then(function (data) {
-                        return data.json()
-                    }).then(function (data) {
+                    instrumentDatabaseSearchService.getList(vm.inputText, 1, vm.instrument_type).then(function (data) {
 
                         vm.databaseInstrumentsTotal = data.resultCount
 
