@@ -26,7 +26,8 @@
                 entityType: '=',
                 evEditorDataService: '=',
                 evEditorEventService: '=',
-                itemChange: '&?'
+                itemChange: '&?',
+                fieldsDataStore: '='
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs, bfcVm) {
@@ -360,7 +361,11 @@
 
                         if (scope.entityType === 'complex-transaction') {
 
-                            return fieldResolverService.getFieldsByContentType(scope.item.content_type, options).then(function (res) {
+                            console.log('scope.fieldsDataStore', scope.fieldsDataStore);
+
+                            return fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore).then(function (res) {
+
+                                console.log('res', res);
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
@@ -381,7 +386,7 @@
 
                         } else {
 
-                            return fieldResolverService.getFields(scope.item.key, options).then(function (res) {
+                            return fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;

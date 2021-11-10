@@ -33,12 +33,25 @@
     var metaEventClassRepository = require('../repositories/metaEventClassRepository');
     var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
 
-    var getFields = function (fieldKey, options) {
+    var getFields = function (fieldKey, options, fieldsDataStore) {
 
         return new Promise(function (resolve, reject) {
 
             console.log('options', options);
             console.log('fieldKey', fieldKey);
+            console.log('fieldsDataStore', fieldsDataStore);
+
+            if (fieldsDataStore) {
+
+                if (!fieldsDataStore['fieldKeys']) {
+                    fieldsDataStore['fieldKeys'] = {}
+                }
+
+                if (fieldsDataStore['fieldKeys'][fieldKey]) {
+                    resolve(fieldsDataStore[fieldKey])
+                }
+
+            }
 
             if (options && options.hasOwnProperty('entityType')) {
 
@@ -401,108 +414,268 @@
 
     };
 
-    var getFieldsByContentType = function (contentType, options) {
-        return new Promise(function (resolve, reject) {
+    var getFieldsByContentType = function (contentType, options, fieldsDataStore) {
 
-            switch (contentType) {
-                case 'instruments.dailypricingmodel':
-                    entityFieldsRepository.getDailyPricingModelChoices({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.dailypricingmodel', data: data});
-                    });
-                    break;
-                case 'instruments.pricingpolicy':
-                    pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.pricingpolicy', data: data.results});
-                    });
-                    break;
-                case 'instruments.paymentsizedetail':
-                    entityFieldsRepository.getPaymentSizeDetailChoices({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.paymentsizedetail', data: data});
-                    });
-                    break;
-                case 'instruments.accrualcalculationmodel':
-                    accrualCalculationModelRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.accrualcalculationmodel', data: data});
-                    });
-                    break;
-                case 'instruments.periodicity':
-                    instrumentPeriodicityRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.periodicity', data: data});
-                    });
-                    break;
-                case 'instruments.instrument':
-                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.instrument', data: data.results});
-                    });
-                    break;
-                case 'integrations.pricedownloadscheme':
-                    importPriceDownloadSchemeRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'integrations.pricedownloadscheme', data: data.results});
-                    });
-                    break;
-                case 'instruments.instrumenttype':
-                    instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instruments.instrumenttype', data: data.results});
-                    });
-                    break;
-                case 'currencies.currency':
-                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'currencies.currency', data: data.results});
-                    });
-                    break;
-                case 'portfolios.portfolio':
-                    portfolioRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'portfolios.portfolio', data: data.results});
-                    });
-                    break;
-                case 'counterparties.counterparty':
-                    counterpartyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'counterparties.counterparty', data: data.results});
-                    });
-                    break;
-                case 'counterparties.responsible':
-                    responsibleRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'counterparties.responsible', data: data.results});
-                    });
-                    break;
-                case 'accounts.account':
-                    accountRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'accounts.account', data: data.results});
-                    });
-                    break;
-                case 'accounts.accounttype':
-                    accountTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'accounts.accounttype', data: data.results});
-                    });
-                    break;
-                case 'transactions.eventclass':
-                    metaEventClassRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'transactions.eventclass', data: data});
-                    });
-                    break;
-                case 'transactions.notificationclass':
-                    metaNotificationClassRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'transactions.notificationclass', data: data});
-                    });
-                    break;
-                case 'strategies.strategy1':
-                    strategyRepository.getListLight(1, {pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'strategies.strategy1', data: data.results});
-                    });
-                    break;
-                case 'strategies.strategy2':
-                    strategyRepository.getListLight(2, {pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'strategies.strategy2', data: data.results});
-                    });
-                    break;
-                case 'strategies.strategy3':
-                    strategyRepository.getListLight(3, {pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'strategies.strategy3', data: data.results});
-                    });
-                    break;
+        if (!fieldsDataStore['fieldKeys']) {
+            fieldsDataStore['fieldKeys'] = {}
+        }
+
+        if (fieldsDataStore['fieldKeys'][contentType]) {
+
+            if (fieldsDataStore['fieldKeys'][contentType] instanceof Promise) {
+
+                console.log('instanceof Promise fieldsDataStore[contentType]', fieldsDataStore['fieldKeys'][contentType]);
+
+                return fieldsDataStore['fieldKeys'][contentType];
+            } else {
+
+                console.log('return new promise fieldsDataStore[\'fieldKeys\'][contentType]', fieldsDataStore['fieldKeys'][contentType]);
+
+                return new Promise(function (resolve, reject) {
+
+                    resolve(fieldsDataStore['fieldKeys'][contentType])
+                })
             }
+        } else {
 
-        });
+            fieldsDataStore['fieldKeys'][contentType] = new Promise(function (resolve, reject) {
+
+                switch (contentType) {
+                    case 'instruments.dailypricingmodel':
+                        entityFieldsRepository.getDailyPricingModelChoices({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'instruments.dailypricingmodel',
+                                data: data
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'instruments.pricingpolicy':
+                        pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'instruments.pricingpolicy',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'instruments.paymentsizedetail':
+                        entityFieldsRepository.getPaymentSizeDetailChoices({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'instruments.paymentsizedetail',
+                                data: data
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'instruments.accrualcalculationmodel':
+                        accrualCalculationModelRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'instruments.accrualcalculationmodel',
+                                data: data
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'instruments.periodicity':
+                        instrumentPeriodicityRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'instruments.periodicity',
+                                data: data
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'instruments.instrument':
+                        instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'instruments.instrument',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'integrations.pricedownloadscheme':
+                        importPriceDownloadSchemeRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'integrations.pricedownloadscheme',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'instruments.instrumenttype':
+                        instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'instruments.instrumenttype',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'currencies.currency':
+                        currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'currencies.currency',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'portfolios.portfolio':
+                        portfolioRepository.getListLight({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'portfolios.portfolio',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'counterparties.counterparty':
+                        counterpartyRepository.getListLight({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'counterparties.counterparty',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'counterparties.responsible':
+                        responsibleRepository.getListLight({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'counterparties.responsible',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'accounts.account':
+                        accountRepository.getListLight({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'accounts.account',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'accounts.accounttype':
+                        accountTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'accounts.accounttype',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'transactions.eventclass':
+                        metaEventClassRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'transactions.eventclass',
+                                data: data
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'transactions.notificationclass':
+                        metaNotificationClassRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'transactions.notificationclass',
+                                data: data
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'strategies.strategy1':
+                        strategyRepository.getListLight(1, {pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'strategies.strategy1',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'strategies.strategy2':
+                        strategyRepository.getListLight(2, {pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'strategies.strategy2',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'strategies.strategy3':
+                        strategyRepository.getListLight(3, {pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'strategies.strategy3',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                }
+
+            });
+
+            return fieldsDataStore['fieldKeys'][contentType]
+
+        }
     };
 
     module.exports = {
