@@ -17,15 +17,11 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        var instrumentDatabaseUrl = baseUrl + '/' + prefix + '/api/'  + 'instruments/instrument-database-search/?name=' + name
+        var instrumentDatabaseUrl = baseUrl + '/' + prefix + '/api/'  + 'instruments/instrument-database-search/?name=' + name + '&page=' + page
 
-        if (instrument_type){
-            instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + instrument_type
+        if (instrument_type) {
+            instrumentDatabaseUrl = instrumentDatabaseUrl + '&instrument_type=' + instrument_type
 
-            instrumentDatabaseUrl = instrumentDatabaseUrl + '&page=' + page
-        } else {
-
-            instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + page
         }
 
         return xhrService.fetch(instrumentDatabaseUrl,
