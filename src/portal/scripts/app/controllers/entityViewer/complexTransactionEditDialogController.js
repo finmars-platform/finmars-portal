@@ -79,6 +79,8 @@
         // vm.errorFieldsList = [];
         vm.inputsWithCalculations = null;
 
+        vm.fieldsDataStore = {}
+
         vm.openedIn = data.openedIn;
 
         var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
