@@ -86,21 +86,21 @@
                 "name": "Factor",
                 "value_type": 'float'
             },
-            {
-                "key": "principal_amount",
-                "name": "Principal amount",
-                "value_type": 'float'
-            },
-            {
-                "key": "carry_amount",
-                "name": "Carry amount",
-                "value_type": 'float'
-            },
-            {
-                "key": "overheads",
-                "name": "overheads",
-                "value_type": 'float'
-            },
+            // {
+            //     "key": "principal_amount",
+            //     "name": "Principal amount",
+            //     "value_type": 'float'
+            // },
+            // {
+            //     "key": "carry_amount",
+            //     "name": "Carry amount",
+            //     "value_type": 'float'
+            // },
+            // {
+            //     "key": "overheads",
+            //     "name": "overheads",
+            //     "value_type": 'float'
+            // },
             {
                 "key": "trade_price",
                 "name": "Trade price",
