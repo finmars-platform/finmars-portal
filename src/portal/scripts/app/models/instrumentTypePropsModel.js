@@ -132,7 +132,23 @@
 				"key": "default_accrued",
 				"name": "Default accrued",
 				"value_type": 20
-			}
+			},
+
+            {
+                "key": "default_price",
+                "name": "Default price",
+                "value_type": 20
+            },
+            {
+                "key": "maturity_date",
+                "name": "Maturity date",
+                "value_type": 40
+            },
+            {
+                "key": "maturity_price",
+                "name": "Maturity price",
+                "value_type": 20
+            }
         ]
     };
 
