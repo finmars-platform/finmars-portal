@@ -22,6 +22,14 @@
                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
+    <div data-ng-if="popupData.fields.short_name">
+        <text-input
+                label="System Name (Short Name)"
+                placeholder-text="System Name (Short Name)"
+                model="popupData.fields.short_name.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+    </div>
+
     <div data-ng-if="popupData.fields.public_name">
         <text-input
                 label="Name if Hidden (Public Name)"
