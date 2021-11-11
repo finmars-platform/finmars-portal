@@ -27,6 +27,10 @@
     var setCookie = function (name, value, options) {
         options = options || {};
 
+        if (!options.path) {
+            options.path = '/'
+        }
+
         var expires = options.expires;
 
         if (typeof expires == "number" && expires) {
