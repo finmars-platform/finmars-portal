@@ -35,11 +35,15 @@
 
         vm.getData = function () {
 
+            vm.readyStatus.data = false;
+
             return new Promise(function (resolve, reject) {
 
                 processesService.getList(vm.options).then(function (data) {
 
                     vm.items = data.results;
+
+                    vm.readyStatus.data = true;
 
                     resolve();
 
@@ -67,17 +71,26 @@
 
         vm.getStatus = function (item) {
 
-            if (item.task_status === 'P') {
+            if (item.status === 'I') {
+                return 'Init'
+            }
+
+            if (item.status === 'P') {
                 return 'Running'
             }
 
-            if (item.task_status === 'SUCCESS' || item.task_status === 'D') {
+            if (item.status === 'SUCCESS' || item.status === 'D') {
                 return 'Done'
             }
 
-            if (item.task_status === 'E') {
+            if (item.status === 'E') {
                 return 'Error'
             }
+
+            if (item.status === 'T') {
+                return 'Timeout'
+            }
+
 
             return 'Unknown'
 
@@ -93,7 +106,7 @@
 
             var result = '';
 
-            if (item.task_type === 'validate_simple_import') {
+            if (item.type === 'validate_simple_import') {
                 result = 'Entity Import Validation';
 
                 if (item.data) {
@@ -108,7 +121,7 @@
 
             }
 
-            if (item.task_type === 'simple_import') {
+            if (item.type === 'simple_import') {
                 result = 'Entity Import';
 
                 if (item.data) {
@@ -122,7 +135,7 @@
                 }
             }
 
-            if (item.task_type === 'validate_transaction_import') {
+            if (item.type === 'validate_transaction_import') {
                 result = 'Transaction Import Validation';
 
                 if (item.data) {
@@ -136,7 +149,7 @@
                 }
             }
 
-            if (item.task_type === 'transaction_import') {
+            if (item.type === 'transaction_import') {
                 result = 'Transaction Import';
 
                 if (item.data) {
@@ -150,15 +163,15 @@
                 }
             }
 
-            if (item.task_type === 'user_download_pricing') {
+            if (item.type === 'user_download_pricing') {
                 result = 'User Triggered Prices Download'
             }
 
-            if (item.task_type === 'configuration_import') {
+            if (item.type === 'configuration_import') {
                 result = 'Configuration Import';
             }
 
-            if (item.task_type === 'attribute_recalculation') {
+            if (item.type === 'attribute_recalculation') {
                 result = "Attribute Recalculation"
             }
 
@@ -212,11 +225,7 @@
 
         vm.init = function () {
 
-            vm.getData().then(function (data) {
-
-                vm.readyStatus.data = true;
-
-            })
+            vm.getData()
 
         };
 
