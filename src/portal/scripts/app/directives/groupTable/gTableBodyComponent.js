@@ -391,6 +391,8 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
+                    console.log("gTableBodyComponent DATA_LOAD_START");
+
                     // progressBar.style.display = 'block';
                     /* if (scope.isReport) {
                         contentElem.style.opacity = '0.7';
@@ -399,9 +401,19 @@
 
                     scope.evDataService.setDataLoadStatus(false);
 
+                    scope.dataLoadStatus = false;
+
+                    setTimeout(function () {
+                        scope.$apply();
+
+                    }, 0);
+
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                    console.log("gTableBodyComponent DATA_LOAD_END");
+
                     // progressBar.style.display = 'none';
 
                     contentElem.style.opacity = '1';
@@ -415,6 +427,13 @@
                     }
 
                     scope.evDataService.setDataLoadStatus(true);
+
+                    scope.dataLoadStatus = true;
+
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 0)
+
 
                 });
 
