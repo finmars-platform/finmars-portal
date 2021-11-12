@@ -8,7 +8,7 @@
 
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-	var evEvents = require('../../services/entityViewerEvents');
+    var evEvents = require('../../services/entityViewerEvents');
 
     var render = function (elem, projection, evDataService, evEventService) {
 
