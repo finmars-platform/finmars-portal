@@ -2,822 +2,820 @@
  * Created by szhitenev on 16.05.2016.
  */
 (function () {
-	"use strict";
-
-	var evEditorEvents = require("../services/ev-editor/entityViewerEditorEvents");
+    "use strict";
+
+    var evEditorEvents = require("../services/ev-editor/entityViewerEditorEvents");
 
-	var metaService = require("../services/metaService");
-	var layoutService = require("../services/entity-data-constructor/layoutService");
-	var attributeTypeService = require("../services/attributeTypeService");
+    var metaService = require("../services/metaService");
+    var layoutService = require("../services/entity-data-constructor/layoutService");
+    var attributeTypeService = require("../services/attributeTypeService");
 
-	module.exports = function () {
-		return {
-			restrict: "E",
-			scope: {
-				item: "=",
-				entity: "=",
-				entityType: "=",
-				evEditorDataService: "=",
-				evEditorEventService: "=",
-				entityChange: "&?",
-				onFieldBlur: "&?", // for now implemented only for textInputDirective,
-				fieldsDataStore: '='
-			},
-			templateUrl: "views/directives/bind-field-control-view.html",
-			controllerAs: 'vm',
-			controller: ['$scope', function bindFieldControlController ($scope) {
-
-				var vm = this;
-
-				vm.readyStatus = { classifier: false, content: true };
-
-				vm.entityType = $scope.entityType;
-				vm.evEditorDataService = $scope.evEditorDataService;
-				vm.evEditorEventService = $scope.evEditorEventService;
-
-				var attrs = $scope.$parent.vm.attrs || [];
-				var userInputs = $scope.$parent.vm.userInputs || [];
-				var choices = metaService.getEntityViewerFormComponentsValueTypes();
-				var entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
-
-				var palettesList = [];
-
-				$scope.layoutAttrs = layoutService.getLayoutAttrs();
-
-				$scope.isRecalculate = false;
-				$scope.numberFormat = null;
-				$scope.ciEventObj = {
-					event: {},
-				};
+    module.exports = function () {
+        return {
+            restrict: "E",
+            scope: {
+                item: "=",
+                entity: "=",
+                entityType: "=",
+                evEditorDataService: "=",
+                evEditorEventService: "=",
+                entityChange: "&?",
+                onFieldBlur: "&?", // for now implemented only for textInputDirective,
+                fieldsDataStore: '='
+            },
+            templateUrl: "views/directives/bind-field-control-view.html",
+            controllerAs: 'vm',
+            controller: ['$scope', function bindFieldControlController($scope) {
+
+                var vm = this;
+
+                vm.readyStatus = {classifier: false, content: true};
+
+                vm.entityType = $scope.entityType;
+                vm.evEditorDataService = $scope.evEditorDataService;
+                vm.evEditorEventService = $scope.evEditorEventService;
+
+                var attrs = $scope.$parent.vm.attrs || [];
+                var userInputs = $scope.$parent.vm.userInputs || [];
+                var choices = metaService.getEntityViewerFormComponentsValueTypes();
+                var entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
+
+                var palettesList = [];
+
+                $scope.layoutAttrs = layoutService.getLayoutAttrs();
+
+                $scope.isRecalculate = false;
+                $scope.numberFormat = null;
+                $scope.ciEventObj = {
+                    event: {},
+                };
+
+                $scope.recalculateFunction = null;
+                //$scope.numericInputValue = {};
 
-				$scope.recalculateFunction = null;
-				//$scope.numericInputValue = {};
+                $scope.isEditableField = function () {
+                    if (vm.entityType === "complex-transaction" && $scope.item) {
+                        if ($scope.item.can_recalculate || $scope.item.editable === false) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                };
 
-				$scope.isEditableField = function () {
-					if (vm.entityType === "complex-transaction" && $scope.item) {
-						if ($scope.item.can_recalculate || $scope.item.editable === false) {
-							return false;
-						}
-					}
+                $scope.getName = function () {
+
+                    if ($scope.item.name === 'name') {
+                        return 'Report Name (Name)'
+                    }
+
+                    if ($scope.item.name === 'short_name') {
+                        return 'System Name (Short Name)'
+                    }
+
+                    if ($scope.item.name === 'user_code') {
+                        return 'Unique Code (User Code)'
+                    }
 
-					return true;
-				};
+                    if ($scope.item.name === 'public_name') {
+                        return 'Name if Hidden (Public Name)'
+                    }
 
-				$scope.getName = function () {
+                    if ($scope.item.options && $scope.item.options.fieldName) {
+                        return $scope.item.options.fieldName;
 
-					if ($scope.item.name === 'name') {
-						return 'Report Name (Name)'
-					}
+                    } else if ($scope.item.hasOwnProperty('verbose_name')) {
+                        return $scope.item.verbose_name;
 
-					if ($scope.item.name === 'short_name') {
-						return 'System Name (Short Name)'
-					}
-
-					if ($scope.item.name === 'user_code') {
-						return 'Unique Code (User Code)'
-					}
+                    }
 
-					if ($scope.item.name === 'public_name') {
-						return 'Name if Hidden (Public Name)'
-					}
+                    return $scope.item.name;
+                };
 
-					if ($scope.item.options && $scope.item.options.fieldName) {
-						return $scope.item.options.fieldName;
+                $scope.hideIscanceledCheckbox = function (checkboxName) {
+                    if (vm.entityType === "transaction") {
+                        if (checkboxName === "Is canceled") {
+                            return false;
+                        }
 
-					} else if ($scope.item.hasOwnProperty('verbose_name')) {
-						return $scope.item.verbose_name;
+                        return true;
+                    }
 
-					}
+                    return true;
+                };
 
-					return $scope.item.name;
-				};
+                $scope.copyFromField = function (attr) {
+                    var attrObj = JSON.parse(attr);
 
-				$scope.hideIscanceledCheckbox = function (checkboxName) {
-					if (vm.entityType === "transaction") {
-						if (checkboxName === "Is canceled") {
-							return false;
-						}
+                    if (attrObj.key) {
+                        $scope.entity[vm.fieldKey] = $scope.entity[attrObj.key];
+                    }
 
-						return true;
-					}
+                    if (attrObj.id) {
+                        var resAttr = null;
+                        attrs.forEach(function (item) {
+                            if (item.id === attrObj.id) {
+                                resAttr = item;
+                            }
+                        });
+                        $scope.entity[vm.fieldKey] = $scope.entity[resAttr.name];
+                    }
+                };
 
-					return true;
-				};
+                $scope.checkValid = function () {
+                    if ($scope.entity.$_isValid === false) {
+                        var item = $scope.entity[vm.fieldKey];
+                        if (item == null || item === "" || item === undefined) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+
+                $scope.getModelKey = function () {
+
+                    if ($scope.item) {
+
+                        if ($scope.item.value_type === 'table') {
+                            return $scope.item.key;
+                        } else {
+
+
+                            if ($scope.item.hasOwnProperty("id") && $scope.item.id !== null) {
+
+                                if ($scope.item.attribute_type_object) {
+                                    return $scope.item.attribute_type_object.user_code;
+                                } else {
+                                    return $scope.item.user_code;
+                                }
+
+                            } else {
+
+                                var l, e, u;
+
+                                for (e = 0; e < entityAttrs.length; e = e + 1) {
+                                    if ($scope.item.key === entityAttrs[e].key) {
+                                        return entityAttrs[e].key;
+                                    }
+                                }
+
+                                for (l = 0; l < $scope.layoutAttrs.length; l = l + 1) {
+                                    if ($scope.item.name === $scope.layoutAttrs[l].name) {
+                                        return $scope.layoutAttrs[l].key;
+                                    }
+                                }
+
+                                for (u = 0; u < userInputs.length; u = u + 1) {
+                                    if ($scope.item.name === userInputs[u].name) {
+                                        return userInputs[u].name;
+                                    }
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    return false;
+                };
+
+                $scope.setDateToday = function () {
+                    $scope.entity[vm.fieldKey] = moment(new Date()).format(
+                        "YYYY-MM-DD"
+                    );
+                };
+
+                $scope.setDatePlus = function () {
+
+                    const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
+
+                    $scope.entity[vm.fieldKey] = moment(date)
+                        .add(1, "days")
+                        .format("YYYY-MM-DD");
+                };
+
+                $scope.setDateMinus = function () {
+
+                    const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
+                    $scope.entity[vm.fieldKey] = moment(date)
+                        .subtract(1, "days")
+                        .format("YYYY-MM-DD");
+                };
+
+                $scope.node = $scope.node || null;
+
+                function findNodeInChildren(item) {
+                    if ($scope.classifierId === item.id) {
+                        $scope.node = item;
+                    } else {
+                        if (item.children.length) {
+                            item.children.forEach(findNodeInChildren);
+                        }
+                    }
+                }
+
+                var classifierTree;
+
+                function getNode() {
+                    return attributeTypeService
+                        .getByKey(vm.entityType, $scope.item.id)
+                        .then(function (data) {
+                            classifierTree = data;
+                            classifierTree.classifiers.forEach(findNodeInChildren);
+                            return $scope.node;
+                        });
+                }
+
+                $scope.findNodeItem = function () {
+                    vm.readyStatus.classifier = false;
+
+                    return new Promise(function (resolve) {
+                        getNode().then(function (data) {
+                            vm.readyStatus.classifier = true;
+                            $scope.node = data;
+                            $scope.entity[vm.fieldKey] = $scope.classifierId;
+                            resolve(undefined);
+                        });
+                    });
+                };
+
+                $scope.changeClassifier = function () {
+                    if (classifierTree) {
+                        $scope.classifierId = $scope.entity[vm.fieldKey];
+
+                        $scope.findNodeItem().then(function () {
+                            classifierTree.classifiers.forEach(findNodeInChildren);
+                            $scope.$apply();
+
+                            if ($scope.entityChange) {
+                                $scope.entityChange({fieldKey: vm.fieldKey});
+                            }
+                        });
+                    }
+                };
+
+                $scope.styleForInputsWithButtons = function () {
+                    var styleValue = "";
 
-				$scope.copyFromField = function (attr) {
-					var attrObj = JSON.parse(attr);
+                    // -------------------- Space For Buttons -------------------
+                    var buttonsCount = 0;
+
+                    if (
+                        $scope.fieldType["display_name"] === "Number" ||
+                        $scope.fieldType["display_name"] === "Float"
+                    ) {
+                        buttonsCount = 1;
+                    }
+
+                    if ($scope.item.options) {
+                        // for date specific buttons
+
+                        var optionsKeys = Object.keys($scope.item.options);
 
-					if (attrObj.key) {
-						$scope.entity[vm.fieldKey] = $scope.entity[attrObj.key];
-					}
+                        if (optionsKeys && optionsKeys.length > 0) {
+                            optionsKeys.forEach(function (key) {
+                                if ($scope.item.options[key]) {
+                                    buttonsCount = buttonsCount + 1;
+                                }
+                            });
+                        }
+                    }
 
-					if (attrObj.id) {
-						var resAttr = null;
-						attrs.forEach(function (item) {
-							if (item.id === attrObj.id) {
-								resAttr = item;
-							}
-						});
-						$scope.entity[vm.fieldKey] = $scope.entity[resAttr.name];
-					}
-				};
+                    if ($scope.item.buttons && $scope.item.buttons.length > 0) {
+                        buttonsCount = buttonsCount + $scope.item.buttons.length;
+                    }
 
-				$scope.checkValid = function () {
-					if ($scope.entity.$_isValid === false) {
-						var item = $scope.entity[vm.fieldKey];
-						if (item == null || item === "" || item === undefined) {
-							return true;
-						}
-					}
-
-					return false;
-				};
-
-				$scope.getModelKey = function () {
+                    if (buttonsCount > 0) {
+                        styleValue = "padding-right: " + buttonsCount * 34 + "px; ";
+                    }
 
-					if ($scope.item) {
-
-						if ($scope.item.value_type === 'table') {
-							return $scope.item.key;
-						}
-
-						else {
-
-
-							if ($scope.item.hasOwnProperty("id") && $scope.item.id !== null) {
-
-								if ($scope.item.attribute_type_object) {
-									return $scope.item.attribute_type_object.user_code;
-								} else {
-									return $scope.item.user_code;
-								}
-
-							} else {
-
-								var l, e, u;
-
-								for (e = 0; e < entityAttrs.length; e = e + 1) {
-									if ($scope.item.key === entityAttrs[e].key) {
-										return entityAttrs[e].key;
-									}
-								}
-
-								for (l = 0; l < $scope.layoutAttrs.length; l = l + 1) {
-									if ($scope.item.name === $scope.layoutAttrs[l].name) {
-										return $scope.layoutAttrs[l].key;
-									}
-								}
-
-								for (u = 0; u < userInputs.length; u = u + 1) {
-									if ($scope.item.name === userInputs[u].name) {
-										return userInputs[u].name;
-									}
-								}
-
-							}
-
-						}
-
-					}
-
-					return false;
-				};
-
-				$scope.setDateToday = function () {
-					$scope.entity[vm.fieldKey] = moment(new Date()).format(
-						"YYYY-MM-DD"
-					);
-				};
-
-				$scope.setDatePlus = function () {
-
-					const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
-
-					$scope.entity[vm.fieldKey] = moment(date)
-						.add(1, "days")
-						.format("YYYY-MM-DD");
-				};
-
-				$scope.setDateMinus = function () {
-
-					const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
-					$scope.entity[vm.fieldKey] = moment(date)
-						.subtract(1, "days")
-						.format("YYYY-MM-DD");
-				};
-
-				$scope.node = $scope.node || null;
-
-				function findNodeInChildren(item) {
-					if ($scope.classifierId === item.id) {
-						$scope.node = item;
-					} else {
-						if (item.children.length) {
-							item.children.forEach(findNodeInChildren);
-						}
-					}
-				}
-
-				var classifierTree;
-
-				function getNode() {
-					return attributeTypeService
-						.getByKey(vm.entityType, $scope.item.id)
-						.then(function (data) {
-							classifierTree = data;
-							classifierTree.classifiers.forEach(findNodeInChildren);
-							return $scope.node;
-						});
-				}
-
-				$scope.findNodeItem = function () {
-					vm.readyStatus.classifier = false;
-
-					return new Promise(function (resolve) {
-						getNode().then(function (data) {
-							vm.readyStatus.classifier = true;
-							$scope.node = data;
-							$scope.entity[vm.fieldKey] = $scope.classifierId;
-							resolve(undefined);
-						});
-					});
-				};
-
-				$scope.changeClassifier = function () {
-					if (classifierTree) {
-						$scope.classifierId = $scope.entity[vm.fieldKey];
+                    // ----------------------- Background Color -----------------
 
-						$scope.findNodeItem().then(function () {
-							classifierTree.classifiers.forEach(findNodeInChildren);
-							$scope.$apply();
+                    if ($scope.options.backgroundColor) {
+                        styleValue = styleValue + "background-color: " + $scope.options.backgroundColor + ";";
+                    }
 
-							if ($scope.entityChange) {
-								$scope.entityChange({fieldKey: vm.fieldKey});
-							}
-						});
-					}
-				};
-
-				$scope.styleForInputsWithButtons = function () {
-					var styleValue = "";
+                    return styleValue;
+                };
 
-					// -------------------- Space For Buttons -------------------
-					var buttonsCount = 0;
-
-					if (
-						$scope.fieldType["display_name"] === "Number" ||
-						$scope.fieldType["display_name"] === "Float"
-					) {
-						buttonsCount = 1;
-					}
+                $scope.inputBackgroundColor = function () {
+                    var backgroundColor = "";
 
-					if ($scope.item.options) {
-						// for date specific buttons
+                    if ($scope.options.backgroundColor) {
+                        backgroundColor =
+                            "background-color: " + $scope.options.backgroundColor + ";";
+                    }
 
-						var optionsKeys = Object.keys($scope.item.options);
+                    return backgroundColor;
+                };
 
-						if (optionsKeys && optionsKeys.length > 0) {
-							optionsKeys.forEach(function (key) {
-								if ($scope.item.options[key]) {
-									buttonsCount = buttonsCount + 1;
-								}
-							});
-						}
-					}
+                /*$scope.openCalculatorDialog = function ($event) {
 
-					if ($scope.item.buttons && $scope.item.buttons.length > 0) {
-						buttonsCount = buttonsCount + $scope.item.buttons.length;
-					}
+                                        var fieldModel = $scope.entity[vm.fieldKey];
+                                        var calculatorTitle = "Calculator for: " + $scope.getName();
 
-					if (buttonsCount > 0) {
-						styleValue = "padding-right: " + buttonsCount * 34 + "px; ";
-					}
+                                        $mdDialog.show({
+                                                controller: 'CalculatorDialogController as vm',
+                                                templateUrl: 'views/dialogs/calculator-dialog-view.html',
+                                                targetEvent: $event,
+                                                multiple: true,
+                                                locals: {
+                                                        data: {
+                                                                numberValue: fieldModel,
+                                                                calculatorTitle: calculatorTitle
+                                                        }
+                                                }
 
-					// ----------------------- Background Color -----------------
+                                        }).then(function (res) {
 
-					if ($scope.options.backgroundColor) {
-						styleValue = styleValue + "background-color: " + $scope.options.backgroundColor + ";";
-					}
+                                                if (res.status === 'agree') {
 
-					return styleValue;
-				};
+                                                        $scope.entity[vm.fieldKey] = res.numberValue;
+                                                        $scope.numericInputValue.numberVal = formatNumber(res.numberValue);
 
-				$scope.inputBackgroundColor = function () {
-					var backgroundColor = "";
+                                                }
 
-					if ($scope.options.backgroundColor) {
-						backgroundColor =
-							"background-color: " + $scope.options.backgroundColor + ";";
-					}
+                                        });
 
-					return backgroundColor;
-				};
+                                };
 
-				/*$scope.openCalculatorDialog = function ($event) {
+                                var formatNumber = function (numberVal) {
 
-										var fieldModel = $scope.entity[vm.fieldKey];
-										var calculatorTitle = "Calculator for: " + $scope.getName();
+                                        if ($scope.numberFormat) {
 
-										$mdDialog.show({
-												controller: 'CalculatorDialogController as vm',
-												templateUrl: 'views/dialogs/calculator-dialog-view.html',
-												targetEvent: $event,
-												multiple: true,
-												locals: {
-														data: {
-																numberValue: fieldModel,
-																calculatorTitle: calculatorTitle
-														}
-												}
+                                                return renderHelper.formatValue({
+                                                        value: numberVal
+                                                }, {
+                                                        key: 'value',
+                                                        report_settings: $scope.numberFormat
+                                                });
 
-										}).then(function (res) {
+                                        } else {
+                                                return numberVal
+                                        }
 
-												if (res.status === 'agree') {
+                                };
 
-														$scope.entity[vm.fieldKey] = res.numberValue;
-														$scope.numericInputValue.numberVal = formatNumber(res.numberValue);
+                                $scope.onNumericInputFocus = function () {
+                                        if (!numberIsInvalid && fieldHasValue) {
+                                                $scope.numericInputValue.numberVal = JSON.parse(JSON.stringify($scope.entity[vm.fieldKey]));
+                                        }
+                                };
 
-												}
+                                var fieldHasValue = true;
+                                var numberIsInvalid;
 
-										});
+                                $scope.numericItemChange = function () {
 
-								};
+                                        numberIsInvalid = false;
+                                        fieldHasValue = true;
+                                        var changedValue = $scope.numericInputValue.numberVal;
 
-								var formatNumber = function (numberVal) {
+                                        if (changedValue === '') {
 
-										if ($scope.numberFormat) {
+                                                $scope.entity[vm.fieldKey] = null;
+                                                fieldHasValue = false;
 
-												return renderHelper.formatValue({
-														value: numberVal
-												}, {
-														key: 'value',
-														report_settings: $scope.numberFormat
-												});
+                                        } else if (!isNaN(changedValue) &&
+                                                changedValue !== null) {
 
-										} else {
-												return numberVal
-										}
+                                                if (Number.isInteger(changedValue)) {
+                                                        changedValue = parseInt(changedValue);
+                                                } else {
+                                                        changedValue = parseFloat(changedValue);
+                                                }
 
-								};
+                                                // negative numbers processing
+                                                /!*if ($scope.item.options.onlyPositive) {
 
-								$scope.onNumericInputFocus = function () {
-										if (!numberIsInvalid && fieldHasValue) {
-												$scope.numericInputValue.numberVal = JSON.parse(JSON.stringify($scope.entity[vm.fieldKey]));
-										}
-								};
+                                                        if (parseFloat(changedValue) < 0) {
+                                                                numberIsInvalid = true;
+                                                        } else {
+                                                                $scope.entity[vm.fieldKey] = JSON.parse(JSON.stringify(changedValue));
+                                                        }
 
-								var fieldHasValue = true;
-								var numberIsInvalid;
+                                                } else {
 
-								$scope.numericItemChange = function () {
+                                                        $scope.entity[vm.fieldKey] = JSON.parse(JSON.stringify(changedValue));
+                                                }*!/
 
-										numberIsInvalid = false;
-										fieldHasValue = true;
-										var changedValue = $scope.numericInputValue.numberVal;
+                                                if (parseFloat(changedValue) < 0) {
 
-										if (changedValue === '') {
+                                                        if ($scope.numberFormat && $scope.numberFormat.negative_color_format_id === 1) {
+                                                                numberInputElem.classList.add('negative-red');
+                                                        }
 
-												$scope.entity[vm.fieldKey] = null;
-												fieldHasValue = false;
+                                                        if ($scope.item.options && $scope.item.options.onlyPositive) {
+                                                                numberIsInvalid = true;
+                                                        } else {
+                                                                $scope.entity[vm.fieldKey] = JSON.parse(JSON.stringify(changedValue));
+                                                        }
 
-										} else if (!isNaN(changedValue) &&
-												changedValue !== null) {
+                                                } else {
+                                                        numberInputElem.classList.remove('negative-red');
+                                                        $scope.entity[vm.fieldKey] = JSON.parse(JSON.stringify(changedValue));
+                                                }
+                                                // < negative numbers processing >
 
-												if (Number.isInteger(changedValue)) {
-														changedValue = parseInt(changedValue);
-												} else {
-														changedValue = parseFloat(changedValue);
-												}
+                                        } else {
 
-												// negative numbers processing
-												/!*if ($scope.item.options.onlyPositive) {
+                                                numberIsInvalid = true;
 
-														if (parseFloat(changedValue) < 0) {
-																numberIsInvalid = true;
-														} else {
-																$scope.entity[vm.fieldKey] = JSON.parse(JSON.stringify(changedValue));
-														}
+                                        }
 
-												} else {
+                                        if (numberIsInvalid) {
 
-														$scope.entity[vm.fieldKey] = JSON.parse(JSON.stringify(changedValue));
-												}*!/
+                                                $scope.entity[vm.fieldKey] = null;
+                                                numberInputContainerElem.classList.add('md-input-invalid');
+                                                numberInputElem.classList.add('ng-invalid', 'ng-invalid-number');
 
-												if (parseFloat(changedValue) < 0) {
+                                        } else {
+                                                numberInputContainerElem.classList.remove('md-input-invalid');
+                                                numberInputElem.classList.remove('ng-invalid', 'ng-invalid-number');
+                                        }
 
-														if ($scope.numberFormat && $scope.numberFormat.negative_color_format_id === 1) {
-																numberInputElem.classList.add('negative-red');
-														}
+                                        $scope.itemChange();
 
-														if ($scope.item.options && $scope.item.options.onlyPositive) {
-																numberIsInvalid = true;
-														} else {
-																$scope.entity[vm.fieldKey] = JSON.parse(JSON.stringify(changedValue));
-														}
+                                };
+
+                                $scope.onNumericInputBlur = function () {
+                                        if (!numberIsInvalid && fieldHasValue) {
+                                                var itemNumberValue = JSON.parse(JSON.stringify($scope.entity[vm.fieldKey]));
+                                                $scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
+                                        }
+                                };*/
+                var checkForNotNull = function () {
+
+                    if ($scope.item.options && $scope.item.options.notNull) {
+                        $scope.options.notNull = true;
+
+                    } else if (
+                        $scope.item.frontOptions &&
+                        ($scope.item.frontOptions.notNull || $scope.item.frontOptions.usedInExpr)
+                    ) {
+
+                        $scope.options.notNull = true;
+
+                    } else if ($scope.item.key) {
+
+                        var requiredAttrs = metaService.getRequiredEntityAttrs(
+                            vm.entityType
+                        );
+
+                        if (requiredAttrs.indexOf($scope.item.key) > -1) {
+                            $scope.options.notNull = true;
+                        }
+
+                    }
+
+                };
+
+                var getFieldBackgroundColor = function () {
+
+                    if ($scope.item.backgroundColor) {
+
+                        if (typeof $scope.item.backgroundColor === "string") {
+                            $scope.options.backgroundColor = $scope.item.backgroundColor; // allows old layouts keep its background color
+                        } else if (typeof $scope.item.backgroundColor === "object") {
+
+                            var paletteData = $scope.item.backgroundColor;
+                            var paletteNotFound = true;
+
+                            var i, a;
+                            loop1: for (i = 0; i < palettesList.length; i++) {
+                                if (palettesList[i].user_code === paletteData.paletteUserCode) {
+                                    paletteNotFound = false;
+
+                                    for (a = 0; a < palettesList[i].colors.length; a++) {
+                                        if (palettesList[i].colors[a].order === paletteData.colorOrder) {
+                                            $scope.options.backgroundColor = palettesList[i].colors[a].value;
+                                            break loop1;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (paletteNotFound) {
+                                // if palette was not found, use default palette
+
+                                loop1: for (i = 0; i < palettesList.length; i++) {
+                                    if (palettesList[i].user_code === "Default Palette") {
+                                        for (a = 0; a < palettesList[i].colors.length; a++) {
+                                            if (
+                                                palettesList[i].colors[a].order ===
+                                                paletteData.colorOrder
+                                            ) {
+                                                $scope.options.backgroundColor =
+                                                    palettesList[i].colors[a].value;
+                                                break loop1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var setItemSpecificSettings = function () {
+
+                    if (vm.evEditorDataService) {
+                        palettesList = vm.evEditorDataService.getColorPalettesList();
+                    }
+
+                    $scope.fieldType = null;
+                    /*$scope.attribute = $scope.item;
+
+                                        if ($scope.attribute && $scope.attribute.can_recalculate) {
+                                                $scope.isRecalculate = true;
+                                        }
+
+                                        var i;
+                                        for (i = 0; i < choices.length; i = i + 1) {
+                                                if (choices[i].value === $scope.attribute['value_type']) {
+                                                        $scope.fieldType = choices[i];
+                                                }
+                                        }*/
+                    if ($scope.item.can_recalculate) {
+                        $scope.isRecalculate = true;
+                    }
+
+                    var i;
+                    for (i = 0; i < choices.length; i = i + 1) {
+                        if (choices[i].value === $scope.item["value_type"]) {
+                            $scope.fieldType = choices[i];
+                            break;
+                        }
+                    }
+
+                    if ($scope.item["value_type"] === 100) {
+                        $scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
+                    }
+
+                    if ($scope.item.options) {
+                        // prepare data for number field
+                        if ($scope.fieldType && $scope.fieldType.value === 20) {
+                            if ($scope.item.options.number_format) {
+                                $scope.numberFormat = $scope.item.options.number_format;
+                            }
+
+                            if ($scope.fieldType.value === 20) {
+                                $scope.onlyPositive = $scope.item.options.onlyPositive;
+                            }
+                        }
+                        // < prepare data for number field >
+
+                        // prepare data for date field
+                        if ($scope.fieldType.value === 40) {
 
-												} else {
-														numberInputElem.classList.remove('negative-red');
-														$scope.entity[vm.fieldKey] = JSON.parse(JSON.stringify(changedValue));
-												}
-												// < negative numbers processing >
+                            if (!$scope.item.buttons) {
+                                $scope.item.buttons = [];
+                            }
 
-										} else {
+                            if ($scope.item.options.dateTodayPlus) {
+                                $scope.item.buttons.push({
+                                    iconObj: {type: "angular-material", icon: "add"},
+                                    tooltip: "Increase by one day",
+                                    classes: "date-input-specific-btns",
+                                    action: {callback: $scope.setDatePlus}
+                                });
+                            }
 
-												numberIsInvalid = true;
+                            if ($scope.item.options.dateToday) {
+                                $scope.item.buttons.push({
+                                    iconObj: {type: "angular-material", icon: "radio_button_unchecked"},
+                                    tooltip: "Set today's date",
+                                    classes: "date-input-specific-btns",
+                                    action: {callback: $scope.setDateToday}
+                                });
+                            }
 
-										}
+                            if ($scope.item.options.dateTodayMinus) {
+                                $scope.item.buttons.push({
+                                    iconObj: {type: "angular-material", icon: "remove"},
+                                    tooltip: "Decrease by one day",
+                                    classes: "date-input-specific-btns",
+                                    action: {callback: $scope.setDateMinus}
+                                });
+                            }
+                        }
+                        // < prepare data for date field >
 
-										if (numberIsInvalid) {
+                        if ($scope.item.options.tooltipValue) {
+                            $scope.tooltipText = $scope.item.options.tooltipValue
 
-												$scope.entity[vm.fieldKey] = null;
-												numberInputContainerElem.classList.add('md-input-invalid');
-												numberInputElem.classList.add('ng-invalid', 'ng-invalid-number');
+                        } else if ($scope.item.tooltip) {
+                            $scope.tooltipText = $scope.item.tooltip
 
-										} else {
-												numberInputContainerElem.classList.remove('md-input-invalid');
-												numberInputElem.classList.remove('ng-invalid', 'ng-invalid-number');
-										}
+                        } else {
+                            $scope.tooltipText = $scope.getName()
+                        }
+                    }
 
-										$scope.itemChange();
+                    getFieldBackgroundColor();
 
-								};
+                    if ($scope.options.backgroundColor) {
+                        $scope.customStyles = {
+                            "customInputBackgroundColor": "background-color: " + $scope.options.backgroundColor + ";"
+                        };
+                    }
 
-								$scope.onNumericInputBlur = function () {
-										if (!numberIsInvalid && fieldHasValue) {
-												var itemNumberValue = JSON.parse(JSON.stringify($scope.entity[vm.fieldKey]));
-												$scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
-										}
-								};*/
-				var checkForNotNull = function () {
+                    if ($scope.item.frontOptions) {
 
-					if ($scope.item.options && $scope.item.options.notNull) {
-						$scope.options.notNull = true;
+                        if ($scope.item.frontOptions.recalculated) {
 
-					}
+                            $scope.ciEventObj.event = {key: "set_style_preset1"};
 
-					else if (
-						$scope.item.frontOptions &&
-						($scope.item.frontOptions.notNull ||$scope.item.frontOptions.usedInExpr)
-					) {
-
-						$scope.options.notNull = true;
+                        }
 
-					} else if ($scope.item.key) {
-
-						var requiredAttrs = metaService.getRequiredEntityAttrs(
-							vm.entityType
-						);
-
-						if (requiredAttrs.indexOf($scope.item.key) > -1) {
-							$scope.options.notNull = true;
-						}
-
-					}
-
-				};
-
-        		var getFieldBackgroundColor = function () {
-
-        			if ($scope.item.backgroundColor) {
-
-						if (typeof $scope.item.backgroundColor === "string") {
-						  $scope.options.backgroundColor = $scope.item.backgroundColor; // allows old layouts keep its background color
-						}
-
-						else if (typeof $scope.item.backgroundColor === "object") {
-
-							var paletteData = $scope.item.backgroundColor;
-							var paletteNotFound = true;
-
-							var i, a;
-							loop1: for (i = 0; i < palettesList.length; i++) {
-								if (palettesList[i].user_code === paletteData.paletteUserCode) {
-									paletteNotFound = false;
-
-									for (a = 0; a < palettesList[i].colors.length; a++) {
-										if (palettesList[i].colors[a].order === paletteData.colorOrder) {
-											$scope.options.backgroundColor = palettesList[i].colors[a].value;
-											break loop1;
-										}
-									}
-								}
-							}
-
-							if (paletteNotFound) {
-								// if palette was not found, use default palette
-
-								loop1: for (i = 0; i < palettesList.length; i++) {
-									if (palettesList[i].user_code === "Default Palette") {
-										for (a = 0; a < palettesList[i].colors.length; a++) {
-											if (
-												palettesList[i].colors[a].order ===
-												paletteData.colorOrder
-											) {
-												$scope.options.backgroundColor =
-													palettesList[i].colors[a].value;
-												break loop1;
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				};
-
-				var setItemSpecificSettings = function () {
-
-					if (vm.evEditorDataService) {
-						palettesList = vm.evEditorDataService.getColorPalettesList();
-					}
-
-					$scope.fieldType = null;
-					/*$scope.attribute = $scope.item;
-
-										if ($scope.attribute && $scope.attribute.can_recalculate) {
-												$scope.isRecalculate = true;
-										}
-
-										var i;
-										for (i = 0; i < choices.length; i = i + 1) {
-												if (choices[i].value === $scope.attribute['value_type']) {
-														$scope.fieldType = choices[i];
-												}
-										}*/
-					if ($scope.item.can_recalculate) {
-						$scope.isRecalculate = true;
-					}
-
-					var i;
-					for (i = 0; i < choices.length; i = i + 1) {
-						if (choices[i].value === $scope.item["value_type"]) {
-							$scope.fieldType = choices[i];
-							break;
-						}
-					}
-
-					if ($scope.item["value_type"] === 100) {
-						$scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
-					}
-
-					if ($scope.item.options) {
-						// prepare data for number field
-						if ($scope.fieldType && $scope.fieldType.value === 20) {
-							if ($scope.item.options.number_format) {
-								$scope.numberFormat = $scope.item.options.number_format;
-							}
+                    }
+                };
 
-							if ($scope.fieldType.value === 20) {
-								$scope.onlyPositive = $scope.item.options.onlyPositive;
-							}
-						}
-						// < prepare data for number field >
+                var initListeners = function () {
 
-						// prepare data for date field
-						if ($scope.fieldType.value === 40) {
+                    vm.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
+                            $scope.ciEventObj.event = {key: "mark_not_valid_fields"};
+                        }
+                    );
 
-							if (!$scope.item.buttons) {
-								$scope.item.buttons = [];
-							}
+                    if (vm.entityType === "complex-transaction") {
 
-							if ($scope.item.options.dateTodayPlus) {
-								$scope.item.buttons.push({
-									iconObj: {type: "angular-material", icon: "add"},
-									tooltip: "Increase by one day",
-									classes: "date-input-specific-btns",
-									action: { callback: $scope.setDatePlus }
-								});
-							}
+                        vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_START, function () {
 
-							if ($scope.item.options.dateToday) {
-								$scope.item.buttons.push({
-									iconObj: {type: "angular-material", icon: "radio_button_unchecked"},
-									tooltip: "Set today's date",
-									classes: "date-input-specific-btns",
-									action: { callback: $scope.setDateToday }
-								});
-							}
+                                var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
 
-							if ($scope.item.options.dateTodayMinus) {
-								$scope.item.buttons.push({
-									iconObj: {type: "angular-material", icon: "remove"},
-									tooltip: "Decrease by one day",
-									classes: "date-input-specific-btns",
-									action: { callback: $scope.setDateMinus }
-								});
-							}
-						}
-						// < prepare data for date field >
+                                if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
+                                    vm.readyStatus.content = false;
+                                }
 
-						if ($scope.item.options.tooltipValue) {
-							$scope.tooltipText = $scope.item.options.tooltipValue
+                            }
+                        );
 
-						} else if ($scope.item.tooltip) {
-							$scope.tooltipText = $scope.item.tooltip
+                        vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
-						} else {
-							$scope.tooltipText = $scope.getName()
-						}
-					}
+                            var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
 
-					getFieldBackgroundColor();
+                            if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
+                                vm.readyStatus.content = true;
+                            }
 
-					if ($scope.options.backgroundColor) {
-						$scope.customStyles = {
-							"customInputBackgroundColor": "background-color: " + $scope.options.backgroundColor + ";"
-						};
-					}
+                            if ($scope.item &&
+                                $scope.item.frontOptions && $scope.item.frontOptions.recalculated &&
+                                ($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0)) {
 
-					if ($scope.item.frontOptions) {
+                                setItemSpecificSettings();
 
-						if ($scope.item.frontOptions.recalculated) {
+                            }
 
-							$scope.ciEventObj.event = {key: "set_style_preset1"};
+                        });
 
-						}
+                    }
 
-					}
-				};
+                    /* vm.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
 
-				var initListeners = function () {
+                        var changedUserInputData;
 
-					vm.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
-							$scope.ciEventObj.event = { key: "mark_not_valid_fields" };
-						}
-					);
+                        if (vm.evEditorDataService) {
+                            changedUserInputData = vm.evEditorDataService.getChangedUserInputData();
+                        }
 
-					vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_START, function () {
+                        if (changedUserInputData &&
+                            changedUserInputData.frontOptions &&
+                            changedUserInputData.frontOptions.linked_inputs_names) {
 
-							var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
+                            if (changedUserInputData.frontOptions.linked_inputs_names.includes(vm.fieldKey)) {
+                                $scope.ciEventObj.event = {key: "set_style_preset2"};
+                            }
 
-							if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
-								vm.readyStatus.content = false;
-							}
+                        }
 
-						}
-					);
+                    }); */
 
-					vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
+                };
 
-						var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
+                /*$scope.$watch('eventSignal', function () {
+                                        if ($scope.eventSignal) {
+                                                $scope.ciEventObj.event = $scope.eventSignal;
+                                        }
+                                });*/
 
-						if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
-							vm.readyStatus.content = true;
-						}
+                $scope.recalculate = function () {
 
-						if ($scope.item &&
-							$scope.item.frontOptions && $scope.item.frontOptions.recalculated &&
-							($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0)) {
+                    if ($scope.recalculateFunction) {
+                        const paramsObj = $scope.item && $scope.item.buttons[0] && $scope.item.buttons[0].action && $scope.item.buttons[0].action.parameters;
 
-							setItemSpecificSettings();
+                        if (paramsObj) {
+                            $scope.recalculateFunction(paramsObj);
+                        }
 
-						}
+                    }
 
-					});
+                };
 
-					/* vm.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
+                $scope.itemChange = function () {
+                    if ($scope.entityChange) {
+                        $scope.entityChange({fieldKey: vm.fieldKey});
+                    }
+                };
 
-						var changedUserInputData;
+                $scope.inputBlur = function () {
+                    if ($scope.onFieldBlur) {
+                        $scope.onFieldBlur();
+                    }
+                };
 
-						if (vm.evEditorDataService) {
-							changedUserInputData = vm.evEditorDataService.getChangedUserInputData();
-						}
+                $scope.onDateChange = function () {
+                    if ($scope.entity[vm.fieldKey] === "") {
+                        $scope.entity[vm.fieldKey] = null;
+                    }
 
-						if (changedUserInputData &&
-							changedUserInputData.frontOptions &&
-							changedUserInputData.frontOptions.linked_inputs_names) {
+                    $scope.itemChange();
+                };
 
-							if (changedUserInputData.frontOptions.linked_inputs_names.includes(vm.fieldKey)) {
-								$scope.ciEventObj.event = {key: "set_style_preset2"};
-							}
+                $scope.init = function () {
 
-						}
+                    vm.fieldKey = $scope.getModelKey();
 
-					}); */
+                    $scope.options = {};
 
-				};
+                    if (vm.evEditorEventService) {
+                        initListeners();
+                    }
 
-				/*$scope.$watch('eventSignal', function () {
-										if ($scope.eventSignal) {
-												$scope.ciEventObj.event = $scope.eventSignal;
-										}
-								});*/
+                    if (vm.fieldKey === "tags") {
 
-				$scope.recalculate = function () {
+                        $scope.options = {
+                            entityType: vm.entityType,
+                        };
 
-					if ($scope.recalculateFunction) {
-						const paramsObj = $scope.item && $scope.item.buttons[0] && $scope.item.buttons[0].action && $scope.item.buttons[0].action.parameters;
+                    } else {
 
-						if (paramsObj) {
-							$scope.recalculateFunction(paramsObj);
-						}
+                        if (metaService.getEntitiesWithSimpleFields().includes(vm.entityType)) {
 
-					}
+                            $scope.options = {
+                                entityType: vm.entityType,
+                                key: vm.fieldKey,
+                            };
 
-				};
+                        }
+                    }
 
-				$scope.itemChange = function () {
-					if ($scope.entityChange) {
-						$scope.entityChange({fieldKey: vm.fieldKey});
-					}
-				};
+                    var tooltipsList = [];
 
-				$scope.inputBlur = function () {
-					if ($scope.onFieldBlur) {
-						$scope.onFieldBlur();
-					}
-				};
+                    if (vm.evEditorDataService) {
+                        tooltipsList = vm.evEditorDataService.getTooltipsData();
+                        $scope.recalculateFunction = vm.evEditorDataService.getRecalculationFunction();
+                    }
 
-				$scope.onDateChange = function () {
-					if ($scope.entity[vm.fieldKey] === "") {
-						$scope.entity[vm.fieldKey] = null;
-					}
+                    for (var i = 0; i < tooltipsList.length; i++) {
+                        if (tooltipsList[i].key === vm.fieldKey) {
+                            $scope.tooltipText = tooltipsList[i].text;
+                            break;
+                        }
+                    }
 
-					$scope.itemChange();
-				};
+                    if ($scope.item) {
+                        setItemSpecificSettings();
+                    }
 
-				$scope.init = function () {
+                    if ($scope.fieldType) {
+                        if ($scope.fieldType.value === 30) {
+                            if ($scope.entity) {
+                                $scope.classifierId = $scope.entity[vm.fieldKey];
 
-					vm.fieldKey = $scope.getModelKey();
+                                $scope.findNodeItem().then(function () {
+                                    $scope.$apply();
+                                });
+                            }
+                        }
+                    }
 
-					$scope.options = {};
+                    checkForNotNull();
 
-					if (vm.evEditorEventService) {
-						initListeners();
-					}
+                    /* if ($scope.fieldType && $scope.fieldType.value === 20) {
 
-					if (vm.fieldKey === "tags") {
+                        $scope.numericInputValue.numberVal = null;
+                        setTimeout(function () {
+                            numberInputContainerElem = elem[0].querySelector('.bfNumberInputContainer');
+                            numberInputElem = elem[0].querySelector('.bfNumberInput');
+                        }, 500);
 
-						$scope.options = {
-							entityType: vm.entityType,
-						};
+                        if ($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0) {
 
-					} else {
+                            var itemNumberValue = JSON.parse(JSON.stringify($scope.entity[vm.fieldKey]));
+                            $scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
 
-						if (metaService.getEntitiesWithSimpleFields().includes(vm.entityType)) {
+                        }
 
-							$scope.options = {
-								entityType: vm.entityType,
-								key: vm.fieldKey,
-							};
+                    } */
+                };
 
-						}
-					}
+                $scope.init();
 
-					var tooltipsList = [];
+            }]
 
-					if (vm.evEditorDataService) {
-						tooltipsList = vm.evEditorDataService.getTooltipsData();
-						$scope.recalculateFunction = vm.evEditorDataService.getRecalculationFunction();
-					}
-
-					for (var i = 0; i < tooltipsList.length; i++) {
-						if (tooltipsList[i].key === vm.fieldKey) {
-							$scope.tooltipText = tooltipsList[i].text;
-							break;
-						}
-					}
-
-					if ($scope.item) {
-						setItemSpecificSettings();
-					}
-
-					if ($scope.fieldType) {
-						if ($scope.fieldType.value === 30) {
-							if ($scope.entity) {
-								$scope.classifierId = $scope.entity[vm.fieldKey];
-
-								$scope.findNodeItem().then(function () {
-									$scope.$apply();
-								});
-							}
-						}
-					}
-
-					checkForNotNull();
-
-					/* if ($scope.fieldType && $scope.fieldType.value === 20) {
-
-						$scope.numericInputValue.numberVal = null;
-						setTimeout(function () {
-							numberInputContainerElem = elem[0].querySelector('.bfNumberInputContainer');
-							numberInputElem = elem[0].querySelector('.bfNumberInput');
-						}, 500);
-
-						if ($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0) {
-
-							var itemNumberValue = JSON.parse(JSON.stringify($scope.entity[vm.fieldKey]));
-							$scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
-
-						}
-
-					} */
-				};
-
-				$scope.init();
-
-			}]
-
-		};
-	};
+        };
+    };
 })();
