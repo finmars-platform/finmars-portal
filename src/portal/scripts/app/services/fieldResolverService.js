@@ -156,6 +156,21 @@
                         resolve({type: 'id', key: 'instrument', data: data.results});
                     });
                     break;
+                case 'linked_instrument':
+                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'instrument', data: data.results});
+                    });
+                    break;
+                case 'allocation_balance':
+                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'instrument', data: data.results});
+                    });
+                    break;
+                case 'allocation_pl':
+                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'instrument', data: data.results});
+                    });
+                    break;
                 case 'pricing_policy':
                     pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'pricing_policy', data: data.results});
