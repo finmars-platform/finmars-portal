@@ -1200,8 +1200,8 @@
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                    interfaceLayout.groupingArea.collapsed = false;
-                    interfaceLayout.groupingArea.height = 98;
+                    // interfaceLayout.groupingArea.collapsed = false;
+                    // interfaceLayout.groupingArea.height = 98;
                     interfaceLayout.columnArea.collapsed = false;
                     interfaceLayout.columnArea.height = 70;
 
