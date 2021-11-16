@@ -616,7 +616,7 @@
             var keysLen = keys.length;
 
             for (i = 0; i < keysLen; i = i + 1) {
-				result.push(data.data[keys[i]]);
+                result.push(data.data[keys[i]]);
             }
 
             return result;
@@ -982,12 +982,16 @@
                 var interfaceLayout = getInterfaceLayout();
 
                 var interfaceLayoutToSave = {};
-                interfaceLayoutToSave.groupingArea = {};
-                interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
-                interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
+                // interfaceLayoutToSave.groupingArea = {};
+                // if (interfaceLayout.groupingArea) {
+                //     interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
+                //     interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
+                // }
                 interfaceLayoutToSave.columnArea = {};
                 // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
-                interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
+                if (interfaceLayout.columnArea) {
+                    interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
+                }
 
                 interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
 
@@ -1069,12 +1073,16 @@
             var interfaceLayout = getInterfaceLayout();
 
             var interfaceLayoutToSave = {};
-            interfaceLayoutToSave.groupingArea = {};
-            interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
-            interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
+            // interfaceLayoutToSave.groupingArea = {};
+            // if (interfaceLayout.groupingArea) {
+            //     interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
+            //     interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
+            // }
             interfaceLayoutToSave.columnArea = {};
             // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
-            interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
+            if (interfaceLayout.columnArea) {
+                interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
+            }
 
             interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
 
@@ -1608,9 +1616,6 @@
         function getGlobalTableSearch() {
             return data.globalTableSearch;
         }
-
-
-
 
 
         return {

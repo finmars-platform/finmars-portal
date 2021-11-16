@@ -38,7 +38,7 @@
         return new Promise(function (resolve, reject) {
 
             console.log('options', options);
-            console.log('fieldKey', fieldKey);
+                console.log('fieldKey', fieldKey);
             console.log('fieldsDataStore', fieldsDataStore);
 
             if (fieldsDataStore) {

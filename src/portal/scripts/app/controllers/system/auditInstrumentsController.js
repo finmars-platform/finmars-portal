@@ -12,34 +12,35 @@
         var vm = this;
 
         vm.entityType = 'audit-instrument';
+        vm.contentType = 'audit.objecthistory4entry'
         vm.entityRaw = [];
 
         vm.readyStatus = {content: false};
 
         vm.entityViewer = {extraFeatures: []};
 
-        auditService.getList({filters: {'content_type': 'instruments.instrument'}}).then(function (data) {
-            vm.entityRaw = data;
-            vm.readyStatus.content = true;
-            $scope.$apply();
-        });
-
-        vm.components = {
-            sidebar: true,
-            groupingArea: true,
-            columnAreaHeader: true,
-            splitPanel: true,
-            addEntityBtn: false,
-            fieldManagerBtn: true,
-            layoutManager: true,
-            autoReportRequest: false
-        };
-
         vm.getList = function (options) {
+
+            if (options.hasOwnProperty('filters')) {
+                options['filters'] = {}
+            }
+
+            if (options['filters'].hasOwnProperty('content_type')) {
+                options['filters']['content_type'] = {}
+            }
+
+            options['filters']['content_type'] = 'instruments.instrument'
+
             return auditService.getList(options).then(function (data) {
                 return data;
             })
         }
+
+        vm.init = function(){
+            vm.readyStatus.content = true
+        };
+
+        vm.init()
     };
 
 }());
