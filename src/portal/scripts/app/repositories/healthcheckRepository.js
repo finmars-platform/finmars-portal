@@ -9,17 +9,17 @@
 
     var getData = function () {
 
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch('__HEALTHCHECK_HOST__',
+        // var prefix = baseUrlService.getMasterUserPrefix();
+        // var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch('__HEALTHCHECK_HOST__',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
