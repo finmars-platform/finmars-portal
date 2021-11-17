@@ -13,6 +13,7 @@
 				eventSignal: "=",
 				smallOptions: "=",
 				isDisabled: '=',
+				isReadonly: '=',
 				onChangeCallback: "&?",
 			},
 			templateUrl: "views/directives/customInputs/date-input-view.html",

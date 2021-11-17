@@ -9,9 +9,9 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
-	const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
+    const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
-	var currencyService = require('../../services/currencyService');
+    var currencyService = require('../../services/currencyService');
 
     module.exports = function ($mdDialog, $state,) {
         return {
@@ -23,44 +23,57 @@
                 attributeDataService: '=',
                 spExchangeService: '=',
             },
-            link: function (scope, ) {
+            link: function (scope,) {
 
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.isReport = metaService.isReport(scope.entityType) || false;
                 scope.reportOptions = scope.evDataService.getReportOptions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
+                scope.globalTableSearch = ''
+
                 scope.layoutData = {
-                	name: ''
-				};
+                    name: ''
+                };
 
-				let listLayout = scope.evDataService.getListLayout();
+                let listLayout = scope.evDataService.getListLayout();
 
-				if (listLayout && listLayout.name) {
-					scope.layoutData.name = listLayout.name;
-				}
+                if (listLayout && listLayout.name) {
+                    scope.layoutData.name = listLayout.name;
+                }
 
                 scope.popupData = {
                     entityType: scope.entityType,
                     evDataService: scope.evDataService,
                     evEventService: scope.evEventService,
-					spExchangeService: scope.spExchangeService
+                    spExchangeService: scope.spExchangeService
                 }
 
-				scope.saveLayoutList = function ($event) {
+                scope.onGlobalTableSearchChange = function () {
 
-					var isNewLayout = scope.evDataService.isLayoutNew();
+                    scope.evDataService.setGlobalTableSearch(scope.globalTableSearch);
 
-					if (isNewLayout) {
-						evRvLayoutsHelper.saveAsLayoutList(scope.evDataService, scope.evEventService, scope.isReport, $mdDialog, scope.entityType, $event);
+                    if (!scope.isReport) {
+                        scope.evDataService.resetTableContent(false);
+                    }
 
-					} else {
-						evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
-					}
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
+                }
 
-				};
+                scope.saveLayoutList = function ($event) {
 
-                scope.openMissingPricesDialog = function($event) {
+                    var isNewLayout = scope.evDataService.isLayoutNew();
+
+                    if (isNewLayout) {
+                        evRvLayoutsHelper.saveAsLayoutList(scope.evDataService, scope.evEventService, scope.isReport, $mdDialog, scope.entityType, $event);
+
+                    } else {
+                        evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+                    }
+
+                };
+
+                scope.openMissingPricesDialog = function ($event) {
 
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
@@ -79,10 +92,10 @@
 
                 scope.toggleFilterBlock = function ($event) {
 
-					const elem = $event.currentTarget;
-					elem.classList.contains('active') ? elem.classList.remove('active') : elem.classList.add('active');
+                    const elem = $event.currentTarget;
+                    elem.classList.contains('active') ? elem.classList.remove('active') : elem.classList.add('active');
 
-					scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
+                    scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
 
                 };
 
@@ -205,7 +218,7 @@
 
                                 if (!scope.currencies.length) {
 
-                                    const ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+                                    const ecosystemDefaultData = await ecosystemDefaultService.getList().then(res => res.results[0]);
                                     scope.currencies.push(ecosystemDefaultData.currency_object);
                                     scope.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
 
@@ -241,6 +254,8 @@
                     var reportOptions = scope.evDataService.getReportOptions();
                     var reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 
+                    console.log('updateReportOptions.scope.reportOptions', scope.reportOptions);
+
                     var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
                     var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, scope.reportLayoutOptions);
                     // TODO Delete in future
@@ -258,15 +273,15 @@
                     }, 200)
                 };
 
-                var initEventListeners =function () {
+                var initEventListeners = function () {
 
                     scope.evEventService.addEventListener(evEvents.LAYOUT_NAME_CHANGE, function () {
 
-                    	listLayout = scope.evDataService.getListLayout();
+                        listLayout = scope.evDataService.getListLayout();
 
-						if (listLayout && listLayout.name) {
-							scope.layoutData.name = listLayout.name;
-						}
+                        if (listLayout && listLayout.name) {
+                            scope.layoutData.name = listLayout.name;
+                        }
 
                     });
 
@@ -277,9 +292,9 @@
 
                     });
 
-					scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
-						scope.reportOptions = scope.evDataService.getReportOptions();
-					});
+                    scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+                        scope.reportOptions = scope.evDataService.getReportOptions();
+                    });
 
                 };
 

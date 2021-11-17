@@ -756,12 +756,12 @@
                     notificationsListType: 'all'
                 }
             })
-            .state('app.portal.system.transactions', {
+            .state('app.portal.data.transactions', {
                 url: '/audit/transactions',
                 templateUrl: 'views/system/audit-transactions-view.html',
                 controller: 'TransactionsAuditController as vm'
             })
-            .state('app.portal.system.instruments', {
+            .state('app.portal.data.instruments', {
                 url: '/audit/instruments',
                 templateUrl: 'views/system/audit-instruments-view.html',
                 controller: 'InstrumentsAuditController as vm'

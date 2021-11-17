@@ -19,6 +19,9 @@
 
                 </div>
 
+                <md-button class="md-raised md-primary float-right"  data-ng-click="vm.getMasterUsersList($event)">
+                    Refresh
+                </md-button>
 
                 <md-button class="md-raised md-primary float-right"  data-ui-sref="app.new-database">Create
                     Database
@@ -27,6 +30,8 @@
                 <md-button class="md-raised md-primary float-right"  data-ng-click="vm.createDatabaseFromBackup($event)">Create
                     Database From Backup
                 </md-button>
+
+
 
             </div>
 
@@ -116,7 +121,7 @@
                             </div>
                         </md-card-title-text>
                     </md-card-title>
-                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="item.is_initialized">
+                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="item.is_initialized && item.online">
                         <!--<md-button>Leave</md-button>-->
 
                         <md-button data-ng-if="!item.is_owner" class="md-raised"
@@ -135,7 +140,7 @@
                                    data-ng-click="vm.renameMasterUser($event, item)">Rename
                         </md-button>
 
-                        <md-button data-ng-if="!item.legacy_id" class="md-raised" data-ng-click="vm.exportMasterUserBackup($event, item)">
+                        <md-button data-ng-if="!item.legacy_id && item.is_admin" class="md-raised" data-ng-click="vm.exportMasterUserBackup($event, item)">
 <!--                        <md-button  class="md-raised" data-ng-click="vm.exportMasterUserBackup($event, item)">-->
                             Export Backup
                         </md-button>
@@ -145,6 +150,9 @@
                     </md-card-actions>
                     <md-card-actions layout="row" layout-align="space-between center" data-ng-if="!item.is_initialized">
                         <div class="text-center">Ecosystem is initializing</div>
+                    </md-card-actions>
+                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="item.is_initialized && !item.online">
+                        <div class="text-center">Something went wrong. Ecosystem is not responding.</div>
                     </md-card-actions>
                 </md-card>
 

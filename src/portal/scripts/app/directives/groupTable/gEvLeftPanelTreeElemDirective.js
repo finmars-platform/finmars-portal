@@ -21,32 +21,32 @@
                 evDataService: '=',
                 evEventService: '=',
                 item: '=',
-				evContentElement: '='
+                evContentElement: '='
             },
             link: function (scope,) {
 
-            	scope.loading = false;
+                scope.loading = false;
 
                 scope.unfoldGroup = function ($event) {
 
-                	scope.item.___is_open = true;
+                    scope.item.___is_open = true;
 
                     scope.evDataService.setData(scope.item);
 
-					const hasUnloadedChildren = scope.item.___items_count > 0 && !scope.item.results.length;
+                    const hasUnloadedChildren = scope.item.___items_count > 0 && !scope.item.results.length;
 
-					if (hasUnloadedChildren) {
+                    if (hasUnloadedChildren) {
 
-						scope.loading = true;
+                        scope.loading = true;
 
-						const dataLoadEndIndex = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                        const dataLoadEndIndex = scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-							scope.loading = false;
-							scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndIndex);
+                            scope.loading = false;
+                            scope.evEventService.removeEventListener(evEvents.DATA_LOAD_END, dataLoadEndIndex);
 
-						});
+                        });
 
-					}
+                    }
 
                     evDomManager.requestGroups(scope.item.___id, scope.item.___parentId, scope.evDataService, scope.evEventService);
 
@@ -61,17 +61,17 @@
 
                 var deselectChildrenObjs = function (item) {
 
-                	item.results.forEach(function (child) { // deactivate objects from previously selected group
+                    item.results.forEach(function (child) { // deactivate objects from previously selected group
 
-						if (child.___type === 'object') {
-							child.___is_activated = false;
-						}
+                        if (child.___type === 'object') {
+                            child.___is_activated = false;
+                        }
 
-					});
+                    });
 
-                	return item;
+                    return item;
 
-				};
+                };
 
                 scope.toggleGroupSelection = function ($event) {
 
@@ -85,16 +85,16 @@
 
                     if (!scope.multiselectIsActive) {
 
-						var selected = scope.item.___is_selected;
-                    	var items = scope.evDataService.getDataAsList();
+                        var selected = scope.item.___is_selected;
+                        var items = scope.evDataService.getDataAsList();
 
                         items.forEach(function (item) {
 
-                        	item.___is_selected = false;
+                            item.___is_selected = false;
 
-							if (item.results && item.results.length) {
-								item = deselectChildrenObjs(item);
-							}
+                            if (item.results && item.results.length) {
+                                item = deselectChildrenObjs(item);
+                            }
 
                             scope.evDataService.setData(item);
 
@@ -102,7 +102,7 @@
 
                         scope.evDataService.setSelectedGroups([]);
 
-						scope.item.___is_selected = selected; // return ___is_selected status of clicked group after resetting statuses of all groups
+                        scope.item.___is_selected = selected; // return ___is_selected status of clicked group after resetting statuses of all groups
 
                     }
 
@@ -110,14 +110,14 @@
 
                     if (scope.item.___is_selected) {
 
-						if (scope.item.results && scope.item.results.length) {
+                        if (scope.item.results && scope.item.results.length) {
 
-							var item = scope.evDataService.getData(scope.item.___id);
-							item = deselectChildrenObjs(item);
+                            var item = scope.evDataService.getData(scope.item.___id);
+                            item = deselectChildrenObjs(item);
 
-							scope.evDataService.setData(item);
+                            scope.evDataService.setData(item);
 
-						}
+                        }
 
                         selectedGroups = selectedGroups.filter(function (group) {
                             return group.___id !== scope.item.___id;
@@ -137,26 +137,53 @@
 
                     scope.evDataService.setSelectedGroups(selectedGroups);
 
-					scope.evContentElement.scrollTop = 0;
+                    scope.evContentElement.scrollTop = 0;
 
-					scope.evDataService.setSelectAllRowsState(false);
+                    scope.evDataService.setSelectAllRowsState(false);
 
-					scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
-					scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
+                    scope.evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 }
 
+                scope.getPrettyName = function () {
+                    scope.item.___group_name_pretty = scope.item.___group_name
+
+                    if (scope.groupType.entity === 'complex-transaction') {
+                        if (scope.groupType.key === 'status') {
+
+                            if (scope.item.___group_name === 1) {
+                                scope.item.___group_name_pretty = 'Booked'
+                            } else if (scope.item.___group_name === 2) {
+                                scope.item.___group_name_pretty = 'Pending'
+                            } else if (scope.item.___group_name === 3) {
+                                scope.item.___group_name_pretty = 'Ignored'
+                            }
+
+                        }
+
+                    }
+
+                    return scope.item.___group_name_pretty
+                }
+
                 var init = async function () {
 
+                    console.log('tree elem, ', scope.item)
 
                     var groups = scope.evDataService.getGroups();
+
+                    scope.groupType = groups[scope.item.___level - 1]
 
                     if (scope.item.___level === groups.length) {
 
                         scope.isLastLevel = true;
                     }
+
+                    console.log('tree groups, ', groups)
+                    console.log('tree groupType, ', scope.groupType)
 
 
                 };

@@ -73,6 +73,12 @@
             'overheads', 'overheads_fixed', 'overheads_fx', 'total_loc', 'total_fixed_loc', 'total_fx_loc', 'principal_loc', 'principal_fixed_loc', 'principal_fx_loc',
             'carry_loc', 'carry_fixed_loc', 'carry_fx_loc', 'overheads_loc', 'overheads_fixed_loc',
 
+            'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
+            'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
+            'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
+            'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
+            'overheads_fx_closed_loc',
+
             'time_invested', 'position_return', 'net_position_return'
         ];
 
@@ -616,7 +622,8 @@
                 locals: {
                     data: {
                         availableAttrs: availableAttrs,
-                        title: dialogTitle
+                        title: dialogTitle,
+                        isReport: true
                     }
                 }
             }).then(function (res) {

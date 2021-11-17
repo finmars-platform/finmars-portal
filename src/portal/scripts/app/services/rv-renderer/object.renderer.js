@@ -7,7 +7,7 @@
 
     var renderHelper = require('../../helpers/render.helper');
     var rvHelper = require('../../helpers/rv.helper');
-	var stringHelper = require('../../helpers/stringHelper');
+    var stringHelper = require('../../helpers/stringHelper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
@@ -40,22 +40,16 @@
                         result.numeric_result = item.value_float;
                         result.raw_text_result = item.value_float.toString();
 
-                    }
-
-                    else if (column.value_type === 10 && item.value_string) {
+                    } else if (column.value_type === 10 && item.value_string) {
 
                         result.html_result = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
                         result.raw_text_result = item.value_string;
 
-                    }
-
-                    else if (column.value_type === 30 && item.classifier_object) {
+                    } else if (column.value_type === 30 && item.classifier_object) {
 
                         result.html_result = item.classifier_object.name;
                         result.raw_text_result = item.classifier_object.name;
-                    }
-
-                    else if (column.value_type === 40 && item.value_date) {
+                    } else if (column.value_type === 40 && item.value_date) {
 
                         result.html_result = item.value_date;
                         result.raw_text_result = item.value_date;
@@ -87,7 +81,7 @@
 
         if (typeof obj[column.key] === 'string') {
 
-			result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
+            result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
             result.raw_text_result = obj[column.key];
 
         } else {
@@ -98,14 +92,100 @@
 
             if (typeof obj[column.key] === 'number') {
 
-                if (obj[column.key + '_object'] && obj[column.key + '_object'].name) {
+                if (obj[column.key + '_object'] && obj[column.key + '_object'].short_name) {
 
                     result.html_result = stringHelper.parseAndInsertHyperlinks(
-                    	obj[column.key + '_object'].name,
-						"class='openLinkInNewTab'"
-					);
+                        obj[column.key + '_object'].short_name,
+                        "class='openLinkInNewTab'"
+                    );
 
-                    result.raw_text_result = obj[column.key + '_object'].name;
+                    result.raw_text_result = obj[column.key + '_object'].short_name;
+
+                } else if (column.key === 'complex_transaction.status') {
+
+                    if (obj[column.key] === 1) {
+                        result.html_result = 'Booked'
+                        result.raw_text_result = 'Booked'
+                    }
+
+                    if (obj[column.key] === 2) {
+                        result.html_result = 'Pending'
+                        result.raw_text_result = 'Pending'
+                    }
+
+                    if (obj[column.key] === 3) {
+                        result.html_result = 'Ignored'
+                        result.raw_text_result = 'Ignored'
+                    }
+
+                } else if (column.key === 'transaction_class') {
+
+                    // BUY = 1
+                    // SELL = 2
+                    // FX_TRADE = 3
+                    // INSTRUMENT_PL = 4
+                    // TRANSACTION_PL = 5
+                    // TRANSFER = 6
+                    // FX_TRANSFER = 7
+                    // CASH_INFLOW = 8
+                    // CASH_OUTFLOW = 9
+                    //
+                    // DEFAULT = 10
+
+                    if (obj[column.key] === 1) {
+                        result.html_result = 'Buy'
+                        result.raw_text_result = 'Buy'
+                    }
+
+                    if (obj[column.key] === 2) {
+                        result.html_result = 'Sell'
+                        result.raw_text_result = 'Sell'
+                    }
+
+                    if (obj[column.key] === 3) {
+                        result.html_result = 'FX Trade'
+                        result.raw_text_result = 'Fx Trade'
+                    }
+
+                    if (obj[column.key] === 4) {
+                        result.html_result = 'Instrument PL'
+                        result.raw_text_result = 'Instrument PL'
+                    }
+
+                    if (obj[column.key] === 5) {
+                        result.html_result = 'Transaction PL'
+                        result.raw_text_result = 'Transaction PL'
+                    }
+
+                    if (obj[column.key] === 6) {
+                        result.html_result = 'Transfer'
+                        result.raw_text_result = 'Transfer'
+                    }
+
+                    if (obj[column.key] === 7) {
+                        result.html_result = 'FX Transfer'
+                        result.raw_text_result = 'FX Transfer'
+                    }
+
+                    if (obj[column.key] === 8) {
+                        result.html_result = 'Cash Inflow'
+                        result.raw_text_result = 'Cash Inflow'
+                    }
+
+                    if (obj[column.key] === 9) {
+                        result.html_result = 'Cash Outflow'
+                        result.raw_text_result = 'Cash Outflow'
+                    }
+
+                    if (obj[column.key] === 10) {
+                        result.html_result = 'Default'
+                        result.raw_text_result = 'Default'
+                    }
+
+                    if (obj[column.key] === 11) {
+                        result.html_result = 'Placeholder'
+                        result.raw_text_result = 'Placeholder'
+                    }
 
                 } else {
 
@@ -122,6 +202,22 @@
 
                     result.html_result = '[' + obj[column.key].length + ']';
                     result.raw_text_result = '[' + obj[column.key].length + ']';
+
+                } else {
+
+                    if (typeof obj[column.key] === 'boolean') {
+
+                        if (obj[column.key]) {
+
+                            result.html_result = 'True'
+                            result.raw_text_result =  'True'
+
+                        } else {
+                            result.html_result = 'False'
+                            result.raw_text_result =  'False'
+                        }
+
+                    }
 
                 }
 
@@ -146,15 +242,15 @@
 
         var proxylineIsActive = function () {
 
-        	/*if (reportOptions.subtotals_options) {
-        		return reportOptions.subtotals_options.type === 'area';
+            /*if (reportOptions.subtotals_options) {
+                return reportOptions.subtotals_options.type === 'area';
 
-			} else { // for old layouts
-        		return groups[columnNumber - 1].report_settings.subtotal_type === 'area';
-			}*/
-			return groups[columnNumber - 1].report_settings.subtotal_type === 'area';
+            } else { // for old layouts
+                return groups[columnNumber - 1].report_settings.subtotal_type === 'area';
+            }*/
+            return groups[columnNumber - 1].report_settings.subtotal_type === 'area';
 
-		};
+        };
 
         if (proxylineIsActive()) {
 
@@ -193,17 +289,17 @@
 
                 if (parentGroup.___is_open) {
 
-					var foldButtonSign = currentGroup.___is_open ? '-': '+';
+                    var foldButtonSign = currentGroup.___is_open ? '-' : '+';
 
-					var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
+                    var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
 
-					var groupName = currentGroup.___group_name;
+                    var groupName = currentGroup.___group_name;
 
-					if (groupName && typeof groupName === 'string') {
+                    if (groupName && typeof groupName === 'string') {
 
-						groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+                        groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
 
-					}
+                    }
 
                     result.html_result = foldButton + '<span class="text-bold">' + groupName + '</span>';
                     result.raw_text_result = currentGroup.___group_name;
@@ -250,7 +346,7 @@
             } else {
 
                 // if (column.report_settings && !column.report_settings.hide_subtotal) {
-				if (column.report_settings) {
+                if (column.report_settings) {
 
                     var subtotal;
 
@@ -374,31 +470,30 @@
 
     var getBorderClasses = function (evDataService, obj, columnNumber, groups) {
 
-    	var results = [];
+        var results = [];
 
-    	var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
+        var borderBottomTransparent = getBorderBottomTransparent(evDataService, obj, columnNumber, groups);
 
-    	if (borderBottomTransparent) {
-			results.push(borderBottomTransparent);
-		}
+        if (borderBottomTransparent) {
+            results.push(borderBottomTransparent);
+        }
 
 
+        // grouping columns cells except last
+        if (groups.length && columnNumber < groups.length) {
 
-		// grouping columns cells except last
-    	if (groups.length && columnNumber < groups.length) {
+            // unless next cell is cell with group name
+            if (!renderHelper.isCellWithProxylineFoldButton(evDataService, obj, columnNumber)) {
 
-    		// unless next cell is cell with group name
-    		if (!renderHelper.isCellWithProxylineFoldButton(evDataService, obj, columnNumber)) {
+                results.push('border-right-transparent');
 
-    			results.push('border-right-transparent');
+            }
 
-			}
+        }
 
-		}
+        return results;
 
-    	return results;
-
-	};
+    };
 
     var getColorNegativeNumber = function (val, column) {
 
@@ -426,37 +521,37 @@
 
     var getCellClasses = function (evDataService, obj, column, columnNumber, groups, valueObj) {
 
-    	var result = [];
+        var result = [];
 
-		var borderClasses = getBorderClasses(evDataService, obj, columnNumber, groups);
+        var borderClasses = getBorderClasses(evDataService, obj, columnNumber, groups);
 
-		if (borderClasses.length) {
-			result = result.concat(borderClasses);
-		}
+        if (borderClasses.length) {
+            result = result.concat(borderClasses);
+        }
 
-		var textAlign = getCellTextAlign(evDataService, column, columnNumber, groups);
+        var textAlign = getCellTextAlign(evDataService, column, columnNumber, groups);
 
-		if (textAlign) {
-			result.push(textAlign);
-		}
+        if (textAlign) {
+            result.push(textAlign);
+        }
 
-		if (valueObj.numeric_result !== null && valueObj.numeric_result !== undefined) {
+        if (valueObj.numeric_result !== null && valueObj.numeric_result !== undefined) {
 
-			var colorNegative = getColorNegativeNumber(valueObj.numeric_result, column);
+            var colorNegative = getColorNegativeNumber(valueObj.numeric_result, column);
 
-			if (colorNegative) {
-				result.push(colorNegative);
-			}
+            if (colorNegative) {
+                result.push(colorNegative);
+            }
 
-		}
+        }
 
-		if (column.isHidden) {
-			result.push('display-none');
-		}
+        if (column.isHidden) {
+            result.push('display-none');
+        }
 
-    	return result;
+        return result;
 
-	};
+    };
 
     var isCellModified = function (obj, column, columnIndex) {
 
@@ -507,25 +602,25 @@
 		}
 
 		rowSelection = '<div class="g-row-selection"><div class="' + rowSelectionBtnClasses + '">' + rowSelectionBtnContent + '</div></div>'; */
-		var rowSelection = renderHelper.getRowSelectionElem(obj);
+        var rowSelection = renderHelper.getRowSelectionElem(obj);
 
-		/*if (obj.___is_active_object || obj.___is_activated) {
+        /*if (obj.___is_active_object || obj.___is_activated) {
 
-			var className = obj.___is_active_object ? 'is-active-object': 'selected';
-			classList.push(className);
+            var className = obj.___is_active_object ? 'is-active-object': 'selected';
+            classList.push(className);
 
-		}*/
-		if (obj.___is_active_object) {
-			classList.push('is-active-object');
-		}
+        }*/
+        if (obj.___is_active_object) {
+            classList.push('is-active-object');
+        }
 
-		if (obj.___is_activated) {
-			classList.push('selected');
-		}
+        if (obj.___is_activated) {
+            classList.push('selected');
+        }
 
-		if (obj.___context_menu_is_opened) {
-			classList.push('context-menu-opened');
-		}
+        if (obj.___context_menu_is_opened) {
+            classList.push('context-menu-opened');
+        }
 
         let color = 'none';
         if (markedReportRows.hasOwnProperty(obj.id)) {
@@ -538,13 +633,13 @@
         var classes = classList.join(' ');
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
-        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result = '<div class="' + classes + '" style="top: ' + offsetTop + 'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         /* var textAlign;
         var colorNegative = '';
         var borderBottomTransparent = ''; */
-		var columnNumber;
+        var columnNumber;
         var value_obj;
         var gCellTitle = '';
         var resultValue;
@@ -562,8 +657,8 @@
 
             cellModified = isCellModified(obj, column, columnIndex) ? 'g-cell-modified' : ''; // why cell modified is not inside class list
 
-			var cellClassesList = getCellClasses(evDataService, obj, column, columnNumber, groups, value_obj);
-			var cellClasses = cellClassesList.join(' ');
+            var cellClassesList = getCellClasses(evDataService, obj, column, columnNumber, groups, value_obj);
+            var cellClasses = cellClassesList.join(' ');
 
             obj.___cells_values.push({
                 width: column.style.width,
@@ -582,11 +677,11 @@
             }
 
             cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
-					'<div class="g-cell ' + cellModified + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
-						'<div class="g-cell-content-wrap">' +
-							resultValue +
-						'</div>' +
-					'</div>' +
+                '<div class="g-cell ' + cellModified + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
+                '<div class="g-cell-content-wrap">' +
+                resultValue +
+                '</div>' +
+                '</div>' +
                 '</div>';
 
             result = result + cell;

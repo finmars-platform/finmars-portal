@@ -69,6 +69,10 @@
                 return 'pricing/price-history-error';
             case 'currency-history-error':
                 return 'pricing/currency-history-error';
+            case 'audit-instrument':
+                return 'audit/history';
+            case 'audit-transaction':
+                return 'audit/history';
 
         }
 

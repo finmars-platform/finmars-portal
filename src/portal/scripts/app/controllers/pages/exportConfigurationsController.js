@@ -656,98 +656,117 @@
 
         vm.getEntityName = function (item) {
 
-            switch (item.entity) {
-                case 'transactions.transactiontype':
-                    return "Transaction Types";
-                case 'transactions.transactiontypegroup':
-                    return "Transaction Type Groups";
-                case 'accounts.accounttype':
-                    return "Account Types";
-                case 'currencies.currency':
-                    return 'Currencies';
-                case 'instruments.pricingpolicy':
-                    return "Pricing Policy";
-                case 'instruments.instrumenttype':
-                    return "Instrument Types";
-                case 'ui.editlayout':
-                    return "Input Form";
-                case 'ui.listlayout':
-                    return "Entity viewer layouts";
-                case 'ui.reportlayout':
-                    return "Report builder layouts";
-                case 'ui.dashboardlayout':
-                    return "Dashboard layouts";
-                case 'ui.templatelayout':
-                    return 'Template Layout';
-                case 'ui.contextmenulayout':
-                    return 'Context Menu Layout';
-                case 'ui.bookmark':
-                    return "Bookmarks";
-                case 'ui.entitytooltip':
-                    return 'System Tooltips';
-                case 'ui.colorpalette':
-                    return 'Color Palettes';
-                case 'ui.columnsortdata':
-                    return 'Column Sort Data';
-                case 'reference_tables.referencetable':
-                    return "Reference Tables";
-                case 'csv_import.csvimportscheme':
-                    return "Data import from CSV schemes";
-                case 'complex_import.compleximportscheme':
-                    return 'Complex Import Schemes';
-                case 'integrations.instrumentdownloadscheme':
-                    return "Instrument Download Schemes";
-                case 'integrations.pricedownloadscheme':
-                    return "Price Download Schemes";
-                case 'integrations.complextransactionimportscheme':
-                    return "Complex Transaction Import Scheme";
-                case 'obj_attrs.portfolioattributetype':
-                    return "Portfolio Dynamic Attributes";
-                case 'obj_attrs.accountattributetype':
-                    return "Account Dynamic Attributes";
-                case 'obj_attrs.accounttypeattributetype':
-                    return "Account Type Dynamic Attributes";
-                case 'obj_attrs.responsibleattributetype':
-                    return "Responsible Dynamic Attributes";
-                case 'obj_attrs.counterpartyattributetype':
-                    return "Counterparty Dynamic Attributes";
-                case 'obj_attrs.instrumentattributetype':
-                    return "Instrument Dynamic Attributes";
-                case 'obj_attrs.instrumenttypeattributetype':
-                    return "Instrument Type Dynamic Attributes";
-                case 'obj_attrs.transactiontypeattributetype':
-                    return "Transaction Type Dynamic Attributes";
-                case 'obj_attrs.strategy1attributetype':
-                    return "Strategy 1 Dynamic Attributes";
-                case 'obj_attrs.strategy2attributetype':
-                    return "Strategy 2 Dynamic Attributes";
-                case 'obj_attrs.strategy3attributetype':
-                    return "Strategy 3 Dynamic Attributes";
-                case 'obj_attrs.currencyattributetype':
-                    return "Currency Dynamic Attributes";
-                case 'reports.balancereportcustomfield':
-                    return "Balance Report Custom Fields";
-                case 'reports.plreportcustomfield':
-                    return "P&L Report Custom Fields";
-                case 'reports.transactionreportcustomfield':
-                    return "Transaction Report Custom Fields";
-                case 'ui.instrumentuserfieldmodel':
-                    return 'Instrument User Text Field Names';
-                case 'ui.transactionuserfieldmodel':
-                    return 'Transaction User Field Names';
-                case 'pricing.currencypricingscheme':
-                    return 'Currency Pricing Scheme';
-                case 'pricing.instrumentpricingscheme':
-                    return 'Instrument Pricing Scheme';
-                case 'pricing.pricingprocedure':
-                    return 'Pricing Procedure';
-                case 'schedules.pricingschedule':
-                    return 'Pricing Schedule';
-                case 'procedures.requestdatafileprocedure':
-                    return 'Data Procedure';
-                default:
-                    return "Unknown"
+            var name = metaContentTypesService.getEntityNameByContentType(item.entity)
+
+            if (item.entity === 'obj_attrs.genericattributetype') {
+
+                var attr_name = 'Unknown';
+
+                if (item.content && item.content.length) {
+                    attr_name = metaContentTypesService.getEntityNameByContentType(item.content[0].content_type)
+                }
+
+                name = 'Attribute Type ' + attr_name
             }
+
+            if (!name) {
+                name = 'Unknown (' + item.entity + ')'
+            }
+
+            return name
+
+            // switch (item.entity) {
+            //     case 'transactions.transactiontype':
+            //         return "Transaction Types";
+            //     case 'transactions.transactiontypegroup':
+            //         return "Transaction Type Groups";
+            //     case 'accounts.accounttype':
+            //         return "Account Types";
+            //     case 'currencies.currency':
+            //         return 'Currencies';
+            //     case 'instruments.pricingpolicy':
+            //         return "Pricing Policy";
+            //     case 'instruments.instrumenttype':
+            //         return "Instrument Types";
+            //     case 'ui.editlayout':
+            //         return "Input Form";
+            //     case 'ui.listlayout':
+            //         return "Entity viewer layouts";
+            //     case 'ui.reportlayout':
+            //         return "Report builder layouts";
+            //     case 'ui.dashboardlayout':
+            //         return "Dashboard layouts";
+            //     case 'ui.templatelayout':
+            //         return 'Template Layout';
+            //     case 'ui.contextmenulayout':
+            //         return 'Context Menu Layout';
+            //     case 'ui.bookmark':
+            //         return "Bookmarks";
+            //     case 'ui.entitytooltip':
+            //         return 'System Tooltips';
+            //     case 'ui.colorpalette':
+            //         return 'Color Palettes';
+            //     case 'ui.columnsortdata':
+            //         return 'Column Sort Data';
+            //     case 'reference_tables.referencetable':
+            //         return "Reference Tables";
+            //     case 'csv_import.csvimportscheme':
+            //         return "Data import from CSV schemes";
+            //     case 'complex_import.compleximportscheme':
+            //         return 'Complex Import Schemes';
+            //     case 'integrations.instrumentdownloadscheme':
+            //         return "Instrument Download Schemes";
+            //     case 'integrations.pricedownloadscheme':
+            //         return "Price Download Schemes";
+            //     case 'integrations.complextransactionimportscheme':
+            //         return "Complex Transaction Import Scheme";
+            //     case 'obj_attrs.portfolioattributetype':
+            //         return "Portfolio Dynamic Attributes";
+            //     case 'obj_attrs.accountattributetype':
+            //         return "Account Dynamic Attributes";
+            //     case 'obj_attrs.accounttypeattributetype':
+            //         return "Account Type Dynamic Attributes";
+            //     case 'obj_attrs.responsibleattributetype':
+            //         return "Responsible Dynamic Attributes";
+            //     case 'obj_attrs.counterpartyattributetype':
+            //         return "Counterparty Dynamic Attributes";
+            //     case 'obj_attrs.instrumentattributetype':
+            //         return "Instrument Dynamic Attributes";
+            //     case 'obj_attrs.instrumenttypeattributetype':
+            //         return "Instrument Type Dynamic Attributes";
+            //     case 'obj_attrs.transactiontypeattributetype':
+            //         return "Transaction Type Dynamic Attributes";
+            //     case 'obj_attrs.strategy1attributetype':
+            //         return "Strategy 1 Dynamic Attributes";
+            //     case 'obj_attrs.strategy2attributetype':
+            //         return "Strategy 2 Dynamic Attributes";
+            //     case 'obj_attrs.strategy3attributetype':
+            //         return "Strategy 3 Dynamic Attributes";
+            //     case 'obj_attrs.currencyattributetype':
+            //         return "Currency Dynamic Attributes";
+            //     case 'reports.balancereportcustomfield':
+            //         return "Balance Report Custom Fields";
+            //     case 'reports.plreportcustomfield':
+            //         return "P&L Report Custom Fields";
+            //     case 'reports.transactionreportcustomfield':
+            //         return "Transaction Report Custom Fields";
+            //     case 'ui.instrumentuserfieldmodel':
+            //         return 'Instrument User Text Field Names';
+            //     case 'ui.transactionuserfieldmodel':
+            //         return 'Transaction User Field Names';
+            //     case 'pricing.currencypricingscheme':
+            //         return 'Currency Pricing Scheme';
+            //     case 'pricing.instrumentpricingscheme':
+            //         return 'Instrument Pricing Scheme';
+            //     case 'pricing.pricingprocedure':
+            //         return 'Pricing Procedure';
+            //     case 'schedules.pricingschedule':
+            //         return 'Pricing Schedule';
+            //     case 'procedures.requestdatafileprocedure':
+            //         return 'Data Procedure';
+            //     default:
+            //         return "Unknown ("+item.entity+")"
+            // }
 
         };
 

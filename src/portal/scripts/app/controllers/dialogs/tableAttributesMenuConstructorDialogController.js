@@ -76,7 +76,8 @@
                 locals: {
                     data: {
                         availableAttrs: vm.availableAttrs,
-                        title: "Select Column"
+                        title: "Select Column",
+                        isReport: false
                     }
                 }
             }).then(function (res) {
@@ -116,7 +117,8 @@
                 locals: {
                     data: {
                         availableAttrs: vm.availableAttrs,
-                        title: "Select Column"
+                        title: "Select Column",
+                        isReport: false
                     }
                 }
             }).then(function (res) {

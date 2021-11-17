@@ -10,6 +10,7 @@
                 <instrument-select
                         label="{{getName()}}"
                         model="entity[fieldKey]"
+                        item-object="entity[fieldKey + '_object']"
                         on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
 
@@ -21,6 +22,7 @@
                 <entity-search-select item="entity[fieldKey]"
                                       label="getName()"
                                       item-name="inputTextObj.value"
+                                      item-object="entity[fieldKey + '_object']"
                                       on-change-callback="changeHandler()"
                                       custom-buttons="item.buttons"
                                       custom-styles="customStyles"

@@ -63,6 +63,9 @@
             "currency-history-error": require('../models/currencyHistoryErrorPropsModel').getAttributes(),
             "price-history-error": require('../models/priceHistoryErrorPropsModel').getAttributes(),
 
+            "transaction-class": require('../models/transactionClassPropsModel').getAttributes(),
+            "complex-transaction-status": require('../models/complextransactionStatusPropsModel').getAttributes(),
+
         };
 
         var customFieldsData = {};
