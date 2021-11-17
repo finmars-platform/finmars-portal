@@ -706,9 +706,6 @@
 
                 vm.entity = vm.updateEntityBeforeSave(vm.entity);
 
-                /*var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-                var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
-
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(vm.entity.actions);
 				var inputsErrors = sharedLogic.validateInputs(vm.entity.inputs);
 				actionsErrors = actionsErrors.concat(inputsErrors);
@@ -807,7 +804,7 @@
 
                 }
 
-            })
+            });
 
         };
 
@@ -832,7 +829,7 @@
                 }
 
                 metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-            })
+            });
 
         };
 
@@ -1602,54 +1599,15 @@
 
         };
 
-        vm.resetPropertyBtn = function (item, propertyName, fieldName) {
+		vm.onActionMultitypeFieldToggle = sharedLogic.onActionMultitypeFieldToggle;
+		vm.onMultitypeFieldValChange = sharedLogic.onMultitypeFieldValChange;
 
-            item[propertyName][fieldName] = null;
-            item[propertyName][fieldName + '_input'] = null;
+		vm.actionsMultitypeFieldsList = [];
+		vm.paneActionsMenuPopups = [];
 
-            if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
-                item[propertyName][fieldName + '_phantom'] = null;
-            }
+		vm.createSelectorPopupDataListForActions = sharedLogic.createSelectorPopupDataListForActions;
 
-            item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
-
-            if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
-
-                setDefaultValueForRelation(item, propertyName, fieldName);
-
-            }
-
-        };
-
-        vm.findInputs = function (entity) {
-
-            var content_type = '';
-            var result;
-
-            for (var i = 0; i < vm.contentTypes.length; i++) {
-                if (vm.contentTypes[i].entity === entity) {
-                    content_type = vm.contentTypes[i].key;
-                    break;
-                }
-
-            }
-
-
-            result = vm.entity.inputs.filter(function (input) {
-
-                if (input.content_type === content_type) {
-                    return true;
-                }
-
-
-                return false;
-            });
-
-            return result;
-
-        };
-
-        vm.deletePane = function (item, $index, $event) {
+        /* vm.deletePane = function (item, $index, $event) {
 
             var description = 'Are you sure to delete this action?';
 
@@ -1675,7 +1633,7 @@
                     vm.clearPhantoms();
                 }
             });
-        };
+        }; */
 
         vm.clearPhantoms = function(){
 
@@ -1778,7 +1736,11 @@
             vm.entity.actions.push(result);
 
             vm.findPhantoms();
+
         };
+
+		vm.generateOperationPopupData = sharedLogic.generateOperationPopupData;
+		vm.generateInstrumentOperationPopupData = sharedLogic.generateInstrumentOperationPopupData;
 
         vm.makeCopyOfAction = function (actionToCopy, index) {
 
@@ -1832,23 +1794,8 @@
             vm.findPhantoms();
         };
 
-        vm.moveDown = function (item, $index) {
-
-            var swap = JSON.parse(JSON.stringify(item));
-            vm.entity.actions[$index] = vm.entity.actions[$index + 1];
-            vm.entity.actions[$index + 1] = swap;
-            vm.findPhantoms();
-
-        };
-
-        vm.moveUp = function (item, $index) {
-
-            var swap = JSON.parse(JSON.stringify(item));
-            vm.entity.actions[$index] = vm.entity.actions[$index - 1];
-            vm.entity.actions[$index - 1] = swap;
-            vm.findPhantoms();
-
-        };
+        vm.moveDown = sharedLogic.moveDown;
+        vm.moveUp = sharedLogic.moveUp;
 
         vm.resolveInstrumentProp = function (item, key, prop) {
 
@@ -1881,7 +1828,7 @@
 
         };
 
-        vm.setTransactionInstrumentInput = function (item, name, prop) {
+        /* vm.setTransactionInstrumentInput = function (item, name, prop) {
 
             if (prop == 'instrument') {
                 item.transaction.instrument_input = name;
@@ -1934,7 +1881,7 @@
                 item.transaction.allocation_balance = null;
             }
 
-        };
+        }; */
 
         vm.setItemInstrumentInput = function (item, key, name, prop) {
 
@@ -1955,7 +1902,7 @@
 
         };
 
-        vm.findPhantoms = function () {
+        /* vm.findPhantoms = function () {
             var result = [];
             vm.entity.actions.forEach(function (action, $index) {
                 action.positionOrder = $index;
@@ -1964,9 +1911,10 @@
                 }
             });
             return result;
-        };
+        }; */
+		vm.findPhantoms = sharedLogic.findPhantoms;
 
-        vm.findEventSchedulePhantoms = function () {
+        /* vm.findEventSchedulePhantoms = function () {
             var result = [];
             vm.entity.actions.forEach(function (action, $index) {
                 action.positionOrder = $index;
@@ -1975,7 +1923,8 @@
                 }
             });
             return result;
-        };
+        }; */
+		vm.findEventSchedulePhantoms = sharedLogic.findEventSchedulePhantoms;
 
         /* vm.loadRelation = function (field) {
 
@@ -2054,125 +2003,145 @@
 
         };
 
-        vm.getActionTemplates = function () {
+		vm.getActionTemplates = function () {
 
-            vm.readyStatus.action_templates = false;
+			vm.readyStatus.action_templates = false;
 
-            return uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
+			return new Promise(function (res) {
 
-                vm.actionTemplates = data.results;
+				sharedLogic.getActionTemplates().then(function (actionTemplatesData) {
 
-                vm.readyStatus.action_templates = true;
+					vm.actionTemplatesPopupData = actionTemplatesData;
 
-                $scope.$apply();
+					vm.readyStatus.action_templates = true;
+					$scope.$apply();
 
-            })
+					res();
 
-        };
+				}).catch(function (error) {res()});
 
-        /* vm.appendFromTemplate = function ($event, template) {
+			});
 
-            console.log("Append from Template", template);
+		};
 
-            if (template.type === 'input_template') {
+		/* vm.getActionTemplates = function () {
 
-                $mdDialog.show({
-                    controller: 'InputTemplateLayoutViewerDialogController as vm',
-                    templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
-                    targetEvent: $event,
-                    locals: {
-                        data: {
-                            template: template
-                        }
-                    },
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true
-                }).then(function (res) {
+			vm.readyStatus.action_templates = false;
 
-                    if (res.status === 'agree') {
+			return uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
 
-                        var template = res.data.template;
+				vm.actionTemplatesPopup = data.results;
 
-                        template.data.inputs.forEach(function (input) {
+				vm.readyStatus.action_templates = true;
 
-                            vm.entity.inputs.push(input);
+				$scope.$apply();
 
-                        })
+			})
 
-                    }
+		};
 
-                })
+		vm.appendFromTemplate = function ($event, template) {
 
-            }
-            else if (template.type === 'field_template') {
+			console.log("Append from Template", template);
 
-                Object.keys(vm.entity).forEach(function (key) {
+			if (template.type === 'input_template') {
 
-                    if (key.indexOf('user_text_') !== -1) {
-                        vm.entity[key] = '';
-                    }
+				$mdDialog.show({
+					controller: 'InputTemplateLayoutViewerDialogController as vm',
+					templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+					targetEvent: $event,
+					locals: {
+						data: {
+							template: template
+						}
+					},
+					preserveScope: true,
+					autoWrap: true,
+					skipHide: true,
+					multiple: true
+				}).then(function (res) {
 
-                    if (key.indexOf('user_number_') !== -1) {
-                        vm.entity[key] = '';
-                    }
+					if (res.status === 'agree') {
 
-                    if (key.indexOf('user_date_') !== -1) {
-                        vm.entity[key] = '';
-                    }
+						var template = res.data.template;
 
-                });
+						template.data.inputs.forEach(function (input) {
 
-                Object.keys(template.data.fields).forEach(function (key) {
+							vm.entity.inputs.push(input);
 
-                    vm.entity[key] = template.data.fields[key];
+						})
 
-                })
+					}
 
-            }
-            else if (template.type === 'action_template') {
+				})
 
-                var actionsToAdd = template.data.actions.map(function (action) {
+			}
+			else if (template.type === 'field_template') {
 
-                    Object.keys(action).forEach(function (key) {
+				Object.keys(vm.entity).forEach(function (key) {
 
-                        if (typeof action[key] === 'object' && action[key] !== null) {
+					if (key.indexOf('user_text_') !== -1) {
+						vm.entity[key] = '';
+					}
 
-                            Object.keys(action[key]).forEach(function (actionItemKey) {
+					if (key.indexOf('user_number_') !== -1) {
+						vm.entity[key] = '';
+					}
 
-                                if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+					if (key.indexOf('user_date_') !== -1) {
+						vm.entity[key] = '';
+					}
 
-                                    if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
+				});
 
-                                        action[key][actionItemKey + '_toggle'] = true;
+				Object.keys(template.data.fields).forEach(function (key) {
 
-                                        setDefaultValueForRelation(action, key, actionItemKey);
+					vm.entity[key] = template.data.fields[key];
 
-                                        delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
-                                    }
+				})
 
-                                }
+			}
+			else if (template.type === 'action_template') {
 
-                            })
+				var actionsToAdd = template.data.actions.map(function (action) {
 
-                        }
+					Object.keys(action).forEach(function (key) {
 
-                    });
+						if (typeof action[key] === 'object' && action[key] !== null) {
 
-                    return action;
-                });
+							Object.keys(action[key]).forEach(function (actionItemKey) {
 
-                vm.entity.actions = vm.entity.actions.concat(actionsToAdd);
+								if (action[key].hasOwnProperty(actionItemKey + '_input')) {
 
-            }
+									if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
 
-        }; */
+										action[key][actionItemKey + '_toggle'] = true;
+
+										setDefaultValueForRelation(action, key, actionItemKey);
+
+										delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
+									}
+
+								}
+
+							})
+
+						}
+
+					});
+
+					return action;
+				});
+
+				vm.entity.actions = vm.entity.actions.concat(actionsToAdd);
+
+			}
+
+		}; */
 		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
+		vm.saveAsTemplate = sharedLogic.saveAsTemplate;
 
-        vm.saveAsTemplate = function ($event, type) {
-
-            console.log("Save as Template")
+        /* vm.saveAsTemplate = function ($event, type) {
 
             $mdDialog.show({
                 controller: 'SaveAsDialogController as vm',
@@ -2187,7 +2156,8 @@
                 locals: {
                     data: {}
                 }
-            }).then(function (res) {
+            })
+			.then(function (res) {
 
 
                 if (res.status === 'agree') {
@@ -2314,7 +2284,7 @@
                             }
                         });
 
-                        vm.getInputTemplates();
+						sharedLogic.getInputTemplates();
                         vm.getFieldTemplates();
                         vm.getActionTemplates();
 
@@ -2324,7 +2294,7 @@
 
             });
 
-        };
+        }; */
 
 
         // Transaction type actions controller end
@@ -2372,7 +2342,10 @@
 
             Promise.all(allDataPromises).then(function () {
 
-                sharedLogic.initAfterMainDataLoaded(); // grid table assembled here
+				vm.paneActionsMenuPopups = vm.createSelectorPopupDataListForActions();
+
+				var iamdlResult = sharedLogic.initAfterMainDataLoaded(); // assembling of grid table and data for multitypeFields inside actions here
+				vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
 
                 vm.readyStatus.entity = true;
                 vm.readyStatus.inputs = true;

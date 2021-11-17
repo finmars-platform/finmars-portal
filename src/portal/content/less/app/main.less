@@ -2700,6 +2700,21 @@ expression-editor-button.grey-expression-btn {
   }
 }
 
+expression-editor-button.expression-entered,
+.transaction-type-actions-tab-view expression-editor-button.expression-entered {
+
+  button.md-button.expr-btn {
+    color: #fff;
+    background-color: @orange;
+
+    &:not([disabled]):hover {
+      background-color: rgb(250, 250, 250);
+      opacity: 0.5;
+    }
+  }
+
+}
+
 .draggable-dialog-sign {
   position: absolute;
   width: 20px;

@@ -1,76 +1,108 @@
 <div class="custom-input-container multitype-field-container multitypeFieldContainer">
 
-    <div ng-if="getLabel()"
-         class="custom-input-top-row">
-        <span class="custom-input-textarea-span-pan">{{getLabel()}}</span>
-    </div>
+    <div ng-if="readyStatus">
 
-    <div class="custom-input-main-container customInputBackgroundColor">
-        <div class="custom-input-borders overflow-visible">
-            <div class="custom-input-content p-r-0">
+        <div ng-if="getLabel()"
+             class="custom-input-top-row">
+            <span class="custom-input-textarea-span-pan">{{getLabel()}}</span>
+        </div>
 
-                <div class="multitype-field-inputs-wrap">
+        <div class="custom-input-main-container customInputBackgroundColor">
+            <div class="custom-input-borders overflow-visible">
+                <div class="custom-input-content p-r-0">
 
-                    <div ng-if="activeType.fieldType === 'textInput'">
-                        <text-input model="activeType.model"
-                                    small-options="activeType.fieldData.smallOptions"
-                                    on-change-callback="onChangeCallback()"></text-input>
+                    <div class="multitype-field-inputs-wrap">
+
+                        <div ng-if="activeType.fieldType === 'textInput'">
+                            <text-input model="activeType.model"
+                                        small-options="activeType.fieldData.smallOptions"
+                                        on-change-callback="onChangeCallback()"></text-input>
+                        </div>
+
+                        <div ng-if="activeType.fieldType === 'numberInput'">
+                            <number-input model="activeType.model"
+                                          small-options="activeType.fieldData.smallOptions"
+                                          on-change-callback="onChangeCallback()"></number-input>
+                        </div>
+
+                        <div ng-if="activeType.fieldType === 'dateInput'">
+                            <date-input model="activeType.model"
+                                        small-options="activeType.fieldData.smallOptions"
+                                        on-change-callback="onChangeCallback()"></date-input>
+                        </div>
+
+                        <div ng-if="activeType.fieldType === 'dropdownSelect' && !activeType.fieldData.loadMenuOptions">
+                            <dropdown-select model="activeType.model"
+                                             small-options="activeType.fieldData.smallOptions"
+                                             menu-options="activeType.fieldData.menuOptions"
+                                             group-options="{{activeType.fieldData.groupOptions}}"
+                                             is-disabled="activeType.fieldData.isDisabled"
+                                             item-name="activeType.fieldData.itemName"
+                                             on-change-callback="onChangeCallback()"></dropdown-select>
+                        </div>
+
+                        <div ng-if="activeType.fieldType === 'dropdownSelect' && activeType.fieldData.loadMenuOptions">
+                            <dropdown-select model="activeType.model"
+                                             small-options="activeType.fieldData.smallOptions"
+                                             menu-options="activeType.fieldData.menuOptions"
+                                             group-options="{{activeType.fieldData.groupOptions}}"
+                                             is-disabled="activeType.fieldData.isDisabled"
+                                             item-name="activeType.fieldData.itemName"
+                                             load-menu-options="activeType.fieldData.loadMenuOptions()"
+                                             on-change-callback="onChangeCallback()"></dropdown-select>
+                        </div>
+
+                        <div ng-if="activeType.fieldType === 'entitySearchSelect'">
+                            <entity-search-select item="activeType.model"
+                                                  entity-type="activeType.fieldData.entityType"
+                                                  is-disabled="isDisabled"
+                                                  item-name="activeType.fieldData.itemName"
+                                                  on-change-callback="onChangeCallback()"></entity-search-select>
+                        </div>
+
                     </div>
 
-                    <div ng-if="activeType.fieldType === 'numberInput'">
-                        <number-input model="activeType.model"
-                                      small-options="activeType.fieldData.smallOptions"
-                                      on-change-callback="onChangeCallback()"></number-input>
-                    </div>
+                    <div class="custom-input-side-items flex-row customInputBackgroundColor">
 
-                    <div ng-if="activeType.fieldType === 'dateInput'">
-                        <date-input model="activeType.model"
-                                    small-options="activeType.fieldData.smallOptions"
-                                    on-change-callback="onChangeCallback()"></date-input>
-                    </div>
-
-                    <div ng-if="activeType.fieldType === 'dropdownSelect'">
-                        <dropdown-select model="activeType.model"
-                                         small-options="activeType.fieldData.smallOptions"
-                                         menu-options="activeType.fieldData.menuOptions"
-                                         on-change-callback="onChangeCallback()"></dropdown-select>
-                    </div>
-
-                </div>
-
-                <div class="custom-input-side-items flex-row customInputBackgroundColor">
-
-                    <div class="custom-input-custom-btns-holder"></div>
+                        <div class="custom-input-custom-btns-holder"></div>
                         <!--<div popup
                              open-on="click"
                              close-on-click-outside="true"
                              popup-data="vm.fixedAreaPopup">
                             <div ng-bind-html="activeType.sign"></div>
                         </div>-->
-                    <div ng-if="typeSwitch === 'button'"
-                         class="multitype-field-type-sign-wrap"
-                         ng-click="switchType()"
-                         ng-bind-html="activeType.sign"></div>
+                        <div ng-if="typeSwitch === 'button'"
+                             class="multitype-field-type-sign-wrap"
+                             ng-click="switchType()"
+                             ng-bind-html="activeType.sign"></div>
 
-                    <div ng-if="typeSwitch === 'selector'"
-                         popup
-                         popup-data="typeSelPopupData"
-                         popup-template="{{typeSelPopupTpl}}"
-                         open-on="click"
-                         position-relative-to="element"
-                         relative-popup-x="right"
-                         close-on-click-outside="true"
-                         offset-x="10"
-                         offset-y="2"
-                         popup-classes="'rounded-border'"
+                        <div ng-if="typeSwitch === 'selector'"
+                             popup
+                             popup-data="typeSelPopupData"
+                             popup-template="{{typeSelPopupTpl}}"
+                             open-on="click"
+                             position-relative-to="element"
+                             relative-popup-x="right"
+                             close-on-click-outside="true"
+                             offset-x="10"
+                             offset-y="2"
+                             popup-classes="rounded-border"
 
-                         class="multitype-field-type-sign-wrap">
-                        <div ng-bind-html="activeType.sign"></div>
+                             class="multitype-field-type-sign-wrap">
+                            <div ng-bind-html="activeType.sign"></div>
+                        </div>
+
                     </div>
 
                 </div>
-
             </div>
+        </div>
+
+    </div>
+
+    <div ng-if="!readyStatus">
+        <div class="flex-row fc-space-around height-100">
+            <progress-circular diameter="30"></progress-circular>
         </div>
     </div>
 
