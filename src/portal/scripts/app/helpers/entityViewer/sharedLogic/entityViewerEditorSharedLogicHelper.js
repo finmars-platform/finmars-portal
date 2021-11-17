@@ -471,6 +471,8 @@
 
         const getShowByDefaultOptions = function (columns, entityType) {
 
+        	console.log('getShowByDefaultOptions', columns, entityType);
+
             let result = viewModel.showByDefaultOptions;
 
             if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
@@ -480,7 +482,8 @@
             if (columns > 5) {
 
                 if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
-                    result = result.filter(option => option.id !== 'short_name');
+                    // result = result.filter(option => option.id !== 'short_name');
+                    result = result
                 } else {
                     result = result.filter(option => option.id !== 'user_code');
                 }

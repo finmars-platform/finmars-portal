@@ -31,6 +31,32 @@
         return exist;
     }
 
+    var convertNameKeyToUserCodeKey = function (key) {
+
+        var result = key
+
+        var pieces = key.split('.');
+
+        var last_key;
+        if (pieces.length > 1) {
+            last_key = pieces.pop()
+        } else {
+            last_key = pieces[0]
+        }
+
+        if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
+
+            pieces.push('user_code')
+
+            result = pieces.join('.')
+
+        }
+
+
+        return result
+
+    }
+
     /**
      * Get list of unique groups
      * @param {object[]} items - collection of items
@@ -52,11 +78,54 @@
             };
 
             var item_value = item[group.key];
+            var identifier_value = item[group.key];
+            var identifier_key = null;
 
-            if (item_value !== null && item_value !== undefined && item_value !== '-') {
+            identifier_key = convertNameKeyToUserCodeKey(group.key)
+            identifier_value = item[identifier_key];
 
-                resultGroup.___group_identifier = item_value.toString();
+            if (identifier_value !== null && identifier_value !== undefined && identifier_value !== '-') {
+
+                resultGroup.___group_identifier = identifier_value.toString();
                 resultGroup.___group_name = item_value.toString();
+
+
+                // if (group.key === 'complex_transaction.is_canceled') {
+                //
+                //     if (item_value) {
+                //         resultGroup.___group_name = 'Canceled'
+                //     } else {
+                //         resultGroup.___group_name = 'Not Canceled'
+                //     }
+                //
+                // }
+                //
+                // if (group.key === 'complex_transaction.is_locked') {
+                //
+                //     if (item_value) {
+                //         resultGroup.___group_name = 'Locked'
+                //     } else {
+                //         resultGroup.___group_name = 'Unlocked'
+                //     }
+                //
+                // }
+
+                if (group.key === 'complex_transaction.status') {
+
+                    if (item_value === 1) {
+                        resultGroup.___group_name = 'Booked'
+                    }
+
+                    if (item_value === 2) {
+                        resultGroup.___group_name = 'Pending'
+                    }
+
+                    if (item_value === 3) {
+                        resultGroup.___group_name = 'Ignored'
+                    }
+
+                }
+
 
             }
 
@@ -96,6 +165,7 @@
             var regularFilters = filterService.getRegularFilters(options);
 
             var reportOptions = entityViewerDataService.getReportOptions();
+            var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
 
             var groups = [];
 
@@ -108,15 +178,20 @@
                 items = filterService.filterTableRows(items, regularFilters);
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
+                if (globalTableSearch) {
+                    items = filterService.filterByGlobalTableSearch(items, globalTableSearch)
+                }
+
+
                 // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js
 
-/*				const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+                /*				const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
-				if (rowTypeFilters) {
+                                if (rowTypeFilters) {
 
-					items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
+                                    items = filterService.filterByRowType(items, rowTypeFilters.markedRowFilters);
 
-				}*/
+                                }*/
 
                 var group = options.groups_types[options.groups_types.length - 1];
 
@@ -140,11 +215,11 @@
 
                 }
 
-/*                if (options.groups_order === 'desc') {
-                    groups = sortService.sortItems(groups, '-___group_name');
-                } else {
-                    groups = sortService.sortItems(groups, '___group_name');
-                }*/
+                /*                if (options.groups_order === 'desc') {
+                                    groups = sortService.sortItems(groups, '-___group_name');
+                                } else {
+                                    groups = sortService.sortItems(groups, '___group_name');
+                                }*/
 
                 result.count = groups.length;
                 result.results = groups;

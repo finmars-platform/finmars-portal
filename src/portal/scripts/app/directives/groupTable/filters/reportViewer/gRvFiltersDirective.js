@@ -118,6 +118,8 @@
 					scope.filtersChips = [];
 					const errors = [];
 
+					console.log('formatFiltersForChips.filters', filters)
+
 					filters.forEach(filter => {
 
 						if (filter.type !== "filter_link") { // don't show filter from dashboard component

@@ -13,7 +13,6 @@ h2 {
 }
 
 
-
 button {
   background-color: transparent;
   border: none;
@@ -1115,6 +1114,7 @@ md-menu-bar.header-logout-menu {
   .portal-header md-toolbar.header {
     padding-left: @collapsedLeftSidenavWidth;
   }
+
   //</editor-fold>
 
   //<editor-fold desc="Old sidemenu styles">
@@ -3053,7 +3053,8 @@ button.md-raised.md-warn.md-button {
   border: none;
 }
 
-@font-face { // prevents showing of text of icons before they are loaded
+@font-face {
+  // prevents showing of text of icons before they are loaded
   font-family: 'Material Icons';
   font-display: block;
 }
@@ -3138,7 +3139,7 @@ button.md-raised.md-warn.md-button {
       padding-right: 28px;
 
       span.error {
-        color:  #f05a22;
+        color: #f05a22;
         margin-right: 8px;
         margin-bottom: 2px;
         font-size: 16px;
@@ -3370,7 +3371,51 @@ span.websocket-connection-status {
   &.open {
     background: green;
   }
+
   &.closed {
     background: red;
+  }
+}
+
+.instrument-select-database-footer {
+  float: left;
+  width: 200px;
+  text-align: left;
+  padding-top: 12px;
+  color: #f05a22;
+
+  span {
+    cursor: pointer;
+
+    &:hover {
+      opacity: .7;
+    }
+  }
+}
+
+
+.global-table-filter-container {
+  margin-left: 24px;
+  width: 500px;
+}
+
+.global-table-filter-search {
+  margin-left: 0;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #000;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+  margin-top: 5px;
+  outline: none;
+}
+
+.entity-viewer-holder .g-wrapper {
+  .ev-left-panel-inner-container.state-folded {
+    .ev-left-panel-drag-msg {
+      display: none;
+    }
   }
 }

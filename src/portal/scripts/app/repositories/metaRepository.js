@@ -163,6 +163,10 @@
 				"value": 110,
 				"display_name": "Selector"
         	},
+            {
+                "value": 80,
+                "display_name": "Datetime"
+            },
 			{
 				"value": 120,
 				"display_name": "Button"
@@ -180,7 +184,7 @@
 				"display_name": "Multiple choice field"
         	},
 			{
-				"value": "boolean",
+				"value": 50,
 				"display_name": "Boolean"
         	},
 			{

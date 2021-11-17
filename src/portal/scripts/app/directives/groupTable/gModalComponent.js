@@ -37,6 +37,7 @@
         logService.property('vm.entityType', vm.entityType);
 
         vm.attrs = [];
+        vm.pricingAttrs = [];
         vm.entityAttrs = [];
 
         vm.userTextFields = [];
@@ -145,6 +146,7 @@
 
                 vm.attrs = vm.attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
 
+
                 console.log('vm.attrs', vm.attrs);
 
                 vm.attrs = vm.attrs.map(function (attribute) {
@@ -161,11 +163,20 @@
 
                 });
 
+                vm.pricingAttrs = vm.attrs.filter(function (item){
+                    return item.key.indexOf('pricing_policy_') !== -1
+                })
+
+                vm.attrs = vm.attrs.filter(function (item){
+                    return item.key.indexOf('pricing_policy_') === -1
+                })
+
                 vm.attrsList = vm.attrsList.concat(vm.entityAttrs);
                 vm.attrsList = vm.attrsList.concat(vm.userTextFields);
                 vm.attrsList = vm.attrsList.concat(vm.userNumberFields);
                 vm.attrsList = vm.attrsList.concat(vm.userDateFields);
                 vm.attrsList = vm.attrsList.concat(vm.attrs);
+                vm.attrsList = vm.attrsList.concat(vm.pricingAttrs);
 
                 syncAttrs();
                 getSelectedAttrs();
@@ -1567,7 +1578,8 @@
                 locals: {
                     data: {
                         availableAttrs: availableAttrs,
-                        title: dialogTitle
+                        title: dialogTitle,
+                        isReport: false
                     }
                 }
             }).then(function (res) {

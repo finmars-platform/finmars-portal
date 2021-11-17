@@ -29,8 +29,8 @@
         vm.dashboardEventService = null;
 
         vm.popupData = {
-			dashboardDataService: vm.dashboardDataService,
-			dashboardEventService: vm.dashboardEventService
+            dashboardDataService: vm.dashboardDataService,
+            dashboardEventService: vm.dashboardEventService
         }
 
         vm.processing = false;
@@ -195,17 +195,26 @@
                     vm.layout = data.results[0];
                 }
 
-                vm.projection = vm.generateProjection(vm.layout);
-                vm.dashboardDataService.setProjection(vm.projection);
+                if (vm.layout) {
 
-                vm.dashboardDataService.setData(vm.layout);
-                vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
+                    vm.projection = vm.generateProjection(vm.layout);
+                    vm.dashboardDataService.setProjection(vm.projection);
 
-                vm.readyStatus.data = true;
+                    vm.dashboardDataService.setData(vm.layout);
+                    vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
-                vm.initDashboardComponents();
+                    vm.readyStatus.data = true;
 
-                $scope.$apply();
+                    vm.initDashboardComponents();
+
+                    $scope.$apply();
+
+                } else {
+
+                    vm.readyStatus.data = true;
+                    $scope.$apply();
+
+                }
 
             })
 
@@ -346,26 +355,26 @@
 
         var componentsFinishedLoading = function () {
 
-			var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
-			var componentsIds = Object.keys(statusesObject);
+            var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+            var componentsIds = Object.keys(statusesObject);
 
-			var processing = false;
+            var processing = false;
 
-			for (var i = 0; i < componentsIds.length; i++) {
+            for (var i = 0; i < componentsIds.length; i++) {
 
-				if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
-					statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
+                if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
+                    statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
 
-					processing = true;
-					break;
+                    processing = true;
+                    break;
 
-				}
+                }
 
-			}
+            }
 
-			return processing;
+            return processing;
 
-		};
+        };
 
 
         vm.refreshActiveTab = function () {
@@ -381,7 +390,7 @@
             } else {
 
                 setTimeout(function () { // enable refresh buttons if no components uses active object
-					vm.processing = componentsFinishedLoading();
+                    vm.processing = componentsFinishedLoading();
                 }, 100);
 
             }
@@ -400,7 +409,7 @@
             } else {
 
                 setTimeout(function () { // enable refresh buttons if no components uses active object
-					vm.processing = componentsFinishedLoading();
+                    vm.processing = componentsFinishedLoading();
                 }, 100);
 
             }
@@ -445,7 +454,7 @@
 
                 }); */
 
-				var processed = componentsFinishedLoading();
+                var processed = componentsFinishedLoading();
 
                 if (processed) {
 
@@ -458,7 +467,7 @@
 
             })
 
-            vm.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_LAYOUT_CHANGE, function (){
+            vm.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_LAYOUT_CHANGE, function () {
 
                 var layoutToOpen = vm.dashboardDataService.getLayoutToOpen();
 
@@ -587,8 +596,8 @@
             vm.dashboardEventService = new DashboardEventService();
 
             vm.popupData = {
-				dashboardDataService: vm.dashboardDataService,
-				dashboardEventService: vm.dashboardEventService
+                dashboardDataService: vm.dashboardDataService,
+                dashboardEventService: vm.dashboardEventService
             }
 
             vm.openDashboardLayout();

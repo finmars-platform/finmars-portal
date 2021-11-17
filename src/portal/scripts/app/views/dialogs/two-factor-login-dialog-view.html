@@ -24,7 +24,7 @@
 
                 </div>
 
-                <div data-ng-show="vm.securityCode.length == 6">
+                <div data-ng-show="vm.securityCode.length == 6 && vm.codeIsChecked">
 
                     <div data-ng-show="vm.codeIsValid" class="color-success">
                         Code is correct!

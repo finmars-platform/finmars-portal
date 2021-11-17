@@ -190,6 +190,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 					middlewareService.masterUserChanged();
 
+					globalDataService.setMasterUser(master);
+
 					authorizerService.setCurrentMasterUser(master.id).then(function (data) {
 
 						if (data.base_api_url) {
@@ -285,6 +287,12 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 				getMasterUsersList().then(resData => {
 					scope.$apply();
 				});
+
+				websocketService.addEventListener('master_user_change', function (data) {
+
+					scope.currentMasterUser = globalDataService.getMasterUser();
+					console.log("Header master user change")
+				})
 
 			};
 

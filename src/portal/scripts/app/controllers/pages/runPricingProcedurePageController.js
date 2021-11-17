@@ -6,6 +6,7 @@
     var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var healthcheckService = require('../../services/healthcheckService');
 
 
     module.exports = function ($scope, $mdDialog) {
@@ -22,8 +23,8 @@
 
                 vm.procedures = data.results.map(function (item) {
 
-                    item.user_price_date_from =  item.price_date_from_calculated;
-                    item.user_price_date_to =  item.price_date_to_calculated;
+                    item.user_price_date_from = item.price_date_from_calculated;
+                    item.user_price_date_to = item.price_date_to_calculated;
 
                     return item
                 });
@@ -36,6 +37,9 @@
 
             })
         };
+
+        vm.mediatorStatus = 'Unknown'
+        vm.brokerBloombergStatus = 'Unknown'
 
         vm.executeProcedure = function ($event, item) {
 
@@ -78,10 +82,76 @@
 
         };
 
+        vm.getData = function () {
+
+            vm.mediatorStatus = 'Unknown'
+            vm.brokerBloombergStatus = 'Unknown'
+
+            return new Promise(function (resolve, reject) {
+
+                healthcheckService.getData().then(function (data) {
+
+                    vm.healthcheckData = data;
+
+                    vm.healthcheckData.forEach(function (service) {
+
+                        if (service.name === 'Mediator Service') {
+                            if (service.status === 200) {
+                                vm.mediatorStatus = 'Online'
+                            } else {
+                                vm.mediatorStatus = 'Offline'
+                            }
+                        }
+
+                        if (service.name === 'Bloomberg Data Provider Service') {
+                            if (service.status === 200) {
+                                vm.brokerBloombergStatus = 'Online'
+                            } else {
+                                vm.brokerBloombergStatus = 'Offline'
+                            }
+                        }
+
+
+                    })
+
+                    vm.noInfo = false;
+
+                    console.log('HealthcheckController.vm.healthcheckData', vm.healthcheckData);
+
+                    vm.readyStatus.data = true;
+
+                    resolve();
+
+                    $scope.$apply();
+
+                }).catch(function (error) {
+
+                    console.log('error', error);
+
+                    vm.noInfo = true;
+
+                    $scope.$apply();
+
+                })
+
+            })
+
+        };
+
 
         vm.init = function () {
 
             vm.getList();
+
+            console.log("Run Pricing Procedure")
+
+            if ('__HEALTHCHECK_HOST__') {
+
+                vm.getData()
+
+            } else {
+                vm.noInfo = true;
+            }
 
         };
 

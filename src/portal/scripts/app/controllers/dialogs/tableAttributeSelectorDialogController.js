@@ -17,6 +17,7 @@
 
         vm.activeGroup = [];
         vm.currentLocation = '-';
+        vm.isReport = data.isReport;
 
         vm.searchTerms = '';
 
@@ -31,15 +32,35 @@
 
         var divideTableAttrsInGroups = function () {
 
-            var a,b;
+            console.log('tableAttributes', tableAttributes);
+
+            var a, b;
             for (a = 0; a < tableAttributes.length; a++) {
 
                 var tAttr = JSON.parse(JSON.stringify(tableAttributes[a]));
                 var attrPathKeys = tAttr.name.split(". ");
 
                 if (tAttr.hasOwnProperty('attribute_type')) { // place all dynamic attributes into separate group
-                    attrPathKeys.splice(0, 0, 'User Attributes');
+
+                    if (vm.isReport) {
+
+                        if (tAttr.key.indexOf('pricing_policy_') !== -1) {
+                            attrPathKeys.splice(1, 0, 'Pricing');
+                        } else {
+                            attrPathKeys.splice(1, 0, 'User Attributes');
+                        }
+                    } else {
+
+                        if (tAttr.key.indexOf('pricing_policy_') !== -1) {
+                            attrPathKeys.splice(0, 0, 'Pricing');
+                        } else {
+                            attrPathKeys.splice(0, 0, 'User Attributes');
+                        }
+
+                    }
+
                 }
+
 
                 var attrName = attrPathKeys.pop();
                 var attrObjPath = tableAttrsTree.items;

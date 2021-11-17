@@ -17,7 +17,7 @@
     module.exports = function () {
 
         return {
-        	require: '^^bindFieldControl',
+            require: '^^bindFieldControl',
             scope: {
                 item: '=',
                 entity: '=',
@@ -26,16 +26,17 @@
                 entityType: '=',
                 evEditorDataService: '=',
                 evEditorEventService: '=',
-                itemChange: '&?'
+                itemChange: '&?',
+                fieldsDataStore: '='
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs, bfcVm) {
 
                 // scope.readyStatus = {content: false};
-				scope.readyStatus = bfcVm.readyStatus;
-				scope.readyStatus.content = false;
+                scope.readyStatus = bfcVm.readyStatus;
+                scope.readyStatus.content = false;
 
-				scope.type = 'id';
+                scope.type = 'id';
                 scope.fields = [];
                 scope.sortedFields = [];
                 scope.schemeSortedFields = []
@@ -69,8 +70,11 @@
                 };
 
                 scope.getModelKeyEntity = function () {
+
+                    // console.log('scope.getModelKeyEntity scope.item.key', scope.item.key)
+
                     //var key;
-                    var modelKeyEntity;
+                    var modelKeyEntity = scope.item.key;
 
                     if (scope.entityType === 'complex-transaction') {
 
@@ -131,7 +135,7 @@
 
                             scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
 
-							scope.readyStatus.content = true;
+                            scope.readyStatus.content = true;
 
                             scope.$apply();
                         })
@@ -232,11 +236,11 @@
 
                     if (scope.item.options && scope.item.options.fieldsList) {
 
-                    	var resultCaption = '';
+                        var resultCaption = '';
 
                         scope.item.options.fieldsList.forEach(function (item, index) {
 
-                        	if (index + 1 === scope.item.options.fieldsList.length) {
+                            if (index + 1 === scope.item.options.fieldsList.length) {
                                 resultCaption = resultCaption + field[item];
                             } else {
                                 resultCaption = resultCaption + field[item] + ' / ';
@@ -256,8 +260,8 @@
                             ...item,
                             bindFieldsName: scope.bindListFields(item)
                         } */
-						item.bindFieldsName = scope.bindListFields(item);
-						return item;
+                        item.bindFieldsName = scope.bindListFields(item);
+                        return item;
                     })
                 };
 
@@ -289,19 +293,37 @@
                             result = scope.fields[0].public_name;
                         }
                     }*/
-                    if (scope.fields[0]) {
 
-                        if (scope.fields[0].short_name) {
-                            result = scope.fields[0].short_name;
+                    var id = scope.entity[scope.fieldKey];
 
-                        } else if (scope.fields[0].name) {
-                            result = scope.fields[0].name;
 
-                        } else {
-                            result = scope.fields[0].public_name;
+                    if (scope.fields && scope.fields.length) {
+
+                        for (var i = 0; i < scope.fields.length; i = i + 1) {
+
+                            if (scope.fields[i].id === id) {
+
+                                if (scope.fields[i].short_name) {
+                                    result = scope.fields[i].short_name;
+
+                                } else if (scope.fields[i].name) {
+                                    result = scope.fields[i].name;
+
+                                } else {
+                                    result = scope.fields[i].public_name;
+                                }
+                            }
+
+                            if (result) {
+                                break;
+                            }
+
                         }
 
                     }
+
+                    console.log('scope.fields', scope.fields)
+                    console.log('getInputTextForEntitySearch', result)
 
                     return result;
                 };
@@ -339,17 +361,21 @@
 
                         if (scope.entityType === 'complex-transaction') {
 
-                            return fieldResolverService.getFieldsByContentType(scope.item.content_type, options).then(function (res) {
+                            console.log('scope.fieldsDataStore', scope.fieldsDataStore);
+
+                            return fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore).then(function (res) {
+
+                                console.log('res', res);
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
                                 if ('price_download_scheme') {
-                                	scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
-								}
+                                    scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+                                }
 
-								scope.readyStatus.content = true;
+                                scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
 
                                 scope.getFieldsGrouped();
@@ -360,17 +386,17 @@
 
                         } else {
 
-                            return fieldResolverService.getFields(scope.item.key, options).then(function (res) {
+                            return fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
                                 scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
                                 if ('price_download_scheme') {
-									scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
-								}
+                                    scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+                                }
 
-								scope.readyStatus.content = true;
+                                scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
 
                                 scope.getFieldsGrouped();
@@ -427,16 +453,16 @@
 
 				}; */
 
-				scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-				scope.$watch('item', function () {
+                scope.$watch('item', function () {
 
-					fieldsDataIsLoaded = false;
+                    fieldsDataIsLoaded = false;
 
-					// prepareDataForSelector();
-					scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                    // prepareDataForSelector();
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-				});
+                });
 
                 scope.changeHandler = function () {
                     if (scope.itemChange) {
@@ -456,11 +482,11 @@
 
                     if (scope.item.frontOptions) {
 
-						if (scope.item.frontOptions.recalculated) {
+                        if (scope.item.frontOptions.recalculated) {
 
-							scope.ciEventObj.event = {key: "set_style_preset1"};
+                            scope.ciEventObj.event = {key: "set_style_preset1"};
 
-						}
+                        }
 
                     }
 
@@ -484,12 +510,12 @@
                     scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
                         if (scope.item &&
-							scope.item.frontOptions && scope.item.frontOptions.recalculated &&
+                            scope.item.frontOptions && scope.item.frontOptions.recalculated &&
                             (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
                             setItemSpecificSettings();
-							// prepareDataForSelector();
-							scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                            // prepareDataForSelector();
+                            scope.inputTextObj.value = scope.getInputTextForEntitySearch();
                             /* if (scope.item.frontOptions.recalculated) {
 
 								// setTimeout removes delay before applying preset1 to custom input
@@ -525,7 +551,7 @@
 
                 scope.init = function () {
 
-                	scope.getData();
+                    scope.getData();
 
                     if (scope.evEditorEventService) {
                         initListeners();
@@ -572,7 +598,7 @@
                     scope.fieldValue = {value: scope.entity[scope.fieldKey]};
                     scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-					scope.modelKeyEntity = scope.getModelKeyEntity();
+                    scope.modelKeyEntity = scope.getModelKeyEntity();
 
                 };
 

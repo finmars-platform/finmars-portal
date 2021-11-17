@@ -71,6 +71,8 @@
 
 		vm.openedIn = data.openedIn;
 
+		vm.fieldsDataStore = {}
+
         var notCopiedTransaction = true;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
         //var tooltipsList = [];
@@ -395,7 +397,14 @@
                     vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
                     vm.getAttributeTypes();
 
+                    var entityState = JSON.parse(JSON.stringify(vm.entity))
+
                     vm.getFormLayout().then(function (value) {
+
+                        vm.entity = entityState;
+
+                        console.log('entityState', entityState);
+
                         $scope.$apply();
                     })
 
@@ -560,6 +569,8 @@
                         res.complex_transaction.is_locked = resultEntity.is_locked;
                         res.complex_transaction.is_canceled = resultEntity.is_canceled;
 
+                        res.complex_transaction_status = 1 // status PRODUCTION
+
                         if (dcLayoutHasBeenFixed) {
 
                             vm.transactionType.book_transaction_layout = dataConstructorLayout;
@@ -705,59 +716,354 @@
 
         };
 
+        vm.bookAsIgnored = async function ($event) {
+
+            transactionHelper.updateEntityBeforeSave(vm);
+
+            var errors = entityEditorHelper.validateComplexTransaction(vm.entity,
+                vm.transactionType.actions,
+                vm.tabs,
+                vm.entityAttrs,
+                vm.attrs,
+                vm.userInputs);
+
+            if (errors.length) {
+
+                vm.locsWithErrors = {};
+
+                /* errors.forEach(function (errorObj) {
+
+                    if (errorObj.locationData &&
+                        errorObj.locationData.type === 'tab') {
+
+                        var tabName = errorObj.locationData.name.toLowerCase();
+
+                        var selectorString = ".tab-name-elem[data-tab-name='" + tabName + "']";
+
+                        var tabNameElem = document.querySelector(selectorString);
+                        tabNameElem.classList.add('error-tab');
+
+                        if (!vm.locsWithErrors.hasOwnProperty(tabName)) {
+							vm.locsWithErrors[tabName] = [errorObj.key];
+
+                        } else if (vm.locsWithErrors[tabName].indexOf(errorObj.key) < 0) {
+							vm.locsWithErrors[tabName].push(errorObj.key);
+
+                        }
+
+                        vm.errorFieldsList.push(errorObj.key);
+
+                    }
+
+                });
+
+				sharedLogicHelper.processTabsErrors(errors, vm.locsWithErrors, vm.errorFieldsList);
+
+                vm.evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
+
+                $mdDialog.show({
+                    controller: 'EvAddEditValidationDialogController as vm',
+                    templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            errorsList: errors
+                        }
+                    }
+                }) */
+
+                entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
+
+            }
+            else {
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+
+                var resultEntity = vm.entity;
+
+                /* resultEntity.values = {};
+
+                vm.userInputs.forEach(function (userInput) {
+
+                    if (userInput !== null) {
+
+                        Object.keys(vm.entity).forEach(function (key) {
+
+                            if (key === userInput.name) {
+
+                                resultEntity.values[userInput.name] = vm.entity[userInput.name];
+
+                                if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
+                                    resultEntity.values[userInput.name] = true;
+                                }
+
+                            }
+
+                        });
+
+                    }
+
+                }); */
+                resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
+
+                resultEntity.store = true;
+                resultEntity.calculate = true;
+
+                console.log('resultEntity', resultEntity);
+
+                vm.processing = true;
+
+                new Promise(function (resolve, reject) {
+
+                    transactionTypeService.initBookComplexTransaction(resultEntity.transaction_type, {}).then(function (data) {
+
+                        var res = Object.assign(data, resultEntity);
+
+                        res.complex_transaction.is_locked = resultEntity.is_locked;
+                        res.complex_transaction.is_canceled = resultEntity.is_canceled;
+                        
+                        res.complex_transaction_status = 3 // status IGNORED
+
+                        if (dcLayoutHasBeenFixed) {
+
+                            vm.transactionType.book_transaction_layout = dataConstructorLayout;
+
+                            transactionTypeService.update(vm.transactionType.id, vm.transactionType);
+
+                        }
+
+                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                            vm.processing = false;
+
+                            toastNotificationService.success('Transaction was successfully booked');
+
+                            resolve(data);
+
+                        })
+                            .catch(function (data) {
+
+                                console.log('here?', data);
+
+                                if (data.hasOwnProperty('message') && data.message.reason == 410) {
+
+                                    vm.processing = false;
+
+                                    $mdDialog.show({
+                                        controller: 'BookUniquenessWarningDialogController as vm',
+                                        templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+                                        targetEvent: $event,
+                                        parent: angular.element(document.body),
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                errorData: data
+                                            }
+                                        }
+                                    }).then(function (response) {
+
+                                        console.log('response', response);
+
+                                        if(response.reaction === 'cancel') {
+                                            // do nothing
+                                        }
+
+                                        if(response.reaction === 'skip') {
+                                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
+                                        }
+
+                                        if(response.reaction === 'book_without_unique_code') {
+
+                                            // TODO refactor here
+                                            // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+
+                                            res.uniqueness_reaction = 2;
+
+                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                                vm.processing = false;
+
+                                                toastNotificationService.success('Transaction was successfully booked');
+
+                                                resolve(data);
+
+                                            })
+
+                                        }
+
+                                        if (response.reaction === 'overwrite') {
+
+                                            // TODO refactor here
+                                            //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+
+                                            res.uniqueness_reaction = 3;
+
+                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                                vm.processing = false;
+
+                                                toastNotificationService.success('Transaction was successfully booked');
+
+                                                resolve(data);
+
+                                            })
+
+                                        }
+
+                                    })
+
+
+                                } else {
+
+                                    vm.processing = false;
+
+                                    $mdDialog.show({
+                                        controller: 'ValidationDialogController as vm',
+                                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                        targetEvent: $event,
+                                        parent: angular.element(document.body),
+                                        multiple: true,
+                                        locals: {
+                                            validationData: {
+                                                errorData: data,
+                                                tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                                entityType: 'complex-transaction'
+                                            }
+                                        }
+                                    });
+
+                                    reject(data);
+
+                                }
+
+                            });
+
+                    });
+
+                })
+                    .then(function (data) {
+
+                        if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: {
+                                        errorData: data,
+                                        tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                        entityType: 'complex-transaction'
+                                    }
+                                },
+                                multiple: true
+                            })
+
+                        } else {
+                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: data});
+                        }
+
+                    });
+
+            }
+
+        };
+
         vm.bookAsPending = async function ($event) {
 
             transactionHelper.updateEntityBeforeSave(vm);
 
-            vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            // vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attrs);
+            //
+            // var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
 
-            var hasProhibitNegNums = entityEditorHelper.checkForNegNumsRestriction(vm.entity, vm.entityAttrs, vm.userInputs, vm.layoutAttrs);
+            var errors = entityEditorHelper.validateComplexTransaction(vm.entity,
+                vm.transactionType.actions,
+                vm.tabs,
+                vm.entityAttrs,
+                vm.attrs,
+                vm.userInputs);
 
-            if (vm.entity.$_isValid) {
+            if (errors.length) {
 
-                if (hasProhibitNegNums.length === 0) {
+                entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
-                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
 
-                    /*resultEntity.values = {};
+            } else {
 
-                    vm.userInputs.forEach(function (userInput) {
+                // if (vm.entity.$_isValid) {
 
-                        if (userInput !== null) {
-                            var keys = Object.keys(vm.entity);
-                            keys.forEach(function (key) {
-                                if (key === userInput.name) {
-                                    resultEntity.values[userInput.name] = vm.entity[userInput.name];
-                                }
+                    // if (hasProhibitNegNums.length === 0) {
+
+                        var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+
+                        /*resultEntity.values = {};
+
+                        vm.userInputs.forEach(function (userInput) {
+
+                            if (userInput !== null) {
+                                var keys = Object.keys(vm.entity);
+                                keys.forEach(function (key) {
+                                    if (key === userInput.name) {
+                                        resultEntity.values[userInput.name] = vm.entity[userInput.name];
+                                    }
+                                });
+                            }
+                        });*/
+                        resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
+
+                        resultEntity.store = true;
+                        resultEntity.calculate = true;
+
+                        vm.processing = true;
+
+                        new Promise(function (resolve, reject) {
+
+                            transactionTypeService.initBookPendingComplexTransaction(resultEntity.transaction_type).then(function (data) {
+
+                                var res = Object.assign(data, resultEntity);
+
+                                res.complex_transaction.is_locked = resultEntity.is_locked;
+                                res.complex_transaction.is_canceled = resultEntity.is_canceled;
+
+                                transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                    vm.processing = false;
+
+                                    toastNotificationService.success('Transaction was successfully booked');
+
+                                    resolve(data);
+                                });
                             });
-                        }
-                    });*/
-					resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
 
-                    resultEntity.store = true;
-                    resultEntity.calculate = true;
+                        })
+                        .then(function (data) {
 
-                    new Promise(function (resolve, reject) {
+                            if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
-                        transactionTypeService.initBookPendingComplexTransaction(resultEntity.transaction_type).then(function (data) {
+                                $mdDialog.show({
+                                    controller: 'ValidationDialogController as vm',
+                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                    targetEvent: $event,
+                                    locals: {
+                                        validationData: {
+                                            errorData: data,
+                                            tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                            entityType: 'complex-transaction'
+                                        }
+                                    },
+                                    multiple: true,
+                                    preserveScope: true,
+                                    autoWrap: true,
+                                    skipHide: true
+                                })
 
-                            var res = Object.assign(data, resultEntity);
+                            } else {
+                                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree'});
+                            }
 
-                            res.complex_transaction.is_locked = resultEntity.is_locked;
-                            res.complex_transaction.is_canceled = resultEntity.is_canceled;
-
-                            transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
-
-                                toastNotificationService.success('Transaction was successfully booked');
-
-                                resolve(data);
-                            });
-                        });
-
-                    })
-					.then(function (data) {
-
-                        if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+                        })
+                        .catch(function (data) {
 
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
@@ -776,67 +1082,42 @@
                                 skipHide: true
                             })
 
-                        } else {
-							metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree'});
-						}
+                        });
 
-                    })
-					.catch(function (data) {
-
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: {
-                                    errorData: data,
-                                    tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                    entityType: 'complex-transaction'
-                                }
-                            },
-                            multiple: true,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
-
-                    });
-
-                }
-
-                else {
-
-                    var warningDescription = '<p>Next fields should have positive number value to proceed:';
-
-                    hasProhibitNegNums.forEach(function (field) {
-                        warningDescription = warningDescription + '<br>' + field;
-                    });
-
-                    warningDescription = warningDescription + '</p>';
-
-                    $mdDialog.show({
-                        controller: "WarningDialogController as vm",
-                        templateUrl: "views/dialogs/warning-dialog-view.html",
-                        multiple: true,
-                        clickOutsideToClose: false,
-                        locals: {
-                            warning: {
-                                title: "Warning",
-                                description: warningDescription,
-                                actionsButtons: [
-                                    {
-                                        name: "CLOSE",
-                                        response: {status: 'disagree'}
-                                    }
-                                ]
-                            }
-                        }
-
-                    });
+                    // }
+                    // else {
+                    //
+                    //     var warningDescription = '<p>Next fields should have positive number value to proceed:';
+                    //
+                    //     hasProhibitNegNums.forEach(function (field) {
+                    //         warningDescription = warningDescription + '<br>' + field;
+                    //     });
+                    //
+                    //     warningDescription = warningDescription + '</p>';
+                    //
+                    //     $mdDialog.show({
+                    //         controller: "WarningDialogController as vm",
+                    //         templateUrl: "views/dialogs/warning-dialog-view.html",
+                    //         multiple: true,
+                    //         clickOutsideToClose: false,
+                    //         locals: {
+                    //             warning: {
+                    //                 title: "Warning",
+                    //                 description: warningDescription,
+                    //                 actionsButtons: [
+                    //                     {
+                    //                         name: "CLOSE",
+                    //                         response: {status: 'disagree'}
+                    //                     }
+                    //                 ]
+                    //             }
+                    //         }
+                    //
+                    //     });
+                    //
+                    // }
 
                 }
-
-            }
 
         };
 

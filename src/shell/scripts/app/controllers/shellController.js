@@ -78,7 +78,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                 })
                     .then(res => {
-                        if (res.status === 'agree') onLogInSuccess(data.token);
+                        if (res.status === 'agree') onLogInSuccess(res.token);
                     });
 
             } else {
@@ -306,14 +306,12 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
             } else {
 
-                if (data.base_api_url) {
-                    baseUrlService.setMasterUserPrefix(data.base_api_url);
-                }
-
                 isAuthenticated = true;
                 vm.isAuthenticated = isAuthenticated;
 
-                if (data.current_master_user_id) {
+                if (data.current_master_user_id && data.base_api_url) {
+
+                    baseUrlService.setMasterUserPrefix(data.base_api_url);
 
                     globalDataService.setCurrentMasterUserStatus(true);
 
