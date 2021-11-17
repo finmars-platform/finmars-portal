@@ -146,18 +146,50 @@
 
         };
 
+        const relations2KeysObj = {
+			'transaction_class': {
+				id: 'value',
+				name: 'name'
+			},
+			/*'price_download_scheme': {
+				id: 'id',
+				name: 'user_code'
+			},*/
+			'price_download_scheme': {
+				id: 'id',
+				name: 'scheme_name'
+			},
+		}
+
+		const formatRelationForSelector = function (key, relationsList) {
+
+        	if (relations2KeysObj.hasOwnProperty(key)) { // relations with specific properties to use as 'id' or (and) 'name'
+
+        		var propertyForId = relations2KeysObj[key].id;
+				var propertyForName = relations2KeysObj[key].name;
+
+        		return relationsList.map(rItem => {
+        			return {id: rItem[propertyForId], name: rItem[propertyForName]};
+				});
+
+			}
+
+			return relationsList;
+
+		};
+
 		const loadRelation = function (field, noScopeUpdate) {
 
 			field = field.replace(/-/g, "_"); // replace all '_' with '-'
 
-			// if (!viewModel.relationItems.hasOwnProperty(field)) {
-			if (!loadedRelationsList.includes(field)) {
+			/* if (!loadedRelationsList.includes(field)) {
 
 				return new Promise(function (resolve, reject) {
 
 					fieldResolverService.getFields(field).then(function (data) {
 
-						viewModel.relationItems[field] = data.data;
+						viewModel.relationItems[field] = formatRelationForSelector(field, data.data);
+
 						loadedRelationsList.push(field);
 
 						if (noScopeUpdate) {
@@ -171,7 +203,31 @@
 
 			}
 
-			return {status: 'item_exist', field: field};
+			return {status: 'item_exist', field: field}; */
+			return new Promise(function (resolve, reject) {
+
+				if (loadedRelationsList.includes(field)) {
+					resolve(viewModel.relationItems[field]);
+
+				} else {
+
+					fieldResolverService.getFields(field).then(function (data) {
+
+						viewModel.relationItems[field] = formatRelationForSelector(field, data.data);
+
+						loadedRelationsList.push(field);
+
+						if (noScopeUpdate) {
+							$scope.$apply();
+						}
+
+						resolve(viewModel.relationItems[field]);
+
+					}).catch(error => reject(error));
+
+				}
+
+			});
 
 		};
 
@@ -210,7 +266,7 @@
                     return {id: rTable.name, name: rTable.name};
                 });
 
-            })
+            });
 
         };
 
@@ -229,6 +285,202 @@
             })
 
         };
+
+		/**
+		 *
+		 * @param actions {Array|Object} - list of actions or a single action
+		 */
+		const insertActions = function (actions) {
+
+        	if (Array.isArray(actions)) {
+
+				actions.forEach(function (action) {
+
+					viewModel.entity.actions.push(action);
+
+					const multitypeFieldsData = getMultitypeFieldsDataForAction(action);
+					viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+				})
+
+			} else {
+
+        		viewModel.entity.actions.push(actions);
+
+				const multitypeFieldsData = getMultitypeFieldsDataForAction(actions);
+				viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+			}
+
+			viewModel.paneActionsMenuPopups = createSelectorPopupDataListForActions();
+
+		};
+
+        const addAction = function (actionType) {
+
+        	viewModel.accordion.collapseAll();
+
+			var result = {
+				isPaneExpanded: true
+			};
+
+			result[actionType] = {};
+
+			var fields = {
+				'transaction': [
+					'account_cash', 'account_cash_input', 'account_interim',
+					'account_interim_input', 'account_position', 'account_position_input',
+					'accounting_date', 'allocation_balance', 'allocation_balance_input',
+					'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
+					'allocation_pl_phantom', 'carry_with_sign', 'cash_consideration', 'cash_date',
+					'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
+					'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes',
+					'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_size_with_sign',
+					'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
+					'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
+					'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
+					'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
+					'strategy3_position', 'strategy3_position_input', 'trade_price', 'transaction_class', 'transaction_currency',
+					'transaction_currency_input'
+				],
+				'instrument': [
+					'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
+					'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
+					'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
+					'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
+					'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
+					'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
+					'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
+				'instrument_accrual_calculation_schedules': [
+					'accrual_calculation_model', 'accrual_calculation_model_input', 'accrual_size', 'accrual_start_date',
+					'first_payment_date', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'periodicity',
+					'periodicity_input', 'periodicity_n'
+				],
+				'instrument_event_schedule': [
+					'description', 'effective_date', 'event_class', 'event_class_input', 'final_date', 'instrument',
+					'instrument_input', 'instrument_phantom', 'is_auto_generated', 'name', 'notification_class',
+					'notification_class_input', 'notify_in_n_days', 'periodicity', 'periodicity_input', 'periodicity_input'
+				],
+				'instrument_event_schedule_action': [
+					'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
+					'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
+				],
+				'instrument_manual_pricing_formula': [
+					'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
+				],
+				'instrument_factor_schedule': [
+					'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
+				],
+				'execute_command': [
+					'expr'
+				]
+			};
+
+
+			fields[actionType].forEach(function (key) {
+				result[actionType][key] = null;
+			});
+
+			/*viewModel.entity.actions.push(result);
+
+			const multitypeFieldsData = getMultitypeFieldsDataForAction(result);
+			viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+			viewModel.paneActionsMenuPopups = createSelectorPopupDataListForActions();*/
+			insertActions(result);
+
+			findPhantoms();
+
+		};
+
+        const generateOperationPopupData = {
+        	options: [
+				{
+					key: "transaction",
+					name: "Create base transaction"
+				},
+				{
+					key: "instrument",
+					name: "Create instrument"
+				},
+				{
+					key: "execute_command",
+					name: "Execute command"
+				}
+			],
+			selectOption: function (option, _$popup) {
+
+        		_$popup.cancel();
+
+        		addAction(option.key);
+
+			}
+		};
+
+		const generateInstrumentOperationPopupData = {
+			options: [
+				{
+					key: "instrument_factor_schedule",
+					name: "Create factor"
+				},
+				{
+					key: "instrument_manual_pricing_formula",
+					name: "Create pricing"
+				},
+				{
+					key: "instrument_accrual_calculation_schedules",
+					name: "Create accrual"
+				},
+				{
+					key: "instrument_event_schedule",
+					name: "Create event"
+				},
+				{
+					key: "instrument_event_schedule_action",
+					name: "Create Event Action"
+				}
+			],
+			selectOption: function (option, _$popup) {
+
+				_$popup.cancel();
+
+				addAction(option.key);
+
+			}
+		};
+
+		const getActionTemplates = function () {
+
+			return new Promise((resolve, reject) => {
+
+				uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
+
+					let actionTemplatesPopupData = {};
+					const actionTemplates = data.results;
+
+					actionTemplatesPopupData = {
+						selectOption: function (option, _$popup, $event) {
+
+							_$popup.cancel();
+
+							const templateToAppend = actionTemplates.find(template => template.id === option.key);
+
+							appendFromTemplate($event, templateToAppend);
+
+						}
+					};
+
+					actionTemplatesPopupData.options = actionTemplates.map(function (template) {
+						return {key: template.id, name: template.name};
+					});
+
+					resolve(actionTemplatesPopupData);
+
+				}).catch(error => reject(error));
+
+			});
+
+		};
 
         const removeInputFromActions = function (deletedInputName) {
 
@@ -811,12 +1063,11 @@
 
 		const onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
 
-            var changedCell = gtDataService.getCell(rowData.order, colData.order);
+            let changedCell = gtDataService.getCell(rowData.order, colData.order);
 
-            var contentTypeCell = viewModel.inputsGridTableDataService.getCellByKey(rowData.order, 'content_type');
+            const contentTypeCell = viewModel.inputsGridTableDataService.getCellByKey(rowData.order, 'content_type');
 
-            // var loadRelationRes = viewModel.loadRelation(resolveRelation(contentTypeCell.settings.val ue), true);
-            var loadRelationRes = relationItemsResolver(contentTypeCell.settings.value);
+            /* var loadRelationRes = relationItemsResolver(contentTypeCell.settings.value);
 
             if (loadRelationRes && loadRelationRes.status === 'item_exist') {
                 changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field];
@@ -830,7 +1081,23 @@
 
                 });
 
-            }
+            } */
+			let fieldKey = resolveRelation(contentTypeCell.settings.value);
+			fieldKey = fieldKey.replace(/-/g, "_");
+
+			if (loadedRelationsList.includes(fieldKey)) {
+				changedCell.settings.selectorOptions = viewModel.relationItems[fieldKey];
+
+			} else {
+
+				loadRelation(fieldKey).then(function (relItem) {
+
+					changedCell.settings.selectorOptions = relItem;
+					$scope.$apply();
+
+				});
+
+			}
 
         };
 
@@ -864,10 +1131,10 @@
 
                 case 100:
 
-                    contentType.objPath = ['content_type']
-                    contentType.cellType = 'selector'
-                    contentType.settings.isDisabled = true
-                    contentType.settings.selectorOptions = viewModel.selectorContentTypes
+                    contentType.objPath = ['content_type'];
+                    contentType.cellType = 'selector';
+                    contentType.settings.isDisabled = true;
+                    contentType.settings.selectorOptions = viewModel.selectorContentTypes;
 
                     var contextProps = contextProperties[contentType.settings.value];
                     if (contextProps) {
@@ -1015,8 +1282,10 @@
                         contextProperties: contextProperties,
                         relationItems: viewModel.relationItems,
                         inputsForMultiselector: viewModel.inputsForMultiselector,
+						loadedRelationsList: loadedRelationsList,
 
-                        relationItemsResolver: relationItemsResolver,
+						resolveRelationCallback: resolveRelation,
+						loadRelationCallback: loadRelation,
                     }
                 }
 
@@ -1398,7 +1667,1556 @@
 
 		};
 
+		const findInputs = function (entity) {
+
+			var content_type = '';
+			var result;
+
+			for (var i = 0; i < viewModel.contentTypes.length; i++) {
+				if (viewModel.contentTypes[i].entity === entity) {
+					content_type = viewModel.contentTypes[i].key;
+					break;
+				}
+
+			}
+
+			result = viewModel.entity.inputs.filter(function (input) {
+				if (input.content_type === content_type) {
+					return true;
+				}
+
+				return false;
+			});
+
+			result = result.map(function (input) {
+				return {id: input.name, name: input.name};
+			});
+
+			return result;
+
+		};
+
+		/*const findPhantoms = function () {
+			var result = [];
+			viewModel.entity.actions.forEach(function (action, $index) {
+				action.positionOrder = $index;
+				if (action.instrument !== null) {
+					result.push(action);
+				}
+			});
+			return result;
+		}; */
+
+		const findPhantoms = function () {
+			var result = [];
+			viewModel.entity.actions.forEach(function (action, $index) {
+
+				action.positionOrder = $index;
+
+				if (action.instrument !== null) {
+					result.push({
+						id: $index, // position order of phantom
+						name: action.action_notes || ''
+					});
+				}
+
+			});
+
+			return result;
+		};
+
+		const findEventSchedulePhantoms = function () {
+
+			/*var result = [];
+
+			viewModel.entity.actions.forEach(function (action, $index) {
+				action.positionOrder = $index;
+				if (action.instrument_event_schedule !== null) {
+					result.push(action);
+				}
+			});
+
+			return result;*/
+			return new Promise(res => {
+
+				let result = [];
+
+				viewModel.entity.actions.forEach(function (action, $index) {
+					action.positionOrder = $index;
+					if (action.instrument_event_schedule !== null) {
+						result.push(action);
+					}
+				});
+
+				res(result);
+
+			});
+
+		};
+
+		const findInputsAndPhantoms = function (entity, phantomsList) {
+
+			if (!phantomsList) phantomsList = findPhantoms();
+
+			return [
+				{
+					name: 'Inputs',
+					content: findInputs(entity)
+				},
+				{
+					name: 'Phantoms',
+					content: phantomsList
+				}
+			];
+
+		};
+
+		const deletePane = function ($index, $event) {
+
+			$event.stopPropagation();
+			var description = 'Are you sure to delete this action?';
+
+			$mdDialog.show({
+				controller: 'WarningDialogController as vm',
+				templateUrl: 'views/dialogs/warning-dialog-view.html',
+				parent: angular.element(document.body),
+				targetEvent: $event,
+				preserveScope: true,
+				autoWrap: true,
+				multiple: true,
+				skipHide: true,
+				locals: {
+					warning: {
+						title: 'Warning',
+						description: description
+					}
+				}
+			}).then(function (res) {
+				if (res.status === 'agree') {
+
+					viewModel.entity.actions.splice($index, 1);
+					viewModel.actionsMultitypeFieldsList.splice($index, 1);
+					// console.log("testing.deletePane actionsMultitypeFieldsList", viewModel.actionsMultitypeFieldsList);
+					viewModel.clearPhantoms();
+					createSelectorPopupDataListForActions();
+
+				}
+			});
+		};
+
+		const makeCopyOfAction = function (actionToCopy, index, $event) {
+
+			$event.stopPropagation();
+			var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
+
+			delete actionCopy.$$hashKey;
+			delete actionCopy.id;
+			delete actionCopy.order;
+
+			var actionName = actionCopy.action_notes + ' (Copy)';
+			var actionNameOccupied = true;
+
+			var c = 1;
+			while (actionNameOccupied) { // check that copy name is unique
+
+				actionNameOccupied = false;
+
+				for (var a = 0; a < viewModel.entity.actions.length; a++) {
+
+					if (viewModel.entity.actions[a].action_notes === actionName) {
+
+						c = c + 1;
+						actionName = actionCopy.action_notes + ' (Copy ' + c + ')';
+						actionNameOccupied = true;
+
+						break;
+
+					}
+
+				}
+
+				if (!actionNameOccupied) {
+					actionCopy.action_notes = actionName;
+
+					if (actionCopy.transaction && actionCopy.transaction.hasOwnProperty('action_notes')) {
+						actionCopy.transaction.action_notes = actionName;
+					}
+
+					if (actionCopy.instrument) {
+						actionCopy.instrument.action_notes = actionName;
+					}
+
+				}
+
+			}
+
+			viewModel.accordion.collapseAll();
+
+			actionCopy.isPaneExpanded = true;
+
+			viewModel.entity.actions.splice(index + 1, 0, actionCopy);
+
+			const multitypeFieldsData = getMultitypeFieldsDataForAction(actionCopy);
+			viewModel.actionsMultitypeFieldsList.splice(index + 1, 0, multitypeFieldsData);
+			// console.log("testing.makeCopyOfAction actionsMultitypeFieldsList", viewModel.actionsMultitypeFieldsList);
+			viewModel.findPhantoms();
+
+			viewModel.paneActionsMenuPopups = createSelectorPopupDataListForActions();
+			// console.log("testing.makeCopyOfAction paneActionsMenuPopups", viewModel.paneActionsMenuPopups);
+		};
+
+		const createSelectorPopupDataListForActions = function () {
+
+			viewModel.paneActionsMenuPopups = [];
+
+			viewModel.entity.actions.forEach(function (action, index) {
+
+				viewModel.paneActionsMenuPopups.push({
+					options: [
+						{
+							key: 'delete',
+							name: 'DELETE',
+							actionIndex: index
+						},
+						{
+							key: 'copy',
+							name: 'MAKE COPY',
+							actionIndex: index
+						}
+					],
+					selectOption: function (option, _$popup, $event) {
+
+						$event.stopPropagation();
+						_$popup.cancel();
+
+						var action = viewModel.entity.actions[option.actionIndex];
+
+						if (option.key === 'delete') {
+							deletePane(option.actionIndex, $event);
+
+						} else if (option.key === 'copy') {
+							makeCopyOfAction(action, option.actionIndex, $event);
+						}
+
+					}
+				});
+
+			});
+			// console.log("testing.createSelectorPopupDataListForActions ", viewModel.paneActionsMenuPopups);
+			return viewModel.paneActionsMenuPopups;
+
+		};
+
+		const createTransactionMFData = function (action) {
+
+			const loadSettlementCurrency = function () {
+				return loadRelation('settlement_currency');
+			};
+
+			const loadTransactionCurrency = function () {
+				return loadRelation('transaction_currency');
+			};
+
+			let multitypeFieldsData = {};
+
+			multitypeFieldsData.portfolio = [
+				{
+					'key': 'input',
+					'model': action.transaction.portfolio_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.portfolio_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('portfolio')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.portfolio,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.portfolio_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'portfolio',
+						'itemName': action.transaction.portfolio_object ? action.transaction.portfolio_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.settlement_currency = [
+				{
+					'key': 'input',
+					'model': action.transaction.settlement_currency_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.settlement_currency_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('currency')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.settlement_currency,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.settlement_currency_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.transaction.settlement_currency_object ? action.transaction.settlement_currency_object.name : '',
+						'loadMenuOptions': loadSettlementCurrency
+					}
+				}
+			];
+
+			multitypeFieldsData.transaction_currency = [
+				{
+					'key': 'input',
+					'model': action.transaction.transaction_currency_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.transaction_currency_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('currency')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.transaction_currency,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.transaction_currency_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.transaction.transaction_currency_object ? action.transaction.transaction_currency_object.name : '',
+						'loadMenuOptions': loadTransactionCurrency
+					}
+				}
+			];
+
+			multitypeFieldsData.instrument = [
+				{
+					'key': 'input',
+					'model': action.transaction[viewModel.resolveInstrumentProp(action, 'transaction', 'instrument')],
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputsAndPhantoms('instrument'),
+						'groupOptions': true
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.instrument,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'instrument',
+						'itemName': action.transaction.instrument_object ? action.transaction.instrument_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.account_position = [
+				{
+					'key': 'input',
+					'model': action.transaction.account_position_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.account_position_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('account')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.account_position,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.account_position_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'account',
+						'itemName': action.transaction.account_position_object ? action.transaction.account_position_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.account_cash = [
+				{
+					'key': 'input',
+					'model': action.transaction.account_cash_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.account_cash_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('account')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.account_cash,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.account_cash_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'account',
+						'itemName': action.transaction.account_cash_object ? action.transaction.account_cash_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.account_interim = [
+				{
+					'key': 'input',
+					'model': action.transaction.account_interim_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.account_interim_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('account')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.account_interim,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.account_interim_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'account',
+						'itemName': action.transaction.account_interim_object ? action.transaction.account_interim_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.linked_instrument = [
+				{
+					'key': 'input',
+					'model': action.transaction[viewModel.resolveInstrumentProp(action, 'transaction', 'linked_instrument')],
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.linked_instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputsAndPhantoms('instrument'),
+						'groupOptions': true
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.linked_instrument,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.linked_instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'instrument',
+						'itemName': action.transaction.linked_instrument_object ? action.transaction.linked_instrument_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.allocation_pl = [
+				{
+					'key': 'input',
+					'model': action.transaction[viewModel.resolveInstrumentProp(action, 'transaction', 'allocation_pl')],
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.allocation_pl_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputsAndPhantoms('instrument'),
+						'groupOptions': true
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.allocation_pl,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.allocation_pl_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'instrument',
+						'itemName': action.transaction.allocation_pl_object ? action.transaction.allocation_pl_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.allocation_balance = [
+				{
+					'key': 'input',
+					'model': action.transaction[viewModel.resolveInstrumentProp(action, 'transaction', 'allocation_balance')],
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.allocation_balance_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputsAndPhantoms('instrument'),
+						'groupOptions': true
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.allocation_balance,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.allocation_balance_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'instrument',
+						'itemName': action.transaction.allocation_balance_object ? action.transaction.allocation_balance_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.strategy1_position = [
+				{
+					'key': 'input',
+					'model': action.transaction.strategy1_position_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.strategy1_position_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('strategy-1')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.strategy1_position,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.strategy1_position_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'strategy-1',
+						'itemName': action.transaction.strategy1_position_object ? action.transaction.strategy1_position_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.strategy2_position = [
+				{
+					'key': 'input',
+					'model': action.transaction.strategy2_position_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.strategy2_position_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('strategy-2')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.strategy2_position,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.strategy2_position_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'strategy-2',
+						'itemName': action.transaction.strategy2_position_object ? action.transaction.strategy2_position_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.strategy3_position = [
+				{
+					'key': 'input',
+					'model': action.transaction.strategy3_position_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.strategy3_position_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('strategy-3')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.strategy3_position,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.strategy3_position_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'strategy-3',
+						'itemName': action.transaction.strategy3_position_object ? action.transaction.strategy3_position_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.strategy1_cash = [
+				{
+					'key': 'input',
+					'model': action.transaction.strategy1_cash_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.strategy1_cash_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('strategy-1')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.strategy1_cash,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.strategy1_cash_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'strategy-1',
+						'itemName': action.transaction.strategy1_cash_object ? action.transaction.strategy1_cash_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.strategy2_cash = [
+				{
+					'key': 'input',
+					'model': action.transaction.strategy2_cash_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.strategy2_cash_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('strategy-2')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.strategy2_cash,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.strategy2_cash_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'strategy-2',
+						'itemName': action.transaction.strategy2_cash_object ? action.transaction.strategy2_cash_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.strategy3_cash = [
+				{
+					'key': 'input',
+					'model': action.transaction.strategy3_cash_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.strategy3_cash_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('strategy-3')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.strategy3_cash,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.strategy3_cash_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'strategy-3',
+						'itemName': action.transaction.strategy3_cash_object ? action.transaction.strategy3_cash_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.counterparty = [
+				{
+					'key': 'input',
+					'model': action.transaction.counterparty_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.counterparty_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('counterparty')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.counterparty,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.counterparty_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'counterparty',
+						'itemName': action.transaction.counterparty_object ? action.transaction.counterparty_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.responsible = [
+				{
+					'key': 'input',
+					'model': action.transaction.responsible_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.transaction.responsible_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('responsible')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.transaction.responsible,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.transaction.responsible_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'responsible',
+						'itemName': action.transaction.responsible_object ? action.transaction.responsible_object.name : ''
+					}
+				}
+			];
+
+			return multitypeFieldsData;
+
+		};
+
+		const createInstrumentMFData = function (action) {
+
+			const loadInstrumentTypes = function () {
+				return loadRelation('instrument_type');
+			};
+
+			const loadPricingCurrency = function () {
+				return loadRelation('instrument_type');
+			};
+
+			const loadAccruedCurrency = function () {
+				return loadRelation('accrued_currency');
+			};
+
+			const loadDailyPricingPricingModel = function () {
+				return loadRelation('daily_pricing_model');
+			};
+
+			const loadPriceDownloadScheme = function () {
+				return loadRelation('price_download_scheme');
+			};
+
+			const loadPaymentSizeDetail = function () {
+				return loadRelation('payment_size_detail');
+			};
+
+			let multitypeFieldsData = {};
+
+			multitypeFieldsData.instrument_type = [
+				{
+					'key': 'input',
+					'model': action.instrument.instrument_type_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument.instrument_type_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('instrument-type')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument.instrument_type,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument.instrument_type_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument.instrument_type_object ? action.instrument.instrument_type_object.name : '',
+						'loadMenuOptions': loadInstrumentTypes
+					}
+				}
+			];
+
+			multitypeFieldsData.pricing_currency = [
+				{
+					'key': 'input',
+					'model': action.instrument.pricing_currency_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument.pricing_currency_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('currency')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument.pricing_currency,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument.pricing_currency_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument.pricing_currency_object ? action.instrument.pricing_currency_object.name : '',
+						'loadMenuOptions': loadPricingCurrency
+					}
+				}
+			];
+
+			multitypeFieldsData.accrued_currency = [
+				{
+					'key': 'input',
+					'model': action.instrument.accrued_currency_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument.accrued_currency_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('currency')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument.accrued_currency,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument.accrued_currency_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument.accrued_currency_object ? action.instrument.accrued_currency_object.name : '',
+						'loadMenuOptions': loadAccruedCurrency
+					}
+				}
+			];
+
+			multitypeFieldsData.daily_pricing_model = [
+				{
+					'key': 'input',
+					'model': action.instrument.daily_pricing_model_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument.daily_pricing_model_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('daily-pricing-model')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument.daily_pricing_model,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument.daily_pricing_model_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument.daily_pricing_model_object ? action.instrument.daily_pricing_model_object.name : '',
+						'loadMenuOptions': loadDailyPricingPricingModel
+					}
+				}
+			];
+
+			multitypeFieldsData.price_download_scheme = [
+				{
+					'key': 'input',
+					'model': action.instrument.price_download_scheme_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument.price_download_scheme_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('price-download-scheme')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument.price_download_scheme,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument.price_download_scheme_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument.price_download_scheme_object ? action.instrument.price_download_scheme_object.name : '',
+						'loadMenuOptions': loadPriceDownloadScheme
+					}
+				}
+			];
+
+			multitypeFieldsData.payment_size_detail = [
+				{
+					'key': 'input',
+					'model': action.instrument.payment_size_detail_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument.payment_size_detail_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('payment-size-detail')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument.payment_size_detail,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument.payment_size_detail_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument.payment_size_detail_object ? action.instrument.payment_size_detail_object.name : '',
+						'loadMenuOptions': loadPaymentSizeDetail
+					}
+				}
+			];
+
+			return multitypeFieldsData;
+
+		};
+
+		const createInstrumentFactorScheduleMFData = function (action) {
+
+			let multitypeFieldsData = {};
+
+			multitypeFieldsData.instrument = [
+				{
+					'key': 'input',
+					'model': action.instrument_factor_schedule[viewModel.resolveInstrumentProp(action, 'instrument_factor_schedule', 'instrument')],
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_factor_schedule.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputsAndPhantoms('instrument'),
+						'groupOptions': true
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_factor_schedule.instrument,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_factor_schedule.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'instrument',
+						'itemName': action.instrument_factor_schedule.instrument_object ? action.instrument_factor_schedule.instrument_object.name : ''
+					}
+				}
+			];
+
+			return multitypeFieldsData;
+
+		};
+
+		const createInstrumentManualPricingFormulaMFData = function (action) {
+
+			let multitypeFieldsData = {};
+
+			multitypeFieldsData.instrument = [
+				{
+					'key': 'input',
+					'model': action.instrument_manual_pricing_formula[viewModel.resolveInstrumentProp(action, 'instrument_manual_pricing_formula', 'instrument')],
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_manual_pricing_formula.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputsAndPhantoms('instrument'),
+						'groupOptions': true
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_manual_pricing_formula.instrument,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_manual_pricing_formula.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'instrument',
+						'itemName': action.instrument_manual_pricing_formula.instrument_object ? action.instrument_manual_pricing_formula.instrument_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.pricing_policy = [
+				{
+					'key': 'input',
+					'model': action.instrument_manual_pricing_formula.pricing_policy_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_manual_pricing_formula.pricing_policy_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('pricing-policy')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_manual_pricing_formula.pricing_policy,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_manual_pricing_formula.pricing_policy_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument_manual_pricing_formula.pricing_policy_object ? action.instrument_manual_pricing_formula.pricing_policy_object.name : '',
+						'loadMenuOptions': function () {
+							return loadRelation('pricing_policy');
+						}
+					}
+				}
+			];
+
+			return multitypeFieldsData;
+
+		};
+
+		const createInstrumentAccrualCalculationSchedulesMFData = function (action) {
+
+			let multitypeFieldsData = {};
+
+			multitypeFieldsData.instrument = [
+				{
+					'key': 'input',
+					'model': action.instrument_accrual_calculation_schedules[viewModel.resolveInstrumentProp(action, 'instrument_accrual_calculation_schedules', 'instrument')],
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_accrual_calculation_schedules.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputsAndPhantoms('instrument'),
+						'groupOptions': true
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_accrual_calculation_schedules.instrument,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_accrual_calculation_schedules.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'instrument',
+						'itemName': action.instrument_accrual_calculation_schedules.instrument_object ? action.instrument_accrual_calculation_schedules.instrument_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.periodicity = [
+				{
+					'key': 'input',
+					'model': action.instrument_accrual_calculation_schedules.periodicity_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_accrual_calculation_schedules.periodicity_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('periodicity')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_accrual_calculation_schedules.periodicity,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_accrual_calculation_schedules.periodicity_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument_accrual_calculation_schedules.periodicity_object ? action.instrument_accrual_calculation_schedules.periodicity_object.name : '',
+						'loadMenuOptions': function () {
+							return loadRelation('periodicity');
+						}
+					}
+				}
+			];
+
+			multitypeFieldsData.accrual_calculation_model = [
+				{
+					'key': 'input',
+					'model': action.instrument_accrual_calculation_schedules.accrual_calculation_model_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('accrual-calculation-model')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_accrual_calculation_schedules.accrual_calculation_model,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument_accrual_calculation_schedules.accrual_calculation_model_object ? action.instrument_accrual_calculation_schedules.accrual_calculation_model_object.name : '',
+						'loadMenuOptions': function () {
+							return loadRelation('accrual_calculation_model');
+						}
+					}
+				}
+			];
+
+			return multitypeFieldsData;
+
+		};
+
+		const createInstrumentEventSchedulesMFData = function (action) {
+
+			let multitypeFieldsData = {};
+
+			multitypeFieldsData.instrument = [
+				{
+					'key': 'input',
+					'model': action.instrument_event_schedule[viewModel.resolveInstrumentProp(action, 'instrument_event_schedule', 'instrument')],
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_event_schedule.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputsAndPhantoms('instrument'),
+						'groupOptions': true
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_event_schedule.instrument,
+					'fieldType': 'entitySearchSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_event_schedule.instrument_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'entityType': 'instrument',
+						'itemName': action.instrument_event_schedule.instrument_object ? action.instrument_event_schedule.instrument_object.name : ''
+					}
+				}
+			];
+
+			multitypeFieldsData.notification_class = [
+				{
+					'key': 'input',
+					'model': action.instrument_event_schedule.notification_class_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_event_schedule.notification_class_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('notification-class')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_event_schedule.notification_class,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_event_schedule.notification_class_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument_event_schedule.notification_class_object ? action.instrument_event_schedule.notification_class_object.name : '',
+						'loadMenuOptions': function () {
+							return loadRelation('notification_class');
+						}
+					}
+				}
+			];
+
+			multitypeFieldsData.periodicity = [
+				{
+					'key': 'input',
+					'model': action.instrument_event_schedule.periodicity_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_event_schedule.periodicity_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('periodicity')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_event_schedule.periodicity,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_event_schedule.periodicity_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument_event_schedule.periodicity_object ? action.instrument_event_schedule.periodicity_object.name : '',
+						'loadMenuOptions': function () {
+							return loadRelation('periodicity');
+						}
+					}
+				}
+			];
+
+			multitypeFieldsData.event_class = [
+				{
+					'key': 'input',
+					'model': action.instrument_event_schedule.event_class_input,
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': !!!action.instrument_event_schedule.event_class_toggle,
+					'sign': '<div class="multitype-field-type-letter">I</div>',
+					'value_type': 70,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': findInputs('event-class')
+					}
+				},
+				{
+					'key': 'relation',
+					'model': action.instrument_event_schedule.event_class,
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': !!action.instrument_event_schedule.event_class_toggle,
+					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': [],
+						'itemName': action.instrument_event_schedule.event_class_object ? action.instrument_event_schedule.event_class_object.name : '',
+						'loadMenuOptions': function () {
+							return loadRelation('event_class');
+						}
+					}
+				}
+			];
+
+			return multitypeFieldsData;
+
+		};
+
+
+		const getMultitypeFieldsDataForAction = function (action) {
+
+			let multitypeFieldsData = {};
+
+			if (action.transaction) {
+				multitypeFieldsData = createTransactionMFData(action);
+			}
+			else if (action.instrument) {
+				multitypeFieldsData = createInstrumentMFData(action);
+			}
+			else if (action.instrument_factor_schedule) {
+				multitypeFieldsData = createInstrumentFactorScheduleMFData(action);
+			}
+			else if (action.instrument_manual_pricing_formula) {
+				multitypeFieldsData = createInstrumentManualPricingFormulaMFData(action);
+			}
+			else if (action.instrument_accrual_calculation_schedules) {
+				multitypeFieldsData = createInstrumentAccrualCalculationSchedulesMFData(action);
+			}
+			else if (action.instrument_event_schedule) {
+				multitypeFieldsData = createInstrumentEventSchedulesMFData(action);
+			}
+
+			return multitypeFieldsData;
+
+		};
+
+		const createDataForMultitypeFieldsList = function () {
+
+			let actionsMultitypeFieldsList = [];
+
+			viewModel.entity.actions.forEach(function (action) {
+
+				const multitypeFieldsData = getMultitypeFieldsDataForAction(action);
+
+				actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+			});
+
+			return actionsMultitypeFieldsList;
+
+		};
+
+		const setTransactionInstrumentInput = function (item, name, prop) {
+
+			if (prop === 'instrument') {
+				item.transaction.instrument_input = name;
+				item.transaction.instrument_phantom = null;
+				item.transaction.instrument = null;
+			}
+
+			else if (prop === 'linked_instrument') {
+				item.transaction.linked_instrument_input = name;
+				item.transaction.linked_instrument_phantom = null;
+				item.transaction.linked_instrument = null;
+			}
+
+			else if (prop === 'allocation_pl') {
+				item.transaction.allocation_pl_input = name;
+				item.transaction.allocation_pl_phantom = null;
+				item.transaction.allocation_pl = null;
+			}
+
+			else if (prop === 'allocation_balance') {
+				item.transaction.allocation_balance_input = name;
+				item.transaction.allocation_balance_phantom = null;
+				item.transaction.allocation_balance = null;
+			}
+		};
+
+		const setTransactionInstrumentPhantom = function (item, positionOrder, prop) {
+
+			if (prop === 'instrument') {
+				item.transaction.instrument_input = null;
+				item.transaction.instrument_phantom = positionOrder;
+				item.transaction.instrument = null;
+			}
+
+			else if (prop === 'linked_instrument') {
+				item.transaction.linked_instrument_input = null;
+				item.transaction.linked_instrument_phantom = positionOrder;
+				item.transaction.linked_instrument = null;
+			}
+
+			else if (prop === 'allocation_pl') {
+				item.transaction.allocation_pl_input = null;
+				item.transaction.allocation_pl_phantom = positionOrder;
+				item.transaction.allocation_pl = null;
+			}
+
+			else if (prop === 'allocation_balance') {
+				item.transaction.allocation_balance_input = null;
+				item.transaction.allocation_balance_phantom = positionOrder;
+				item.transaction.allocation_balance = null;
+			}
+
+		};
+
+		const moveDown = function (item, $index, $event) {
+
+			if ($event) $event.stopPropagation();
+
+			var swap = JSON.parse(JSON.stringify(item));
+
+			viewModel.entity.actions[$index] = viewModel.entity.actions[$index + 1];
+			viewModel.entity.actions[$index + 1] = swap;
+
+			viewModel.findPhantoms();
+
+			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList();
+
+		};
+
+		const moveUp = function (item, $index, $event) {
+
+			if ($event) $event.stopPropagation();
+
+			var swap = JSON.parse(JSON.stringify(item));
+
+			viewModel.entity.actions[$index] = viewModel.entity.actions[$index - 1];
+			viewModel.entity.actions[$index - 1] = swap;
+
+			viewModel.findPhantoms();
+
+			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList();
+
+		};
+
+		/**
+		 *
+		 * @param fieldKey {string}
+		 * @param action {Object} - ttype action
+		 * @param actionIndex {number}
+		 * @param actionType {string} - can be 'transaction', 'instrument', 'instrument_event_schedule' ...
+		 */
+		const onMultitypeFieldValChange = function (fieldKey, action, actionIndex, actionType) {
+
+			let fieldProp = fieldKey;
+			const multitypeFieldData = viewModel.actionsMultitypeFieldsList[actionIndex][fieldKey];
+
+			let activeType = multitypeFieldData.find(data => data.isActive);
+			if (!activeType) activeType = multitypeFieldData.find(data => data.isDefault);
+
+			if (activeType.key === 'input') { // input selector changed
+
+				fieldProp = fieldKey + '_input';
+
+				if (actionType === 'transaction') {
+
+					const instrFieldChanged = ['instrument', 'linked_instrument', 'allocation_pl', 'allocation_balance'].includes(fieldKey);
+
+					if (instrFieldChanged) {
+
+						fieldProp = null; // value will be set by methods below
+
+						if (isNaN(activeType.model)) { // phantom of input selected
+							setTransactionInstrumentInput(action, activeType.model, fieldKey);
+
+						} else { // input selected
+							setTransactionInstrumentPhantom(action, activeType.model, fieldKey);
+						}
+
+					}
+
+				}
+
+			}
+
+			if (fieldProp) action[actionType][fieldProp] = activeType.model;
+
+		};
+
         const initAfterMainDataLoaded = function () {
+
+        	let result = {};
 
             getInputsForLinking();
 
@@ -1408,9 +3226,19 @@
 
             createDataForInputsGridTable();
 
-        };
+			result.actionsMultitypeFieldsList = createDataForMultitypeFieldsList();
 
-		const setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+			return result;
+
+        };
+		/**
+		 *
+		 * @param actionData {Object} - ttype action
+		 * @param actionType {string} - can be 'transaction', 'instrument', 'instrument_event_schedule' ...
+		 * @param fieldName {string}
+		 * @param relationSelData {Object} - data for relation selector inside multitype field
+		 */
+		const setDefaultValueForRelation = function (actionData, actionType, fieldName, relationSelData) {
 
 			var relationType = '';
 			switch (fieldName) {
@@ -1421,11 +3249,6 @@
 					break;
 				default:
 					relationType = fieldName;
-			}
-
-			var nameProperty = 'name';
-			if (fieldName === 'price_download_scheme') {
-				nameProperty = 'user_code';
 			}
 
 			var defaultValueKey = '';
@@ -1459,16 +3282,204 @@
 
 			if (ecosystemDefaultData.hasOwnProperty(defaultValueKey)) {
 
+				var nameProperty = 'name';
+				if (fieldName === 'price_download_scheme') {
+					nameProperty = 'user_code';
+				}
+
 				var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
 
-				actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
+				actionData[actionType][fieldName] = ecosystemDefaultData[defaultValueKey];
 
-				// needed for displaying default value after turning on 'relation' field
-				actionData[propertyName][fieldName + '_object'] = {};
-				actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
-				actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+				// needed to display default value name inside selector after toggling 'relation' field
+				actionData[actionType][fieldName + '_object'] = {};
+				actionData[actionType][fieldName + '_object'][nameProperty] = defaultName;
+				actionData[actionType][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+
+				if (relationSelData) {
+					relationSelData.model = ecosystemDefaultData[defaultValueKey];
+					relationSelData.fieldData.itemName = defaultName;
+				}
+				// < needed to display default value name inside selector after toggling 'relation' field >
 
 			}
+
+		};
+
+		const onActionMultitypeFieldToggle = function (fieldName, item, itemIndex, actionType) {
+
+			item[actionType][fieldName] = null;
+			item[actionType][fieldName + '_input'] = null;
+
+			if (item[actionType].hasOwnProperty(fieldName + '_phantom')) {
+				item[actionType][fieldName + '_phantom'] = null;
+			}
+
+			item[actionType][fieldName + '_toggle'] = !item[actionType][fieldName + '_toggle'];
+
+			let multitypeFieldData = viewModel.actionsMultitypeFieldsList[itemIndex][fieldName];
+
+			const activeType = multitypeFieldData.find(type => type.isActive);
+			const inactiveType = multitypeFieldData.find(type => !type.isActive);
+			inactiveType.model = null;
+
+			if (item[actionType][fieldName + '_toggle'] && !item[actionType][fieldName]) {
+				setDefaultValueForRelation(item, actionType, fieldName, activeType);
+			}
+
+		};
+
+		const saveAsTemplate = function ($event, type) {
+
+			$mdDialog.show({
+				controller: 'SaveAsDialogController as vm',
+				templateUrl: 'views/dialogs/save-as-dialog-view.html',
+				parent: angular.element(document.body),
+				targetEvent: $event,
+				clickOutsideToClose: false,
+				preserveScope: true,
+				autoWrap: true,
+				skipHide: true,
+				multiple: true,
+				locals: {
+					data: {}
+				}
+			})
+			.then(function (res) {
+
+				if (res.status === 'agree') {
+
+					var template = {
+						name: '',
+						type: type,
+						data: {}
+					};
+
+					template.name = res.data.name;
+
+					if (type === 'input_template') {
+
+						template.data.inputs = viewModel.entity.inputs.map(function (item) {
+
+							return {
+								name: item.name,
+								verbose_name: item.verbose_name,
+								value_type: item.value_type,
+								content_type: item.content_type,
+								value: item.value,
+								value_expr: item.value_expr
+							}
+
+						})
+
+					}
+
+					if (type === 'field_template') {
+
+						template.data.fields = {};
+
+						Object.keys(viewModel.entity).forEach(function (key) {
+
+							if (key.indexOf('user_text_') !== -1) {
+								template.data.fields[key] = viewModel.entity[key];
+							}
+
+							if (key.indexOf('user_number_') !== -1) {
+								template.data.fields[key] = viewModel.entity[key];
+							}
+
+							if (key.indexOf('user_date_') !== -1) {
+								template.data.fields[key] = viewModel.entity[key];
+							}
+
+						});
+
+					}
+
+					if (type === 'action_template') {
+
+						template.data.actions = viewModel.entity.actions.map(function (action) {
+
+							var result = {};
+
+							Object.keys(action).forEach(function (key) {
+
+								if (typeof action[key] === 'object' && action[key] !== null) {
+
+									result[key] = {};
+
+									Object.keys(action[key]).forEach(function (actionItemKey) {
+
+										result[key][actionItemKey] = action[key][actionItemKey];
+
+										if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+
+											result[key][actionItemKey + '_field_type'] = 'input';
+
+											if (action[key][actionItemKey + '_toggle']) {
+												result[key][actionItemKey + '_field_type'] = 'relation';
+											}
+
+											result[key][actionItemKey] = null; // if its relation property
+										}
+
+										if (actionItemKey.indexOf('_input') !== -1) {
+											result[key][actionItemKey] = null; // if its relation_input property
+										}
+
+										if (actionItemKey.indexOf('_toggle') !== -1) {
+											delete result[key][actionItemKey]
+										}
+
+										if (actionItemKey.indexOf('_object') !== -1) {
+											delete result[key][actionItemKey]
+										}
+
+
+									})
+
+
+								} else {
+									result[key] = action[key];
+								}
+
+							});
+
+							return result
+
+						})
+
+					}
+
+					uiService.createTemplateLayout(template).then(function (data) {
+
+						$mdDialog.show({
+							controller: 'InfoDialogController as vm',
+							templateUrl: 'views/info-dialog-view.html',
+							parent: angular.element(document.body),
+							targetEvent: $event,
+							clickOutsideToClose: false,
+							preserveScope: true,
+							autoWrap: true,
+							skipHide: true,
+							multiple: true,
+							locals: {
+								info: {
+									title: 'Success',
+									description: "Template successfully created"
+								}
+							}
+						});
+
+						getInputTemplates();
+						viewModel.getFieldTemplates();
+						viewModel.getActionTemplates();
+
+					})
+
+				}
+
+			});
 
 		};
 
@@ -1544,6 +3555,7 @@
 			}
 			else if (template.type === 'action_template') {
 
+				//region Formatting actions from template before adding them
 				var actionsToAdd = template.data.actions.map(function (action) {
 
 					Object.keys(action).forEach(function (key) {
@@ -1558,7 +3570,7 @@
 
 										action[key][actionItemKey + '_toggle'] = true;
 
-										setDefaultValueForRelation(action, key, actionItemKey);
+										setDefaultValueForRelation(action, key, actionItemKey, );
 
 										delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
 									}
@@ -1572,9 +3584,12 @@
 					});
 
 					return action;
-				});
 
-				viewModel.entity.actions = viewModel.entity.actions.concat(actionsToAdd);
+				});
+				//endregion
+
+				insertActions(actionsToAdd);
+				// viewModel.entity.actions = viewModel.entity.actions.concat(actionsToAdd);
 
 			}
 
@@ -1587,8 +3602,16 @@
             updateInputFunctions: updateInputFunctions,
             getReferenceTables: getReferenceTables,
             getInputTemplates: getInputTemplates,
+			getActionTemplates: getActionTemplates,
+			findPhantoms: findPhantoms,
+			findEventSchedulePhantoms: findEventSchedulePhantoms,
+			createDataForMultitypeFieldsList: createDataForMultitypeFieldsList,
+
+			generateOperationPopupData: generateOperationPopupData,
+			generateInstrumentOperationPopupData: generateInstrumentOperationPopupData,
 
 			updateEntityBeforeSave: updateEntityBeforeSave,
+			loadedRelationsList: loadedRelationsList,
 			loadRelation: loadRelation,
 			resolveRelation: resolveRelation,
             checkActionsForEmptyFields: checkActionsForEmptyFields,
@@ -1600,6 +3623,13 @@
 			loadEcosystemDefaults: loadEcosystemDefaults,
 			getTransactionUserFields: getTransactionUserFields,
 
+			createSelectorPopupDataListForActions: createSelectorPopupDataListForActions,
+			moveDown: moveDown,
+			moveUp: moveUp,
+			onActionMultitypeFieldToggle: onActionMultitypeFieldToggle,
+			onMultitypeFieldValChange: onMultitypeFieldValChange,
+
+			saveAsTemplate: saveAsTemplate,
 			appendFromTemplate: appendFromTemplate,
             initAfterMainDataLoaded: initAfterMainDataLoaded
         }

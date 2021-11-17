@@ -51,7 +51,7 @@
         vm.complexTransactionOptions = {};
 
         var originalEntityInputs = null;
-        vm.selectorContentTypes = [];
+        vm.selectorContentTypes = []; // changed by initAfterMainDataLoaded
 
         vm.processing = false;
 
@@ -405,7 +405,8 @@
                         vm.readyStatus.layout = true;
                         $scope.$apply();
 
-                        vm.setStateInActionsControls();
+						setStateInActionsControls();
+						vm.paneActionsMenuPopups = vm.createSelectorPopupDataListForActions();
 
                         res();
 
@@ -735,12 +736,11 @@
 
         vm.save = function () {
 
-            var saveTTypePromise = new Promise(function (resolve, reject) {
+        	var saveTTypePromise = new Promise(function (resolve, reject) {
 
                 var entityToSave = vm.updateEntityBeforeSave(vm.entity);
-
-                /* var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-                var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
+                // var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
+                // var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
                 var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
@@ -768,14 +768,13 @@
 
                     reject();
 
-                } else {
+                }
+                else {
 
                     vm.processing = true;
 
                     transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
-                        console.log('data', data);
-                        //originalEntity = JSON.parse(angular.toJson(vm.entity));
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
                         vm.entity.object_permissions = data.object_permissions;
 
@@ -1111,7 +1110,7 @@
 
                 var exist = false;
 
-                vm.relationItems[entityKey].forEach(function (item) {
+                /* vm.relationItems[entityKey].forEach(function (item) {
 
                     if (item.user_code) {
                         if (item.user_code === obj_from_input.user_code) {
@@ -1119,13 +1118,14 @@
                         }
                     }
 
-                    if (item.user_code) {
-                        if (item.user_code === obj_from_input.user_code) {
-                            exist = true;
-                        }
-                    }
+                }); */
+				vm.relationItems[entityKey].forEach(function (item) {
 
-                });
+					if (item.id && item.id === obj_from_input.user_code) {
+						exist = true;
+					}
+
+				});
 
                 if (!exist) {
                     vm.relationItems[entityKey].push(obj_from_input)
@@ -1667,12 +1667,6 @@
             }
         };
 
-        vm.preventSpace = function ($event) {
-
-            $event.stopPropagation();
-
-        };
-
         vm.rebookInstrumentReactions = [
             {
                 name: "Create Instrument. If exists: Overwrite",
@@ -1714,27 +1708,27 @@
         vm.instrumentTypeTransactionTypes = [
             {
                 name: 'One Off Event',
-                value: 'one_off_event'
+                id: 'one_off_event'
             },
             {
                 name: 'Regular Event',
-                value: 'regular_event'
+				id: 'regular_event'
             },
             {
                 name: 'Factor up',
-                value: 'factor_up'
+				id: 'factor_up'
             },
             {
                 name: 'Factor same',
-                value: 'factor_same'
+				id: 'factor_same'
             },
             {
                 name: 'Factor down',
-                value: 'factor_down'
+				id: 'factor_down'
             }
         ];
 
-        vm.setStateInActionsControls = function () {
+        var setStateInActionsControls = function () {
 
             vm.actionsKeysList = [
                 'instrument',
@@ -1769,7 +1763,6 @@
             });
 
         };
-
 
         /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
@@ -1836,81 +1829,16 @@
 
         };
 
-        vm.resetPropertyBtn = function (item, propertyName, fieldName) {
+        vm.onActionMultitypeFieldToggle = sharedLogic.onActionMultitypeFieldToggle;
+        vm.onMultitypeFieldValChange = sharedLogic.onMultitypeFieldValChange;
 
-            item[propertyName][fieldName] = null;
-            item[propertyName][fieldName + '_input'] = null;
+        vm.actionsMultitypeFieldsList = [];
+        vm.paneActionsMenuPopups = [];
 
-            if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
-                item[propertyName][fieldName + '_phantom'] = null;
-            }
+		// vm.createActionsMenuPopupsList
+		vm.createSelectorPopupDataListForActions = sharedLogic.createSelectorPopupDataListForActions;
 
-            item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
-
-            if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
-
-                setDefaultValueForRelation(item, propertyName, fieldName);
-
-                /*vm.loadRelation(relationType).then(function (data) {
-
-                    var defaultPropertyName = 'name';
-                    if (fieldName === 'price_download_scheme') {
-                        defaultPropertyName = 'user_code';
-                    }
-
-                    vm.relationItems[relationType].forEach(function (relation) {
-
-                        if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
-                            item[propertyName][fieldName] = relation.id;
-
-                            item[propertyName][fieldName + '_object'] = {};
-                            item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
-
-                        }
-
-                    });
-
-                    $scope.$apply(function () {
-                        setTimeout(function () {
-                            $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                ev.stopPropagation();
-                            });
-                        }, 100);
-                    });
-
-                });*/
-
-            }
-
-        };
-
-        vm.findInputs = function (entity) {
-
-            var content_type = '';
-            var result;
-
-            for (var i = 0; i < vm.contentTypes.length; i++) {
-                if (vm.contentTypes[i].entity === entity) {
-                    content_type = vm.contentTypes[i].key;
-                    break;
-                }
-
-            }
-
-
-            result = vm.entity.inputs.filter(function (input) {
-                if (input.content_type === content_type) {
-                    return true;
-                }
-
-                return false;
-            });
-
-            return result;
-
-        };
-
-        vm.deletePane = function (item, $index, $event) {
+        /* vm.deletePane = function ($index, $event) {
 
             $event.stopPropagation();
             var description = 'Are you sure to delete this action?';
@@ -1934,11 +1862,12 @@
                 if (res.status === 'agree') {
                     vm.entity.actions.splice($index, 1);
 
-                    vm.clearPhantoms()
+                    vm.clearPhantoms();
+					vm.createActionsMenuPopupsList();
 
                 }
             });
-        };
+        }; */
 
         vm.clearPhantoms = function () {
 
@@ -1973,151 +1902,69 @@
 
         };
 
-        vm.addAction = function (actionType) {
+        vm.generateOperationPopupData = sharedLogic.generateOperationPopupData;
+        vm.generateInstrumentOperationPopupData = sharedLogic.generateInstrumentOperationPopupData;
 
-            vm.accordion.collapseAll();
+		/*vm.makeCopyOfAction = function (actionToCopy, index, $event) {
 
-            var result = {
-                isPaneExpanded: true
-            };
+			$event.stopPropagation();
+			var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
 
-            result[actionType] = {};
+			delete actionCopy.$$hashKey;
+			delete actionCopy.id;
+			delete actionCopy.order;
 
-            var fields = {
-                'transaction': [
-                    'account_cash', 'account_cash_input', 'account_interim',
-                    'account_interim_input', 'account_position', 'account_position_input',
-                    'accounting_date', 'allocation_balance', 'allocation_balance_input',
-                    'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
-                    'allocation_pl_phantom', 'carry_with_sign', 'cash_consideration', 'cash_date',
-                    'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
-                    'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes',
-                    'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_size_with_sign',
-                    'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
-                    'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
-                    'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
-                    'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
-                    'strategy3_position', 'strategy3_position_input', 'trade_price', 'transaction_class', 'transaction_currency',
-                    'transaction_currency_input'
-                ],
-                'instrument': [
-                    'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
-                    'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
-                    'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
-                    'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
-                    'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
-                    'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
-                    'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
-                'instrument_accrual_calculation_schedules': [
-                    'accrual_calculation_model', 'accrual_calculation_model_input', 'accrual_size', 'accrual_start_date',
-                    'first_payment_date', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'periodicity',
-                    'periodicity_input', 'periodicity_n'
-                ],
-                'instrument_event_schedule': [
-                    'description', 'effective_date', 'event_class', 'event_class_input', 'final_date', 'instrument',
-                    'instrument_input', 'instrument_phantom', 'is_auto_generated', 'name', 'notification_class',
-                    'notification_class_input', 'notify_in_n_days', 'periodicity', 'periodicity_input', 'periodicity_input'
-                ],
-                'instrument_event_schedule_action': [
-                    'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
-                    'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
-                ],
-                'instrument_manual_pricing_formula': [
-                    'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
-                ],
-                'instrument_factor_schedule': [
-                    'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
-                ],
-                'execute_command': [
-                    'expr'
-                ]
-            };
+			var actionName = actionCopy.action_notes + ' (Copy)';
+			var actionNameOccupied = true;
 
+			var c = 1;
+			while (actionNameOccupied) { // check that copy name is unique
 
-            fields[actionType].forEach(function (key) {
-                result[actionType][key] = null;
-            });
+				actionNameOccupied = false;
 
-            vm.entity.actions.push(result);
+				for (var a = 0; a < vm.entity.actions.length; a++) {
 
-            vm.findPhantoms();
-        };
+					if (vm.entity.actions[a].action_notes === actionName) {
 
-        vm.makeCopyOfAction = function (actionToCopy, index, $event) {
+						c = c + 1;
+						actionName = actionCopy.action_notes + ' (Copy ' + c + ')';
+						actionNameOccupied = true;
 
-            $event.stopPropagation();
-            var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
+						break;
 
-            delete actionCopy.id;
-            delete actionCopy.order;
+					}
 
-            var actionName = actionCopy.action_notes + ' (Copy)';
-            var actionNameOccupied = true;
+				}
 
-            var c = 1;
-            while (actionNameOccupied) { // check that copy name is unique
+				if (!actionNameOccupied) {
+					actionCopy.action_notes = actionName;
 
-                actionNameOccupied = false;
+					if (actionCopy.transaction && actionCopy.transaction.hasOwnProperty('action_notes')) {
+						actionCopy.transaction.action_notes = actionName;
+					}
 
-                for (var a = 0; a < vm.entity.actions.length; a++) {
+					if (actionCopy.instrument) {
+						actionCopy.instrument.action_notes = actionName;
+					}
 
-                    if (vm.entity.actions[a].action_notes === actionName) {
+				}
 
-                        c = c + 1;
-                        actionName = actionCopy.action_notes + ' (Copy ' + c + ')';
-                        actionNameOccupied = true;
+			}
 
-                        break;
+			vm.accordion.collapseAll();
 
-                    }
+			actionCopy.isPaneExpanded = true;
 
-                }
+			vm.entity.actions.splice(index + 1, 0, actionCopy);
 
-                if (!actionNameOccupied) {
-                    actionCopy.action_notes = actionName;
+			vm.findPhantoms();
 
-                    if (actionCopy.transaction && actionCopy.transaction.hasOwnProperty('action_notes')) {
-                        actionCopy.transaction.action_notes = actionName;
-                    }
+			vm.paneActionsMenuPopups = vm.createActionsMenuPopupsList();
 
-                    if (actionCopy.instrument) {
-                        actionCopy.instrument.action_notes = actionName;
-                    }
+		}; */
 
-                }
-
-            }
-
-            vm.accordion.collapseAll();
-
-            actionCopy.isPaneExpanded = true;
-
-            vm.entity.actions.splice(index + 1, 0, actionCopy);
-
-            vm.findPhantoms();
-        };
-
-        vm.moveDown = function (item, $index, $event) {
-
-            $event.stopPropagation();
-
-            var swap = JSON.parse(JSON.stringify(item));
-            vm.entity.actions[$index] = vm.entity.actions[$index + 1];
-            vm.entity.actions[$index + 1] = swap;
-            vm.findPhantoms();
-
-        };
-
-        vm.moveUp = function (item, $index, $event) {
-
-            $event.stopPropagation();
-
-            var swap = JSON.parse(JSON.stringify(item));
-            vm.entity.actions[$index] = vm.entity.actions[$index - 1];
-            vm.entity.actions[$index - 1] = swap;
-            vm.findPhantoms();
-
-        };
+		vm.moveDown = sharedLogic.moveDown;
+		vm.moveUp = sharedLogic.moveUp;
 
         vm.resolveInstrumentProp = function (item, key, prop) {
 
@@ -2150,7 +1997,7 @@
 
         };
 
-        vm.setTransactionInstrumentInput = function (item, name, prop) {
+        /* vm.setTransactionInstrumentInput = function (item, name, prop) {
 
             if (prop == 'instrument') {
                 item.transaction.instrument_input = name;
@@ -2203,7 +2050,7 @@
                 item.transaction.allocation_balance = null;
             }
 
-        };
+        }; */
 
         vm.setItemInstrumentInput = function (item, key, name, prop) {
 
@@ -2224,28 +2071,8 @@
 
         };
 
-        vm.findPhantoms = function () {
-            var result = [];
-            vm.entity.actions.forEach(function (action, $index) {
-                action.positionOrder = $index;
-                if (action.instrument !== null) {
-                    result.push(action);
-                }
-            });
-            return result;
-        };
-
-        vm.findEventSchedulePhantoms = function () {
-            var result = [];
-            vm.entity.actions.forEach(function (action, $index) {
-                action.positionOrder = $index;
-                if (action.instrument_event_schedule !== null) {
-                    result.push(action);
-                }
-            });
-            return result;
-        };
-
+		vm.findPhantoms = sharedLogic.findPhantoms;
+		vm.findEventSchedulePhantoms = sharedLogic.findEventSchedulePhantoms;
         vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
@@ -2314,15 +2141,20 @@
 
             vm.readyStatus.action_templates = false;
 
-            return uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
+            return new Promise(function (res) {
 
-                vm.actionTemplates = data.results;
+            	sharedLogic.getActionTemplates().then(function (actionTemplatesData) {
 
-                vm.readyStatus.action_templates = true;
+					vm.actionTemplatesPopupData = actionTemplatesData;
 
-                $scope.$apply();
+					vm.readyStatus.action_templates = true;
+					$scope.$apply();
 
-            })
+					res();
+
+				}).catch(function (error) {res()});
+
+			});
 
         };
 
@@ -2428,163 +2260,11 @@
             }
 
         }; */
+
 		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
+        vm.saveAsTemplate = sharedLogic.saveAsTemplate;
 
-        vm.saveAsTemplate = function ($event, type) {
-
-            $mdDialog.show({
-                controller: 'SaveAsDialogController as vm',
-                templateUrl: 'views/dialogs/save-as-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                clickOutsideToClose: false,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    data: {}
-                }
-            }).then(function (res) {
-
-
-                if (res.status === 'agree') {
-
-                    var template = {
-                        name: '',
-                        type: type,
-                        data: {}
-                    };
-
-                    template.name = res.data.name;
-
-                    if (type === 'input_template') {
-
-                        template.data.inputs = vm.entity.inputs.map(function (item) {
-
-                            return {
-                                name: item.name,
-                                verbose_name: item.verbose_name,
-                                value_type: item.value_type,
-                                content_type: item.content_type,
-                                value: item.value,
-                                value_expr: item.value_expr
-                            }
-
-                        })
-
-                    }
-
-                    if (type === 'field_template') {
-
-                        template.data.fields = {};
-
-                        Object.keys(vm.entity).forEach(function (key) {
-
-                            if (key.indexOf('user_text_') !== -1) {
-                                template.data.fields[key] = vm.entity[key];
-                            }
-
-                            if (key.indexOf('user_number_') !== -1) {
-                                template.data.fields[key] = vm.entity[key];
-                            }
-
-                            if (key.indexOf('user_date_') !== -1) {
-                                template.data.fields[key] = vm.entity[key];
-                            }
-
-                        });
-
-                    }
-
-                    if (type === 'action_template') {
-
-                        template.data.actions = vm.entity.actions.map(function (action) {
-
-                            var result = {};
-
-                            Object.keys(action).forEach(function (key) {
-
-                                if (typeof action[key] === 'object' && action[key] !== null) {
-
-                                    result[key] = {};
-
-                                    Object.keys(action[key]).forEach(function (actionItemKey) {
-
-                                        result[key][actionItemKey] = action[key][actionItemKey];
-
-                                        if (action[key].hasOwnProperty(actionItemKey + '_input')) {
-
-                                            result[key][actionItemKey + '_field_type'] = 'input';
-
-                                            if (action[key][actionItemKey + '_toggle']) {
-                                                result[key][actionItemKey + '_field_type'] = 'relation';
-                                            }
-
-                                            result[key][actionItemKey] = null; // if its relation property
-                                        }
-
-                                        if (actionItemKey.indexOf('_input') !== -1) {
-                                            result[key][actionItemKey] = null; // if its relation_input property
-                                        }
-
-                                        if (actionItemKey.indexOf('_toggle') !== -1) {
-                                            delete result[key][actionItemKey]
-                                        }
-
-                                        if (actionItemKey.indexOf('_object') !== -1) {
-                                            delete result[key][actionItemKey]
-                                        }
-
-
-                                    })
-
-
-                                } else {
-                                    result[key] = action[key];
-                                }
-
-                            });
-
-                            return result
-
-                        })
-
-                    }
-
-                    uiService.createTemplateLayout(template).then(function (data) {
-
-                        $mdDialog.show({
-                            controller: 'InfoDialogController as vm',
-                            templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: $event,
-                            clickOutsideToClose: false,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            locals: {
-                                info: {
-                                    title: 'Success',
-                                    description: "Template successfully created"
-                                }
-                            }
-                        });
-
-                        vm.getInputTemplates();
-                        vm.getFieldTemplates();
-                        vm.getActionTemplates();
-
-                    })
-
-                }
-
-            });
-
-        };
-
-        /*var updateLinkedInputsOptionsInsideGridTable = function () {
+        /* var updateLinkedInputsOptionsInsideGridTable = function () {
 
             var linkedInputsNames = vm.inputsGridTableDataService.getCellByKey('templateRow', 'linked_inputs_names');
             linkedInputsNames.settings.selectorOptions = inputsForMultiselector
@@ -2623,8 +2303,7 @@
                 onInputsGridTableRowAddition();
             });
 
-        };*/
-
+        }; */
 
         vm.recalculateUserFields = function ($event) {
 
@@ -2664,12 +2343,14 @@
 
             var getInputTemplPromise = sharedLogic.getInputTemplates();
             vm.getFieldTemplates();
-            vm.getActionTemplates();
+            var getActionsTemplPromise = vm.getActionTemplates();
 
-            Promise.all([getItemPromise, getAttrsPromise, getRefTablesPromise, getInputTemplPromise]).then(function () {
+            Promise.all([getItemPromise, getAttrsPromise, getRefTablesPromise, getInputTemplPromise, getActionsTemplPromise]).then(function () {
 
-                sharedLogic.initAfterMainDataLoaded();
-                vm.readyStatus.inputs = true;
+                var iamdlResult = sharedLogic.initAfterMainDataLoaded();
+				vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
+
+				vm.readyStatus.inputs = true;
 
             });
 
@@ -2679,115 +2360,6 @@
         };
 
         vm.init();
-
-        const some = {
-			"id": 2753,
-			"name": "account_position",
-			"verbose_name": "Account of booking",
-			"value_type": 100,
-			"reference_table": null,
-			"content_type": "accounts.account",
-			"order": 1,
-			"can_recalculate": false,
-			"value_expr": "",
-			"tooltip": "ttyp tooltip here",
-			"is_fill_from_context": false,
-			"context_property": null,
-			"value": "40",
-			"account": null,
-			"instrument_type": null,
-			"instrument": null,
-			"currency": null,
-			"counterparty": null,
-			"responsible": null,
-			"portfolio": null,
-			"strategy1": null,
-			"strategy2": null,
-			"strategy3": null,
-			"daily_pricing_model": null,
-			"payment_size_detail": null,
-			"pricing_policy": null,
-			"periodicity": null,
-			"accrual_calculation_model": null,
-			"settings": {
-				"linked_inputs_names": [
-					"test_account1",
-					"test_account2"
-				],
-				"recalc_on_change_linked_inputs": [
-					"test_account2"
-				]
-			},
-			"button_data": null,
-			"account_object": null,
-			"instrument_object": null,
-			"instrument_type_object": null,
-			"daily_pricing_model_object": null,
-			"payment_size_detail_object": null,
-			"currency_object": null,
-			"counterparty_object": null,
-			"portfolio_object": null,
-			"strategy1_object": null,
-			"strategy2_object": null,
-			"strategy3_object": null,
-			"pricing_policy_object": null,
-			"periodicity_object": null,
-			"accrual_calculation_model_object": null
-		};
-        const another = {
-			"id": 2753,
-			"name": "account_position",
-			"verbose_name": "Account of booking",
-			"value_type": 100,
-			"reference_table": null,
-			"content_type": "accounts.account",
-			"order": 1,
-			"can_recalculate": false,
-			"value_expr": "",
-			"tooltip": "ttyp tooltip here",
-			"is_fill_from_context": false,
-			"context_property": null,
-			"value": 40,
-			"account": null,
-			"instrument_type": null,
-			"instrument": null,
-			"currency": null,
-			"counterparty": null,
-			"responsible": null,
-			"portfolio": null,
-			"strategy1": null,
-			"strategy2": null,
-			"strategy3": null,
-			"daily_pricing_model": null,
-			"payment_size_detail": null,
-			"pricing_policy": null,
-			"periodicity": null,
-			"accrual_calculation_model": null,
-			"settings": {
-				"linked_inputs_names": [
-					"test_account1",
-					"test_account2"
-				],
-				"recalc_on_change_linked_inputs": [
-					"test_account2"
-				]
-			},
-			"button_data": null,
-			"account_object": null,
-			"instrument_object": null,
-			"instrument_type_object": null,
-			"daily_pricing_model_object": null,
-			"payment_size_detail_object": null,
-			"currency_object": null,
-			"counterparty_object": null,
-			"portfolio_object": null,
-			"strategy1_object": null,
-			"strategy2_object": null,
-			"strategy3_object": null,
-			"pricing_policy_object": null,
-			"periodicity_object": null,
-			"accrual_calculation_model_object": null
-		};
 
     }
 

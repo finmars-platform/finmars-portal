@@ -5,7 +5,22 @@
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
-    <div class="custom-input-main-container">
+    <div popup
+         popup-template-url="{{popupTemplate}}"
+         popup-data="menuOptionsPopupData"
+         popup-event-service="popupEventService"
+         position-relative-to="element"
+         relative-popup-x="left"
+         relative-popup-y="bottom"
+         offset-y="2"
+         open-on="click"
+         close-on-click-outside="true"
+         popup-width="element"
+         popup-classes="custom-select-popup-container mh-100vh-popup"
+         on-cancel="onMenuClose()"
+
+         class="custom-input-main-container">
+
         <div class="custom-input-borders">
             <div class="custom-input-content">
 
@@ -18,15 +33,22 @@
                         <span class="material-icons">menu</span>
                     </button>
 
-                    <input
+                    <!-- <input
                         type="text"
                         placeholder="{{placeholderText}}"
-                        data-ng-model="inputText"
-                        data-ng-model-options="{debounce: 1000}"
-                        data-ng-change="onInputTextChange()"
-                        data-ng-disabled="isDisabled"
+                        ng-model="inputText"
+                        ng-model-options="{debounce: 1000}"
+                        ng-change="onInputTextChange()"
+                        ng-disabled="isDisabled"
                         class="custom-input dropdown-select-input dropdownSelectInputElem"
-                    />
+                    /> -->
+                    <input
+                            type="text"
+                            placeholder="{{placeholderText}}"
+                            ng-model="inputText"
+                            ng-disabled="isDisabled"
+                            readonly
+                            class="custom-input dropdown-select-input dropdownSelectInputElem" />
 
                 </div>
 
@@ -34,8 +56,9 @@
 
                     <div class="custom-input-custom-btns-holder">
                         <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
-                            <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
-                                            data-ng-click="callFnForCustomBtn(button.action)">
+                            <button data-ng-repeat="button in customButtons"
+                                    class="{{button.classes}} custom-input-custom-btn"
+                                    data-ng-click="callFnForCustomBtn(button.action)">
                                 {{button.caption}}
                                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
                                                         size="24"
@@ -66,22 +89,33 @@
         </div>
     </div>
 
-    <div ng-if="dropdownMenuShown"
+    <!--<div ng-if="dropdownMenuShown"
          class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
-        <div class="custom-input-sel-menu-block">
-            <div data-ng-if="!sorted"
-                 data-ng-repeat="option in menuOptions | orderBy: '-'+option.name | filter: inputText"
-                 data-ng-click="selectOption(option)"
-                 data-ng-bind="option.name"
-                 class="custom-input-sel-option"></div>
 
-            <div data-ng-if="sorted"
-                 data-ng-repeat="option in menuOptions | filter: inputText"
-                 data-ng-click="selectOption(option)"
-                 data-ng-bind="option.name"
+        <div ng-if="!groupOptions"
+             class="custom-input-sel-menu-block">
+            <div ng-repeat="option in menuOptions | orderBy:'name':false:optionsComparator | filter: inputText"
+                 ng-click="selectOption(option)"
+                 ng-bind="option.name"
                  class="custom-input-sel-option"></div>
         </div>
-    </div>
+
+        <div ng-if="groupOptions"
+             class="custom-input-sel-menu-block">
+            <div data-ng-repeat="group in menuOptions | orderBy:'name':false:optionsComparator | filter: inputText"
+                 class="custom-input-sel-group">
+
+                <div ng-if="group.content.length">
+                    <div class="group-name" ng-bind="group.name"></div>
+                    <div ng-repeat="option in group.content | orderBy:'name':false:optionsComparator| filter: inputText"
+                         ng-click="selectOption(option)"
+                         ng-bind="option.name"
+                         class="custom-input-sel-option"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>-->
 
     <div ng-if="error"
          ng-bind="error"
