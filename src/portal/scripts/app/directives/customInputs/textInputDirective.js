@@ -322,18 +322,19 @@
 						fullTextWrapper.addEventListener("mouseleave", closeFulltext);
 						fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab);
 
-					} else {
+					}
+					else {
 
 						inputElem.addEventListener("focus", function () {
 
 							inputContainer.classList.add("custom-input-full-text-focused");
 							fullTextElem.focus();
 
-							fullTextWrapper.addEventListener("mouseleave", function () {
+							/* fullTextWrapper.addEventListener("mouseleave", function () {
 
 								fullTextElem.blur();
 
-							}, {once: true});
+							}, {once: true}); */
 
 						});
 
