@@ -50,7 +50,7 @@
         return ['price-history', 'currency-history', 'transaction', 'pricing-policy',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
             'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup',
-            'audit-transaction', 'audit-instrument'];
+            'audit-transaction', 'audit-instrument', 'generated-event'];
     };
 
     var getEntityAttrs = function (entity) {
@@ -70,6 +70,7 @@
             "pricing-policy": require('../models/pricingPolicyPropsModel').getAttributes(),
             "instrument-type": require('../models/instrumentTypePropsModel').getAttributes(),
             "instrument": require('../models/instrumentPropsModel').getAttributes(),
+            "generated-event": require('../models/generatedEventPropsModel').getAttributes(),
             "transaction": require('../models/transactionPropsModel').getAttributes(),
             "transaction-type-group": require('../models/transactionTypeGroupPropsModel').getAttributes(),
             "transaction-type": require('../models/transactionTypePropsModel').getAttributes(),

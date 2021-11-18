@@ -194,6 +194,14 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.generated-event', {
+                url: '/generated-events',
+                templateUrl: 'views/data/data-generated-event-view.html',
+                controller: 'DataGeneratedEventController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
             .state('app.portal.data.instrument-type', {
                 url: '/instrument-types',
                 templateUrl: 'views/data/data-instrument-type-view.html',
