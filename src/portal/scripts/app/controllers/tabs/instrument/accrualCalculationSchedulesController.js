@@ -357,15 +357,15 @@
                     },
                     {
                         key: 'periodicity',
-                        objPaths: [['accrual_calculation_model'], ['periodicity_n'], ['periodicity']],
+                        objPaths: [['periodicity'], ['periodicity_n'], ['accrual_calculation_model']],
                         columnName: 'Periodicity',
                         order: 3,
                         cellType: 'customPopup',
                         settings: {
                             value: [
-                                null, // for accrual_calculation_model
+								null, // for periodicity
                                 null, // for periodicity_n
-                                null // for periodicity
+								null, // for accrual_calculation_model
                             ],
                             cellText: '',
                             closeOnMouseOut: false,
@@ -374,9 +374,9 @@
                                     main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-accrual-schedules-periodicity-view.html'\"></div>"
                                 },
                                 popupData: [
-                                    {selectorOptions: vm.accrualModels},
+									{selectorOptions: vm.periodicityItems},
 									{fieldTypesData: null},
-                                    {selectorOptions: vm.periodicityItems}
+									{selectorOptions: vm.accrualModels},
                                 ]
                             }
                         },
@@ -387,11 +387,11 @@
 
 								periodicityCell.settings.cellText = '';
 
-                                if (periodicityCell.settings.value[2]) {
+                                if (periodicityCell.settings.value[0]) {
 
 									const selectedPeriodicity = vm.periodicityItems.find(item => {
 										// return item.user_code === periodicityCell.settings.value[2];
-										return item.id === periodicityCell.settings.value[2];
+										return item.id === periodicityCell.settings.value[0];
 									});
 									periodicityCell.settings.cellText = selectedPeriodicity.name
 
@@ -509,9 +509,9 @@
 				insertMultitypeFieldDataIntroCell('accrual_size', 'First payment date');
 
 				rowObj.columns[3].settings.value = [
-					schedule.accrual_calculation_model,
+					schedule.periodicity,
 					schedule.periodicity_n,
-					schedule.periodicity
+					schedule.accrual_calculation_model,
 				];
 
 				var periodicityNTypesList = JSON.parse(JSON.stringify(accrualMultitypeFieldsData['periodicity_n'].fieldTypesList));
@@ -577,32 +577,35 @@
 
 			insertMultitypeFieldDataIntroCell('accrual_size', 'Accrual size');
 
-			//<editor-fold desc="Set multitype field data for periodicity_n inside periodicity">
+			//<editor-fold desc="Periodicity column">
+
+			// Set multitype field data for periodicity_n inside periodicity
 			var periodicityNTypesList = JSON.parse(JSON.stringify(accrualMultitypeFieldsData['periodicity_n'].fieldTypesList));
 			multitypeFieldService.setActiveTypeByValueType(periodicityNTypesList, null, null);
 			periodicityNTypesList.forEach(type => type.label = 'Number of days');
 
 			var periodicityCell = gridTableHelperService.getCellFromRowByKey(templateRow, 'periodicity');
 			periodicityCell.settings.popupSettings.popupData[1].fieldTypesData = periodicityNTypesList;
-			//</editor-fold>
 
 			// Needed to update data after downloading it from server
-			var tmplRowPeriodicityPopup = vm.schedulesGridTableData.templateRow.columns[3].settings.popupSettings;
-			tmplRowPeriodicityPopup.popupData[0].selectorOptions = vm.accrualModels.map(function (aModel) {
-				return {
-					// id: aModel.user_code,
-					id: aModel.id,
-					name: aModel.name
-				}
-			});
+			var tmplRowPeriodicityPopup = periodicityCell.settings.popupSettings;
 
-			tmplRowPeriodicityPopup.popupData[2].selectorOptions = vm.periodicityItems.map(function (pItem) {
+			tmplRowPeriodicityPopup.popupData[0].selectorOptions = vm.periodicityItems.map(function (pItem) {
 				return {
 					// id: pItem.user_code,
 					id: pItem.id,
 					name: pItem.name
 				}
 			});
+
+			tmplRowPeriodicityPopup.popupData[2].selectorOptions = vm.accrualModels.map(function (aModel) {
+				return {
+					// id: aModel.user_code,
+					id: aModel.id,
+					name: aModel.name
+				}
+			});
+			//</editor-fold>
 
 			//<editor-fold desc="Assemble header columns">
 			var rowObj = metaHelper.recursiveDeepCopy(vm.schedulesGridTableData.templateRow, true);
