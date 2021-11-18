@@ -79,152 +79,48 @@
             'raw_text_result': ''
         };
 
-        if (typeof obj[column.key] === 'string') {
+        if (column.value_type === 10) {
 
             result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
             result.raw_text_result = obj[column.key];
 
-        } else {
+        }
 
-            // Works only for 1 level entities
-            // Example:
-            // For instrument_object.instrument_type_object.name it won't work
+        if (column.value_type === 20) {
 
-            if (typeof obj[column.key] === 'number') {
-
-                if (obj[column.key + '_object'] && obj[column.key + '_object'].short_name) {
-
-                    result.html_result = stringHelper.parseAndInsertHyperlinks(
-                        obj[column.key + '_object'].short_name,
-                        "class='openLinkInNewTab'"
-                    );
-
-                    result.raw_text_result = obj[column.key + '_object'].short_name;
-
-                } else if (column.key === 'complex_transaction.status') {
-
-                    if (obj[column.key] === 1) {
-                        result.html_result = 'Booked'
-                        result.raw_text_result = 'Booked'
-                    }
-
-                    if (obj[column.key] === 2) {
-                        result.html_result = 'Pending'
-                        result.raw_text_result = 'Pending'
-                    }
-
-                    if (obj[column.key] === 3) {
-                        result.html_result = 'Ignored'
-                        result.raw_text_result = 'Ignored'
-                    }
-
-                } else if (column.key === 'transaction_class') {
-
-                    // BUY = 1
-                    // SELL = 2
-                    // FX_TRADE = 3
-                    // INSTRUMENT_PL = 4
-                    // TRANSACTION_PL = 5
-                    // TRANSFER = 6
-                    // FX_TRANSFER = 7
-                    // CASH_INFLOW = 8
-                    // CASH_OUTFLOW = 9
-                    //
-                    // DEFAULT = 10
-
-                    if (obj[column.key] === 1) {
-                        result.html_result = 'Buy'
-                        result.raw_text_result = 'Buy'
-                    }
-
-                    if (obj[column.key] === 2) {
-                        result.html_result = 'Sell'
-                        result.raw_text_result = 'Sell'
-                    }
-
-                    if (obj[column.key] === 3) {
-                        result.html_result = 'FX Trade'
-                        result.raw_text_result = 'Fx Trade'
-                    }
-
-                    if (obj[column.key] === 4) {
-                        result.html_result = 'Instrument PL'
-                        result.raw_text_result = 'Instrument PL'
-                    }
-
-                    if (obj[column.key] === 5) {
-                        result.html_result = 'Transaction PL'
-                        result.raw_text_result = 'Transaction PL'
-                    }
-
-                    if (obj[column.key] === 6) {
-                        result.html_result = 'Transfer'
-                        result.raw_text_result = 'Transfer'
-                    }
-
-                    if (obj[column.key] === 7) {
-                        result.html_result = 'FX Transfer'
-                        result.raw_text_result = 'FX Transfer'
-                    }
-
-                    if (obj[column.key] === 8) {
-                        result.html_result = 'Cash Inflow'
-                        result.raw_text_result = 'Cash Inflow'
-                    }
-
-                    if (obj[column.key] === 9) {
-                        result.html_result = 'Cash Outflow'
-                        result.raw_text_result = 'Cash Outflow'
-                    }
-
-                    if (obj[column.key] === 10) {
-                        result.html_result = 'Default'
-                        result.raw_text_result = 'Default'
-                    }
-
-                    if (obj[column.key] === 11) {
-                        result.html_result = 'Placeholder'
-                        result.raw_text_result = 'Placeholder'
-                    }
-
-                } else {
-
-                    result.html_result = renderHelper.formatValue(obj, column);
-                    result.numeric_result = obj[column.key];
-                    // result.raw_text_result = renderHelper.formatValue(obj, column); // Twice process format?
-                    result.raw_text_result = result.html_result;
-
-                }
-
-            } else {
-
-                if (Array.isArray(obj[column.key])) {
-
-                    result.html_result = '[' + obj[column.key].length + ']';
-                    result.raw_text_result = '[' + obj[column.key].length + ']';
-
-                } else {
-
-                    if (typeof obj[column.key] === 'boolean') {
-
-                        if (obj[column.key]) {
-
-                            result.html_result = 'True'
-                            result.raw_text_result =  'True'
-
-                        } else {
-                            result.html_result = 'False'
-                            result.raw_text_result =  'False'
-                        }
-
-                    }
-
-                }
-
-            }
+            result.html_result = renderHelper.formatValue(obj, column);
+            result.numeric_result = obj[column.key];
+            // result.raw_text_result = renderHelper.formatValue(obj, column); // Twice process format?
+            result.raw_text_result = result.html_result;
 
         }
 
+        if (column.value_type === 40) {
+
+            result.html_result = obj[column.key];
+            result.raw_text_result = obj[column.key];
+
+        }
+
+        if (column.value_type === 60) {
+            if (obj[column.key]) {
+
+                result.html_result = 'True'
+                result.raw_text_result =  'True'
+
+            } else {
+                result.html_result = 'False'
+                result.raw_text_result =  'False'
+            }
+        }
+
+        if (Array.isArray(obj[column.key])) {
+
+            result.html_result = '[' + obj[column.key].length + ']';
+            result.raw_text_result = '[' + obj[column.key].length + ']';
+
+        }
+        
         return result;
 
     };
