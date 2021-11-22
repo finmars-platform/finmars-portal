@@ -30,6 +30,8 @@
 
     var metaHelper = require('../../helpers/meta.helper');
 
+	var EventService = require("../../services/eventService");
+
     var GridTableDataService = require('../../services/gridTableDataService');
     var GridTableEventService = require('../../services/gridTableEventService');
 
@@ -1067,42 +1069,9 @@
         };*/
         vm.resolveRelation = sharedLogic.resolveRelation;
 
-        vm.updateInputFunctions = function () {
-
-            /*vm.inputsGroup = {
-                "name": "<b>Inputs</b>",
-                "key": 'input'
-            };*/
-            vm.expressionData.groups[0] = {
-                "name": "<b>Inputs</b>",
-                "key": 'input'
-            }
-
-            if (vm.entity.inputs && vm.entity.inputs.length > 0) {
-
-                //vm.inputsFunctions = vm.entity.inputs.map(function (input) {
-                vm.expressionData.functions[0] = vm.entity.inputs.map(function (input) {
-
-                    return {
-                        "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                        "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
-                        "groups": "input",
-                        "func": input.name
-                    }
-
-                });
-
-            } else {
-
-                vm.expressionData.functions = []
-
-            }
-
-        };
-
         vm.saveItem = function (item) {
 
-            sharedLogic.updateInputFunctions();
+			vm.expressionData = sharedLogic.updateInputFunctions();
 
             item.editStatus = false;
         };
@@ -1797,37 +1766,6 @@
         vm.moveDown = sharedLogic.moveDown;
         vm.moveUp = sharedLogic.moveUp;
 
-        vm.resolveInstrumentProp = function (item, key, prop) {
-
-            if (prop === 'instrument') {
-                if (item[key].instrument_input !== null) {
-                    return 'instrument_input'
-                }
-                return 'instrument_phantom'
-            }
-
-            if (prop === 'linked_instrument') {
-                if (item[key].linked_instrument_input !== null) {
-                    return 'linked_instrument_input'
-                }
-                return 'linked_instrument_phantom'
-            }
-            if (prop === 'allocation_pl') {
-                if (item[key].allocation_pl_input !== null) {
-                    return 'allocation_pl_input'
-                }
-                return 'allocation_pl_phantom'
-            }
-
-            if (prop === 'allocation_balance') {
-                if (item[key].allocation_balance_input !== null) {
-                    return 'allocation_balance_input'
-                }
-                return 'allocation_balance_phantom'
-            }
-
-        };
-
         /* vm.setTransactionInstrumentInput = function (item, name, prop) {
 
             if (prop == 'instrument') {
@@ -2305,6 +2243,8 @@
                 vm.dialogElemToResize = document.querySelector('.ttypeCreationElemToDrag');
             });
 
+			vm.actionsMFEventService = new EventService();
+
             vm.inputsGridTableDataService = new GridTableDataService();
             vm.inputsGridTableEventService = new GridTableEventService();
 
@@ -2330,7 +2270,7 @@
             vm.getFieldTemplates();
             vm.getActionTemplates();
 
-            sharedLogic.updateInputFunctions();
+			vm.expressionData = sharedLogic.updateInputFunctions();
 
             var allDataPromises = [
                 attrsProm,

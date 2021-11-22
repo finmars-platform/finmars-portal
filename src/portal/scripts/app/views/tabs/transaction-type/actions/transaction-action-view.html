@@ -53,6 +53,7 @@
                 <multitype-field label="Portfolio"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].portfolio"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('portfolio', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('portfolio', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -95,6 +96,7 @@
                 <multitype-field label="Settlement currency"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].settlement_currency"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('settlement_currency', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('settlement_currency', item, $index, 'transaction')"
                                  class="ttype-action-input p-l-0"></multitype-field>
@@ -132,6 +134,7 @@
                 <multitype-field label="Transaction currency"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].transaction_currency"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('transaction_currency', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('transaction_currency', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -187,6 +190,7 @@
                     <multitype-field label="Instrument"
                                      field-types-data="vm.actionsMultitypeFieldsList[$index].instrument"
                                      is-disabled="vm.isRelationInputFieldDisabled()"
+                                     event-service="vm.actionsMFEventService"
                                      on-value-change="vm.onMultitypeFieldValChange('instrument', item, $index, 'transaction')"
                                      on-type-change="vm.onActionMultitypeFieldToggle('instrument', item, $index, 'transaction')"
                                      class="ttype-action-input"></multitype-field>
@@ -386,6 +390,7 @@
                 <multitype-field label="Account position"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].account_position"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('account_position', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('account_position', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -448,6 +453,7 @@
                 <multitype-field label="Account cash"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].account_cash"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('account_cash', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('account_cash', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -494,6 +500,7 @@
                 <multitype-field label="Account interim"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].account_interim"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('account_interim', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('account_interim', item, $index, 'transaction')"
                                  class="ttype-action-input p-r-0"></multitype-field>
@@ -551,6 +558,7 @@
                     <multitype-field label="Linked instrument"
                                      field-types-data="vm.actionsMultitypeFieldsList[$index].linked_instrument"
                                      is-disabled="vm.isRelationInputFieldDisabled()"
+                                     event-service="vm.actionsMFEventService"
                                      on-value-change="vm.onMultitypeFieldValChange('linked_instrument', item, $index, 'transaction')"
                                      on-type-change="vm.onActionMultitypeFieldToggle('linked_instrument', item, $index, 'transaction')"
                                      class="ttype-action-input"></multitype-field>
@@ -605,6 +613,7 @@
                     <multitype-field label="Allocation-P&L"
                                      field-types-data="vm.actionsMultitypeFieldsList[$index].allocation_pl"
                                      is-disabled="vm.isRelationInputFieldDisabled()"
+                                     event-service="vm.actionsMFEventService"
                                      on-value-change="vm.onMultitypeFieldValChange('allocation_pl', item, $index, 'transaction')"
                                      on-type-change="vm.onActionMultitypeFieldToggle('allocation_pl', item, $index, 'transaction')"
                                      class="ttype-action-input"></multitype-field>
@@ -659,6 +668,7 @@
                     <multitype-field label="Allocation-Balance"
                                      field-types-data="vm.actionsMultitypeFieldsList[$index].allocation_balance"
                                      is-disabled="vm.isRelationInputFieldDisabled()"
+                                     event-service="vm.actionsMFEventService"
                                      on-value-change="vm.onMultitypeFieldValChange('allocation_balance', item, $index, 'transaction')"
                                      on-type-change="vm.onActionMultitypeFieldToggle('allocation_balance', item, $index, 'transaction')"
                                      class="ttype-action-input p-r-0"></multitype-field>
@@ -701,6 +711,7 @@
                 <multitype-field label="Strategy1 position"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].strategy1_position"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('strategy1_position', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('strategy1_position', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -734,6 +745,7 @@
                 <multitype-field label="Strategy2 position"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].strategy2_position"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('strategy2_position', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('strategy2_position', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -766,6 +778,7 @@
                 <multitype-field label="Strategy3 position"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].strategy3_position"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('strategy3_position', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('strategy3_position', item, $index, 'transaction')"
                                  class="ttype-action-input p-r-0"></multitype-field>
@@ -802,6 +815,7 @@
                 <multitype-field label="Strategy1 cash"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].strategy1_cash"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('strategy1_cash', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('strategy1_cash', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -835,6 +849,7 @@
                 <multitype-field label="Strategy2 cash"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].strategy2_cash"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('strategy2_cash', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('strategy2_cash', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -868,6 +883,7 @@
                 <multitype-field label="Strategy3 cash"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].strategy3_cash"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('strategy3_cash', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('strategy3_cash', item, $index, 'transaction')"
                                  class="ttype-action-input p-r-0"></multitype-field>
@@ -905,6 +921,7 @@
                 <multitype-field label="Counterparty"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].counterparty"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('counterparty', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('counterparty', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>
@@ -940,6 +957,7 @@
                 <multitype-field label="Responsible"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].responsible"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('responsible', item, $index, 'transaction')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('responsible', item, $index, 'transaction')"
                                  class="ttype-action-input"></multitype-field>

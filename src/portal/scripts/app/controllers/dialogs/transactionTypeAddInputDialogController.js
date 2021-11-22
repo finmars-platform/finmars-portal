@@ -12,7 +12,6 @@
         vm.fillFromContext = data.fillFromContext
         vm.defaultValue = data.defaultValue
         vm.relationItems = data.relationItems
-		// console.log("testing.ttypeAddInput data", data);
         vm.valueTypeOptions = data.valueTypeOptions
         vm.contentTypeOptions = []
         vm.textEventSignal = {}

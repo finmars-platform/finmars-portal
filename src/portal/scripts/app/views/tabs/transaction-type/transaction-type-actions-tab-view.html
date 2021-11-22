@@ -1,5 +1,5 @@
 <div>
-    <div class="transaction-type-actions-tab-view">
+    <div class="transaction-type-actions-tab-view transaction-type-actions-wrapper">
         <v-accordion class="vAccordion-type1" multiple control="vm.accordion">
 
             <v-pane data-ng-repeat="item in vm.entity.actions track by $index" expanded="item.isPaneExpanded">
@@ -57,7 +57,9 @@
                             </md-button>
                         </div>
                     </div> -->
-                    <div class="accordion-header-content flex-row fc-space-between fi-center"
+
+                    <div ng-include="'views/tabs/transaction-type/transaction-type-action-accordion-header-view.html'"></div>
+                    <!-- <div class="accordion-header-content flex-row fc-space-between fi-center"
                          ng-click="vm.toggleItem($pane, item, $event)">
 
                         <div class="flex-row fi-center p-l-24">
@@ -116,7 +118,7 @@
                                 <span class="material-icons">more_vert</span>
                             </button>
                         </div>
-                    </div>
+                    </div> -->
                 </v-pane-header>
 
                 <v-pane-content class="transaction-type-actions-fields" ng-class="{'p-t-10': $pane.isExpanded()}">

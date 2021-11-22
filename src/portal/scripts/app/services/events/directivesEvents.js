@@ -15,4 +15,8 @@ module.exports = {
 	'CLASSIFIER_TREE_CHANGED': 'CLASSIFIER_TREE_CHANGED',
 	//endregion
 
+	//region multitypeFieldDirective
+	'FIELD_TYPES_DATA_CHANGED': 'FIELD_TYPES_DATA_CHANGED',
+	//endregion
+
 };
