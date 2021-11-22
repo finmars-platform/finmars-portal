@@ -9,6 +9,7 @@
 
 	const uiService = require('../../../services/uiService');
 	const gridTableEvents = require('../../../services/gridTableEvents');
+	const directiveEvents = require('../../../services/events/directivesEvents');
 
 	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
 	const helpExpressionsService = require('../../../services/helpExpressionsService');
@@ -143,6 +144,8 @@
                 viewModel.expressionData.functions = []
 
             }
+
+            return viewModel.expressionData;
 
         };
 
@@ -292,7 +295,7 @@
 		 */
 		const insertActions = function (actions) {
 
-        	if (Array.isArray(actions)) {
+        	if (Array.isArray(actions)) { // add multiple actions
 
 				actions.forEach(function (action) {
 
@@ -303,7 +306,7 @@
 
 				})
 
-			} else {
+			} else { // add single action
 
         		viewModel.entity.actions.push(actions);
 
@@ -316,9 +319,76 @@
 
 		};
 
+		var actionFieldsByType = {
+			'transaction': [
+				'account_cash', 'account_cash_input', 'account_interim',
+				'account_interim_input', 'account_position', 'account_position_input',
+				'accounting_date', 'allocation_balance', 'allocation_balance_input',
+				'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
+				'allocation_pl_phantom', 'carry_with_sign', 'cash_consideration', 'cash_date',
+				'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
+				'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes',
+				'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_size_with_sign',
+				'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
+				'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
+				'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
+				'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
+				'strategy3_position', 'strategy3_position_input', 'trade_price', 'transaction_class', 'transaction_currency',
+				'transaction_currency_input'
+			],
+			'instrument': [
+				'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
+				'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
+				'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
+				'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
+				'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
+				'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
+				'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
+			'instrument_accrual_calculation_schedules': [
+				'accrual_calculation_model', 'accrual_calculation_model_input', 'accrual_size', 'accrual_start_date',
+				'first_payment_date', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'periodicity',
+				'periodicity_input', 'periodicity_n'
+			],
+			'instrument_event_schedule': [
+				'description', 'effective_date', 'event_class', 'event_class_input', 'final_date', 'instrument',
+				'instrument_input', 'instrument_phantom', 'is_auto_generated', 'name', 'notification_class',
+				'notification_class_input', 'notify_in_n_days', 'periodicity', 'periodicity_input', 'periodicity_input'
+			],
+			'instrument_event_schedule_action': [
+				'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
+				'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
+			],
+			'instrument_manual_pricing_formula': [
+				'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
+			],
+			'instrument_factor_schedule': [
+				'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
+			],
+			'execute_command': [
+				'expr'
+			]
+		};
+
+		const createNewAction = actionType => {
+
+			var actionToAdd = {
+				isPaneExpanded: true
+			};
+
+			actionToAdd[actionType] = {};
+
+			actionFieldsByType[actionType].forEach(function (key) {
+				actionToAdd[actionType][key] = null;
+			});
+
+			return actionToAdd;
+
+		};
+
         const addAction = function (actionType) {
 
-        	viewModel.accordion.collapseAll();
+			viewModel.accordion.collapseAll();
+        	/* viewModel.accordion.collapseAll();
 
 			var result = {
 				isPaneExpanded: true
@@ -379,7 +449,7 @@
 
 			fields[actionType].forEach(function (key) {
 				result[actionType][key] = null;
-			});
+			}); */
 
 			/*viewModel.entity.actions.push(result);
 
@@ -387,6 +457,8 @@
 			viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
 
 			viewModel.paneActionsMenuPopups = createSelectorPopupDataListForActions();*/
+			var result = createNewAction(actionType);
+
 			insertActions(result);
 
 			findPhantoms();
@@ -989,19 +1061,26 @@
             // if there is is_fill_from_context, enable it
             var fillFromContext = gridTableHelperService.getCellFromRowByKey(newRow, 'is_fill_from_context');
             if (fillFromContext.settings.value) {
-                newInput.is_fill_from_context = true
+                newInput.is_fill_from_context = true;
             }
 
             viewModel.entity.inputs.unshift(newInput);
 
             viewModel.entity.inputs.forEach(function (input, iIndex) {
-                viewModel.inputsGridTableData.body[iIndex].order = iIndex
+                viewModel.inputsGridTableData.body[iIndex].order = iIndex;
             })
 
             onInputsGridTableCellChange(newRow.key);
 
             getInputsForLinking();
             updateLinkedInputsOptionsInsideGridTable();
+
+            viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions); // update options for selectors of instrument inputs
+			setTimeout(function () {
+				$scope.$apply();
+				viewModel.actionsMFEventService.dispatchEvent(directiveEvents.FIELD_TYPES_DATA_CHANGED);
+			}, 0);
+
 
         };
 
@@ -1232,7 +1311,8 @@
                     }
                 }
 
-            }).then(function (res) {
+            })
+			.then(function (res) {
 
                 if (res.status === 'agree') {
 
@@ -1242,7 +1322,7 @@
                         var inputName = nameCell.settings.value;
 
                         viewModel.entity.inputs.splice(sRow.order, 1);
-                        updateInputFunctions();
+						viewModel.expressionData = updateInputFunctions();
 
                         gtDataService.deleteRows(sRow);
 
@@ -1253,7 +1333,15 @@
                     getInputsForLinking();
                     updateLinkedInputsOptionsInsideGridTable();
 
-                    // removeInputsFromLinkedInputs();
+					viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions); // update options for selectors of instrument inputs
+					// console.log("testing actionsMultitypeFieldsList after delete", viewModel.actionsMultitypeFieldsList);
+					setTimeout(function () {
+						$scope.$apply();
+						viewModel.actionsMFEventService.dispatchEvent(directiveEvents.FIELD_TYPES_DATA_CHANGED);
+					}, 0);
+
+
+					// removeInputsFromLinkedInputs();
                     gtEventService.dispatchEvent(gridTableEvents.ROW_SELECTION_TOGGLED);
 
                     // $scope.$apply();
@@ -1289,7 +1377,8 @@
                     }
                 }
 
-            }).then(function (res) {
+            })
+			.then(function (res) {
 
                 if (res.status === 'agree') {
 
@@ -1339,9 +1428,7 @@
                 onInputsGridTableCellChange(argumentsObj.row.key);
             });
 
-            viewModel.inputsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
-                onInputsGridTableRowAddition();
-            });
+            viewModel.inputsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, onInputsGridTableRowAddition);
 
         };
 
@@ -1631,8 +1718,14 @@
 
 		const loadEcosystemDefaults = function () {
 
-        	ecosystemDefaultService.getList().then(function (data) {
-				ecosystemDefaultData = data.results[0];
+        	return new Promise((resolve, reject) => {
+
+        		ecosystemDefaultService.getList().then(function (data) {
+					ecosystemDefaultData = data.results[0];
+					resolve();
+
+        		}).catch(error => reject(error));
+
 			});
 
 		};
@@ -1668,6 +1761,10 @@
 		};
 
 		const findInputs = function (entity) {
+			// console.log("testing.findInputs entity", entity);
+			if (!viewModel.entity) { // if this method was fired outside of add / edit ttype
+				return [];
+			}
 
 			var content_type = '';
 			var result;
@@ -1679,7 +1776,7 @@
 				}
 
 			}
-
+			// console.log("testing.findInputs inputs", content_type, JSON.parse(JSON.stringify(viewModel.entity.inputs)));
 			result = viewModel.entity.inputs.filter(function (input) {
 				if (input.content_type === content_type) {
 					return true;
@@ -1691,7 +1788,7 @@
 			result = result.map(function (input) {
 				return {id: input.name, name: input.name};
 			});
-
+			// console.log("testing.findInputs result", result);
 			return result;
 
 		};
@@ -1754,14 +1851,17 @@
 
 		};
 
-		const findInputsAndPhantoms = function (entity, phantomsList) {
+		const findInputsAndPhantoms = function (entityType, phantomsList) {
 
-			if (!phantomsList) phantomsList = findPhantoms();
+			if (!phantomsList) {
+				// check bellow needed in case of this method was fired outside of add / edit ttype
+				phantomsList = (viewModel.entity && viewModel.entity.actions) ? findPhantoms() : [];
+			}
 
 			return [
 				{
 					name: 'Inputs',
-					content: findInputs(entity)
+					content: findInputs(entityType)
 				},
 				{
 					name: 'Phantoms',
@@ -1949,6 +2049,8 @@
 				}
 			];
 
+			const currencyInputs = findInputs('currency');
+
 			multitypeFieldsData.settlement_currency = [
 				{
 					'key': 'input',
@@ -1960,7 +2062,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('currency')
+						'menuOptions': currencyInputs
 					}
 				},
 				{
@@ -1991,7 +2093,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('currency')
+						'menuOptions': currencyInputs
 					}
 				},
 				{
@@ -2011,10 +2113,12 @@
 				}
 			];
 
+			const inputsPhantomsForInstr = findInputsAndPhantoms('instrument');
+
 			multitypeFieldsData.instrument = [
 				{
 					'key': 'input',
-					'model': action.transaction[viewModel.resolveInstrumentProp(action, 'transaction', 'instrument')],
+					'model': action.transaction[resolveInstrumentProp(action, 'transaction', 'instrument')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': !!!action.transaction.instrument_toggle,
@@ -2022,7 +2126,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputsAndPhantoms('instrument'),
+						'menuOptions': inputsPhantomsForInstr,
 						'groupOptions': true
 					}
 				},
@@ -2042,6 +2146,8 @@
 				}
 			];
 
+			const accountInputs = findInputs('account');
+
 			multitypeFieldsData.account_position = [
 				{
 					'key': 'input',
@@ -2053,7 +2159,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('account')
+						'menuOptions': accountInputs
 					}
 				},
 				{
@@ -2083,7 +2189,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('account')
+						'menuOptions': accountInputs
 					}
 				},
 				{
@@ -2113,7 +2219,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('account')
+						'menuOptions': accountInputs
 					}
 				},
 				{
@@ -2135,7 +2241,7 @@
 			multitypeFieldsData.linked_instrument = [
 				{
 					'key': 'input',
-					'model': action.transaction[viewModel.resolveInstrumentProp(action, 'transaction', 'linked_instrument')],
+					'model': action.transaction[resolveInstrumentProp(action, 'transaction', 'linked_instrument')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': !!!action.transaction.linked_instrument_toggle,
@@ -2143,7 +2249,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputsAndPhantoms('instrument'),
+						'menuOptions': inputsPhantomsForInstr,
 						'groupOptions': true
 					}
 				},
@@ -2166,7 +2272,7 @@
 			multitypeFieldsData.allocation_pl = [
 				{
 					'key': 'input',
-					'model': action.transaction[viewModel.resolveInstrumentProp(action, 'transaction', 'allocation_pl')],
+					'model': action.transaction[resolveInstrumentProp(action, 'transaction', 'allocation_pl')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': !!!action.transaction.allocation_pl_toggle,
@@ -2174,7 +2280,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputsAndPhantoms('instrument'),
+						'menuOptions': inputsPhantomsForInstr,
 						'groupOptions': true
 					}
 				},
@@ -2197,7 +2303,7 @@
 			multitypeFieldsData.allocation_balance = [
 				{
 					'key': 'input',
-					'model': action.transaction[viewModel.resolveInstrumentProp(action, 'transaction', 'allocation_balance')],
+					'model': action.transaction[resolveInstrumentProp(action, 'transaction', 'allocation_balance')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': !!!action.transaction.allocation_balance_toggle,
@@ -2205,7 +2311,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputsAndPhantoms('instrument'),
+						'menuOptions': inputsPhantomsForInstr,
 						'groupOptions': true
 					}
 				},
@@ -2225,6 +2331,10 @@
 				}
 			];
 
+			const strategy1Inputs = findInputs('strategy-1');
+			const strategy2Inputs = findInputs('strategy-2');
+			const strategy3Inputs = findInputs('strategy-3');
+
 			multitypeFieldsData.strategy1_position = [
 				{
 					'key': 'input',
@@ -2236,7 +2346,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('strategy-1')
+						'menuOptions': strategy1Inputs
 					}
 				},
 				{
@@ -2266,7 +2376,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('strategy-2')
+						'menuOptions': strategy2Inputs
 					}
 				},
 				{
@@ -2296,7 +2406,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('strategy-3')
+						'menuOptions': strategy3Inputs
 					}
 				},
 				{
@@ -2326,7 +2436,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('strategy-1')
+						'menuOptions': strategy1Inputs
 					}
 				},
 				{
@@ -2356,7 +2466,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('strategy-2')
+						'menuOptions': strategy2Inputs
 					}
 				},
 				{
@@ -2386,7 +2496,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('strategy-3')
+						'menuOptions': strategy3Inputs
 					}
 				},
 				{
@@ -2528,6 +2638,8 @@
 				}
 			];
 
+			const currencyInputs = findInputs('currency');
+
 			multitypeFieldsData.pricing_currency = [
 				{
 					'key': 'input',
@@ -2539,7 +2651,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('currency')
+						'menuOptions': currencyInputs
 					}
 				},
 				{
@@ -2570,7 +2682,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('currency')
+						'menuOptions': currencyInputs
 					}
 				},
 				{
@@ -2694,7 +2806,7 @@
 			multitypeFieldsData.instrument = [
 				{
 					'key': 'input',
-					'model': action.instrument_factor_schedule[viewModel.resolveInstrumentProp(action, 'instrument_factor_schedule', 'instrument')],
+					'model': action.instrument_factor_schedule[resolveInstrumentProp(action, 'instrument_factor_schedule', 'instrument')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': !!!action.instrument_factor_schedule.instrument_toggle,
@@ -2733,7 +2845,7 @@
 			multitypeFieldsData.instrument = [
 				{
 					'key': 'input',
-					'model': action.instrument_manual_pricing_formula[viewModel.resolveInstrumentProp(action, 'instrument_manual_pricing_formula', 'instrument')],
+					'model': action.instrument_manual_pricing_formula[resolveInstrumentProp(action, 'instrument_manual_pricing_formula', 'instrument')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': !!!action.instrument_manual_pricing_formula.instrument_toggle,
@@ -2805,7 +2917,7 @@
 			multitypeFieldsData.instrument = [
 				{
 					'key': 'input',
-					'model': action.instrument_accrual_calculation_schedules[viewModel.resolveInstrumentProp(action, 'instrument_accrual_calculation_schedules', 'instrument')],
+					'model': action.instrument_accrual_calculation_schedules[resolveInstrumentProp(action, 'instrument_accrual_calculation_schedules', 'instrument')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': !!!action.instrument_accrual_calculation_schedules.instrument_toggle,
@@ -2907,10 +3019,12 @@
 
 			let multitypeFieldsData = {};
 
+			const toggled = !!!action.instrument_event_schedule.instrument_toggle;
+
 			multitypeFieldsData.instrument = [
 				{
 					'key': 'input',
-					'model': action.instrument_event_schedule[viewModel.resolveInstrumentProp(action, 'instrument_event_schedule', 'instrument')],
+					'model': action.instrument_event_schedule[resolveInstrumentProp(action, 'instrument_event_schedule', 'instrument')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': !!!action.instrument_event_schedule.instrument_toggle,
@@ -3068,12 +3182,23 @@
 			return multitypeFieldsData;
 
 		};
-
-		const createDataForMultitypeFieldsList = function () {
+		/**
+		 *
+		 * @param actions {Array} - transaction type actions list
+		 * @returns {Array<Object>} - list of data's for multitype fields inside actions
+		 */
+		const createDataForMultitypeFieldsList = function (actions) {
 
 			let actionsMultitypeFieldsList = [];
 
-			viewModel.entity.actions.forEach(function (action) {
+			/* viewModel.entity.actions.forEach(function (action) {
+
+				const multitypeFieldsData = getMultitypeFieldsDataForAction(action);
+
+				actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+			}); */
+			actions.forEach(function (action) {
 
 				const multitypeFieldsData = getMultitypeFieldsDataForAction(action);
 
@@ -3151,7 +3276,7 @@
 
 			viewModel.findPhantoms();
 
-			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList();
+			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
 		};
 
@@ -3166,7 +3291,38 @@
 
 			viewModel.findPhantoms();
 
-			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList();
+			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
+
+		};
+
+		const resolveInstrumentProp = (item, key, prop) => {
+
+			if (prop === 'instrument') {
+				if (item[key].instrument_input !== null) {
+					return 'instrument_input'
+				}
+				return 'instrument_phantom'
+			}
+
+			if (prop === 'linked_instrument') {
+				if (item[key].linked_instrument_input !== null) {
+					return 'linked_instrument_input'
+				}
+				return 'linked_instrument_phantom'
+			}
+			if (prop === 'allocation_pl') {
+				if (item[key].allocation_pl_input !== null) {
+					return 'allocation_pl_input'
+				}
+				return 'allocation_pl_phantom'
+			}
+
+			if (prop === 'allocation_balance') {
+				if (item[key].allocation_balance_input !== null) {
+					return 'allocation_balance_input'
+				}
+				return 'allocation_balance_phantom'
+			}
 
 		};
 
@@ -3226,7 +3382,7 @@
 
             createDataForInputsGridTable();
 
-			result.actionsMultitypeFieldsList = createDataForMultitypeFieldsList();
+			result.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
 			return result;
 
@@ -3236,7 +3392,7 @@
 		 * @param actionData {Object} - ttype action
 		 * @param actionType {string} - can be 'transaction', 'instrument', 'instrument_event_schedule' ...
 		 * @param fieldName {string}
-		 * @param relationSelData {Object} - data for relation selector inside multitype field
+		 * @param relationSelData {=Object} - data for relation selector inside multitype field
 		 */
 		const setDefaultValueForRelation = function (actionData, actionType, fieldName, relationSelData) {
 
@@ -3570,7 +3726,7 @@
 
 										action[key][actionItemKey + '_toggle'] = true;
 
-										setDefaultValueForRelation(action, key, actionItemKey, );
+										setDefaultValueForRelation(action, key, actionItemKey);
 
 										delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
 									}
@@ -3605,8 +3761,8 @@
 			getActionTemplates: getActionTemplates,
 			findPhantoms: findPhantoms,
 			findEventSchedulePhantoms: findEventSchedulePhantoms,
-			createDataForMultitypeFieldsList: createDataForMultitypeFieldsList,
 
+			createNewAction: createNewAction,
 			generateOperationPopupData: generateOperationPopupData,
 			generateInstrumentOperationPopupData: generateInstrumentOperationPopupData,
 
@@ -3626,11 +3782,16 @@
 			createSelectorPopupDataListForActions: createSelectorPopupDataListForActions,
 			moveDown: moveDown,
 			moveUp: moveUp,
+			resolveInstrumentProp: resolveInstrumentProp,
+
+			getMultitypeFieldsDataForAction: getMultitypeFieldsDataForAction,
+			createDataForMultitypeFieldsList: createDataForMultitypeFieldsList,
 			onActionMultitypeFieldToggle: onActionMultitypeFieldToggle,
 			onMultitypeFieldValChange: onMultitypeFieldValChange,
 
 			saveAsTemplate: saveAsTemplate,
 			appendFromTemplate: appendFromTemplate,
+			setDefaultValueForRelation: setDefaultValueForRelation,
             initAfterMainDataLoaded: initAfterMainDataLoaded
         }
 

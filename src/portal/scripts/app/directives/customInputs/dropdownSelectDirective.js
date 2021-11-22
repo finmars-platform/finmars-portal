@@ -72,7 +72,7 @@
 
 							itemName = item.name;
 							scope.inputText = item.name;
-							// console.log("testing inputText", scope.inputText);
+
 							setTimeout(function () {
 
 								if (scope.onChangeCallback) scope.onChangeCallback();
@@ -383,9 +383,7 @@
 
                 	/* IMPORTANT: item name watcher should be called before model watcher. */
 					scope.$watch('itemName', function () {
-						/*if (scope.label === 'Transaction class') {
-							console.log("testing itemName i", scope.itemName);
-						}*/
+
 						if (scope.itemName) {
 							// itemName = scope.itemName;
 							scope.inputText = itemName;
@@ -394,9 +392,7 @@
 							// itemName = '';
 							scope.inputText = '';
 						}
-						/*if (scope.label === 'Transaction class') {
-							console.log("testing itemName 2", scope.inputText);
-						}*/
+
 					});
 
                     scope.$watch('model', function () {

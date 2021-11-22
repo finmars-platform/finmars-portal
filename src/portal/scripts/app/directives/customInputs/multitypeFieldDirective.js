@@ -1,6 +1,8 @@
 (function () {
 	"use strict";
 
+	const directiveEvents = require("../../services/events/directivesEvents");
+
 	module.exports = function () {
 		return {
 			restrict: "E",
@@ -28,6 +30,7 @@
 				enteredValue: '<', // object {model: "entered into field value", type: "selected type"}
 				typeSwitch: '@', // 'button', 'selector'. Default - button.
 				isDisabled: '=',
+				eventService: '=',
 
 				onTypeChange: '&?',
 				onValueChange: '&?',
@@ -38,6 +41,25 @@
 				scope.readyStatus = false;
 
 				if (!scope.typeSwitch) scope.typeSwitch = 'button';
+
+				scope.getInputContainerClasses = function () {
+
+					var classes = '';
+
+					if (scope.isDisabled) {
+						classes += "custom-input-is-disabled";
+
+					} else if (scope.error) {
+						classes = 'custom-input-error';
+					}
+
+					if (scope.noIndicatorBtn) {
+						classes += " no-indicator-btn";
+					}
+
+					return classes;
+
+				};
 
 				scope.getLabel = function () {
 
@@ -114,7 +136,17 @@
 					</div>
 				</div>`;
 
+				if (scope.eventService) {
+
+					scope.eventService.addEventListener(directiveEvents.FIELD_TYPES_DATA_CHANGED, function () {
+						init();
+					});
+
+				}
+
 				const init = function () {
+
+					scope.readyStatus = false;
 
 					// IMPORTANT: helps to understand that error occured inside multitypeFieldDirecitve
 					if (!Array.isArray(scope.fieldTypesData) || !scope.fieldTypesData.length) {

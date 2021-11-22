@@ -29,6 +29,8 @@
     var uiService = require('../../services/uiService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+    var EventService = require("../../services/eventService");
+
     var GridTableDataService = require('../../services/gridTableDataService');
     var GridTableEventService = require('../../services/gridTableEventService');
 
@@ -313,7 +315,7 @@
 
                     vm.entity = data;
 
-                    sharedLogic.updateInputFunctions();
+                    vm.expressionData = sharedLogic.updateInputFunctions();
                     /* vm.expressionData.groups[0] = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
@@ -1966,37 +1968,6 @@
 		vm.moveDown = sharedLogic.moveDown;
 		vm.moveUp = sharedLogic.moveUp;
 
-        vm.resolveInstrumentProp = function (item, key, prop) {
-
-            if (prop === 'instrument') {
-                if (item[key].instrument_input !== null) {
-                    return 'instrument_input'
-                }
-                return 'instrument_phantom'
-            }
-
-            if (prop === 'linked_instrument') {
-                if (item[key].linked_instrument_input !== null) {
-                    return 'linked_instrument_input'
-                }
-                return 'linked_instrument_phantom'
-            }
-            if (prop === 'allocation_pl') {
-                if (item[key].allocation_pl_input !== null) {
-                    return 'allocation_pl_input'
-                }
-                return 'allocation_pl_phantom'
-            }
-
-            if (prop === 'allocation_balance') {
-                if (item[key].allocation_balance_input !== null) {
-                    return 'allocation_balance_input'
-                }
-                return 'allocation_balance_phantom'
-            }
-
-        };
-
         /* vm.setTransactionInstrumentInput = function (item, name, prop) {
 
             if (prop == 'instrument') {
@@ -2322,6 +2293,8 @@
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.ttypeEditorElemToDrag');
             });
+
+            vm.actionsMFEventService = new EventService();
 
             vm.inputsGridTableDataService = new GridTableDataService();
             vm.inputsGridTableEventService = new GridTableEventService();
