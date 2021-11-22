@@ -29,6 +29,8 @@
                 return 'counterparties/counterparty-group';
             case 'instrument':
                 return 'instruments/instrument';
+            case 'generated-event':
+                return 'instruments/generated-event';
             case 'instrument-type':
                 return 'instruments/instrument-type';
             case 'price-history':

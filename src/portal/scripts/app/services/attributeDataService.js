@@ -32,6 +32,7 @@
             "pricing-policy": require('../models/pricingPolicyPropsModel').getAttributes(),
             "instrument-type": require('../models/instrumentTypePropsModel').getAttributes(),
             "instrument": require('../models/instrumentPropsModel').getAttributes(),
+            "generated-event": require('../models/generatedEventPropsModel').getAttributes(),
             "transaction": require('../models/transactionPropsModel').getAttributes(),
             "transaction-type-group": require('../models/transactionTypeGroupPropsModel').getAttributes(),
             "transaction-type": require('../models/transactionTypePropsModel').getAttributes(),
