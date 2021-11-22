@@ -148,6 +148,11 @@
                 key: "instruments.instrument"
             },
             {
+                name: "Generated Event",
+                entity: 'generated-event',
+                key: "instruments.generatedevent"
+            },
+            {
                 name: 'Price History',
                 entity: 'price-history',
                 key: 'instruments.pricehistory'
@@ -543,6 +548,11 @@
                 name: "Instrument",
                 entity: 'instrument',
                 key: "instruments.instrument"
+            },
+            {
+                name: "Generated Event",
+                entity: 'generated-event',
+                key: "instruments.generatedevent"
             },
             {
                 name: 'Pricing Policy',

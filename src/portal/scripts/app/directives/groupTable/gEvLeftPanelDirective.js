@@ -144,6 +144,8 @@
                             scope.sliderButtonState = 'folded';
 							slider.classList.add('display-none');
 
+							scope.groupSectionState = false;
+
                         } else {
 
                         	resultWidth = 230;

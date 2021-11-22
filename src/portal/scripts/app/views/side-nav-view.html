@@ -244,6 +244,15 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li data-ng-if="vm.accessTable.data_instrument">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data.generated-event">
+                                        <span class="side-nav-title">Events</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                             </ul>
                         </div>
                     </li>
