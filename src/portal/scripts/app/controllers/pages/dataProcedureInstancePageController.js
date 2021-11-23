@@ -19,21 +19,7 @@
 
             dataProcedureInstanceService.getList().then(function (data) {
 
-                vm.procedures = data.results.map(function (item) {
-
-                    item.processed_procedures = item.procedures.filter(function (procedure) {
-                        return procedure.status !== 'P'
-                    }).length;
-
-                    if (item.processed_procedures) {
-                        item.progress_percent = Math.floor(item.processed_procedures / item.procedures.length * 100)
-                    } else {
-                        item.progress_percent = 0;
-                    }
-
-                    return item
-                });
-
+                vm.procedures = data.results
                 console.log(vm.procedures);
 
                 vm.readyStatus.procedures = true;
@@ -48,17 +34,6 @@
             dataProcedureInstanceService.getByKey(item.id).then(function (data) {
 
                 data.opened = item.opened;
-
-                data.processed_procedures = data.procedures.filter(function (procedure) {
-                    return procedure.status !== 'P'
-                }).length;
-
-                if (data.processed_procedures) {
-                    data.progress_percent = Math.floor(data.processed_procedures / data.procedures.length * 100)
-                } else {
-                    data.progress_percent = 0;
-                }
-
 
                 vm.procedures.splice($index, 1, data);
 
