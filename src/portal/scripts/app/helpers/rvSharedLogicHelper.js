@@ -96,6 +96,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
             viewModel.entityViewerDataService.setIsReport(true);
             viewModel.entityViewerDataService.setCurrentMember(viewModel.currentMember);
             viewModel.entityViewerDataService.setVirtualScrollStep(500);
+            // viewModel.entityViewerDataService.setVirtualScrollStep(50);
 
             viewModel.entityViewerDataService.setRowHeight(36);
 
@@ -449,9 +450,11 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                         viewModel.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                     }
 
+                    updateTableAfterEntityChanges(res);
+
                 }
 
-                updateTableAfterEntityChanges(res);
+
 
             });
 
@@ -478,8 +481,13 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
             }).then(function (res) {
 
-                updateTableAfterEntityChanges(res);
+                console.log('res', res);
 
+                if (res.status !== 'disagree') {
+
+                    updateTableAfterEntityChanges(res);
+
+                }
             });
 
         };
