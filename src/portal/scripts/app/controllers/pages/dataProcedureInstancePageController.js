@@ -1,0 +1,115 @@
+/**
+ * Created by szhitenev on 23.11.2021.
+ */
+(function () {
+
+    'use strict';
+
+    var dataProcedureInstanceService = require('../../services/procedures/dataProcedureInstanceService');
+
+    module.exports = function ($scope, $mdDialog) {
+
+        var vm = this;
+
+        vm.procedures = [];
+
+        vm.readyStatus = {procedures: false};
+
+        vm.getList = function () {
+
+            dataProcedureInstanceService.getList().then(function (data) {
+
+                vm.procedures = data.results.map(function (item) {
+
+                    item.processed_procedures = item.procedures.filter(function (procedure) {
+                        return procedure.status !== 'P'
+                    }).length;
+
+                    if (item.processed_procedures) {
+                        item.progress_percent = Math.floor(item.processed_procedures / item.procedures.length * 100)
+                    } else {
+                        item.progress_percent = 0;
+                    }
+
+                    return item
+                });
+
+                console.log(vm.procedures);
+
+                vm.readyStatus.procedures = true;
+
+                $scope.$apply();
+
+            })
+        };
+
+        vm.refreshItem = function ($index, item) {
+
+            dataProcedureInstanceService.getByKey(item.id).then(function (data) {
+
+                data.opened = item.opened;
+
+                data.processed_procedures = data.procedures.filter(function (procedure) {
+                    return procedure.status !== 'P'
+                }).length;
+
+                if (data.processed_procedures) {
+                    data.progress_percent = Math.floor(data.processed_procedures / data.procedures.length * 100)
+                } else {
+                    data.progress_percent = 0;
+                }
+
+
+                vm.procedures.splice($index, 1, data);
+
+                console.log('data', data);
+
+                $scope.$apply();
+
+            });
+
+        };
+
+        vm.showErrorDetails = function ($event, procedure) {
+
+            var description;
+
+            description = "<div>";
+
+            description = description + "<p> <b>Status Code:</b> " + procedure.error_code + "</p>";
+            description = description + "<p> <b>Description:</b> <br/><br/> " + procedure.error_message + "</p>";
+
+            description = description + '</div>';
+
+            $mdDialog.show({
+                controller: 'InfoDialogController as vm',
+                templateUrl: 'views/info-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    info: {
+                        title: 'Procedure Error Details',
+                        description: description
+                    }
+                }
+            });
+
+
+        };
+
+        vm.init = function () {
+
+            vm.getList();
+
+        };
+
+        vm.init();
+
+    };
+
+}());
