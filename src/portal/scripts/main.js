@@ -550,6 +550,7 @@ export default (function () {
 
 
 	portal.controller('DataProcedurePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/dataProcedurePageController')]);
+	portal.controller('DataProcedureInstancePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/dataProcedureInstancePageController')]);
 
 	portal.controller('DataProcedureAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/procedures/dataProcedureAddDialogController')]);
 	portal.controller('DataProcedureEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/procedures/dataProcedureEditDialogController')]);
