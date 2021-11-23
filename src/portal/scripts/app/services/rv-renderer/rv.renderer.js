@@ -53,6 +53,7 @@
 
         console.timeEnd("Generating projection as HTML");
 
+        console.log("Rendering " + rows.length + ' rows');
         console.time("Rendering projection");
 
         if (!rows.length) {
