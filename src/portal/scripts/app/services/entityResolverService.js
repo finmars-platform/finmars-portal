@@ -131,6 +131,15 @@
             case 'strategy-3':
                 return strategyService.getList(3);
                 break;
+            case 'strategy-1-subgroup':
+                return strategySubgroupService.getList(1);
+                break;
+            case 'strategy-2-subgroup':
+                return strategySubgroupService.getList(2);
+                break;
+            case 'strategy-3-subgroup':
+                return strategySubgroupService.getList(3);
+                break;
             case 'instrument-class':
                 return instrumentClassService.getList(options);
                 break;
