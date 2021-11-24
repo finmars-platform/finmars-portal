@@ -127,6 +127,7 @@
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
+        vm.groupSelectorOptions = [];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
@@ -1818,6 +1819,7 @@
         // Instrument tab Exposure end
 
 		vm.typeSelectorChange = null;
+		vm.groupSelectorChange = null;
 
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 
@@ -2055,6 +2057,7 @@
 					});
 
 				};
+
 
             }
             else {

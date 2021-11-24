@@ -1,94 +1,94 @@
 <div ng-if="vm.readyStatus.permissions && vm.readyStatus.entity">
 
-<!--    <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
-         class="entity-editor-fixed-fields-container">
+    <!--    <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
+             class="entity-editor-fixed-fields-container">
 
-        <div layout="row" class="entity-editor-row">
-            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="50">
+            <div layout="row" class="entity-editor-row">
+                <div class="ev-data-field"
+                     data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                     flex="50">
 
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
-                                    entity-type="vm.entityType"
-                                    entity="vm.entity"
-                                    ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService"
-                                    item="vm.fixedFieldsAttributes[0]"
-                                    entity-change="vm.onEntityChange()"
-                                    on-field-blur="vm.onNameInputBlur()">
-                </bind-field-control>
+                    <bind-field-control data-ng-if="vm.fixedFieldsAttributes[0]"
+                                        entity-type="vm.entityType"
+                                        entity="vm.entity"
+                                        ev-editor-data-service="vm.evEditorDataService"
+                                        ev-editor-event-service="vm.evEditorEventService"
+                                        item="vm.fixedFieldsAttributes[0]"
+                                        entity-change="vm.onEntityChange()"
+                                        on-field-blur="vm.onNameInputBlur()">
+                    </bind-field-control>
+                </div>
+
+                <div class="ev-data-field"
+                     data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                     flex="35">
+                    <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]" entity-type="vm.entityType"
+                                        entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                        ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
+                                        item="vm.fixedFieldsAttributes[1]"></bind-field-control>
+                </div>
+
+                <div class="ev-data-field"
+                     data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                     flex="15">
+                    <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]" entity-type="vm.entityType"
+                                        entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                        ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
+                                        item="vm.fixedFieldsAttributes[2]"></bind-field-control>
+                </div>
             </div>
 
-            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="35">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[1]" entity-type="vm.entityType"
-                                    entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
-                                    item="vm.fixedFieldsAttributes[1]"></bind-field-control>
+            <div layout="row" class="entity-editor-row">
+                <div class="ev-data-field"
+                     data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                     flex="50">
+                    <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]" entity-type="vm.entityType"
+                                        entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                        ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
+                                        item="vm.fixedFieldsAttributes[3]"></bind-field-control>
+                </div>
+
+                <div class="ev-data-field"
+                     data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                     flex="35">
+                    <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]" entity-type="vm.entityType"
+                                        entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
+                                        ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
+                                        item="vm.fixedFieldsAttributes[4]"></bind-field-control>
+                </div>
+
+                &lt;!&ndash;<div class="ev-data-field"
+                     data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                     flex="15">
+                    <dropdown-select label="Status"
+                                     model="vm.entityStatus"
+                                     placeholder-text="System List"
+                                     menu-options="vm.statusSelectorOptions"
+                                     small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                                     on-change-callback="vm.entityStatusChanged()"
+                                     class="ev-editor-field"></dropdown-select>&ndash;&gt;
+
+                &lt;!&ndash; Old selector &ndash;&gt;
+                &lt;!&ndash;<div class="ev-data-field"
+                     data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
+                     flex="15">
+                    <md-input-container class="md-block">
+                        <label>Status</label>
+                        <md-select data-ng-model="vm.entityStatus"
+                                   data-ng-change="vm.entityStatusChanged()">
+                            <md-option value="enabled">Enabled</md-option>
+                            <md-option value="disabled">Disabled</md-option>
+                            <md-option value="deleted">Deleted</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>&ndash;&gt;
+
             </div>
 
-            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="15">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[2]" entity-type="vm.entityType"
-                                    entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
-                                    item="vm.fixedFieldsAttributes[2]"></bind-field-control>
+            <div class="entity-editor-divider-holder">
+                <div></div>
             </div>
-        </div>
-
-        <div layout="row" class="entity-editor-row">
-            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="50">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[3]" entity-type="vm.entityType"
-                                    entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
-                                    item="vm.fixedFieldsAttributes[3]"></bind-field-control>
-            </div>
-
-            <div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="35">
-                <bind-field-control data-ng-if="vm.fixedFieldsAttributes[4]" entity-type="vm.entityType"
-                                    entity="vm.entity" ev-editor-data-service="vm.evEditorDataService"
-                                    ev-editor-event-service="vm.evEditorEventService" entity-change="vm.onEntityChange()"
-                                    item="vm.fixedFieldsAttributes[4]"></bind-field-control>
-            </div>
-
-            &lt;!&ndash;<div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="15">
-                <dropdown-select label="Status"
-                                 model="vm.entityStatus"
-                                 placeholder-text="System List"
-                                 menu-options="vm.statusSelectorOptions"
-                                 small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
-                                 on-change-callback="vm.entityStatusChanged()"
-                                 class="ev-editor-field"></dropdown-select>&ndash;&gt;
-
-            &lt;!&ndash; Old selector &ndash;&gt;
-            &lt;!&ndash;<div class="ev-data-field"
-                 data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
-                 flex="15">
-                <md-input-container class="md-block">
-                    <label>Status</label>
-                    <md-select data-ng-model="vm.entityStatus"
-                               data-ng-change="vm.entityStatusChanged()">
-                        <md-option value="enabled">Enabled</md-option>
-                        <md-option value="disabled">Disabled</md-option>
-                        <md-option value="deleted">Deleted</md-option>
-                    </md-select>
-                </md-input-container>
-            </div>&ndash;&gt;
-
-        </div>
-
-        <div class="entity-editor-divider-holder">
-            <div></div>
-        </div>
-    </div>-->
+        </div>-->
 
     <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-area">
@@ -150,16 +150,29 @@
                         'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }">
 
-                <dropdown-select data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
-                                 label="{{vm.typeFieldLabel}}"
-                                 model="vm.entity[vm.typeFieldName]"
-                                 placeholder-text="{{vm.typeFieldLabel}}"
-                                 menu-options="vm.typeSelectorOptions"
-                                 small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
-                                 on-change-callback="vm.typeSelectorChange()"
-                                 class="ev-editor-field"></dropdown-select>
+                <dropdown-select
+                        data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
+                        label="{{vm.typeFieldLabel}}"
+                        model="vm.entity[vm.typeFieldName]"
+                        placeholder-text="{{vm.typeFieldLabel}}"
+                        menu-options="vm.typeSelectorOptions"
+                        small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
+                        on-change-callback="vm.typeSelectorChange()"
+                        class="ev-editor-field"></dropdown-select>
 
-                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
+
+                <dropdown-select
+                        data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
+                        label="Group"
+                        model="vm.entity.group"
+                        placeholder-text="Group"
+                        menu-options="vm.groupSelectorOptions"
+                        small-options="{tooltipText: 'Group', indicatorBtnIcon: 'type1'}"
+                        class="ev-editor-field">
+                </dropdown-select>
+
+
+                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3'"
                      class="ev-editor-field">
                     <text-input
                             label="System Name (Short Name)"
@@ -168,17 +181,17 @@
                 </div>
             </div>
 
-<!--            Add dialog have not status field-->
-<!--            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
-                 class="width-33">
-                <dropdown-select label="Status"
-                                 model="vm.entityStatus"
-                                 placeholder-text="System List"
-                                 menu-options="vm.statusSelectorOptions"
-                                 small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
-                                 on-change-callback="vm.entityStatusChanged()"
-                                 class="ev-editor-field"></dropdown-select>
-            </div>-->
+            <!--            Add dialog have not status field-->
+            <!--            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
+                             class="width-33">
+                            <dropdown-select label="Status"
+                                             model="vm.entityStatus"
+                                             placeholder-text="System List"
+                                             menu-options="vm.statusSelectorOptions"
+                                             small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
+                                             on-change-callback="vm.entityStatusChanged()"
+                                             class="ev-editor-field"></dropdown-select>
+                        </div>-->
             <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
                  class="width-33">
 
@@ -199,7 +212,6 @@
                 </div>
 
             </div>
-
 
 
         </div>
@@ -369,27 +381,28 @@
                 <md-tab-body>
                     <md-content class="md-padding p-t-26">
                         <div layout="row"
-                         data-ng-repeat="row in vm.range(tab.layout.rows)"
-                         class="entity-editor-row">
-                        <div class="ev-data-field
+                             data-ng-repeat="row in vm.range(tab.layout.rows)"
+                             class="entity-editor-row">
+                            <div class="ev-data-field
 								{{field.attribute['value_type'] === 'decoration' ? 'decoration-label-line' : ''}}"
-                             data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
-                             flex="{{vm.bindFlex(tab, field)}}"
-                             data-ng-if="vm.checkFieldRender(tab, row, field)">
-                            <bind-field-control entity-type="vm.entityType"
-                                                entity="vm.entity"
-                                                entity-change="vm.onEntityChange(fieldKey)"
-                                                ev-editor-data-service="vm.evEditorDataService"
-                                                ev-editor-event-service="vm.evEditorEventService"
-                                                item="vm.attributesLayout[tab.tabOrder][field.row][field.column]">
-                            </bind-field-control>
+                                 data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
+                                 flex="{{vm.bindFlex(tab, field)}}"
+                                 data-ng-if="vm.checkFieldRender(tab, row, field)">
+                                <bind-field-control entity-type="vm.entityType"
+                                                    entity="vm.entity"
+                                                    entity-change="vm.onEntityChange(fieldKey)"
+                                                    ev-editor-data-service="vm.evEditorDataService"
+                                                    ev-editor-event-service="vm.evEditorEventService"
+                                                    item="vm.attributesLayout[tab.tabOrder][field.row][field.column]">
+                                </bind-field-control>
+                            </div>
                         </div>
-                    </div>
                     </md-content>
                 </md-tab-body>
             </md-tab>
 
-            <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)" md-active="vm.activeTab === tab">
+            <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)"
+                    md-active="vm.activeTab === tab">
 
                 <md-tab-body>
                     <md-content class="md-padding p-t-26">
