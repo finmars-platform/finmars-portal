@@ -321,6 +321,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                 } else {
 
+                    baseUrlService.setMasterUserPrefix(null);
+
                     globalDataService.setCurrentMasterUserStatus(false);
 
                     if ($state.current.name !== 'app.profile') $state.go('app.profile', {}, {});
