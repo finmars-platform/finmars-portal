@@ -108,9 +108,9 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                    if (broadcastChannelService.isAvailable) {
-                        broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
-                    }
+                    // if (broadcastChannelService.isAvailable) {
+                    //     broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
+                    // }
 
                     $state.go('app.portal.home');
 
