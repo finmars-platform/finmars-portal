@@ -329,6 +329,200 @@
                     }
                 };
 
+                scope.sortGroupType = function ($event, item, $index, type) {
+
+                    // reset sorting for other groups
+                    var i;
+                    for (i = 0; i < scope.groupTypes.length; i = i + 1) {
+                        if (!scope.groupTypes[i].options) {
+                            scope.groupTypes[i].options = {};
+                        }
+                    }
+
+                    var group = scope.groupTypes[$index];
+                    console.log("groups sorting group", group);
+                    item.options.sort = type;
+
+                    scope.groupTypes.forEach(function (item) {
+
+                        if (group.key === item.key || group.id === item.id) {
+                            item = group
+                        }
+
+                    });
+
+                    scope.evDataService.setGroups(scope.groupTypes);
+                    scope.evDataService.setActiveGroupTypeSort(group);
+
+                    scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
+
+                }
+
+                scope.deleteGroupType = function($event, item, $index) {
+
+                    scope.groupTypes = scope.groupTypes.filter(function (item, index){
+                        return index !== $index
+                    })
+
+                    scope.evDataService.setSelectedGroups([])
+                    scope.evDataService.setGroups(scope.groupTypes)
+
+                    scope.evDataService.resetData();
+                    scope.evDataService.resetRequestParameters();
+
+                    var rootGroup = scope.evDataService.getRootGroupData();
+
+                    scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+                }
+
+                const getAttributes = () => {
+
+                    var allAttrsList;
+
+
+                    var entityType = scope.evDataService.getEntityType();
+
+                    if (scope.viewContext === 'reconciliation_viewer') {
+                        allAttrsList = scope.attributeDataService.getReconciliationAttributes();
+                    } else {
+
+                        switch (entityType) {
+                            case 'balance-report':
+                                allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
+                                break;
+
+                            case 'pl-report':
+                                allAttrsList = scope.attributeDataService.getPlReportAttributes();
+                                break;
+
+                            case 'transaction-report':
+                                allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
+                                break;
+
+                            default:
+                                var entityAttrs = [];
+                                var dynamicAttrs = [];
+                                allAttrsList = [];
+
+                                entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(entityType);
+
+                                entityAttrs.forEach(function (item) {
+                                    if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                                        item.name = 'Group';
+                                    }
+                                    item.entity = entityType;
+                                });
+
+                                let instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
+                                let transactionUserFields = scope.attributeDataService.getTransactionUserFields();
+
+                                instrumentUserFields.forEach(function (field) {
+
+                                    entityAttrs.forEach(function (entityAttr) {
+
+                                        if (entityAttr.key === field.key) {
+                                            entityAttr.name = field.name;
+                                        }
+
+                                    })
+
+                                });
+
+                                transactionUserFields.forEach(function (field) {
+
+                                    entityAttrs.forEach(function (entityAttr) {
+
+                                        if (entityAttr.key === field.key) {
+                                            entityAttr.name = field.name;
+                                        }
+
+                                    })
+
+                                });
+
+                                dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(entityType);
+
+
+                                dynamicAttrs = dynamicAttrs.map(function (attribute) {
+
+                                    let result = {};
+
+                                    result.attribute_type = Object.assign({}, attribute);
+                                    result.value_type = attribute.value_type;
+                                    result.content_type = scope.contentType;
+                                    result.key = 'attributes.' + attribute.user_code;
+                                    result.name = attribute.name;
+
+                                    return result
+
+                                });
+
+                                allAttrsList = allAttrsList.concat(entityAttrs);
+                                allAttrsList = allAttrsList.concat(dynamicAttrs);
+
+                                break;
+                        }
+
+                    }
+
+                    return allAttrsList;
+
+                };
+
+                scope.addGroupType = function ($event){
+
+                    var allAttrsList = getAttributes();
+
+                    var availableAttrs;
+
+                    availableAttrs = allAttrsList.filter(function (attr) {
+                        for (var i = 0; i < scope.groupTypes.length; i++) {
+                            if (scope.groupTypes[i].key === attr.key) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    });
+
+                    $mdDialog.show({
+                        controller: "TableAttributeSelectorDialogController as vm",
+                        templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                availableAttrs: availableAttrs,
+                                title: 'Choose group to add',
+                                isReport: false
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res && res.status === "agree") {
+
+                            scope.groupTypes.push(res.data);
+                            scope.evDataService.setSelectedGroups([])
+                            scope.evDataService.setGroups(scope.groupTypes)
+
+                            scope.evDataService.resetData();
+                            scope.evDataService.resetRequestParameters();
+
+                            var rootGroup = scope.evDataService.getRootGroupData();
+
+                            scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
+
+                            scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
+                        }
+
+                    });
+
+                }
+
                 var init = async function () {
 
                     scope.multiselectIsActive = scope.evDataService.getSelectedGroupsMultiselectState()
