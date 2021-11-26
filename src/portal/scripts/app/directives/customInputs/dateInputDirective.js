@@ -1,453 +1,513 @@
 (function () {
-	"use strict";
+    "use strict";
 
-	module.exports = function () {
-		return {
-			restrict: "E",
-			scope: {
-				label: "@",
-				model: "=",
-				customButtons: "=",
-				customStyles: "=",
-				elemsStyles: "=",
-				eventSignal: "=",
-				smallOptions: "=",
-				isDisabled: '=',
-				isReadonly: '=',
-				onChangeCallback: "&?",
-			},
-			templateUrl: "views/directives/customInputs/date-input-view.html",
-			link: function (scope, elem, attr) {
+    module.exports = function () {
+        return {
+            restrict: "E",
+            scope: {
+                label: "@",
+                model: "=",
+                customButtons: "=",
+                customStyles: "=",
+                elemsStyles: "=",
+                eventSignal: "=",
+                smallOptions: "=",
+                isDisabled: '=',
+                isReadonly: '=',
+                onChangeCallback: "&?",
+            },
+            templateUrl: "views/directives/customInputs/date-input-view.html",
+            link: function (scope, elem, attr) {
 
-				scope.error = "";
-				scope.placeholderText = "yyyy-mm-dd";
+                scope.error = "";
+                scope.placeholderText = "yyyy-mm-dd";
 
-				scope.dateValue = ""; // prevents from calling on change method when date changed to the same date
+                scope.dateValue = ""; // prevents from calling on change method when date changed to the same date
 
-				var onChangeDelay = 800; // should be same as debounce of input.date-input
-				var stylePreset;
-				// var pickmeupChangeTimeout;
+                var onChangeDelay = 800; // should be same as debounce of input.date-input
+                var stylePreset;
+                // var pickmeupChangeTimeout;
 
-				// TIPS
-				// scope.smallOptions probable properties
-					// tooltipText: custom tolltip text
-					// notNull: turn on error mode if field is not filled
-					// noIndicatorBtn: whether to show button at the right part of input
+                // TIPS
+                // scope.smallOptions probable properties
+                // tooltipText: custom tolltip text
+                // notNull: turn on error mode if field is not filled
+                // noIndicatorBtn: whether to show button at the right part of input
 
-				var inputContainer = elem[0].querySelector(".dateInputContainer");
-				var inputElem = elem[0].querySelector(".dateInputElem");
+                var inputContainer = elem[0].querySelector(".dateInputContainer");
+                var inputElem = elem[0].querySelector(".dateInputElem");
 
-				var inputLoaded = false; // prevents not null inputs highlight from start
-				var dateChangedFromOutside = true;
+                var inputLoaded = false; // prevents not null inputs highlight from start
+                var dateChangedFromOutside = true;
 
-				var doNotShowDatepicker = true; // used to prevent datepicker show on click
-				var position = "right";
-				var defaultDate = false;
+                var doNotShowDatepicker = true; // used to prevent datepicker show on click
+                var position = "right";
+                var defaultDate = false;
 
-				if (scope.smallOptions) {
+                if (scope.smallOptions) {
 
-					scope.tooltipText = scope.smallOptions.tooltipText;
+                    scope.tooltipText = scope.smallOptions.tooltipText;
 
-					if (scope.smallOptions.position) position = scope.position;
-					if (scope.smallOptions.defaultDate) defaultDate = scope.defaultDate;
+                    if (scope.smallOptions.position) position = scope.position;
+                    if (scope.smallOptions.defaultDate) defaultDate = scope.defaultDate;
 
-					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+                    scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
 
-				}
+                }
 
-				scope.getInputContainerClasses = function () {
+                function checkValue(str, max) {
+                    if (str.charAt(0) !== '0' || str == '00') {
+                        var num = parseInt(str);
+                        if (isNaN(num) || num <= 0 || num > max) num = 1;
+                        str = num > parseInt(max.toString().charAt(0)) && num.toString().length == 1 ? '0' + num : num.toString();
+                    }
+                    ;
+                    return str;
+                };
 
-					var classes = "";
+                scope.getInputContainerClasses = function () {
 
-					if (scope.isDisabled) {
-						classes += "custom-input-is-disabled";
+                    var classes = "";
 
-					} else if (scope.error) {
-						classes = 'custom-input-error';
+                    if (scope.isDisabled) {
+                        classes += "custom-input-is-disabled";
 
-					} else if (stylePreset) {
-						classes = 'custom-input-preset' + stylePreset;
+                    } else if (scope.error) {
+                        classes = 'custom-input-error';
 
-					} else if (scope.valueIsValid) {
-						classes = 'custom-input-is-valid';
+                    } else if (stylePreset) {
+                        classes = 'custom-input-preset' + stylePreset;
 
-					}
+                    } else if (scope.valueIsValid) {
+                        classes = 'custom-input-is-valid';
 
-					if (scope.noIndicatorBtn) {
-						classes += " no-indicator-btn";
-					}
+                    }
 
-					return classes;
+                    if (scope.noIndicatorBtn) {
+                        classes += " no-indicator-btn";
+                    }
 
-				};
+                    return classes;
 
-				var onChangeIndex;
+                };
 
-				scope.onDateChange = function (dateValue) {
-					// scope.error = "";
-					var error = "",
-						model,
-						valueIsValid;
-					stylePreset = "";
+                var onChangeIndex;
 
-					var onChangeEnd = function () {
+                scope.onDateChange = function (dateValue) {
+                    // scope.error = "";
+                    var error = "",
+                        model,
+                        valueIsValid;
+                    stylePreset = "";
 
-						dateChangedFromOutside = false;
-						clearTimeout(onChangeIndex);
+                    var onChangeEnd = function () {
 
-						onChangeIndex = setTimeout(() => {
+                        dateChangedFromOutside = false;
+                        clearTimeout(onChangeIndex);
 
-							scope.valueIsValid = valueIsValid;
-							scope.error = error;
+                        onChangeIndex = setTimeout(() => {
 
-							scope.$apply();
+                            scope.valueIsValid = valueIsValid;
+                            scope.error = error;
 
-							if (scope.onChangeCallback) scope.onChangeCallback();
+                            scope.$apply();
 
-						}, onChangeDelay);
+                            if (scope.onChangeCallback) scope.onChangeCallback();
 
-					};
+                        }, onChangeDelay);
 
-					if (dateValue) {
+                    };
 
-						if (dateValue !== scope.model) {
+                    if (dateValue) {
 
-							if (moment(dateValue, "YYYY-MM-DD", true).isValid()) {
+                        if (dateValue !== scope.model) {
 
-								valueIsValid = true;
-								model = dateValue;
+                            if (moment(dateValue, "YYYY-MM-DD", true).isValid()) {
 
-							} else {
+                                valueIsValid = true;
+                                model = dateValue;
 
-								valueIsValid = false;
-								error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
-								model = null;
+                            } else {
 
-							}
+                                valueIsValid = false;
+                                error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
+                                model = null;
 
-							/* if (scope.onChangeCallback) {
+                            }
 
-								setTimeout(function () {
-									scope.onChangeCallback();
-								}, 0);
+                            /* if (scope.onChangeCallback) {
 
-							} */
-							if (model !== scope.model) { // don't signal change if invalid value changed on another invalid value or null
+                                setTimeout(function () {
+                                    scope.onChangeCallback();
+                                }, 0);
 
-								scope.model = model;
-								onChangeEnd();
+                            } */
+                            if (model !== scope.model) { // don't signal change if invalid value changed on another invalid value or null
 
-							}
+                                scope.model = model;
+                                onChangeEnd();
 
-						}
+                            }
 
-					}
-					else if (scope.model !== null) {
+                        }
 
-						valueIsValid = false;
-						scope.model = null;
+                    } else if (scope.model !== null) {
 
-						if (scope.smallOptions && scope.smallOptions.notNull) {
-							error = "Field should not be null";
-						}
+                        valueIsValid = false;
+                        scope.model = null;
 
-						onChangeEnd();
-						/* if (scope.onChangeCallback) {
+                        if (scope.smallOptions && scope.smallOptions.notNull) {
+                            error = "Field should not be null";
+                        }
 
-							setTimeout(function () {
-								scope.onChangeCallback();
-							}, 0);
+                        onChangeEnd();
+                        /* if (scope.onChangeCallback) {
 
-						} */
+                            setTimeout(function () {
+                                scope.onChangeCallback();
+                            }, 0);
 
-					}
+                        } */
 
-				};
+                    }
 
-				/* var onDateBlur = function () {
+                };
 
-					scope.error = "";
-					stylePreset = "";
+                /* var onDateBlur = function () {
 
-			if (scope.dateValue) {
+                    scope.error = "";
+                    stylePreset = "";
 
-				if (scope.dateValue !== scope.model) {
+            if (scope.dateValue) {
 
-					if (moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
+                if (scope.dateValue !== scope.model) {
 
-						scope.valueIsValid = true;
-						scope.model = JSON.parse(JSON.stringify(scope.dateValue));
+                    if (moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
 
-					} else {
+                        scope.valueIsValid = true;
+                        scope.model = JSON.parse(JSON.stringify(scope.dateValue));
 
-						scope.valueIsValid = false;
-						scope.error ="Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
-						scope.model = null;
+                    } else {
 
-					}
+                        scope.valueIsValid = false;
+                        scope.error ="Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
+                        scope.model = null;
 
-					if (scope.onChangeCallback) {
+                    }
 
-						setTimeout(function () {
-							scope.onChangeCallback();
-						}, 0);
+                    if (scope.onChangeCallback) {
 
-					}
+                        setTimeout(function () {
+                            scope.onChangeCallback();
+                        }, 0);
 
-				}
+                    }
 
-			} else if (scope.dateValue !== scope.model) {
+                }
 
-				scope.valueIsValid = false;
-				scope.model = null;
+            } else if (scope.dateValue !== scope.model) {
 
-				if (scope.smallOptions && scope.smallOptions.notNull) {
-					scope.error = "Field should not be null";
-				}
+                scope.valueIsValid = false;
+                scope.model = null;
 
-				if (scope.onChangeCallback) {
+                if (scope.smallOptions && scope.smallOptions.notNull) {
+                    scope.error = "Field should not be null";
+                }
 
-					setTimeout(function () {
-						scope.onChangeCallback();
-					}, 0);
+                if (scope.onChangeCallback) {
 
-				}
+                    setTimeout(function () {
+                        scope.onChangeCallback();
+                    }, 0);
 
-			}
-				}; */
+                }
 
-				scope.callFnForCustomBtn = function (actionData) {
+            }
+                }; */
 
-					if (actionData.parameters) {
-						actionData.callback(actionData.parameters);
-					} else {
-						actionData.callback();
-					}
+                scope.callFnForCustomBtn = function (actionData) {
 
-				};
+                    if (actionData.parameters) {
+                        actionData.callback(actionData.parameters);
+                    } else {
+                        actionData.callback();
+                    }
 
-				scope.focusDateInput = function () {
+                };
 
-					inputElem.focus();
-					doNotShowDatepicker = false;
+                scope.focusDateInput = function () {
 
-					pickmeup(inputElem).show();
+                    inputElem.focus();
+                    doNotShowDatepicker = false;
 
-				};
+                    pickmeup(inputElem).show();
 
-				var applyCustomStyles = function () {
+                };
 
-					Object.keys(scope.customStyles).forEach(function (className) {
+                var applyCustomStyles = function () {
 
-						var elemClass = "." + className;
-						var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
+                    Object.keys(scope.customStyles).forEach(function (className) {
 
-						if (elemToApplyStyles.length) {
+                        var elemClass = "." + className;
+                        var elemToApplyStyles = elem[0].querySelectorAll(elemClass);
 
-							elemToApplyStyles.forEach(function (htmlNode) {
-								htmlNode.style.cssText = scope.customStyles[className];
-							})
+                        if (elemToApplyStyles.length) {
 
-						}
+                            elemToApplyStyles.forEach(function (htmlNode) {
+                                htmlNode.style.cssText = scope.customStyles[className];
+                            })
 
-					});
+                        }
 
-				};
+                    });
 
-				var prepareCustomButtons = function () {
+                };
 
-					scope.plussMinusButtons = [];
-					scope.usualCustomButtons = [];
+                var prepareCustomButtons = function () {
 
-					scope.customButtons.forEach(function (cBtn) {
+                    scope.plussMinusButtons = [];
+                    scope.usualCustomButtons = [];
 
-						if (cBtn.classes && cBtn.classes.indexOf("date-input-specific-btns") > -1) {
-							scope.plussMinusButtons.push(cBtn);
+                    scope.customButtons.forEach(function (cBtn) {
 
-						} else {
-							scope.usualCustomButtons.push(cBtn);
+                        if (cBtn.classes && cBtn.classes.indexOf("date-input-specific-btns") > -1) {
+                            scope.plussMinusButtons.push(cBtn);
 
-						}
+                        } else {
+                            scope.usualCustomButtons.push(cBtn);
 
-					});
+                        }
 
-				}
+                    });
 
-				var initEventListeners = function () {
+                }
 
-					elem[0].addEventListener("mouseover", function () {
-						inputContainer.classList.add("custom-input-hovered");
-					});
+                var initEventListeners = function () {
 
-					elem[0].addEventListener("mouseleave", function () {
-						inputContainer.classList.remove("custom-input-hovered");
-					});
+                    elem[0].addEventListener("mouseover", function () {
+                        inputContainer.classList.add("custom-input-hovered");
+                    });
 
-					inputElem.addEventListener("focus", function () {
-						doNotShowDatepicker = true;
-						inputContainer.classList.add("custom-input-focused");
-					});
+                    elem[0].addEventListener("mouseleave", function () {
+                        inputContainer.classList.remove("custom-input-hovered");
+                    });
 
-					inputElem.addEventListener("blur", function () {
+                    inputElem.addEventListener("focus", function () {
+                        doNotShowDatepicker = true;
+                        inputContainer.classList.add("custom-input-focused");
+                    });
 
-						inputContainer.classList.remove("custom-input-focused");
+                    inputElem.addEventListener('input', function (e) {
+                        this.type = 'text';
+                        var input = this.value;
+                        if (/\D\/$/.test(input)) input = input.substr(0, input.length - 3);
+                        var values = input.split('-').map(function (v) {
+                            return v.replace(/\D/g, '')
+                        });
 
-						setTimeout(function () {
-							// without timeout changes will be discarded on fast blur
-							// onDateBlur();
-							scope.$apply();
+                        if (values[1]) values[1] = checkValue(values[1], 12);
+                        if (values[2]) values[2] = checkValue(values[2], 31);
 
-						}, 250);
+                        var output = values.map(function (v, i) {
+                            if (v.length == 4 && i == 0) {
+                                return v + '-'
+                            }
+                            else if (v.length == 2 && i == 1) {
+                                return v + '-'
+                            }
+                            else {
+                                return v
+                            }
+                        });
 
-					});
 
-					inputElem.addEventListener("pickmeup-show", function (event) {
-						if (doNotShowDatepicker) event.preventDefault();
-					});
+                        this.value = output.join('').substr(0, 14);
+                    });
 
-					inputElem.addEventListener("pickmeup-change", function (event) {
+                    inputElem.addEventListener("blur", function () {
 
-						scope.dateValue = event.detail.formatted_date;
-						scope.$apply();
+                        inputContainer.classList.remove("custom-input-focused");
 
-						/* clearTimeout(pickmeupChangeTimeout);
+                        setTimeout(function () {
+                            // without timeout changes will be discarded on fast blur
+                            // onDateBlur();
+                            scope.$apply();
 
-						pickmeupChangeTimeout = setTimeout(function () {
-							scope.onDateChange();
-						}, onChangeDelay); */
-						scope.onDateChange(scope.dateValue);
+                        }, 250);
 
-					});
+                        this.type = 'text';
+                        var input = this.value;
+                        var values = input.split('-').map(function (v, i) {
+                            return v.replace(/\D/g, '')
+                        });
+                        var output = '';
 
-					inputElem.addEventListener("pickmeup-hide", function (event) {
-						doNotShowDatepicker = true;
-					});
+                        if (values.length == 3) {
+                            var year = values[0].length !== 4 ? parseInt(values[0]) + 2000 : parseInt(values[0]);
+                            var month = parseInt(values[1]) - 1;
+                            var day = parseInt(values[2]);
+                            var d = new Date(year, month, day);
+                            if (!isNaN(d)) {
+                                var dates = [d.getMonth() + 1, d.getDate(), d.getFullYear()];
+                                output = dates.map(function (v) {
+                                    v = v.toString();
+                                    return v.length == 1 ? '0' + v : v;
+                                }).join('-');
+                            }
+                            ;
+                        }
+                        ;
+                        this.value = output;
 
-				};
+                    });
 
-				var initScopeWatchers = function () {
+                    inputElem.addEventListener("pickmeup-show", function (event) {
+                        if (doNotShowDatepicker) event.preventDefault();
+                    });
 
-					scope.$watch("model", function () {
-						//if (scope.model && scope.model.value) {
-						if (dateChangedFromOutside) { // don't execute if date changed by input itself
+                    inputElem.addEventListener("pickmeup-change", function (event) {
 
-							if (scope.model) {
+                        scope.dateValue = event.detail.formatted_date;
+                        scope.$apply();
 
-								if (scope.model !== scope.dateValue) {
+                        /* clearTimeout(pickmeupChangeTimeout);
 
-									scope.error = "";
-									scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+                        pickmeupChangeTimeout = setTimeout(function () {
+                            scope.onDateChange();
+                        }, onChangeDelay); */
+                        scope.onDateChange(scope.dateValue);
 
-									if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
+                    });
 
-										scope.valueIsValid = false;
-										scope.error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
-										scope.model = null;
+                    inputElem.addEventListener("pickmeup-hide", function (event) {
+                        doNotShowDatepicker = true;
+                    });
 
-									}
+                };
 
-								}
+                var initScopeWatchers = function () {
 
-							} else {
+                    scope.$watch("model", function () {
+                        //if (scope.model && scope.model.value) {
+                        if (dateChangedFromOutside) { // don't execute if date changed by input itself
 
-								if (scope.dateValue) {
+                            if (scope.model) {
 
-									if (!scope.error) {
-										scope.dateValue = "";
-									}
+                                if (scope.model !== scope.dateValue) {
 
-								} else if (scope.smallOptions && scope.smallOptions.notNull && inputLoaded) {
-									scope.error = "Field should not be null";
-								}
+                                    scope.error = "";
+                                    scope.dateValue = JSON.parse(JSON.stringify(scope.model));
 
-							}
+                                    if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
 
-							inputLoaded = true;
+                                        scope.valueIsValid = false;
+                                        scope.error = "Date has wrong format. Use one of these formats instead: YYYY-MM-DD.";
+                                        scope.model = null;
 
-						}
+                                    }
 
-						dateChangedFromOutside = true;
+                                }
 
-					});
+                            } else {
 
-					if (scope.eventSignal) {
-						// this if prevents watcher below from running without need
+                                if (scope.dateValue) {
 
-						scope.$watch("eventSignal", function () {
-							if (scope.eventSignal && scope.eventSignal.key) {
-								switch (scope.eventSignal.key) {
+                                    if (!scope.error) {
+                                        scope.dateValue = "";
+                                    }
 
-									case "mark_not_valid_fields":
-										/*if (scope.smallOptions && scope.smallOptions.notNull) {
+                                } else if (scope.smallOptions && scope.smallOptions.notNull && inputLoaded) {
+                                    scope.error = "Field should not be null";
+                                }
 
-												if (!scope.model && !scope.dateValue) {
-														scope.error = 'Field should not be null';
-												}
+                            }
 
-										}*/
+                            inputLoaded = true;
 
-										if (!scope.model && !scope.dateValue) {
-											scope.error = "Field should not be null";
-										}
+                        }
 
-										break;
+                        dateChangedFromOutside = true;
 
-									case "set_style_preset1":
-										stylePreset = 1;
-										break;
+                    });
 
-									case "set_style_preset2":
-										stylePreset = 2;
-										break;
-								}
+                    if (scope.eventSignal) {
+                        // this if prevents watcher below from running without need
 
-								scope.eventSignal = {};
-							}
-						});
-					}
-				};
+                        scope.$watch("eventSignal", function () {
+                            if (scope.eventSignal && scope.eventSignal.key) {
+                                switch (scope.eventSignal.key) {
 
-				var init = function () {
+                                    case "mark_not_valid_fields":
+                                        /*if (scope.smallOptions && scope.smallOptions.notNull) {
 
-					if (scope.customButtons) {
-						prepareCustomButtons();
-					}
+                                                if (!scope.model && !scope.dateValue) {
+                                                        scope.error = 'Field should not be null';
+                                                }
 
-					if (scope.dateValue) {
+                                        }*/
 
-						pickmeup(inputElem, {
-							date: new Date(scope.dateValue),
-							current: new Date(scope.dateValue),
-							position: position,
-							default_date: defaultDate,
-							hide_on_select: true,
-							format: "Y-m-d",
-						});
+                                        if (!scope.model && !scope.dateValue) {
+                                            scope.error = "Field should not be null";
+                                        }
 
-					} else {
+                                        break;
 
-						pickmeup(inputElem, {
-							position: position,
-							default_date: defaultDate,
-							hide_on_select: true,
-							format: "Y-m-d",
-						});
+                                    case "set_style_preset1":
+                                        stylePreset = 1;
+                                        break;
 
-					}
+                                    case "set_style_preset2":
+                                        stylePreset = 2;
+                                        break;
+                                }
 
-					initScopeWatchers();
+                                scope.eventSignal = {};
+                            }
+                        });
+                    }
+                };
 
-					initEventListeners();
+                var init = function () {
 
-					if (scope.customStyles) {
-						applyCustomStyles();
-					}
+                    if (scope.customButtons) {
+                        prepareCustomButtons();
+                    }
 
-				};
+                    if (scope.dateValue) {
 
-				init();
-			},
-		};
-	};
+                        pickmeup(inputElem, {
+                            date: new Date(scope.dateValue),
+                            current: new Date(scope.dateValue),
+                            position: position,
+                            default_date: defaultDate,
+                            hide_on_select: true,
+                            format: "Y-m-d",
+                        });
+
+                    } else {
+
+                        pickmeup(inputElem, {
+                            position: position,
+                            default_date: defaultDate,
+                            hide_on_select: true,
+                            format: "Y-m-d",
+                        });
+
+                    }
+
+                    initScopeWatchers();
+
+                    initEventListeners();
+
+                    if (scope.customStyles) {
+                        applyCustomStyles();
+                    }
+
+                };
+
+                init();
+            },
+        };
+    };
 
 }());
