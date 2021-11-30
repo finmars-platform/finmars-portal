@@ -87,6 +87,25 @@
                 var transactionUserFields = vm.attributeDataService.getTransactionUserFields();
                 var instrumentUserFields = vm.attributeDataService.getInstrumentUserFields();
 
+                vm.entityAttrs = vm.entityAttrs.filter(function (item) {
+
+                    var state = true;
+                    
+                    for (var i = 0; i < transactionUserFields.length; i = i + 1) {
+
+                        if (item.key === transactionUserFields[i].key) {
+                            state = transactionUserFields[i].is_active
+                            break;
+                        }
+                        
+                    }
+
+                    
+                    return state;
+
+                })
+
+
                 vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
 
                     if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
