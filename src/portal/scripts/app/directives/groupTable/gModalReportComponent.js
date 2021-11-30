@@ -11,7 +11,7 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+    var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
@@ -167,8 +167,8 @@
             vm.strategy3attrsFiltered = [];
             vm.allocationAttrsFiltered = [];
 
-			//<editor-fold desc="Get system attributes">
-			vm.balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
+            //<editor-fold desc="Get system attributes">
+            vm.balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
 
             vm.balanceMismatchAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereportmismatch', '', 'Mismatch', {maxDepth: 1});
 
@@ -191,10 +191,10 @@
             vm.strategy2attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2', 'Strategy 2', {maxDepth: 1});
 
             vm.strategy3attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
-			//</editor-fold>
+            //</editor-fold>
 
-			//<editor-fold desc="Get dynamic attributes">
-			var instrumentUserFields = attributeDataService.getInstrumentUserFields();
+            //<editor-fold desc="Get dynamic attributes">
+            var instrumentUserFields = attributeDataService.getInstrumentUserFields();
 
             instrumentUserFields.forEach(function (field) {
 
@@ -254,44 +254,44 @@
             vm.instrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
             vm.allocationDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             vm.linkedInstrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
-			//</editor-fold>
+            //</editor-fold>
 
             // remove attributes that area already inside currency from balance
-			vm.balanceAttrs = vm.balanceAttrs.filter(bAttr => {
-				return !!!vm.currencyAttrs.find(cAttr => cAttr.key === bAttr.key);
-			});
+            vm.balanceAttrs = vm.balanceAttrs.filter(bAttr => {
+                return !!!vm.currencyAttrs.find(cAttr => cAttr.key === bAttr.key);
+            });
 
-			//<editor-fold desc="Create list with all attributes">
-			vm.attrsList = vm.attrsList.concat(vm.balanceAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.allocationAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.allocationDynamicAttrs);
+            //<editor-fold desc="Create list with all attributes">
+            vm.attrsList = vm.attrsList.concat(vm.balanceAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.balancePerformanceAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.balanceMismatchAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.custom);
+            vm.attrsList = vm.attrsList.concat(vm.balancePerformanceAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.balanceMismatchAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.custom);
 
-			vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.strategy1attrs);
-			vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
-			vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
-			//</editor-fold>
+            vm.attrsList = vm.attrsList.concat(vm.strategy1attrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
+            //</editor-fold>
 
-			//<editor-fold desc="Group attributes for tabs">
-			filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
+            //<editor-fold desc="Group attributes for tabs">
+            filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
             composeAttrsInsideTab('balancePerformanceAttrs', performanceAttrsComp);
             composeAttrsInsideTab('instrumentAttrs', instrumentAttrsComp);
             vm.instrumentTypeAttrsFiltered = getAttrsForInstrumentTypeTab('instrumentAttrs', instrumentTypeAttrsComp);
@@ -305,7 +305,7 @@
             filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
             filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);
             composeAttrsInsideTab('allocationAttrs', allocationAttrsComp);
-			//</editor-fold>
+            //</editor-fold>
 
             /*vm.attrsList = attrsList;*/
 
@@ -408,10 +408,10 @@
         };
 
         function syncTypeAttrs(attrs) {
-			// Drag and drop inside tab "Selected" changes GCF without dispatching events
-			groups = vm.entityViewerDataService.getGroups();
-			columns = vm.entityViewerDataService.getColumns();
-			filters = vm.entityViewerDataService.getFilters();
+            // Drag and drop inside tab "Selected" changes GCF without dispatching events
+            groups = vm.entityViewerDataService.getGroups();
+            columns = vm.entityViewerDataService.getColumns();
+            filters = vm.entityViewerDataService.getFilters();
 
             var i;
             for (i = 0; i < attrs.length; i = i + 1) {
@@ -460,10 +460,10 @@
         }
 
         function updateTypeAttrs(attrs) {
-			// Drag and drop inside tab "Selected" changes GCF without dispatching events
-        	groups = vm.entityViewerDataService.getGroups();
-			columns = vm.entityViewerDataService.getColumns();
-			filters = vm.entityViewerDataService.getFilters();
+            // Drag and drop inside tab "Selected" changes GCF without dispatching events
+            groups = vm.entityViewerDataService.getGroups();
+            columns = vm.entityViewerDataService.getColumns();
+            filters = vm.entityViewerDataService.getFilters();
 
             var c, g, f;
             var columnExist, groupExist, filterExist;
@@ -600,7 +600,7 @@
 
             const attrGroups = {groups, columns, filters}; // Victor 2020.12.10 I need variables: groups, columns, filters in sharedLogicHelper
 
-			sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
+            sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
 
         };
         // < format data for SELECTED tab >
@@ -688,22 +688,26 @@
 
                     for (var i = 0; i < vm.attrsList.length; i++) {
 
-                        if (vm.attrsList[i].key === res.data.key) {
+                        for (var j = 0; j < res.data.items.length; j++) {
 
-                            switch (selectedGroup) {
-                                case 'group':
-                                    vm.attrsList[i].groups = true;
-                                    break;
-                                case 'column':
-                                    vm.attrsList[i].columns = true;
-                                    break;
-                                case 'filter':
-                                    vm.attrsList[i].filters = true;
-                                    break;
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                                switch (selectedGroup) {
+                                    case 'group':
+                                        vm.attrsList[i].groups = true;
+                                        break;
+                                    case 'column':
+                                        vm.attrsList[i].columns = true;
+                                        break;
+                                    case 'filter':
+                                        vm.attrsList[i].filters = true;
+                                        break;
+                                }
+
+                                vm.updateAttrs(vm.attrsList);
+                                break;
                             }
 
-                            vm.updateAttrs(vm.attrsList);
-                            break;
                         }
 
                     }

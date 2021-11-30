@@ -1,31 +1,103 @@
 // table-attributes-selector-dialog-view
+
+.dialog-close-button {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  cursor: pointer;
+  &:hover {
+    opacity: .7;
+  }
+}
 .attr-selector-dialog {
-  min-width: 500px;
-  min-height: 80%;
+  //min-width: 500px;
+  height: 600px;
   padding-bottom: 52px;
+
+  width: 451px;
+
+  md-toolbar {
+    min-height: 96px;
+    height: 96px;
+    max-height: 96px;
+  }
+
+  .md-toolbar-tools {
+    padding-left: 10px;
+    min-height: 96px;
+    height: 96px;
+    max-height: 96px;
+    h2 {
+      font-weight: 500;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 28px;
+      color: #333333;
+    }
+  }
+
+  md-dialog-content {
+    padding: 0;
+  }
+
+  .attribute-selector-item {
+    height: 47px;
+
+    font-size: 14px;
+    letter-spacing: normal;
+    color: #333333;
+    padding: 0 30px;
+    line-height: 47px;
+
+    span.material-icons {
+      position: relative;
+      top: 5px;
+      margin-right: 4px;
+      color: #747474;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.0392156862745098);
+    }
+  }
+  .attr-selector-search {
+    width: 400px;
+  }
 }
 
 .attr-selector-btns-holder {
-  padding: 5px 25px 0;
+  padding: 5px 0 0;
 }
 
 .attr-selector-breadcrumbs {
-  margin-bottom: 10px;
+  height: 40px;
+  box-sizing: border-box;
+  padding-top: 8px;
 
+  overflow: hidden;
+
+  .attr-selector-breadcrumbs-item {
+    cursor: pointer;
+    &:hover {
+      opacity: .7;
+    }
+  }
+
+  .material-icons {
+    position: relative;
+    top: -4px;
+  }
   span {
-    margin-left: 10px;
+    margin-left: 5px;
   }
 }
 
 .attr-selector-back-btn {
   position: relative;
-  min-width: 36px;
-  min-height: 36px;
-  height: 36px;
-  width: 36px;
-  fill: #fff;
-  padding-top: 4px;
-  margin-bottom: 25px;
+  cursor: pointer;
+  &:hover {
+    opacity: .7;
+  }
 }
 
 .attr-selector-filter {
@@ -36,8 +108,8 @@
 }
 
 .attr-selector-btns-container {
-  margin-left: 24px;
-  margin-bottom: 14px;
+  height: 352px;
+  overflow-y: auto;
 }
 // < table-attributes-selector-dialog-view >
 
