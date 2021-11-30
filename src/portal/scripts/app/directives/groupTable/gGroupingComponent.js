@@ -513,7 +513,11 @@
 
                         if (res && res.status === "agree") {
                             res.data.groups = true;
-                            scope.groups.push(res.data);
+
+                            for (var i = 0; i < res.data.items.length; i = i +1) {
+                                scope.groups.push(res.data.items[i]);
+                            }
+
                             scope.evDataService.setGroups(scope.groups);
                             scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);

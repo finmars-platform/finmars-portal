@@ -1,403 +1,407 @@
 (function () {
 
-	'use strict';
-
-	const uiService = require('../../../../services/uiService');
-	const evEvents = require('../../../../services/entityViewerEvents');
-
-	const evHelperService = require('../../../../services/entityViewerHelperService');
-	// const EventService = require('../../../../services/eventService');
-
-	module.exports = function ($mdDialog, $state, $bigDrawer) {
-		return {
-			require: '^^gFilters',
-			restrict: 'E',
-			scope: {
-				evDataService: '=',
-				evEventService: '=',
-				attributeDataService: '=',
-			},
-			templateUrl: 'views/directives/groupTable/filters/g-ev-rv-filters-view.html',
-			link: function (scope, elem, attrs, gFiltersVm) {
-
-				scope.entityType = gFiltersVm.entityType;
-				scope.isReport = false;
-				scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-				scope.shownFiltersType = 'frontend';
-
-				scope.readyStatus = {
-					filters: false
-				}
-
-				scope.filterPopupTemplate = 'views/popups/groupTable/filters/ev-filter-popup-view.html';
-
-				scope.popupPosX = gFiltersVm.popupPosX;
-				scope.popupPosY = gFiltersVm.popupPosY;
-				scope.fpBackClasses = gFiltersVm.fpBackClasses;
-				scope.fpClasses = gFiltersVm.fpClasses;
-
-				const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
-				const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
-				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainer");
-				let addFilterElem;
-
-				let filters = scope.evDataService.getFilters();
-				let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
-
-				scope.evGetEntityNameByState = function () {
-
-					switch ($state.current.name) {
-						case 'app.data.portfolio':
-							return "PORTFOLIO";
-							break;
-						case 'app.data.account':
-							return "ACCOUNT";
-							break;
-						case 'app.data.counterparty':
-							return "COUNTERPARTY";
-							break;
-						case 'app.data.counterparty-group':
-							return "COUNTERPARTY GROUP";
-							break;
-						case 'app.data.responsible':
-							return "RESPONSIBLE";
-							break;
-						case 'app.data.responsible-group':
-							return "RESPONSIBLE GROUP";
-							break;
-						case 'app.data.instrument':
-							return "INSTRUMENT";
-							break;
-						case 'app.data.transaction':
-							return "TRANSACTION";
-							break;
-						case 'app.data.price-history':
-							return "PRICE HISTORY";
-							break;
-						case 'app.data.currency-history':
-							return "CURRENCY HISTORY";
-							break;
-						case 'app.data.strategy':
-							return "STRATEGY";
-							break;
-						case 'app.data.strategy-subgroup':
-							return "STRATEGY SUBGROUP";
-							break;
-						case 'app.data.strategy-group':
-							return "STRATEGY GROUP";
-							break;
-						case 'app.data.account-type':
-							return "ACCOUNT TYPES";
-							break;
-						case 'app.data.instrument-type':
-							return "INSTRUMENT TYPES";
-							break;
-						/* case 'app.data.pricing-policy':
-							return "PRICING POLICY";
-							break; */
-						case 'app.data.transaction-type':
-							return "TRANSACTION TYPE";
-							break;
-						case 'app.data.transaction-type-group':
-							return "TRANSACTION TYPE GROUP";
-							break;
-						case 'app.data.currency':
-							return "CURRENCY";
-							break;
-						case 'app.data.complex-transaction':
-							return "TRANSACTION";
-							break;
-						case 'app.data.tag':
-							return "TAG";
-							break;
-						default:
-							return "ENTITIY";
-							break;
-					}
-				};
+    'use strict';
+
+    const uiService = require('../../../../services/uiService');
+    const evEvents = require('../../../../services/entityViewerEvents');
+
+    const evHelperService = require('../../../../services/entityViewerHelperService');
+    // const EventService = require('../../../../services/eventService');
+
+    module.exports = function ($mdDialog, $state, $bigDrawer) {
+        return {
+            require: '^^gFilters',
+            restrict: 'E',
+            scope: {
+                evDataService: '=',
+                evEventService: '=',
+                attributeDataService: '=',
+            },
+            templateUrl: 'views/directives/groupTable/filters/g-ev-rv-filters-view.html',
+            link: function (scope, elem, attrs, gFiltersVm) {
+
+                scope.entityType = gFiltersVm.entityType;
+                scope.isReport = false;
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.shownFiltersType = 'frontend';
+
+                scope.readyStatus = {
+                    filters: false
+                }
+
+                scope.filterPopupTemplate = 'views/popups/groupTable/filters/ev-filter-popup-view.html';
+
+                scope.popupPosX = gFiltersVm.popupPosX;
+                scope.popupPosY = gFiltersVm.popupPosY;
+                scope.fpBackClasses = gFiltersVm.fpBackClasses;
+                scope.fpClasses = gFiltersVm.fpClasses;
+
+                const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
+                const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
+                let filtersChipsContainer = elem[0].querySelector(".gFiltersContainer");
+                let addFilterElem;
+
+                let filters = scope.evDataService.getFilters();
+                let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+
+                scope.evGetEntityNameByState = function () {
+
+                    switch ($state.current.name) {
+                        case 'app.data.portfolio':
+                            return "PORTFOLIO";
+                            break;
+                        case 'app.data.account':
+                            return "ACCOUNT";
+                            break;
+                        case 'app.data.counterparty':
+                            return "COUNTERPARTY";
+                            break;
+                        case 'app.data.counterparty-group':
+                            return "COUNTERPARTY GROUP";
+                            break;
+                        case 'app.data.responsible':
+                            return "RESPONSIBLE";
+                            break;
+                        case 'app.data.responsible-group':
+                            return "RESPONSIBLE GROUP";
+                            break;
+                        case 'app.data.instrument':
+                            return "INSTRUMENT";
+                            break;
+                        case 'app.data.transaction':
+                            return "TRANSACTION";
+                            break;
+                        case 'app.data.price-history':
+                            return "PRICE HISTORY";
+                            break;
+                        case 'app.data.currency-history':
+                            return "CURRENCY HISTORY";
+                            break;
+                        case 'app.data.strategy':
+                            return "STRATEGY";
+                            break;
+                        case 'app.data.strategy-subgroup':
+                            return "STRATEGY SUBGROUP";
+                            break;
+                        case 'app.data.strategy-group':
+                            return "STRATEGY GROUP";
+                            break;
+                        case 'app.data.account-type':
+                            return "ACCOUNT TYPES";
+                            break;
+                        case 'app.data.instrument-type':
+                            return "INSTRUMENT TYPES";
+                            break;
+                        /* case 'app.data.pricing-policy':
+                            return "PRICING POLICY";
+                            break; */
+                        case 'app.data.transaction-type':
+                            return "TRANSACTION TYPE";
+                            break;
+                        case 'app.data.transaction-type-group':
+                            return "TRANSACTION TYPE GROUP";
+                            break;
+                        case 'app.data.currency':
+                            return "CURRENCY";
+                            break;
+                        case 'app.data.complex-transaction':
+                            return "TRANSACTION";
+                            break;
+                        case 'app.data.tag':
+                            return "TAG";
+                            break;
+                        default:
+                            return "ENTITIY";
+                            break;
+                    }
+                };
 
-				scope.evAddEntity = async function () {
+                scope.evAddEntity = async function () {
 
-					let editLayout, entity = {};
+                    let editLayout, entity = {};
 
-					switch (scope.entityType) {
+                    switch (scope.entityType) {
 
-						case 'transaction-type':
+                        case 'transaction-type':
 
-							editLayout = await uiService.getDefaultEditLayout(scope.entityType);
-							evHelperService.openTTypeAddDrawer(
-								scope.evDataService,
-								scope.evEventService,
-								editLayout,
-								$bigDrawer,
-								scope.entityType,
-								entity
-							);
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openTTypeAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
 
-							break;
+                            break;
 
-						case 'complex-transaction':
+                        case 'complex-transaction':
 
-							editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
 
-							evHelperService.openComplexTransactionAddDrawer(
-								scope.evDataService,
-								scope.evEventService,
-								editLayout,
-								$bigDrawer,
-								scope.entityType,
-								entity
-							);
+                            evHelperService.openComplexTransactionAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
 
-							break;
+                            break;
 
-						default:
+                        default:
 
-							editLayout = await uiService.getDefaultEditLayout(scope.entityType);
-							evHelperService.openEntityViewerAddDrawer(
-								scope.evDataService,
-								scope.evEventService,
-								editLayout,
-								$bigDrawer,
-								scope.entityType,
-								entity
-							);
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openEntityViewerAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
 
-							break;
+                            break;
 
-					}
+                    }
 
-				};
+                };
 
-				/* scope.evApplyDatabaseFilters = function () {
-					scope.evDataService.resetTableContent(false);
-					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-				}; */
-				scope.refreshTable = function () {
+                /* scope.evApplyDatabaseFilters = function () {
+                    scope.evDataService.resetTableContent(false);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                }; */
+                scope.refreshTable = function () {
 
-					scope.evDataService.resetTableContent(false);
+                    scope.evDataService.resetTableContent(false);
 
-					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-				}
+                }
 
-				//region Chips
-				const formatFiltersForChips = function () {
+                //region Chips
+                const formatFiltersForChips = function () {
 
-					scope.filtersChips = [];
+                    scope.filtersChips = [];
 
-					const errors = [];
-					// const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
-					filters[scope.shownFiltersType].forEach(filter => {
+                    const errors = [];
+                    // const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
+                    filters[scope.shownFiltersType].forEach(filter => {
 
-						const filterOpts = filter.options || {};
-						/* let filterVal = filterOpts.filter_values || "";
+                        const filterOpts = filter.options || {};
+                        /* let filterVal = filterOpts.filter_values || "";
 
-						if (filterOpts.filter_type === 'from_to') {
+                        if (filterOpts.filter_type === 'from_to') {
 
-							filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
+                            filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
 
-						} else if (filterOpts.filter_type === 'out_of_range' ) {
+                        } else if (filterOpts.filter_type === 'out_of_range' ) {
 
-							filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
+                            filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
 
-						} */
+                        } */
 
-						let filterData = {
-							id: filter.key,
-							isActive: filterOpts.enabled
-						};
+                        let filterData = {
+                            id: filter.key,
+                            isActive: filterOpts.enabled
+                        };
 
-						const filterName = filter.layout_name ? filter.layout_name : filter.name;
+                        const filterName = filter.layout_name ? filter.layout_name : filter.name;
 
-						let chipText = gFiltersVm.getChipTextElem(filterName, filterOpts.filter_values, filterOpts.filter_type);
+                        let chipText = gFiltersVm.getChipTextElem(filterName, filterOpts.filter_values, filterOpts.filter_type);
 
-						filterData.text = chipText;
+                        filterData.text = chipText;
 
-						if (filter.key.startsWith('custom_fields')) {
+                        if (filter.key.startsWith('custom_fields')) {
 
-							let error;
+                            let error;
 
-							[filter, filterData, error] = gFiltersVm.checkCustomFieldFilterForError(filter, filterData, customFields);
-							if (error) errors.push(error);
+                            [filter, filterData, error] = gFiltersVm.checkCustomFieldFilterForError(filter, filterData, customFields);
+                            if (error) errors.push(error);
 
-						}
+                        }
 
-						scope.filtersChips.push(filterData);
+                        scope.filtersChips.push(filterData);
 
-					});
+                    });
 
-					if (errors.length) gFiltersVm.updateMissingCustomFieldsList(errors);
+                    if (errors.length) gFiltersVm.updateMissingCustomFieldsList(errors);
 
-					gFiltersVm.updateFilterAreaHeight();
+                    gFiltersVm.updateFilterAreaHeight();
 
-				};
+                };
 
-				scope.onFilterChipClick = gFiltersVm.onFilterChipClick;
+                scope.onFilterChipClick = gFiltersVm.onFilterChipClick;
 
-				scope.filterSettingsChange = function () {
+                scope.filterSettingsChange = function () {
 
-					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-					if (scope.shownFiltersType === 'frontend') scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    if (scope.shownFiltersType === 'frontend') scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-				};
+                };
 
-				scope.onChipsFirstRender = gFiltersVm.onChipsFirstRender;
+                scope.onChipsFirstRender = gFiltersVm.onChipsFirstRender;
 
-				scope.addFilter = function ($event) {
+                scope.addFilter = function ($event) {
 
-					// const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
+                    // const shownFilters = scope.showFrontFilters ? filters.frontend : filters.backend;
 
-					gFiltersVm.openAddFilterDialog($event, filters[scope.shownFiltersType]).then(res => {
+                    gFiltersVm.openAddFilterDialog($event, filters[scope.shownFiltersType]).then(res => {
 
-						if (res.status === 'agree') {
+                        if (res.status === 'agree') {
 
-							filters[scope.shownFiltersType].push(res.data);
+                            for (var i = 0; i < res.data.items.length; i = i + 1) {
+                                filters[scope.shownFiltersType].push(res.data.items[i]);
+                            }
 
-							scope.evDataService.setFilters(filters);
-							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                            console.log('filters addFilter', filters);
 
-						}
+                            scope.evDataService.setFilters(filters);
+                            scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-					});
+                        }
 
-				};
+                    });
 
-				scope.removeFilter = function (filtersToRemove) {
+                };
 
-					filters[scope.shownFiltersType] = filters[scope.shownFiltersType].filter(filter => {
-						return filtersToRemove.find(item => item.id !== filter.key);
-					});
+                scope.removeFilter = function (filtersToRemove) {
 
-					scope.evDataService.setFilters(filters);
+                    filters[scope.shownFiltersType] = filters[scope.shownFiltersType].filter(filter => {
+                        return filtersToRemove.find(item => item.id !== filter.key);
+                    });
 
-					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    scope.evDataService.setFilters(filters);
 
-				};
-				//endregion
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-				scope.toggleFiltersToShow = function () {
+                };
+                //endregion
 
-					// scope.showFrontFilters = !scope.showFrontFilters;
+                scope.toggleFiltersToShow = function () {
 
-					scope.shownFiltersType = (scope.shownFiltersType === 'frontend') ? 'backend' : 'frontend';
-					scope.popupData.shownFiltersType = scope.shownFiltersType;
+                    // scope.showFrontFilters = !scope.showFrontFilters;
 
-					if (!addFilterElem) {
-						addFilterElem = filtersChipsContainer.querySelector('.add-chip-wrap .chip-list-content');
-					}
+                    scope.shownFiltersType = (scope.shownFiltersType === 'frontend') ? 'backend' : 'frontend';
+                    scope.popupData.shownFiltersType = scope.shownFiltersType;
 
-					addFilterElem.innerText = (scope.shownFiltersType === 'frontend') ? 'ADD FILTER' : 'ADD SERVER FILTER';
+                    if (!addFilterElem) {
+                        addFilterElem = filtersChipsContainer.querySelector('.add-chip-wrap .chip-list-content');
+                    }
 
-					formatFiltersForChips();
+                    addFilterElem.innerText = (scope.shownFiltersType === 'frontend') ? 'ADD FILTER' : 'ADD SERVER FILTER';
 
-					scope.evEventService.dispatchEvent(evEvents.FILTERS_TO_SHOW_CHANGE);
+                    formatFiltersForChips();
 
-				};
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_TO_SHOW_CHANGE);
 
-				scope.toggleSplitPanel = gFiltersVm.toggleSplitPanel;
+                };
 
-				scope.exportAsCSV = gFiltersVm.exportAsCSV;
-				scope.exportAsExcel = gFiltersVm.exportAsExcel;
-				scope.copyReport = gFiltersVm.copyReport;
-				scope.copySelectedToBuffer = gFiltersVm.copySelectedToBuffer;
+                scope.toggleSplitPanel = gFiltersVm.toggleSplitPanel;
 
-				scope.openViewConstructor = gFiltersVm.openViewConstructor;
+                scope.exportAsCSV = gFiltersVm.exportAsCSV;
+                scope.exportAsExcel = gFiltersVm.exportAsExcel;
+                scope.copyReport = gFiltersVm.copyReport;
+                scope.copySelectedToBuffer = gFiltersVm.copySelectedToBuffer;
 
-				scope.openCustomFieldsManager = function ($event) {
+                scope.openViewConstructor = gFiltersVm.openViewConstructor;
 
-					$mdDialog.show({
-						controller: 'AttributesManagerDialogController as vm',
-						templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
-						targetEvent: $event,
-						multiple: true,
-						locals: {
-							data: {
-								entityType: scope.entityType
-							}
-						}
-					});
+                scope.openCustomFieldsManager = function ($event) {
 
-				};
+                    $mdDialog.show({
+                        controller: 'AttributesManagerDialogController as vm',
+                        templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    });
 
-				scope.openInputFormEditor = function (ev) {
+                };
 
-					$mdDialog.show({
-						controller: 'EntityDataConstructorDialogController as vm',
-						templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
-						targetEvent: ev,
-						multiple: true,
-						locals: {
-							data: {
-								entityType: scope.entityType
-							}
-						}
-					});
+                scope.openInputFormEditor = function (ev) {
 
-				};
+                    $mdDialog.show({
+                        controller: 'EntityDataConstructorDialogController as vm',
+                        templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                        targetEvent: ev,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                entityType: scope.entityType
+                            }
+                        }
+                    });
 
-				const initEventListeners = function () {
+                };
 
-					// placed here because formatFiltersForChips() should be called only after customFields update
-					scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
-						customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
-						formatFiltersForChips();
-					});
+                const initEventListeners = function () {
 
-					scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, function () {
-						gFiltersVm.calculateFilterChipsContainerWidth(gFiltersLeftPartWidth, gFiltersRightPartWidth, filtersChipsContainer);
-					});
+                    // placed here because formatFiltersForChips() should be called only after customFields update
+                    scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                        customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                        formatFiltersForChips();
+                    });
 
-					scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+                    scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, function () {
+                        gFiltersVm.calculateFilterChipsContainerWidth(gFiltersLeftPartWidth, gFiltersRightPartWidth, filtersChipsContainer);
+                    });
 
-						filters = scope.evDataService.getFilters();
+                    scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-						formatFiltersForChips();
+                        filters = scope.evDataService.getFilters();
 
-						setTimeout(function () { // wait until DOM elems reflow after ng-repeat
+                        formatFiltersForChips();
 
-							const filterAreaHeightChanged = gFiltersVm.updateFilterAreaHeight();
+                        setTimeout(function () { // wait until DOM elems reflow after ng-repeat
 
-							if (filterAreaHeightChanged) {
-								scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-							}
+                            const filterAreaHeightChanged = gFiltersVm.updateFilterAreaHeight();
 
-						}, 0);
+                            if (filterAreaHeightChanged) {
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                            }
 
-					});
+                        }, 0);
 
-					scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
-						scope.currentAdditions = scope.evDataService.getAdditions();
-					});
+                    });
 
-				};
+                    scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+                        scope.currentAdditions = scope.evDataService.getAdditions();
+                    });
 
-				const init = function () {
+                };
 
-					// separateEvFilters();
+                const init = function () {
 
-					scope.popupEventService = gFiltersVm.popupEventService;
-					scope.chipsListEventService = gFiltersVm.chipsListEventService;
+                    // separateEvFilters();
 
-					scope.popupData = gFiltersVm.popupData;
-					scope.popupData.shownFiltersType = scope.shownFiltersType;
+                    scope.popupEventService = gFiltersVm.popupEventService;
+                    scope.chipsListEventService = gFiltersVm.chipsListEventService;
 
-					formatFiltersForChips();
+                    scope.popupData = gFiltersVm.popupData;
+                    scope.popupData.shownFiltersType = scope.shownFiltersType;
 
-					scope.readyStatus.filters = true;
+                    formatFiltersForChips();
 
-					gFiltersVm.updateFilterAreaHeightOnInit();
+                    scope.readyStatus.filters = true;
 
-					initEventListeners();
+                    gFiltersVm.updateFilterAreaHeightOnInit();
 
-				};
+                    initEventListeners();
 
-				init();
+                };
 
-			}
-		}
-	}
+                init();
+
+            }
+        }
+    }
 
 })();

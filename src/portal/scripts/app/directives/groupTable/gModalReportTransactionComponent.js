@@ -874,22 +874,25 @@
 
                     for (var i = 0; i < vm.attrsList.length; i++) {
 
-                        if (vm.attrsList[i].key === res.data.key) {
+                        for (var j = 0; j < res.data.items.length; j = j + 1) {
 
-                            switch (selectedGroup) {
-                                case 'group':
-                                    vm.attrsList[i].groups = true;
-                                    break;
-                                case 'column':
-                                    vm.attrsList[i].columns = true;
-                                    break;
-                                case 'filter':
-                                    vm.attrsList[i].filters = true;
-                                    break;
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                                switch (selectedGroup) {
+                                    case 'group':
+                                        vm.attrsList[i].groups = true;
+                                        break;
+                                    case 'column':
+                                        vm.attrsList[i].columns = true;
+                                        break;
+                                    case 'filter':
+                                        vm.attrsList[i].filters = true;
+                                        break;
+                                }
+
+                                vm.updateAttrs(vm.attrsList);
+                                break;
                             }
-
-                            vm.updateAttrs(vm.attrsList);
-                            break;
                         }
 
                     }
