@@ -17,7 +17,7 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+    var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
@@ -380,9 +380,9 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                            if (attrs[i].key === item.key) {
-                                attrs[i].columns = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].columns = true;
+                        }
 
                     }
 
@@ -392,9 +392,9 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                            if (attrs[i].key === item.key) {
-                                attrs[i].filters = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].filters = true;
+                        }
 
                     }
 
@@ -404,9 +404,9 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                            if (attrs[i].key === item.key) {
-                                attrs[i].groups = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].groups = true;
+                        }
 
                     }
 
@@ -632,22 +632,25 @@
 
                     for (var i = 0; i < vm.attrsList.length; i++) {
 
-                        if (vm.attrsList[i].key === res.data.key) {
+                        for (var j = 0; j < res.data.items.length; j++) {
 
-                            switch (selectedGroup) {
-                                case 'group':
-                                    vm.attrsList[i].groups = true;
-                                    break;
-                                case 'column':
-                                    vm.attrsList[i].columns = true;
-                                    break;
-                                case 'filter':
-                                    vm.attrsList[i].filters = true;
-                                    break;
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                                switch (selectedGroup) {
+                                    case 'group':
+                                        vm.attrsList[i].groups = true;
+                                        break;
+                                    case 'column':
+                                        vm.attrsList[i].columns = true;
+                                        break;
+                                    case 'filter':
+                                        vm.attrsList[i].filters = true;
+                                        break;
+                                }
+
+                                vm.updateAttrs(vm.attrsList);
+                                break;
                             }
-
-                            vm.updateAttrs(vm.attrsList);
-                            break;
                         }
 
                     }

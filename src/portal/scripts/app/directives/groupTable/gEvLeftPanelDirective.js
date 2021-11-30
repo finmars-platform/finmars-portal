@@ -8,7 +8,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-	var evFilterService = require('../../services/ev-data-provider/filter.service');
+    var evFilterService = require('../../services/ev-data-provider/filter.service');
 
     module.exports = function ($mdDialog, $state,) {
         return {
@@ -19,7 +19,7 @@
                 evEventService: '=',
                 attributeDataService: '=',
                 spExchangeService: '=', // TODO may be not need
-				contentWrapElement: '='
+                contentWrapElement: '='
             },
             link: function (scope,) {
 
@@ -28,7 +28,7 @@
 
                 scope.sliderButtonState = 'unfolded';
 
-				let finishRenderIndex;
+                let finishRenderIndex;
 
                 scope.recursiveMarkHasSelected = function (tree, selectedGroups) {
 
@@ -65,7 +65,7 @@
 
                     scope.recursiveMarkHasSelected(result, selectedGroups);
 
-					// result = evFilterService.filterTableTree(result, scope.evDataService);
+                    // result = evFilterService.filterTableTree(result, scope.evDataService);
 
                     return result;
 
@@ -109,23 +109,23 @@
 
                         var originalWidth = interfaceLayout.evLeftPanel.width;
 
-						$(window).bind('mousemove', function sliderMouseMove(event) {
+                        $(window).bind('mousemove', function sliderMouseMove(event) {
 
-							var diffX = event.clientX - clientX;
-							// var diffY = clientY + event.clientY
-							resultWidth = Math.max(230, originalWidth + diffX);
+                            var diffX = event.clientX - clientX;
+                            // var diffY = clientY + event.clientY
+                            resultWidth = Math.max(230, originalWidth + diffX);
 
-							interfaceLayout.evLeftPanel.width = resultWidth;
-							// leftPanel.style.width = resultWidth + 'px';
-							// tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
-							leftPanel.style["flex-basis"] = resultWidth + 'px';
-							leftPanel.style.width = resultWidth + 'px';
+                            interfaceLayout.evLeftPanel.width = resultWidth;
+                            // leftPanel.style.width = resultWidth + 'px';
+                            // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
+                            leftPanel.style["flex-basis"] = resultWidth + 'px';
+                            leftPanel.style.width = resultWidth + 'px';
 
-							scope.evDataService.setInterfaceLayout(interfaceLayout);
+                            scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-						});
+                        });
 
                     })
 
@@ -136,29 +136,29 @@
 
                     });
 
-                    evLeftPanelSliderButton.addEventListener('click', function (event){
+                    evLeftPanelSliderButton.addEventListener('click', function (event) {
 
                         if (scope.sliderButtonState === 'unfolded') {
 
                             resultWidth = 33;
                             scope.sliderButtonState = 'folded';
-							slider.classList.add('display-none');
+                            slider.classList.add('display-none');
 
-							scope.groupSectionState = false;
+                            scope.groupSectionState = false;
 
                         } else {
 
-                        	resultWidth = 230;
+                            resultWidth = 230;
                             scope.sliderButtonState = 'unfolded';
-							slider.classList.remove('display-none');
+                            slider.classList.remove('display-none');
 
                         }
 
                         interfaceLayout.evLeftPanel.width = resultWidth;
                         // leftPanel.style.width = resultWidth + 'px';
                         // tableSection.style.width = parentSection.clientWidth - (resultWidth +1) + 'px'
-						leftPanel.style["flex-basis"] = resultWidth + 'px';
-						leftPanel.style.width = resultWidth + 'px';
+                        leftPanel.style["flex-basis"] = resultWidth + 'px';
+                        leftPanel.style.width = resultWidth + 'px';
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
 
@@ -265,18 +265,18 @@
                             var elemItem;
                             var elemNextSiblingIndex;
 
-                            scope.groupTypes.forEach(function (item, index){
-                                if(item.key === elemKey) {
+                            scope.groupTypes.forEach(function (item, index) {
+                                if (item.key === elemKey) {
                                     elemItem = item
                                 }
 
                             })
 
-                            scope.groupTypes = scope.groupTypes.filter(function (item){
+                            scope.groupTypes = scope.groupTypes.filter(function (item) {
                                 return item.key !== elemKey
                             })
 
-                            scope.groupTypes.forEach(function (item, index){
+                            scope.groupTypes.forEach(function (item, index) {
 
                                 if (item.key === nextSiblingKey) {
                                     elemNextSiblingIndex = index
@@ -358,9 +358,9 @@
 
                 }
 
-                scope.deleteGroupType = function($event, item, $index) {
+                scope.deleteGroupType = function ($event, item, $index) {
 
-                    scope.groupTypes = scope.groupTypes.filter(function (item, index){
+                    scope.groupTypes = scope.groupTypes.filter(function (item, index) {
                         return index !== $index
                     })
 
@@ -472,7 +472,7 @@
 
                 };
 
-                scope.addGroupType = function ($event){
+                scope.addGroupType = function ($event) {
 
                     var allAttrsList = getAttributes();
 
@@ -504,7 +504,12 @@
 
                         if (res && res.status === "agree") {
 
-                            scope.groupTypes.push(res.data);
+
+                            for (var i = 0; i < res.data.items.length; i = i + 1) {
+                                scope.groupTypes.push(res.data.items[i]);
+                            }
+
+
                             scope.evDataService.setSelectedGroups([])
                             scope.evDataService.setGroups(scope.groupTypes)
 
@@ -535,33 +540,33 @@
 
                     scope.tree = scope.generateGroupsTree()
 
-					/* setTimeout(function () {
+                    /* setTimeout(function () {
 
-						scope.resize();
+                        scope.resize();
 
-					}, 100)
+                    }, 100)
 
-					window.addEventListener('resize', function () {
-						scope.resize();
-					}); */
+                    window.addEventListener('resize', function () {
+                        scope.resize();
+                    }); */
 
                     scope.handleSlider();
                     scope.drake.init();
 
-					finishRenderIndex = scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
+                    finishRenderIndex = scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
 
-						scope.evContentElement = scope.contentWrapElement.querySelector('.ev-viewport');
-						scope.evEventService.removeEventListener(evEvents.FINISH_RENDER, finishRenderIndex);
+                        scope.evContentElement = scope.contentWrapElement.querySelector('.ev-viewport');
+                        scope.evEventService.removeEventListener(evEvents.FINISH_RENDER, finishRenderIndex);
 
-					});
+                    });
 
                 };
 
                 init();
 
                 scope.$on('$destroy', function () {
-					$(window).unbind('mouseup');
-				});
+                    $(window).unbind('mouseup');
+                });
 
             },
         }
