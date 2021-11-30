@@ -90,6 +90,46 @@
             {
                 "key": "user_text_20",
                 "name": "User Text 20"
+            },
+            {
+                "key": "user_text_21",
+                "name": "User Text 21"
+            },
+            {
+                "key": "user_text_22",
+                "name": "User Text 22"
+            },
+            {
+                "key": "user_text_23",
+                "name": "User Text 23"
+            },
+            {
+                "key": "user_text_24",
+                "name": "User Text 24"
+            },
+            {
+                "key": "user_text_25",
+                "name": "User Text 25"
+            },
+            {
+                "key": "user_text_26",
+                "name": "User Text 26"
+            },
+            {
+                "key": "user_text_27",
+                "name": "User Text 27"
+            },
+            {
+                "key": "user_text_28",
+                "name": "User Text 28"
+            },
+            {
+                "key": "user_text_29",
+                "name": "User Text 29"
+            },
+            {
+                "key": "user_text_30",
+                "name": "User Text 30"
             }
         ];
 
@@ -240,6 +280,7 @@
 						vm.transactionTypeTextFields.forEach(function (textField) {
 
 							if (textField.key === field.key) {
+								textField.is_active = field.is_active;
 								textField.name = field.name;
 								textField.id = field.id;
 							}
@@ -249,6 +290,7 @@
 						vm.transactionTypeNumberFields.forEach(function (numberField) {
 
 							if (numberField.key === field.key) {
+								numberField.is_active = field.is_active;
 								numberField.name = field.name;
 								numberField.id = field.id;
 							}
@@ -258,6 +300,7 @@
 						vm.transactionTypeDateFields.forEach(function (dateField) {
 
 							if (dateField.key === field.key) {
+								dateField.is_active = field.is_active;
 								dateField.name = field.name;
 								dateField.id = field.id;
 							}
@@ -287,6 +330,7 @@
 						vm.instrumentTextFields.forEach(function (textField) {
 
 							if (textField.key === field.key) {
+								// textField.is_active = field.is_active;
 								textField.name = field.name;
 								textField.id = field.id;
 							}

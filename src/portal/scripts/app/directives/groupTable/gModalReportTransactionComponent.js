@@ -222,6 +222,26 @@
 
             transactionUserFields.forEach(function (field) {
 
+                vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr){
+
+                    if (entityAttr.key === 'complex_transaction.' + field.key) {
+                        return field.is_active;
+                    }
+
+                    return true
+
+                })
+
+                userFieldsComp = userFieldsComp.filter(function (item){
+                    if (item === 'complex_transaction.' + field.key) {
+                        return field.is_active;
+                    }
+
+                    return true
+                })
+
+                console.log('userFieldsComp', userFieldsComp);
+
                 vm.complexTransactionAttrs = vm.complexTransactionAttrs.map(function (entityAttr, index) {
 
                     if (entityAttr.key === 'complex_transaction.' + field.key) {
