@@ -32,7 +32,9 @@
 		const groupSelectorValueEntities = {
 			'strategy-1': 'strategy-1-subgroup',
 			'strategy-2': 'strategy-2-subgroup',
-			'strategy-3': 'strategy-3-subgroup'
+			'strategy-3': 'strategy-3-subgroup',
+			'responsible': 'responsible-group',
+			'counterparty': 'counterparty-group'
 		};
 
 

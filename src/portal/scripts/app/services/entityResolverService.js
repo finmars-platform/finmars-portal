@@ -74,6 +74,12 @@
             case 'counterparty':
                 return counterpartyService.getList(options);
                 break;
+            case 'responsible-group':
+                return responsibleGroupService.getList(options);
+                break;
+            case 'counterparty-group':
+                return counterpartyGroupService.getList(options);
+                break;
             case 'currency':
                 return currencyService.getList(options);
                 break;
