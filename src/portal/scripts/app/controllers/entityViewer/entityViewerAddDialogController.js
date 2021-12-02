@@ -1201,7 +1201,7 @@
 
                                     if (data.message.non_field_errors[0].indexOf('unique set') !== -1) {
 
-                                       popupText = vm.entityTypeSlug() + ' is already exist'
+                                        popupText = vm.entityTypeSlug() + ' is already exist'
 
                                     }
 
@@ -1892,6 +1892,12 @@
 
                 } else {
                     $scope.$apply();
+                }
+
+                if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+
+                    vm.entity.group = vm.groupSelectorOptions[0].id
+
                 }
 
                 /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
