@@ -175,7 +175,7 @@
 
                 var groupTypes = entityViewerDataService.getGroups();
 
-                items = filterService.filterTableRows(items, regularFilters);
+                items = filterService.filterTableRows(items, regularFilters, entityType);
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
 
                 if (globalTableSearch) {
