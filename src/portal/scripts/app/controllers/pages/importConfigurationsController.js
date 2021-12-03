@@ -87,8 +87,6 @@
                             }
 
 
-
-
                         }
 
                         vm.openImportConfigurationManager($event);
@@ -96,7 +94,6 @@
                         $scope.$apply();
 
                     };
-
 
 
                 });
@@ -126,7 +123,7 @@
                     console.log('vm.configurationFile', vm.configurationFile);
 
                     vm.initImportedState();
-                    
+
                     $scope.$apply();
 
                 } catch (error) {
@@ -940,30 +937,38 @@
 
         };
 
-        vm.importConfiguration = function (resolve) {
+        vm.importConfiguration = function (resolve, reject) {
 
-            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+            try {
 
-                vm.importConfig = data;
+                backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
 
-                vm.counter = data.processed_rows;
-                vm.activeItemTotal = data.total_rows;
+                    vm.importConfig = data;
 
-                $scope.$apply();
+                    vm.counter = data.processed_rows;
+                    vm.activeItemTotal = data.total_rows;
 
-                if (vm.importConfig.task_status === 'SUCCESS') {
+                    $scope.$apply();
 
-                    resolve()
+                    if (vm.importConfig.task_status === 'SUCCESS') {
 
-                } else {
+                        resolve()
 
-                    setTimeout(function () {
-                        vm.importConfiguration(resolve);
-                    }, 1000)
+                    } else if (vm.importConfig.task_status === 'ERROR') {
+                        reject('Server could not process the file. Please, try again later');
+                    } else {
 
-                }
+                        setTimeout(function () {
+                            vm.importConfiguration(resolve);
+                        }, 1000)
 
-            })
+                    }
+
+                })
+
+            } catch (e) {
+                reject(e)
+            }
 
         };
 
@@ -1045,39 +1050,51 @@
 
             new Promise(function (resolve, reject) {
 
-                vm.importConfiguration(resolve)
+                vm.importConfiguration(resolve, reject)
 
             }).then(function (data) {
 
                 console.log('agreeAsBackendProcess data', data);
                 console.log('agreeAsBackendProcess vm.importConfig', vm.importConfig);
 
+                vm.pageState = 'import-complete';
+                $scope.$apply();
 
-                $mdDialog.show({
-                    controller: 'ConfigurationImportResultDialogController as vm',
-                    templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: vm.importConfig
-                    }
 
-                }).then(function () {
-
-                    vm.importConfig = null;
-                    vm.configurationFile = null;
-                    vm.file = null;
-                    vm.pageState = 'default';
-
-                });
-
+            }).catch(function (reason) {
+                vm.pageState = 'import-error';
+                vm.errorMessage = reason;
+                $scope.$apply();
             })
 
 
         };
+
+        vm.showImportDetails = function ($event) {
+
+            $mdDialog.show({
+                controller: 'ConfigurationImportResultDialogController as vm',
+                templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: vm.importConfig
+                }
+
+            })
+
+        }
+
+        vm.goToDefaultState = function ($event) {
+            vm.importConfig = null;
+            vm.configurationFile = null;
+            vm.file = null;
+            vm.processing = false;
+            vm.pageState = 'default';
+        }
 
         vm.checkForDuplicates = function () {
 
@@ -1149,7 +1166,7 @@
 
         // IMPORT DIALOG LOGIC HERE END
 
-        vm.initImportedState = function (){
+        vm.initImportedState = function () {
 
             vm.sections = vm.file.body;
 
@@ -1190,7 +1207,6 @@
 
 
         vm.init = function () {
-
 
 
         };
