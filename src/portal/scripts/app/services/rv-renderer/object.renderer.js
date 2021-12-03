@@ -50,6 +50,18 @@
 
         }
 
+        if (column.value_type === 'field') {// maybe deprecated logic, but required for old layouts
+            result.html_result = obj[column.key];
+            result.raw_text_result = obj[column.key];
+        }
+
+        if (column.value_type === 'float') {// maybe deprecated logic, but required for old layouts
+            result.html_result = renderHelper.formatValue(obj, column);
+            result.numeric_result = obj[column.key];
+            // result.raw_text_result = renderHelper.formatValue(obj, column); // Twice process format?
+            result.raw_text_result = result.html_result;
+        }
+
         if (column.value_type === 60) {
             if (obj[column.key]) {
 
