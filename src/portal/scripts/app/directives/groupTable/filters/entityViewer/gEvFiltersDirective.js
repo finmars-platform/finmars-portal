@@ -136,6 +136,20 @@
 
                             break;
 
+                        case 'instrument-type':
+
+                            editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                            evHelperService.openInstrumentTypeAddDrawer(
+                                scope.evDataService,
+                                scope.evEventService,
+                                editLayout,
+                                $bigDrawer,
+                                scope.entityType,
+                                entity
+                            );
+
+                            break;
+
                         case 'complex-transaction':
 
                             editLayout = await uiService.getDefaultEditLayout(scope.entityType);

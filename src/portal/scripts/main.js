@@ -334,6 +334,23 @@ export default (function () {
 	portal.controller('ListLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/listLayoutExportDialogController')]);
 
 
+	// Instrument Type
+
+	portal.controller(
+		'InstrumentTypeAddDialogController',
+		[
+			'$scope', '$mdDialog', '$bigDrawer', '$state', 'authorizerService', 'usersService', 'usersGroupService', 'entityType', 'entity', 'data',
+			require('./app/controllers/entityViewer/instrumentTypeAddDialogController')
+		]
+	);
+	portal.controller(
+		'InstrumentTypeEditDialogController',
+		[
+			'$scope', '$mdDialog', '$bigDrawer', '$state', 'authorizerService', 'usersService', 'usersGroupService', 'entityType', 'entityId', 'data',
+			require('./app/controllers/entityViewer/instrumentTypeEditDialogController')
+		]
+	);
+
 	// Transaction type form
 
 	portal.controller(
