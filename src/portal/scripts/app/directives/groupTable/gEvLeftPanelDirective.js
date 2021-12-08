@@ -172,23 +172,23 @@
 
                 scope.initEventListeners = function () {
 
-                    /* scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         // scope.resize();
 
                         setTimeout(function () {
-                            scope.tree = scope.generateGroupsTree();
+                            scope.tree = JSON.parse(JSON.stringify(scope.generateGroupsTree()));
                             scope.$apply()
                         }, 0)
 
-                    }); */
+                    });
 
                     scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
                         // scope.resize();
 
                         setTimeout(function () {
-                            scope.tree = scope.generateGroupsTree();
+                            scope.tree = JSON.parse(JSON.stringify(scope.generateGroupsTree()));
                             scope.$apply()
                         }, 0)
 
@@ -200,7 +200,7 @@
                         // scope.resize();
 
                         setTimeout(function () {
-                            scope.tree = scope.generateGroupsTree();
+                            scope.tree = JSON.parse(JSON.stringify(scope.generateGroupsTree()));
                             scope.$apply();
                         }, 0)
 
@@ -538,7 +538,7 @@
 
                     console.log('scope.groupTypes', scope.groupTypes)
 
-                    scope.tree = scope.generateGroupsTree()
+                    scope.tree = JSON.parse(JSON.stringify(scope.generateGroupsTree()));
 
                     /* setTimeout(function () {
 
@@ -552,6 +552,7 @@
 
                     scope.handleSlider();
                     scope.drake.init();
+
 
                     finishRenderIndex = scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
 

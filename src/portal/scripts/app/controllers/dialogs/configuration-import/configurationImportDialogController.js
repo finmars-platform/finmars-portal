@@ -19,6 +19,8 @@
 
         var vm = this;
 
+        vm.pageState = 'import-manager';
+
         vm.file = data.file;
         vm.rawFile = data.rawFile;
 
@@ -987,6 +989,8 @@
                 mode: vm.settings.mode
             };
 
+            vm.pageState = 'import-progress';
+
             new Promise(function (resolve, reject) {
 
                 vm.importConfiguration(resolve)
@@ -996,29 +1000,61 @@
                 console.log('agreeAsBackendProcess data', data);
                 console.log('agreeAsBackendProcess vm.importConfig', vm.importConfig);
 
+                vm.pageState = 'import-complete';
 
-                $mdDialog.show({
-                    controller: 'ConfigurationImportResultDialogController as vm',
-                    templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        data: vm.importConfig
-                    }
+                // $mdDialog.show({
+                //     controller: 'ConfigurationImportResultDialogController as vm',
+                //     templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
+                //     targetEvent: $event,
+                //     preserveScope: true,
+                //     multiple: true,
+                //     autoWrap: true,
+                //     skipHide: true,
+                //     locals: {
+                //         data: vm.importConfig
+                //     }
+                //
+                // }).then(function () {
+                //
+                //     $mdDialog.hide({status: 'agree', data: {}});
+                //
+                // });
 
-                }).then(function () {
-
-                    $mdDialog.hide({status: 'agree', data: {}});
-
-                });
-
+            }).catch(function (reason) {
+                vm.pageState = 'import-error';
+                vm.errorMessage = reason;
+                $scope.$apply();
             })
 
 
         };
+
+        vm.showImportDetails = function ($event) {
+
+            $mdDialog.show({
+                controller: 'ConfigurationImportResultDialogController as vm',
+                templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: vm.importConfig
+                }
+
+            })
+
+        }
+
+        vm.goToDefaultState = function ($event) {
+            vm.importConfig = null;
+            vm.configurationFile = null;
+            vm.file = null;
+            vm.processing = false;
+            vm.pageState = 'import-manager';
+        }
+
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
