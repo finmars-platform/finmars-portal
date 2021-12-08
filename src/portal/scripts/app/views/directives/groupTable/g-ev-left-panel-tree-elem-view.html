@@ -15,21 +15,33 @@
         <div data-ng-show="item.___is_open"
              class="ev-left-panel-folding-btn"
              data-ng-click="foldGroup($event)">
-            <span class="material-icons" >expand_more</span>
+            <span class="material-icons">expand_more</span>
         </div>
 
-        <div data-ng-click="toggleGroupSelection($event)" class="ev-left-panel-tree-elem-name"> {{getPrettyName()}} ({{item.___items_count}})</div>
-<!--        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}}</div>-->
+        <div data-ng-click="toggleGroupSelection($event)" class="ev-left-panel-tree-elem-name"> {{getPrettyName()}}
+            ({{item.___items_count}})
+        </div>
+        <!--        <div data-ng-click="toggleGroupSelection($event)"  class="ev-left-panel-tree-elem-name"> {{item.___group_name}}</div>-->
     </div>
 
     <div data-ng-if="item.___is_open">
-        <div data-ng-repeat="child in item.results track by $index" class="ev-left-panel-children-holder" >
+        <div data-ng-repeat="child in item.results track by $index" class="ev-left-panel-children-holder">
 
             <g-ev-left-panel-tree-elem item="child"
                                        ev-data-service="evDataService"
                                        ev-event-service="evEventService"
                                        ev-content-element="evContentElement"></g-ev-left-panel-tree-elem>
 
+
+        </div>
+
+        <div data-ng-if="currentPage < total_pages">
+            <button class="control-button load-more" data-ng-if="!isLastLevel" data-ng-click="loadMore($event)">Load
+                more
+            </button>
+            <button class="control-button load-all" data-ng-if="!isLastLevel" data-ng-click="loadAll($event)"> Load
+                all
+            </button>
         </div>
     </div>
 
