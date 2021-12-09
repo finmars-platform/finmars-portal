@@ -1627,16 +1627,8 @@
 
         vm.relationItems = {};
 
-        vm.toggleItem = function (pane, item, $event) {
-
-            $event.stopPropagation();
-
-            if (!$event.target.classList.contains('ttype-action-notes-input')) {
-                pane.toggle();
-                item.isPaneExpanded = !item.isPaneExpanded;
-            }
-
-        };
+		vm.onActionAccordionCollapse = sharedLogic.onActionAccordionCollapse;
+        vm.toggleItem = sharedLogic.toggleItem;
 
         vm.getActionTypeName = function (action) {
 

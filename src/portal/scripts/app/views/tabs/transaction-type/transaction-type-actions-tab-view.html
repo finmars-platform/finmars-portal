@@ -1,6 +1,7 @@
 <div>
-    <div class="transaction-type-actions-tab-view transaction-type-actions-wrapper">
-        <v-accordion class="vAccordion-type1" multiple control="vm.accordion">
+    <div class="transaction-type-actions-tab-view transaction-type-actions-wrapper ">
+        <v-accordion multiple control="vm.accordion" oncollapse="vm.onActionAccordionCollapse(index, id)"
+                     class="vAccordion-type1">
 
             <v-pane data-ng-repeat="item in vm.entity.actions track by $index" expanded="item.isPaneExpanded">
                 <v-pane-header ng-class="{'m-b-0': !$pane.isExpanded()}" inactive class="transaction-type-action-pane">
@@ -121,7 +122,7 @@
                     </div> -->
                 </v-pane-header>
 
-                <v-pane-content class="transaction-type-actions-fields" ng-class="{'p-t-10': $pane.isExpanded()}">
+                <v-pane-content class="transaction-type-actions-fields {{'ttypeActionsFields' + $index}}" ng-class="{'p-t-10': $pane.isExpanded()}">
 
                     <div data-ng-if="item.transaction != null"
                          data-ng-include="'views/tabs/transaction-type/actions/transaction-action-view.html'"></div>

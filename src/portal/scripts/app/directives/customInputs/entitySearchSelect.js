@@ -22,7 +22,10 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
-                onChangeCallback: '&'
+
+				onMenuOpen: '&',
+				onMenuClose: '&',
+				onChangeCallback: '&',
             },
             templateUrl: 'views/directives/customInputs/entity-search-select-view.html',
             link: function (scope, elem, attrs) {
@@ -275,6 +278,10 @@
                     window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
 
+					if (scope.onMenuClose) {
+						scope.onMenuClose();
+					}
+
                     if (updateScope) {
                         scope.$apply();
                     }
@@ -404,6 +411,10 @@
                         inputContainer.classList.add('custom-input-focused');
 
                         getOptionsList();
+
+						if (scope.onMenuOpen) {
+							scope.onMenuOpen();
+						}
 
                     });
 

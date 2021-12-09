@@ -119,6 +119,21 @@
             return contextProperties;
         };
 
+		const onActionAccordionCollapse = function (index, id) {
+			removeEmptySpaceFromAction(index);
+		};
+
+		const toggleItem = function (pane, item, $index, $event) {
+
+			$event.stopPropagation();
+
+			if (!$event.target.classList.contains('ttype-action-notes-input')) {
+				pane.toggle();
+				item.isPaneExpanded = !item.isPaneExpanded;
+			}
+
+		};
+
         const updateInputFunctions = function () {
 
             viewModel.expressionData.groups[0] = {
@@ -301,16 +316,20 @@
 
 					viewModel.entity.actions.push(action);
 
-					const multitypeFieldsData = getMultitypeFieldsDataForAction(action);
+					const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
+					const multitypeFieldsData = getMultitypeFieldsDataForAction(action, newActionIndex);
+
 					viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
 
-				})
+				});
 
 			} else { // add single action
 
         		viewModel.entity.actions.push(actions);
 
-				const multitypeFieldsData = getMultitypeFieldsDataForAction(actions);
+				const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
+				const multitypeFieldsData = getMultitypeFieldsDataForAction(actions, newActionIndex);
+
 				viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
 
 			}
@@ -1334,7 +1353,7 @@
                     updateLinkedInputsOptionsInsideGridTable();
 
 					viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions); // update options for selectors of instrument inputs
-					// console.log("testing actionsMultitypeFieldsList after delete", viewModel.actionsMultitypeFieldsList);
+
 					setTimeout(function () {
 						$scope.$apply();
 						viewModel.actionsMFEventService.dispatchEvent(directiveEvents.FIELD_TYPES_DATA_CHANGED);
@@ -1761,7 +1780,7 @@
 		};
 
 		const findInputs = function (entity) {
-			// console.log("testing.findInputs entity", entity);
+
 			if (!viewModel.entity) { // if this method was fired outside of add / edit ttype
 				return [];
 			}
@@ -1776,7 +1795,7 @@
 				}
 
 			}
-			// console.log("testing.findInputs inputs", content_type, JSON.parse(JSON.stringify(viewModel.entity.inputs)));
+
 			result = viewModel.entity.inputs.filter(function (input) {
 				if (input.content_type === content_type) {
 					return true;
@@ -1788,7 +1807,7 @@
 			result = result.map(function (input) {
 				return {id: input.name, name: input.name};
 			});
-			// console.log("testing.findInputs result", result);
+
 			return result;
 
 		};
@@ -1895,9 +1914,11 @@
 				if (res.status === 'agree') {
 
 					viewModel.entity.actions.splice($index, 1);
-					viewModel.actionsMultitypeFieldsList.splice($index, 1);
-					// console.log("testing.deletePane actionsMultitypeFieldsList", viewModel.actionsMultitypeFieldsList);
+					// viewModel.actionsMultitypeFieldsList.splice($index, 1);
+
 					viewModel.clearPhantoms();
+
+					viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 					createSelectorPopupDataListForActions();
 
 				}
@@ -1956,13 +1977,14 @@
 
 			viewModel.entity.actions.splice(index + 1, 0, actionCopy);
 
-			const multitypeFieldsData = getMultitypeFieldsDataForAction(actionCopy);
-			viewModel.actionsMultitypeFieldsList.splice(index + 1, 0, multitypeFieldsData);
-			// console.log("testing.makeCopyOfAction actionsMultitypeFieldsList", viewModel.actionsMultitypeFieldsList);
+			const coppiedActionIndex = index + 1;
+			const multitypeFieldsData = getMultitypeFieldsDataForAction(actionCopy, coppiedActionIndex);
+			viewModel.actionsMultitypeFieldsList.splice(coppiedActionIndex, 0, multitypeFieldsData);
+
 			viewModel.findPhantoms();
 
 			viewModel.paneActionsMenuPopups = createSelectorPopupDataListForActions();
-			// console.log("testing.makeCopyOfAction paneActionsMenuPopups", viewModel.paneActionsMenuPopups);
+
 		};
 
 		const createSelectorPopupDataListForActions = function () {
@@ -2002,12 +2024,30 @@
 				});
 
 			});
-			// console.log("testing.createSelectorPopupDataListForActions ", viewModel.paneActionsMenuPopups);
+
 			return viewModel.paneActionsMenuPopups;
 
 		};
 
-		const createTransactionMFData = function (action) {
+		const removeEmptySpaceFromAction = function (actionIndex) {
+
+			const actionClass = ".ttypeActionsFields" + actionIndex;
+
+			const actionOfFieldElem = document.querySelector(actionClass);
+			actionOfFieldElem.classList.remove("actions-entity-selector-menu-opened");
+
+		};
+
+		const addEmptySpaceToAction = function (actionIndex) {
+
+			const actionClass = ".ttypeActionsFields" + actionIndex;
+			const actionOfFieldElem = document.querySelector(actionClass);
+
+			actionOfFieldElem.classList.add("actions-entity-selector-menu-opened");
+
+		};
+
+		const createTransactionMFData = function (action, actionIndex) {
 
 			const loadSettlementCurrency = function () {
 				return loadRelation('settlement_currency');
@@ -2016,6 +2056,14 @@
 			const loadTransactionCurrency = function () {
 				return loadRelation('transaction_currency');
 			};
+
+			const onESMenuOpen = function () {
+				addEmptySpaceToAction(actionIndex);
+			};
+
+			const onESMenuClose = function () {
+				removeEmptySpaceFromAction(actionIndex);
+			}
 
 			let multitypeFieldsData = {};
 
@@ -2264,7 +2312,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
-						'itemName': action.transaction.linked_instrument_object ? action.transaction.linked_instrument_object.name : ''
+						'itemName': action.transaction.linked_instrument_object ? action.transaction.linked_instrument_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2295,7 +2345,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
-						'itemName': action.transaction.allocation_pl_object ? action.transaction.allocation_pl_object.name : ''
+						'itemName': action.transaction.allocation_pl_object ? action.transaction.allocation_pl_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2326,7 +2378,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
-						'itemName': action.transaction.allocation_balance_object ? action.transaction.allocation_balance_object.name : ''
+						'itemName': action.transaction.allocation_balance_object ? action.transaction.allocation_balance_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2360,7 +2414,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-1',
-						'itemName': action.transaction.strategy1_position_object ? action.transaction.strategy1_position_object.name : ''
+						'itemName': action.transaction.strategy1_position_object ? action.transaction.strategy1_position_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2390,7 +2446,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-2',
-						'itemName': action.transaction.strategy2_position_object ? action.transaction.strategy2_position_object.name : ''
+						'itemName': action.transaction.strategy2_position_object ? action.transaction.strategy2_position_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2420,7 +2478,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-3',
-						'itemName': action.transaction.strategy3_position_object ? action.transaction.strategy3_position_object.name : ''
+						'itemName': action.transaction.strategy3_position_object ? action.transaction.strategy3_position_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2450,7 +2510,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-1',
-						'itemName': action.transaction.strategy1_cash_object ? action.transaction.strategy1_cash_object.name : ''
+						'itemName': action.transaction.strategy1_cash_object ? action.transaction.strategy1_cash_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2480,7 +2542,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-2',
-						'itemName': action.transaction.strategy2_cash_object ? action.transaction.strategy2_cash_object.name : ''
+						'itemName': action.transaction.strategy2_cash_object ? action.transaction.strategy2_cash_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2510,7 +2574,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-3',
-						'itemName': action.transaction.strategy3_cash_object ? action.transaction.strategy3_cash_object.name : ''
+						'itemName': action.transaction.strategy3_cash_object ? action.transaction.strategy3_cash_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2540,7 +2606,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'counterparty',
-						'itemName': action.transaction.counterparty_object ? action.transaction.counterparty_object.name : ''
+						'itemName': action.transaction.counterparty_object ? action.transaction.counterparty_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2570,7 +2638,9 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'responsible',
-						'itemName': action.transaction.responsible_object ? action.transaction.responsible_object.name : ''
+						'itemName': action.transaction.responsible_object ? action.transaction.responsible_object.name : '',
+						'onMenuOpen': onESMenuOpen,
+						'onMenuClose': onESMenuClose
 					}
 				}
 			];
@@ -2799,7 +2869,7 @@
 
 		};
 
-		const createInstrumentFactorScheduleMFData = function (action) {
+		const createInstrumentFactorScheduleMFData = function (action, actionIndex) {
 
 			let multitypeFieldsData = {};
 
@@ -2829,16 +2899,23 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
-						'itemName': action.instrument_factor_schedule.instrument_object ? action.instrument_factor_schedule.instrument_object.name : ''
+						'itemName': action.instrument_factor_schedule.instrument_object ? action.instrument_factor_schedule.instrument_object.name : '',
+						'onMenuOpen': function () {
+							addEmptySpaceToAction(actionIndex);
+						},
+						'onMenuClose': function () {
+							removeEmptySpaceFromAction(actionIndex);
+						}
 					}
 				}
+
 			];
 
 			return multitypeFieldsData;
 
 		};
 
-		const createInstrumentManualPricingFormulaMFData = function (action) {
+		const createInstrumentManualPricingFormulaMFData = function (action, actionIndex) {
 
 			let multitypeFieldsData = {};
 
@@ -2868,7 +2945,13 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
-						'itemName': action.instrument_manual_pricing_formula.instrument_object ? action.instrument_manual_pricing_formula.instrument_object.name : ''
+						'itemName': action.instrument_manual_pricing_formula.instrument_object ? action.instrument_manual_pricing_formula.instrument_object.name : '',
+						'onMenuOpen': function () {
+							addEmptySpaceToAction(actionIndex);
+						},
+						'onMenuClose': function () {
+							removeEmptySpaceFromAction(actionIndex);
+						}
 					}
 				}
 			];
@@ -2910,7 +2993,7 @@
 
 		};
 
-		const createInstrumentAccrualCalculationSchedulesMFData = function (action) {
+		const createInstrumentAccrualCalculationSchedulesMFData = function (action, actionIndex) {
 
 			let multitypeFieldsData = {};
 
@@ -2940,7 +3023,13 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
-						'itemName': action.instrument_accrual_calculation_schedules.instrument_object ? action.instrument_accrual_calculation_schedules.instrument_object.name : ''
+						'itemName': action.instrument_accrual_calculation_schedules.instrument_object ? action.instrument_accrual_calculation_schedules.instrument_object.name : '',
+						'onMenuOpen': function () {
+							addEmptySpaceToAction(actionIndex);
+						},
+						'onMenuClose': function () {
+							removeEmptySpaceFromAction(actionIndex);
+						}
 					}
 				}
 			];
@@ -3015,11 +3104,11 @@
 
 		};
 
-		const createInstrumentEventSchedulesMFData = function (action) {
+		const createInstrumentEventSchedulesMFData = function (action, actionIndex) {
 
 			let multitypeFieldsData = {};
 
-			const toggled = !!!action.instrument_event_schedule.instrument_toggle;
+			// const toggled = !!!action.instrument_event_schedule.instrument_toggle;
 
 			multitypeFieldsData.instrument = [
 				{
@@ -3047,7 +3136,13 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
-						'itemName': action.instrument_event_schedule.instrument_object ? action.instrument_event_schedule.instrument_object.name : ''
+						'itemName': action.instrument_event_schedule.instrument_object ? action.instrument_event_schedule.instrument_object.name : '',
+						'onMenuOpen': function () {
+							addEmptySpaceToAction(actionIndex);
+						},
+						'onMenuClose': function () {
+							removeEmptySpaceFromAction(actionIndex);
+						}
 					}
 				}
 			];
@@ -3155,33 +3250,33 @@
 
 		};
 
-
-		const getMultitypeFieldsDataForAction = function (action) {
+		const getMultitypeFieldsDataForAction = function (action, actionIndex) {
 
 			let multitypeFieldsData = {};
 
 			if (action.transaction) {
-				multitypeFieldsData = createTransactionMFData(action);
+				multitypeFieldsData = createTransactionMFData(action, actionIndex);
 			}
 			else if (action.instrument) {
 				multitypeFieldsData = createInstrumentMFData(action);
 			}
 			else if (action.instrument_factor_schedule) {
-				multitypeFieldsData = createInstrumentFactorScheduleMFData(action);
+				multitypeFieldsData = createInstrumentFactorScheduleMFData(action, actionIndex);
 			}
 			else if (action.instrument_manual_pricing_formula) {
-				multitypeFieldsData = createInstrumentManualPricingFormulaMFData(action);
+				multitypeFieldsData = createInstrumentManualPricingFormulaMFData(action, actionIndex);
 			}
 			else if (action.instrument_accrual_calculation_schedules) {
-				multitypeFieldsData = createInstrumentAccrualCalculationSchedulesMFData(action);
+				multitypeFieldsData = createInstrumentAccrualCalculationSchedulesMFData(action, actionIndex);
 			}
 			else if (action.instrument_event_schedule) {
-				multitypeFieldsData = createInstrumentEventSchedulesMFData(action);
+				multitypeFieldsData = createInstrumentEventSchedulesMFData(action, actionIndex);
 			}
 
 			return multitypeFieldsData;
 
 		};
+
 		/**
 		 *
 		 * @param actions {Array} - transaction type actions list
@@ -3198,9 +3293,9 @@
 				actionsMultitypeFieldsList.push(multitypeFieldsData);
 
 			}); */
-			actions.forEach(function (action) {
+			actions.forEach(function (action, index) {
 
-				const multitypeFieldsData = getMultitypeFieldsDataForAction(action);
+				const multitypeFieldsData = getMultitypeFieldsDataForAction(action, index);
 
 				actionsMultitypeFieldsList.push(multitypeFieldsData);
 
@@ -3754,6 +3849,9 @@
         return {
             getValueTypes: getValueTypes,
             getContextProperties: getContextProperties,
+
+			onActionAccordionCollapse: onActionAccordionCollapse,
+			toggleItem: toggleItem,
 
             updateInputFunctions: updateInputFunctions,
             getReferenceTables: getReferenceTables,
