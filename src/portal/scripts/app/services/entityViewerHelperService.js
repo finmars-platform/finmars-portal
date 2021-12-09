@@ -700,6 +700,73 @@
 		}
     };
 
+    var postInstrumentTypeEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
+
+        /* evDataService.setActiveObjectAction(null);
+        evDataService.setActiveObjectActionData(null); */
+        evDataService.setRowsActionData(null);
+
+        if (res.status === 'agree') {
+            updateEntityInsideTable(evDataService, evEventService, res);
+        }
+        else if (res.status === 'delete') {
+
+            var objects = evDataService.getObjects();
+
+            objects.forEach(function (obj) {
+
+                if (entityId === obj.id) {
+
+                    var parent = evDataService.getData(obj.___parentId);
+
+                    parent.results = parent.results.filter(function (resultItem) {
+                        return resultItem.id !== entityId
+                    });
+
+                    evDataService.setData(parent)
+
+                }
+
+            });
+
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
+
+        }
+        else if (res.status === 'copy') {
+
+            const entitytype = res.data.entityType;
+            const entity = res.data.entity;
+
+            openInstrumentTypeAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
+
+        }
+
+    };
+
+    var postInstrumentTypeAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res) {
+
+        if (res.status === 'agree') {
+            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
+        }
+        else if (res.status === 'edit') {
+
+            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
+            // open edit window
+            const entitytype = res.data.entityType;
+            const entityId = res.data.entity.id;
+            openInstrumentTypeEditDrawer(
+                evDataService,
+                evEventService,
+                layout,
+                $bigDrawer,
+                entitytype,
+                entityId
+            );
+
+        }
+    };
+
     var postComplexTransactionEditionAction = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
 
         /* evDataService.setActiveObjectAction(null);
@@ -1157,7 +1224,7 @@
 
         }).then(function (res) {
 
-            postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data);
+            postInstrumentTypeAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data);
 
         });
 
@@ -1191,7 +1258,7 @@
 
         }).then(function (res) {
 
-            postEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+            postInstrumentTypeEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
 
 
         });
