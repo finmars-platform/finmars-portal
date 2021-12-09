@@ -257,9 +257,9 @@
 
                 var init = async function () {
 
-                    scope.getGroupType()
-
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        scope.getGroupType()
 
                         var groupHashId = scope.item.___id;
 

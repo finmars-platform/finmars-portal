@@ -752,13 +752,14 @@
 
         }
 
+
         if (errorObj) {
 
             errorObj.key = key;
             errorObj.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
             errorsList.push(errorObj);
 
-            if (errorObj.locationData.type === 'system_tab') {
+            if (errorObj.locationData && errorObj.locationData.type === 'system_tab') {
 				copySystemTabErrorForUserTab(key, tabs, errorObj, errorsList);
 			}
 
@@ -805,7 +806,7 @@
 
             } else {
 
-                if (['procedure_modified_datetime'].indexOf(key) == -1) {
+                if (['procedure_modified_datetime'].indexOf(key) === -1) {
                     validateEvField(key, fieldValue, entityAttr, tabs, fixedFieldsAttrs, entityType, errors);
                 }
             }
@@ -1334,7 +1335,135 @@
 
 	};
 
-	/**
+    /**
+     * Highlight errors on the form
+     *
+     * @param errors {Array.<Object>} - data for dialog with validator results
+     * @param evEditorDataService {Object} - entityViewerEditorDataService
+     * @param evEditorEventService {Object} - entityViewerEditorEventService
+     * @param $mdDialog {Object}
+     * @param $event {Object} - event object
+     * @param fixedAreaPopup {?Object} - fields inside of popup
+     * @returns {Object|null} - changed fixedAreaPopup or null
+     */
+    const processTabsErrorsInstrumentType = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup) {
+
+
+        let locsWithErrors = evEditorDataService.getLocationsWithErrors();
+        let formErrorsList = evEditorDataService.getFormErrorsList();
+
+        let fixedAreaPopupChanged = false;
+
+        errors.forEach(function (errorObj) {
+
+            if (errorObj.locationData) {
+
+                if (['user_tab', 'system_tab'].includes(errorObj.locationData.type)) {
+
+                    const tabName = errorObj.locationData.name.toLowerCase();
+                    const tabType = errorObj.locationData.type; // system_tab || user_tab
+
+                    let tabIsNotMarked = false;
+
+                    if (!locsWithErrors[tabType].hasOwnProperty(tabName)) {
+
+                        locsWithErrors[tabType][tabName] = [errorObj.key];
+                        tabIsNotMarked = true;
+
+                    } else if (!locsWithErrors[tabType][tabName].includes(errorObj.key)) {
+
+                        locsWithErrors[tabType][tabName].push(errorObj.key);
+                        tabIsNotMarked = true;
+
+                    }
+
+                    if (tabIsNotMarked) {
+
+                        if (!formErrorsList.includes(errorObj.key)) { // component can be in multiple tabs (e.g. maturity_date) but formErrorsList should contain only one key
+
+                            formErrorsList.push(errorObj.key);
+
+                        }
+
+                        if (tabType === 'user_tab') {
+
+                            const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
+                            const tabNameElem = document.querySelector(selectorString);
+
+                            if (tabNameElem) tabNameElem.classList.add('error-tab');
+
+                        } else if (tabType === 'system_tab') {
+                            const selectorString = ".evFormSystemTabName[data-tab-name='" + tabName + "']";
+                            const tabNameElem = document.querySelector(selectorString);
+
+                            if (tabNameElem) tabNameElem.classList.add('error-tab');
+                        }
+
+                    }
+
+                }
+                else if (errorObj.locationData.type === 'fixed_area') {
+
+                    var fieldProp = errorObj.key;
+                    var popupFieldsKeysList = [];
+
+                    if (fixedAreaPopup) popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
+
+                    var errorIsInsidePopup = popupFieldsKeysList.length && popupFieldsKeysList.includes(fieldProp);
+
+                    if (!locsWithErrors.fixed_area.fields.includes(fieldProp)) {
+
+                        locsWithErrors.fixed_area.fields.push(fieldProp);
+
+                        if (errorIsInsidePopup) {
+
+                            fixedAreaPopupChanged = true;
+                            // Trigger error mode of the field inside popup of fixed area
+                            fixedAreaPopup.fields[fieldProp].event = {key: "error", error: errorObj.message};
+                            fixedAreaPopup.fields[fieldProp].error = errorObj.message;
+
+                            /* const popupElem = document.querySelector('.entityEditorFixedAreaPopup');
+                            popupElem.classList.add("error"); */
+                            fixedAreaPopup.event = {key: "error", error: "There are fields with errors inside"}
+                            fixedAreaPopup.error = "There are fields with errors inside";
+
+                        }
+
+                    }
+
+                    if (!formErrorsList.includes(fieldProp)) formErrorsList.push(fieldProp);
+
+                }
+
+            }
+
+        });
+
+        evEditorDataService.setLocationsWithErrors(locsWithErrors);
+        evEditorDataService.setFormErrorsList(formErrorsList);
+
+        evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
+
+        $mdDialog.show({
+            controller: 'EvAddEditValidationDialogController as vm',
+            templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+            targetEvent: $event,
+            multiple: true,
+            locals: {
+                data: {
+                    errorsList: errors
+                }
+            }
+        });
+
+        if (fixedAreaPopupChanged) return fixedAreaPopup;
+
+        return null;
+
+    };
+
+
+    /**
 	 *
 	 * @param errorKey {string} - name of property inside entity object
 	 * @param formErrorsList {Array.<string>} - list of error keys
@@ -2058,6 +2187,7 @@
         validateComplexTransaction: validateComplexTransaction,
         validateEntity: validateEntity,
         processTabsErrors: processTabsErrors,
+        processTabsErrorsInstrumentType: processTabsErrorsInstrumentType,
 
         checkTabsForErrorFields: checkTabsForErrorFields,
 
