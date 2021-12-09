@@ -750,6 +750,7 @@
 
             getInputsForLinking();
             updateLinkedInputsOptionsInsideGridTable();
+			updateInputFunctions();
 
         };
 
