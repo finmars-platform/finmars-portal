@@ -61,7 +61,7 @@
 					selectOption: function (item, _$popup, $event) {
 
 						_$popup.cancel();
-						// console.log("testing selectOption", item);
+
 						if (item.id !== scope.model) {
 
 							stylePreset = '';

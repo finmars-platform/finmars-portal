@@ -699,7 +699,8 @@
 
                     <div class="template-ttype-actions transaction-type-actions-wrapper">
 
-                        <v-accordion class="vAccordion-type1" multiple control="vm.accordion">
+                        <v-accordion multiple control="vm.accordion" oncollapse="vm.onActionAccordionCollapse(index, id)"
+                                     class="vAccordion-type1">
 
                             <v-pane data-ng-repeat="item in vm.activeActionTemplate.data.actions track by $index"
                                     expanded="item.isPaneExpanded">

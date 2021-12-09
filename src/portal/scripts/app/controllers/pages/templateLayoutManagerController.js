@@ -326,7 +326,7 @@
 
         // ACTIONS TAB START
 
-        vm.toggleItem = function (pane, item, $event) {
+        /* vm.toggleItem = function (pane, item, $event) {
 
             $event.stopPropagation();
 
@@ -335,7 +335,8 @@
                 item.isPaneExpanded = !item.isPaneExpanded;
             }
 
-        };
+        }; */
+		vm.toggleItem = ttypeSharedLogic.toggleItem;
 
         /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
