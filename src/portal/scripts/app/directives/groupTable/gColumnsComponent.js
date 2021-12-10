@@ -717,125 +717,125 @@
                 };
 
                 /**
-				 * @param dataList {Array<Object>} - For rv list of all groups' data. For ev list of selected groups' data.
-				*/
-				var selectRowsInsideData = function (dataList) {
+                 * @param dataList {Array<Object>} - For rv list of all groups' data. For ev list of selected groups' data.
+                 */
+                var selectRowsInsideData = function (dataList) {
 
-					dataList.forEach(function (dataListItem) {
+                    dataList.forEach(function (dataListItem) {
 
-						if (scope.isReport &&
-							dataListItem.___type === 'group') {
+                        if (scope.isReport &&
+                            dataListItem.___type === 'group') {
 
-							dataListItem.___is_area_subtotal_activated = scope.isAllSelected;
-							dataListItem.___is_line_subtotal_activated = scope.isAllSelected;
+                            dataListItem.___is_area_subtotal_activated = scope.isAllSelected;
+                            dataListItem.___is_line_subtotal_activated = scope.isAllSelected;
 
-						} else if (dataListItem.___type === 'object') {
-							dataListItem.___is_activated = scope.isAllSelected;
-						}
+                        } else if (dataListItem.___type === 'object') {
+                            dataListItem.___is_activated = scope.isAllSelected;
+                        }
 
-						if (dataListItem.results && dataListItem.results.length) {
+                        if (dataListItem.results && dataListItem.results.length) {
 
-							dataListItem.results.forEach(function (child) {
+                            dataListItem.results.forEach(function (child) {
 
-								if (child.___type === 'object') {
-									child.___is_activated = scope.isAllSelected;
-								}
+                                if (child.___type === 'object') {
+                                    child.___is_activated = scope.isAllSelected;
+                                }
 
-							});
+                            });
 
-						}
+                        }
 
-						scope.evDataService.setData(dataListItem);
+                        scope.evDataService.setData(dataListItem);
 
-					});
+                    });
 
-					var data = scope.evDataService.getData();
+                    var data = scope.evDataService.getData();
 
-				};
+                };
 
                 scope.selectAllRows = function () {
 
                     console.time('Selecting all rows');
 
-					var flatList;
-					var dataList = [];
-					// var activateItems;
+                    var flatList;
+                    var dataList = [];
+                    // var activateItems;
 
-                     if (scope.isReport) {
-                    	flatList = rvDataHelper.getFlatStructure(scope.evDataService);
-						/* activateItems = function (item) {
+                    if (scope.isReport) {
+                        flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+                        /* activateItems = function (item) {
 
-							if (item.___type === 'group') {
+                            if (item.___type === 'group') {
 
-								var itemData = Object.assign({}, scope.evDataService.getData(item.___id));
-								itemData.___is_area_subtotal_activated = scope.isAllSelected;
-								itemData.___is_line_subtotal_activated = scope.isAllSelected;
-								scope.evDataService.setData(itemData);
+                                var itemData = Object.assign({}, scope.evDataService.getData(item.___id));
+                                itemData.___is_area_subtotal_activated = scope.isAllSelected;
+                                itemData.___is_line_subtotal_activated = scope.isAllSelected;
+                                scope.evDataService.setData(itemData);
 
-							} else {
-								item.___is_activated = scope.isAllSelected;
-							}
+                            } else {
+                                item.___is_activated = scope.isAllSelected;
+                            }
 
-						}; */
+                        }; */
 
-					} else {
-						flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
-						/* activateItems = function (item) {
-							item.___is_activated = scope.isAllSelected;
-						};*/
-					}
+                    } else {
+                        flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
+                        /* activateItems = function (item) {
+                            item.___is_activated = scope.isAllSelected;
+                        };*/
+                    }
 
                     scope.isAllSelected = scope.evDataService.getSelectAllRowsState();
 
                     scope.isAllSelected = !scope.isAllSelected;
 
                     flatList.forEach(function (item) {
-                    	if (item.___type === 'object') {
-							item.___is_activated = scope.isAllSelected;
-						}
-					});
+                        if (item.___type === 'object') {
+                            item.___is_activated = scope.isAllSelected;
+                        }
+                    });
 
                     if (scope.isReport) {
 
-                    	/* dataList.forEach(function (dataListItem) {
+                        /* dataList.forEach(function (dataListItem) {
 
-							if (dataListItem.results && dataListItem.results.length) {
+                            if (dataListItem.results && dataListItem.results.length) {
 
-								dataListItem.results.forEach(function (childItem) {
+                                dataListItem.results.forEach(function (childItem) {
 
-									childItem.___is_activated = false;
+                                    childItem.___is_activated = false;
 
-									flatList.forEach(function (item) {
+                                    flatList.forEach(function (item) {
 
-										if (childItem.___id === item.___id) {
+                                        if (childItem.___id === item.___id) {
 
-											childItem.___is_activated = item.___is_activated
+                                            childItem.___is_activated = item.___is_activated
 
-										}
+                                        }
 
-									})
-
-
-								});
-
-							}
+                                    })
 
 
-						}); */
-						dataList = scope.evDataService.getDataAsList();
+                                });
 
-					} else {
+                            }
 
-                    	var selGroups = scope.evDataService.getSelectedGroups();
 
-						selGroups.forEach(function (sGroup) {
-							var rawData = scope.evDataService.getData(sGroup.___id);
-							dataList.push(rawData);
-						});
+                        }); */
+                        dataList = scope.evDataService.getDataAsList();
 
-					}
+                    } else {
 
-					selectRowsInsideData(dataList);
+                        var selGroups = scope.evDataService.getSelectedGroups();
+
+                        selGroups.forEach(function (sGroup) {
+                            var rawData = scope.evDataService.getData(sGroup.___id);
+                            dataList.push(rawData);
+                        });
+
+                    }
+
+                    selectRowsInsideData(dataList);
 
                     scope.evDataService.setSelectAllRowsState(scope.isAllSelected);
 
@@ -2123,7 +2123,10 @@
                         if (res && res.status === "agree") {
 
                             res.data.columns = true;
-                            scope.columns.push(res.data);
+
+                            for (var i = 0; i < res.data.items.length; i = i + 1) {
+                                scope.columns.push(res.data.items[i]);
+                            }
                             scope.evDataService.setColumns(scope.columns);
 
                             scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);

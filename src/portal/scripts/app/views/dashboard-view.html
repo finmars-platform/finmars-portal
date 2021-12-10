@@ -345,20 +345,27 @@
 
             </div>
 
-            <div class="dashboard-tabs-holder">
-                <md-tabs md-border-bottom md-dynamic-height class="dashboard-tabs">
+            <div class="dashboard-tab-headers-holder">
 
-                    <md-tab data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number"
-                            md-on-select="vm.setActiveTab(tab)">
-                        <md-tab-label>
-                            <span>
+                <div class="tab-header {{tab.active ? 'active' : ''}} " data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number"
+                        data-ng-click="vm.setActiveTab(tab)">
+                   <span>
                                 {{tab.name}}
                             </span>
-                        </md-tab-label>
 
-                        <md-tab-body>
+                </div>
 
-                            <div class="dashboard-layout position-relative height-100"
+            </div>
+
+            <div class="dashboard-tabs-holder">
+                <div class="dashboard-tabs height-100 width-100">
+
+                    <div data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number" data-ng-show="tab.active" class="height-100 width-100 display-block">
+
+
+                        <div class="tab-body height-100 width-100">
+
+                            <div class="dashboard-layout position-relative height-100 width-100"
                                  dashboard-grid-aligner
                                  dashboard-data-service="vm.dashboardDataService"
                                  dashboard-event-service="vm.dashboardEventService"
@@ -541,10 +548,10 @@
 
                             </div>
 
-                        </md-tab-body>
-                    </md-tab>
+                        </divmd-tab-body>
+                    </div>
 
-                </md-tabs>
+                </div>
             </div>
 
         </div>

@@ -1093,6 +1093,7 @@
 
             getInputsForLinking();
             updateLinkedInputsOptionsInsideGridTable();
+			updateInputFunctions();
 
             viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions); // update options for selectors of instrument inputs
 			setTimeout(function () {
