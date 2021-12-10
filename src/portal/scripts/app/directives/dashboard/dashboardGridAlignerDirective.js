@@ -29,7 +29,9 @@
 
                 scope.calculateSingleCellWidth = function () {
 
-                    var tabWidth = elem.width();
+                    var tabWidth = elem.parent().parent().parent().width();
+
+                    console.log('tabWidth', tabWidth);
 
                     scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal);
 
