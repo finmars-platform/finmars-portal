@@ -6,6 +6,7 @@
     'use strict';
 
     var xhrService = require('../../../../core/services/xhrService');
+    var cookieService = require('../../../../core/services/cookieService');
 
     var getData = function () {
 

@@ -61,9 +61,11 @@
 
     };
 
-    var filterTableRows = function (items, regularFilters) {
+    var filterTableRows = function (items, regularFilters, entityType) {
 
         var match;
+
+        console.log('filterTableRows.regularFilters', regularFilters)
 
         return items.filter(function (item, tableRowIndex) {
 
@@ -81,6 +83,15 @@
                 if (keyProperty !== 'ordering') {
 
                     if (item.hasOwnProperty(keyProperty) && item[keyProperty]) { // check if cell used to filter row is not empty
+
+                        if (entityType === 'balance-report' || entityType === 'pl-report') {
+                            if (keyProperty === 'name' || keyProperty.indexOf('instrument') !== -1) {
+                                if (item.item_type !== 1) { // item_type 1 == "instrument"
+                                    match = false;
+                                    break;
+                                }
+                            }
+                        }
 
                         if (filterType === 'empty') { // prevent pass of cells with values
                             match = false;
@@ -164,11 +175,21 @@
 
                     } else {
 
+
                         if (excludeEmptyCells) { // if user choose to hide empty cells
                             match = false;
                             break;
                         } else {
-                            match = true;
+
+                            if (keyProperty === 'name' || keyProperty.indexOf('instrument') !== -1) {
+                                if (item.item_type !== 1) { // item_type 1 == "instrument"
+                                    match = false;
+                                    break;
+                                }
+                            } else {
+
+                                match = true;
+                            }
                         }
                     }
 
@@ -221,7 +242,7 @@
                     // } else if (valueToFilter.indexOf(filterBy) !== -1) {
                     //     return true;
                     // }
-                }else if (doesStringContainsSubstrings(valueToFilter, filterBy)) {
+                } else if (doesStringContainsSubstrings(valueToFilter, filterBy)) {
                     return true;
 
                 }

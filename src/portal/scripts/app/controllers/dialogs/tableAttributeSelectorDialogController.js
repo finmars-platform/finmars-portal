@@ -16,6 +16,13 @@
         }
 
         vm.activeGroup = [];
+
+        vm.selectedAttributes = [];
+
+        vm.currentLevel = 0;
+        vm.currentPath = [];
+
+
         vm.currentLocation = '-';
         vm.isReport = data.isReport;
 
@@ -25,151 +32,390 @@
         var openedGroupNames = [];
         var tableAttributes = data.availableAttrs;
 
-        var tableAttrsTree = {
+        vm.tableAttrsTree = {
             name: '-',
             items: []
         };
+
+        var get_or_create_group = function (item) {
+
+            var itemPathNamePieces = item.name.split('. ')
+
+            if (item.attribute_type) {
+
+                if (item.key.indexOf("pricing_policy_") !== -1) {
+
+                    name = itemPathNamePieces.pop()
+                    itemPathNamePieces.push("Pricing")
+                    itemPathNamePieces.push(name)
+
+                } else {
+                    name = itemPathNamePieces.pop()
+                    itemPathNamePieces.push("User Attributes")
+                    itemPathNamePieces.push(name)
+                }
+
+            }
+
+            var itemLevel = itemPathNamePieces.length;
+
+            var groupPathName = itemPathNamePieces.slice()
+            groupPathName.pop();
+            var groupLevel = itemLevel - 1;
+
+            var groupToLook = vm.tableAttrsTree;
+            var exist;
+
+            for (var i = 0; i < groupLevel; i = i + 1) {
+
+                var name = groupPathName[i];
+                exist = false;
+
+                for (var j = 0; j < groupToLook.items.length; j = j + 1) {
+
+                    if (groupToLook.items[j].isGroup && groupToLook.items[j].name === name) {
+                        groupToLook = groupToLook.items[j];
+                        exist = true;
+                        break;
+                    }
+
+                }
+
+                if (!exist) {
+
+                    var fullGroupPathName = []
+
+                    for (var x = 0; x <= i; x = x + 1) {
+                        fullGroupPathName.push(groupPathName[x]);
+                    }
+
+                    var newGroup = {
+                        name: groupPathName[i],
+                        level: i,
+                        isGroup: true,
+                        order: 0,
+                        fullPathName: fullGroupPathName.join(' / '),
+                        items: []
+                    }
+
+                    groupToLook.items.push(newGroup);
+
+                    groupToLook = newGroup;
+
+                }
+
+            }
+
+
+            return groupToLook;
+
+        }
 
         var divideTableAttrsInGroups = function () {
 
             console.log('tableAttributes', tableAttributes);
 
-            var a, b;
-            for (a = 0; a < tableAttributes.length; a++) {
+            var tableAttributesCopy = JSON.parse(JSON.stringify(tableAttributes));
 
-                var tAttr = JSON.parse(JSON.stringify(tableAttributes[a]));
-                var attrPathKeys = tAttr.name.split(". ");
 
-                if (tAttr.hasOwnProperty('attribute_type')) { // place all dynamic attributes into separate group
+            if (vm.isReport) {
 
-                    if (vm.isReport) {
+                tableAttributesCopy.forEach(function (item) {
 
-                        if (tAttr.key.indexOf('pricing_policy_') !== -1) {
-                            attrPathKeys.splice(1, 0, 'Pricing');
+                    var itemPathNamePieces = item.name.split('. ')
+                    var itemLevel = itemPathNamePieces.length;
+
+                    var group = get_or_create_group(item) // whole magic here
+
+                    if (item.attribute_type) {
+
+                        itemPathNamePieces.pop() // delete name
+
+                        if (item.key.indexOf('pricing_policy_') !== -1) {
+                            itemPathNamePieces.push('Pricing');
                         } else {
-                            attrPathKeys.splice(1, 0, 'User Attributes');
+                            itemPathNamePieces.push('User Attributes');
                         }
+
+                        itemPathNamePieces.push(item.name) // add name again
+
+                        group.items.push(
+                            {
+                                attributeObject: item,
+                                isGroup: false,
+                                order: 1,
+                                level: itemLevel,
+                                name: item.name,
+                                fullPathName: itemPathNamePieces.join(' / ')
+                            }
+                        )
+
                     } else {
 
-                        if (tAttr.key.indexOf('pricing_policy_') !== -1) {
-                            attrPathKeys.splice(0, 0, 'Pricing');
-                        } else {
-                            attrPathKeys.splice(0, 0, 'User Attributes');
-                        }
-
+                        group.items.push(
+                            {
+                                attributeObject: item,
+                                isGroup: false,
+                                order: 1,
+                                level: itemLevel,
+                                name: item.name,
+                                fullPathName: itemPathNamePieces.join(' / ')
+                            }
+                        )
                     }
 
+                })
+
+
+            } else {
+
+                var userAttributesFolder = {
+                    name: 'User Attributes',
+                    fullPathName: 'User Attributes',
+                    order: 0,
+                    level: 1,
+                    isGroup: true,
+                    items: []
                 }
 
+                var pricingFolder = {
+                    name: 'Pricing',
+                    fullPathName: "Pricing",
+                    order: 0,
+                    level: 1,
+                    isGroup: true,
+                    items: []
+                }
 
-                var attrName = attrPathKeys.pop();
-                var attrObjPath = tableAttrsTree.items;
+                tableAttributesCopy.forEach(function (item) {
 
-                attrPathKeys.forEach(function (attrPathKey) {
+                    if (item.attribute_type) {
 
-                    var groupExist = false;
+                        if (item.key.indexOf('pricing_policy_') !== -1) {
 
-                    if (attrObjPath.length > 0) { // if group exist find it
+                            pricingFolder.items.push({
+                                attributeObject: item,
+                                isGroup: false,
+                                order: 1,
+                                level: 2,
+                                name: item.name,
+                                fullPathName: 'Pricing / ' + item.name
+                            })
 
-                        for (b = 0; b < attrObjPath.length; b++) {
+                        } else {
 
-                            var tAttrGroupName = attrObjPath[b].name;
-
-                            if (tAttrGroupName === attrPathKey) {
-                                attrObjPath = attrObjPath[b].items;
-                                groupExist = true;
-                                break;
-                            }
+                            userAttributesFolder.items.push({
+                                attributeObject: item,
+                                isGroup: false,
+                                order: 1,
+                                level: 2,
+                                name: item.name,
+                                fullPathName: 'User Attributes / ' + item.name
+                            });
                         }
 
-                    }
 
-                    if (!groupExist) { // if there is no such group, create one
-
-                        var newAttrGroup = {
-                            name: attrPathKey,
-                            isGroup: true,
-                            order: 0,
-                            items: []
-                        };
-
-                        attrObjPath.push(newAttrGroup);
-                        attrObjPath = attrObjPath[attrObjPath.length - 1].items;
-
-                    }
-
-                });
-
-                var tAttrData = {
-                    attributeObject: tAttr,
-                    isGroup: false,
-                    order: 1,
-                    name: attrName
-                };
-
-                attrObjPath.push(tAttrData);
-
-            }
-
-        };
-
-        var getCurrentLocation = function () {
-
-            var currentLocationPath = '-';
-
-            if (openedGroupNames.length > 0) {
-
-                openedGroupNames.forEach(function (gName) {
-
-                    if (currentLocationPath === '-') {
-                        currentLocationPath = gName;
                     } else {
-                        currentLocationPath = currentLocationPath + ' > ' + gName;
+
+                        vm.tableAttrsTree.items.push({
+                            attributeObject: item,
+                            isGroup: false,
+                            order: 1,
+                            level: 1,
+                            name: item.name,
+                            fullPathName: item.name
+                        })
                     }
 
-                });
+                })
+
+                vm.tableAttrsTree.items.unshift(pricingFolder)
+                vm.tableAttrsTree.items.unshift(userAttributesFolder)
+
 
             }
 
-            vm.currentLocation = currentLocationPath;
 
         };
+
+        vm.openFromCurrentPath = function (item, $index) {
+
+            vm.currentPath = vm.currentPath.filter(function (item, index) {
+                return index <= $index
+            })
+
+            vm.currentLevel = vm.currentPath.length;
+
+            vm.generateProjection();
+
+        }
+
+        vm.resetCurrentPath = function () {
+            vm.currentPath = [];
+            vm.currentLevel = 0;
+
+            vm.generateProjection();
+        }
 
         vm.returnToPrevGroup = function () {
-            if (previousGroup.length > 0) {
-                openedGroupNames.splice(-1, 1);
-                vm.activeGroup = previousGroup.pop();
+            if (vm.currentPath.length > 0) {
+                vm.currentPath.splice(-1, 1);
+                vm.currentLevel = vm.currentLevel - 1;
 
-                getCurrentLocation();
+                vm.generateProjection();
             }
         };
 
-        vm.openGroupOrSelectAttr = function (item) {
+        vm.searchTermChange = function () {
+            console.log('vm.searchTerms', vm.searchTerms);
+
+            vm.currentPath = [];
+            vm.currentLevel = 0;
+
+            vm.generateProjection();
+
+        }
+
+        vm.openGroup = function (item) {
 
             vm.searchTerms = '';
 
-            if (item.isGroup) {
+            vm.currentPath = item.fullPathName.split(' / ')
 
-                var groupData = JSON.parse(JSON.stringify(vm.activeGroup));
-                previousGroup.push(groupData);
-                vm.activeGroup = item;
+            vm.currentLevel = vm.currentPath.length;
 
-                openedGroupNames.push(item.name);
-                getCurrentLocation();
-
-            } else {
-                vm.save(item.attributeObject);
-            }
+            vm.generateProjection();
 
         };
+
+        vm.selectAttr = function (item) {
+
+            item._active = !item._active;
+
+            vm.selectedAttributes.push(item);
+
+            console.log('vm.selectedAttributes', vm.selectedAttributes);
+
+        }
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.save = function (attr) {
-            $mdDialog.hide({status: 'agree', data: attr});
-        };
+
+        vm.agree = function () {
+
+            var attributes = vm.selectedAttributes.map(function (item) {
+                return item.attributeObject
+            })
+
+            $mdDialog.hide({
+                status: 'agree', data: {
+                    items: attributes
+                }
+            });
+
+        }
+
+        vm.convertTreeToFlatList = function (tree) {
+
+            var result = []
+
+            function traverseNode(node) {
+
+                result.push(node)
+                node.items.forEach(function (child) {
+
+                    if (child.hasOwnProperty('items')) {
+                        traverseNode(child)
+                    } else {
+                        result.push(child)
+                    }
+
+                })
+
+            }
+
+            traverseNode(tree);
+
+            return result
+
+        }
+
+        vm.getHighlighted = function (value) {
+
+            var inputTextPieces = vm.searchTerms.split(' ')
+
+            var resultValue;
+
+            // Regular expression for multiple highlighting case insensitive results
+            var reg = new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+
+            resultValue = value.replace(reg, '<span class="highlight">$1</span>');
+
+            return resultValue
+
+        }
+
+        vm.generateProjection = function () {
+
+            vm.processing = true;
+
+            new Promise(function (resolve, reject) {
+
+                if (vm.searchTerms) {
+
+                    var items = vm.treeAsList.filter(function (item) {
+                        return item.name.toLowerCase().indexOf(vm.searchTerms.toLowerCase()) !== -1
+                    })
+
+                    items = items.map(function (item) {
+
+                        item.fullPathNameWithHighlight = vm.getHighlighted(item.fullPathName)
+
+                        return item
+                    })
+
+                    vm.projection = {
+                        items: items
+                    }
+
+                    console.log('vm.projection', vm.projection);
+
+
+                } else {
+
+                    console.log('tableAttrsTree', vm.tableAttrsTree);
+                    console.log('vm.currentPath', vm.currentPath);
+
+                    var groupToLook = vm.tableAttrsTree;
+
+                    for (var i = 0; i <= vm.currentLevel; i = i + 1) {
+
+                        var name = vm.currentPath[i];
+
+                        groupToLook.items.forEach(function (item) {
+
+                            if (item.name === name) {
+                                groupToLook = item;
+                            }
+
+                        })
+
+                    }
+
+                    vm.projection = groupToLook;
+
+                    console.log('groupToLook', vm.projection);
+
+                }
+                resolve();
+
+            }).then(function () {
+                vm.processing = false;
+                $scope.$apply()
+            })
+        }
 
         var init = function () {
             setTimeout(function () {
@@ -177,8 +423,11 @@
             }, 100);
 
             divideTableAttrsInGroups();
+            vm.treeAsList = vm.convertTreeToFlatList(vm.tableAttrsTree)
 
-            vm.activeGroup = JSON.parse(JSON.stringify(tableAttrsTree));
+            vm.generateProjection();
+
+            // vm.activeGroup = JSON.parse(JSON.stringify(tableAttrsTree));
         };
 
         init();

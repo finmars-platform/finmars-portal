@@ -438,6 +438,11 @@
                 templateUrl: 'views/pages/run-data-procedure-page-view.html',
                 controller: 'RunDataProcedurePageController as vm'
             })
+            .state('app.portal.data-procedure-instance', {
+                url: '/data-procedure-instance',
+                templateUrl: 'views/pages/data-procedure-instance-page-view.html',
+                controller: 'DataProcedureInstancePageController as vm'
+            })
             .state('app.portal.import', {
                 url: '/import',
                 abstract: true,

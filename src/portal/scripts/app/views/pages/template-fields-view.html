@@ -14,12 +14,18 @@
 
                 <div class="overflow-hidden">
 
-                    <div data-ng-repeat="field in vm.transactionTypeTextFields track by field.id" class="float-left m-b-8"
+                    <div data-ng-repeat="field in vm.transactionTypeTextFields track by field.key"
+                         class="float-left m-b-8"
                          style="width: 310px">
                         <b>{{field.key}}</b>
-                        <md-input-container style="height: 32px">
-                            <input type="text" data-ng-model="field.name" value-title>
-                        </md-input-container>
+
+                        <div layout="row">
+                            <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
+                            </md-checkbox>
+                            <md-input-container style="height: 32px">
+                                <input type="text" data-ng-model="field.name" value-title>
+                            </md-input-container>
+                        </div>
                     </div>
 
                 </div>
@@ -37,9 +43,13 @@
                     <div data-ng-repeat="field in vm.transactionTypeNumberFields" class="float-left m-b-8"
                          style="width: 335px">
                         <b>{{field.key}}</b>
-                        <md-input-container style="height: 32px">
-                            <input type="text" data-ng-model="field.name" value-title>
-                        </md-input-container>
+                        <div layout="row">
+                            <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
+                            </md-checkbox>
+                            <md-input-container style="height: 32px">
+                                <input type="text" data-ng-model="field.name" value-title>
+                            </md-input-container>
+                        </div>
                     </div>
 
                 </div>
@@ -58,9 +68,13 @@
                          class="float-left"
                          style="width: 300px">
                         <b>{{field.key}}</b>
-                        <md-input-container style="height: 32px">
-                            <input type="text" data-ng-model="field.name" value-title>
-                        </md-input-container>
+                        <div layout="row">
+                            <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
+                            </md-checkbox>
+                            <md-input-container style="height: 32px">
+                                <input type="text" data-ng-model="field.name" value-title>
+                            </md-input-container>
+                        </div>
                     </div>
 
                 </div>
@@ -73,7 +87,8 @@
 
             <md-button class="md-raised md-primary"
                        ng-click="vm.saveTransactionTypeFields()"
-                       ng-disabled="vm.readyStatus.transactionTypeProcessing">Apply</md-button>
+                       ng-disabled="vm.readyStatus.transactionTypeProcessing">Apply
+            </md-button>
 
             <div data-ng-if="vm.readyStatus.transactionTypeProcessing" class="m-l-16 m-t-8">
                 <md-progress-circular md-mode="indeterminate"
@@ -94,7 +109,8 @@
 
                 <div class="overflow-hidden">
 
-                    <div data-ng-repeat="field in vm.instrumentTextFields track by field.id" class="float-left m-b-8" style="width: 310px">
+                    <div data-ng-repeat="field in vm.instrumentTextFields track by field.id" class="float-left m-b-8"
+                         style="width: 310px">
                         <b>{{field.key}}</b>
                         <md-input-container style="height: 32px">
                             <input type="text" data-ng-model="field.name" value-title>
@@ -111,7 +127,8 @@
 
             <md-button class="md-raised md-primary"
                        ng-click="vm.saveInstrumentFields()"
-                       ng-disabled="vm.readyStatus.instrumentProcessing">Apply</md-button>
+                       ng-disabled="vm.readyStatus.instrumentProcessing">Apply
+            </md-button>
 
             <div data-ng-if="vm.readyStatus.instrumentProcessing" class="m-l-16 m-t-8">
                 <md-progress-circular md-mode="indeterminate"

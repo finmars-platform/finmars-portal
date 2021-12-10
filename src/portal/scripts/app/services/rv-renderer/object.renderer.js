@@ -14,58 +14,6 @@
     // var checkIcon = renderHelper.getIconByKey('checkIcon');
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';
 
-
-    /**
-     * Get Dynamic attribute value
-     * @return {Object} Return html_result and number result (optional)
-     * @memberof module:ReportViewerRendererObjectRenderer
-     */
-    var getDynamicAttributeValue = function (obj, column) {
-
-        var result = {
-            'html_result': '',
-            'numeric_result': null,
-            'raw_text_result': ''
-        };
-
-        if (column.id && obj[column.entity + '_object']) {
-
-            obj[column.entity + '_object'].attributes.forEach(function (item) {
-
-                if (item.attribute_type === column.id) {
-
-                    if (column.value_type === 20 && item.value_float) {
-
-                        result.html_result = item.value_float.toString();
-                        result.numeric_result = item.value_float;
-                        result.raw_text_result = item.value_float.toString();
-
-                    } else if (column.value_type === 10 && item.value_string) {
-
-                        result.html_result = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
-                        result.raw_text_result = item.value_string;
-
-                    } else if (column.value_type === 30 && item.classifier_object) {
-
-                        result.html_result = item.classifier_object.name;
-                        result.raw_text_result = item.classifier_object.name;
-                    } else if (column.value_type === 40 && item.value_date) {
-
-                        result.html_result = item.value_date;
-                        result.raw_text_result = item.value_date;
-
-                    }
-                }
-
-            });
-
-        }
-
-
-        return result;
-
-    };
-
     /**
      * Get Entity attribute value
      * @return {Object} Return html_result and number result (optional)
@@ -79,7 +27,7 @@
             'raw_text_result': ''
         };
 
-        if (column.value_type === 10) {
+        if (column.value_type === 10 || column.value_type === 30) {
 
             result.html_result = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
             result.raw_text_result = obj[column.key];
@@ -100,6 +48,18 @@
             result.html_result = obj[column.key];
             result.raw_text_result = obj[column.key];
 
+        }
+
+        if (column.value_type === 'field') {// maybe deprecated logic, but required for old layouts
+            result.html_result = obj[column.key];
+            result.raw_text_result = obj[column.key];
+        }
+
+        if (column.value_type === 'float') {// maybe deprecated logic, but required for old layouts
+            result.html_result = renderHelper.formatValue(obj, column);
+            result.numeric_result = obj[column.key];
+            // result.raw_text_result = renderHelper.formatValue(obj, column); // Twice process format?
+            result.raw_text_result = result.html_result;
         }
 
         if (column.value_type === 60) {
@@ -222,9 +182,7 @@
 
             result = handleColumnInGroupList(evDataService, obj, column, columnNumber);
 
-        }
-
-        if (renderHelper.isColumnAfterGroupsList(columnNumber, groups)) {
+        } else if (renderHelper.isColumnAfterGroupsList(columnNumber, groups)) {
 
             var parent = evDataService.getData(obj.___parentId);
 
@@ -233,9 +191,6 @@
                 // if (obj[column.key]) { // Victor if obj[column.key] === 0 ?
                 if (typeof obj[column.key] !== 'undefined' && obj[column.key] !== null) {
                     result = getEntityAttributeValue(obj, column);
-
-                } else {
-                    result = getDynamicAttributeValue(obj, column);
 
                 }
 
