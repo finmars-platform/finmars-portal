@@ -294,6 +294,10 @@
 
             vm.selectedAttributes.push(item);
 
+            vm.selectedAttributes = vm.selectedAttributes.filter(function (attr){
+                return attr._active;
+            })
+
             console.log('vm.selectedAttributes', vm.selectedAttributes);
 
         }
