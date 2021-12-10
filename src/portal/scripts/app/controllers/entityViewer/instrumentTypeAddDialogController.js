@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 05.05.2016.
+ * Created by szhitenev on 08.12.2021.
  */
 (function () {
 
@@ -55,7 +55,7 @@
 
         vm.readyStatus = {permissions: false, entity: false, layout: false};
 
-        vm.entityType = entityType;
+        vm.entityType = 'instrument-type';
 
         vm.entity = {$_isValid: true};
         vm.dataConstructorLayout = {};
@@ -350,7 +350,7 @@
 
                 if (fieldPath.tabIndex === 'fixedArea') {
                     var dcLayoutFields = vm.fixedArea.layout.fields;
-                    var layoutFieldsToSave = dataConstructorLayout.data.fixedArea.layout.fields;
+                    var layoutFieldsTofdataConstructorLayout.data.fixedArea.layout.fields;
                 } else {
                     var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
 
@@ -1136,7 +1136,7 @@
             if (errors.length) {
 
                 // vm.sharedLogic.processTabsErrors(errors, $event);
-                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+                var processResult = entityEditorHelper.processTabsErrorsInstrumentType(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
 
                 if (processResult) {
                     vm.fixedAreaPopup = processResult;
@@ -1311,6 +1311,31 @@
                 }
 
             }
+
+        };
+
+        vm.saveAndExit = function (action) {
+
+            vm.save().then(function (responseData) {
+
+                let responseObj = {status: 'disagree'};
+
+                if (action === 'edit') {
+
+                    vm.entity = {...vm.entity, ...responseData};
+                    vm.entity.$_isValid = true;
+
+                    responseObj = {
+                        status: 'edit',
+                        data: {
+                            entityType: vm.entityType,
+                            entity: vm.entity
+                        }
+                    };
+                }
+
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+            })
 
         };
 

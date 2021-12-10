@@ -217,7 +217,20 @@
                         );
 						break;
 
-					case 'complex-transaction':
+                    case 'instrument-type':
+                        editLayout = await uiService.getDefaultEditLayout(vm.entityType);
+                        evHelperService.openInstrumentTypeEditDrawer(
+                            vm.entityViewerDataService,
+                            vm.entityViewerEventService,
+                            editLayout,
+                            $bigDrawer,
+                            entityType,
+                            actionData.object.id
+                        );
+                        break;
+
+
+                    case 'complex-transaction':
 
 						/* // Waiting for transaction type to load add big delay
 

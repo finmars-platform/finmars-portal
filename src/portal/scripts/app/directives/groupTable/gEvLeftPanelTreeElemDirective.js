@@ -73,6 +73,76 @@
 
                 };
 
+                scope.loadMore = function ($event) {
+
+
+                    var groupHashId = scope.item.___id;
+
+
+                    var requestParameters = scope.evDataService.getRequestParameters(groupHashId);
+
+                    console.log('load more ', requestParameters)
+
+                    scope.total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
+
+                    if (requestParameters.body.page < scope.total_pages) {
+
+                        if (!requestParameters.body.page) {
+                            requestParameters.body.page = 1;
+                            requestParameters.requestedPages = [1]
+                        }
+
+                        requestParameters.body.page = requestParameters.body.page + 1;
+                        requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                        requestParameters.requestedPages.push(requestParameters.body.page);
+
+                        scope.evDataService.setRequestParameters(requestParameters);
+                        scope.evDataService.setActiveRequestParametersId(requestParameters.id);
+
+
+                        scope.currentPage = requestParameters.body.page
+                    }
+
+
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                }
+
+                scope.loadAll = function ($event) {
+
+                    var groupHashId = scope.item.___id;
+
+
+                    var requestParameters = scope.evDataService.getRequestParameters(groupHashId);
+
+                    console.log('load all ', requestParameters)
+
+
+                    scope.total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
+
+                    if (requestParameters.body.page < scope.total_pages) {
+
+                        if (!requestParameters.body.page) {
+                            requestParameters.body.page = 1;
+                            requestParameters.requestedPages = [1]
+                        }
+
+                        requestParameters.loadAll = true;
+
+                        requestParameters.body.page = requestParameters.body.page + 1;
+                        requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                        requestParameters.requestedPages.push(requestParameters.body.page);
+
+                        scope.evDataService.setRequestParameters(requestParameters);
+
+                        scope.currentPage = requestParameters.body.page
+
+
+                    }
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                }
+
                 scope.toggleGroupSelection = function ($event) {
 
                     if (!scope.isLastLevel) {
@@ -151,7 +221,7 @@
                 scope.getPrettyName = function () {
                     scope.item.___group_name_pretty = scope.item.___group_name
 
-                    if (scope.groupType.entity === 'complex-transaction') {
+                    if (scope.groupType && scope.groupType.entity === 'complex-transaction') {
                         if (scope.groupType.key === 'status') {
 
                             if (scope.item.___group_name === 1) {
@@ -169,8 +239,7 @@
                     return scope.item.___group_name_pretty
                 }
 
-                var init = async function () {
-
+                scope.getGroupType = function () {
                     console.log('tree elem, ', scope.item)
 
                     var groups = scope.evDataService.getGroups();
@@ -184,7 +253,40 @@
 
                     console.log('tree groups, ', groups)
                     console.log('tree groupType, ', scope.groupType)
+                }
 
+                var init = async function () {
+
+                    scope.getGroupType()
+
+                    scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+
+                        scope.getGroupType()
+
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        scope.getGroupType()
+
+                        var groupHashId = scope.item.___id;
+
+                        var requestParameters = scope.evDataService.getRequestParameters(groupHashId);
+
+                        scope.total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
+
+                        if (!requestParameters.body.page) {
+                            requestParameters.body.page = 1;
+                            requestParameters.requestedPages = [1]
+                        }
+
+                        scope.currentPage = requestParameters.body.page
+
+                        console.log('scope.requestParameters', scope.requestParameters);
+                        console.log('scope.currentPage', scope.currentPage);
+                        console.log('scope.total_pages', scope.total_pages);
+
+                    })
 
                 };
 

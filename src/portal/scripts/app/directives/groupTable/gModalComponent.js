@@ -13,13 +13,13 @@
     var ScrollHelper = require('../../helpers/scrollHelper');
 
     var metaService = require('../../services/metaService');
-	var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+    var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         var vm = this;
 
-		var sharedLogicHelper = new GModalSharedLogicHelper(vm);
+        var sharedLogicHelper = new GModalSharedLogicHelper(vm);
 
         vm.readyStatus = {content: false};
 
@@ -86,6 +86,25 @@
 
                 var transactionUserFields = vm.attributeDataService.getTransactionUserFields();
                 var instrumentUserFields = vm.attributeDataService.getInstrumentUserFields();
+
+                vm.entityAttrs = vm.entityAttrs.filter(function (item) {
+
+                    var state = true;
+                    
+                    for (var i = 0; i < transactionUserFields.length; i = i + 1) {
+
+                        if (item.key === transactionUserFields[i].key) {
+                            state = transactionUserFields[i].is_active
+                            break;
+                        }
+                        
+                    }
+
+                    
+                    return state;
+
+                })
+
 
                 vm.entityAttrs = vm.entityAttrs.filter(function (item, index) {
 
@@ -163,11 +182,11 @@
 
                 });
 
-                vm.pricingAttrs = vm.attrs.filter(function (item){
+                vm.pricingAttrs = vm.attrs.filter(function (item) {
                     return item.key.indexOf('pricing_policy_') !== -1
                 })
 
-                vm.attrs = vm.attrs.filter(function (item){
+                vm.attrs = vm.attrs.filter(function (item) {
                     return item.key.indexOf('pricing_policy_') === -1
                 })
 
@@ -251,14 +270,14 @@
             var i;
             for (i = 0; i < attrs.length; i = i + 1) {
 
-            	attrs[i].columns = false;
+                attrs[i].columns = false;
                 attrs[i].groups = false;
                 attrs[i].filters = false;
 
                 groups.map(function (item) {
-					if (attrs[i].key === item.key) {
-						attrs[i].groups = true;
-					}
+                    if (attrs[i].key === item.key) {
+                        attrs[i].groups = true;
+                    }
                     return item;
                 });
 
@@ -276,12 +295,12 @@
                     return item;
                 }); */
 
-				filters.backend.map(function (item) {
-					if (attrs[i].key === item.key) {
-						attrs[i].filters = true;
-					}
-					return item;
-				});
+                filters.backend.map(function (item) {
+                    if (attrs[i].key === item.key) {
+                        attrs[i].filters = true;
+                    }
+                    return item;
+                });
 
             }
         }
@@ -351,58 +370,58 @@
                     }
                 }
 
-				//region FILTERING
+                //region FILTERING
 
-				/* for (f = 0; f < filters.length; f = f + 1) {
-					if (typeAttrs[i].hasOwnProperty('key')) {
-						if (typeAttrs[i].key === filters[f].key) {
-							filterExist = true;
-							if (typeAttrs[i].filters === false) {
-								filters.splice(f, 1);
-								f = f - 1;
-							}
-							break;
-						}
-					} else {
-						if (typeAttrs[i].name === filters[f].name) {
-							filterExist = true;
-							if (typeAttrs[i].filters === false) {
-								filters.splice(f, 1);
-								f = f - 1;
-							}
-							break;
-						}
-					}
-				} */
+                /* for (f = 0; f < filters.length; f = f + 1) {
+                    if (typeAttrs[i].hasOwnProperty('key')) {
+                        if (typeAttrs[i].key === filters[f].key) {
+                            filterExist = true;
+                            if (typeAttrs[i].filters === false) {
+                                filters.splice(f, 1);
+                                f = f - 1;
+                            }
+                            break;
+                        }
+                    } else {
+                        if (typeAttrs[i].name === filters[f].name) {
+                            filterExist = true;
+                            if (typeAttrs[i].filters === false) {
+                                filters.splice(f, 1);
+                                f = f - 1;
+                            }
+                            break;
+                        }
+                    }
+                } */
 
-				var checkForFilterExistence = function (filtersList) {
+                var checkForFilterExistence = function (filtersList) {
 
-                	for (f = 0; f < filtersList.length; f = f + 1) {
+                    for (f = 0; f < filtersList.length; f = f + 1) {
 
-						if (typeAttrs[i].key === filtersList[f].key) {
-							filterExist = true;
-							if (typeAttrs[i].filters === false) {
-								filtersList.splice(f, 1);
-								f = f - 1;
-							}
-							break;
-						}
+                        if (typeAttrs[i].key === filtersList[f].key) {
+                            filterExist = true;
+                            if (typeAttrs[i].filters === false) {
+                                filtersList.splice(f, 1);
+                                f = f - 1;
+                            }
+                            break;
+                        }
 
-					}
+                    }
 
-                	return filtersList;
+                    return filtersList;
 
-				};
+                };
 
                 // filters.frontend = checkForFilterExistence(filters.frontend);
-				filters.backend = checkForFilterExistence(filters.backend);
+                filters.backend = checkForFilterExistence(filters.backend);
 
-				if (!filterExist) {
+                if (!filterExist) {
                     if (typeAttrs[i].filters === true) {
                         filters.backend.push(typeAttrs[i]);
                     }
                 }
-				//endregion
+                //endregion
 
             }
 
@@ -469,76 +488,76 @@
 
         }
 
-		/* var updateSelectedAttr = function (attr, selectedAttrs) {
+        /* var updateSelectedAttr = function (attr, selectedAttrs) {
 
-			const existingAttrIndex = selectedAttrs.findIndex(selAttr => attr.key === selAttr.key);
+            const existingAttrIndex = selectedAttrs.findIndex(selAttr => attr.key === selAttr.key);
 
-			if (existingAttrIndex < 0) {
-				selectedAttrs.push(attr);
-			} else {
-				selectedAttrs[existingAttrIndex] = attr;
-			}
+            if (existingAttrIndex < 0) {
+                selectedAttrs.push(attr);
+            } else {
+                selectedAttrs[existingAttrIndex] = attr;
+            }
 
-		};
+        };
 
-		var separateSelectedAttrs = function (attributes, attrsVmKey) {
+        var separateSelectedAttrs = function (attributes, attrsVmKey) {
 
-			for (var i = 0; i < attributes.length; i++) {
+            for (var i = 0; i < attributes.length; i++) {
 
-				var attribute = JSON.parse(angular.toJson(attributes[i]));
-				attribute['attrsVmKey'] = attrsVmKey; // used inside HTML for vm.onSelectedAttrsChange()
+                var attribute = JSON.parse(angular.toJson(attributes[i]));
+                attribute['attrsVmKey'] = attrsVmKey; // used inside HTML for vm.onSelectedAttrsChange()
 
-				// attrsVmKey used in vm.updateAttrs and selectedDnD
-				if (attribute.columns) {
-					updateSelectedAttr(attribute, selectedColumns);
+                // attrsVmKey used in vm.updateAttrs and selectedDnD
+                if (attribute.columns) {
+                    updateSelectedAttr(attribute, selectedColumns);
 
-				} else if (attribute.groups) {
-					updateSelectedAttr(attribute, selectedGroups);
+                } else if (attribute.groups) {
+                    updateSelectedAttr(attribute, selectedGroups);
 
-				}
+                }
 
-				if (attribute.filters) {
-					updateSelectedAttr(attribute, selectedFilters);
-				}
+                if (attribute.filters) {
+                    updateSelectedAttr(attribute, selectedFilters);
+                }
 
-			}
+            }
 
-		};
+        };
 
-		var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
+        var organizeSelectedAttrs = function (insideTable, selectedAttrs, groupType) { // putting selected attributes in the same order as in the table
 
-			// All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
-			let selectedAttrsObj = {};
-			let inactiveAttrs = [];
+            // All items from insideTable starts the array in Order by insideTable, other items from selectedAttrs adds to end of array
+            let selectedAttrsObj = {};
+            let inactiveAttrs = [];
 
-			selectedAttrs.forEach((attr) => {
+            selectedAttrs.forEach((attr) => {
 
-				if (attr) {
+                if (attr) {
 
-					if (attr[groupType]) {
-						selectedAttrsObj[attr.key] = attr
+                    if (attr[groupType]) {
+                        selectedAttrsObj[attr.key] = attr
 
-					} else if (!isAttrInsideOfAnotherGroup(attr.key, groupType)) {
+                    } else if (!isAttrInsideOfAnotherGroup(attr.key, groupType)) {
 
-						inactiveAttrs.push(attr);
+                        inactiveAttrs.push(attr);
 
-					}
+                    }
 
-				}
+                }
 
-			});
+            });
 
-			let orderedAttrs = insideTable.map(function (attr) {
+            let orderedAttrs = insideTable.map(function (attr) {
 
-				return selectedAttrsObj[attr.key];
+                return selectedAttrsObj[attr.key];
 
-			});
+            });
 
-			orderedAttrs = orderedAttrs.concat(inactiveAttrs);
+            orderedAttrs = orderedAttrs.concat(inactiveAttrs);
 
-			return orderedAttrs;
+            return orderedAttrs;
 
-		}; */
+        }; */
 
         vm.selectedGroups = [];
         vm.selectedColumns = [];
@@ -561,22 +580,22 @@
             vm.selectedGroups = organizeSelectedAttrs(groups, selectedGroups, 'groups');
             vm.selectedColumns = organizeSelectedAttrs(columns, selectedColumns, 'columns');
             vm.selectedFilters = organizeSelectedAttrs(filters.backend, selectedFilters, 'filters'); */
-			const attributesLists = [
-				'entityAttrs',
-				'attrs',
-				'userTextFields',
-				'userNumberFields',
-				'userDateFields',
-			];
+            const attributesLists = [
+                'entityAttrs',
+                'attrs',
+                'userTextFields',
+                'userNumberFields',
+                'userDateFields',
+            ];
 
-			const attrGroups = {groups, columns, filters: filters.backend}; // Victor 2020.12.10 I need variables: groups, columns, filters in sharedLogicHelper
+            const attrGroups = {groups, columns, filters: filters.backend}; // Victor 2020.12.10 I need variables: groups, columns, filters in sharedLogicHelper
 
-			sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
+            sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
 
-			vm.selectedGroups = vm.selectedGroups.filter(group => {
-				const hasNoMatchingColumn = !!!vm.selectedColumns.find(column => column.key === group.key);
-				return hasNoMatchingColumn;
-			});
+            vm.selectedGroups = vm.selectedGroups.filter(group => {
+                const hasNoMatchingColumn = !!!vm.selectedColumns.find(column => column.key === group.key);
+                return hasNoMatchingColumn;
+            });
 
         };
 
@@ -988,70 +1007,70 @@
                         }
 
                     }; */
-					var changeToColumn = function () {
+                    var changeToColumn = function () {
 
-						var draggedAttribute = vm[attrsVmKey].find(attr => attr.key === attributeKey);
+                        var draggedAttribute = vm[attrsVmKey].find(attr => attr.key === attributeKey);
 
-						draggedAttribute.groups = false;
-						draggedAttribute.columns = true;
+                        draggedAttribute.groups = false;
+                        draggedAttribute.columns = true;
 
-						var attrData = JSON.parse(JSON.stringify(draggedAttribute));
-						var insertAttr = true;
+                        var attrData = JSON.parse(JSON.stringify(draggedAttribute));
+                        var insertAttr = true;
 
-						if (nextSibling) {
-							var nextSiblingKey = nextSibling.dataset.attributeKey;
-						}
+                        if (nextSibling) {
+                            var nextSiblingKey = nextSibling.dataset.attributeKey;
+                        }
 
-						attributeChanged = true;
+                        attributeChanged = true;
 
-						for (var a = 0; a < columns.length; a++) { // search for the same attr
+                        for (var a = 0; a < columns.length; a++) { // search for the same attr
 
-							if (columns[a].key === attributeKey) {
+                            if (columns[a].key === attributeKey) {
 
-								columns[a].groups = attrData.groups;
-								columns[a].columns = attrData.columns;
-								columns[a].groups = attrData.groups;
+                                columns[a].groups = attrData.groups;
+                                columns[a].columns = attrData.columns;
+                                columns[a].groups = attrData.groups;
 
-								if (nextSiblingKey === attributeKey) { // attr already in right place
+                                if (nextSiblingKey === attributeKey) { // attr already in right place
 
-									insertAttr = false;
+                                    insertAttr = false;
 
-								} else { // remove attribute before inserting it into another index
+                                } else { // remove attribute before inserting it into another index
 
-									attrData = JSON.parse(JSON.stringify(columns[a]));
-									columns.splice(a, 1);
+                                    attrData = JSON.parse(JSON.stringify(columns[a]));
+                                    columns.splice(a, 1);
 
-								}
+                                }
 
-								break;
-							}
+                                break;
+                            }
 
-						}
+                        }
 
-						if (insertAttr) {
+                        if (insertAttr) {
 
-							if (nextSibling) {
+                            if (nextSibling) {
 
-								for (var a = 0; a < columns.length; a++) {
+                                for (var a = 0; a < columns.length; a++) {
 
-									if (columns[a].key === nextSiblingKey) {
+                                    if (columns[a].key === nextSiblingKey) {
 
-										columns.splice(a, 0, attrData);
-										break;
+                                        columns.splice(a, 0, attrData);
+                                        break;
 
-									}
+                                    }
 
-								}
+                                }
 
-							} else {
-								columns.push(attrData);
-							}
+                            } else {
+                                columns.push(attrData);
+                            }
 
-							vm.entityViewerDataService.setColumns(columns);
+                            vm.entityViewerDataService.setColumns(columns);
 
-						}
+                        }
 
-					};
+                    };
 
                     var changeOrder = function (orderOf) {
 
@@ -1121,30 +1140,29 @@
                             $scope.$apply();
                         }
                     };
-					// dragging from columns
+                    // dragging from columns
                     if (source.classList.contains('vcSelectedColumns')) {
 
                         // dragged to filters
                         if (target.classList.contains('vcSelectedFilters')) {
-							vm[attrsVmKey] = sharedLogicHelper.onDropToSelectedFilter(vm[attrsVmKey], attributeKey);
-							attributeChanged = true;
+                            vm[attrsVmKey] = sharedLogicHelper.onDropToSelectedFilter(vm[attrsVmKey], attributeKey);
+                            attributeChanged = true;
                             // < dragged to filters >
 
                             // If column's order changed
-                        }
-                        else if (target.classList.contains('vcSelectedColumns')) {
-							changeOrder('columns');
+                        } else if (target.classList.contains('vcSelectedColumns')) {
+                            changeOrder('columns');
                             // < If column's order changed >
                         }
 
                     }
-					// < dragging from columns >
-					// dragging from filters
+                        // < dragging from columns >
+                    // dragging from filters
                     else if (source.classList.contains('vcSelectedFilters')) {
 
                         // dragged to columns
                         if (target.classList.contains('vcSelectedColumns')) {
-							changeToColumn();
+                            changeToColumn();
                         }
 
                     }
@@ -1177,33 +1195,33 @@
 
             selectedDragulaInit: function () {
 
-				// var groupsContainer = document.querySelector('.vcSelectedGroups');
-				var columnsContainer = document.querySelector('.vcSelectedColumns');
-				var filtersContainer = document.querySelector('.vcSelectedFilters')
+                // var groupsContainer = document.querySelector('.vcSelectedGroups');
+                var columnsContainer = document.querySelector('.vcSelectedColumns');
+                var filtersContainer = document.querySelector('.vcSelectedFilters')
 
                 var items = [
-					// groupsContainer,
-					columnsContainer,
-					filtersContainer
+                    // groupsContainer,
+                    columnsContainer,
+                    filtersContainer
                 ];
 
                 this.dragula = dragula(items, {
                     revertOnSpill: true,
-					moves: function (el, target, source, nextSibling) {
-						if (el.classList.contains('itemWithError')) {
-							return false;
-						}
+                    moves: function (el, target, source, nextSibling) {
+                        if (el.classList.contains('itemWithError')) {
+                            return false;
+                        }
 
-						return true;
-					},
-					accepts: function (el, target, source, nextSibling) {
+                        return true;
+                    },
+                    accepts: function (el, target, source, nextSibling) {
 
-						if (source === filtersContainer && target === filtersContainer) {
-							return false;
-						}
+                        if (source === filtersContainer && target === filtersContainer) {
+                            return false;
+                        }
 
-						return true;
-					}
+                        return true;
+                    }
                 });
             },
 
@@ -1588,15 +1606,18 @@
 
                     for (var i = 0; i < vm.attrsList.length; i++) {
 
-                        if (vm.attrsList[i].key === res.data.key) {
+                        for (var j = 0; j < res.data.items.length; j++) {
 
-                            if (selectedGroup === 'column') {
-                                vm.attrsList[i].columns = true;
-                            } else {
-                                vm.attrsList[i].filters = true;
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                                if (selectedGroup === 'column') {
+                                    vm.attrsList[i].columns = true;
+                                } else {
+                                    vm.attrsList[i].filters = true;
+                                }
+                                vm.updateAttrs(vm.attrsList);
+                                break;
                             }
-                            vm.updateAttrs(vm.attrsList);
-                            break;
                         }
 
                     }
