@@ -175,7 +175,14 @@
                 vm.readyStatus.data = true;
 
                 vm.projection = vm.generateProjection(vm.layout);
+
+                if (vm.projection && vm.projection.length) {
+                    vm.projection[0].active = true
+                }
+
                 vm.dashboardDataService.setProjection(vm.projection);
+
+
 
                 vm.initDashboardComponents();
 
@@ -198,6 +205,12 @@
                 if (vm.layout) {
 
                     vm.projection = vm.generateProjection(vm.layout);
+
+                    if (vm.projection && vm.projection.length) {
+                        vm.projection[0].active = true
+                    }
+
+
                     vm.dashboardDataService.setProjection(vm.projection);
 
                     vm.dashboardDataService.setData(vm.layout);
@@ -248,6 +261,11 @@
                     vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
                     vm.projection = vm.generateProjection(vm.layout);
+
+                    if (vm.projection && vm.projection.length) {
+                        vm.projection[0].active = true
+                    }
+
 
                     vm.dashboardDataService.setProjection(vm.projection);
 
@@ -417,7 +435,16 @@
         };
 
         vm.setActiveTab = function (tab) {
+
+            vm.projection.forEach(function (item) {
+                item.active = false;
+            })
+
+            tab.active = true;
+
             vm.dashboardDataService.setActiveTab(tab)
+
+            vm.dashboardEventService.dispatchEvent(dashboardEvents.RESIZE)
         };
 
         vm.updateLayoutOnComponentChange = function (tabNumber, rowNumber, socketData) {
