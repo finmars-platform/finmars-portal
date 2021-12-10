@@ -29,6 +29,15 @@
 			'instrument-type': 'instrument-class'
         };
 
+		const groupSelectorValueEntities = {
+			'strategy-1': 'strategy-1-subgroup',
+			'strategy-2': 'strategy-2-subgroup',
+			'strategy-3': 'strategy-3-subgroup',
+			'responsible': 'responsible-group',
+			'counterparty': 'counterparty-group'
+		};
+
+
         // let instrumentTypesList = [];
 
         const noEntityTabs = [''];
@@ -555,6 +564,68 @@
 
 		};
 
+
+		/**
+		 *
+		 * @param entityType - entitType of relation selector (e.g. instrument type selector for instrument)
+		 * @returns {Promise<unknown>} - returns array of entities on resolve and error object on reject
+		 */
+		const getGroupSelectorOptions = function (entityType) {
+
+			let options = {pageSize: 1000, page: 1};
+
+			const loadAllPages = (resolve, reject) => {
+
+				entityResolverService.getList(entityType, options).then(function (typesData) {
+
+					viewModel.groupSelectorOptions = viewModel.groupSelectorOptions.concat(typesData.results);
+
+					if (typesData.next) {
+
+						options.page = options.page + 1;
+						loadAllPages(resolve, reject);
+
+					} else {
+						resolve();
+					}
+
+				}).catch(error => reject(error));
+
+			};
+
+			return new Promise((res, rej) => {
+
+				entityResolverService.getList(entityType, options).then(typesData => {
+
+					// const options = Array.isArray(typesData) ? typesData : typesData.results;
+					if (Array.isArray(typesData)) {
+
+						viewModel.typeSelectorOptions = typesData;
+						res();
+
+					} else {
+
+						viewModel.groupSelectorOptions = typesData.results;
+
+						if (typesData.next) {
+							options.page = options.page + 1;
+							loadAllPages(res, rej);
+
+						} else {
+							res();
+						}
+
+					}
+
+				}).catch(error => {
+					console.error("getFieldsForFixedAreaPopup error", error);
+					rej(error);
+				});
+
+			});
+
+		};
+
 		const resolveEditLayout = function () {
 
 			if (viewModel.entityType === 'instrument' &&
@@ -785,9 +856,18 @@
 
 			const hasRelationSelectorInFixedArea = typeSelectorValueEntities.hasOwnProperty(viewModel.entityType);
 
+
 			if (hasRelationSelectorInFixedArea) {
 				const valueEntity = typeSelectorValueEntities[viewModel.entityType];
 				await getTypeSelectorOptions(valueEntity);
+
+			}
+
+			const hasGroupRelationSelectorInFixedArea = groupSelectorValueEntities.hasOwnProperty(viewModel.entityType);
+
+			if (hasGroupRelationSelectorInFixedArea) {
+				const groupValueEntity = groupSelectorValueEntities[viewModel.entityType];
+				await getGroupSelectorOptions(groupValueEntity);
 			}
 
 			const tabs = await getUserTabsAndFixedAreaData(formLayoutFromAbove);

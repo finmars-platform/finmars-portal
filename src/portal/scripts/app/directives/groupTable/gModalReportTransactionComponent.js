@@ -222,6 +222,26 @@
 
             transactionUserFields.forEach(function (field) {
 
+                vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr){
+
+                    if (entityAttr.key === 'complex_transaction.' + field.key) {
+                        return field.is_active;
+                    }
+
+                    return true
+
+                })
+
+                userFieldsComp = userFieldsComp.filter(function (item){
+                    if (item === 'complex_transaction.' + field.key) {
+                        return field.is_active;
+                    }
+
+                    return true
+                })
+
+                console.log('userFieldsComp', userFieldsComp);
+
                 vm.complexTransactionAttrs = vm.complexTransactionAttrs.map(function (entityAttr, index) {
 
                     if (entityAttr.key === 'complex_transaction.' + field.key) {
@@ -874,22 +894,25 @@
 
                     for (var i = 0; i < vm.attrsList.length; i++) {
 
-                        if (vm.attrsList[i].key === res.data.key) {
+                        for (var j = 0; j < res.data.items.length; j = j + 1) {
 
-                            switch (selectedGroup) {
-                                case 'group':
-                                    vm.attrsList[i].groups = true;
-                                    break;
-                                case 'column':
-                                    vm.attrsList[i].columns = true;
-                                    break;
-                                case 'filter':
-                                    vm.attrsList[i].filters = true;
-                                    break;
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                                switch (selectedGroup) {
+                                    case 'group':
+                                        vm.attrsList[i].groups = true;
+                                        break;
+                                    case 'column':
+                                        vm.attrsList[i].columns = true;
+                                        break;
+                                    case 'filter':
+                                        vm.attrsList[i].filters = true;
+                                        break;
+                                }
+
+                                vm.updateAttrs(vm.attrsList);
+                                break;
                             }
-
-                            vm.updateAttrs(vm.attrsList);
-                            break;
                         }
 
                     }

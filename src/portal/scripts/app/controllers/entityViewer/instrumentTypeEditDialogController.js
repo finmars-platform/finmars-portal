@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 05.05.2016.
+ * Created by szhitenev on 08.12.2021.
  */
 (function () {
 
@@ -54,7 +54,7 @@
             vm.contextData = data.contextData;
         }
 
-        vm.entityType = entityType;
+        vm.entityType = 'instrument-type';
 
         vm.entityId = entityId;
 
@@ -960,7 +960,7 @@
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
 
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+				var processResult = entityEditorHelper.processTabsErrorsInstrumentType(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
 
 				if (processResult) {
 					vm.fixedAreaPopup = processResult;
@@ -1017,6 +1017,31 @@
                 });
 
             }
+
+        };
+
+        vm.saveAndExit = function (action) {
+
+            vm.save().then(function (responseData) {
+
+                let responseObj = {status: 'disagree'};
+
+                if (action === 'edit') {
+
+                    vm.entity = {...vm.entity, ...responseData};
+                    vm.entity.$_isValid = true;
+
+                    responseObj = {
+                        status: 'edit',
+                        data: {
+                            entityType: vm.entityType,
+                            entity: vm.entity
+                        }
+                    };
+                }
+
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+            })
 
         };
 

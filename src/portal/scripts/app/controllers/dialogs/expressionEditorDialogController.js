@@ -77,7 +77,7 @@
                         vm.item.expression = "";
                     }
 
-                    vm.item.expression += res.data.key;
+                    vm.item.expression += res.data.items[0].key;
                 }
 
             });
