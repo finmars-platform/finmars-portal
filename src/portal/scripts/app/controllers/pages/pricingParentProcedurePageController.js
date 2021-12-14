@@ -102,6 +102,28 @@
 
         };
 
+        vm.showRequestDetails = function ($event, procedure) {
+
+            $mdDialog.show({
+                controller: 'InfoDialogController as vm',
+                templateUrl: 'views/info-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    info: {
+                        title: 'Procedure Request',
+                        description: procedure.request_data
+                    }
+                }
+            });
+
+        }
+
         vm.init = function () {
 
             vm.getList();
