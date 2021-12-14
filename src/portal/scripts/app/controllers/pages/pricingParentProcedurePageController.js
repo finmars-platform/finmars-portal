@@ -104,6 +104,14 @@
 
         vm.showRequestDetails = function ($event, procedure) {
 
+            var text;
+
+            if (procedure.request_data) {
+                text = JSON.stringify(procedure.request_data)
+            } else {
+                text = 'No request data found'
+            }
+
             $mdDialog.show({
                 controller: 'InfoDialogController as vm',
                 templateUrl: 'views/info-dialog-view.html',
@@ -117,7 +125,7 @@
                 locals: {
                     info: {
                         title: 'Procedure Request',
-                        description: procedure.request_data
+                        description: text
                     }
                 }
             });
