@@ -828,10 +828,18 @@
 
                         var selGroups = scope.evDataService.getSelectedGroups();
 
-                        selGroups.forEach(function (sGroup) {
-                            var rawData = scope.evDataService.getData(sGroup.___id);
+                        if (selGroups.length) {
+                            selGroups.forEach(function (sGroup) {
+                                var rawData = scope.evDataService.getData(sGroup.___id);
+                                dataList.push(rawData);
+                            });
+                        } else {
+
+
+                            var rawData = scope.evDataService.getRootGroupData()
+
                             dataList.push(rawData);
-                        });
+                        }
 
                     }
 
