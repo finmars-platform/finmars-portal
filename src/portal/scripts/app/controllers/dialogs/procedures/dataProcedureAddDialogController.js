@@ -21,6 +21,24 @@
         vm.schemes = [];
         vm.providers = [];
 
+        vm.toggleStatus = {
+            'date_from': 'datepicker',
+            'date_to': 'datepicker'
+        };
+
+        vm.toggle = function (key) {
+
+            if (vm.toggleStatus[key] === 'datepicker') {
+                vm.toggleStatus[key] = 'expr'
+            } else {
+                vm.toggleStatus[key] = 'datepicker'
+            }
+
+            vm.item[key] = null;
+            vm.item[key + '_expr'] = null;
+
+        };
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
