@@ -23,6 +23,24 @@
         vm.transactionImportSchemes = [];
         vm.providers = [];
 
+        vm.toggleStatus = {
+            'date_from': 'datepicker',
+            'date_to': 'datepicker'
+        };
+
+        vm.toggle = function (key) {
+
+            if (vm.toggleStatus[key] === 'datepicker') {
+                vm.toggleStatus[key] = 'expr'
+            } else {
+                vm.toggleStatus[key] = 'datepicker'
+            }
+
+            vm.item[key] = null;
+            vm.item[key + '_expr'] = null;
+
+        };
+
         vm.getTransactionImportSchemes = function(){
 
             transactionImportSchemeService.getListLight().then(function (data) {
@@ -80,6 +98,24 @@
                 vm.item = data;
 
                 vm.readyStatus.procedure = true;
+
+
+                if (vm.item.date_from_expr) {
+                    vm.toggleStatus['date_from'] = 'expr'
+
+                } else {
+                    vm.toggleStatus['date_from'] = 'datepicker'
+                }
+
+                if (vm.item.date_to_expr) {
+                    vm.toggleStatus['date_to'] = 'expr'
+
+
+                } else {
+                    vm.toggleStatus['date_to'] = 'datepicker'
+                }
+
+
 
                 $scope.$apply();
 
