@@ -200,6 +200,10 @@
                         return 'Created'
                     }
 
+                    if (obj[column.key] === 'R') {
+                        return 'Requested'
+                    }
+
                     if (obj[column.key] === 'Overwritten') {
                         return 'Created'
                     }
