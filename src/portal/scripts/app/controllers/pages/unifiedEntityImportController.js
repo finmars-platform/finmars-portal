@@ -41,6 +41,17 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
         vm.hasSchemeEditPermission = false;
 
+        vm.modes = [
+            {
+                id: 'skip',
+                name: 'Skip'
+            },
+            {
+                id: 'overwrite',
+                name: 'Overwrite'
+            }
+        ]
+
         vm.loadIsAvailable = function () {
             if (vm.config.file !== null && vm.config.file !== undefined) {
                 return true;
