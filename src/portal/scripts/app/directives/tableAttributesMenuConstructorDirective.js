@@ -167,6 +167,7 @@
                         if (res.status === "agree") {
 
                             scope.model = res.selectedAttrs;
+
                             setInputAndTooltipText();
 
                             if (scope.onChangeCallback) {

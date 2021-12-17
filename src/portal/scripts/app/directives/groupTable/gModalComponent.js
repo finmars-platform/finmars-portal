@@ -1597,30 +1597,32 @@
                     data: {
                         availableAttrs: availableAttrs,
                         title: dialogTitle,
-                        isReport: false
+                        isReport: false,
+						multiselector: true
                     }
                 }
             }).then(function (res) {
 
                 if (res && res.status === "agree") {
 
-                    for (var i = 0; i < vm.attrsList.length; i++) {
+					for (var j = 0; j < res.data.items.length; j++) {
 
-                        for (var j = 0; j < res.data.items.length; j++) {
+						for (var i = 0; i < vm.attrsList.length; i++) {
 
-                            if (vm.attrsList[i].key === res.data.items[j].key) {
+							if (vm.attrsList[i].key === res.data.items[j].key) {
 
-                                if (selectedGroup === 'column') {
-                                    vm.attrsList[i].columns = true;
-                                } else {
-                                    vm.attrsList[i].filters = true;
-                                }
-                                vm.updateAttrs(vm.attrsList);
-                                break;
-                            }
-                        }
+								if (selectedGroup === 'column') {
+									vm.attrsList[i].columns = true;
+								} else {
+									vm.attrsList[i].filters = true;
+								}
+								break;
+							}
+						}
 
-                    }
+					}
+
+					vm.updateAttrs(vm.attrsList);
 
                 }
 

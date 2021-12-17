@@ -77,25 +77,31 @@
                     data: {
                         availableAttrs: vm.availableAttrs,
                         title: "Select Column",
-                        isReport: false
+                        isReport: false,
+						multiselector: true
                     }
                 }
             }).then(function (res) {
 
                 if (res && res.status === "agree") {
 
-                    var keyOfAddedAttr = res.data.key;
+					res.data.items.forEach(function (attrToAdd) {
 
-                    var attributeData = {
-                        attribute_data: res.data,
-                        layout_name: '',
-                        order: vm.selectedAttrs.length
-                    };
+						var keyOfAddedAttr = attrToAdd.key;
 
-                    vm.selectedAttrs.push(attributeData);
-                    setAttrsOrder();
+						var attributeData = {
+							attribute_data: attrToAdd,
+							layout_name: '',
+							order: vm.selectedAttrs.length
+						};
 
-                    updateAvailableAttrs(keyOfAddedAttr);
+						vm.selectedAttrs.push(attributeData);
+
+						updateAvailableAttrs(keyOfAddedAttr);
+
+					});
+
+					setAttrsOrder();
 
                 }
 
@@ -125,12 +131,13 @@
 
                 if (res && res.status === "agree") {
 
-                    var keyOfAddedAttr = res.data.key;
+                    var keyOfAddedAttr = res.data.items[0].key;
 
-                    attribute.attribute_data = res.data;
+                    attribute.attribute_data = res.data.items[0];
 
                     updateAvailableAttrs(keyOfAddedAttr);
                     vm.availableAttrs.push(attributeData);
+
                 }
 
             })
