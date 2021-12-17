@@ -88,23 +88,28 @@
   background: #fff;
 }
 
-div.input-upload-file-container {
-  border-radius: 5px;
-  padding: 0;
-  text-align: left;
-  width: 120px;
-  min-width: 120px;
-  margin: 16px auto 0;
-  box-shadow: none;
-  label.IFUlabel.md-button.md-primary.md-raised {
+.import-configuration-page {
+  div.input-upload-file-container {
+    border-radius: 5px;
     padding: 0;
+    text-align: left;
     width: 120px;
-    background: rgba(240, 90, 34, 1);
-    &:hover {
+    min-width: 120px;
+    margin: 16px auto 0;
+    box-shadow: none;
+
+    label.IFUlabel.md-button.md-primary.md-raised {
+      padding: 0;
+      width: 120px;
       background: rgba(240, 90, 34, 1);
-      opacity: .7;
+
+      &:hover {
+        background: rgba(240, 90, 34, 1);
+        opacity: .7;
+      }
     }
   }
+
 }
 
 .import-configuration-page-mode-settings {
@@ -117,8 +122,9 @@ div.input-upload-file-container {
   margin-top: 16px;
 }
 
-.start-import-button.md-button.md-primary.md-raised  {
+.start-import-button.md-button.md-primary.md-raised {
   background: rgba(240, 90, 34, 1);
+
   &:hover {
     background: rgba(240, 90, 34, 1);
     opacity: .7;
@@ -142,6 +148,7 @@ div.input-upload-file-container {
   cursor: pointer;
   position: relative;
   top: 6px;
+
   &:hover {
     opacity: .7;
   }
@@ -156,6 +163,7 @@ div.input-upload-file-container {
   padding: 20px;
   box-sizing: border-box;
 }
+
 .import-configuration-page-progress-bar-container {
   width: 270px;
 }
