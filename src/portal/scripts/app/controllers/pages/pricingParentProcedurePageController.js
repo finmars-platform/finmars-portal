@@ -102,6 +102,36 @@
 
         };
 
+        vm.showRequestDetails = function ($event, procedure) {
+
+            var text;
+
+            if (procedure.request_data) {
+                text = JSON.stringify(procedure.request_data)
+            } else {
+                text = 'No request data found'
+            }
+
+            $mdDialog.show({
+                controller: 'InfoDialogController as vm',
+                templateUrl: 'views/info-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    info: {
+                        title: 'Procedure Request',
+                        description: text
+                    }
+                }
+            });
+
+        }
+
         vm.init = function () {
 
             vm.getList();

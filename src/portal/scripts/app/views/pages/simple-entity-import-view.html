@@ -1,10 +1,32 @@
 <div data-ng-if="vm.readyStatus.schemes"
      layout="column"
-     style="padding: 0 20px">
+     style="padding: 0 20px" class="import-page simple-import-page">
 
-    <h2 class="m-b-35">Simple Entity Import Manager</h2>
+    <div layout="column" style="margin-bottom: 20px; width: 300px;">
 
-    <div layout="row" style="margin-bottom: 20px">
+        <dropdown-select model="vm.activeContentType"
+                         placeholder-text="Entity"
+                         menu-options="vm.contentTypes"
+                         on-change-callback="vm.getSchemeList()"
+                         small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
+                         class=" m-t-16"></dropdown-select>
+
+
+        <div class="position-relative" layout="row">
+            <dropdown-select
+                    model="vm.config.scheme"
+                    placeholder-text="Import scheme"
+                    menu-options="vm.entitySchemes"
+                    small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
+                    class=" m-t-8 width-100"></dropdown-select>
+            <md-button
+                    class="scheme-edit-button md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"
+                    data-ng-click="vm.editScheme($event)" style="top: 3px;">
+                <ng-md-icon icon="edit" size="24"></ng-md-icon>
+                <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme</md-tooltip>
+            </md-button>
+        </div>
+
 
         <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
             <input type="file" id="importDataUploadInput" input-file-directive
@@ -12,93 +34,27 @@
                    read-file-change="vm.checkExtension(vm.config.file, 'csv', $event)">
         </md-input-container>
         <div class="input-upload-file-container">
-            <p class="importDataUploadInput">Select file</p>
+            <p class="importDataUploadInput">Entity</p>
             <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
-                <ng-md-icon icon="file_upload"></ng-md-icon>
-                <span>BROWSE</span></label>
+                <span>BROWSE...</span></label>
         </div>
 
-        <md-input-container aria-label="select with filter">
+        <div layout="row" layout-align="end center" class="m-t-8">
 
-            <label for="">Choose entity</label>
-            <md-select ng-model="vm.activeContentType"
-                       md-container-class="common-select-container"
-                       md-on-close="searchTerm = ''"
-                       data-ng-change="vm.updateEntitySchemes()">
-
-                <md-select-header>
-                    <input data-ng-model="searchTerm"
-                           type="search"
-                           placeholder="Search for a ..."
-                           class="md-text md-select-search-pattern select-input-filter"
-                           ng-keydown="$event.stopPropagation()">
-                </md-select-header>
-
-                <div class="select-options-holder">
-
-                    <md-option
-                            data-ng-repeat="entity in vm.contentTypes | filter: {name: searchTerm}"
-                            ng-value="entity.key"
-                            ng-bind="entity.name">
-                    </md-option>
-
-                </div>
-
-            </md-select>
-        </md-input-container>
-
-        <div layout="row">
-
-            <md-input-container aria-label="select with filter">
-
-                <label for="">Import scheme</label>
-                <md-select ng-model="vm.config.scheme"
-                           md-container-class="common-select-container"
-                           md-on-close="searchTerm = ''"
-                           style="width: 200px">
-
-                    <md-select-header>
-                        <input data-ng-model="searchTerm"
-                               type="search"
-                               placeholder="Search for a ..."
-                               class="md-text md-select-search-pattern select-input-filter"
-                               ng-keydown="$event.stopPropagation()">
-                    </md-select-header>
-
-                    <div class="select-options-holder">
-
-                        <md-option
-                                data-ng-repeat="item in vm.entitySchemes | filter: {user_code: searchTerm}"
-                                ng-value="item.id"
-                                ng-bind="item.user_code">
-                        </md-option>
-                        <md-option data-ng-click="vm.createScheme($event)">Add scheme
-                        </md-option>
-                    </div>
-
-                </md-select>
-            </md-input-container>
+            <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8" style="position: relative; top: -4px;">
+                <progress-circular diameter="20"></progress-circular>
+            </div>
             <md-button
-                    class="instrument-mapping-btn md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"
-                    data-ng-click="vm.editScheme($event)">
-                <ng-md-icon icon="edit" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>
-                <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme</md-tooltip>
-            </md-button>
-        </div>
-        <div layout="row">
-            <md-button
-                    class="md-raised {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    class="link-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                     data-ng-click="vm.validateImport($event)">
                 VALIDATE
             </md-button>
             <md-button
-                    class="md-raised colored-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                     data-ng-click="vm.startImportWithValidation($event)">
                 IMPORT
             </md-button>
-            <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
-                <progress-circular diameter="20"></progress-circular>
-            </div>
+
         </div>
     </div>
 
