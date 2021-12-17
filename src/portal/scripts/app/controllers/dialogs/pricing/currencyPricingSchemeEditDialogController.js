@@ -72,17 +72,21 @@
 
         vm.getAttributeTypes = function () {
 
-            var entityType = 'currency';
+            return new Promise(function (resolve, reject) {
 
-            attributeTypeService.getList(entityType, {pageSize: 1000}).then(function (data) {
+                var entityType = 'currency';
 
-                vm.attributeTypes = data.results;
+                attributeTypeService.getList(entityType, {pageSize: 1000}).then(function (data) {
 
-                vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
+                    vm.attributeTypes = data.results;
 
-                vm.readyStatus.attributeTypes = true;
+                    vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
 
-                $scope.$apply();
+                    vm.readyStatus.attributeTypes = true;
+
+                    resolve();
+
+                })
 
             })
 
@@ -128,7 +132,29 @@
 
                 console.log('data', data);
 
-                $scope.$apply();
+                vm.getAttributeTypes().then(function () {
+
+                    if (vm.item.type_settings.data) {
+                        if (vm.item.type_settings.data.parameters) {
+
+                            vm.item.type_settings.data.parameters.forEach(function (item, index) {
+
+                                if (item.attribute_key) {
+                                    item.___switch_state = 'attribute_key'
+                                }
+
+                                vm.optionsForMultipleParameters[index] = vm.getOptionsForAttributeKey(item.value_type);
+
+                            })
+
+                        }
+                    }
+
+                    console.log('vm.optionsForMultipleParameters', vm.optionsForMultipleParameters);
+
+                    $scope.$apply();
+                })
+
 
             })
 
@@ -148,7 +174,7 @@
 
         };
 
-        vm.switchParameter = function($event, item) {
+        vm.switchParameter = function ($event, item) {
 
             if (item.___switch_state === 'default_value') {
                 item.___switch_state = 'attribute_key'
@@ -181,7 +207,7 @@
 
             vm.getItem();
             vm.getTypes();
-            vm.getAttributeTypes();
+
 
         };
 
