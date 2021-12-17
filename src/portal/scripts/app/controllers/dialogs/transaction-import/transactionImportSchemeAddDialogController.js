@@ -39,11 +39,11 @@
         };
 
         vm.mapFields = [
-            {
-                value: '',
-                transaction_type: null,
-                fields: []
-            }
+            // {
+            //     value: '',
+            //     transaction_type: null,
+            //     fields: []
+            // }
         ];
 
         vm.providerFields = [
@@ -55,21 +55,21 @@
         ];
 
         vm.calculatedFields = [
-            {
-                name: '',
-                column: '',
-                name_expr: ''
-            }
+            // {
+            //     name: '',
+            //     column: '',
+            //     name_expr: ''
+            // }
         ];
 
         vm.reconFields = [
-            {
-                name: '',
-                selector_values: [],
-                line_reference_id: '',
-                reference_date: '',
-                fields: []
-            }
+            // {
+            //     name: '',
+            //     selector_values: [],
+            //     line_reference_id: '',
+            //     reference_date: '',
+            //     fields: []
+            // }
         ];
 
         vm.openSelectorManager = function ($event) {
@@ -483,7 +483,11 @@
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                         targetEvent: $event,
                         locals: {
-                            validationData: reason.message
+                            validationData: {
+                                errorData: {
+                                    message: reason.message
+                                }
+                            }
                         },
                         preserveScope: true,
                         autoWrap: true,
@@ -528,7 +532,10 @@
                 multiple: true,
                 locals: {
                     entityType: 'transaction-type',
-                    entityId: ttypeId
+                    entityId: ttypeId,
+                    data: {
+                        openedIn: 'dialog'
+                    }
                 }
             })
 
