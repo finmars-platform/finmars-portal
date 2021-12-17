@@ -497,7 +497,8 @@
                             data: {
                                 availableAttrs: availableAttrs,
                                 title: 'Choose group to add',
-                                isReport: false
+                                isReport: false,
+								multiselector: true
                             }
                         }
                     }).then(function (res) {
