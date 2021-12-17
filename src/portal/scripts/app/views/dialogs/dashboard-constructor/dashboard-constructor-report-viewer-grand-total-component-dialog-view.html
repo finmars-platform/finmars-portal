@@ -1,4 +1,6 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+<md-dialog aria-label="dashboard grand total constructor dialog"
+           class="draggable-dialog width-50"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>New Report Viewer Grand Total Component</h2>
@@ -24,7 +26,7 @@
                             </md-input-container>
                         </div>
 
-                        <div class="m-t-16 m-b-16">
+                        <!-- <div class="m-t-16 m-b-16">
 
                             <md-input-container style="width: 200px;">
                                 <label for="">Report Type</label>
@@ -37,21 +39,8 @@
                             </md-input-container>
 
                         </div>
+
                         <div class="m-t-16 m-b-16">
-
-                            <!--<md-input-container style="width: 200px;">-->
-                                <!--<label for="">Layout</label>-->
-                                <!--<md-select data-ng-model="vm.item.settings.layout"-->
-                                           <!--ng-class="{'disabled-btn': !vm.item.settings.entity_type}"-->
-                                           <!--md-on-open="vm.getLayouts()">-->
-                                    <!--<md-option-->
-                                            <!--data-ng-repeat="layout in vm.layouts | orderBy:'-name' track by layout.id "-->
-                                            <!--ng-value="layout.id">-->
-                                        <!--{{layout.name}}-->
-                                    <!--</md-option>-->
-                                <!--</md-select>-->
-                            <!--</md-input-container>-->
-
                             <expandable-items-selector data-model="vm.item.settings.layout"
                                                        data-title="Layout"
                                                        data-dialog-title="Choose layout"
@@ -59,7 +48,19 @@
                                                        data-is-disabled="!vm.item.settings.entity_type"
                                                        data-on-change-callback="vm.showLinkingToFilters()"
                                                        class="dashboard-constructor-selector-directive"></expandable-items-selector>
+                        </div> -->
+                        <div style="width: 400px;" class="m-l-10 m-b-16">
+                            <div ng-if="vm.readyStatus.layouts">
+                                <multitype-field label="Select layout"
+                                                 field-types-data="vm.layoutsSelectorsList"
+                                                 type-switch="selector"
+                                                 on-value-change="vm.onLayoutChange()"
+                                                 on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
+                            </div>
 
+                            <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">
+                                <progress-circular diameter="30"></progress-circular>
+                            </div>
                         </div>
 
                         <div class="m-t-16 m-b-16">

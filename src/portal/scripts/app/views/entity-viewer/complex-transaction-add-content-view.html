@@ -4,7 +4,7 @@
 
         <div layout="row" style="height: 90px;">
 
-            <div layout="row" flex="50" class="p-t-24"
+            <!-- <div layout="row" flex="50" class="p-t-24"
                  style="border: 1px solid #000; background: #ffeee8">
                 <md-input-container style="font-size: 18px; " class="width-100">
                     <label for="">Transaction type</label>
@@ -34,6 +34,13 @@
 
                     </md-select>
                 </md-input-container>
+
+            </div> -->
+            <div class="flex-1-1-50 p-t-24">
+                <complex-dropdown-select label="Transaction type"
+                                         model="vm.transactionTypeId"
+                                         menu-options="vm.transactionGroups"
+                                         on-change="vm.transactionTypeChange()"></complex-dropdown-select>
             </div>
 
             <div flex="50">
@@ -122,6 +129,7 @@
                                 ev-editor-data-service="vm.evEditorDataService"
                                 ev-editor-event-service="vm.evEditorEventService"
                                 item="vm.fixedAreaAttributesLayout[row][field.column]"
+                                fields-data-store="vm.fieldsDataStore"
                                 entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                     </div>
                 </div>
@@ -137,7 +145,7 @@
 
                     <md-tab-body>
                         <md-content class="md-padding p-t-26 "
-                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
+                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked, 'canceled-tab-overlay': vm.entity.is_canceled}" style="min-height: 50vh">
                             <div data-ng-repeat="row in vm.range(tab.layout.rows)"
                                  layout="row"
                                  class="entity-editor-row" data-row-number="{{row}}">
@@ -154,6 +162,7 @@
                                             ev-editor-data-service="vm.evEditorDataService"
                                             ev-editor-event-service="vm.evEditorEventService"
                                             item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
+                                            fields-data-store="vm.fieldsDataStore"
                                             entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                                 </div>
                             </div>

@@ -65,38 +65,47 @@
 		return new Promise(function (resolve, reject) {
 			resolve([
 				{
+					id: 1,
 					"value": "1",
 					"name": "Buy"
 				},
 				{
+					id: 2,
 					"value": "2",
 					"name": "Sell"
 				},
 				{
+					id: 3,
 					"value": "3",
 					"name": "FX Trade"
 				},
 				{
+					id: 4,
 					"value": "4",
 					"name": "Instrument PL"
 				},
 				{
+					id: 5,
 					"value": "5",
 					"name": "Transaction PL"
 				},
 				{
+					id: 6,
 					"value": "6",
 					"name": "Transfer"
 				},
 				{
+					id: 7,
 					"value": "7",
 					"name": "FX Transfer"
 				},
 				{
+					id: 8,
 					"value": "8",
 					"name": "Cash-Inflow"
 				},
 				{
+					id: 9,
 					"value": "9",
 					"name": "Cash-Outflow"
 				}

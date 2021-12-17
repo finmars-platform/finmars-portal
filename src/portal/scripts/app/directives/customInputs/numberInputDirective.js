@@ -219,11 +219,13 @@
                             scope.numberToShow = res.numberValue;
                             applyNumberFormatToInput();
 
-                            if (scope.onChangeCallback) {
+							if (scope.onChangeCallback) {
 
-                                setTimeout(() => scope.onChangeCallback())
+								setTimeout(() => {
+									scope.onChangeCallback();
+								}, 0);
 
-                            }
+							}
 
                         }
 

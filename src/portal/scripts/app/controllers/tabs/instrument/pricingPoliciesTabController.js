@@ -236,7 +236,7 @@
 
         var formatDataForPricingGridTable = function () {
 
-            // assemble header columns
+			//region assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
 
             vm.pricingPoliciesGridTableData.header.columns = rowObj.columns.map(function (column) {
@@ -255,9 +255,9 @@
                 return headerData;
 
             });
-            // < assemble header columns >
+			//endregion
 
-            // assemble body rows
+			//region assemble body rows
 			if (!Array.isArray(vm.entity.pricing_policies)) vm.entity.pricing_policies = [];
 
 			vm.entity.pricing_policies.forEach(function (policy, policyIndex) {
@@ -307,6 +307,7 @@
 				if (fieldValueType === 70) typesList = getOptionsForPPDefaultValueSel(typesList, policy);
 
                 const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(typesList, defaultParameters, defaultValue, fieldValueType);
+
                 defaultParameters = fieldData.cell;
 
                 gridTableHelperService.setCellInsideRow(rowObj, defaultParameters);
@@ -314,8 +315,7 @@
                 vm.pricingPoliciesGridTableData.body.push(rowObj);
 
             });
-            // < assemble body rows >
-
+			//endregion
         };
         // <Event schedules grid Table>
 
@@ -513,8 +513,8 @@
 
             Promise.all([getInstrumentPricingSchemes, getAttributeTypes]).then(function () {
 
-				formatDataForPricingGridTable();
-                generateInstrumentAttributeTypesByValueTypes();
+				generateInstrumentAttributeTypesByValueTypes();
+            	formatDataForPricingGridTable();
 
 				vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData);
 				vm.readyStatus = true;

@@ -1,5 +1,35 @@
 <div>
 
+    <div layout="row" class="m-t-8 m-b-8">
+
+        <div style="width: 200px;" class="p-l-8 p-r-8">
+            <number-input label="Default Price"
+                          model="vm.entity.default_price"
+                          event-signal="vm.evEditorFieldEvent"
+                          small-options="{tooltipText: 'Default Price'}"
+            >
+            </number-input>
+        </div>
+
+        <div style="width: 200px;" class="p-l-8 p-r-8">
+            <number-input label="Maturity Price"
+                          model="vm.entity.maturity_price"
+                          event-signal="vm.evEditorFieldEvent"
+                          small-options="{tooltipText: 'Maturity Price'}"
+                          style="width: 200px;">
+            </number-input>
+        </div>
+
+        <div style="width: 200px;" class="p-l-8 p-r-8">
+            <date-input label="Maturity Date"
+                        model="vm.entity.maturity_date"
+                        event-signal="vm.evEditorFieldEvent"
+                        small-options="{tooltipText: 'Maturity Date'}"
+                        style="width: 200px;">
+            </date-input>
+        </div>
+
+    </div>
 
 
     <table>
@@ -63,8 +93,11 @@
 
             <td>
                 <md-input-container class="m-t-16">
-                    <md-select data-ng-model="item.pricing_scheme" data-ng-change="vm.pricingSchemeChange(item)">
-                        <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.instrumentPricingSchemes">{{scheme.name}}</md-option>
+                    <md-select data-ng-model="item.pricing_scheme"
+                               data-ng-change="vm.pricingSchemeChange($event, item)">
+                        <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.instrumentPricingSchemes">
+                            {{scheme.name}}
+                        </md-option>
                     </md-select>
                 </md-input-container>
             </td>
@@ -88,7 +121,8 @@
                     -
                 </div>
 
-                <div data-ng-if="item.pricing_scheme_object.type_object.input_type != 1" class="m-t-16" data-ng-init="item.default_value ? item.switchState = 'default_value' : item.switchState = 'attribute_key'">
+                <div data-ng-if="item.pricing_scheme_object.type_object.input_type != 1" class="m-t-16"
+                     data-ng-init="item.default_value ? item.switchState = 'default_value' : item.switchState = 'attribute_key'">
 
                     <div layout="row" data-ng-if="item.switchState == 'default_value'">
 
@@ -97,7 +131,9 @@
                             <input type="text" data-ng-model="item.default_value">
                         </md-input-container>
 
-                        <md-button class="md-raised md-primary" data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch</md-button>
+                        <md-button class="md-raised md-primary"
+                                   data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch
+                        </md-button>
 
                     </div>
 
@@ -106,11 +142,16 @@
                         <md-input-container class="m-t-16">
                             <label>Options</label>
                             <md-select data-ng-model="item.attribute_key">
-                                <md-option ng-value="attribute.user_code" data-ng-repeat="attribute in vm.attributeTypesByValueTypes[item.pricing_scheme_object.type_settings.value_type]">{{attribute.name}}</md-option>
+                                <md-option ng-value="attribute.user_code"
+                                           data-ng-repeat="attribute in vm.attributeTypesByValueTypes[item.pricing_scheme_object.type_settings.value_type]">
+                                    {{attribute.name}}
+                                </md-option>
                             </md-select>
                         </md-input-container>
 
-                        <md-button class="md-raised md-primary" data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch</md-button>
+                        <md-button class="md-raised md-primary"
+                                   data-ng-click="vm.switchPricingPolicyParameter($event, item)">Switch
+                        </md-button>
 
                     </div>
 
@@ -126,14 +167,18 @@
 
                 <div class="m-t-16" data-ng-if="item.pricing_scheme_object.type_object.input_type == 3">
 
-                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog($event, item)">...</md-button>
+                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog($event, item)">
+                        ...
+                    </md-button>
 
                 </div>
 
             </td>
 
             <td>
-                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)">Edit</md-button>
+                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)">
+                    Edit
+                </md-button>
             </td>
 
             <td>

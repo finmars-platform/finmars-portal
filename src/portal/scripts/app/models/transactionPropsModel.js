@@ -144,12 +144,12 @@
             {
                 "key": "is_locked",
                 "name": "Is locked",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "is_canceled",
                 "name": "Is canceled",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "factor",
@@ -205,17 +205,26 @@
             {
                 "key": "allocation_balance",
                 "name": "Allocation Balance",
-                "value_type": "field"
+                "value_content_type": "instruments.instrument",
+                "value_entity": "instrument",
+                "code": "user_code",
+                "value_type": 'field'
             },
             {
                 "key": "allocation_pl",
                 "name": "Allocation P&L",
-                "value_type": "field"
+                "value_content_type": "instruments.instrument",
+                "value_entity": "instrument",
+                "code": "user_code",
+                "value_type": 'field'
             },
             {
                 "key": "linked_instrument",
                 "name": "Linked instrument",
-                "value_type": "field"
+                "value_content_type": "instruments.instrument",
+                "value_entity": "instrument",
+                "code": "user_code",
+                "value_type": 'field'
             }
         ]
     };

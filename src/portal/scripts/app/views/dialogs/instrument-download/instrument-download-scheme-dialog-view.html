@@ -31,7 +31,20 @@
                     </md-card-content>
                 </md-card>
                 <md-card flex="50" class="inm-card-special">
+
+
+
                     <md-card-content>
+
+                        <md-input-container>
+                            <label>Mode</label>
+                            <md-select data-ng-model="vm.scheme.mode">
+                                <md-option value="skip">Skip if exists</md-option>
+                                <md-option value="overwrite">Overwrite</md-option>
+                                <md-option value="overwrite_empty_values">Overwrite empty values</md-option>
+                            </md-select>
+                        </md-input-container>
+
                         <md-input-container class="md-block"
                                             flex-gt-sm
                                             aria-label="select with filter">

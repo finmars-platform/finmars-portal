@@ -294,7 +294,7 @@
 
             if (item.market_value) {
 
-                item.market_value_percent = item.market_value / groupsTotalMarketValue[key] * 100;
+                item.market_value_percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
 
             } else {
                 item.market_value_percent = 0;
@@ -302,7 +302,7 @@
 
             if (item.exposure) {
 
-                item.exposure_percent = item.exposure / groupsTotalExposure[key] * 100;
+                item.exposure_percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
 
             } else {
                 item.exposure_percent = 0;

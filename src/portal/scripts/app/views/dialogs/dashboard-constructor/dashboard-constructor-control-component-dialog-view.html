@@ -105,7 +105,8 @@
                 <md-tab-body>
                     <md-content>
                         <div class="p-24">
-                            <md-radio-group ng-model="vm.defaultValue.mode">
+                            <md-radio-group ng-model="vm.defaultValue.mode"
+                                            ng-change="vm.onGetDefaultValueFromLayoutMode()">
 
                                 <md-radio-button ng-value="0">Get value</md-radio-button>
                                 <md-radio-button ng-value="1">Set default value</md-radio-button>
@@ -117,7 +118,7 @@
 
                                 <div class="p-b-24">Value type: {{vm.getCurrentValueTypeName()}}</div>
 
-                                <md-input-container class="dashboard-constructor-field1" style="height: 58px">
+                                <!-- <md-input-container class="dashboard-constructor-field1" style="height: 58px">
                                     <label for="">Report Type</label>
                                     <md-select data-ng-model="vm.defaultValue.entity_type"
                                                data-ng-change="vm.onReportTypeChange()">
@@ -133,26 +134,45 @@
                                                            items="vm.layoutsWithLinkToFilters"
                                                            is-disabled="!vm.defaultValue.entity_type"
                                                            on-change-callback="vm.onLayoutChange()"
-                                                           class="dashboard-constructor-selector-directive"></expandable-items-selector>
+                                                           class="dashboard-constructor-selector-directive"></expandable-items-selector> -->
+                                <div class="flex-row">
 
-                                <md-input-container ng-if="vm.item.settings.value_type == 40 && vm.defaultValue.entity_type !== 'balance-report'"
-                                                    class="dashboard-constructor-field1" style="height: 58px">
+                                    <div style="width: 400px;">
+                                        <div ng-if="vm.readyStatus.layouts">
+                                            <multitype-field label="Select layout"
+                                                             field-types-data="vm.layoutsSelectorsList"
+                                                             type-switch="selector"
+                                                             on-value-change="vm.onLayoutChange()"
+                                                             on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
+                                        </div>
 
-                                    <label for="">Report Field</label>
-                                    <md-select data-ng-model="vm.defaultValue.report_field"
-                                               data-ng-disabled="!vm.defaultValue.layout">
+                                        <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">
+                                            <progress-circular diameter="30"></progress-circular>
+                                        </div>
+                                    </div>
 
-                                        <md-option
-                                                data-ng-repeat="reportField in vm.reportFields"
-                                                ng-value="reportField"
-                                                ng-bind="reportField.name">
-                                        </md-option>
+                                    <div>
+                                        <md-input-container ng-if="vm.item.settings.value_type == 40 && vm.defaultValue.entity_type !== 'balance-report'"
+                                                            class="dashboard-constructor-field1" style="height: 58px">
 
-                                    </md-select>
-                                </md-input-container>
+                                            <label for="">Report Field</label>
+                                            <md-select data-ng-model="vm.defaultValue.report_field"
+                                                       data-ng-disabled="!vm.defaultValue.layout">
 
-                                <div data-ng-if="vm.item.settings.value_type == 40 && vm.defaultValue.report_field.value">
-                                    Current default value: {{vm.defaultValue.report_field.value}}
+                                                <md-option data-ng-repeat="reportField in vm.reportFields"
+                                                           ng-value="reportField"
+                                                           ng-bind="reportField.name">
+                                                </md-option>
+
+                                            </md-select>
+                                        </md-input-container>
+                                    </div>
+
+                                    <div data-ng-if="vm.item.settings.value_type === 40 && vm.defaultValue.report_field.value"
+                                         class="p-t-10" ng-class="{'m-l-8': vm.defaultValue.entity_type === 'balance-report'}">
+                                        Current default value: {{vm.defaultValue.report_field.value}}
+                                    </div>
+
                                 </div>
 
                             </div>

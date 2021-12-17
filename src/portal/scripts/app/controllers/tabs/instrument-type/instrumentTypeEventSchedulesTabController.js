@@ -297,7 +297,7 @@
 
             var optionsColumn = {
                 key: 'options_settings',
-                objPath: ['options'],
+                objPath: ['options_settings'],
                 columnName: '',
                 order: 5,
                 cellType: 'customPopup',
@@ -407,12 +407,12 @@
                 rowObj.columns[3].settings.value = row.override_name;
                 rowObj.columns[4].settings.value = row.tooltip;
 
-                if (row.options) {
+                if (row.options_settings) {
 
                     const optionsCell = metaHelper.recursiveDeepCopy(optionsColumn, false);
 
                     rowObj.columns[5] = optionsCell;
-                    rowObj.columns[5].settings.value = row.options;
+                    rowObj.columns[5].settings.value = row.options_settings;
 
                 }
 
@@ -422,6 +422,10 @@
 
             return eventsGridTableData;
 
+        };
+
+        const getTTypesAsSelectorOptions = ttype => {
+        	return {id: ttype.user_code, name: ttype.short_name};
         };
 
 		const getEventsActionGridTableData = function (item){
@@ -457,9 +461,11 @@
                             objPath:['text'],
                             columnName: 'Text',
                             order: 1,
-                            cellType: 'text',
+                            cellType: 'expression',
                             settings: {
-                                value: null
+                                value: null,
+								exprData: null,
+								closeOnMouseOut: false
                             },
                             styles: {
                                 'grid-table-cell': {'width': '506px'}
@@ -545,9 +551,17 @@
 				if (row.frontOptions && row.frontOptions.gtKey) rowObj.key = row.frontOptions.gtKey;
 
                 rowObj.columns[0].settings.value = row.transaction_type;
-				rowObj.columns[0].settings.selectorOptions = vm.transactionTypes;
+				rowObj.columns[0].settings.selectorOptions = vm.transactionTypes.map(getTTypesAsSelectorOptions);
 
-                rowObj.columns[1].settings.value = row.text;
+                // rowObj.columns[1].settings.value = row.text;
+				let textCol = gridTableHelperService.getCellFromRowByKey(rowObj, 'text');
+				textCol.settings.value = row.text;
+
+				textCol.settings.exprData = {
+					groups: [],
+					functions: [],
+				};
+
                 rowObj.columns[2].settings.value = row.is_sent_to_pending;
                 rowObj.columns[3].settings.value = row.is_book_automatic;
                 // rowObj.columns[4].settings.value = row.button_position;
@@ -677,9 +691,9 @@
 		/** @param fieldKey {string} - property inside entity object, that was changed */
 		vm.onRequiredFieldChange = function (fieldKey) {
 
-			const tabsWithErrors = vm.evEditorDataService.getTabsWithErrors();
+			const locsWithErrors = vm.evEditorDataService.getLocationsWithErrors();
 
-			if (tabsWithErrors['system_tab'].hasOwnProperty('events')) {
+			if (locsWithErrors['system_tab'].hasOwnProperty('events')) {
 				$scope.$parent.vm.onEntityChange(fieldKey);
 			}
 
@@ -729,9 +743,9 @@
 
 		};
 
-		vm.toggleEventBlockableItems = function (item) {
+		/* vm.toggleEventBlockableItems = function (item) {
 
-			const tableData = item.eventBlockableItemsGridTableDataService.getTableData();
+			const tableData = item.eventItems2GridTableDataService.getTableData();
 
 			tableData.body.forEach(row => {
 
@@ -741,8 +755,11 @@
 
 			});
 
-			item.eventBlockableItemsGridTableDataService.setTableData(tableData);
+			item.eventItems2GridTableDataService.setTableData(tableData);
 
+		}; */
+		vm.onAutogenerateToggle = function ($event, item) {
+			if (!item.autogenerate) item.data.get_items2_from_accruals = false;
 		};
 
         vm.createInstrumentTypeEvent = function () {
@@ -750,6 +767,7 @@
             const mapOptions = function (item) {
                 return {
                     user_code: item.user_code,
+					id: item.id,
                     name: item.name,
                     to_show: true,
                     override_name: "",
@@ -765,8 +783,8 @@
                 eventItemsGridTableDataService: new GridTableDataService(),
                 eventItemsGridTableEventService: new EventService(),
 
-				eventBlockableItemsGridTableDataService: new GridTableDataService(),
-				eventBlockableItemsGridTableEventService: new EventService(),
+				eventItems2GridTableDataService: new GridTableDataService(),
+				eventItems2GridTableEventService: new EventService(),
 
                 eventActionsGridTableDataService: new GridTableDataService(),
                 eventActionsGridTableEventService: new EventService(),
@@ -782,62 +800,58 @@
                         	key: 'name',
 							name: 'Title',
 							to_show: true,
-							defaultValueType: 'text',
-							options: false
+							defaultValueType: 'text'
 						},
                         {
                             key: 'description',
                             name: 'Message text',
                             to_show: true,
-                            defaultValueType: 'text',
-                            options: false
+                            defaultValueType: 'text'
                         },
                         {
                             key: 'notification_class',
                             name: 'Notification Class',
                             to_show: true,
                             defaultValueType: 'selector',
-                            options: notificationClassesSelectorOptions
+                            options_settings: notificationClassesSelectorOptions
                         },
                         {
                             key: 'notify_in_n_days',
                             name: 'Notify in N days',
                             to_show: true,
-                            defaultValueType: 'number',
-                            options: false
+                            defaultValueType: 'number'
                         }
                     ],
-					blockableItems: [
+					// blockableItems: [
+					items2: [
 						{
                             key: 'effective_date',
                             name: 'Effective Date',
                             to_show: true,
-                            defaultValueType: 'multitypeField',
-                            options: false
+                            defaultValueType: 'multitypeField'
                         },
                         {
                             key: 'final_date',
                             name: 'Final Date',
                             to_show: true,
-                            defaultValueType: 'multitypeField',
-                            options: false
+                            defaultValueType: 'multitypeField'
                         },
                         {
                             key: 'periodicity',
                             name: 'Periodicity',
                             to_show: true,
                             defaultValueType: 'selector',
-                            options: periodicitySelectorOptions
+                            options_settings: periodicitySelectorOptions
                         },
                         {
                             key: 'periodicity_n',
                             name: 'Periodicity N',
                             to_show: true,
-                            defaultValueType: 'multitypeField',
-                            options: false
+                            defaultValueType: 'multitypeField'
                         }
 					],
-					items_blocked: false,
+					// items_blocked: false,
+					get_items2_from_accruals: false,
                     actions: []
                 }
             };
@@ -855,7 +869,7 @@
 			formatDataForEventGridTable(event, event.data.items, event.eventItemsGridTableDataService, event.eventItemsGridTableEventService, 'items');
 
 			// for event blockable rows
-			formatDataForEventGridTable(event, event.data.blockableItems, event.eventBlockableItemsGridTableDataService, event.eventBlockableItemsGridTableEventService, 'blockableItems');
+			formatDataForEventGridTable(event, event.data.items2, event.eventItems2GridTableDataService, event.eventItems2GridTableEventService, 'items2');
 
             /* var eventsActionGridTableData = getEventsActionGridTableData(event);
             event.eventActionsGridTableDataService.setTableData(eventsActionGridTableData);
@@ -920,7 +934,7 @@
             item.data.actions.unshift(newAction);
 
             var transactionType = gridTableHelperService.getCellFromRowByKey(newRow, 'transaction_type');
-            transactionType.settings.selectorOptions = vm.transactionTypes;
+            transactionType.settings.selectorOptions = vm.transactionTypes.map(getTTypesAsSelectorOptions);
 
             /* var buttonPosition = gridTableHelperService.getCellFromRowByKey(newRow, 'button_position');
             buttonPosition.settings.selectorOptions = getRangeOfNumbers(item.data.actions.length); */
@@ -937,10 +951,9 @@
 
 		const onActionsTableDeleteRows = function (data, item, eventActionsGridTableDataService, eventActionsGridTableEventService) {
 
-            var gridTableData = eventActionsGridTableDataService.getTableData()
+            var gridTableData = eventActionsGridTableDataService.getTableData();
 
             item.data.actions = item.data.actions.filter(function (action) {
-
                 var actionId = action.id || action.frontOptions.gtKey;
                 return data.deletedRowsKeys.indexOf(actionId) === -1;
             });
@@ -1037,12 +1050,12 @@
 			formatDataForEventGridTable(event, event.data.items, event.eventItemsGridTableDataService, event.eventItemsGridTableEventService, 'items');
 
 			// for event blockable rows
-			event.eventBlockableItemsGridTableDataService = new GridTableDataService();
-			event.eventBlockableItemsGridTableEventService = new EventService();
+			event.eventItems2GridTableDataService = new GridTableDataService();
+			event.eventItems2GridTableEventService = new EventService();
 
-			if (!event.data.blockableItems) event.data.blockableItems = [];
+			if (!event.data.items2) event.data.items2 = [];
 
-			formatDataForEventGridTable(event, event.data.blockableItems, event.eventBlockableItemsGridTableDataService, event.eventBlockableItemsGridTableEventService, 'blockableItems');
+			formatDataForEventGridTable(event, event.data.items2, event.eventItems2GridTableDataService, event.eventItems2GridTableEventService, 'items2');
 			//</editor-fold>
 
 			//<editor-fold desc="Actions grid table">
@@ -1065,6 +1078,16 @@
 
 		vm.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, () => {
 			vm.evEditorFieldEvent = { key: "mark_not_valid_fields" };
+		});
+
+		vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, () => {
+
+			vm.entity = $scope.$parent.vm.entity;
+
+			vm.entity.events.forEach((item, index) => {
+				if (item.data) formatExistingEvent(item, index);
+			});
+
 		});
 
         vm.init = function () {
@@ -1090,9 +1113,7 @@
 				multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
 
 				vm.entity.events.forEach((item, index) => {
-
 					if (item.data) formatExistingEvent(item, index);
-
 				});
 
 				vm.readyStatus.gridTable = true;

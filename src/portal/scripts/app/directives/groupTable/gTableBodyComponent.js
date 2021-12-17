@@ -29,14 +29,14 @@
                 contentWrapElement: '=',
                 workareaWrapElement: '='
             },
-/*            template: '<div>' +
-                '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
-                '            <progress-linear class="ev-progressbar"></progress-linear>\n' +
-                '        </div>' +
-                '<div class="ev-viewport">' +
-                '<div class="ev-content"></div>' +
-                '</div>' +
-                '</div>',*/
+            /*            template: '<div>' +
+                            '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
+                            '            <progress-linear class="ev-progressbar"></progress-linear>\n' +
+                            '        </div>' +
+                            '<div class="ev-viewport">' +
+                            '<div class="ev-content"></div>' +
+                            '</div>' +
+                            '</div>',*/
             templateUrl: 'views/directives/groupTable/g-table-body-view.html',
             link: function (scope, elem) {
 
@@ -64,8 +64,8 @@
                 var activeLayoutConfigIsSet = false;
 
                 if (!scope.isReport) {
-                	elements.leftPanelElem = scope.workareaWrapElement.querySelector('.gEvLeftPanelHolder');
-				}
+                    elements.leftPanelElem = scope.workareaWrapElement.querySelector('.gEvLeftPanelHolder');
+                }
 
                 const setColorsForSubtotals = function (flatList, coloredSubtotals) {
 
@@ -128,10 +128,10 @@
 
                     rvDomManager.calculateScroll(elements, scope.evDataService);
 
-                    window.requestAnimationFrame(function (){
+                    window.requestAnimationFrame(function () {
 
-                    	rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
-						cellContentOverflow();
+                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        cellContentOverflow();
 
                     });
 
@@ -142,7 +142,7 @@
                     // var flatList = evDataHelper.getFlatStructure(scope.evDataService);
                     var flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
 
-					console.log('renderEntityViewer.flatlist', flatList);
+                    console.log('renderEntityViewer.flatlist', flatList);
                     /* flatList = flatList.map(function (item, i) {
                         item.___flat_list_index = i;
                         return item
@@ -150,13 +150,47 @@
 
                     scope.evDataService.setUnfilteredFlatList(flatList); */
 
-					var filters = scope.evDataService.getFilters();
-					var regularFilters = evFilterService.convertIntoRegularFilters(filters.frontend);
+                    var filters = scope.evDataService.getFilters();
+                    var regularFilters = evFilterService.convertIntoRegularFilters(filters.frontend);
 
-					if (regularFilters.length) {
-						var groups = scope.evDataService.getGroups();
-						flatList = evFilterService.filterTableRows(flatList, regularFilters, groups);
-					}
+                    if (regularFilters.length) {
+                        var groups = scope.evDataService.getGroups();
+                        flatList = evFilterService.filterTableRows(flatList, regularFilters, groups);
+                    }
+
+                    var selGroupsList = scope.evDataService.getSelectedGroups();
+
+                    if (selGroupsList.length) {
+
+                        var lastSelGroup = selGroupsList[selGroupsList.length - 1];
+
+                        var controlObj = {
+                            ___parentId: lastSelGroup.___id,
+                            ___type: 'control',
+                            ___level: lastSelGroup.___level + 1
+                        };
+
+                        controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+                        flatList.push(controlObj);
+
+                    } else {
+
+                        if (flatList.length) {
+
+                            var controlObj = {
+                                ___parentId: flatList[0].___parentId,
+                                ___type: 'control',
+                                ___level: 1
+                            };
+
+                            controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+                            flatList.push(controlObj);
+
+                        }
+
+                    }
 
                     var index = 0;
                     flatList = flatList.map(function (item, i) {
@@ -174,6 +208,16 @@
                         return item
                     });
 
+                    /* var controlObj = {
+                        ___parentId: obj.___id,
+                        ___type: 'control',
+                        ___level: obj.___level + 1
+                    };
+
+                    controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+                    obj.results.push(controlObj); */
+
                     scope.evDataService.setFlatList(flatList);
 
                     // evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
@@ -186,7 +230,7 @@
 
                     evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
-                    window.requestAnimationFrame(function (){
+                    window.requestAnimationFrame(function () {
                         evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
                     });
 
@@ -195,90 +239,91 @@
 
                 }
 
-				function cellContentOverflow() {
+                function cellContentOverflow() {
 
-					var rows = contentElem.querySelectorAll('.g-row');
-					rows = Array.from(rows);
+                    var rows = contentElem.querySelectorAll('.g-row');
+                    rows = Array.from(rows);
 
-					var subtotalRows = rows.filter(function (row) {
-						return row.dataset.type === 'subtotal';
-					});
+                    var subtotalRows = rows.filter(function (row) {
+                        return row.dataset.type === 'subtotal';
+                    });
 
-					var r, w;
-					for (r = 0; r < subtotalRows.length; r++) {
+                    var r, w;
+                    for (r = 0; r < subtotalRows.length; r++) {
 
-						var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
-						var cells = subtotalRows[r].querySelectorAll('.g-cell');
+                        var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
+                        var cells = subtotalRows[r].querySelectorAll('.g-cell');
 
-						for (w = 0; w < cellWraps.length; w++) {
+                        for (w = 0; w < cellWraps.length; w++) {
 
-							var cellWrap = cellWraps[w], cellWrapWidth = cellWrap.clientWidth;
-							var cell = cells[w];
-							var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
-							var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
+                            var cellWrap = cellWraps[w], cellWrapWidth = cellWrap.clientWidth;
+                            var cell = cells[w];
+                            var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
+                            var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
 
-							var rowIsGrandTotal = false;
-							var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
+                            var rowIsGrandTotal = false;
+                            var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
 
-							if (parentGroups[0].___level === 0 && w === 0) {
-								rowIsGrandTotal = true;
-							}
+                            if (parentGroups[0].___level === 0 && w === 0) {
+                                rowIsGrandTotal = true;
+                            }
 
-							if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
+                            if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
 
-								var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
-								var cellSpaceForText = cellContentWrap.clientWidth;
+                                var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
+                                var cellSpaceForText = cellContentWrap.clientWidth;
 
-								if (!rowIsGrandTotal) {
-									cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
-								}
+                                if (!rowIsGrandTotal) {
+                                    cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
+                                }
 
-								if (cellContentHolder.offsetWidth > cellSpaceForText) {
+                                if (cellContentHolder.offsetWidth > cellSpaceForText) {
 
-									var cellStretchWidth = cellWrapWidth;
-									var nextCellIndex = w;
-									var overflowedCells = [];
+                                    var cellStretchWidth = cellWrapWidth;
+                                    var nextCellIndex = w;
+                                    var overflowedCells = [];
 
-									// Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
-									while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
+                                    // Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
+                                    while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
 
-										var nextCellIndex = nextCellIndex + 1;
+                                        var nextCellIndex = nextCellIndex + 1;
 
-										var nextCellWrap = cellWraps[nextCellIndex], nextCellWrapWidth = nextCellWrap.clientWidth;
-										var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
-										var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
+                                        var nextCellWrap = cellWraps[nextCellIndex],
+                                            nextCellWrapWidth = nextCellWrap.clientWidth;
+                                        var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
+                                        var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
 
-										if (nexCellContentHolder || nextCellContentWrap.contentText) {
-											break;
-										}
+                                        if (nexCellContentHolder || nextCellContentWrap.contentText) {
+                                            break;
+                                        }
 
-										overflowedCells.push(nextCellWrap);
+                                        overflowedCells.push(nextCellWrap);
 
-										cellSpaceForText = cellSpaceForText + nextCellWrapWidth;
-										cellStretchWidth = cellStretchWidth + nextCellWrapWidth;
+                                        cellSpaceForText = cellSpaceForText + nextCellWrapWidth;
+                                        cellStretchWidth = cellStretchWidth + nextCellWrapWidth;
 
-									}
+                                    }
 
-									if (cellStretchWidth > cellWrapWidth) { // check if there are available cells to be overflowed
+                                    if (cellStretchWidth > cellWrapWidth) { // check if there are available cells to be overflowed
 
-										overflowedCells.pop(); // leaving right border of last overflowed cell
+                                        overflowedCells.pop(); // leaving right border of last overflowed cell
 
-										overflowedCells.forEach(function (overflowedCell) {
-											overflowedCell.classList.add('g-overflowed-cell');
-										});
+                                        overflowedCells.forEach(function (overflowedCell) {
+                                            overflowedCell.classList.add('g-overflowed-cell');
+                                        });
 
-										cellWrap.classList.add('g-overflowing-cell');
-										cell.style.width = cellStretchWidth + 'px';
+                                        cellWrap.classList.add('g-overflowing-cell');
+                                        cell.style.width = cellStretchWidth + 'px';
 
-									}
-								}
+                                    }
+                                }
 
-							}
+                            }
 
-						}
-					}
+                        }
+                    }
 
-				}
+                }
 
                 function updateTableContent() {
                     if (scope.isReport) {
@@ -346,20 +391,32 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
+                    console.log("gTableBodyComponent DATA_LOAD_START");
+
                     // progressBar.style.display = 'block';
                     /* if (scope.isReport) {
                         contentElem.style.opacity = '0.7';
                     } */
-					contentElem.style.opacity = '0.7';
+                    contentElem.style.opacity = '0.7';
 
                     scope.evDataService.setDataLoadStatus(false);
+
+                    scope.dataLoadStatus = false;
+
+                    setTimeout(function () {
+                        scope.$apply();
+
+                    }, 0);
 
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                    console.log("gTableBodyComponent DATA_LOAD_END");
+
                     // progressBar.style.display = 'none';
 
-					contentElem.style.opacity = '1';
+                    contentElem.style.opacity = '1';
 
                     updateTableContent();
 
@@ -369,7 +426,14 @@
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
                     }
 
-					scope.evDataService.setDataLoadStatus(true);
+                    scope.evDataService.setDataLoadStatus(true);
+
+                    scope.dataLoadStatus = true;
+
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 0)
+
 
                 });
 
@@ -379,7 +443,7 @@
 
                     updateTableContent();
 
-					scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
+                    scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                 });
 
@@ -400,7 +464,7 @@
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
                     }
 
-					scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
+                    scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                 });
 
@@ -431,7 +495,7 @@
                     } else {
 
                         // evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-						// evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
+                        // evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                         if (projection) {
                             evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
@@ -493,8 +557,7 @@
                                 cellContentOverflow();
                             });*/
 
-                        }
-                        else {
+                        } else {
 
                             evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
@@ -505,7 +568,7 @@
 
                         }
 
-						scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
+                        scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                     }, 500);
 

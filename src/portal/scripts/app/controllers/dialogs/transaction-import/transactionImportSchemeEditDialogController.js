@@ -615,7 +615,10 @@
                 multiple: true,
                 locals: {
                     entityType: 'transaction-type',
-                    entityId: ttypeId
+                    entityId: ttypeId,
+					data: {
+                    	openedIn: 'dialog'
+					}
                 }
             })
 

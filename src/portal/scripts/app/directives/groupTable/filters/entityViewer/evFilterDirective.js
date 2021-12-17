@@ -76,6 +76,9 @@
 
 					vm.evDataService.setFilters(filters);
 
+					vm.evDataService.resetTableContent(false);
+					vm.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
 					$scope.onSave();
 					$scope.$destroy();
 

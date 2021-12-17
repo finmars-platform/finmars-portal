@@ -23,10 +23,31 @@
         var canLoadMore = false;
 
 
-        selectedGroups.forEach(function (selectedGroup) {
+        console.log('control.render.selectedGroups', selectedGroups);
 
-            var requestParameters = evDataService.getRequestParameters(selectedGroup.___id);
+
+        if (selectedGroups && selectedGroups.length) {
+            selectedGroups.forEach(function (selectedGroup) {
+
+                var requestParameters = evDataService.getRequestParameters(selectedGroup.___id);
+                var pagination = requestParameters.pagination;
+
+
+                var total_pages = Math.ceil(pagination.count / pagination.page_size);
+                var page = pagination.page;
+
+                if (page < total_pages) {
+                    canLoadMore = true;
+                }
+
+
+            })
+        } else {
+            var requestParameters = evDataService.getRequestParameters(obj.___parentId);
             var pagination = requestParameters.pagination;
+
+            console.log('control.render.selectedGroups', obj);
+            console.log('control.render.selectedGroups', requestParameters);
 
 
             var total_pages = Math.ceil(pagination.count / pagination.page_size);
@@ -36,9 +57,9 @@
                 canLoadMore = true;
             }
 
+        }
 
-        })
-
+        console.log('control.render.selectedGroups', canLoadMore);
 
         // console.log('requestParameters', requestParameters);
         // console.log('total_pages', total_pages);

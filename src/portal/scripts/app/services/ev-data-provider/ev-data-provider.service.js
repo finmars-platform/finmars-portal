@@ -14,6 +14,20 @@
         entityViewerDataService.setRequestParameters(requestParameters);
     };
 
+    var injectGlobalTableSearch = function (entityViewerDataService) {
+        var requestParameters = entityViewerDataService.getActiveRequestParameters();
+
+        requestParameters.body['global_table_search'] = ''
+
+        var query = entityViewerDataService.getGlobalTableSearch();
+
+        if (query) {
+            requestParameters.body['global_table_search'] = query
+        }
+
+        entityViewerDataService.setRequestParameters(requestParameters);
+    };
+
     var injectRegularFilters = function (entityViewerDataService) {
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
@@ -132,6 +146,8 @@
 
             obj = Object.assign({}, rootGroupData);
 
+            obj.___items_count = data.count;
+
             obj.count = data.count;
             obj.next = data.next;
             obj.previous = data.previous;
@@ -142,7 +158,8 @@
                 }
             }
 
-        } else {
+        }
+        else {
 
             var groupData = entityViewerDataService.getData(event.___id);
 
@@ -155,7 +172,8 @@
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-                obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                // obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                obj.___items_count = data.count;
 
                 obj.count = data.count;
                 obj.next = data.next;
@@ -167,13 +185,15 @@
                     }
                 }
 
-            } else {
+            }
+            else {
 
                 obj = Object.assign({}, data);
                 obj.___group_name = event.groupName ? event.groupName : '-';
                 obj.___group_id = event.groupId ? event.groupId : '-';
                 obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
-                obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                // obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                obj.___items_count = data.count;
                 obj.___is_open = true;
                 obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -217,7 +237,7 @@
             return item
         });
 
-        var controlObj = {
+    	/*var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
             ___level: obj.___level + 1
@@ -225,7 +245,7 @@
 
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results.push(controlObj);
+        obj.results.push(controlObj);*/
 
         console.log('attributeDataService', attributeDataService);
 
@@ -277,6 +297,8 @@
 
             obj = Object.assign({}, rootGroupData);
 
+            obj.___items_count = data.count;
+
             obj.count = data.count;
             obj.next = data.next;
             obj.previous = data.previous;
@@ -301,7 +323,8 @@
 
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-                obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                // obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                obj.___items_count = data.count;
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                 obj.count = data.count;
@@ -321,7 +344,8 @@
                 obj = Object.assign({}, data);
                 obj.___group_name = event.groupName ? event.groupName : '-';
                 obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
-                obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                // obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                obj.___items_count = data.count;
                 obj.___group_id = event.groupId ? event.groupId : '-';
                 // obj.___group_identifier = event.groupId;
                 obj.___is_open = true;
@@ -335,13 +359,13 @@
             }
         }
 
-        obj.results = obj.results.filter(function (item) {
+        /* obj.results = obj.results.filter(function (item) {
             if (item && item.___type !== 'control') {
                 return true;
             }
 
             return false;
-        });
+        }); */
 
         var groups = entityViewerDataService.getGroups();
         var parents = [];
@@ -354,7 +378,7 @@
 
         // evDataHelper.setDefaultGroups(obj);
         obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
+            return item.___type !== 'control';
         });
 
         obj.results = obj.results.map(function (item, index) {
@@ -380,14 +404,14 @@
                 }
 
                 item.___id = evRvCommonHelper.getId(item);
-                item.___index = index
+                item.___index = index;
 
             }
 
-            return item
+            return item;
         });
 
-        var controlObj = {
+        /* var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
             ___level: obj.___level + 1
@@ -395,7 +419,7 @@
 
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results.push(controlObj);
+        obj.results.push(controlObj); */
 
         console.log('DESERIALIZE GROUPS', obj.results);
 
@@ -607,7 +631,7 @@
 
                     }
 
-                    evDataHelper.setDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+                    // evDataHelper.setDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
                     requestParameters.pagination.page = pageToRequest;
                     entityViewerDataService.setRequestParameters(requestParameters);
@@ -695,6 +719,7 @@
         console.time('Updating data structure');
         injectEntityViewerOptions(entityViewerDataService);
         injectRegularFilters(entityViewerDataService);
+        injectGlobalTableSearch(entityViewerDataService)
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
