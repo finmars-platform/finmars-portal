@@ -17,6 +17,7 @@
         vm.filters = {};
 
         vm.events = [];
+        vm.eventsProjection = [];
 
         vm.recursiveOpenDialogs = function (resolve, events, index, $event) {
 
@@ -207,6 +208,100 @@
 
         };
 
+        vm.updateFilters = function () {
+
+            console.log('vm.updateFilters.filters', vm.filters)
+
+            vm.eventsProjection = vm.events.filter(function (item) {
+
+                var result = true;
+
+                if (vm.filters.status) {
+
+                    var status = vm.getStatus(item.status)
+
+                    if (status.toLowerCase().indexOf(vm.filters.status.toLowerCase()) === -1) {
+                        result = false;
+                    }
+
+                }
+
+                if (vm.filters.description) {
+
+                    if (item.event_schedule_object) {
+                        if (item.event_schedule_object.display_description.toString().toLowerCase().indexOf(vm.filters.description.toLowerCase()) === -1) {
+                            result = false;
+                        }
+                    } else {
+                        result = false;
+                    }
+
+                }
+
+                if (vm.filters.instrument) {
+
+                    if (item.instrument_object) {
+
+                        if (item.instrument_object.user_code.toLowerCase().indexOf(vm.filters.instrument.toLowerCase()) === -1) {
+                            result = false;
+                        }
+                    } else {
+                        result = false
+                    }
+
+                }
+
+                if (vm.filters.position) {
+
+                    if (item.position) {
+                        if (item.position.toString().toLowerCase().indexOf(vm.filters.position.toLowerCase()) === -1) {
+                            result = false;
+                        }
+                    } else {
+                        result = false;
+                    }
+
+                }
+
+
+                if (vm.filters.portfolio) {
+
+                    if (item.portfolio_object) {
+
+                        if (item.portfolio_object.user_code.toLowerCase().indexOf(vm.filters.portfolio.toLowerCase()) === -1) {
+                            result = false;
+                        }
+                    } else {
+                        result = false
+                    }
+
+                }
+
+
+                if (vm.filters.account) {
+
+                    if (item.account_object) {
+
+                        if (item.account_object.user_code.toLowerCase().indexOf(vm.filters.account.toLowerCase()) === -1) {
+                            result = false;
+                        }
+                    } else {
+                        result = false
+                    }
+
+                }
+
+
+                return result;
+
+            })
+
+            console.log('vm.updateFilters.eventsProjection', vm.eventsProjection)
+
+
+        }
+
+
         vm.requestEvents = function (sortingOptions) {
             vm.loading = true;
 
@@ -225,6 +320,8 @@
             instrumentEventService.getList(options).then(function (data) {
 
                 vm.events = data.results;
+
+                vm.updateFilters();
 
                 vm.loading = false;
 

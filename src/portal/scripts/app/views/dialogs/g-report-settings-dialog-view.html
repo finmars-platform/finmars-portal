@@ -577,6 +577,21 @@
                                                 on-change-callback="vm.selectedCustomFieldsChanged()"
                                                 name-property="name"></two-fields-multiselect>
                     </div>
+
+
+                    <div class="m-t-16" data-ng-if="vm.entityType == 'transaction-report'">
+
+                        <div layout="row"  class="m-t-16">
+                            <md-input-container flex="100">
+                                <label>Filter transactions by statuses</label>
+                                <md-select data-ng-model="vm.complex_transaction_statuses_filter" multiple>
+                                    <md-option value="booked">Booked</md-option>
+                                    <md-option value="ignored">Ignored</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div data-ng-if="!vm.checkReadyStatus()" class="p-t-24 p-b-24">

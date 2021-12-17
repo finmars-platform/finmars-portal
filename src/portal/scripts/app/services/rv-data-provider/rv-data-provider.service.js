@@ -168,6 +168,8 @@
 
         // console.log('requestReport started');
 
+        entityViewerDataService.setStatusData('loading');
+
         requestData(entityViewerDataService, entityViewerEventService).then(function (data) {
 
             var reportOptions = entityViewerDataService.getReportOptions();
@@ -700,6 +702,8 @@
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
         var groups = evDataService.getGroups();
         var activeColumnSort = evDataService.getActiveColumnSort();
+
+        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         if (groups.length) {
             console.log('createDataStructure 1', defaultRootRequestParameters)

@@ -80,6 +80,9 @@
 
 			recalculationPromise.then(function (data) {
 
+				console.log('data', data);
+				console.log('inputs', inputs);
+
 				inputs.forEach(inputName => {
 
 					viewModel.entity[inputName] = data.values[inputName]
@@ -414,7 +417,7 @@
 			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
 			let formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
-			let tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+			let tabsWithErrors = viewModel.evEditorDataService.getLocationsWithErrors();
 
 			errors.forEach(errorObj => {
 

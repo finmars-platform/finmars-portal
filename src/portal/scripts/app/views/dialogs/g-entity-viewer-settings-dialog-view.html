@@ -55,6 +55,16 @@
             </md-input-container>
         </div>
 
+        <div layout="row" data-ng-if="vm.entityType === 'complex-transaction'" class="m-t-16">
+            <md-input-container flex="100">
+                <label>Filter transactions by statuses</label>
+                <md-select data-ng-model="vm.complexTransactionFilters" multiple>
+                    <md-option value="booked">Booked</md-option>
+                    <md-option value="ignored">Ignored</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+
     </md-dialog-content>
 
     <md-dialog-actions layout="row" layout-align="space-between center">

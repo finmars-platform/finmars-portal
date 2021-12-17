@@ -140,7 +140,7 @@
   }
 
 
-
+  @dashboardCellPaddingRight: 8px; // if changed also change var domElemHorizontalPaddings inside dashboardGridAlignerDirective.js
   .dashboard-cell {
 
     //padding: 10px;
@@ -150,7 +150,7 @@
     overflow: auto;
 
     padding-bottom: 8px;
-    padding-right: 8px;
+    padding-right: @dashboardCellPaddingRight;
 
     &.bordered::after {
 

@@ -94,7 +94,7 @@
 
 		};
 
-		const getNewRowUniqueKey = function (gridTableDataService) {
+		/* const getNewRowUniqueKey = function (gridTableDataService) {
 
 			let newRowIndex = 0;
 
@@ -107,7 +107,7 @@
 
 			return newRowIndex + md5Helper.md5('newGridTableRow', newRowIndex);
 
-		}
+		} */
 
         return {
             onGridTableCellChange: onGridTableCellChange,
@@ -116,7 +116,7 @@
 
 			getMultitypeFieldDataForCell: getMultitypeFieldDataForCell,
 
-			getNewRowUniqueKey: getNewRowUniqueKey
+			// getNewRowUniqueKey: getNewRowUniqueKey
         }
 
     }

@@ -43,6 +43,7 @@
                                    ev-editor-data-service="evEditorDataService"
                                    ev-editor-event-service="evEditorEventService"
                                    data-entity-type="vm.entityType"
+                                   fields-data-store="fieldsDataStore"
                                    data-item-change="itemChange()">
                 </ev-field-resolver>
             </div>
@@ -57,6 +58,7 @@
                                    ev-editor-data-service="evEditorDataService"
                                    ev-editor-event-service="evEditorEventService"
                                    data-entity-type="vm.entityType"
+                                   fields-data-store="fieldsDataStore"
                                    data-item-change="itemChange()">
                 </ev-field-resolver>
             </div>
@@ -72,6 +74,19 @@
                     small-options="{tooltipText: tooltipText, notNull: options.notNull}"
                     on-change-callback="onDateChange()">
             </date-input>
+        </div>
+
+        <div ng-if="fieldType['display_name'] === 'Datetime'" class="field-date-pick">
+            <datetime-input
+                    label="{{getName()}}"
+                    model="entity[vm.fieldKey]"
+                    custom-buttons="item.buttons"
+                    is-readonly="item.readonly"
+                    custom-styles="customStyles"
+                    event-signal="ciEventObj.event"
+                    small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                    on-change-callback="onDateChange()">
+            </datetime-input>
         </div>
 
         <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
@@ -106,13 +121,15 @@
                           </md-option>
                         </md-select>
                       </md-input-container>-->
-
                 <classifier-select label="{{getName()}}"
                                    placeholder-text="{{getName()}}"
                                    model="entity[vm.fieldKey]"
                                    classifier-attr="item"
                                    classifier-value="entity[vm.fieldKey]"
+                                   event-signal="ciEventObj.event"
                                    entity-type="vm.entityType"
+                                   small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                                   on-change-callback="itemChange()"
                 ></classifier-select>
 
             </div>

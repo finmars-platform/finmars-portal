@@ -29,6 +29,8 @@
                 return 'counterparties/counterparty-group';
             case 'instrument':
                 return 'instruments/instrument';
+            case 'generated-event':
+                return 'instruments/generated-event';
             case 'instrument-type':
                 return 'instruments/instrument-type';
             case 'price-history':
@@ -69,6 +71,10 @@
                 return 'pricing/price-history-error';
             case 'currency-history-error':
                 return 'pricing/currency-history-error';
+            case 'audit-instrument':
+                return 'audit/history';
+            case 'audit-transaction':
+                return 'audit/history';
 
         }
 
