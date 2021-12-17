@@ -12,12 +12,21 @@
                          class=" m-t-16"></dropdown-select>
 
 
-        <dropdown-select
-                model="vm.config.scheme"
-                placeholder-text="Import scheme"
-                menu-options="vm.entitySchemes"
-                small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
-                class=" m-t-8"></dropdown-select>
+        <div class="position-relative" layout="row">
+            <dropdown-select
+                    model="vm.config.scheme"
+                    placeholder-text="Import scheme"
+                    menu-options="vm.entitySchemes"
+                    small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
+                    class=" m-t-8 width-100"></dropdown-select>
+            <md-button
+                    class="scheme-edit-button md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"
+                    data-ng-click="vm.editScheme($event)" style="top: 3px;">
+                <ng-md-icon icon="edit" size="24"></ng-md-icon>
+                <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme</md-tooltip>
+            </md-button>
+        </div>
+
 
         <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
             <input type="file" id="importDataUploadInput" input-file-directive
