@@ -21,6 +21,10 @@ export default function () {
 	const setCookie = function (name, value, options) {
 		options = options || {};
 
+		if (!options.path) {
+			options.path = '/'
+		}
+
 		let expires = options.expires;
 
 		if (typeof expires == "number" && expires) {

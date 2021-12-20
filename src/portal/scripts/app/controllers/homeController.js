@@ -210,6 +210,12 @@
 
         };
 
+        vm.reactToEvents = function (){
+
+            processEventsPromise()
+
+        }
+
         vm.init = async function () {
 
             /* vm.getMasterUsersList().then(function () {
@@ -231,7 +237,7 @@
 
 			var promises = [];
 
-			promises.push(processEventsPromise());
+			// promises.push(processEventsPromise());
 			promises.push(getDashboardsList());
 
 			await Promise.all(promises);

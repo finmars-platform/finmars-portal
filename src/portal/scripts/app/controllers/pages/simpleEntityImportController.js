@@ -33,7 +33,9 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
         vm.dataIsImported = false;
         vm.activeContentType = null;
 
-        vm.config = {};
+        vm.config = {
+            scheme: null
+        };
         vm.validateConfig = {};
 
         vm.processing = false;
@@ -42,13 +44,18 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
         vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
-            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
+            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.processing === false) {
                 return true;
             }
             return false;
         };
 
-        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
+        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
+
+            item.id = item.key;
+
+            return item
+        })
 
         vm.getSchemeList = function () {
 

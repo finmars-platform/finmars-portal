@@ -176,7 +176,7 @@
             return "Deleted";
         }
 
-        if (obj[column.key]) {
+        if (obj[column.key] != null && obj[column.key] !== undefined) {
 
             if (typeof obj[column.key] === 'string') {
 
@@ -200,12 +200,16 @@
                         return 'Created'
                     }
 
+                    if (obj[column.key] === 'R') {
+                        return 'Requested'
+                    }
+
                     if (obj[column.key] === 'Overwritten') {
                         return 'Created'
                     }
 
                 }
-                else if(column.key === 'procedure_modified_datetime') {
+                else if(column.key === 'procedure_modified_datetime' || column.key === 'created' || column.key === 'modified') {
 
                     return moment(obj[column.key]).format('YYYY-MM-DD HH:mm:ss')
 
@@ -253,6 +257,10 @@
                         return 'Pending'
                     }
 
+                    if (obj[column.key] === 3) {
+                        return 'Ignored'
+                    }
+
                 }
 
                 return obj[column.key]
@@ -260,6 +268,16 @@
 
             if (Array.isArray(obj[column.key])) {
                 return '[' + obj[column.key].length + ']';
+            }
+
+            if (typeof obj[column.key] === 'boolean') {
+
+                if (obj[column.key]) {
+                    return 'True'
+                } else {
+                    return 'False'
+                }
+
             }
 
         }
@@ -451,7 +469,7 @@
 
         result = result + rowSelection + rowSettings;
 
-        console.log('render.columns', columns);
+        // console.log('render.columns', columns);
 
         columns.forEach(function (column, columnIndex) {
 

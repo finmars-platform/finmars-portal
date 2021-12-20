@@ -131,6 +131,7 @@
                                 ev-editor-data-service="vm.evEditorDataService"
                                 ev-editor-event-service="vm.evEditorEventService"
                                 item="vm.fixedAreaAttributesLayout[row][field.column]"
+                                fields-data-store="vm.fieldsDataStore"
                                 entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                     </div>
                 </div>
@@ -146,7 +147,7 @@
 
                     <md-tab-body>
                         <md-content class="md-padding p-t-26 "
-                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked}" style="min-height: 50vh">
+                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked, 'canceled-tab-overlay': vm.entity.is_canceled}" style="min-height: 50vh">
                             <div data-ng-repeat="row in vm.range(tab.layout.rows)"
                                  layout="row"
                                  class="entity-editor-row" data-row-number="{{row}}">
@@ -163,6 +164,7 @@
                                             ev-editor-data-service="vm.evEditorDataService"
                                             ev-editor-event-service="vm.evEditorEventService"
                                             item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
+                                            fields-data-store="vm.fieldsDataStore"
                                             entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                                 </div>
                             </div>

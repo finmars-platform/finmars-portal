@@ -1,519 +1,523 @@
 (function () {
 
-	'use strict';
+    'use strict';
 
-	const uiService = require('../../../../services/uiService');
-	const evEvents = require('../../../../services/entityViewerEvents');
+    const uiService = require('../../../../services/uiService');
+    const evEvents = require('../../../../services/entityViewerEvents');
 
-	// const EventService = require('../../../../services/eventService');
+    // const EventService = require('../../../../services/eventService');
 
-	module.exports = function ($mdDialog, gFiltersHelper) {
-		return {
-			require: '^^gFilters',
-			restrict: 'E',
-			scope: {
-				evDataService: '=',
-				evEventService: '=',
-				attributeDataService: '=',
-			},
-			templateUrl: 'views/directives/groupTable/filters/g-ev-rv-filters-view.html',
-			link: function (scope, elem, attrs, gFiltersVm) {
+    module.exports = function ($mdDialog, gFiltersHelper) {
+        return {
+            require: '^^gFilters',
+            restrict: 'E',
+            scope: {
+                evDataService: '=',
+                evEventService: '=',
+                attributeDataService: '=',
+            },
+            templateUrl: 'views/directives/groupTable/filters/g-ev-rv-filters-view.html',
+            link: function (scope, elem, attrs, gFiltersVm) {
 
-				scope.entityType = gFiltersVm.entityType;
-				scope.isReport = true;
-				scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-				scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
+                scope.entityType = gFiltersVm.entityType;
+                scope.isReport = true;
+                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
 
-				const hideUseFromAboveFilters = gFiltersVm.hideUseFromAboveFilters;
+                const hideUseFromAboveFilters = gFiltersVm.hideUseFromAboveFilters;
 
-				if (hideUseFromAboveFilters) {
-					scope.showUseFromAboveFilters = false;
-				} else {
-					scope.showUseFromAboveFilters = !scope.isRootEntityViewer; // show use from above filters by default inside split panel
-				}
+                if (hideUseFromAboveFilters) {
+                    scope.showUseFromAboveFilters = false;
+                } else {
+                    scope.showUseFromAboveFilters = !scope.isRootEntityViewer; // show use from above filters by default inside split panel
+                }
 
-				scope.rvAutoRefresh = scope.evDataService.getAutoRefreshState();
+                scope.rvAutoRefresh = scope.evDataService.getAutoRefreshState();
 
-				if (scope.rvAutoRefresh === null || scope.rvAutoRefresh === undefined) { //if we missed initial state for already existing layout
-					scope.rvAutoRefresh = true;
-				}
+                if (scope.rvAutoRefresh === null || scope.rvAutoRefresh === undefined) { //if we missed initial state for already existing layout
+                    scope.rvAutoRefresh = true;
+                }
 
-				scope.readyStatus = {
-					filters: false
-				}
+                scope.readyStatus = {
+                    filters: false
+                }
 
-				scope.filterPopupTemplate = 'views/popups/groupTable/filters/rv-filter-popup-view.html';
+                scope.filterPopupTemplate = 'views/popups/groupTable/filters/rv-filter-popup-view.html';
 
-				scope.popupPosX = gFiltersVm.popupPosX;
-				scope.popupPosY = gFiltersVm.popupPosY;
-				scope.fpBackClasses = gFiltersVm.fpBackClasses;
-				scope.fpClasses = gFiltersVm.fpClasses;
+                scope.popupPosX = gFiltersVm.popupPosX;
+                scope.popupPosY = gFiltersVm.popupPosY;
+                scope.fpBackClasses = gFiltersVm.fpBackClasses;
+                scope.fpClasses = gFiltersVm.fpClasses;
 
-				const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
-				const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
-				let filtersChipsContainer = elem[0].querySelector(".gFiltersContainer");
+                const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
+                const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
+                let filtersChipsContainer = elem[0].querySelector(".gFiltersContainer");
 
-				let filters = scope.evDataService.getFilters();
-				let useFromAboveFilters = [];
-				let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                let filters = scope.evDataService.getFilters();
+                let useFromAboveFilters = [];
+                let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
 
-				/* scope.calculateReport = function () {
-					scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-				}; */
-				scope.refreshTable = function () {
-					scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-				};
+                /* scope.calculateReport = function () {
+                    scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                }; */
+                scope.refreshTable = function () {
+                    scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+                };
 
-				//region Chips
-				scope.onFilterChipClick = gFiltersVm.onFilterChipClick;
+                //region Chips
+                scope.onFilterChipClick = gFiltersVm.onFilterChipClick;
 
-				scope.filterSettingsChange = function () {
+                scope.filterSettingsChange = function () {
 
-					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-					scope.evDataService.resetTableContent(true);
+                    scope.evDataService.resetTableContent(true);
 
-					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-				};
+                };
 
-				scope.toggleUseFromAboveFilters = function () {
+                scope.toggleUseFromAboveFilters = function () {
 
-					scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters;
-					scope.evEventService.dispatchEvent(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
-					formatFiltersForChips();
+                    scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters;
+                    scope.evEventService.dispatchEvent(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
+                    formatFiltersForChips();
 
-					setTimeout(() => {
+                    setTimeout(() => {
 
-						const filterAreaHeightChanged = gFiltersVm.updateFilterAreaHeight();
+                        const filterAreaHeightChanged = gFiltersVm.updateFilterAreaHeight();
 
-						if (filterAreaHeightChanged) {
-							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-						}
+                        if (filterAreaHeightChanged) {
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                        }
 
-					}, 0);
+                    }, 0);
 
 
-				};
+                };
 
-				/* const getUseFromAboveFilters = function () {
+                /* const getUseFromAboveFilters = function () {
 
-					useFromAboveFilters = filters.filter((filter, index) => {
+                    useFromAboveFilters = filters.filter((filter, index) => {
 
-						if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
+                        if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
 
-							filter.filtersListIndex = index;
-							return true;
+                            filter.filtersListIndex = index;
+                            return true;
 
-						}
+                        }
 
-						return false;
+                        return false;
 
-					});
+                    });
 
-				}; */
+                }; */
 
-				const formatFiltersForChips = function () {
+                const formatFiltersForChips = function () {
 
-					scope.filtersChips = [];
-					const errors = [];
+                    scope.filtersChips = [];
+                    const errors = [];
 
-					filters.forEach(filter => {
+                    console.log('formatFiltersForChips.filters', filters)
 
-						if (filter.type !== "filter_link") { // don't show filter from dashboard component
+                    filters.forEach(filter => {
 
-							const filterOpts = filter.options || {};
-							/* let filterVal = filterOpts.filter_values || "";
+                        if (filter.type !== "filter_link") { // don't show filter from dashboard component
 
-							if (filterOpts.filter_type === 'from_to') {
+                            const filterOpts = filter.options || {};
+                            /* let filterVal = filterOpts.filter_values || "";
 
-								filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
+                            if (filterOpts.filter_type === 'from_to') {
 
-							} else if (filterOpts.filter_type === 'out_of_range' ) {
+                                filterVal = `From ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
 
-								filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
+                            } else if (filterOpts.filter_type === 'out_of_range' ) {
 
-							} */
+                                filterVal = `Out of range from ${filterOpts.filter_values.min_value} to ${filterOpts.filter_values.max_value}`;
 
-							// hide use from above filters if needed
-							if (
-								scope.showUseFromAboveFilters ||
-								(!filterOpts.use_from_above || !Object.keys(filterOpts.use_from_above).length)
-							) {
+                            } */
 
-								let filterData = {
-									id: filter.key,
-									isActive: filterOpts.enabled
-								};
+                            // hide use from above filters if needed
+                            if (
+                                scope.showUseFromAboveFilters ||
+                                (!filterOpts.use_from_above || !Object.keys(filterOpts.use_from_above).length)
+                            ) {
 
-								const filterName = filter.layout_name ? filter.layout_name : filter.name;
+                                let filterData = {
+                                    id: filter.key,
+                                    isActive: filterOpts.enabled
+                                };
 
-								let chipText = gFiltersVm.getChipTextElem(filterName, filterOpts.filter_values, filterOpts.filter_type);
+                                const filterName = filter.layout_name ? filter.layout_name : filter.name;
 
-								if (filterOpts.use_from_above &&
-									Object.keys(filterOpts.use_from_above).length) {
+                                let chipText = gFiltersVm.getChipTextElem(filterName, filterOpts.filter_values, filterOpts.filter_type);
 
-									filterData.classes = "use-from-above-filter-chip"
-									filterData.tooltipContent = chipText
+                                if (filterOpts.use_from_above &&
+                                    Object.keys(filterOpts.use_from_above).length) {
 
-									chipText = '<span class="material-icons">link</span>' + chipText;
+                                    filterData.classes = "use-from-above-filter-chip"
+                                    filterData.tooltipContent = chipText
 
-								}
+                                    chipText = '<span class="material-icons">link</span>' + chipText;
 
-								filterData.text = chipText;
+                                }
 
-								/*
-								if (filter.key.startsWith('custom_fields')) {
-									const customField = customFields.find( field => filter.key === `custom_fields.${field.user_code}`)
-									if (!customField) {
+                                filterData.text = chipText;
 
-										filter.options.enabled = false;
-										const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
+                                /*
+                                if (filter.key.startsWith('custom_fields')) {
+                                    const customField = customFields.find( field => filter.key === `custom_fields.${field.user_code}`)
+                                    if (!customField) {
 
-										filterData.error_data = {
-											code: 10,
-											description: description
-										}
+                                        filter.options.enabled = false;
+                                        const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
 
-										const error = {
-											key: filter.key,
-											description: description
-										}
+                                        filterData.error_data = {
+                                            code: 10,
+                                            description: description
+                                        }
 
-										errors.push(error)
+                                        const error = {
+                                            key: filter.key,
+                                            description: description
+                                        }
 
-									}
+                                        errors.push(error)
 
-								}
-								*/
-								if (filter.key.startsWith('custom_fields')) {
+                                    }
 
-									let error;
+                                }
+                                */
+                                if (filter.key.startsWith('custom_fields')) {
 
-									[filter, filterData, error] = gFiltersVm.checkCustomFieldFilterForError(filter, filterData, customFields);
-									if (error) errors.push(error);
+                                    let error;
 
-								}
+                                    [filter, filterData, error] = gFiltersVm.checkCustomFieldFilterForError(filter, filterData, customFields);
+                                    if (error) errors.push(error);
 
-								scope.filtersChips.push(filterData);
+                                }
 
-							}
+                                scope.filtersChips.push(filterData);
 
-						}
+                            }
 
-					});
+                        }
 
-					if (errors.length) gFiltersVm.updateMissingCustomFieldsList(errors);
+                    });
 
-					gFiltersVm.updateFilterAreaHeight()
+                    if (errors.length) gFiltersVm.updateMissingCustomFieldsList(errors);
 
-				};
+                    gFiltersVm.updateFilterAreaHeight()
 
-				scope.onChipsFirstRender = gFiltersVm.onChipsFirstRender;
+                };
 
-				scope.addFilter = function ($event) {
+                scope.onChipsFirstRender = gFiltersVm.onChipsFirstRender;
 
-					gFiltersVm.openAddFilterDialog($event, filters).then(res => {
+                scope.addFilter = function ($event) {
 
-						if (res.status === 'agree') {
+                    gFiltersVm.openAddFilterDialog($event, filters).then(res => {
 
-							filters.push(res.data);
+                        if (res.status === 'agree') {
 
-							scope.evDataService.setFilters(filters);
-							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                            for (var i = 0; i < res.data.items.length; i = i + 1) {
+                                filters.push(res.data.items[0]);
+                            }
 
-						}
+                            scope.evDataService.setFilters(filters);
+                            scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-					});
+                        }
 
-				};
+                    });
 
-				scope.removeFilter = function (filtersToRemove) {
+                };
 
-					filters = filters.filter(filter => {
-						return filtersToRemove.find(item => item.id !== filter.key);
-					});
+                scope.removeFilter = function (filtersToRemove) {
 
-					scope.evDataService.setFilters(filters);
+                    filters = filters.filter(filter => {
+                        return filtersToRemove.find(item => item.id !== filter.key);
+                    });
 
-					scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-					scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    scope.evDataService.setFilters(filters);
 
-				};
-				//endregion
+                    scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                    scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-				scope.toggleSplitPanel = gFiltersVm.toggleSplitPanel;
+                };
+                //endregion
 
-				scope.toggleMatrix = function ($event) {
+                scope.toggleSplitPanel = gFiltersVm.toggleSplitPanel;
 
-					var viewType = scope.evDataService.getViewType();
-					var newViewType;
+                scope.toggleMatrix = function ($event) {
 
-					if (viewType === 'matrix') {
-						newViewType = 'report_viewer'
-					} else {
-						newViewType = 'matrix'
-					}
+                    var viewType = scope.evDataService.getViewType();
+                    var newViewType;
 
-					if (newViewType === 'matrix') {
+                    if (viewType === 'matrix') {
+                        newViewType = 'report_viewer'
+                    } else {
+                        newViewType = 'matrix'
+                    }
 
-						var settings = scope.evDataService.getViewSettings(newViewType);
+                    if (newViewType === 'matrix') {
 
-						$mdDialog.show({
-							controller: 'ReportViewerMatrixSettingsDialogController as vm',
-							templateUrl: 'views/dialogs/report-viewer-matrix-settings-dialog-view.html',
-							parent: angular.element(document.body),
-							clickOutsideToClose: false,
-							targetEvent: $event,
-							preserveScope: true,
-							multiple: true,
-							autoWrap: true,
-							skipHide: true,
-							locals: {
-								data: {
-									attributeDataService: scope.attributeDataService,
-									evDataService: scope.evDataService,
-									evEventService: scope.evEventService,
-									settings: settings
-								}
-							}
-						}).then(function (res) {
+                        var settings = scope.evDataService.getViewSettings(newViewType);
 
-							if (res.status === 'agree') {
+                        $mdDialog.show({
+                            controller: 'ReportViewerMatrixSettingsDialogController as vm',
+                            templateUrl: 'views/dialogs/report-viewer-matrix-settings-dialog-view.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                data: {
+                                    attributeDataService: scope.attributeDataService,
+                                    evDataService: scope.evDataService,
+                                    evEventService: scope.evEventService,
+                                    settings: settings
+                                }
+                            }
+                        }).then(function (res) {
 
-								settings = res.data.settings;
+                            if (res.status === 'agree') {
 
-								scope.evDataService.setViewType(newViewType);
-								scope.evDataService.setViewSettings(newViewType, settings);
+                                settings = res.data.settings;
 
-								scope.evEventService.dispatchEvent(evEvents.VIEW_TYPE_CHANGED)
+                                scope.evDataService.setViewType(newViewType);
+                                scope.evDataService.setViewSettings(newViewType, settings);
 
-							}
+                                scope.evEventService.dispatchEvent(evEvents.VIEW_TYPE_CHANGED)
 
-						})
+                            }
 
-					} else {
+                        })
 
-						scope.evDataService.setViewType(newViewType);
-						scope.evDataService.setViewSettings(newViewType, {});
+                    } else {
 
-						scope.evEventService.dispatchEvent(evEvents.VIEW_TYPE_CHANGED)
-					}
+                        scope.evDataService.setViewType(newViewType);
+                        scope.evDataService.setViewSettings(newViewType, {});
 
-				};
+                        scope.evEventService.dispatchEvent(evEvents.VIEW_TYPE_CHANGED)
+                    }
 
-				scope.exportAsPdf = function ($event) {
+                };
 
-					$mdDialog.show({
-						controller: 'ExportPdfDialogController as vm',
-						templateUrl: 'views/dialogs/export-pdf-dialog-view.html',
-						parent: angular.element(document.body),
-						targetEvent: $event,
-						locals: {
-							evDataService: scope.evDataService,
-							evEventService: scope.evEventService,
-							data: {entityType: scope.entityType}
-						}
-					})
+                scope.exportAsPdf = function ($event) {
 
-				};
+                    $mdDialog.show({
+                        controller: 'ExportPdfDialogController as vm',
+                        templateUrl: 'views/dialogs/export-pdf-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            evDataService: scope.evDataService,
+                            evEventService: scope.evEventService,
+                            data: {entityType: scope.entityType}
+                        }
+                    })
 
-				scope.exportAsCSV = gFiltersVm.exportAsCSV;
-				scope.exportAsExcel = gFiltersVm.exportAsExcel;
-				scope.copyReport = gFiltersVm.copyReport;
-				scope.copySelectedToBuffer = gFiltersVm.copySelectedToBuffer;
+                };
 
-				scope.openViewConstructor = gFiltersVm.openViewConstructor;
+                scope.exportAsCSV = gFiltersVm.exportAsCSV;
+                scope.exportAsExcel = gFiltersVm.exportAsExcel;
+                scope.copyReport = gFiltersVm.copyReport;
+                scope.copySelectedToBuffer = gFiltersVm.copySelectedToBuffer;
 
-				scope.openCustomFieldsManager = function ($event) {
+                scope.openViewConstructor = gFiltersVm.openViewConstructor;
 
-					$mdDialog.show({
-						controller: 'CustomFieldDialogController as vm',
-						templateUrl: 'views/dialogs/custom-field/custom-field-dialog-view.html',
-						parent: angular.element(document.body),
-						targetEvent: $event,
-						clickOutsideToClose: false,
-						preserveScope: true,
-						multiple: true,
-						locals: {
-							attributeDataService: scope.attributeDataService,
-							entityViewerEventService: scope.evEventService,
-							data: {
-								entityType: gFiltersVm.entityType
-							}
-						}
-					});
+                scope.openCustomFieldsManager = function ($event) {
 
-				};
+                    $mdDialog.show({
+                        controller: 'CustomFieldDialogController as vm',
+                        templateUrl: 'views/dialogs/custom-field/custom-field-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        multiple: true,
+                        locals: {
+                            attributeDataService: scope.attributeDataService,
+                            entityViewerEventService: scope.evEventService,
+                            data: {
+                                entityType: gFiltersVm.entityType
+                            }
+                        }
+                    });
 
-				scope.toggleAutoRefresh = function () {
+                };
 
-					scope.rvAutoRefresh = !scope.rvAutoRefresh
+                scope.toggleAutoRefresh = function () {
 
-					scope.evDataService.setAutoRefreshState(scope.rvAutoRefresh)
+                    scope.rvAutoRefresh = !scope.rvAutoRefresh
 
-				}
+                    scope.evDataService.setAutoRefreshState(scope.rvAutoRefresh)
 
-				scope.addMenu = {
-					data: {
-						menu: {
-							root: {
-								items: [
-									{
-										action: "book_transaction",
-										name: "Book Transaction",
-										order: 0
-									},
-									{
-										action: "add_portfolio",
-										name: "Add Portfolio",
-										order: 1
-									},
-									{
-										action: "add_account",
-										name: "Add Account",
-										order: 2
-									},
-									{
-										action: "add_currency",
-										name: "Add Currency",
-										order: 3
-									},
-									{
-										action: "add_instrument",
-										name: "Add Instrument",
-										order: 4
-									}
-								]
-							}
-						}
-					}
-				}
+                }
 
-				const getAddMenuLayout = function () {
+                scope.addMenu = {
+                    data: {
+                        menu: {
+                            root: {
+                                items: [
+                                    {
+                                        action: "book_transaction",
+                                        name: "Book Transaction",
+                                        order: 0
+                                    },
+                                    {
+                                        action: "add_portfolio",
+                                        name: "Add Portfolio",
+                                        order: 1
+                                    },
+                                    {
+                                        action: "add_account",
+                                        name: "Add Account",
+                                        order: 2
+                                    },
+                                    {
+                                        action: "add_currency",
+                                        name: "Add Currency",
+                                        order: 3
+                                    },
+                                    {
+                                        action: "add_instrument",
+                                        name: "Add Instrument",
+                                        order: 4
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
 
-					uiService.getContextMenuLayoutList({
-						filters: {
-							type: 'report_menu_add_entities'
-						}
-					}).then(function (data) {
+                const getAddMenuLayout = function () {
 
-						if (data.results.length) {
-							scope.addMenu = data.results[0]
-						}
+                    uiService.getContextMenuLayoutList({
+                        filters: {
+                            type: 'report_menu_add_entities'
+                        }
+                    }).then(function (data) {
 
-						scope.$apply()
+                        if (data.results.length) {
+                            scope.addMenu = data.results[0]
+                        }
 
-					});
+                        scope.$apply()
 
-				}
+                    });
 
-				scope.dispatchAddMenuAction = function ($event, item) {
+                }
 
-					scope.evDataService.setUserRequestedAction(item.action)
+                scope.dispatchAddMenuAction = function ($event, item) {
 
-					scope.evEventService.dispatchEvent(evEvents.USER_REQUEST_AN_ACTION)
+                    scope.evDataService.setUserRequestedAction(item.action)
 
-				}
+                    scope.evEventService.dispatchEvent(evEvents.USER_REQUEST_AN_ACTION)
 
-				const initEventListeners = function () {
+                }
 
-					// placed here because formatFiltersForChips() should be called only after customFields update
-					scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
-						customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
-						formatFiltersForChips();
-					});
+                const initEventListeners = function () {
 
-					scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, function () {
-						gFiltersVm.calculateFilterChipsContainerWidth(gFiltersLeftPartWidth, gFiltersRightPartWidth, filtersChipsContainer);
-					});
+                    // placed here because formatFiltersForChips() should be called only after customFields update
+                    scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                        customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                        formatFiltersForChips();
+                    });
 
-					scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+                    scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, function () {
+                        gFiltersVm.calculateFilterChipsContainerWidth(gFiltersLeftPartWidth, gFiltersRightPartWidth, filtersChipsContainer);
+                    });
 
-						filters = scope.evDataService.getFilters();
+                    scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-						// getUseFromAboveFilters();
-						useFromAboveFilters = gFiltersHelper.filterUseFromAboveFilters(filters);
+                        filters = scope.evDataService.getFilters();
 
-						formatFiltersForChips();
+                        // getUseFromAboveFilters();
+                        useFromAboveFilters = gFiltersHelper.filterUseFromAboveFilters(filters);
 
-						setTimeout(function () { // wait until DOM elems reflow after ng-repeat
+                        formatFiltersForChips();
 
-							const filterAreaHeightChanged = gFiltersVm.updateFilterAreaHeight();
+                        setTimeout(function () { // wait until DOM elems reflow after ng-repeat
 
-							if (filterAreaHeightChanged) {
-								scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-							}
+                            const filterAreaHeightChanged = gFiltersVm.updateFilterAreaHeight();
 
-						}, 0);
+                            if (filterAreaHeightChanged) {
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                            }
 
+                        }, 0);
 
-					});
 
-					scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+                    });
 
-						if (useFromAboveFilters.length) {
+                    scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
-							const filtersChangedFromAbove = gFiltersHelper.insertActiveObjectDataIntoFilters(scope.evDataService, scope.evEventService);
-							if (filtersChangedFromAbove) formatFiltersForChips();
+                        if (useFromAboveFilters.length) {
 
-						}
+                            const filtersChangedFromAbove = gFiltersHelper.insertActiveObjectDataIntoFilters(scope.evDataService, scope.evEventService);
+                            if (filtersChangedFromAbove) formatFiltersForChips();
 
-					});
+                        }
 
-					scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
+                    });
 
-						if (useFromAboveFilters.length) {
+                    scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
 
-							useFromAboveFilters.forEach(ufaFilter => {
+                        if (useFromAboveFilters.length) {
 
-								filters[ufaFilter.filtersListIndex].options.filter_values = [];
+                            useFromAboveFilters.forEach(ufaFilter => {
 
-							});
+                                filters[ufaFilter.filtersListIndex].options.filter_values = [];
 
-							scope.evDataService.setFilters(filters);
+                            });
 
-							scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                            scope.evDataService.setFilters(filters);
 
-							scope.evDataService.resetTableContent(true);
+                            scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                            scope.evDataService.resetTableContent(true);
 
-						}
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-					});
+                        }
 
-					scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
-						scope.currentAdditions = scope.evDataService.getAdditions();
-					});
+                    });
 
-				};
+                    scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+                        scope.currentAdditions = scope.evDataService.getAdditions();
+                    });
 
-				const init = function () {
+                };
 
-					scope.popupEventService = gFiltersVm.popupEventService;
-					scope.chipsListEventService = gFiltersVm.chipsListEventService;
+                const init = function () {
 
-					scope.popupData = gFiltersVm.popupData;
+                    scope.popupEventService = gFiltersVm.popupEventService;
+                    scope.chipsListEventService = gFiltersVm.chipsListEventService;
 
-					getAddMenuLayout();
+                    scope.popupData = gFiltersVm.popupData;
 
-					useFromAboveFilters = gFiltersHelper.filterUseFromAboveFilters(filters);
-					formatFiltersForChips();
+                    getAddMenuLayout();
 
-					scope.readyStatus.filters = true;
+                    useFromAboveFilters = gFiltersHelper.filterUseFromAboveFilters(filters);
+                    formatFiltersForChips();
 
-					gFiltersVm.updateFilterAreaHeightOnInit();
+                    scope.readyStatus.filters = true;
 
-					initEventListeners();
+                    gFiltersVm.updateFilterAreaHeightOnInit();
 
-				};
+                    initEventListeners();
 
-				init();
+                };
 
-			}
+                init();
 
-		};
-	}
+            }
+
+        };
+    }
 
 })();

@@ -1,0 +1,48 @@
+<md-dialog class="draggable-dialog width-40" aria-label="master user deletion dialog" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+            <h2>Warning!</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="p-24">
+
+        <div data-ng-if="vm.processing" class="p-t-24 p-b-24">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular data-diameter="50"></progress-circular>
+            </div>
+
+        </div>
+
+        <div data-ng-if="!vm.processing">
+
+            <div class="warning-text">
+                <p>Are you sure you want to delete <b>{{vm.backup.name}}</b> database?</p>
+
+                <p>Type the Database name to delete it:</p>
+
+                <div>
+
+                    <md-input-container>
+                        <label>Database name</label>
+                        <input type="text" data-ng-model="vm.nameCheck">
+                    </md-input-container>
+                </div>
+
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="md-raised md-warn"
+                   data-ng-class="{'disabled-btn': vm.nameCheck != vm.masterUser.name || vm.processing}"
+                   ng-click="vm.agree()" style="margin-right:20px;">
+            Delete
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

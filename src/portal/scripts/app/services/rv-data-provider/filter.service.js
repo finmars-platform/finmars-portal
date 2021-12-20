@@ -61,9 +61,11 @@
 
     };
 
-    var filterTableRows = function (items, regularFilters) {
+    var filterTableRows = function (items, regularFilters, entityType) {
 
         var match;
+
+        console.log('filterTableRows.regularFilters', regularFilters)
 
         return items.filter(function (item, tableRowIndex) {
 
@@ -81,6 +83,15 @@
                 if (keyProperty !== 'ordering') {
 
                     if (item.hasOwnProperty(keyProperty) && item[keyProperty]) { // check if cell used to filter row is not empty
+
+                        if (entityType === 'balance-report' || entityType === 'pl-report') {
+                            if (keyProperty === 'name' || keyProperty.indexOf('instrument') !== -1) {
+                                if (item.item_type !== 1) { // item_type 1 == "instrument"
+                                    match = false;
+                                    break;
+                                }
+                            }
+                        }
 
                         if (filterType === 'empty') { // prevent pass of cells with values
                             match = false;
@@ -149,11 +160,11 @@
 
                             }
 
-                             /* TODO delete as deprecated
-                             if (valueType === 100) {
-                                valueFromTable = valueFromTable;
-                                filterArgument = filterArgument[0];
-                             } */
+                            /* TODO delete as deprecated
+                            if (valueType === 100) {
+                               valueFromTable = valueFromTable;
+                               filterArgument = filterArgument[0];
+                            } */
 
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
@@ -164,11 +175,21 @@
 
                     } else {
 
+
                         if (excludeEmptyCells) { // if user choose to hide empty cells
                             match = false;
                             break;
                         } else {
-                            match = true;
+
+                            if (keyProperty === 'name' || keyProperty.indexOf('instrument') !== -1) {
+                                if (item.item_type !== 1) { // item_type 1 == "instrument"
+                                    match = false;
+                                    break;
+                                }
+                            } else {
+
+                                match = true;
+                            }
                         }
                     }
 
@@ -218,12 +239,32 @@
                         return true;
                     }
 
+                    // } else if (valueToFilter.indexOf(filterBy) !== -1) {
+                    //     return true;
+                    // }
                 } else if (doesStringContainsSubstrings(valueToFilter, filterBy)) {
                     return true;
 
                 }
 
                 break;
+
+            case 'contains_has_substring':
+
+                if (/^".*"$/.test(filterBy)) { // if string inside of double quotes
+
+                    var formattedFilterBy = filterBy.replace(/^"|"$/g, ''); // removing first and last double quotes
+
+                    if (valueToFilter.indexOf(formattedFilterBy) > -1) {
+                        return true;
+                    }
+
+                } else if (valueToFilter.indexOf(filterBy) !== -1) {
+                    return true;
+                }
+
+                break;
+
 
             case 'does_not_contains':
                 if (valueToFilter.indexOf(filterBy) === -1) {
@@ -265,7 +306,7 @@
 
             case 'less_equal':
 
-            	if (valueToFilter <= filterBy) {
+                if (valueToFilter <= filterBy) {
                     return true;
                 }
 
@@ -285,7 +326,7 @@
 
             case 'from_to':
 
-            	var minValue = filterBy.min_value;
+                var minValue = filterBy.min_value;
                 var maxValue = filterBy.max_value;
 
                 if (valueToFilter >= minValue && valueToFilter <= maxValue) {
@@ -325,11 +366,11 @@
                 }
                 break;
 
-			default:
+            default:
 
-				return false;
+                return false;
 
-				break;
+                break;
 
         }
 
@@ -361,6 +402,32 @@
 
     };
 
+    var convertNameKeyToUserCodeKey = function (key) {
+
+        var result = key
+
+        var pieces = key.split('.');
+
+        var last_key;
+        if (pieces.length > 1) {
+            last_key = pieces.pop()
+        } else {
+            last_key = pieces[0]
+        }
+
+        if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
+
+            pieces.push('user_code')
+
+            result = pieces.join('.')
+
+        }
+
+
+        return result
+
+    }
+
     var filterByGroupsFilters = function (items, options, groupTypes) {
 
         var i;
@@ -380,9 +447,11 @@
 
                     key = options.groups_types[i].key;
 
+                    // console.log('key', key)
+
                     value = options.groups_values[i];
 
-                    match = getFilterMatch(item, key, value);
+                    match = getFilterMatch(item, convertNameKeyToUserCodeKey(key), value);
 
                     if (match === false) {
                         break;
@@ -474,12 +543,57 @@
         return result;
     };
 
+    var filterByGlobalTableSearch = function (items, query) {
+
+        var match;
+
+        var keys
+
+        var pieces = query.split(' ')
+
+        pieces = pieces.map(function (piece) {
+            return piece.toLowerCase()
+        })
+
+        items = items.filter(function (item) {
+
+            match = false;
+
+            keys = Object.keys(item)
+
+            keys.forEach(function (key) {
+
+                if (item[key] !== null && item[key] !== undefined) {
+
+                    pieces.forEach(function (piece) {
+
+                        if (item[key].toString().toLowerCase().indexOf(piece) !== -1) {
+                            match = true
+                        }
+
+                    })
+
+                }
+
+            })
+
+            return match;
+
+        });
+
+
+        return items;
+
+    };
+
+
     module.exports = {
         filterTableRows: filterTableRows,
         filterByGroupsFilters: filterByGroupsFilters,
         // filterByRowType: filterByRowType,
         getRegularFilters: getRegularFilters,
-        convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters
+        convertTableFiltersToRegularFilters: convertTableFiltersToRegularFilters,
+        filterByGlobalTableSearch: filterByGlobalTableSearch
     }
 
 }());

@@ -6,21 +6,21 @@
     'use strict';
 
     const metaService = require('../../../services/metaService');
-	const evEvents = require('../../../services/entityViewerEvents');
-	const popupEvents = require('../../../services/events/popupEvents');
+    const evEvents = require('../../../services/entityViewerEvents');
+    const popupEvents = require('../../../services/events/popupEvents');
 
-	const metaHelper = require('../../../helpers/meta.helper');
-	const evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
+    const metaHelper = require('../../../helpers/meta.helper');
+    const evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
 
-	const uiService = require('../../../services/uiService');
-	const downloadFileHelper = require('../../../helpers/downloadFileHelper');
+    const uiService = require('../../../services/uiService');
+    const downloadFileHelper = require('../../../helpers/downloadFileHelper');
 
-	const convertReportHelper = require('../../../helpers/converters/convertReportHelper');
-	const reportCopyHelper = require('../../../helpers/reportCopyHelper');
+    const convertReportHelper = require('../../../helpers/converters/convertReportHelper');
+    const reportCopyHelper = require('../../../helpers/reportCopyHelper');
 
-	const exportExcelService = require('../../../services/exportExcelService');
+    const exportExcelService = require('../../../services/exportExcelService');
 
-	const EventService = require('../../../services/eventService');
+    const EventService = require('../../../services/eventService');
 
     module.exports = function ($mdDialog, gFiltersHelper) {
         return {
@@ -30,56 +30,56 @@
                 evEventService: '=',
                 attributeDataService: '=',
                 contentWrapElement: '=',
-				dashboardComponentElement: '=',
+                dashboardComponentElement: '=',
                 hideFiltersBlock: '=',
                 hideUseFromAboveFilters: '=',
             },
-			templateUrl: 'views/directives/groupTable/filters/g-filters-view.html',
-            controller: ['$scope', function gFiltersController ($scope) {
+            templateUrl: 'views/directives/groupTable/filters/g-filters-view.html',
+            controller: ['$scope', function gFiltersController($scope) {
 
-            	let vm = this;
+                let vm = this;
 
-            	vm.entityType = $scope.evDataService.getEntityType();
+                vm.entityType = $scope.evDataService.getEntityType();
                 $scope.isReport = metaService.isReport(vm.entityType);
                 // $scope.currentAdditions = $scope.evDataService.getAdditions();
                 $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
                 $scope.viewContext = $scope.evDataService.getViewContext();
 
                 $scope.isFiltersOpened = !$scope.hideFiltersBlock; // when inside dashboard or split panel
-				vm.hideUseFromAboveFilters = $scope.hideUseFromAboveFilters;
+                vm.hideUseFromAboveFilters = $scope.hideUseFromAboveFilters;
 
-				vm.popupPosX = { value: null }
-				vm.popupPosY = { value: null }
-				vm.fpBackClasses = "z-index-48"
-				vm.fpClasses = "z-index-49"
+                vm.popupPosX = {value: null}
+                vm.popupPosY = {value: null}
+                vm.fpBackClasses = "z-index-48"
+                vm.fpClasses = "z-index-49"
 
-				/* $scope.readyStatus = {
-					filters: false
-				} */
-				$scope.showFrontFilters = true;
+                /* $scope.readyStatus = {
+                    filters: false
+                } */
+                $scope.showFrontFilters = true;
 
-				// const gFiltersElem = elem[0].querySelector('.gFilters');
-				const filtersContainerElem = $scope.contentWrapElement ? $scope.contentWrapElement : $scope.dashboardComponentElement;
-				const gFiltersElem = filtersContainerElem.querySelector('.gFilters');
-				/** Used when inside dashboard, and does not change with window resize. Can be less than actual width, when used outside dashboard. */
-				const gFiltersElemWidth = gFiltersElem.clientWidth;
+                // const gFiltersElem = elem[0].querySelector('.gFilters');
+                const filtersContainerElem = $scope.contentWrapElement ? $scope.contentWrapElement : $scope.dashboardComponentElement;
+                const gFiltersElem = filtersContainerElem.querySelector('.gFilters');
+                /** Used when inside dashboard, and does not change with window resize. Can be less than actual width, when used outside dashboard. */
+                const gFiltersElemWidth = gFiltersElem.clientWidth;
 
-				const gFiltersWrapElem = gFiltersElem.querySelector('.gFiltersWrap');
-				const gFiltersElemPadding = parseInt(gFiltersWrapElem.style.padding, 10);
-				let currentAdditions = $scope.evDataService.getAdditions();
-				// let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
+                const gFiltersWrapElem = gFiltersElem.querySelector('.gFiltersWrap');
+                const gFiltersElemPadding = parseInt(gFiltersWrapElem.style.padding, 10);
+                let currentAdditions = $scope.evDataService.getAdditions();
+                // let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
 
-				/* let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
+                /* let filtersChipsContainer = elem[0].querySelector(".gFiltersContainerWidth");
 
-				const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
-				const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth; */
+                const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
+                const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth; */
 
-				let filters = [];
-				// let useFromAboveFilters = [];
+                let filters = [];
+                // let useFromAboveFilters = [];
 
-				let entityAttrs = [];
-				let dynamicAttrs = [];
-				let attrsWithoutFilters = ['notes'];
+                let entityAttrs = [];
+                let dynamicAttrs = [];
+                let attrsWithoutFilters = ['notes'];
                 // let customFields = $scope.attributeDataService.getCustomFieldsByEntityType(vm.entityType);
 
                 const getAttributes = () => {
@@ -90,10 +90,10 @@
                         allAttrsList = $scope.attributeDataService.getReconciliationAttributes();
                     } else {
 
-						switch (vm.entityType) {
-							case 'balance-report':
-								allAttrsList = $scope.attributeDataService.getBalanceReportAttributes();
-								break;
+                        switch (vm.entityType) {
+                            case 'balance-report':
+                                allAttrsList = $scope.attributeDataService.getBalanceReportAttributes();
+                                break;
 
                             case 'pl-report':
                                 allAttrsList = $scope.attributeDataService.getPlReportAttributes();
@@ -108,14 +108,14 @@
                                 dynamicAttrs = [];
                                 allAttrsList = [];
 
-								entityAttrs = $scope.attributeDataService.getEntityAttributesByEntityType(vm.entityType);
+                                entityAttrs = $scope.attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
-								entityAttrs.forEach(function (item) {
-									if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
-										item.name = 'Group';
-									}
-									item.entity = vm.entityType;
-								});
+                                entityAttrs.forEach(function (item) {
+                                    if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                                        item.name = 'Group';
+                                    }
+                                    item.entity = vm.entityType;
+                                });
 
                                 let instrumentUserFields = $scope.attributeDataService.getInstrumentUserFields();
                                 let transactionUserFields = $scope.attributeDataService.getTransactionUserFields();
@@ -144,7 +144,7 @@
 
                                 });
 
-								dynamicAttrs = $scope.attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
+                                dynamicAttrs = $scope.attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
 
 
                                 dynamicAttrs = dynamicAttrs.map(function (attribute) {
@@ -195,7 +195,7 @@
 
                 const getListLayoutByEntity = function (entityType) {
 
-                	var options = {
+                    var options = {
                         pageSize: 1000,
                         page: 1,
                         sort: {
@@ -237,85 +237,85 @@
 
                 vm.getChipTextElem = function (filterName, filterValues, filterType) {
 
-                	let filterVal = filterValues || "";
+                    let filterVal = filterValues || "";
 
-                	switch (filterType) {
-						case 'from_to':
-							filterVal = `From ${filterValues.min_value} to ${filterValues.max_value}`;
-							break;
+                    switch (filterType) {
+                        case 'from_to':
+                            filterVal = `From ${filterValues.min_value} to ${filterValues.max_value}`;
+                            break;
 
-						case 'out_of_range':
-							filterVal = `Out of range from ${filterValues.min_value} to ${filterValues.max_value}`;
-							break;
+                        case 'out_of_range':
+                            filterVal = `Out of range from ${filterValues.min_value} to ${filterValues.max_value}`;
+                            break;
 
-						case 'multiselector':
-							filterVal = filterValues.join(', ');
-							break;
+                        case 'multiselector':
+                            filterVal = filterValues.join(', ');
+                            break;
 
-						case 'date_tree':
-							const formattedDates = filterValues.map(date => moment(date).format('YYYY-MM-DD'));
-							filterVal = formattedDates.join(', ');
-							break;
-					}
+                        case 'date_tree':
+                            const formattedDates = filterValues.map(date => moment(date).format('YYYY-MM-DD'));
+                            filterVal = formattedDates.join(', ');
+                            break;
+                    }
 
-                	return `<span class="g-filter-chips-text">
+                    return `<span class="g-filter-chips-text">
 						<span class="g-filter-chip-name">${filterName}:</span>
 						<span class="g-filter-chip-value text-bold"> ${filterVal}</span>
 					</span>`;
 
-				};
+                };
 
                 vm.checkCustomFieldFilterForError = (filter, filterData, customFields) => {
 
-                	const customField = customFields.find(field => filter.key === `custom_fields.${field.user_code}`)
+                    const customField = customFields.find(field => filter.key === `custom_fields.${field.user_code}`)
 
-					if (!customField) {
+                    if (!customField) {
 
-						filter.options.enabled = false;
-						const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
+                        filter.options.enabled = false;
+                        const description = `The ${filter.groups ? 'group' : 'column'} does not exist in the Configuration`
 
-						filterData.error_data = {
-							code: 10,
-							description: description
-						}
+                        filterData.error_data = {
+                            code: 10,
+                            description: description
+                        }
 
-						const error = {
-							key: filter.key,
-							description: description
-						}
+                        const error = {
+                            key: filter.key,
+                            description: description
+                        }
 
-						return [filter, filterData, error];
+                        return [filter, filterData, error];
 
-					}
+                    }
 
-					return [filter, filterData, null];
+                    return [filter, filterData, null];
 
-				};
+                };
 
                 vm.updateMissingCustomFieldsList = function (errors) {
 
-                	const missingCustomFields = [];
+                    const missingCustomFields = [];
 
-                	errors.forEach(error => {
+                    errors.forEach(error => {
 
-                		if (!missingCustomFields.find(field => field.key === error.key)) {
-							missingCustomFields.push(error);
-						}
+                        if (!missingCustomFields.find(field => field.key === error.key)) {
+                            missingCustomFields.push(error);
+                        }
 
-					});
+                    });
 
-					$scope.evDataService.setMissingCustomFields({forFilters: missingCustomFields});
+                    $scope.evDataService.setMissingCustomFields({forFilters: missingCustomFields});
 
-				};
+                };
 
                 vm.toggleSplitPanel = function ($event, type) {
 
                     if (currentAdditions.type === type) {
 
-						evRvLayoutsHelper.clearSplitPanelAdditions($scope.evDataService);
+                        evRvLayoutsHelper.clearSplitPanelAdditions($scope.evDataService);
 
-						$scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
-						$scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                        $scope.evEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
+                        $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                     } else {
 
@@ -391,8 +391,7 @@
 
                             });
 
-                        }
-                        else {
+                        } else {
 
                             var additions = $scope.evDataService.getAdditions();
 
@@ -423,7 +422,7 @@
                     downloadFileHelper.downloadFile(blobPart, "text/plain", "report.csv");
                 };
 
-                vm.exportAsExcel = function(){
+                vm.exportAsExcel = function () {
 
                     var data = {
                         entityType: vm.entityType,
@@ -512,153 +511,157 @@
                 };
 
 
+                //region Chips filters
 
-				//region Chips filters
+                /* $scope.removeFilter = function (filtersToRemove) {
 
-				/* $scope.removeFilter = function (filtersToRemove) {
+                    filters = filters.filter(filter => {
+                        return filtersToRemove.find(item => item.id !== filter.key);
+                    });
 
-					filters = filters.filter(filter => {
-						return filtersToRemove.find(item => item.id !== filter.key);
-					});
+                    // $scope.evDataService.setFilters($scope.filters);
+                    setFilters();
+                    $scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+                    $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-					// $scope.evDataService.setFilters($scope.filters);
-					setFilters();
-					$scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-					$scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                }; */
 
-				}; */
+                const getAttrsForFilterAddition = filtersList => {
 
-				const getAttrsForFilterAddition = filtersList => {
+                    const allAttrsList = getAttributes();
 
-					const allAttrsList = getAttributes();
+                    const availableAttrs = allAttrsList.filter(attr => {
 
-					const availableAttrs = allAttrsList.filter(attr => {
+                        for (let i = 0; i < filtersList.length; i++) {
+                            if (filtersList[i].key === attr.key) {
+                                return false;
+                            }
+                        }
 
-						for (let i = 0; i < filtersList.length; i++) {
-							if (filtersList[i].key === attr.key) {
-								return false;
-							}
-						}
+                        if (attrsWithoutFilters.includes(attr.key)) {
+                            return false;
+                        }
 
-						if (attrsWithoutFilters.includes(attr.key)) {
-							return false;
-						}
+                        return true;
 
-						return true;
+                    });
 
-					});
+                    return availableAttrs;
 
-					return availableAttrs;
+                }
 
-				}
+                vm.openAddFilterDialog = function (event, filters) {
 
-				vm.openAddFilterDialog = function (event, filters) {
+                    // const availableAttrs = getAttrsForFilterAddition();
+                    return new Promise((resolve, reject) => {
 
-					// const availableAttrs = getAttrsForFilterAddition();
-					return new Promise((resolve, reject) => {
+                        try {
 
-						try {
+                            const availableAttrs = getAttrsForFilterAddition(filters);
 
-							const availableAttrs = getAttrsForFilterAddition(filters);
+                            $mdDialog.show({
+                                controller: "TableAttributeSelectorDialogController as vm",
+                                templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                                targetEvent: event,
+                                multiple: true,
+                                locals: {
+                                    data: {
+                                        availableAttrs: availableAttrs,
+                                        title: 'Choose filter to add',
+                                        isReport: $scope.isReport
+                                    }
+                                }
 
-							$mdDialog.show({
-								controller: "TableAttributeSelectorDialogController as vm",
-								templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
-								targetEvent: event,
-								multiple: true,
-								locals: {
-									data: {
-										availableAttrs: availableAttrs,
-										title: 'Choose filter to add'
-									}
-								}
+                            })
+                                .then(function (res) {
 
-							})
-							.then(function (res) {
+                                    if (res && res.status === "agree") {
 
-								if (res && res.status === "agree") {
+                                        // res.data.groups = true;
+                                        /* if (!res.data.options) {
+                                            res.data.options = {};
+                                        }
 
-									// res.data.groups = true;
-									/* if (!res.data.options) {
-										res.data.options = {};
-									}
+                                        if (!res.data.options.filter_type) {
+                                            res.data.options.filter_type = metaHelper.getDefaultFilterType(res.data.value_type);
+                                        }
 
-									if (!res.data.options.filter_type) {
-										res.data.options.filter_type = metaHelper.getDefaultFilterType(res.data.value_type);
-									}
+                                        if (!res.data.options.filter_values) {
+                                            res.data.options.filter_values = [];
+                                        }
 
-									if (!res.data.options.filter_values) {
-										res.data.options.filter_values = [];
-									}
+                                        if (!res.data.options.hasOwnProperty('exclude_empty_cells')) {
+                                            res.data.options.exclude_empty_cells = false;
+                                        } */
 
-									if (!res.data.options.hasOwnProperty('exclude_empty_cells')) {
-										res.data.options.exclude_empty_cells = false;
-									} */
-									res.data = gFiltersHelper.setFilterDefaultOptions(res.data);
+                                        for (var i = 0; i < res.data.items.length; i = i + 1) {
+                                            res.data.items[i] = gFiltersHelper.setFilterDefaultOptions(res.data.items[i]);
+                                        }
 
-									resolve({status: res.status, data: res.data});
+                                        console.log('openAddFilterDialog res.data.items', res.data.items)
 
-								}
+                                        resolve({status: res.status, data: res.data});
 
-								resolve({status: res.status});
+                                    }
 
-							}).catch(error => reject(error));
+                                    resolve({status: res.status});
 
-						} catch (error) {
-							reject(error);
-						}
+                                }).catch(error => reject(error));
 
-					});
+                        } catch (error) {
+                            reject(error);
+                        }
 
-				};
+                    });
 
-				/* const getUseFromAboveFilters = function () {
+                };
 
-					useFromAboveFilters = filters.filter((filter, index) => {
+                /* const getUseFromAboveFilters = function () {
 
-						if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
+                    useFromAboveFilters = filters.filter((filter, index) => {
 
-							filter.filtersListIndex = index;
-							return true;
+                        if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
 
-						}
+                            filter.filtersListIndex = index;
+                            return true;
 
-						return false;
+                        }
 
-					});
+                        return false;
 
-				}; */
-				/**
-				 * Sets width for element with filter chips.
-				 *
-				 * @param leftPartWidth {number} - width of .gFiltersLeftPartWidth element
-				 * @param rightPartWidth {number} - width of .gFiltersRightPartWidth element
-				 * @param filtersChipsContainer {HTMLElement}
-				 */
-				vm.calculateFilterChipsContainerWidth = function (leftPartWidth, rightPartWidth, filtersChipsContainer) {
+                    });
 
-					// let filtersChipsContainerWidth = 800;
+                }; */
+                /**
+                 * Sets width for element with filter chips.
+                 *
+                 * @param leftPartWidth {number} - width of .gFiltersLeftPartWidth element
+                 * @param rightPartWidth {number} - width of .gFiltersRightPartWidth element
+                 * @param filtersChipsContainer {HTMLElement}
+                 */
+                vm.calculateFilterChipsContainerWidth = function (leftPartWidth, rightPartWidth, filtersChipsContainer) {
 
-					let filterAreaWidth;
-					if ($scope.contentWrapElement) {
-						filterAreaWidth = $scope.contentWrapElement.clientWidth;
-					}
-					else if ($scope.viewContext === 'dashboard') { // For dashboard components without wrapElems e.g. matrix
-						filterAreaWidth = gFiltersElemWidth;
-					}
+                    // let filtersChipsContainerWidth = 800;
 
-					const horizontalPaddings = gFiltersElemPadding * 2;
-					const availableSpace = filterAreaWidth - horizontalPaddings - leftPartWidth - rightPartWidth;
+                    let filterAreaWidth;
+                    if ($scope.contentWrapElement) {
+                        filterAreaWidth = $scope.contentWrapElement.clientWidth;
+                    } else if ($scope.viewContext === 'dashboard') { // For dashboard components without wrapElems e.g. matrix
+                        filterAreaWidth = gFiltersElemWidth;
+                    }
 
-					/* if (availableSpace < 800) {
+                    const horizontalPaddings = gFiltersElemPadding * 2;
+                    const availableSpace = filterAreaWidth - horizontalPaddings - leftPartWidth - rightPartWidth;
 
-						filtersChipsContainerWidth = Math.max(availableSpace, 500);
+                    /* if (availableSpace < 800) {
 
-					} */
+                        filtersChipsContainerWidth = Math.max(availableSpace, 500);
 
-					filtersChipsContainer.style.width = availableSpace + 'px';
+                    } */
 
-				};
+                    filtersChipsContainer.style.width = availableSpace + 'px';
+
+                };
 
                 /* const formatFiltersForChips = function () {
 
@@ -764,12 +767,12 @@
 
                 vm.onFilterChipClick = function (chipsData, event) {
 
-					vm.popupData.filterKey = chipsData.data.id
+                    vm.popupData.filterKey = chipsData.data.id
 
-					vm.popupPosX.value = event.clientX
-					vm.popupPosY.value = event.clientY
+                    vm.popupPosX.value = event.clientX
+                    vm.popupPosY.value = event.clientY
 
-					vm.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
+                    vm.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
 
                 };
 
@@ -787,25 +790,25 @@
 
                 };
 
-				vm.onChipsFirstRender = function () {
-					vm.updateFilterAreaHeight();
-					$scope.evEventService.dispatchEvent(evEvents.FILTERS_RENDERED);
-				};
-				//endregion
+                vm.onChipsFirstRender = function () {
+                    vm.updateFilterAreaHeight();
+                    $scope.evEventService.dispatchEvent(evEvents.FILTERS_RENDERED);
+                };
+                //endregion
 
-				const initEventListeners = function () {
+                const initEventListeners = function () {
 
-					/*
-					$scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
-						customFields = $scope.attributeDataService.getCustomFieldsByEntityType(vm.entityType);
-						formatFiltersForChips();
-					})
+                    /*
+                    $scope.evEventService.addEventListener(evEvents.DYNAMIC_ATTRIBUTES_CHANGE, function () {
+                        customFields = $scope.attributeDataService.getCustomFieldsByEntityType(vm.entityType);
+                        formatFiltersForChips();
+                    })
 
-					$scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, calculateFilterChipsContainerWidth);
+                    $scope.evEventService.addEventListener(evEvents.TABLE_SIZES_CALCULATED, calculateFilterChipsContainerWidth);
 
                     $scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
 
-						filters = getFilters();
+                        filters = getFilters();
 
                         getUseFromAboveFilters();
 
@@ -813,7 +816,7 @@
 
                         setTimeout(function () { // wait until DOM elems reflow after ng-repeat
 
-							const filterAreaHeightChanged = vm.updateFilterAreaHeight();
+                            const filterAreaHeightChanged = vm.updateFilterAreaHeight();
 
                             if (filterAreaHeightChanged) {
                                 $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
@@ -822,7 +825,7 @@
                         }, 0);
 
 
-					}); */
+                    }); */
 
                     $scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_BLOCK, function () {
 
@@ -842,7 +845,7 @@
 
                     });
 
-					/* $scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
+                    /* $scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
                         if (useFromAboveFilters.length) {
 
@@ -850,8 +853,8 @@
 
                             useFromAboveFilters.forEach((useFromAboveFilter) => {
 
-								let filter = filters[useFromAboveFilter.filtersListIndex];
-								let key = filter.options.use_from_above; // for old layouts
+                                let filter = filters[useFromAboveFilter.filtersListIndex];
+                                let key = filter.options.use_from_above; // for old layouts
 
                                 if (typeof filter.options.use_from_above === 'object') {
                                     key = filter.options.use_from_above.key;
@@ -872,8 +875,8 @@
 
                             if (filterChangedFromAbove) {
 
-								// $scope.evDataService.setFilters($scope.filters);
-								setFilters();
+                                // $scope.evDataService.setFilters($scope.filters);
+                                setFilters();
 
                                 formatFiltersForChips();
                                 $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
@@ -886,7 +889,7 @@
 
                     $scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
 
-						/!* var hasUseFromAboveFilter = false;
+                        /!* var hasUseFromAboveFilter = false;
 
                         $scope.filters.forEach(function (filter) {
 
@@ -899,18 +902,18 @@
 
                             }
 
-						}); *!/
+                        }); *!/
 
                         if (useFromAboveFilters.length) {
 
                             useFromAboveFilters.forEach(ufaFilter => {
 
-								filters[ufaFilter.filtersListIndex].options.filter_values = [];
+                                filters[ufaFilter.filtersListIndex].options.filter_values = [];
 
                             });
 
-							// $scope.evDataService.setFilters($scope.filters);
-							setFilters();
+                            // $scope.evDataService.setFilters($scope.filters);
+                            setFilters();
 
                             $scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
@@ -920,76 +923,75 @@
 
                         }
 
-					}); */
+                    }); */
 
-				};
+                };
 
-				vm.updateFilterAreaHeightOnInit = function () {
-					/*
+                vm.updateFilterAreaHeightOnInit = function () {
+                    /*
                     TODO: Refactor this
                     1 add on "resize" event listener for filter area height change
                     2 calculate before render e.g width 1000px -> we got 2 rows - height 140px
                                                  width 500px -> we got 3 row - heiht 210px
                     */
-					setTimeout(function () {
-						vm.updateFilterAreaHeight(); // important here
-						$scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-					}, 1000);
+                    setTimeout(function () {
+                        vm.updateFilterAreaHeight(); // important here
+                        $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                    }, 1000);
 
-				};
+                };
 
-				const syncFiltersLayoutNamesWithColumns = function () {
+                const syncFiltersLayoutNamesWithColumns = function () {
 
-					const columns = $scope.evDataService.getColumns();
-					const filters = $scope.evDataService.getFilters();
+                    const columns = $scope.evDataService.getColumns();
+                    const filters = $scope.evDataService.getFilters();
 
-					columns.forEach(column => {
+                    columns.forEach(column => {
 
-						if (column.layout_name) {
+                        if (column.layout_name) {
 
-							if ($scope.isReport) {
+                            if ($scope.isReport) {
 
-								const matchingFilter = filters.find(filter => filter.key === column.key);
-								if (matchingFilter) matchingFilter.layout_name = column.layout_name;
+                                const matchingFilter = filters.find(filter => filter.key === column.key);
+                                if (matchingFilter) matchingFilter.layout_name = column.layout_name;
 
-							}
-							else {
+                            } else {
 
-								const matchingFrontFilter = filters.frontend.find(filter => filter.key === column.key);
-								if (matchingFrontFilter) matchingFrontFilter.layout_name = column.layout_name;
+                                const matchingFrontFilter = filters.frontend.find(filter => filter.key === column.key);
+                                if (matchingFrontFilter) matchingFrontFilter.layout_name = column.layout_name;
 
-								const matchingBackFilter = filters.backend.find(filter => filter.key === column.key);
-								if (matchingBackFilter) matchingBackFilter.layout_name = column.layout_name;
+                                const matchingBackFilter = filters.backend.find(filter => filter.key === column.key);
+                                if (matchingBackFilter) matchingBackFilter.layout_name = column.layout_name;
 
-							}
+                            }
 
 
-						}
+                        }
 
-					});
+                    });
 
-					$scope.evDataService.setFilters(filters);
+                    $scope.evDataService.setFilters(filters);
 
-				};
+                };
 
-				const init = function () {
-					const filtersObj = $scope.evDataService.getFilters();
+                const init = function () {
+                    const filtersObj = $scope.evDataService.getFilters();
 
-					vm.popupEventService = new EventService();
-					vm.chipsListEventService = new EventService();
+                    vm.popupEventService = new EventService();
+                    vm.chipsListEventService = new EventService();
 
-					vm.popupData = {
-						evDataService: $scope.evDataService,
-						evEventService: $scope.evEventService,
-						attributeDataService: $scope.attributeDataService
-					}
+                    vm.popupData = {
+                        evDataService: $scope.evDataService,
+                        evEventService: $scope.evEventService,
+                        attributeDataService: $scope.attributeDataService
+                    }
 
-					syncFiltersLayoutNamesWithColumns();
-					// formatFiltersForChips();
+                    syncFiltersLayoutNamesWithColumns();
+                    // formatFiltersForChips();
 
-					// $scope.openCustomFieldsManager = $scope.isReport ? openCustomFieldsManagerDialog : openManageAttrsDialog;
+                    // $scope.openCustomFieldsManager = $scope.isReport ? openCustomFieldsManagerDialog : openManageAttrsDialog;
 
-					// $scope.readyStatus.filters = true;
+                    // $scope.readyStatus.filters = true;
 
                     initEventListeners();
 

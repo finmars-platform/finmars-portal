@@ -22,7 +22,7 @@
 
     var attributeTypeService = require('../../services/attributeTypeService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
-	var instrumentTypeService = require('../../services/instrumentTypeService');
+    var instrumentTypeService = require('../../services/instrumentTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
@@ -39,17 +39,17 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     var SHOW_BY_DEFAULT_OPTIONS = [
-        {id: 'name', name: 'Name'},
-        {id: 'public_name', name: 'Public Name'},
-        {id: 'short_name', name: 'Short Name'},
-        {id: 'user_code', name: 'User Code'},
+        {id: 'name', name: 'Name', visible_name: 'Report Name (Name)'},
+        {id: 'public_name', name: 'Public Name', visible_name: 'System Name (Short Name)'},
+        {id: 'short_name', name: 'Short Name', visible_name: 'Unique Code (User Code)'},
+        {id: 'user_code', name: 'User Code', visible_name: 'Name if Hidden (Public Name)'},
     ];
 
     module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
 
         var vm = this;
 
-		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
@@ -98,8 +98,8 @@
         vm.currencies = []; // need for instrument pricing tab;
 
         // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
-		//region Fixed area popup
-		vm.action = 'add';
+        //region Fixed area popup
+        vm.action = 'add';
         vm.typeFieldName = 'type';
         vm.typeFieldLabel = 'Type';
 
@@ -130,18 +130,18 @@
             {id: 2, name: "Run Valuation: if non-zero position"},
             {id: 3, name: "Run Valuation: always"},
         ];
-		//endregion
+        //endregion
 
         vm.activeTab = null;
 
         vm.openedIn = data.openedIn; // 'big-drawer', 'dialog'
         vm.originalFixedAreaPopupFields;
 
-		if (vm.entityType === 'instrument') {
-			vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
-		}
+        if (vm.entityType === 'instrument') {
+            vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
+        }
 
-		vm.typeSelectorChange = null;
+        vm.typeSelectorChange = null;
 
         var formLayoutFromAbove = data.editLayout;
 
@@ -168,7 +168,7 @@
         };
 
         vm.getPlaceholderByDefault = function () {
-            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).name;
+            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).visible_name;
         };
 
         vm.isEntityTabActive = function () {
@@ -184,8 +184,8 @@
 
         vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
-		/* vm.tabsWithErrors = {"system_tab": {}, "user_tab": {}};
-		vm.formErrorsList = []; */
+        /* vm.tabsWithErrors = {"system_tab": {}, "user_tab": {}};
+        vm.formErrorsList = []; */
         var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
         var getEntityAttrs = function () {
@@ -768,7 +768,7 @@
                 locals: {
                     data: {
                         entityType: vm.entityType,
-						layoutId: vm.dataConstructorLayout.id
+                        layoutId: vm.dataConstructorLayout.id
                     }
                 }
             }).then(function (res) {
@@ -903,9 +903,9 @@
             return vm.readyStatus.layout && vm.readyStatus.entity && vm.readyStatus.permissions
         }; */
 
-		vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
-		vm.bindFlex = vm.sharedLogic.bindFlex;
-		vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
+        vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
+        vm.bindFlex = vm.sharedLogic.bindFlex;
+        vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
 
         vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
 
@@ -986,54 +986,54 @@
 
         var setValuesFromInstrumentType = function (entity) {
 
-        	return new Promise(async function (resolve) {
+            return new Promise(async function (resolve) {
 
-				var activeInstrType = vm.typeSelectorOptions.find(instrType => instrType.id === vm.entity.instrument_type);
+                var activeInstrType = vm.typeSelectorOptions.find(instrType => instrType.id === vm.entity.instrument_type);
 
-				if (activeInstrType) { // if instrument type exist
+                if (activeInstrType) { // if instrument type exist
 
-					var fullInstrType = vm.instrumentTypesList.find(instrType => instrType.id === vm.entity.instrument_type);
+                    var fullInstrType = vm.instrumentTypesList.find(instrType => instrType.id === vm.entity.instrument_type);
 
-					if (!fullInstrType) {
-						fullInstrType = await instrumentTypeService.getByKey(activeInstrType.id);
-					}
+                    if (!fullInstrType) {
+                        fullInstrType = await instrumentTypeService.getByKey(activeInstrType.id);
+                    }
 
-					//region Set user attributes
+                    //region Set user attributes
 
-					fullInstrType.instrument_attributes.forEach(attr => {
+                    fullInstrType.instrument_attributes.forEach(attr => {
 
-						const key = attr.attribute_type_user_code;
-						const value = entityEditorHelper.instrumentTypeAttrValueMapper(attr);
+                        const key = attr.attribute_type_user_code;
+                        const value = entityEditorHelper.instrumentTypeAttrValueMapper(attr);
 
-						if (!entity[key] && entity[key] !== 0) {
-							entity[key] = value;
-						}
+                        if (!entity[key] && entity[key] !== 0) {
+                            entity[key] = value;
+                        }
 
-					});
-					//endregion
+                    });
+                    //endregion
 
-					//region Set accruals properties
-					var propsToSetList = ['accrued_currency', 'payment_size_detail', 'accrued_multiplier', 'default_accrued'];
+                    //region Set accruals properties
+                    var propsToSetList = ['accrued_currency', 'payment_size_detail', 'accrued_multiplier', 'default_accrued'];
 
-					propsToSetList.forEach(function (prop) {
+                    propsToSetList.forEach(function (prop) {
 
-						if (fullInstrType[prop] || fullInstrType[prop] === 0 &&
-							!entity[prop] && entity[prop] !== 0) {
+                        if (fullInstrType[prop] || fullInstrType[prop] === 0 &&
+                            !entity[prop] && entity[prop] !== 0) {
 
-							entity[prop] = fullInstrType[prop];
+                            entity[prop] = fullInstrType[prop];
 
-						}
+                        }
 
-					});
-					//endregion
+                    });
+                    //endregion
 
-				}
+                }
 
-				resolve(entity);
+                resolve(entity);
 
-			});
+            });
 
-		};
+        };
 
         /*vm.entityStatusChanged = function () {
 
@@ -1101,9 +1101,9 @@
 
                 }
             } */
-			if (vm.entityType === 'instrument') {
-				vm.entity = await setValuesFromInstrumentType(vm.entity);
-			}
+            if (vm.entityType === 'instrument') {
+                vm.entity = await setValuesFromInstrumentType(vm.entity);
+            }
 
             if (vm.entityType === 'instrument-type') {
 
@@ -1123,28 +1123,27 @@
                 vm.attributeTypes,
                 []); */
 
-			var errors = entityEditorHelper.validateEntity(
-				vm.entity,
-				vm.entityType,
-				vm.tabs,
-				vm.keysOfFixedFieldsAttrs,
-				vm.entityAttrs,
-				vm.attributeTypes,
-				[]
-			);
+            var errors = entityEditorHelper.validateEntity(
+                vm.entity,
+                vm.entityType,
+                vm.tabs,
+                vm.keysOfFixedFieldsAttrs,
+                vm.entityAttrs,
+                vm.attributeTypes,
+                []
+            );
 
             if (errors.length) {
 
                 // vm.sharedLogic.processTabsErrors(errors, $event);
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
 
-				if (processResult) {
-					vm.fixedAreaPopup = processResult;
-					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
-				}
+                if (processResult) {
+                    vm.fixedAreaPopup = processResult;
+                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
+                }
 
-            }
-            else {
+            } else {
 
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
@@ -1187,26 +1186,55 @@
                     }
 
                 })
-				.catch(function (data) {
+                    .catch(function (data) {
 
-                    vm.processing = false;
+                        console.log('save.data', data);
 
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        parent: angular.element(document.body),
-                        multiple: true,
-                        locals: {
-                            validationData: {
-                                errorData: data,
-                                tableColumnsNames: ['Name of fields', 'Error Cause']
-                            },
+                        vm.processing = false;
+
+                        var popupText = ''
+
+                        if (data) {
+                            if (data.message) {
+
+                                if (data.message.non_field_errors && data.message.non_field_errors.length) {
+
+                                    if (data.message.non_field_errors[0].indexOf('unique set') !== -1) {
+
+                                        popupText = vm.entityTypeSlug() + ' is already exist'
+
+                                    }
+
+                                }
+
+
+                            }
+                        }
+
+                        if (popupText) {
+
+                            toastNotificationService.info(popupText);
+
+                        } else {
+
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                parent: angular.element(document.body),
+                                multiple: true,
+                                locals: {
+                                    validationData: {
+                                        errorData: data,
+                                        tableColumnsNames: ['Name of fields', 'Error Cause']
+                                    },
+
+                                }
+                            })
 
                         }
-                    })
 
-                });
+                    });
 
             }
 
@@ -1229,7 +1257,7 @@
                     entityResolverService.create(vm.entityType, resultEntity).then(function (data) {
 
                         var responseObj = {res: 'agree', data: data};
-						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+                        metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
                     }).catch(function (data) {
 
@@ -1632,9 +1660,9 @@
 
         vm.getDataForInstrumentTypeTabs = function () {
 
-            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data) {
 
-                vm.instrumentTypeInstrumentsSelectorOptions = data.results.map(function (item){
+                vm.instrumentTypeInstrumentsSelectorOptions = data.results.map(function (item) {
                     return {
                         id: item.user_code,
                         name: item.name
@@ -1643,9 +1671,9 @@
 
             })
 
-            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data) {
 
-                vm.instrumentTypeCurrenciesSelectorOptions = data.results.map(function (item){
+                vm.instrumentTypeCurrenciesSelectorOptions = data.results.map(function (item) {
                     return {
                         id: item.user_code,
                         name: item.name
@@ -1702,13 +1730,13 @@
 
         vm.getDataForInstrumentTabs = function () {
 
-            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data) {
 
                 vm.instrumentInstrumentsSelectorOptions = data.results
 
             })
 
-            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data) {
 
                 vm.instrumentCurrenciesSelectorOptions = data.results
 
@@ -1725,15 +1753,15 @@
 
             vm.sharedLogic.getFormLayout().then(formLayoutData => {
 
-            	vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+                vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+                vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
-				vm.attributeTypes = formLayoutData.attributeTypes;
+                vm.attributeTypes = formLayoutData.attributeTypes;
 
-				vm.tabs = formLayoutData.tabs;
-				vm.attributesLayout = formLayoutData.attributesLayout;
+                vm.tabs = formLayoutData.tabs;
+                vm.attributesLayout = formLayoutData.attributesLayout;
 
-			});
+            });
 
         }
 
@@ -1810,8 +1838,8 @@
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EventService();
 
-			vm.evEditorDataService.setLocationsWithErrors(null);
-			vm.evEditorDataService.setFormErrorsList([]);
+            vm.evEditorDataService.setLocationsWithErrors(null);
+            vm.evEditorDataService.setFormErrorsList([]);
 
             var tooltipsOptions = {
                 pageSize: 1000,
@@ -1835,49 +1863,55 @@
             // vm.getFormLayout();
             // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
 
-			 vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
+            vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
-				vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+                vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+                vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
-				vm.attributeTypes = formLayoutData.attributeTypes;
+                vm.attributeTypes = formLayoutData.attributeTypes;
 
-				vm.tabs = formLayoutData.tabs;
-				vm.attributesLayout = formLayoutData.attributesLayout;
+                vm.tabs = formLayoutData.tabs;
+                vm.attributesLayout = formLayoutData.attributesLayout;
 
-				 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+                vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
-				if (vm.entityType === 'instrument') {
+                if (vm.entityType === 'instrument') {
 
-					vm.typeSelectorChange = function () {
+                    vm.typeSelectorChange = function () {
 
-						vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+                        vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
-							vm.tabs = data.tabs;
-							vm.attributesLayout = data.attributesLayout;
+                            vm.tabs = data.tabs;
+                            vm.attributesLayout = data.attributesLayout;
 
-							$scope.$apply();
+                            $scope.$apply();
 
-						});
+                        });
 
-					};
+                    };
 
-				} else {
-					$scope.$apply();
-				}
+                } else {
+                    $scope.$apply();
+                }
 
-				/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
+                if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
 
-					vm.fixedAreaPopup.fields = fieldsData;
-					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+                    vm.entity.group = vm.groupSelectorOptions[0].id
 
-					$scope.$apply();
+                }
 
-				}); */
+                /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
-			});
+                    vm.fixedAreaPopup.fields = fieldsData;
+                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
 
-			vm.getCurrencies();
+                    $scope.$apply();
+
+                }); */
+
+            });
+
+            vm.getCurrencies();
 
             if (vm.entityType === 'price-history' || vm.entityType === 'currency-history' || vm.entityType === 'portfolio-register' || vm.entityType === 'portfolio-register-record') {
                 vm.readyStatus.permissions = true;

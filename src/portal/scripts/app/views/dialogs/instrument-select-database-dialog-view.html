@@ -13,7 +13,7 @@
 
         <div>
 
-            <div>
+            <div layout="row">
 
                 <div style="width: 383px; padding-left: 20px;">
                     <text-input
@@ -21,6 +21,20 @@
                             placeholder-text="Search"
                             model="vm.inputText"
                             class="m-r-8"></text-input>
+                </div>
+
+                <div class="m-l-8">
+
+                    <dropdown-select class="p-r-8"
+                                     model="vm.instrument_type"
+                                     placeholder-text="Instrument Type"
+                                     menu-options="vm.instrumentTypeOptions"
+                                     small-options="{tooltipText: 'Instrument Type'}"
+                                     class="custom-input-bottom-space"
+                                     on-change-callback="vm.onInputTextChange()"
+                                     style="width: 50%">
+                    </dropdown-select>
+
                 </div>
 
             </div>
@@ -32,7 +46,7 @@
                 </div>
 
                 <div style="width: 30%; padding: 5px;">
-                    ISIN
+                    ISIN / Code
                 </div>
 
                 <div style="width: 20%; padding: 5px;">
@@ -100,6 +114,8 @@
                             </div>
 
                         </div>
+
+                        <button class="control-button load-more {{vm.globalProcessing ? 'disabled-btn' : ''}}" data-ng-if="vm.globalPage < vm.totalPages" data-ng-click="vm.loadMoreGlobalInstruments($event)">Load more</button>
 
                     </div>
 
@@ -250,6 +266,16 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
+
+        <div class="instrument-select-database-footer">
+
+            <span class="material-icons" data-ng-click="vm.unlock = true" data-ng-if="!vm.unlock">lock</span>
+
+            <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.addInstrument($event)">add</span>
+            <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.importBloomberg($event)">upgrade</span>
+
+        </div>
+
         <md-button class="link-button md-button md-ink-ripple" ng-click="vm.cancel()">
             Cancel
         </md-button>

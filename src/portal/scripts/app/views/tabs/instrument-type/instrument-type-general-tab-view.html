@@ -1,0 +1,140 @@
+<div>
+    <div data-ng-if="vm.checkReadyStatus()" style="min-height: 500px;">
+
+        <div layout="row" class="m-t-8 m-b-8">
+            <div class="width-33 p-l-8 p-r-8">
+
+                <usercode-input ng-if="!vm.entity.id" data-item="vm.entity"></usercode-input>
+
+                <text-input data-ng-if="vm.entity.id"
+                            label="Unique code (User Code)"
+                            placeholder-text="Unique code (User Code)"
+                            model="vm.entity.user_code"></text-input>
+
+            </div>
+
+            <div class="width-33 p-l-8 p-r-8">
+
+                <md-input-container style="width: 300px">
+                    <label for="">Notes</label>
+                    <input type="text" data-ng-model="vm.entity.notes">
+                </md-input-container>
+
+            </div>
+
+        </div>
+
+
+        <div layout="row" class="m-t-8 m-b-16">
+
+            <div class="width-33 p-l-16 p-r-16">
+                <text-input
+                        label="Report Name (Name)"
+                        placeholder-text="Report Name (Name)"
+                        model="vm.entity.name"></text-input>
+            </div>
+
+            <div class="width-33 p-l-16 p-r-16">
+                <text-input
+                        label="Name if Hidden (Public Name)"
+                        placeholder-text="Name if Hidden (Public Name)"
+                        model="vm.entity.public_name"></text-input>
+            </div>
+
+
+            <div class="width-33 p-l-16 p-r-16">
+                <text-input
+                        label="System Name (Short Name)"
+                        placeholder-text="System Name (Short Name)"
+                        model="vm.entity.short_name"></text-input>
+
+            </div>
+
+        </div>
+
+
+        <div layout="row" class="m-b-8 m-t-16">
+
+            <div class="width-33 p-l-8 p-r-8">
+
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.onEntityChange(fieldKey)"
+                                    ev-editor-data-service="vm.evEditorDataService"
+                                    ev-editor-event-service="vm.evEditorEventService"
+                                    item="{name: 'Instrument Class', key: 'instrument_class', value_type: 'field'}">
+                </bind-field-control>
+            </div>
+
+
+            <div class="width-33 p-l-8 p-r-8">
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.onEntityChange(fieldKey)"
+                                    ev-editor-data-service="vm.evEditorDataService"
+                                    ev-editor-event-service="vm.evEditorEventService"
+                                    item="{name: 'One Off Event', key: 'one_off_event', value_type: 'field'}">
+                </bind-field-control>
+            </div>
+
+            <div class="width-33 p-l-8 p-r-8">
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.onEntityChange(fieldKey)"
+                                    ev-editor-data-service="vm.evEditorDataService"
+                                    ev-editor-event-service="vm.evEditorEventService"
+                                    item="{name: 'Regular Event', key: 'regular_event', value_type: 'field'}">
+                </bind-field-control>
+            </div>
+
+        </div>
+
+        <div layout="row" class="m-b-8 m-t-16">
+
+            <div class="width-33 p-l-8 p-r-8">
+
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.onEntityChange(fieldKey)"
+                                    ev-editor-data-service="vm.evEditorDataService"
+                                    ev-editor-event-service="vm.evEditorEventService"
+                                    item="{name: 'Factor Same', key: 'factor_same', value_type: 'field'}">
+                </bind-field-control>
+
+            </div>
+
+
+            <div class="width-33 p-l-8 p-r-8">
+
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.onEntityChange(fieldKey)"
+                                    ev-editor-data-service="vm.evEditorDataService"
+                                    ev-editor-event-service="vm.evEditorEventService"
+                                    item="{name: 'Factor Up', key: 'factor_up', value_type: 'field'}">
+                </bind-field-control>
+
+            </div>
+
+            <div class="width-33 p-l-8 p-r-8">
+
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.onEntityChange(fieldKey)"
+                                    ev-editor-data-service="vm.evEditorDataService"
+                                    ev-editor-event-service="vm.evEditorEventService"
+                                    item="{name: 'Factor Down', key: 'factor_down', value_type: 'field'}">
+                </bind-field-control>
+
+            </div>
+
+
+        </div>
+
+    </div>
+    <div data-ng-if="!vm.checkReadyStatus()">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+    </div>
+</div>

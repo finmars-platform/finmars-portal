@@ -11,7 +11,7 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+    var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
@@ -61,11 +61,13 @@
             'total_fixed_opened', 'total_fx_opened', 'principal_opened', 'principal_fixed_opened', 'principal_fx_opened', 'carry_opened', 'carry_fixed_opened',
             'carry_fx_opened', 'overheads_opened', 'overheads_fixed_opened', 'overheads_fx_opened', 'total_opened_loc', 'total_fixed_opened_loc', 'total_fx_opened_loc',
             'principal_opened_loc', 'principal_fixed_opened_loc', 'principal_fx_opened_loc', 'carry_opened_loc', 'carry_fixed_opened_loc', 'carry_fx_opened_loc',
-            'overheads_opened_loc', 'overheads_fixed_opened_loc', 'overheads_fx_opened_loc', 'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
-            'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
-            'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
-            'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
-            'overheads_fx_closed_loc',
+            'overheads_opened_loc', 'overheads_fixed_opened_loc', 'overheads_fx_opened_loc',
+
+            // 'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
+            // 'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
+            // 'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
+            // 'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
+            // 'overheads_fx_closed_loc',
 
             'time_invested', 'position_return', 'net_position_return'
         ];
@@ -165,8 +167,8 @@
             vm.strategy3attrsFiltered = [];
             vm.allocationAttrsFiltered = [];
 
-			//<editor-fold desc="Get system attributes">
-			vm.balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
+            //<editor-fold desc="Get system attributes">
+            vm.balanceAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereport', '', 'Balance', {maxDepth: 1});
 
             vm.balanceMismatchAttrs = attributeDataService.getAllAttributesAsFlatList('reports.balancereportmismatch', '', 'Mismatch', {maxDepth: 1});
 
@@ -189,10 +191,10 @@
             vm.strategy2attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy2', 'strategy2', 'Strategy 2', {maxDepth: 1});
 
             vm.strategy3attrs = attributeDataService.getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
-			//</editor-fold>
+            //</editor-fold>
 
-			//<editor-fold desc="Get dynamic attributes">
-			var instrumentUserFields = attributeDataService.getInstrumentUserFields();
+            //<editor-fold desc="Get dynamic attributes">
+            var instrumentUserFields = attributeDataService.getInstrumentUserFields();
 
             instrumentUserFields.forEach(function (field) {
 
@@ -252,44 +254,44 @@
             vm.instrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
             vm.allocationDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             vm.linkedInstrumentDynamicAttrs = attributeDataService.formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
-			//</editor-fold>
+            //</editor-fold>
 
             // remove attributes that area already inside currency from balance
-			vm.balanceAttrs = vm.balanceAttrs.filter(bAttr => {
-				return !!!vm.currencyAttrs.find(cAttr => cAttr.key === bAttr.key);
-			});
+            vm.balanceAttrs = vm.balanceAttrs.filter(bAttr => {
+                return !!!vm.currencyAttrs.find(cAttr => cAttr.key === bAttr.key);
+            });
 
-			//<editor-fold desc="Create list with all attributes">
-			vm.attrsList = vm.attrsList.concat(vm.balanceAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.allocationAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.allocationDynamicAttrs);
+            //<editor-fold desc="Create list with all attributes">
+            vm.attrsList = vm.attrsList.concat(vm.balanceAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.allocationDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.balancePerformanceAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.balanceMismatchAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.custom);
+            vm.attrsList = vm.attrsList.concat(vm.balancePerformanceAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.balanceMismatchAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.custom);
 
-			vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.instrumentDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.linkedInstrumentDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.currencyAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.currencyDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.accountDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
-			vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.portfolioDynamicAttrs);
 
-			vm.attrsList = vm.attrsList.concat(vm.strategy1attrs);
-			vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
-			vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
-			//</editor-fold>
+            vm.attrsList = vm.attrsList.concat(vm.strategy1attrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy2attrs);
+            vm.attrsList = vm.attrsList.concat(vm.strategy3attrs);
+            //</editor-fold>
 
-			//<editor-fold desc="Group attributes for tabs">
-			filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
+            //<editor-fold desc="Group attributes for tabs">
+            filterAttrsToShow('balanceAttrs', balanceAttrsToRemove);
             composeAttrsInsideTab('balancePerformanceAttrs', performanceAttrsComp);
             composeAttrsInsideTab('instrumentAttrs', instrumentAttrsComp);
             vm.instrumentTypeAttrsFiltered = getAttrsForInstrumentTypeTab('instrumentAttrs', instrumentTypeAttrsComp);
@@ -303,7 +305,7 @@
             filterAttrsToShow('strategy2attrs', strategy2AttrsToRemove);
             filterAttrsToShow('strategy3attrs', strategy3AttrsToRemove);
             composeAttrsInsideTab('allocationAttrs', allocationAttrsComp);
-			//</editor-fold>
+            //</editor-fold>
 
             /*vm.attrsList = attrsList;*/
 
@@ -406,10 +408,10 @@
         };
 
         function syncTypeAttrs(attrs) {
-			// Drag and drop inside tab "Selected" changes GCF without dispatching events
-			groups = vm.entityViewerDataService.getGroups();
-			columns = vm.entityViewerDataService.getColumns();
-			filters = vm.entityViewerDataService.getFilters();
+            // Drag and drop inside tab "Selected" changes GCF without dispatching events
+            groups = vm.entityViewerDataService.getGroups();
+            columns = vm.entityViewerDataService.getColumns();
+            filters = vm.entityViewerDataService.getFilters();
 
             var i;
             for (i = 0; i < attrs.length; i = i + 1) {
@@ -458,10 +460,10 @@
         }
 
         function updateTypeAttrs(attrs) {
-			// Drag and drop inside tab "Selected" changes GCF without dispatching events
-        	groups = vm.entityViewerDataService.getGroups();
-			columns = vm.entityViewerDataService.getColumns();
-			filters = vm.entityViewerDataService.getFilters();
+            // Drag and drop inside tab "Selected" changes GCF without dispatching events
+            groups = vm.entityViewerDataService.getGroups();
+            columns = vm.entityViewerDataService.getColumns();
+            filters = vm.entityViewerDataService.getFilters();
 
             var c, g, f;
             var columnExist, groupExist, filterExist;
@@ -598,7 +600,7 @@
 
             const attrGroups = {groups, columns, filters}; // Victor 2020.12.10 I need variables: groups, columns, filters in sharedLogicHelper
 
-			sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
+            sharedLogicHelper.getSelectedAttrs(attributesLists, attrGroups);
 
         };
         // < format data for SELECTED tab >
@@ -676,7 +678,8 @@
                 locals: {
                     data: {
                         availableAttrs: availableAttrs,
-                        title: dialogTitle
+                        title: dialogTitle,
+                        isReport: true
                     }
                 }
             }).then(function (res) {
@@ -685,22 +688,26 @@
 
                     for (var i = 0; i < vm.attrsList.length; i++) {
 
-                        if (vm.attrsList[i].key === res.data.key) {
+                        for (var j = 0; j < res.data.items.length; j++) {
 
-                            switch (selectedGroup) {
-                                case 'group':
-                                    vm.attrsList[i].groups = true;
-                                    break;
-                                case 'column':
-                                    vm.attrsList[i].columns = true;
-                                    break;
-                                case 'filter':
-                                    vm.attrsList[i].filters = true;
-                                    break;
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                                switch (selectedGroup) {
+                                    case 'group':
+                                        vm.attrsList[i].groups = true;
+                                        break;
+                                    case 'column':
+                                        vm.attrsList[i].columns = true;
+                                        break;
+                                    case 'filter':
+                                        vm.attrsList[i].filters = true;
+                                        break;
+                                }
+
+                                vm.updateAttrs(vm.attrsList);
+                                break;
                             }
 
-                            vm.updateAttrs(vm.attrsList);
-                            break;
                         }
 
                     }
