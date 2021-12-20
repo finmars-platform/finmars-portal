@@ -700,6 +700,73 @@
 		}
     };
 
+    var postInstrumentTypeEditionActions = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
+
+        /* evDataService.setActiveObjectAction(null);
+        evDataService.setActiveObjectActionData(null); */
+        evDataService.setRowsActionData(null);
+
+        if (res.status === 'agree') {
+            updateEntityInsideTable(evDataService, evEventService, res);
+        }
+        else if (res.status === 'delete') {
+
+            var objects = evDataService.getObjects();
+
+            objects.forEach(function (obj) {
+
+                if (entityId === obj.id) {
+
+                    var parent = evDataService.getData(obj.___parentId);
+
+                    parent.results = parent.results.filter(function (resultItem) {
+                        return resultItem.id !== entityId
+                    });
+
+                    evDataService.setData(parent)
+
+                }
+
+            });
+
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            updateTableAfterEntitiesDeletion(evDataService, evEventService, [entityId]);
+
+        }
+        else if (res.status === 'copy') {
+
+            const entitytype = res.data.entityType;
+            const entity = res.data.entity;
+
+            openInstrumentTypeAddDrawer(evDataService, evEventService, layout, $bigDrawer, entitytype, entity);
+
+        }
+
+    };
+
+    var postInstrumentTypeAdditionActions = function (evDataService, evEventService, layout, $bigDrawer, res) {
+
+        if (res.status === 'agree') {
+            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
+        }
+        else if (res.status === 'edit') {
+
+            insertObjectAfterCreateHandler(evDataService, evEventService, res.data);
+            // open edit window
+            const entitytype = res.data.entityType;
+            const entityId = res.data.entity.id;
+            openInstrumentTypeEditDrawer(
+                evDataService,
+                evEventService,
+                layout,
+                $bigDrawer,
+                entitytype,
+                entityId
+            );
+
+        }
+    };
+
     var postComplexTransactionEditionAction = function (evDataService, evEventService, layout, $bigDrawer, res, entityId) {
 
         /* evDataService.setActiveObjectAction(null);
@@ -1134,6 +1201,75 @@
         });
     };
 
+
+    var openInstrumentTypeAddDrawer = function (
+        evDataService,
+        evEventService,
+        layout,
+        $bigDrawer,
+        entityType,
+        entity
+    ) {
+
+        var bigDrawerWidth = getBigDrawerWidth(6);
+
+        $bigDrawer.show({
+            controller: 'InstrumentTypeAddDialogController as vm',
+            templateUrl: 'views/entity-viewer/instrument-type-add-drawer-view.html',
+            addResizeButton: false, // ttype always have max width without resize button
+            drawerWidth: bigDrawerWidth,
+            locals: {
+                entityType: entityType,
+                entity: entity,
+                data: {
+                    openedIn: 'big-drawer',
+                    editLayout: layout
+                }
+            }
+
+        }).then(function (res) {
+
+            postInstrumentTypeAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data);
+
+        });
+
+    };
+
+
+    var openInstrumentTypeEditDrawer = function (
+        evDataService,
+        evEventService,
+        layout,
+        $bigDrawer,
+        entitytype,
+        entityId
+    ) {
+
+        var bigDrawerWidth = getBigDrawerWidth(6);
+
+        $bigDrawer.show({
+            controller: 'InstrumentTypeEditDialogController as vm',
+            templateUrl: 'views/entity-viewer/instrument-type-edit-drawer-view.html',
+            addResizeButton: false, // ttype always have max width without resize button
+            drawerWidth: bigDrawerWidth,
+            locals: {
+                entityType: entitytype,
+                entityId: entityId,
+                data: {
+                    openedIn: 'big-drawer',
+                    editLayout: layout
+                }
+            }
+
+        }).then(function (res) {
+
+            postInstrumentTypeEditionActions(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+
+
+        });
+    };
+
+
     var openEntityViewerAddDrawer = function (
         evDataService,
         evEventService,
@@ -1362,8 +1498,13 @@
 
         openEntityViewerEditDrawer: openEntityViewerEditDrawer,
         openEntityViewerAddDrawer: openEntityViewerAddDrawer,
+
         openTTypeEditDrawer: openTTypeEditDrawer,
         openTTypeAddDrawer: openTTypeAddDrawer,
+
+        openInstrumentTypeEditDrawer: openInstrumentTypeEditDrawer,
+        openInstrumentTypeAddDrawer: openInstrumentTypeAddDrawer,
+
         openComplexTransactionEditDrawer:openComplexTransactionEditDrawer,
         openComplexTransactionAddDrawer: openComplexTransactionAddDrawer,
 

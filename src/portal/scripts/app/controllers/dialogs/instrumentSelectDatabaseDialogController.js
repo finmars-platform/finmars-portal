@@ -7,6 +7,7 @@
 
     var instrumentService = require('../../services/instrumentService');
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
+    var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
@@ -22,6 +23,16 @@
         vm.localInstruments = [];
 
         vm.inputText = data.inputText;
+        vm.instrument_type = '';
+
+        vm.globalPage = 1;
+        vm.totalPages = 1;
+
+        vm.instrumentTypeOptions = [
+            {id: 'bonds', name: 'Bonds'},
+            {id: 'stocks', name: 'Stocks'}
+        ]
+
 
         vm.clearHoverInstrument = function () {
 
@@ -160,7 +171,7 @@
             var resultValue;
 
             // Regular expression for multiple highlighting case insensitive results
-            var reg  =  new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+            var reg = new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
 
             resultValue = value.replace(reg, '<span class="highlight">$1</span>');
 
@@ -217,6 +228,99 @@
 
         }
 
+        vm.addInstrument = function ($event) {
+
+            var dialogParent = document.querySelector('.dialog-containers-wrap');
+
+            $mdDialog.show({
+                controller: 'EntityViewerAddDialogController as vm',
+                templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                parent: dialogParent,
+                locals: {
+                    entityType: 'instrument',
+                    entity: {},
+                    data: {}
+                }
+            }).then(function (data) {
+
+                vm.getList();
+
+            })
+
+        }
+
+        vm.importBloomberg = function ($event) {
+
+            var dialogParent = document.querySelector('.dialog-containers-wrap');
+
+            $mdDialog.show({
+                controller: 'InstrumentDownloadDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                targetEvent: $event,
+                multiple: true,
+                parent: dialogParent,
+                locals: {
+                    data: {}
+                }
+            }).then(function (data) {
+
+                vm.getList();
+
+            })
+
+        }
+
+        vm.loadMoreGlobalInstruments = function (){
+
+            vm.globalProcessing = true;
+
+            vm.globalPage = vm.globalPage + 1
+
+            // var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
+            //
+            // if (vm.instrument_type){
+            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
+            //
+            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '&page=' + vm.globalPage
+            // } else {
+            //
+            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + vm.globalPage
+            // }
+            //
+
+
+            instrumentDatabaseSearchService.getList(vm.inputText, vm.globalPage, vm.instrument_type).then(function (data) {
+
+                vm.globalProcessing = false;
+
+                vm.databaseInstrumentsTotal = data.resultCount
+
+                data.foundItems.forEach(function (item) {
+
+                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+
+                    vm.databaseInstruments.push(item)
+
+                })
+
+                vm.totalPages = Math.round(data.resultCount / data.pageSize)
+
+                $scope.$apply();
+
+            }).catch(function (error) {
+
+                vm.globalProcessing = false;
+
+                console.log("Instrument Database error occurred", error)
+
+                $scope.$apply();
+
+            })
+
+        }
+
         vm.getList = function () {
 
             vm.processing = true;
@@ -227,9 +331,13 @@
 
                 promises.push(new Promise(function (resolve, reject) {
 
-                    fetch('https://finmars.com/instrument-database/instr/find/name/' + vm.inputText).then(function (data) {
-                        return data.json()
-                    }).then(function (data) {
+                    // var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
+                    //
+                    // if (vm.instrument_type){
+                    //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
+                    // }
+
+                    instrumentDatabaseSearchService.getList(vm.inputText, 1, vm.instrument_type).then(function (data) {
 
                         vm.databaseInstrumentsTotal = data.resultCount
 
@@ -244,6 +352,8 @@
                         })
 
                         resolve()
+
+                        vm.totalPages = Math.round(data.resultCount / data.pageSize)
 
                     }).catch(function (error) {
 
@@ -265,7 +375,8 @@
                 instrumentService.getListForSelect({
                     pageSize: 1000,
                     filters: {
-                        query: vm.inputText
+                        query: vm.inputText,
+                        instrument_type: vm.instrument_type
                     }
 
                 }).then(function (data) {
@@ -315,14 +426,14 @@
                 vm.processing = false;
 
                 $scope.$apply();
-                
-                setTimeout(function (){
 
-                    $('.instrument-select-options-group-title').on('click', function(){
+                setTimeout(function () {
 
-                        $(this).next()[0].scrollIntoView({ block: 'start', behavior: 'smooth' });
+                    $('.instrument-select-options-group-title').on('click', function () {
+
+                        $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
                     });
-                    
+
                 }, 100)
 
             })

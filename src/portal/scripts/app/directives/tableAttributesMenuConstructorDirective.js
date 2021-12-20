@@ -9,7 +9,7 @@
                 title: '@',
                 dialogTitle: '@',
                 model: '=',
-                defaultAttrsKeys: '<',
+                defaultAttrsKeys: '=',
                 availableAttrs: '<',
                 nothingSelectedText: '@',
                 onChangeCallback: '&?'
@@ -60,6 +60,10 @@
                     setInputAndTooltipText();
 
                 }, true);
+
+				scope.$watch('model', function () {
+					setInputAndTooltipText();
+				});
 
                 var getDefaultAttrFromAvailable = function () {
 

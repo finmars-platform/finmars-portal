@@ -18,11 +18,11 @@
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var colorPalettesService = require('../../services/colorPalettesService');
-	var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-	var metaHelper = require('../../helpers/meta.helper');
+    var metaHelper = require('../../helpers/meta.helper');
 
-	var scrollHelper = new ScrollHelper();
+    var scrollHelper = new ScrollHelper();
 
     module.exports = function ($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
 
@@ -169,90 +169,88 @@
 
             return new Promise((resolve, reject) => {
 
-				var resolveLayout = function () {
+                var resolveLayout = function () {
 
-					setDataConstructorLayout();
+                    setDataConstructorLayout();
 
-					vm.layoutUserCode = vm.ui.user_code;
+                    vm.layoutUserCode = vm.ui.user_code;
 
-					resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
+                    resolve({tabs: vm.tabs, fixedArea: vm.fixedArea});
 
-				};
+                };
 
-				if (vm.isCreateNew) { // There is no layout yet, so create one
+                if (vm.isCreateNew) { // There is no layout yet, so create one
 
-					vm.formLayoutIsNew = true;
-					vm.ui = {
-						data: {}
-					}
+                    vm.formLayoutIsNew = true;
+                    vm.ui = {
+                        data: {}
+                    }
 
-					resolveLayout();
+                    resolveLayout();
 
-				} else {
+                } else {
 
-					// for complex transaction edit layout stored inside transaction type object
-					if (vm.entityType === "complex-transaction") {
+                    // for complex transaction edit layout stored inside transaction type object
+                    if (vm.entityType === "complex-transaction") {
 
-						if (vm.instanceId || vm.instanceId === 0) {
+                        if (vm.instanceId || vm.instanceId === 0) {
 
-							transactionTypeService.getByKey(vm.instanceId).then(data => {
+                            transactionTypeService.getByKey(vm.instanceId).then(data => {
 
-								if (data.book_transaction_layout) {
-									vm.ui = data.book_transaction_layout;
-								} else {
+                                if (data.book_transaction_layout) {
+                                    vm.ui = data.book_transaction_layout;
+                                } else {
 
-									vm.formLayoutIsNew = true;
+                                    vm.formLayoutIsNew = true;
 
-									vm.ui = {
-										data: {}
-									}
-									// vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
-								}
+                                    vm.ui = {
+                                        data: {}
+                                    }
+                                    // vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
+                                }
 
-								resolveLayout();
+                                resolveLayout();
 
-							}).catch(error => reject(error));
+                            }).catch(error => reject(error));
 
-						}
+                        }
 
-					}
-					else { // For not complex-transaction entities
+                    } else { // For not complex-transaction entities
 
-						if (vm.layoutId || vm.layoutId === 0) {
+                        if (vm.layoutId || vm.layoutId === 0) {
 
-							uiService.getEditLayoutByKey(vm.layoutId).then(data => {
+                            uiService.getEditLayoutByKey(vm.layoutId).then(data => {
 
-								vm.ui = data;
-								resolveLayout();
+                                vm.ui = data;
+                                resolveLayout();
 
-							}).catch(error => reject(error));
+                            }).catch(error => reject(error));
 
-						}
-						else { // if no edit layout id was specified, get default edit layout
+                        } else { // if no edit layout id was specified, get default edit layout
 
-							uiService.getDefaultEditLayout(vm.entityType).then(data => {
+                            uiService.getDefaultEditLayout(vm.entityType).then(data => {
 
-								if (data.results.length) {
-									vm.ui = data.results[0];
-								}
+                                if (data.results.length) {
+                                    vm.ui = data.results[0];
+                                }
 
-								// There is no layout yet, so create one
-								else {
-									vm.formLayoutIsNew = true;
-									vm.ui = {
-										data: {}
-									}
-								}
+                                // There is no layout yet, so create one
+                                else {
+                                    vm.formLayoutIsNew = true;
+                                    vm.ui = {
+                                        data: {}
+                                    }
+                                }
 
-								resolveLayout();
+                                resolveLayout();
 
-							}).catch(error => reject(error));
+                            }).catch(error => reject(error));
 
-						}
+                        }
 
-					}
+                    }
 
-				}
+                }
 
             });
 
@@ -322,9 +320,9 @@
         };
 
         vm.onLayoutUserCodeChange = function () {
-			/*vm.formLayoutIsNew = false;
-        	if (vm.layoutUserCode !== vm.ui.user_code) vm.formLayoutIsNew = true;*/
-		};
+            /*vm.formLayoutIsNew = false;
+            if (vm.layoutUserCode !== vm.ui.user_code) vm.formLayoutIsNew = true;*/
+        };
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -385,14 +383,14 @@
 
                 for (c = 0; c < tab.layout.columns; c = c + 1) {
 
-                	field = {
+                    field = {
                         row: tab.layout.rows,
                         column: c + 1,
                         colspan: 1,
                         type: 'empty'
                     };
 
-                	tab.layout.fields.push(field);
+                    tab.layout.fields.push(field);
 
                 }
 
@@ -419,7 +417,7 @@
                 var willBeLostColumns = [];
                 var i;
                 for (i = columns; i < tab.layout.columns; i = i + 1) {
-					willBeLostColumns.push(i + 1);
+                    willBeLostColumns.push(i + 1);
                 }
 
                 var description;
@@ -460,12 +458,12 @@
                             }
                         } */
 
-						tab.layout.fields = tab.layout.fields.filter(field => {
+                        tab.layout.fields = tab.layout.fields.filter(field => {
 
-							if (field.colspan > columns || field.occupiesWholeRow) field.colspan = columns;
-							return field.column <= columns;
+                            if (field.colspan > columns || field.occupiesWholeRow) field.colspan = columns;
+                            return field.column <= columns;
 
-						});
+                        });
 
                         tab.layout.columns = columns;
 
@@ -481,8 +479,7 @@
 
                 });
 
-            }
-            else {
+            } else {
 
                 var r, c;
 
@@ -497,9 +494,9 @@
                     }
                 }
 
-				tab.layout.fields.forEach(field => {
-					if (field.occupiesWholeRow) field.colspan = columns;
-				});
+                tab.layout.fields.forEach(field => {
+                    if (field.occupiesWholeRow) field.colspan = columns;
+                });
 
                 tab.layout.columns = columns;
 
@@ -657,37 +654,31 @@
 
                 vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
 
-				var onSavingEnd = function () {
-					$scope.$apply();
-					$mdDialog.hide({status: 'agree'});
-				};
+                var onSavingEnd = function () {
+                    $scope.$apply();
+                    $mdDialog.hide({status: 'agree'});
+                };
 
                 if (vm.entityType === "complex-transaction") {
 
-                	if (vm.instanceId || vm.instanceId === 0) {
-                		transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(onSavingEnd);
-					}
+                    if (vm.instanceId || vm.instanceId === 0) {
+                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(onSavingEnd);
+                    } else {
+                        toastNotificationService.error("Id of transaction type not found");
+                    }
 
-                	else {
-						toastNotificationService.error("Id of transaction type not found");
-					}
+                } else {
 
-				}
+                    if (vm.formLayoutIsNew) {
+                        uiService.createEditLayout(vm.entityType, vm.ui).then(onSavingEnd);
 
-                else {
+                    } else {
+                        uiService.updateEditLayout(vm.ui.id, vm.ui).then(onSavingEnd);
+                    }
 
-					if (vm.formLayoutIsNew) {
-						uiService.createEditLayout(vm.entityType, vm.ui).then(onSavingEnd);
+                }
 
-					} else {
-						uiService.updateEditLayout(vm.ui.id, vm.ui).then(onSavingEnd);
-					}
-
-				}
-
-            }
-
-            else {
+            } else {
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
@@ -724,8 +715,7 @@
 
                 var flexUnit = 100 / vm.fixedArea.layout.columns;
 
-            }
-            else {
+            } else {
 
                 // TODO this line get throw
                 // Error: [$interpolate:interr] Can't interpolate: {{vm.bindFlex(tab, row, column)}}
@@ -743,9 +733,9 @@
 
             if (field) {
 
-            	if (field.occupiesWholeRow) {
-            		return 100;
-				}
+                if (field.occupiesWholeRow) {
+                    return 100;
+                }
 
                 return Math.floor(field.colspan * flexUnit);
 
@@ -788,15 +778,15 @@
                 if (!notSavedTabExist) {
 
                     vm.tabs.push({
-						name: '',
-						editState: true,
-						tabOrder: vm.tabs.length,
-						layout: {
-							rows: 0,
-							columns: 1,
-							fields: []
-						}
-					});
+                        name: '',
+                        editState: true,
+                        tabOrder: vm.tabs.length,
+                        layout: {
+                            rows: 0,
+                            columns: 1,
+                            fields: []
+                        }
+                    });
 
                     addRows(vm.tabs[vm.tabs.length - 1]);
 
@@ -823,15 +813,15 @@
             } else {
 
                 vm.tabs.push({
-					name: '',
-					editState: true,
-					tabOrder: vm.tabs.length,
-					layout: {
-						rows: 0,
-						columns: 1,
-						fields: []
-					}
-				});
+                    name: '',
+                    editState: true,
+                    tabOrder: vm.tabs.length,
+                    layout: {
+                        rows: 0,
+                        columns: 1,
+                        fields: []
+                    }
+                });
 
                 addRows(vm.tabs[0]);
 
@@ -840,45 +830,45 @@
 
             }
 
-			setTimeout(function () {
-				allowSpacesInTabName();
-			}, 100);
+            setTimeout(function () {
+                allowSpacesInTabName();
+            }, 100);
 
         };
 
-		var tabNameInput = null;
+        var tabNameInput = null;
 
-		var removeKeydownListener = function () {
-			document.removeEventListener('keydown', addSpaceIntoTabName);
-		};
+        var removeKeydownListener = function () {
+            document.removeEventListener('keydown', addSpaceIntoTabName);
+        };
 
-		var addSpaceIntoTabName = function (kDownEv) {
+        var addSpaceIntoTabName = function (kDownEv) {
 
-			if (kDownEv.key === ' ') {
+            if (kDownEv.key === ' ') {
 
-				var tabNewName = metaHelper.insertSpaceIntoElementText(tabNameInput);
+                var tabNewName = metaHelper.insertSpaceIntoElementText(tabNameInput);
 
-				for (var i = 0; i < vm.tabs.length; i++) {
-					if (vm.tabs[i].name === tabNewName) {
-						vm.tabs[i].captionName = tabNewName;
-						break;
-					}
-				}
+                for (var i = 0; i < vm.tabs.length; i++) {
+                    if (vm.tabs[i].name === tabNewName) {
+                        vm.tabs[i].captionName = tabNewName;
+                        break;
+                    }
+                }
 
-			}
+            }
 
-		};
+        };
 
-		var allowSpacesInTabName = function () {
+        var allowSpacesInTabName = function () {
 
-			tabNameInput = document.querySelector('input.tabNameInput');
+            tabNameInput = document.querySelector('input.tabNameInput');
 
-			tabNameInput.addEventListener('focus', function () {
-				document.addEventListener('keydown', addSpaceIntoTabName);
-				tabNameInput.addEventListener('blur', removeKeydownListener, {once: true});
-			});
+            tabNameInput.addEventListener('focus', function () {
+                document.addEventListener('keydown', addSpaceIntoTabName);
+                tabNameInput.addEventListener('blur', removeKeydownListener, {once: true});
+            });
 
-		};
+        };
 
         vm.toggleEditTab = function (tab, action, $index) {
             if (!tab.editState) {
@@ -900,13 +890,13 @@
 
             tab.editState = !tab.editState;
 
-			if (tab.editState) {
+            if (tab.editState) {
 
-				setTimeout(function () {
-					allowSpacesInTabName();
-				}, 100);
+                setTimeout(function () {
+                    allowSpacesInTabName();
+                }, 100);
 
-			}
+            }
 
         };
 
@@ -981,7 +971,11 @@
 
                 if (res.status === 'agree') {
 
-                    attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
+                    attributeTypeService.getList(vm.entityType, {
+                        pageSize: 1000, filters: {
+                            kind: 1
+                        }
+                    }).then(function (data) {
 
                         vm.readyStatus.constructor = false;
 
@@ -1068,8 +1062,7 @@
                             }
                         }
 
-                    }
-                    else if (field.attribute_class === 'userInput') {
+                    } else if (field.attribute_class === 'userInput') {
 
                         for (u = 0; u < vm.userInputs.length; u = u + 1) {
 
@@ -1119,259 +1112,267 @@
 
             return new Promise((resolve, reject) => {
 
-            	var promises = [];
+                var promises = [];
 
-            	var attrsProm = new Promise((res, rej) => {
+                var attrsProm = new Promise((res, rej) => {
 
-                	attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
+                    attributeTypeService.getList(vm.entityType, {
+                        pageSize: 1000, filters: {
+                            kind: 1
+                        }
+                    }).then(function (data) {
 
-						vm.attrs = data.results;
-						/* if (vm.instanceId && vm.entityType === 'complex-transaction') {
+                        vm.attrs = data.results;
+                        /* if (vm.instanceId && vm.entityType === 'complex-transaction') {
 
-							entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
+                            entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
 
-								var inputs = data.inputs;
+                                var inputs = data.inputs;
 
-								inputs.forEach(function (input) {
+                                inputs.forEach(function (input) {
 
-									var input_value_type = input.value_type;
+                                    var input_value_type = input.value_type;
 
-									if (input.value_type === 100) {
-										input_value_type = 'field';
-									}
+                                    if (input.value_type === 100) {
+                                        input_value_type = 'field';
+                                    }
 
-									var contentType;
+                                    var contentType;
 
-									if (input.content_type && input.content_type !== undefined) {
+                                    if (input.content_type && input.content_type !== undefined) {
 
-										contentType = input.content_type.split('.')[1];
+                                        contentType = input.content_type.split('.')[1];
 
-										if (contentType === 'eventclass') {
-											contentType = 'event_class';
-										}
+                                        if (contentType === 'eventclass') {
+                                            contentType = 'event_class';
+                                        }
 
-										if (contentType === 'notificationclass') {
-											contentType = 'notification_class';
-										}
+                                        if (contentType === 'notificationclass') {
+                                            contentType = 'notification_class';
+                                        }
 
-										if (contentType === 'accrualcalculationmodel') {
-											contentType = 'accrual_calculation_model';
-										}
+                                        if (contentType === 'accrualcalculationmodel') {
+                                            contentType = 'accrual_calculation_model';
+                                        }
 
-										if (contentType === 'pricingpolicy') {
-											contentType = 'pricing_policy';
-										}
+                                        if (contentType === 'pricingpolicy') {
+                                            contentType = 'pricing_policy';
+                                        }
 
-									} else {
-										contentType = input.name.split(' ').join('_').toLowerCase();
-									}
+                                    } else {
+                                        contentType = input.name.split(' ').join('_').toLowerCase();
+                                    }
 
-									var userInputObj = {
-										key: contentType,
-										name: input.name,
-										reference_table: input.reference_table,
-										verbose_name: input.verbose_name,
-										content_type: input.content_type,
-										value_type: input_value_type,
-										frontOptions: {
-											attribute_class: 'userInput',
-											occupiesWholeRow: fullRowUserInputsList.includes(contentType)
-										}
-									}
+                                    var userInputObj = {
+                                        key: contentType,
+                                        name: input.name,
+                                        reference_table: input.reference_table,
+                                        verbose_name: input.verbose_name,
+                                        content_type: input.content_type,
+                                        value_type: input_value_type,
+                                        frontOptions: {
+                                            attribute_class: 'userInput',
+                                            occupiesWholeRow: fullRowUserInputsList.includes(contentType)
+                                        }
+                                    }
 
-									vm.userInputs.push(userInputObj);
+                                    vm.userInputs.push(userInputObj);
 
-								});
+                                });
 
-								emptySocketsWithoutAttrFromLayout();
+                                emptySocketsWithoutAttrFromLayout();
 
-								vm.syncItems();
+                                vm.syncItems();
 
-								vm.readyStatus.constructor = true;
+                                vm.readyStatus.constructor = true;
 
-								resolve();
+                                resolve();
 
-							}).catch(() => reject('error on getting complex transaction'));
+                            }).catch(() => reject('error on getting complex transaction'));
 
-						}
+                        }
 
-						else {
+                        else {
 
-							emptySocketsWithoutAttrFromLayout();
+                            emptySocketsWithoutAttrFromLayout();
 
-							vm.syncItems();
+                            vm.syncItems();
 
-							vm.readyStatus.constructor = true;
+                            vm.readyStatus.constructor = true;
 
-							resolve();
+                            resolve();
 
-						} */
-						res();
+                        } */
+                        res();
 
-                	}).catch(error => rej('error on getting dynamic attributes'));
+                    }).catch(error => rej('error on getting dynamic attributes'));
 
-				});
+                });
 
-				promises.push(attrsProm);
+                promises.push(attrsProm);
 
-            	if (vm.instanceId && vm.entityType === 'complex-transaction') {
+                if (vm.instanceId && vm.entityType === 'complex-transaction') {
 
-					var transactionInputsProm = new Promise((res, rej) => {
+                    var transactionInputsProm = new Promise((res, rej) => {
 
-						entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
+                        entityResolverService.getByKey('transaction-type', vm.instanceId).then(function (data) {
 
-							var inputs = data.inputs;
+                            var inputs = data.inputs;
 
-							inputs.forEach(function (input) {
+                            inputs.forEach(function (input) {
 
-								var input_value_type = input.value_type;
+                                var input_value_type = input.value_type;
 
-								if (input.value_type === 100) {
-									input_value_type = 'field';
-								}
+                                if (input.value_type === 100) {
+                                    input_value_type = 'field';
+                                }
 
-								/* var contentType;
+                                /* var contentType;
 
-								if (input.content_type && input.content_type !== undefined) {
+                                if (input.content_type && input.content_type !== undefined) {
 
-									contentType = input.content_type.split('.')[1];
+                                    contentType = input.content_type.split('.')[1];
 
-									if (contentType === 'eventclass') {
-										contentType = 'event_class';
-									}
+                                    if (contentType === 'eventclass') {
+                                        contentType = 'event_class';
+                                    }
 
-									if (contentType === 'notificationclass') {
-										contentType = 'notification_class';
-									}
+                                    if (contentType === 'notificationclass') {
+                                        contentType = 'notification_class';
+                                    }
 
-									if (contentType === 'accrualcalculationmodel') {
-										contentType = 'accrual_calculation_model';
-									}
+                                    if (contentType === 'accrualcalculationmodel') {
+                                        contentType = 'accrual_calculation_model';
+                                    }
 
-									if (contentType === 'pricingpolicy') {
-										contentType = 'pricing_policy';
-									}
+                                    if (contentType === 'pricingpolicy') {
+                                        contentType = 'pricing_policy';
+                                    }
 
-								} else {
-									contentType = input.name.split(' ').join('_').toLowerCase();
-								} */
+                                } else {
+                                    contentType = input.name.split(' ').join('_').toLowerCase();
+                                } */
 
-								var userInputObj = {
-									// key: contentType,
-									name: input.name,
-									reference_table: input.reference_table,
-									verbose_name: input.verbose_name,
-									content_type: input.content_type,
-									value_type: input_value_type,
-									frontOptions: {
-										attribute_class: 'userInput',
-										// occupiesWholeRow: fullRowUserInputsList.includes(contentType)
-										occupiesWholeRow: fullRowUserInputsList.includes(input.name)
-									}
-								};
+                                var userInputObj = {
+                                    // key: contentType,
+                                    name: input.name,
+                                    reference_table: input.reference_table,
+                                    verbose_name: input.verbose_name,
+                                    content_type: input.content_type,
+                                    value_type: input_value_type,
+                                    frontOptions: {
+                                        attribute_class: 'userInput',
+                                        // occupiesWholeRow: fullRowUserInputsList.includes(contentType)
+                                        occupiesWholeRow: fullRowUserInputsList.includes(input.name)
+                                    }
+                                };
 
-								vm.userInputs.push(userInputObj);
+                                vm.userInputs.push(userInputObj);
 
-							});
+                            });
 
-							res();
+                            res();
 
-						}).catch(error => rej({custom_message: 'error on getting complex transaction', error: error}));
+                        }).catch(error => rej({custom_message: 'error on getting complex transaction', error: error}));
 
-					});
+                    });
 
-					promises.push(transactionInputsProm);
+                    promises.push(transactionInputsProm);
 
-				}
+                }
 
-				//region Get entity attrs
-				var entityAttrs = metaService.getEntityAttrs(vm.entityType);
-				var doNotShowAttrs = [];
+                //region Get entity attrs
+                var entityAttrs = metaService.getEntityAttrs(vm.entityType);
+                var doNotShowAttrs = [];
 
-				switch (vm.entityType) {
+                switch (vm.entityType) {
 
-					case 'complex-transaction':
-					case 'transaction-type':
+                    case 'complex-transaction':
+                    case 'transaction-type':
 
-						doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
-							'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
-							'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
-							'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
-							'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
-							'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
-							'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
-							'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
-							'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
+                        doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
+                            'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
+                            'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
+                            'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
+                            'user_text_18', 'user_text_19', 'user_text_20', 'user_text_21', 'user_text_22', 'user_text_23',
+                            'user_text_24', 'user_text_25', 'user_text_26', 'user_text_27', 'user_text_28', 'user_text_29',
+                            'user_text_30',
 
-						break;
+                            'user_number_1', 'user_number_2',
+                            'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
+                            'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
+                            'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
+                            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
 
-					/* case 'instrument':
+                        break;
 
-						doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
-							'accrued_multiplier', 'default_accrued',
-							'pricing_currency', 'price_multiplier',
-							'default_price', 'daily_pricing_model',
-							'price_download_scheme', 'reference_for_pricing',
-							'maturity_date', 'maturity_price'];
+                    /* case 'instrument':
 
-						break; */
+                        doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
+                            'accrued_multiplier', 'default_accrued',
+                            'pricing_currency', 'price_multiplier',
+                            'default_price', 'daily_pricing_model',
+                            'price_download_scheme', 'reference_for_pricing',
+                            'maturity_date', 'maturity_price'];
 
-					default:
-						vm.entityAttrs = entityAttrs;
-						break;
-				}
+                        break; */
 
-				var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
-				doNotShowAttrs = doNotShowAttrs.concat(keysOfFixedFieldsAttrs);
+                    default:
+                        vm.entityAttrs = entityAttrs;
+                        break;
+                }
 
-				if (doNotShowAttrs.length) {
-					vm.entityAttrs = entityAttrs.filter(entity => !doNotShowAttrs.includes(entity.key));
-				}
+                var keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+                doNotShowAttrs = doNotShowAttrs.concat(keysOfFixedFieldsAttrs);
 
-				if (vm.entityType === 'instrument') {
+                if (doNotShowAttrs.length) {
+                    vm.entityAttrs = entityAttrs.filter(entity => !doNotShowAttrs.includes(entity.key));
+                }
 
-					var customizableAccrualsTable = {
-						name: 'Accruals schedules table',
-						key: 'accrual_calculation_schedules',
-						value_type: 'table',
-						frontOptions: {
-							occupiesWholeRow: true
-						}
-					};
+                if (vm.entityType === 'instrument') {
 
-					var accrualsTableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
+                    var customizableAccrualsTable = {
+                        name: 'Accruals schedules table',
+                        key: 'accrual_calculation_schedules',
+                        value_type: 'table',
+                        frontOptions: {
+                            occupiesWholeRow: true
+                        }
+                    };
 
-					var customizableEventsTable = {
-						name: 'Events schedules table',
-						key: 'event_schedules',
-						value_type: 'table',
-						frontOptions: {
-							occupiesWholeRow: true
-						}
-					};
+                    var accrualsTableDataProm = entityDataConstructorService.loadOptionsForAccrualsTable();
 
-					var eventsTableDataProm = entityDataConstructorService.loadOptionsForEventsTable();
+                    var customizableEventsTable = {
+                        name: 'Events schedules table',
+                        key: 'event_schedules',
+                        value_type: 'table',
+                        frontOptions: {
+                            occupiesWholeRow: true
+                        }
+                    };
 
-					vm.entityAttrs.push(customizableAccrualsTable, customizableEventsTable);
+                    var eventsTableDataProm = entityDataConstructorService.loadOptionsForEventsTable();
 
-					promises.push(accrualsTableDataProm, eventsTableDataProm);
+                    vm.entityAttrs.push(customizableAccrualsTable, customizableEventsTable);
 
-				}
-				//endregion
+                    promises.push(accrualsTableDataProm, eventsTableDataProm);
 
-				vm.layoutAttrs = layoutService.getLayoutAttrs();
+                }
+                //endregion
+
+                vm.layoutAttrs = layoutService.getLayoutAttrs();
 
                 Promise.all(promises).then(() => {
 
-                	emptySocketsWithoutAttrFromLayout();
+                    emptySocketsWithoutAttrFromLayout();
 
-					vm.syncItems();
+                    vm.syncItems();
 
-					vm.readyStatus.constructor = true;
+                    vm.readyStatus.constructor = true;
 
-					resolve();
+                    resolve();
 
-				}).catch(error => reject(error));
+                }).catch(error => reject(error));
 
             });
 
@@ -1449,54 +1450,54 @@
             return items;
 
         };
-		/**
-		 * Also called inside layoutConstructorFieldDirective.
-		 *
-		 * @param item {Object} - filled sockeet data
-		 * @returns {string} - attribute class
-		 */
+        /**
+         * Also called inside layoutConstructorFieldDirective.
+         *
+         * @param item {Object} - filled sockeet data
+         * @returns {string} - attribute class
+         */
         vm.getAttributeClass = function (item) {
 
-			if (item.attribute.frontOptions &&
-				item.attribute.frontOptions.attribute_class) { // must have for determining userInputs
+            if (item.attribute.frontOptions &&
+                item.attribute.frontOptions.attribute_class) { // must have for determining userInputs
 
-				var attributeClass = item.attribute.frontOptions.attribute_class;
-				return attributeClass; // returns: 'userInput'
+                var attributeClass = item.attribute.frontOptions.attribute_class;
+                return attributeClass; // returns: 'userInput'
 
-			// } else if (attrsKeys.includes(item.attribute.key)) {
-			} else if (vm.attrs.findIndex(dAttr => dAttr.user_code === item.attribute.user_code) > -1) {
+                // } else if (attrsKeys.includes(item.attribute.key)) {
+            } else if (vm.attrs.findIndex(dAttr => dAttr.user_code === item.attribute.user_code) > -1) {
 
-				return 'attr';
+                return 'attr';
 
-			} else if (vm.entityAttrs.findIndex(eAttr => eAttr.key === item.attribute.key) > -1) {
+            } else if (vm.entityAttrs.findIndex(eAttr => eAttr.key === item.attribute.key) > -1) {
 
-				return 'entityAttr';
+                return 'entityAttr';
 
-			} else if (vm.layoutAttrs.findIndex(lAttr => lAttr.key === item.attribute.key) > -1) {
+            } else if (vm.layoutAttrs.findIndex(lAttr => lAttr.key === item.attribute.key) > -1) {
 
-				return 'decorationAttr';
+                return 'decorationAttr';
 
-			}
+            }
 
-		};
+        };
 
         vm.getTableDefaultSettings = function (attrKey) {
 
-        	const entityTablesData = entityDataConstructorService.dataOfAttributes[vm.entityType];
+            const entityTablesData = entityDataConstructorService.dataOfAttributes[vm.entityType];
 
-			if (entityTablesData && entityTablesData.hasOwnProperty(attrKey)) {
-				return entityTablesData[attrKey];
-			}
+            if (entityTablesData && entityTablesData.hasOwnProperty(attrKey)) {
+                return entityTablesData[attrKey];
+            }
 
-		}
+        }
 
         var occupyWholeRow = function (field, columnsNumber) {
 
-        	field.colspan = columnsNumber;
-        	field.occupiesWholeRow = true;
-			field.type = 'table';
+            field.colspan = columnsNumber;
+            field.occupiesWholeRow = true;
+            field.type = 'table';
 
-		};
+        };
 
         var onDropFromSocket = function (elem, targetTab, targetRow, targetColumn, targetColspan, occupiesWholeRow) {
 
@@ -1513,7 +1514,7 @@
             var a;
             for (a = 0; a < targetTab.layout.fields.length; a++) {
 
-            	var field = targetTab.layout.fields[a];
+                var field = targetTab.layout.fields[a];
 
                 if (field.column === targetColumn && field.row === targetRow) {
 
@@ -1530,16 +1531,16 @@
                     targetTab.layout.fields[a].column = targetColumn;
                     targetTab.layout.fields[a].row = targetRow;
 
-					if (occupiesWholeRow) {
-						occupyWholeRow(field, targetTab.layout.columns);
-					}
+                    if (occupiesWholeRow) {
+                        occupyWholeRow(field, targetTab.layout.columns);
+                    }
 
                     break;
                 }
             }
 
-			//region Make socket we dragged from empty
-			var i;
+            //region Make socket we dragged from empty
+            var i;
             for (i = 0; i < draggedFromTab.layout.fields.length; i++) {
                 var field = draggedFromTab.layout.fields[i];
 
@@ -1558,7 +1559,7 @@
                     break;
                 }
             }
-			//endregion
+            //endregion
 
         };
 
@@ -1567,12 +1568,12 @@
             var a;
             for (a = 0; a < targetTab.layout.fields.length; a++) {
 
-            	var field = targetTab.layout.fields[a];
+                var field = targetTab.layout.fields[a];
 
                 if (field.column === targetColumn && field.row === targetRow) { // dragging from attributes list
 
                     var itemIndex = parseInt(elem.dataset.index, 10);
-					var attr = JSON.parse(JSON.stringify(vm.items[itemIndex]));
+                    var attr = JSON.parse(JSON.stringify(vm.items[itemIndex]));
 
                     field.attribute = attr;
                     field.editable = attr.editable;
@@ -1580,19 +1581,19 @@
                     field.type = 'field';
                     field.colspan = 1;
 
-					/*var entityAttrsKeys = vm.entityAttrs.map(entityAttr => entityAttr.key);
-					var attrsKeys = vm.attrs.map(attr => attr.key);
-					var layoutAttrsKeys = vm.layoutAttrs.map(layoutAttr => layoutAttr.key);*/
+                    /*var entityAttrsKeys = vm.entityAttrs.map(entityAttr => entityAttr.key);
+                    var attrsKeys = vm.attrs.map(attr => attr.key);
+                    var layoutAttrsKeys = vm.layoutAttrs.map(layoutAttr => layoutAttr.key);*/
 
-					/* if (vm.items[itemIndex].frontOptions &&
-						vm.items[itemIndex].frontOptions.attribute_class === 'userInput') {
+                    /* if (vm.items[itemIndex].frontOptions &&
+                        vm.items[itemIndex].frontOptions.attribute_class === 'userInput') {
 
-						field.attribute_class = 'userInput';
+                        field.attribute_class = 'userInput';
 
-					}
+                    }
 
                     else if (field.attribute.hasOwnProperty('id') || // old dynamic attributes didn't have key
-						attrsKeys.includes(field.attribute.key)) {
+                        attrsKeys.includes(field.attribute.key)) {
 
                         field.attribute_class = 'attr';
                         field.id = field.attribute.id;
@@ -1607,24 +1608,24 @@
                         field.attribute_class = 'decorationAttr';
                     } */
 
-					field.attribute_class = vm.getAttributeClass(field);
+                    field.attribute_class = vm.getAttributeClass(field);
 
-					if (field.attribute_class === 'attr') {
-						field.id = field.attribute.id;
-					}
+                    if (field.attribute_class === 'attr') {
+                        field.id = field.attribute.id;
+                    }
 
-					if (attr.value_type === 'table') {
+                    if (attr.value_type === 'table') {
 
-						var defaultSettings = vm.getTableDefaultSettings(attr.key);
+                        var defaultSettings = vm.getTableDefaultSettings(attr.key);
 
-						if (defaultSettings) {
-							field.options = {...field.options, ...defaultSettings};
-						}
+                        if (defaultSettings) {
+                            field.options = {...field.options, ...defaultSettings};
+                        }
 
-					}
+                    }
 
                     if (occupiesWholeRow) {
-                    	occupyWholeRow(field, targetTab.layout.columns);
+                        occupyWholeRow(field, targetTab.layout.columns);
                     }
 
                     if (field.attribute) delete field.attribute.frontOptions;  // have to be after calling vm.getAttributeClass();
@@ -1693,55 +1694,55 @@
                         var targetRow = parseInt(target.dataset.row, 10);
                         var targetColumn = parseInt(target.dataset.col, 10);
                         var targetColspan = parseInt(target.dataset.colspan, 10);
-						var occupiesWholeRow = elem.dataset.occupiesWholeRow === 'true';
+                        var occupiesWholeRow = elem.dataset.occupiesWholeRow === 'true';
 
-						if (occupiesWholeRow) { targetColumn = 1; }
+                        if (occupiesWholeRow) {
+                            targetColumn = 1;
+                        }
 
-						var targetTab = (targetTabOrder === 'fixedArea') ? vm.fixedArea : vm.tabs[targetTabOrder];
+                        var targetTab = (targetTabOrder === 'fixedArea') ? vm.fixedArea : vm.tabs[targetTabOrder];
 
-						if (occupiesWholeRow && !vm.isRowEmpty(targetTab.tabOrder, targetRow, targetTab.layout.columns)) {
+                        if (occupiesWholeRow && !vm.isRowEmpty(targetTab.tabOrder, targetRow, targetTab.layout.columns)) {
 
-							$mdDialog.show({
-								controller: 'WarningDialogController as vm',
-								templateUrl: 'views/dialogs/warning-dialog-view.html',
-								parent: angular.element(document.body),
-								clickOutsideToClose: false,
-								locals: {
-									warning: {
-										title: 'Warning',
-										description: "Row should be empty to contain this attribute."
-									}
-								},
-								multiple: true
-							})
+                            $mdDialog.show({
+                                controller: 'WarningDialogController as vm',
+                                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                                parent: angular.element(document.body),
+                                clickOutsideToClose: false,
+                                locals: {
+                                    warning: {
+                                        title: 'Warning',
+                                        description: "Row should be empty to contain this attribute."
+                                    }
+                                },
+                                multiple: true
+                            })
 
-						}
-						else {
+                        } else {
 
-							if (elem.classList.contains('ec-attr-occupied')) {
-								onDropFromSocket(elem, targetTab, targetRow, targetColumn, targetColspan, occupiesWholeRow);
-							}
-							else {
-								onDropFromAttributesList(elem, targetTab, targetRow, targetColumn, occupiesWholeRow);
-							}
+                            if (elem.classList.contains('ec-attr-occupied')) {
+                                onDropFromSocket(elem, targetTab, targetRow, targetColumn, targetColspan, occupiesWholeRow);
+                            } else {
+                                onDropFromAttributesList(elem, targetTab, targetRow, targetColumn, occupiesWholeRow);
+                            }
 
-							if (targetRow === targetTab.layout.rows) {
-								addRows(targetTab);
-							}
+                            if (targetRow === targetTab.layout.rows) {
+                                addRows(targetTab);
+                            }
 
-							vm.createFieldsTree();
+                            vm.createFieldsTree();
 
-							if (vm.fixedArea.isActive) {
-								vm.createFixedAreaFieldsTree();
-							}
+                            if (vm.fixedArea.isActive) {
+                                vm.createFixedAreaFieldsTree();
+                            }
 
-							vm.syncItems();
+                            vm.syncItems();
 
-							$scope.$apply();
+                            $scope.$apply();
 
-						}
+                        }
 
-						drake.cancel();
+                        drake.cancel();
 
                     }
 
@@ -1779,53 +1780,53 @@
         };
 
         /**
-		 *
-		 * @param attr {Object} - is an entity attribute, dynamic attribute, user input or decoration attribute
-		 * @param attributeClass {String} - can be 'entityAttr', 'attr', 'userInput', 'decorationAttr'
-		 * @param socket {Object} - data of socket inside tab
-		 * @returns {boolean}
-		 */
+         *
+         * @param attr {Object} - is an entity attribute, dynamic attribute, user input or decoration attribute
+         * @param attributeClass {String} - can be 'entityAttr', 'attr', 'userInput', 'decorationAttr'
+         * @param socket {Object} - data of socket inside tab
+         * @returns {boolean}
+         */
         var attributeOccupiesThisSocket = function (attr, attributeClass, socket) {
 
-        	if (socket.attribute_class !== attributeClass) {
-        		return false;
-			}
+            if (socket.attribute_class !== attributeClass) {
+                return false;
+            }
 
-        	switch (socket.attribute_class) {
+            switch (socket.attribute_class) {
 
-        		case 'entityAttr':
-					return socket.attribute.key === attr.key;
+                case 'entityAttr':
+                    return socket.attribute.key === attr.key;
 
-				case 'attr': // dynamic attribute
+                case 'attr': // dynamic attribute
 
-					if (socket.key) { // legacy input form editor layout
-						return socket.key === attr.user_code;
+                    if (socket.key) { // legacy input form editor layout
+                        return socket.key === attr.user_code;
 
-					} else {
+                    } else {
 
-						if (socket.attribute.user_code) {
-							return socket.attribute.user_code === attr.user_code;
-						}
+                        if (socket.attribute.user_code) {
+                            return socket.attribute.user_code === attr.user_code;
+                        }
 
-						return false;
+                        return false;
 
-					}
+                    }
 
-				case 'userInput':
-					return socket.name === attr.name;
+                case 'userInput':
+                    return socket.name === attr.name;
 
-				case 'decorationAttr':
-					if (socket.attribute.hasOwnProperty('key')) {
-						return socket.attribute.key === attr.key;
-					}
+                case 'decorationAttr':
+                    if (socket.attribute.hasOwnProperty('key')) {
+                        return socket.attribute.key === attr.key;
+                    }
 
-					return socket.name === attr.name; // for legacy input form editor layouts
+                    return socket.name === attr.name; // for legacy input form editor layouts
 
-			}
+            }
 
-        	return false;
+            return false;
 
-		};
+        };
 
         vm.syncItems = function () {
 
@@ -1833,96 +1834,96 @@
 
             var showItemInAttrsList = function (item, attributeClass) {
 
-				if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
-					return false;
-				}
+                if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
+                    return false;
+                }
 
-            	var i,a;
-            	for (i = 0; i < vm.tabs.length; i++) {
+                var i, a;
+                for (i = 0; i < vm.tabs.length; i++) {
 
-            		var tab = vm.tabs[i];
+                    var tab = vm.tabs[i];
 
-					for (a = 0; a < tab.layout.fields.length; a++) {
+                    for (a = 0; a < tab.layout.fields.length; a++) {
 
-						var field = tab.layout.fields[a];
+                        var field = tab.layout.fields[a];
 
-						if (attributeOccupiesThisSocket(item, attributeClass, field)) {
-							return false;
-						}
+                        if (attributeOccupiesThisSocket(item, attributeClass, field)) {
+                            return false;
+                        }
 
-					}
+                    }
 
-				}
+                }
 
-            	return true;
+                return true;
 
-			};
+            };
 
-			/* vm.items = vm.items.concat(vm.attrs);
-			vm.items = vm.items.concat(vm.entityAttrs);
-			vm.items = vm.items.concat(vm.userInputs);
-			vm.items = vm.items.concat(vm.layoutAttrs);
+            /* vm.items = vm.items.concat(vm.attrs);
+            vm.items = vm.items.concat(vm.entityAttrs);
+            vm.items = vm.items.concat(vm.userInputs);
+            vm.items = vm.items.concat(vm.layoutAttrs);
 
-			vm.items = vm.items.filter(function (item) {
+            vm.items = vm.items.filter(function (item) {
 
-				var result = true;
+                var result = true;
 
-				vm.tabs.forEach(function (tab) {
-					tab.layout.fields.forEach(function (field) {
-						if (field.name === item.name) {
+                vm.tabs.forEach(function (tab) {
+                    tab.layout.fields.forEach(function (field) {
+                        if (field.name === item.name) {
 
-							result = false;
+                            result = false;
 
-							if (item.hasOwnProperty('key')) {
-								if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel' || item.key === 'layoutPlainText') {
-									result = true;
-								}
-							}
+                            if (item.hasOwnProperty('key')) {
+                                if (item.key === 'layoutLine' || item.key === 'layoutLineWithLabel' || item.key === 'layoutPlainText') {
+                                    result = true;
+                                }
+                            }
 
-						}
+                        }
 
-					})
-				});
+                    })
+                });
 
-				if (vm.fixedArea.isActive) {
+                if (vm.fixedArea.isActive) {
 
-					var i;
-					for (i = 0; i < vm.fixedArea.layout.fields.length; i++) {
-						var field = vm.fixedArea.layout.fields[i];
+                    var i;
+                    for (i = 0; i < vm.fixedArea.layout.fields.length; i++) {
+                        var field = vm.fixedArea.layout.fields[i];
 
-						if (field.type !== 'empty' && field.name === item.name) {
-							result = false;
-							break;
-						}
+                        if (field.type !== 'empty' && field.name === item.name) {
+                            result = false;
+                            break;
+                        }
 
-					}
+                    }
 
-				}
+                }
 
-				if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
-					result = false;
-				}
+                if (item.key === 'object_permissions_user' || item.key === 'object_permissions_group') {
+                    result = false;
+                }
 
-				return result;
+                return result;
 
-			}); */
+            }); */
 
-			var availableAttrs = vm.attrs.filter(function (attr) {
-				return showItemInAttrsList(attr, 'attr');
-			});
+            var availableAttrs = vm.attrs.filter(function (attr) {
+                return showItemInAttrsList(attr, 'attr');
+            });
 
-			var availableEntityAttrs = vm.entityAttrs.filter(function (eAttr) {
-				return showItemInAttrsList(eAttr, 'entityAttr');
-			});
+            var availableEntityAttrs = vm.entityAttrs.filter(function (eAttr) {
+                return showItemInAttrsList(eAttr, 'entityAttr');
+            });
 
-			var availableUserInputs = vm.userInputs.filter(function (input) {
-				return showItemInAttrsList(input, 'userInput');
-			});
+            var availableUserInputs = vm.userInputs.filter(function (input) {
+                return showItemInAttrsList(input, 'userInput');
+            });
 
-			vm.items = vm.items.concat(availableAttrs);
-			vm.items = vm.items.concat(availableEntityAttrs);
-			vm.items = vm.items.concat(availableUserInputs);
-			vm.items = vm.items.concat(vm.layoutAttrs);
+            vm.items = vm.items.concat(availableAttrs);
+            vm.items = vm.items.concat(availableEntityAttrs);
+            vm.items = vm.items.concat(availableUserInputs);
+            vm.items = vm.items.concat(vm.layoutAttrs);
 
             // set all items to Editable = True state by default
             vm.items = vm.items.map(function (item) {
@@ -1958,9 +1959,9 @@
 
         };
 
-		vm.doesAttrOccupiesWholeRow = function (attr) {
-			return (attr.frontOptions && attr.frontOptions.occupiesWholeRow) ? 'true' : 'false';
-		};
+        vm.doesAttrOccupiesWholeRow = function (attr) {
+            return (attr.frontOptions && attr.frontOptions.occupiesWholeRow) ? 'true' : 'false';
+        };
 
         vm.openFormPreview = function ($event) {
 

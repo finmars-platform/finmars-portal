@@ -68,14 +68,14 @@
             </div>
 
             <div class="classifier-sel-tabs-holder flex-row">
+                <div ng-click="vm.showFavorites = true;"
+                     class="classifier-sel-tab"
+                     ng-class="{'active': vm.showFavorites}">FAVORITES</div>
+
                 <div ng-click="vm.showFavorites = false;"
                      class="classifier-sel-tab"
                      ng-class="{'active': !vm.showFavorites}"
                      ng-bind="vm.sellAllTabName">ALL</div>
-
-                <div ng-click="vm.showFavorites = true;"
-                     class="classifier-sel-tab"
-                     ng-class="{'active': vm.showFavorites}">FAVORITES</div>
             </div>
 
             <div class="classifier-tree-loader" ng-if="!vm.readyStatus">

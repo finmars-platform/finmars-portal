@@ -52,7 +52,8 @@
         $('body').addClass('drag-dialog'); // hide backdrop
 
         var complexTransactionAttrsComp = [
-            'complex_transaction.code', 'complex_transaction.date', 'complex_transaction.status', 'complex_transaction.text', 'complex_transaction.transaction_unique_code'
+            'complex_transaction.code', 'complex_transaction.date', 'complex_transaction.text', 'complex_transaction.transaction_unique_code',
+            'complex_transaction.is_canceled', 'complex_transaction.is_locked',
         ];
 
         var userFieldsComp = [
@@ -70,8 +71,17 @@
 
         var transactionAttrsComp = [
             'transaction_code', 'transaction_class.name', 'position_size_with_sign', 'cash_consideration', 'principal_with_sign', 'carry_with_sign', 'overheads_with_sign',
-            'accounting_date', 'cash_date', 'reference_fx_rate', 'is_locked', 'is_canceled', 'factor', 'trade_price'
+            'accounting_date', 'cash_date', 'reference_fx_rate', 'is_locked', 'is_canceled', 'factor', 'trade_price', 'notes'
         ];
+
+        var transactionClassAttrsComp = [
+            'transaction_class.name',
+        ];
+
+        var complexTransactionStatusAttrsComp = [
+            'complex_transaction.status.name',
+        ];
+
 
         var transactionTypeAttrsComp = [
             'complex_transaction.transaction_type.name', 'complex_transaction.transaction_type.short_name', 'complex_transaction.transaction_type.user_code',
@@ -130,6 +140,7 @@
             // contains attributes to show inside tab
             vm.transactionAttrsFiltered= [];
             vm.complexTransactionAttrsFiltered = [];
+            vm.complexTransactionStatusAttrsFiltered = [];
             vm.transactionTypeAttrsFiltered = [];
             vm.userFieldsFiltered = [];
             vm.portfolioAttrsFiltered = [];
@@ -157,7 +168,11 @@
 
             vm.transactionAttrs = attributeDataService.getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
 
+            vm.transactionClassAttrs = attributeDataService.getAllAttributesAsFlatList('transactions.transactionclass', '', 'Transaction Class', {maxDepth: 1});
+
             vm.complexTransactionAttrs = attributeDataService.getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
+
+            vm.complexTransactionStatusAttrs = attributeDataService.getAllAttributesAsFlatList('transactions.complextransactionstatus', 'complex_transaction', 'Complex Transaction status', {maxDepth: 1});
 
             vm.portfolioAttrs = attributeDataService.getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
 
@@ -207,6 +222,26 @@
 
             transactionUserFields.forEach(function (field) {
 
+                vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr){
+
+                    if (entityAttr.key === 'complex_transaction.' + field.key) {
+                        return field.is_active;
+                    }
+
+                    return true
+
+                })
+
+                userFieldsComp = userFieldsComp.filter(function (item){
+                    if (item === 'complex_transaction.' + field.key) {
+                        return field.is_active;
+                    }
+
+                    return true
+                })
+
+                console.log('userFieldsComp', userFieldsComp);
+
                 vm.complexTransactionAttrs = vm.complexTransactionAttrs.map(function (entityAttr, index) {
 
                     if (entityAttr.key === 'complex_transaction.' + field.key) {
@@ -220,6 +255,9 @@
             });
 
             vm.transactionTypeAttrs = [];
+            vm.complexTransactionStatusAttrs = []
+
+            console.log('vm.complexTransactionAttrs', vm.complexTransactionAttrs);
 
             vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
 
@@ -235,11 +273,19 @@
 
                     return false;
 
+                } else if (entityAttr.key.indexOf('complex_transaction.status.name') !== -1 ) {
+
+                    vm.complexTransactionStatusAttrs.push(entityAttr);
+
+                    return false;
+
                 } else {
                     return true;
                 }
 
             });
+
+            console.log('complexTransactionStatusAttrs', vm.complexTransactionStatusAttrs);
 
             var instrumentUserFields = attributeDataService.getInstrumentUserFields();
 
@@ -331,6 +377,7 @@
             vm.attrsList = vm.attrsList.concat(vm.transactionAttrs);
             vm.attrsList = vm.attrsList.concat(vm.complexTransactionAttrs);
             vm.attrsList = vm.attrsList.concat(vm.transactionTypeAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.complexTransactionStatusAttrs);
             vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
             vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
             vm.attrsList = vm.attrsList.concat(vm.responsibleAttrs);
@@ -381,7 +428,9 @@
             composeAttrsInsideTab('complexTransactionAttrs', complexTransactionAttrsComp);
             composeAttrsInsideTab('complexTransactionAttrs', userFieldsComp, 'userFieldsFiltered');
             composeAttrsInsideTab('transactionAttrs', transactionAttrsComp);
+            composeAttrsInsideTab('transactionClassAttrs', transactionClassAttrsComp);
             composeAttrsInsideTab('transactionTypeAttrs', transactionTypeAttrsComp);
+            composeAttrsInsideTab('complexTransactionStatusAttrs', complexTransactionStatusAttrsComp);
             // instrument
             composeAttrsInsideTab('instrumentAttrs', instrumentAttrsComp);
             composeAttrsInsideTab('linkedInstrumentAttrs', linkedInstrumentAttrsComp);
@@ -426,6 +475,7 @@
             vm.attrsList = vm.attrsList.concat(vm.transactionAttrs);
             vm.attrsList = vm.attrsList.concat(vm.complexTransactionAttrs);
             vm.attrsList = vm.attrsList.concat(vm.transactionTypeAttrs);
+            vm.attrsList = vm.attrsList.concat(vm.complexTransactionStatusAttrs);
             vm.attrsList = vm.attrsList.concat(vm.portfolioAttrs);
             vm.attrsList = vm.attrsList.concat(vm.instrumentAttrs);
             vm.attrsList = vm.attrsList.concat(vm.responsibleAttrs);
@@ -496,6 +546,7 @@
             syncTypeAttrs(vm.transactionAttrs);
             syncTypeAttrs(vm.complexTransactionAttrs);
             syncTypeAttrs(vm.transactionTypeAttrs);
+            syncTypeAttrs(vm.complexTransactionStatusAttrs);
             syncTypeAttrs(vm.complexTransactionDynamicAttrs);
             syncTypeAttrs(vm.transactionTypeDynamicAttrs);
 
@@ -705,6 +756,7 @@
                'transactionAttrs',
                'complexTransactionAttrs',
                'transactionTypeAttrs',
+                'complexTransactionStatusAttrs',
                'complexTransactionDynamicAttrs',
                'transactionTypeDynamicAttrs',
 
@@ -832,7 +884,8 @@
                 locals: {
                     data: {
                         availableAttrs: availableAttrs,
-                        title: dialogTitle
+                        title: dialogTitle,
+                        isReport: true
                     }
                 }
             }).then(function (res) {
@@ -841,22 +894,25 @@
 
                     for (var i = 0; i < vm.attrsList.length; i++) {
 
-                        if (vm.attrsList[i].key === res.data.key) {
+                        for (var j = 0; j < res.data.items.length; j = j + 1) {
 
-                            switch (selectedGroup) {
-                                case 'group':
-                                    vm.attrsList[i].groups = true;
-                                    break;
-                                case 'column':
-                                    vm.attrsList[i].columns = true;
-                                    break;
-                                case 'filter':
-                                    vm.attrsList[i].filters = true;
-                                    break;
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                                switch (selectedGroup) {
+                                    case 'group':
+                                        vm.attrsList[i].groups = true;
+                                        break;
+                                    case 'column':
+                                        vm.attrsList[i].columns = true;
+                                        break;
+                                    case 'filter':
+                                        vm.attrsList[i].filters = true;
+                                        break;
+                                }
+
+                                vm.updateAttrs(vm.attrsList);
+                                break;
                             }
-
-                            vm.updateAttrs(vm.attrsList);
-                            break;
                         }
 
                     }

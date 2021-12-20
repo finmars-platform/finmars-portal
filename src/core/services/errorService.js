@@ -141,9 +141,26 @@
 
     };
 
+    var recordError = function (data){
+
+        if (!window.system_errors) {
+            window.system_errors = []
+        }
+
+        window.system_errors.push({
+            created: new Date().toISOString(),
+            location: window.location.href,
+            text: JSON.stringify(data)
+        })
+
+
+        return Promise.reject(data)
+    }
+
     module.exports = {
         handleXhrErrors: handleXhrErrors,
-        notifyError: notifyError
+        notifyError: notifyError,
+        recordError: recordError
     }
 
 
