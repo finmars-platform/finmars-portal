@@ -560,7 +560,19 @@
 
                         try {
 
-                            const availableAttrs = getAttrsForFilterAddition(filters);
+                            let availableAttrs = getAttrsForFilterAddition(filters);
+
+                            if (!$scope.isReport) {
+
+                            	availableAttrs = availableAttrs.filter(attr => {
+                            		if (attr.value_type !== "mc_field" && attr.key !== "notes") {
+										return false;
+									}
+
+                            		return true;
+								});
+
+							}
 
                             $mdDialog.show({
                                 controller: "TableAttributeSelectorDialogController as vm",

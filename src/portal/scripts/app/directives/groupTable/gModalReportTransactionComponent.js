@@ -885,7 +885,8 @@
                     data: {
                         availableAttrs: availableAttrs,
                         title: dialogTitle,
-                        isReport: true
+                        isReport: true,
+						multiselector: true
                     }
                 }
             }).then(function (res) {

@@ -9,11 +9,7 @@
 
         var vm = this;
 
-        vm.title = "Available attributes";
-
-        if (data.title) {
-            vm.title = data.title
-        }
+        vm.title = data.title || "Available attributes";
 
         vm.availableAttrs = data.availableAttrs;
 
@@ -21,6 +17,8 @@
         if (data.selectedAttrs) {
             vm.selectedAttrs = JSON.parse(JSON.stringify(data.selectedAttrs));
         }
+
+        vm.isReport = data.isReport || false;
 
         var setAttrsOrder = function () {
             for (var i = 0; i < vm.selectedAttrs.length; i++) {
@@ -77,7 +75,7 @@
                     data: {
                         availableAttrs: vm.availableAttrs,
                         title: "Select Column",
-                        isReport: false,
+                        isReport: vm.isReport,
 						multiselector: true
                     }
                 }

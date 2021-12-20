@@ -246,11 +246,19 @@
                     return true;
                 }
                 return false;
-            } else {
+            }
+            else if (type === 'filter') {
+
+            	if (item.value_type === "mc_field") {
+            		return false;
+				}
+
                 if (attrsWithoutFilters.indexOf(item.key) !== -1) {
                     return true;
                 }
+
                 return false;
+
             }
         };
 
@@ -1567,7 +1575,9 @@
 
         vm.selectAttribute = function (selectedGroup, event) {
 
-            var availableAttrs;
+            var availableAttrs = vm.attrsList.filter(function (attr) {
+				return attr.value_type !== "mc_field";
+			});
             var dialogTitle;
 
             switch (selectedGroup) {
@@ -1583,6 +1593,7 @@
                         if (attrsWithoutFilters.indexOf(attr.key) === -1 || attr.filters) {
                             return true;
                         }
+
                         return false;
                     });
                     break;

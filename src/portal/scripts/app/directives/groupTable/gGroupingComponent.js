@@ -494,6 +494,8 @@
                             return false;
                         }
 
+						if (attr.value_type === "mc_field") return false;
+
                         return true;
                     });
 

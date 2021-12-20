@@ -479,6 +479,9 @@
                     var availableAttrs;
 
                     availableAttrs = allAttrsList.filter(function (attr) {
+
+                    	if (attr.value_type === "mc_field") return false;
+
                         for (var i = 0; i < scope.groupTypes.length; i++) {
                             if (scope.groupTypes[i].key === attr.key) {
                                 return false;
@@ -505,14 +508,12 @@
 
                         if (res && res.status === "agree") {
 
-
                             for (var i = 0; i < res.data.items.length; i = i + 1) {
                                 scope.groupTypes.push(res.data.items[i]);
                             }
 
-
-                            scope.evDataService.setSelectedGroups([])
-                            scope.evDataService.setGroups(scope.groupTypes)
+                            scope.evDataService.setSelectedGroups([]);
+                            scope.evDataService.setGroups(scope.groupTypes);
 
                             scope.evDataService.resetData();
                             scope.evDataService.resetRequestParameters();
