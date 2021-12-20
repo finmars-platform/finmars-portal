@@ -258,6 +258,7 @@
             vm.mapFields.push({
                 value: '',
                 transaction_type: null,
+                is_default_rule_scenario: false,
                 fields: []
             })
         };
