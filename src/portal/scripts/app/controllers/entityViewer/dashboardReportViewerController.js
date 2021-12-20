@@ -2074,7 +2074,7 @@
                                 vm.entityViewerDataService.setComponents(evComponents);
 
 								//<editor-fold desc="Set dashboard columns list for small rv table">
-								if (vm.userSettings && vm.userSettings.columns) {
+								if (vm.userSettings && vm.userSettings.columns && vm.userSettings.columns.length) {
 
                                     if (fillInModeEnabled) {
 
@@ -2085,6 +2085,7 @@
                                     else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+
                                         var listLayout = vm.entityViewerDataService.getListLayout();
                                         var layoutColumns = listLayout.data.columns;
                                         var layoutGroups = listLayout.data.grouping;
