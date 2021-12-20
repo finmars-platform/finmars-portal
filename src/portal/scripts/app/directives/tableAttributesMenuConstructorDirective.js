@@ -10,12 +10,15 @@
                 dialogTitle: '@',
                 model: '=',
                 defaultAttrsKeys: '=',
+				isReport: '@',
                 availableAttrs: '<',
                 nothingSelectedText: '@',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/dialog-selector-input-with-tooltip-view.html',
             link: function (scope, elem, attr) {
+
+            	scope.isReport = !!scope.isReport;
 
                 var setInputAndTooltipText = function () {
                     if (scope.model && scope.model.length > 0) {
@@ -157,6 +160,7 @@
                         locals: {
                             data: {
                                 title: scope.dialogTitle,
+								isReport: scope.isReport,
                                 availableAttrs: scope.availableAttrs,
                                 selectedAttrs: scope.model,
                                 defaultAttrsKeys: scope.defaultAttrsKeys
