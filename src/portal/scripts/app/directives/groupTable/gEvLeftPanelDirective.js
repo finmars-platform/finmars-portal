@@ -480,7 +480,7 @@
 
                     availableAttrs = allAttrsList.filter(function (attr) {
 
-                    	if (attr.value_type === "mc_field") return false;
+                    	if (attr.value_type === "mc_field" || attr.key === "notes") return false;
 
                         for (var i = 0; i < scope.groupTypes.length; i++) {
                             if (scope.groupTypes[i].key === attr.key) {
