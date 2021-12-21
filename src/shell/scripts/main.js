@@ -35,6 +35,8 @@ import warningDialogController from "./app/controllers/dialogs/warningDialogCont
 
 import dndFilesOnPageDirective from "./app/directives/dndFilesOnPageDirective.js";
 
+const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+
 const app = angular.module('finmars', [
 	'ngAria',
 	'ngMaterial',
@@ -91,35 +93,35 @@ app.run([function () {
 
 	// developerConsoleService.init();
 
-	try {
+	// try {
 
-		window.ws = new WebSocket("__WS_HOST__");
+		// window.ws = new WebSocket("__WS_HOST__");
+
+	if (PROJECT_ENV !== 'local') {
+
+		websocketService.connect();
+		websocketService.reconnectIfError();
 
 		websocketService.addEventListener('simple_message', function (data) {
 			toastNotificationService.info(data.message)
 		})
 
-		window.ws.onopen = function () {
-			console.log("Websocket. Initial Auth");
-			window.ws.send(JSON.stringify({action: "initial_auth"}));
-		}
-
-	} catch (error) {
-
-		console.error("Can't connect to Websocket server. Error ", error);
-
-		window.ws = null;
-
 	}
 
-	if (window.ws) {
-		ws.onerror = function (error) {
+		// window.ws.onopen = function () {
+		// 	console.log("Websocket. Initial Auth");
+		// 	window.ws.send(JSON.stringify({action: "initial_auth"}));
+		// }
 
-			console.error("Can't connect to Websocket server. Error ", error);
+	// } catch (error) {
+	//
+	// 	console.error("Can't connect to Websocket server. Error ", error);
+	//
+	// 	window.ws = null;
+	//
+	// }
 
-			window.ws = null;
-		};
-	}
+
 
 }]);
 //</editor-fold>

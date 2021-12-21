@@ -141,6 +141,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 						authorizerService.logout().then(function (data) {
 
+							cookieService.deleteCookie('authtoken');
+							cookieService.deleteCookie('csrftoken');
+
 							sessionStorage.removeItem('afterLoginEvents');
 
 							/* if (window.location.pathname !== '/') {
@@ -150,7 +153,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 							} */
 							$state.go('app.authentication');
 
-							cookieService.deleteCookie('authtoken');
+							// cookieService.deleteCookie('authtoken');
 
 						});
 
@@ -186,6 +189,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 				const changeMasterUser = function () {
 
 					middlewareService.masterUserChanged();
+
+					globalDataService.setMasterUser(master);
 
 					authorizerService.setCurrentMasterUser(master.id).then(function (data) {
 
@@ -282,6 +287,12 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 				getMasterUsersList().then(resData => {
 					scope.$apply();
 				});
+
+				websocketService.addEventListener('master_user_change', function (data) {
+
+					scope.currentMasterUser = globalDataService.getMasterUser();
+					console.log("Header master user change")
+				})
 
 			};
 

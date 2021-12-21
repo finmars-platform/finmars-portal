@@ -245,7 +245,8 @@
                             }
 
                         } else {
-                            scope.inputText = ""
+                            scope.inputText = "";
+                            scope.itemName = "";
                             // scope.valueIsValid = false
                         }
 

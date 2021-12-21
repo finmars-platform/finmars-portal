@@ -632,6 +632,7 @@
             vm.schemeUpdated['user_code'] = vm.scheme.user_code;
             vm.schemeUpdated['name'] = vm.scheme.name;
             vm.schemeUpdated['short_name'] = vm.scheme.short_name;
+            vm.schemeUpdated['mode'] = vm.scheme.mode;
             vm.schemeUpdated['provider'] = vm.schemeProvider;
             vm.schemeUpdated['factor_schedule_method'] = vm.factorScheduleMethod;
             vm.schemeUpdated['accrual_calculation_schedule_method'] = vm.accrualCalculation;

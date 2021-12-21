@@ -12,7 +12,7 @@
 
 	const gtEvents = require('../../services/gridTableEvents');
 
-	module.exports = function entityDataConstructorDialogController($scope, $mdDialog, gridTableHelperService, data) {
+	module.exports = function instrumentTablesSettingsDialogController($scope, $mdDialog, gridTableHelperService, data) {
 
 		const vm = this;
 
@@ -41,6 +41,8 @@
 			{key: "rows_addition", to_show: true},
 			{key: "rows_deletion", to_show: true}
 		]; */
+
+		vm.dialogLabel = data.dialogLabel;
 
 		vm.gridTableData = {
 			header: {
@@ -179,10 +181,21 @@
 						} else {
 							column.settings.value = settings[colProp];
 						} */
-						column.settings.value = rowData[colProp];
+						if (column.key === 'options_settings') {
+
+							if (rowData.editableOptions) {
+								column.settings.value = rowData[colProp];
+
+							} else {
+								column.cellType = 'empty';
+								delete column.settings;
+							}
+
+						} else {
+							column.settings.value = rowData[colProp];
+						}
 
 					}
-
 					else { // make cell empty if there is not corresponding property
 						column.cellType = 'empty';
 						delete column.settings;
@@ -194,6 +207,8 @@
 				// const nameColumn = gridTableHelperService.getCellFromRowByKey(rowObj, 'notes');
 
 			});
+
+			return vm.gridTableData;
 
 		};
 
@@ -250,7 +265,7 @@
 
 			} */
 
-			formatDataForGridTable(tableData);
+			vm.gridTableData = formatDataForGridTable(tableData);
 			vm.gridTableDataService.setTableData(vm.gridTableData);
 
 			vm.gridTableEventService.addEventListener(gtEvents.CELL_VALUE_CHANGED, argObj => {

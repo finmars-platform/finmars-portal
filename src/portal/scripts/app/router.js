@@ -194,6 +194,14 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.generated-event', {
+                url: '/generated-events',
+                templateUrl: 'views/data/data-generated-event-view.html',
+                controller: 'DataGeneratedEventController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
             .state('app.portal.data.instrument-type', {
                 url: '/instrument-types',
                 templateUrl: 'views/data/data-instrument-type-view.html',
@@ -366,6 +374,12 @@
                 controller: 'CheckEventsController as vm'
             })
 
+            .state('app.portal.update-configuration', {
+                url: '/update-configuration',
+                templateUrl: 'views/pages/update-configuration-page-view.html',
+                controller: 'UpdateConfigurationPageController as vm'
+            })
+
             .state('app.portal.processes', {
                 url: '/processes',
                 templateUrl: 'views/pages/processes-view.html',
@@ -424,6 +438,11 @@
                 templateUrl: 'views/pages/run-data-procedure-page-view.html',
                 controller: 'RunDataProcedurePageController as vm'
             })
+            .state('app.portal.data-procedure-instance', {
+                url: '/data-procedure-instance',
+                templateUrl: 'views/pages/data-procedure-instance-page-view.html',
+                controller: 'DataProcedureInstancePageController as vm'
+            })
             .state('app.portal.import', {
                 url: '/import',
                 abstract: true,
@@ -453,6 +472,11 @@
                 url: '/instrument-import',
                 templateUrl: 'views/pages/instrument-download-view.html',
                 controller: 'InstrumentDownloadController as vm'
+            })
+            .state('app.portal.import.instrument-cbonds', {
+                url: '/instrument-import-cbonds',
+                templateUrl: 'views/pages/instrument-download-cbonds-view.html',
+                controller: 'InstrumentDownloadCbondsController as vm'
             })
             .state('app.portal.import.prices', {
                 url: '/prices-import',
@@ -745,12 +769,12 @@
                     notificationsListType: 'all'
                 }
             })
-            .state('app.portal.system.transactions', {
+            .state('app.portal.data.transactions', {
                 url: '/audit/transactions',
                 templateUrl: 'views/system/audit-transactions-view.html',
                 controller: 'TransactionsAuditController as vm'
             })
-            .state('app.portal.system.instruments', {
+            .state('app.portal.data.instruments', {
                 url: '/audit/instruments',
                 templateUrl: 'views/system/audit-instruments-view.html',
                 controller: 'InstrumentsAuditController as vm'

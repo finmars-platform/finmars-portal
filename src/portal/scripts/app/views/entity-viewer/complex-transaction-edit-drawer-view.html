@@ -10,9 +10,10 @@
             <div class="m-8 f-s-18 p-8"
                  style="background: #ffeee8">
                 <span class="display-inline-block" style="width: 125px">Transaction type:</span> <b>{{vm.entity.transaction_type_object.name}}</b><br/>
-                <span class="display-inline-block" style="width: 125px">Status:</span> <b
-                    data-ng-if="vm.entity.status == 1">Booked</b> <b
-                    data-ng-if="vm.entity.status == 2">Pending</b>
+                <span class="display-inline-block" style="width: 125px">Status:</span>
+                <b data-ng-if="vm.entity.status == 1">Booked</b>
+                <b data-ng-if="vm.entity.status == 2">Pending</b>
+                <b data-ng-if="vm.entity.status == 3">Ignored</b>
             </div>
 
             <div data-ng-if="vm.fixedArea.isActive"
@@ -32,6 +33,7 @@
                                 ev-editor-event-service="vm.evEditorEventService"
                                 ev-editor-data-service="vm.evEditorDataService"
                                 item="vm.fixedAreaAttributesLayout[$index]"
+                                fields-data-store="vm.fieldsDataStore"
                                 entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                     </div>
                 </div>
@@ -48,7 +50,7 @@
 
                     <md-tab-body>
                         <md-content class="md-padding p-t-26"
-                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
+                                    ng-class="{'locked-tab-overlay': vm.entity.is_locked, 'canceled-tab-overlay': vm.entity.is_canceled}" style="min-height: 50vh">
                             <div ng-repeat="row in vm.range(tab.layout.rows)"
                                  layout="row"
                                  class="entity-editor-row">
@@ -62,6 +64,7 @@
                                             ev-editor-event-service="vm.evEditorEventService"
                                             ev-editor-data-service="vm.evEditorDataService"
                                             item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
+                                            fields-data-store="vm.fieldsDataStore"
                                             entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                                 </div>
                             </div>
@@ -196,11 +199,12 @@
                 <span data-ng-show="vm.entity.is_locked || vm.entity.is_canceled">Ok</span>
             </md-button>
 
-            <md-button class="md-raised" data-ng-if="vm.entity.status == 2"
+            <md-button class="md-raised m-r-24"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
-                       ng-click="vm.bookAsPending()">
+                       ng-click="vm.rebookAsPending()">
                 Rebook as pending
             </md-button>
+
             <md-button class="md-raised"
                        data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
                        ng-click="vm.rebook()">

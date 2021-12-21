@@ -47,7 +47,7 @@
       box-sizing: border-box;
       border-top: 1px solid rgb(224, 224, 224);
       //overflow: hidden;
-      z-index: 2;
+      z-index: 3;
     }
 
     .ev-left-panel-inner-container {
@@ -209,6 +209,7 @@
       .ev-left-panel-folding-btn {
         position: relative;
         top: 3px;
+        cursor: pointer;
       }
 
       &.last-level-group {
@@ -679,37 +680,6 @@
 } */
 //endregion
 
-.accrual-add-row-popup-container {
-  width: 240px;
-  min-height: 37px;
-  max-height: 256px;
-  background: #fff;
-  padding: 5px 0;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 1);
-  overflow: auto;
-  z-index: 52;
-  box-sizing: border-box;
-
-  .accrual-add-row-popup-item {
-    padding: 4px 10px;
-    cursor: pointer;
-    white-space: nowrap;
-
-
-    &:hover {
-      background-color: rgba(158, 158, 158, 0.18);
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &.build-accruals {
-      border-top: 1px solid rgba(158, 158, 158, 0.18);
-    }
-  }
-}
-
 .column-manual-sort-icon {
   width: 10px;
   color: #f05a22;
@@ -763,4 +733,25 @@
       display: none;
     }
   }
+}
+
+
+.add-group-type-button {
+  height: 36px;
+  line-height: 36px;
+  color: #f05a22;
+  width: 80%;
+  margin: 16px auto;
+  padding: 0 10px;
+  border-radius: 20px;
+  cursor: pointer;
+
+  span {
+    position: relative;
+    top: 5px;
+  }
+}
+
+.add-group-type-button:hover {
+  background: rgba(240,90,34,.1);
 }

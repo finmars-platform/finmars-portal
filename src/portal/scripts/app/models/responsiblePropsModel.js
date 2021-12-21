@@ -18,11 +18,6 @@
                 "value_type": 10
             },
             {
-                "key": "notes",
-                "name": "Notes",
-                "value_type": 10
-            },
-            {
                 "key": "user_code",
                 "name": "User code",
                 "value_type": 10
@@ -32,6 +27,11 @@
                 "name": "Public name",
                 "value_type": 10,
                 "allow_null": true
+            },
+            {
+                "key": "notes",
+                "name": "Notes",
+                "value_type": 10
             },
             {
                 "key": "group",

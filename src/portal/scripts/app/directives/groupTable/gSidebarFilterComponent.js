@@ -9,7 +9,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
     var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
-	var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
+    var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
@@ -336,7 +336,7 @@
                     }, 200)
                 };
 
-                scope.openMissingPricesDialog = function($event) {
+                scope.openMissingPricesDialog = function ($event) {
 
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
@@ -617,14 +617,18 @@
                         locals: {
                             data: {
                                 availableAttrs: availableAttrs,
-                                title: 'Choose column to add'
+                                title: 'Choose column to add',
+                                isReport: scope.isReport
                             }
                         }
                     }).then(function (res) {
 
                         if (res && res.status === "agree") {
                             res.data.groups = true;
-                            scope.filters.push(res.data);
+
+                            for (var i = 0; i < res.data.items.length; i = i + 1) {
+                                scope.filters.push(res.data.items[i]);
+                            }
                             scope.evDataService.setFilters(scope.filters);
                             scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
                         }
@@ -779,7 +783,7 @@
 
                             uiService.updateListLayout(listLayout.id, listLayout).then(function () {
 
-                            	scope.evDataService.setListLayout(listLayout);
+                                scope.evDataService.setListLayout(listLayout);
                                 scope.evDataService.setActiveLayoutConfiguration({layoutConfig: listLayout});
 
                                 checkIsLayoutDefault();
@@ -848,8 +852,8 @@
 
                             uiService.updateListLayout(listLayout.id, listLayout).then(function (updatedLayoutData) {
 
-								listLayout.modified = updatedLayoutData.modified
-								scope.evDataService.setListLayout(listLayout);
+                                listLayout.modified = updatedLayoutData.modified
+                                scope.evDataService.setListLayout(listLayout);
                                 // Give signal to update layout name in the toolbar
                                 /*if (scope.isRootEntityViewer) {
                                     middlewareService.setNewEntityViewerLayoutName(listLayout.name);
@@ -869,7 +873,7 @@
                 };
 
                 scope.saveLayoutList = function () {
-					evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+                    evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
                 };
 
                 scope.openLayoutList = function ($event) {
@@ -1205,7 +1209,7 @@
 
                     /* var interfaceLayout = scope.evDataService.getInterfaceLayout();
                     scope.sideNavCollapsed = interfaceLayout.filterArea.collapsed; */
-					scope.sideNavCollapsed = true;
+                    scope.sideNavCollapsed = true;
 
 
                 };

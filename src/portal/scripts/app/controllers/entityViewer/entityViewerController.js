@@ -7,6 +7,7 @@
         'use strict';
 
         var uiService = require('../../services/uiService');
+		var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
         var evEvents = require('../../services/entityViewerEvents');
         var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
@@ -25,7 +26,6 @@
         // var middlewareService = require('../../services/middlewareService');
 
         var transactionTypeService = require('../../services/transactionTypeService');
-
 
         module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService) {
 
@@ -217,7 +217,20 @@
                         );
 						break;
 
-					case 'complex-transaction':
+                    case 'instrument-type':
+                        editLayout = await uiService.getDefaultEditLayout(vm.entityType);
+                        evHelperService.openInstrumentTypeEditDrawer(
+                            vm.entityViewerDataService,
+                            vm.entityViewerEventService,
+                            editLayout,
+                            $bigDrawer,
+                            entityType,
+                            actionData.object.id
+                        );
+                        break;
+
+
+                    case 'complex-transaction':
 
 						/* // Waiting for transaction type to load add big delay
 
@@ -438,7 +451,7 @@
 
 							$bigDrawer.show({
 								controller: 'EntityViewerEditDialogController as vm',
-								templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+								templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
 								addResizeButton: true,
 								drawerWidth: bigDrawerWidthPercent,
 								locals: {
@@ -702,8 +715,8 @@
                     if (actionData.object && actionData.object.id || activeRowExist) {
 
                         switch (actionData.actionKey) {
-                            case 'delete':
-								// in case of deleting row with ___is_active === false from context menu
+							case 'delete':
+								// in case of deleting row with ___is_active === false from context menu, add it's id manually
                             	var idsToDelete = [];
                             	if (actionData.object && actionData.object.id) idsToDelete.push(actionData.object.id);
 
@@ -793,7 +806,7 @@
 
 								$bigDrawer.show({
 									controller: 'EntityViewerEditDialogController as vm',
-									templateUrl: 'views/entity-viewer/entity-viewer-universal-edit-drawer-view.html',
+									templateUrl: 'views/entity-viewer/entity-viewer-edit-drawer-view.html',
 									locals: {
 										entityType: 'instrument',
 										entityId: actionData.object.instrument,
@@ -807,7 +820,7 @@
 									vm.entityViewerDataService.setActiveObjectActionData(null); */
 									vm.entityViewerDataService.setRowsActionData(null);
 
-									if (res && res.res === 'agree') {
+									if (res && res.status === 'agree') {
 										vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 									}
 
@@ -935,14 +948,17 @@
                 if (activeObject) {
 
                     var filters = vm.entityViewerDataService.getFilters();
+                    var setFilterValue = function (item) {
 
-                    filters.forEach(function (item) {
+						if (activeObject.hasOwnProperty(item.key)) {
+							item.options.filter_values = [activeObject[item.key]]
+						}
 
-                        if (activeObject.hasOwnProperty(item.key)) {
-                            item.options.filter_values = [activeObject[item.key]]
-                        }
+					};
 
-                    })
+                    filters.frontend.forEach(setFilterValue);
+					filters.backend.forEach(setFilterValue);
+
                 }
 
 
@@ -1042,6 +1058,12 @@
                 vm.entityViewerDataService.setVirtualScrollStep(500);
 
                 vm.entityViewerDataService.setRowHeight(36);
+
+				var rowFilterColor = localStorageService.getRowTypeFilter(false, vm.entityType);
+				var rowTypeFiltersData = vm.entityViewerDataService.getRowTypeFilters();
+				rowTypeFiltersData.markedRowFilters = rowFilterColor;
+
+				vm.entityViewerDataService.setRowTypeFilters(rowTypeFiltersData);
 
                 vm.downloadAttributes();
 
@@ -1313,9 +1335,11 @@
             vm.init = function () {
 
                 if (vm.stateWithLayout) {
-                    initTransitionHooks();
+
+                	initTransitionHooks();
 
                     window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
+
                 }
 
 				onUserChangeIndex = middlewareService.onMasterUserChanged(function () {

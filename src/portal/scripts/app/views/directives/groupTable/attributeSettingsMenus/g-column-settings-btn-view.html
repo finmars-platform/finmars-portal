@@ -39,77 +39,12 @@
                 </md-menu-item>
 
                 <md-menu-item>
-
-                    <md-menu>
-
-                        <md-button aria-label="show number formatting menu"
-                                   ng-click="$mdMenu.open($event)">
-                            <ng-md-icon icon="done"
-                                        class="z-menu-icon"
-                                        style="visibility: hidden;"></ng-md-icon>
-                            <span>Number Format</span>
-                            <ng-md-icon icon="arrow_drop_up"
-                                        class="z-dropdown-icon"></ng-md-icon>
-                        </md-button>
-
-                        <md-menu-content width="4">
-
-                            <md-menu-item>
-                                <md-button ng-click="activateColumnNumberRenderingPreset('price')"
-                                           class="g-settings-option-btn">
-                                    <ng-md-icon icon="visibility_off"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <span>Price (0)</span>
-                                </md-button>
-                            </md-menu-item>
-
-                            <md-menu-item>
-                                <md-button ng-click="activateColumnNumberRenderingPreset('market_value')"
-                                           class="g-settings-option-btn">
-                                    <ng-md-icon icon="visibility_off"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <span>Market Value (000'000)</span>
-                                </md-button>
-                            </md-menu-item>
-
-                            <md-menu-item>
-                                <md-button class="g-settings-option-btn"
-                                           ng-click="activateColumnNumberRenderingPreset('amount')">
-                                    <ng-md-icon icon="visibility_off"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <span>Amount (000'000.00)</span>
-                                </md-button>
-                            </md-menu-item>
-
-                            <md-menu-item>
-                                <md-button class="g-settings-option-btn"
-                                           ng-click="activateColumnNumberRenderingPreset('exposure')">
-                                    <ng-md-icon icon="visibility_off"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <span>Exposure (0.0%)</span>
-                                </md-button>
-                            </md-menu-item>
-
-                            <md-menu-item>
-                                <md-button class="g-settings-option-btn"
-                                           ng-click="activateColumnNumberRenderingPreset('return')">
-                                    <ng-md-icon icon="visibility_off"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <span>Return (0.00%)</span>
-                                </md-button>
-                            </md-menu-item>
-
-                            <md-menu-item>
-                                <md-button class="g-settings-option-btn"
-                                           ng-click="openColumnNumbersRenderingSettings($event)">
-                                    <ng-md-icon icon="visibility_off"
-                                                style="visibility: hidden;"></ng-md-icon>
-                                    <span>Custom</span>
-                                </md-button>
-                            </md-menu-item>
-
-                        </md-menu-content>
-                    </md-menu>
+                    <md-button ng-click="openNumberFormatDialog($event)"
+                               class="g-settings-option-btn">
+                        <ng-md-icon icon="visibility_off"
+                                    style="visibility: hidden;"></ng-md-icon>
+                        <span>Number Format</span>
+                    </md-button>
                 </md-menu-item>
 
                 <md-menu-item data-ng-if="$index !== 0">
