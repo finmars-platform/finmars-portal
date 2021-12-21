@@ -42,6 +42,7 @@
         console.log('API_HOST: ' + API_HOST);
         console.log('WS_HOST: ' + WS_HOST);
         console.log('AUTHORIZER_URL: ' + AUTHORIZER_URL);
+        console.log('HEALTHCHECK_HOST: ' + HEALTHCHECK_HOST);
 
         if (API_HOST.indexOf('https://') === -1 && API_HOST.indexOf('http://') === -1) {
 

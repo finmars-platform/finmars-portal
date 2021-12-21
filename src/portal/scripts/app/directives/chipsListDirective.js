@@ -99,9 +99,9 @@
 
 						// remove "; " from the end
 						let endIndex = scope.hiddenChipsTexts.length - 2;
-						scope.hiddenChipsTexts = scope.hiddenChipsTexts.substring(0, endIndex)
+						scope.hiddenChipsTexts = scope.hiddenChipsTexts.substring(0, endIndex);
 
-						scope.hiddenChipsTexts = "Hidden chips: " + scope.hiddenChipsTexts + "."
+						scope.hiddenChipsTexts = "Hidden chips: " + scope.hiddenChipsTexts + ".";
 
 					}
 
@@ -320,7 +320,13 @@
 
 						scope.eventService.addEventListener(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED, function () {
 
-							chipsContainerWidth = chipsContainer.clientWidth - addChipWidth;
+							if (scope.chipsContainerWidth) {
+								chipsContainerWidth = scope.chipsContainerWidth - addChipWidth;
+
+							} else {
+								chipsContainerWidth = chipsContainer.clientWidth - addChipWidth;
+							}
+
 							scope.concealOverflowingChips();
 
 						});

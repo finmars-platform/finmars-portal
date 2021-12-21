@@ -96,7 +96,7 @@
 
     }; */
 
-	var getStatusIcon = function (obj, currentMember) {
+    var getStatusIcon = function (obj, currentMember) {
 
         var result = '';
 
@@ -143,31 +143,25 @@
             result = 'checkIcon';
 
         } */
-		if (partVisible) {
+        if (partVisible) {
             result = 'partiallyVisibleIcon';
 
-        }
-        else if (obj.is_canceled) {
+        } else if (obj.is_canceled) {
             result = 'cancelIcon';
 
-        }
-        else if (obj.is_locked) {
+        } else if (obj.is_locked) {
             result = 'lock2Icon';
 
-        }
-        else if (obj.is_deleted) {
+        } else if (obj.is_deleted) {
             result = 'deletedIcon';
 
-        }
-        else if (obj.hasOwnProperty('is_enabled') && !obj.is_enabled) {
+        } else if (obj.hasOwnProperty('is_enabled') && !obj.is_enabled) {
             result = 'disabledIcon';
 
-        }
-        else if (obj.hasOwnProperty('is_active') && !obj.is_active) {
+        } else if (obj.hasOwnProperty('is_active') && !obj.is_active) {
             result = 'inactiveIcon';
 
-        }
-        else if (currentMember && currentMember.is_admin) {
+        } else if (currentMember && currentMember.is_admin) {
             result = 'starIcon';
 
         }
@@ -182,10 +176,49 @@
             return "Deleted";
         }
 
-        if (obj[column.key]) {
+        if (obj[column.key] != null && obj[column.key] !== undefined) {
 
             if (typeof obj[column.key] === 'string') {
-                return stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
+
+                if (column.key === 'status') {
+
+
+                    // STATUS_ERROR = 'E'
+                    // STATUS_SKIP = 'S'
+                    // STATUS_CREATED = 'C'
+                    // STATUS_OVERWRITTEN = 'O'
+
+                    if (obj[column.key] === 'E') {
+                        return 'Error'
+                    }
+
+                    if (obj[column.key] === 'S') {
+                        return 'Skip'
+                    }
+
+                    if (obj[column.key] === 'C') {
+                        return 'Created'
+                    }
+
+                    if (obj[column.key] === 'R') {
+                        return 'Requested'
+                    }
+
+                    if (obj[column.key] === 'Overwritten') {
+                        return 'Created'
+                    }
+
+                }
+                else if(column.key === 'procedure_modified_datetime' || column.key === 'created' || column.key === 'modified') {
+
+                    return moment(obj[column.key]).format('YYYY-MM-DD HH:mm:ss')
+
+                }
+                else {
+
+                    return stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
+
+                }
             }
 
             if (typeof obj[column.key] === 'number') {
@@ -216,12 +249,16 @@
 
                 if (column.key === 'status') {
 
-                	if (obj[column.key] === 1) {
+                    if (obj[column.key] === 1) {
                         return 'Booked'
                     }
 
                     if (obj[column.key] === 2) {
                         return 'Pending'
+                    }
+
+                    if (obj[column.key] === 3) {
+                        return 'Ignored'
                     }
 
                 }
@@ -231,6 +268,16 @@
 
             if (Array.isArray(obj[column.key])) {
                 return '[' + obj[column.key].length + ']';
+            }
+
+            if (typeof obj[column.key] === 'boolean') {
+
+                if (obj[column.key]) {
+                    return 'True'
+                } else {
+                    return 'False'
+                }
+
             }
 
         }
@@ -357,7 +404,7 @@
 
     var getCellTextAlign = function (column) {
 
-    	var result = '';
+        var result = '';
 
         if (column.style && column.style.text_align) {
             result = ' text-' + column.style.text_align;
@@ -369,17 +416,17 @@
 
     var getRowGeneralClasses = function (obj, classList, markedRows) {
 
-		if (obj.___context_menu_is_opened) {
-			classList.push('context-menu-opened');
-		}
+        if (obj.___context_menu_is_opened) {
+            classList.push('context-menu-opened');
+        }
 
         if (obj.___is_active_object) {
             classList.push('is-active-object');
         }
 
         if (obj.___is_activated) {
-			classList.push('selected');
-		}
+            classList.push('selected');
+        }
 
         if (obj.is_deleted) {
             classList.push('deleted');
@@ -397,19 +444,19 @@
         getRowGeneralClasses(obj, classList);
 
         // rowSelection = '<div class="g-row-selection">' + getIcon(obj, currentMember, classList) + '</div>';
-		rowSelection = renderHelper.getRowSelectionElem(obj);
+        rowSelection = renderHelper.getRowSelectionElem(obj);
 
-		var rowColor = 'none';
+        var rowColor = 'none';
 
-		if (markedRows.hasOwnProperty(obj.id)) {
+        if (markedRows.hasOwnProperty(obj.id)) {
 
-			rowColor = markedRows[obj.id].color;
-			classList.push('g-row-marked-' + rowColor);
+            rowColor = markedRows[obj.id].color;
+            classList.push('g-row-marked-' + rowColor);
 
-		}
+        }
 
-		var statusIcon = getStatusIcon(obj, currentMember);
-		var rowSettings = renderHelper.getRowSettings(obj.___type, rowColor, statusIcon);
+        var statusIcon = getStatusIcon(obj, currentMember);
+        var rowSettings = renderHelper.getRowSettings(obj.___type, rowColor, statusIcon);
 
         addReconColorization(obj, classList, viewContext, verticalAdditions);
 
@@ -417,18 +464,18 @@
 
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
-        var result = '<div class="' + classes + '" style="top: '+ offsetTop+'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+        var result = '<div class="' + classes + '" style="top: ' + offsetTop + 'px" data-type="object" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         var cell;
 
         result = result + rowSelection + rowSettings;
 
-        console.log('render.columns', columns);
+        // console.log('render.columns', columns);
 
         columns.forEach(function (column, columnIndex) {
 
-			var columnNumber = columnIndex + 1;
+            var columnNumber = columnIndex + 1;
 
-			var cellValue = getValue(obj, column);
+            var cellValue = getValue(obj, column);
             var textAlign = getCellTextAlign(column);
             var gCellTitle = '';
 

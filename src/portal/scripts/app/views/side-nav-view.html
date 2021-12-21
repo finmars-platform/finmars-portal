@@ -244,6 +244,15 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li data-ng-if="vm.accessTable.data_instrument">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data.generated-event">
+                                        <span class="side-nav-title">Events</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -428,6 +437,18 @@
                                               data-ng-if="isSelected()">current page</span>
                                     </md-button>
                                 </li>
+                                <li data-ng-if="vm.accessTable.data_instrument_download">
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn two-line-text"
+                                               ui-sref="app.portal.import.instrument-cbonds">
+                                        <span class="side-nav-title">
+                                            Instrument<br>
+                                            (from CBONDS)
+                                        </span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
                                 <li data-ng-if="vm.accessTable.data_prices_download">
                                     <md-button ui-sref-active="active"
                                                class="sidenav-dropdown-menu-btn two-line-text"
@@ -504,7 +525,7 @@
                             <ul class="sidenav-dropdown-menu open-upward journal-dropdown-menu-element ng-hide">
                                 <li data-ng-if="vm.accessTable.report_instrument_audit">
                                     <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.portal.system.instruments">
+                                               ui-sref="app.portal.data.instruments">
                                         <span class="side-nav-title">Instruments Audit</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -512,7 +533,7 @@
                                 </li>
                                 <li data-ng-if="vm.accessTable.report_transaction_audit">
                                     <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.portal.system.transactions">
+                                               ui-sref="app.portal.data.transactions">
                                         <span class="side-nav-title">Transactions Audit</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -976,6 +997,14 @@
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
                                         </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.update-configuration">
+                                                <span class="side-nav-title">Update</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
 
                                     </ul>
 
@@ -1031,6 +1060,9 @@
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
+
+
+
                         </ul>
                     </div>
                 </div>
@@ -1041,4 +1073,12 @@
     </div>
 </md-sidenav>
 
-<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" ui-sref="app.portal.healthcheck">Build date: __BUILD_DATE__</div>
+<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" data-ng-click="vm.openSystemErrorLogDialog($event)">Build date: __BUILD_DATE__
+
+
+    <span class="websocket-connection-status {{vm.getWsStatus()}}" title="Websocket status: {{vm.getWsStatus()}}"></span>
+
+    <br/>
+    <span class="{{vm.getErrorCount() ? 'text-warning-red' : ''}}">Errors: {{vm.getErrorCount()}}</span>
+
+</div>

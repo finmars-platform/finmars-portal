@@ -33,11 +33,11 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, usersService, gFiltersHelper) {
+        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, gFiltersHelper) {
 
             var vm = this;
 
-            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {
                 attributes: false,
@@ -74,7 +74,7 @@
                 vm.entityViewerDataService.setActiveObjectActionData(null);*/
 				vm.entityViewerDataService.setRowsActionData(null);
 
-                if (res && res.res === 'agree') {
+                if (res && res.status === 'agree') {
 
                     vm.entityViewerDataService.resetData();
                     vm.entityViewerDataService.resetRequestParameters();
@@ -515,7 +515,7 @@
                             noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
                         }
 
-                        await rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
+                        await sharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
 
                         var activeColumnSortProm = new Promise(function (resolve, reject) {
 
@@ -1145,6 +1145,11 @@
 				});
 
 				switch (vm.componentData.type) {
+
+					case 'report_viewer':
+						vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
+						break;
+
 					case 'report_viewer_grand_total':
 
 						vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -1186,6 +1191,7 @@
 
 
 						break;
+
 				}
 
 				if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
@@ -1286,7 +1292,7 @@
 					});
 				}
 
-				vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+				/* vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
 					var activeObject = vm.entityViewerDataService.getActiveObject();
 					var action = vm.entityViewerDataService.getActiveObjectAction();
@@ -1665,7 +1671,7 @@
 						}
 					}
 
-				});
+				}); */
 
                 vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
@@ -1901,6 +1907,7 @@
 
 						styles: vm.componentData.settings.styles,
                         auto_scaling: vm.componentData.settings.auto_scaling,
+						calculate_name_column_width: vm.componentData.settings.calculate_name_column_width,
                         hide_empty_lines: vm.componentData.settings.hide_empty_lines
 
                     };
@@ -2016,7 +2023,7 @@
 
                 vm.entityViewerDataService.setViewContext('dashboard');
 
-                var downloadAttrsPromise = rvSharedLogicHelper.downloadAttributes();
+                var downloadAttrsPromise = sharedLogicHelper.downloadAttributes();
                 vm.setEventListeners();
 
                 console.log('$scope.$parent.vm.contentType', $scope.$parent.vm.contentType)
@@ -2031,7 +2038,7 @@
                 if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
                 } */
-				rvSharedLogicHelper.setLayoutDataForView();
+				sharedLogicHelper.setLayoutDataForView();
 				vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setUseFromAbove(true);
 
@@ -2067,7 +2074,7 @@
                                 vm.entityViewerDataService.setComponents(evComponents);
 
 								//<editor-fold desc="Set dashboard columns list for small rv table">
-								if (vm.userSettings && vm.userSettings.columns) {
+								if (vm.userSettings && vm.userSettings.columns && vm.userSettings.columns.length) {
 
                                     if (fillInModeEnabled) {
 
@@ -2078,6 +2085,7 @@
                                     else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+
                                         var listLayout = vm.entityViewerDataService.getListLayout();
                                         var layoutColumns = listLayout.data.columns;
                                         var layoutGroups = listLayout.data.grouping;
@@ -2129,7 +2137,7 @@
                             /* vm.readyStatus.layout = true;
 
                             $scope.$apply(); */
-							rvSharedLogicHelper.onSetLayoutEnd();
+							sharedLogicHelper.onSetLayoutEnd();
 
                             resolve();
 

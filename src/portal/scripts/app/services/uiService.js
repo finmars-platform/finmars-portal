@@ -5,6 +5,7 @@
 
     'use strict';
 
+    const metaService = require('./metaService');
 	const metaContentTypesService = require('./metaContentTypesService');
 	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
     const ecosystemDefaultService = require('./ecosystemDefaultService');
@@ -167,7 +168,7 @@
 
             const cachedLayout = localStorageService.getCachedLayout(key);
 
-            const fetchDefaultLayout = function () {
+            const fetchLayout = function () {
 
                 uiRepository.getListLayoutByKey(key).then(function (layoutData) {
 
@@ -183,7 +184,7 @@
 
             };
 
-            resolveLayoutByKey(cachedLayout, fetchDefaultLayout, resolve, reject);
+            resolveLayoutByKey(cachedLayout, fetchLayout, resolve, reject);
 
         });
 
@@ -225,6 +226,8 @@
 				if (data.is_default) {
 					localStorageService.cacheDefaultLayout(data);
 				}
+
+				resolve(data);
 
 			}).catch(function (error) {
 				reject(error);
@@ -285,8 +288,8 @@
 		return uiRepository.pingListLayoutByKey(id, xhrOptions);
 	}
 
-	const getListLayoutTemplate = function () {
-        return uiRepository.getListLayoutTemplate();
+	const getListLayoutTemplate = function (isReport) {
+        return uiRepository.getListLayoutTemplate(isReport);
     };
 
 	/**
@@ -369,7 +372,9 @@
 
 					} else {
 
-						defaultLayout = uiRepository.getListLayoutTemplate();
+						const isReport = metaService.isReport(entityType);
+
+						defaultLayout = uiRepository.getListLayoutTemplate(isReport);
 						defaultLayout = await applyDefaultSettingsToLayoutTemplate(defaultLayout);
 						defaultLayoutData = {results: defaultLayout};
 

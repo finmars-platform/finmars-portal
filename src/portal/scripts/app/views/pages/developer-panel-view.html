@@ -1,5 +1,7 @@
 <div class="actions-view">
 
+    <instrument-select model="vm.instrument"></instrument-select>
+
     <div layout="row" layout-align="space-between">
 
         <fieldset layout="column" class="">
@@ -223,6 +225,13 @@
                     </md-button>
                 </div>
 
+                <div>
+                    <md-button data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'pricing-condition'})"
+                               class="md-primary md-raised">
+                       Pricing Condition mapping
+                    </md-button>
+                </div>
+
             </div>
 
             <div layout="row" layout-align="space-between">
@@ -356,5 +365,9 @@
         </fieldset>
 
     </div>
+
+
+
+
 
 </div>

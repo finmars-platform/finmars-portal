@@ -287,6 +287,8 @@
 
             vm.reportOptions.table_font_size = vm.tableFontSize;
 
+            vm.reportOptions.complex_transaction_statuses_filter = vm.complex_transaction_statuses_filter.join(',')
+
             $mdDialog.hide({status: 'agree', data: vm.reportOptions});
         };
 
@@ -370,6 +372,12 @@
 
             if (!vm.pricingPolicies.length) {
                 await getEcosystemDefaultPricingPolicies();
+            }
+
+            if (vm.reportOptions.complex_transaction_statuses_filter) {
+                vm.complex_transaction_statuses_filter = vm.reportOptions.complex_transaction_statuses_filter.split(',')
+            } else {
+                vm.complex_transaction_statuses_filter = ['booked']
             }
 
             // vm.getPortfolios();

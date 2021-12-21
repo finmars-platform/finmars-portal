@@ -80,7 +80,9 @@
                     window.developerConsoleService.rejectRequest(requestId, reason)
                 }
 
-                if (options.notifyError !== false) errorService.notifyError(reason);
+                // if (options.notifyError !== false) errorService.notifyError(reason);
+
+                errorService.recordError(reason)
 
                 console.log('XHR Service catch error', reason);
 

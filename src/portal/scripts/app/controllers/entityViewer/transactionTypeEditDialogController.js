@@ -72,7 +72,7 @@
 
         vm.currentMember = null;
 
-        var ecosystemDefaultData = {};
+        // var ecosystemDefaultData = {};
 
         vm.hasEditPermission = false;
         vm.canManagePermissions = false;
@@ -245,26 +245,31 @@
 
             console.log('copy entity', entity);
 
-            if (windowType === 'big_drawer') {
-
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType}};
-                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
-            }
-
-            $mdDialog.show({
-                controller: 'TransactionTypeAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-                parent: angular.element(document.body),
-                // targetEvent: $event,
-                locals: {
-                    entityType: vm.entityType,
-                    entity: entity
-                }
-            });
-
             // $mdDialog.hide();
-            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
+			if (windowType === 'big_drawer') {
+
+				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
+				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			} else {
+
+				$mdDialog.show({
+					controller: 'TransactionTypeAddDialogController as vm',
+					templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
+					parent: angular.element(document.body),
+					// targetEvent: $event,
+					locals: {
+						entityType: vm.entityType,
+						entity: entity,
+						data: {
+							openedIn: 'dialog'
+						}
+					}
+				});
+
+				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+
+			}
 
         };
 
@@ -812,8 +817,7 @@
         vm.saveAndExit = function () {
 
             vm.save().then(function (data) {
-                // $mdDialog.hide({res: 'agree', data: data});
-                let responseObj = {res: 'agree', data: data};
+                let responseObj = {status: 'agree', data: data};
                 metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
@@ -1312,8 +1316,7 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    // $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-                    let responseObj = {res: 'agree', data: {action: 'delete'}};
+                    let responseObj = {status: 'delete'};
                     metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
                 }
 
@@ -1768,7 +1771,7 @@
         };
 
 
-        var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+        /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
             var relationType = '';
             switch (fieldName) {
@@ -1824,7 +1827,7 @@
             actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
             actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
 
-        };
+        }; */
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 
@@ -2323,7 +2326,7 @@
 
         };
 
-        vm.appendFromTemplate = function ($event, template) {
+        /* vm.appendFromTemplate = function ($event, template) {
 
             //console.log("Append from Template", template);
 
@@ -2397,11 +2400,11 @@
                                 if (action[key].hasOwnProperty(actionItemKey + '_input')) {
 
                                     if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
-                                        /*if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
+                                        /!*if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
                                             action[key][actionItemKey + '_toggle'] = true;
 
                                             setDefaultValueForRelation(action, key, actionItemKey);
-                                        }*/
+                                        }*!/
                                         action[key][actionItemKey + '_toggle'] = true;
 
                                         setDefaultValueForRelation(action, key, actionItemKey);
@@ -2424,7 +2427,8 @@
 
             }
 
-        };
+        }; */
+		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
 
         vm.saveAsTemplate = function ($event, type) {
 
@@ -2645,9 +2649,10 @@
 
             sharedLogic.initGridTableEvents();
 
-            ecosystemDefaultService.getList().then(function (data) {
+            /* ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
-            });
+            }); */
+			sharedLogic.loadEcosystemDefaults();
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();
@@ -2674,6 +2679,115 @@
         };
 
         vm.init();
+
+        const some = {
+			"id": 2753,
+			"name": "account_position",
+			"verbose_name": "Account of booking",
+			"value_type": 100,
+			"reference_table": null,
+			"content_type": "accounts.account",
+			"order": 1,
+			"can_recalculate": false,
+			"value_expr": "",
+			"tooltip": "ttyp tooltip here",
+			"is_fill_from_context": false,
+			"context_property": null,
+			"value": "40",
+			"account": null,
+			"instrument_type": null,
+			"instrument": null,
+			"currency": null,
+			"counterparty": null,
+			"responsible": null,
+			"portfolio": null,
+			"strategy1": null,
+			"strategy2": null,
+			"strategy3": null,
+			"daily_pricing_model": null,
+			"payment_size_detail": null,
+			"pricing_policy": null,
+			"periodicity": null,
+			"accrual_calculation_model": null,
+			"settings": {
+				"linked_inputs_names": [
+					"test_account1",
+					"test_account2"
+				],
+				"recalc_on_change_linked_inputs": [
+					"test_account2"
+				]
+			},
+			"button_data": null,
+			"account_object": null,
+			"instrument_object": null,
+			"instrument_type_object": null,
+			"daily_pricing_model_object": null,
+			"payment_size_detail_object": null,
+			"currency_object": null,
+			"counterparty_object": null,
+			"portfolio_object": null,
+			"strategy1_object": null,
+			"strategy2_object": null,
+			"strategy3_object": null,
+			"pricing_policy_object": null,
+			"periodicity_object": null,
+			"accrual_calculation_model_object": null
+		};
+        const another = {
+			"id": 2753,
+			"name": "account_position",
+			"verbose_name": "Account of booking",
+			"value_type": 100,
+			"reference_table": null,
+			"content_type": "accounts.account",
+			"order": 1,
+			"can_recalculate": false,
+			"value_expr": "",
+			"tooltip": "ttyp tooltip here",
+			"is_fill_from_context": false,
+			"context_property": null,
+			"value": 40,
+			"account": null,
+			"instrument_type": null,
+			"instrument": null,
+			"currency": null,
+			"counterparty": null,
+			"responsible": null,
+			"portfolio": null,
+			"strategy1": null,
+			"strategy2": null,
+			"strategy3": null,
+			"daily_pricing_model": null,
+			"payment_size_detail": null,
+			"pricing_policy": null,
+			"periodicity": null,
+			"accrual_calculation_model": null,
+			"settings": {
+				"linked_inputs_names": [
+					"test_account1",
+					"test_account2"
+				],
+				"recalc_on_change_linked_inputs": [
+					"test_account2"
+				]
+			},
+			"button_data": null,
+			"account_object": null,
+			"instrument_object": null,
+			"instrument_type_object": null,
+			"daily_pricing_model_object": null,
+			"payment_size_detail_object": null,
+			"currency_object": null,
+			"counterparty_object": null,
+			"portfolio_object": null,
+			"strategy1_object": null,
+			"strategy2_object": null,
+			"strategy3_object": null,
+			"pricing_policy_object": null,
+			"periodicity_object": null,
+			"accrual_calculation_model_object": null
+		};
 
     }
 

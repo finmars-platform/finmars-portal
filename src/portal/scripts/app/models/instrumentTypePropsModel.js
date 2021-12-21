@@ -20,12 +20,6 @@
                 "allow_null": true
             },
             {
-                "key": "notes",
-                "name": "Notes",
-                "value_type": 10,
-                "allow_null": true
-            },
-            {
                 "key": "user_code",
                 "name": "User code",
                 "value_type": 10,
@@ -38,9 +32,15 @@
                 "allow_null": true
             },
             {
+                "key": "notes",
+                "name": "Notes",
+                "value_type": 10,
+                "allow_null": true
+            },
+            {
                 "key": "is_active",
                 "name": "Is active",
-                "value_type": "boolean",
+                "value_type": 50,
                 "allow_null": true
             },
             {
@@ -100,7 +100,7 @@
             {
                 "key": "has_second_exposure_currency",
                 "name": "Has second exposure currency",
-                "value_type": "boolean"
+                "value_type": 50
             },
             {
                 "key": "object_permissions",
@@ -132,7 +132,23 @@
 				"key": "default_accrued",
 				"name": "Default accrued",
 				"value_type": 20
-			}
+			},
+
+            {
+                "key": "default_price",
+                "name": "Default price",
+                "value_type": 20
+            },
+            {
+                "key": "maturity_date",
+                "name": "Maturity date",
+                "value_type": 40
+            },
+            {
+                "key": "maturity_price",
+                "name": "Maturity price",
+                "value_type": 20
+            }
         ]
     };
 

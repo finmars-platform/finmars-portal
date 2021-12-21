@@ -4,7 +4,11 @@
 
 	module.exports = function () {
 
-		const fillSelectorOptionsBasedOnValueType = function (instrumentAttrTypes, multitypeFields) {
+		/**
+		 * @param attrTypesList {Array} - dynamic attributes
+		 * @param multitypeFields {Object} - data for multitypeFieldDirective
+		 */
+		const fillSelectorOptionsBasedOnValueType = function (attrTypesList, multitypeFields) {
 
 			Object.keys(multitypeFields).forEach(key => {
 
@@ -14,7 +18,7 @@
 				const notSelType = fieldTypeObj.find(type => type.fieldType !== 'dropdownSelect'); */
 				const selectorType = fieldData.fieldTypesList.find(type => type.fieldType === 'dropdownSelect');
 
-				const formattedAttrTypes = instrumentAttrTypes
+				const formattedAttrTypes = attrTypesList
 					.filter(attrType => {
 						return attrType.value_type === fieldData.value_type && !attrType.can_recalculate;
 					})
@@ -87,9 +91,58 @@
 
 		};
 
+		const getReportLayoutsSelectorData = () => {
+			return [
+				{
+					'key': 'balance-report',
+					'model': "",
+					'fieldType': 'dropdownSelect',
+					'isDefault': true,
+					'isActive': false,
+					'sign': '<div class="multitype-field-type-letter">B</div>',
+					'name': 'Balance',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': []
+					}
+				},
+				{
+					'key': 'pl-report',
+					'model': '',
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': false,
+					'sign': '<div class="multitype-field-type-letter">P</div>',
+					'name': 'Profit & Loss',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': []
+					}
+				},
+				{
+					'key': 'transaction-report',
+					'model': '',
+					'fieldType': 'dropdownSelect',
+					'isDefault': false,
+					'isActive': false,
+					'sign': '<div class="multitype-field-type-letter">T</div>',
+					'name': 'Transactions',
+					'value_type': 100,
+					'fieldData': {
+						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+						'menuOptions': []
+					}
+				}
+			];
+		};
+
 		return {
 			fillSelectorOptionsBasedOnValueType: fillSelectorOptionsBasedOnValueType,
-			setActiveTypeByValueType: setActiveTypeByValueType
+			setActiveTypeByValueType: setActiveTypeByValueType,
+
+			getReportLayoutsSelectorData: getReportLayoutsSelectorData
 		};
 
 	};

@@ -790,7 +790,6 @@
                 evDataService.setActiveObjectRow(null);
             }
 
-
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         }
@@ -1278,10 +1277,23 @@
 
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
-        console.log('calculateScroll.contentWrapElemHeight', contentWrapElemHeight);
-        console.log('calculateScroll.viewportTop', viewportTop);
-        console.log('calculateScroll.viewportHeight', viewportHeight);
+        var isRootTitle = 'isRoot'
+        if (isRootEntityViewer) {
+            isRootTitle = 'isRoot'
+        } else {
+            isRootTitle = 'isChild'
+        }
+
+        if (!isRootEntityViewer) {
+            viewportHeight = viewportHeight - 16; // TODO To show horizontal scroll. Find why
+        }
+
+        // console.log(isRootTitle +  ' calculateScroll.contentWrapElemHeight ' + contentWrapElemHeight);
+        // console.log(isRootTitle +  ' calculateScroll.viewportTop ' + viewportTop);
+        // console.log(isRootTitle +  ' calculateScroll.viewportHeight ' + viewportHeight);
         // console.log('calculateScroll.viewportWidth', viewportWidth);
+
+
         rvScrollManager.setViewportHeight(viewportHeight);
 
         if (viewportWidth) {

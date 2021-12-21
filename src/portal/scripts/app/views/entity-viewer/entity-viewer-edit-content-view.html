@@ -33,7 +33,9 @@
                 <text-input label="{{vm.entityTypeSlug()}}"
                             model="vm.getEntityPropertyByDefault()"
                             placeholder-text="{{vm.getPlaceholderByDefault()}}"
+                            event-signal="vm.fixedAreaPopup.event"
                             small-options="{dialogParent: '.dialog-containers-wrap', readonly: true}"
+                            class="ee-fixed-area-popup entityEditorFixedAreaPopup"
                             style="pointer-events: none;">
                 </text-input>
 
@@ -57,11 +59,22 @@
                                  class="ev-editor-field">
                 </dropdown-select>
 
-                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
+                <dropdown-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3' || vm.entityType === 'responsible' || vm.entityType === 'counterparty'"
+                                 label="Group"
+                                 model="vm.entity.group"
+                                 placeholder-text="Group"
+                                 menu-options="vm.groupSelectorOptions"
+                                 small-options="{tooltipText: 'Group', indicatorBtnIcon: 'type1'}"
+                                 class="ev-editor-field">
+                </dropdown-select>
+
+
+                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'
+                && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3' && vm.entityType !== 'responsible' && vm.entityType !== 'counterparty'"
                      class="ev-editor-field">
                     <text-input
-                            label="Short name"
-                            placeholder-text="Short name"
+                            label="System Name (Short Name)"
+                            placeholder-text="System Name (Short Name)"
                             model="vm.entity.short_name"></text-input>
                 </div>
             </div>
@@ -83,7 +96,7 @@
 
     <div ng-if="vm.readyStatus.layout" class="position-relative">
 
-        <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
+        <md-tabs md-dynamic-height md-border-bottom class="tabs-colored entity-editor-tabs">
 
             <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" md-on-select="vm.activeTab = tab">
 
@@ -117,7 +130,6 @@
             </md-tab>
 
             <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)" md-active="vm.activeTab === tab">
-
                 <!-- Victor 2020.10.28 EntityTabs labels move to md-menu-->
                 <!--                         <md-tab-label>
                                             <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">
@@ -278,6 +290,7 @@
 
         <div class="entity-tabs-menu entityTabsMenu"
              data-ng-class="{'active': vm.isEntityTabActive()}"
+
              popup
              popup-template="{{vm.entityTabsMenuTplt}}"
              popup-data="vm.entityTabsMenuPopupData"
@@ -287,7 +300,8 @@
              close-on-click-outside="true"
              popup-classes="vm.entityTablePopupClasses">
 
-            <md-button aria-label="open entity tabs"
+            <md-button ng-if="vm.entityType !== 'price-history'"
+                       aria-label="open entity tabs"
                        class="md-icon-button entity-tabs-menu-btn">
                 <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
             </md-button>
