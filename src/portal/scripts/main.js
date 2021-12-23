@@ -391,6 +391,7 @@ export default (function () {
 	portal.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
 	portal.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
 	portal.controller('InstrumentTypeUserAttributesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeUserAttributesTabController')]);
+	portal.controller('InstrumentTypeFactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument-type/instrumentTypeFactorScheduleTabController')]);
 
 	// Currency form - tabs
 

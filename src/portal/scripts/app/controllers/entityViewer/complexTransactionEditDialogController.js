@@ -35,6 +35,8 @@
         var vm = this;
         var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
+        vm.sharedLogic = sharedLogicHelper;
+
         vm.entityType = entityType;
         vm.entityId = entityId;
 
@@ -82,6 +84,14 @@
         vm.fieldsDataStore = {}
 
         vm.openedIn = data.openedIn;
+
+        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+
+        console.log('vm.entityTabs', vm.entityTabs);
+
+        vm.entityTabsMenuTplt = sharedLogicHelper.entityTabsMenuTplt;
+        vm.entityTabsMenuPopupData = {viewModel: vm}
+        vm.entityTablePopupClasses = "border-radius-2"
 
         var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 

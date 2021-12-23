@@ -142,7 +142,7 @@
                 Object.keys(vm.contextData).forEach(function (key) {
 
                     if (key.indexOf('_object') === -1) {
-                        result[key] = vm.contextData[key]
+                        result['context_' + key] = vm.contextData[key]
                     }
 
                 })
