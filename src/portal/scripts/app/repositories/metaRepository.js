@@ -300,18 +300,6 @@
                         templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }
                 ];
-            case 'complex-transaction':
-                return [
-                    // {
-                    //     label: 'Actions',
-                    //     templateUrl: 'views/tabs/complex-transaction/book-transaction-actions-tab-view.html'
-                    // },
-                    // {
-                    //     enabled: ['update'],
-                    //     label: 'Transactions',
-                    //     templateUrl: 'views/tabs/complex-transaction/book-transaction-transactions-tab-view.html'
-                    // }
-                ];
             case 'transaction-type':
                 return [
                     {
@@ -328,6 +316,29 @@
                         label: 'Actions',
 						type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
+                    }
+                ];
+            case 'complex-transaction':
+                return [
+                    {
+                        label: 'Fields',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-fields-tab.html'
+                    },
+                    {
+                        label: 'Inputs',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-inputs-tab.html'
+                    },
+                    {
+                        label: 'Base Transactions',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-base-transactions-tab.html'
+                    },
+                    {
+                        label: 'Reconciliation',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-reconciliation-tab.html'
                     }
                 ];
             default:
