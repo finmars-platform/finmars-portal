@@ -523,7 +523,7 @@
 
 			}
             else {
-                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 var resultEntity = vm.entity;
 
@@ -776,7 +776,7 @@
 
             }
             else {
-                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 var resultEntity = vm.entity;
 
@@ -994,7 +994,7 @@
 
                     // if (hasProhibitNegNums.length === 0) {
 
-                        var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                        var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                         /*resultEntity.values = {};
 

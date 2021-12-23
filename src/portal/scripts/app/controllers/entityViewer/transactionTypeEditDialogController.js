@@ -499,7 +499,7 @@
 
                 if (isValid) {
 
-                    entityToSave = entityEditorHelper.removeNullFields(entityToSave);
+                    entityToSave = entityEditorHelper.removeNullFields(entityToSave, vm.entityType);
 
                     transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
