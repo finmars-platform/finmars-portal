@@ -269,6 +269,7 @@
         };
 
         vm.transactionUserFields = {};
+        vm.transactionUserFieldsState = {};
 
         vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
 
@@ -300,21 +301,21 @@
 
             if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
-				entity.attributes = [];
+                entity.attributes = [];
 
                 vm.attrs.forEach(function (attributeType) {
 
                     var value = entity[attributeType.user_code];
 
-					entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
+                    entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
 
                 });
             }
 
-			entity.object_permissions = [];
+            entity.object_permissions = [];
 
             // code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
-			return sharedLogic.updateEntityBeforeSave(entity);
+            return sharedLogic.updateEntityBeforeSave(entity);
 
         };
 
@@ -686,8 +687,8 @@
             addFields("layoutAttrs");
 
             var editLayoutData = {
-            	"name": "Form layout of transaction type: " + ttypeData.name,
-				"user_code": ttypeData.user_code + '_edit_layout',
+                "name": "Form layout of transaction type: " + ttypeData.name,
+                "user_code": ttypeData.user_code + '_edit_layout',
                 "data": [
                     {
                         "layout": {
@@ -701,7 +702,7 @@
                 ]
             };
 
-			return transactionTypeService.patch(instanceId, {
+            return transactionTypeService.patch(instanceId, {
                 book_transaction_layout: editLayoutData
             });
 
@@ -717,8 +718,8 @@
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity);*/
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(vm.entity.actions);
-				var inputsErrors = sharedLogic.validateInputs(vm.entity.inputs);
-				actionsErrors = actionsErrors.concat(inputsErrors);
+                var inputsErrors = sharedLogic.validateInputs(vm.entity.inputs);
+                actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(vm.entity);
 
@@ -745,8 +746,7 @@
 
                     reject();
 
-                }
-                else {
+                } else {
 
                     vm.processing = true;
 
@@ -765,7 +765,7 @@
 
                         }
 
-						vm.entity.object_permissions = responseData.object_permissions;
+                        vm.entity.object_permissions = responseData.object_permissions;
 
                         console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
 
@@ -776,11 +776,11 @@
                             $scope.$apply();
 
                             // resolve(resolve(responseData));
-							resolve(responseData);
+                            resolve(responseData);
 
                         } else {
 
-                        	createDefaultEditLayout(responseData).then(function () {
+                            createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 
                                 $scope.$apply();
@@ -791,26 +791,26 @@
                         }
 
                     })
-					.catch(function (data) {
+                        .catch(function (data) {
 
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: data
-                            },
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true
-                        });
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: data
+                                },
+                                preserveScope: true,
+                                multiple: true,
+                                autoWrap: true,
+                                skipHide: true
+                            });
 
-                        vm.processing = false;
+                            vm.processing = false;
 
-                        reject();
+                            reject();
 
-                    })
+                        })
 
                 }
 
@@ -1684,7 +1684,7 @@
             });
         };
 
-        vm.clearPhantoms = function(){
+        vm.clearPhantoms = function () {
 
             console.log('vm.clearPhantoms');
 
@@ -1692,7 +1692,7 @@
 
             vm.entity.actions.forEach(function (action) {
 
-                Object.keys(action).forEach(function(actionKey) {
+                Object.keys(action).forEach(function (actionKey) {
 
                     if (action[actionKey]) {
                         Object.keys(action[actionKey]).forEach(function (key) {
@@ -2006,7 +2006,7 @@
 
             })
         }; */
-		vm.loadRelation = sharedLogic.loadRelation;
+        vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
 
@@ -2175,7 +2175,7 @@
             }
 
         }; */
-		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
+        vm.appendFromTemplate = sharedLogic.appendFromTemplate;
 
         vm.saveAsTemplate = function ($event, type) {
 
@@ -2333,6 +2333,28 @@
 
         };
 
+        vm.userTextFields = [];
+        vm.userNumberFields = [];
+        vm.userDateFields = [];
+
+        for (var i = 1; i <= 30; i = i + 1) {
+            vm.userTextFields.push({
+                key: 'user_text_' + i
+            })
+        }
+
+        for (var i = 1; i <= 20; i = i + 1) {
+            vm.userNumberFields.push({
+                key: 'user_number_' + i
+            })
+        }
+
+        for (var i = 1; i <= 5; i = i + 1) {
+            vm.userDateFields.push({
+                key: 'user_date_' + i
+            })
+        }
+
 
         // Transaction type actions controller end
 
@@ -2350,7 +2372,7 @@
             /* ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
             }); */
-			sharedLogic.loadEcosystemDefaults();
+            sharedLogic.loadEcosystemDefaults();
 
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();

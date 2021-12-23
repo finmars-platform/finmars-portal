@@ -157,7 +157,13 @@
 
 					fieldResolverService.getFields(field).then(function (data) {
 
-						viewModel.relationItems[field] = data.data;
+						viewModel.relationItems[field] = data.data.map(function(item){
+
+                            item._id  = item.id
+                            item.id = item.user_code
+
+						    return item
+                        });
 						loadedRelationsList.push(field);
 
 						if (noScopeUpdate) {
@@ -1388,6 +1394,9 @@
 					data.results.forEach(function (field) {
 
 						viewModel.transactionUserFields[field.key] = field.name;
+						viewModel.transactionUserFieldsState[field.key] = field.is_active;
+
+						console.log('transactionUserFieldsState', viewModel.transactionUserFieldsState);
 
 					})
 
