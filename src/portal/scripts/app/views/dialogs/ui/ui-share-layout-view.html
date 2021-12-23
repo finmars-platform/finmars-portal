@@ -98,6 +98,10 @@
                 Publish Update
             </md-button>
 
+            <md-button ng-click="vm.agreeForce()" style="margin-right:20px;" data-ng-if="vm.globalConfigurationFile.id">
+                Force Publish Update
+            </md-button>
+
         </div>
     </md-dialog-actions>
 </md-dialog>
