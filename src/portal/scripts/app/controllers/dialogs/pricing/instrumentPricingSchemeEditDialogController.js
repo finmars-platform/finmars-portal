@@ -227,6 +227,8 @@
 
             var index = vm.item.type_settings.data.parameters.length;
 
+            index = index + 1
+
             vm.item.type_settings.data.parameters.push({index: index, ___switch_state: 'default_value'})
 
         };
