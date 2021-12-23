@@ -1150,7 +1150,7 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 result.values = {};
 
@@ -1398,7 +1398,7 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 result.values = {};
 
@@ -1613,7 +1613,7 @@
 
                 // if (hasProhibitNegNums.length === 0) {
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                    var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                     /*result.values = {};
 
