@@ -11,6 +11,35 @@
 
 	module.exports = function (viewModel, $scope, $mdDialog) {
 
+		const entityTabsMenuTplt =
+			'<div class="ev-editor-tabs-popup-content popup-menu">' +
+			'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
+			'class="entity-tabs-menu-option popup-menu-option" ' +
+			'ng-class="popupData.viewModel.sharedLogic.getTabBtnClasses(tab)" ' +
+			'ng-click="popupData.viewModel.activeTab = tab">' +
+			'<span>{{tab.label}}</span>' +
+			'<div ng-if="popupData.viewModel.sharedLogic.isTabWithErrors(tab)" class="tab-option-error-icon">' +
+			'<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
+			'</div>' +
+			'</md-button>' +
+			'</div>';
+
+		const getTabBtnClasses = function (tab) {
+
+			var result = [];
+
+			if (viewModel.activeTab.label === tab.label) {
+				result.push('active-tab-button');
+			}
+
+			// if (isTabWithErrors(tab)) {
+			// 	result.push('error-menu-option');
+			// }
+
+			return result;
+
+		};
+
 		const removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
 
 			inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
@@ -477,6 +506,8 @@
 			checkFieldRender: checkFieldRender,
 			onFieldChange: onFieldChange,
 
+			entityTabsMenuTplt: entityTabsMenuTplt,
+			getTabBtnClasses: getTabBtnClasses
 			// processTabsErrors: processTabsErrors
 		}
 
