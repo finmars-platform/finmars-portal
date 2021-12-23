@@ -17,8 +17,8 @@
         return shareConfigurationFileRepository.create(item);
     };
 
-    var update = function(id, item) {
-        return shareConfigurationFileRepository.update(id, item);
+    var update = function(id, item, force) {
+        return shareConfigurationFileRepository.update(id, item, force);
     };
 
     var deleteByKey = function (id) {
