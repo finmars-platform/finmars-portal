@@ -2,19 +2,24 @@
 
 export default function () {
 
-    return {
-        restrict: 'E',
-        scope: {
-            label: '@',
-            model: '=',
-            menuOptions: '=',
-            favoriteOptions: '=',
-            onChange: '&?'
-        },
-        templateUrl: "views/directives/customInputs/complex-dropdown-select-view.html",
-        link: function (scope, elem, attrs) {
+	return {
+		restrict: 'E',
+		scope: {
+			label: '@',
+			model: '=',
+			menuOptions: '=',
+			favoriteOptions: '=',
 
-            scope.selectedOption = null;
+			onChange: '&?',
+			onSelectedOptionChange: '&?',
+			onFavoriteOptionsChange: '&?',
+		},
+		templateUrl: "views/directives/customInputs/complex-dropdown-select-view.html",
+		link: function (scope, elem, attrs) {
+
+			if (!scope.favoriteOptions) scope.favoriteOptions = [];
+
+			scope.selectedOption = null;
 
             scope.menuOptions = scope.menuOptions.map(option => {
                 option.folded = true;
@@ -34,7 +39,9 @@ export default function () {
 
             }
 
-            const selectOption = function (groupName, option, _$popup) {
+            let originalFavoriteOptsList = JSON.parse(angular.toJson(scope.favoriteOptions));
+
+			const selectOption = function (groupName, option, _$popup) {
 
                 _$popup.cancel();
 
@@ -69,10 +76,37 @@ export default function () {
 
             };
 
-            scope.popupData = {
-                selectedOptions: scope.model,
-                menuOptions: scope.menuOptions,
-                favoriteOptions: scope.favoriteOptions || [],
+            const didFavoriteOptionsChange = function () {
+
+				if (scope.favoriteOptions.length !== originalFavoriteOptsList.length) return true;
+
+				for (let i = 0; i < scope.favoriteOptions.length; i++) {
+
+					if (scope.favoriteOptions[i].id !== originalFavoriteOptsList[i].id) {
+						return true;
+					}
+
+				}
+
+				return false;
+
+			};
+
+			scope.onPopupClose = function () {
+
+				if (didFavoriteOptionsChange()) {
+
+					originalFavoriteOptsList = JSON.parse(angular.toJson(scope.favoriteOptions));
+					if (scope.onFavoriteOptionsChange) scope.onFavoriteOptionsChange();
+
+				}
+
+			};
+
+			scope.popupData = {
+				selectedOptions: scope.model,
+				menuOptions: scope.menuOptions,
+				favoriteOptions: scope.favoriteOptions,
                 showDescriptions: false,
                 selectOptionCallback: selectOption
             }

@@ -12,6 +12,7 @@
 
         _this.drawersPromise = null;
 
+        let templateScope;
         let backdropElem, drawerElem, drawerWrap, drawerContainer, resizeButton;
 		let sidenavWidth = 330, viewportWidth, drawerWidth, drawerHeight, drawerOptions = {},
 			drawerWidthAnimationDuration = 500; // same as width transition duration
@@ -69,7 +70,7 @@
             return new Promise(function (resolve, reject) {
 
                 let tpl;
-                let templateScope;
+                // let templateScope;
                 let ctrl;
                 drawerOptions = options;
 
@@ -171,6 +172,8 @@
                 $(_this.rootElement).removeClass('overflow-hidden');
 
                 // reset variables on drawer close
+				templateScope.$destroy();
+				templateScope = null;
                 resizeButton = null;
                 drawerWidth = null; viewportWidth = null; drawerWidth = null; drawerHeight = null;
                 drawerOptions = {};
