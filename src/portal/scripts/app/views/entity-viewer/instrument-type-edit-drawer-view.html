@@ -268,6 +268,19 @@
                 <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
 
                     <md-menu-item>
+                        <md-button ng-click="vm.copy('big-drawer')"
+                                   data-ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Duplicate</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-divider></md-menu-divider>
+
+                    <md-menu-item>
                         <md-button ng-click="vm.manageAttrs($event)">
                             <div class="flex-row flex-i-center">
                                 <ng-md-icon icon="list" class="flex-row"></ng-md-icon>

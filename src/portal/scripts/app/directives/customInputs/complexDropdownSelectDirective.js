@@ -10,7 +10,6 @@ export default function () {
 			menuOptions: '=',
 			favoriteOptions: '=',
 
-			onChange: '&?',
 			onSelectedOptionChange: '&?',
 			onFavoriteOptionsChange: '&?',
 		},
@@ -66,10 +65,10 @@ export default function () {
                 scope.model = scope.selectedOption.id;
                 scope.popupData.selectedOptions = scope.selectedOption.id;
 
-                if (scope.onChange) {
+                if (scope.onSelectedOptionChange) {
 
                     setTimeout(() => {
-                        scope.onChange({selected: scope.selectedOption});
+                        scope.onSelectedOptionChange({selected: scope.selectedOption});
                     }, 0);
 
                 }
