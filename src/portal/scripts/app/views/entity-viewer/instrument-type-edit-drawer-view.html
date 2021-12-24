@@ -290,6 +290,17 @@
                         </md-button>
                     </md-menu-item>
 
+                    <md-menu-item>
+                        <md-button ng-click="vm.copy('big_drawer')"
+                                   data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.hasEditPermission || vm.processing}">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Duplicate</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
                 </md-menu-content>
             </md-menu>
 
