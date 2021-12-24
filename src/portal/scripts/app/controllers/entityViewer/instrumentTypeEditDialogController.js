@@ -454,8 +454,8 @@
 			} else {
 
 				$mdDialog.show({
-					controller: 'EntityViewerAddDialogController as vm',
-					templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+					controller: 'InstrumentTypeAddDialogController as vm',
+					templateUrl: 'views/entity-viewer/instrument-type-add-drawer-view.html',
 					parent: angular.element(document.body),
 					locals: {
 						entityType: vm.entityType,
