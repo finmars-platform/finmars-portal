@@ -492,7 +492,7 @@
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            if (windowType === 'big_drawer') {
+            if (windowType === 'big-drawer') {
 
                 const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
