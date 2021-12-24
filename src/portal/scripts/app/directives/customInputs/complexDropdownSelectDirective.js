@@ -1,5 +1,7 @@
 'use strict';
 
+const directivesEvents = require('../../services/events/directivesEvents');
+
 export default function () {
 
 	return {
@@ -9,6 +11,8 @@ export default function () {
 			model: '=',
 			menuOptions: '=',
 			favoriteOptions: '=',
+
+			eventService: '=',
 
 			onSelectedOptionChange: '&?',
 			onFavoriteOptionsChange: '&?',
@@ -25,18 +29,29 @@ export default function () {
                 return option;
             });
 
-            if (scope.model || scope.model === 0) {
+            const findSelectedOption = function () {
 
-                scope.selectedOption = scope.menuOptions.find(option => option.id === scope.model);
-                if (scope.selectedOption) {
-                    scope.selectedOption.isActive = true;
-                }
-                if (scope.favoriteOptions && scope.favoriteOptions.length) {
-                    let selFavOpt = scope.favoriteOptions.find(option => option.id === scope.model);
-                    if (selFavOpt) selFavOpt.isActive = true;
-                }
+            	// scope.selectedOption = scope.menuOptions.find(option => option.id === scope.model);
+				for (const group of scope.menuOptions) {
 
-            }
+					scope.selectedOption = group.children.find(option => option.id === scope.model);
+
+					if (scope.selectedOption || scope.selectedOption === 0) break;
+
+				}
+
+				if (scope.selectedOption) {
+					scope.selectedOption.isActive = true;
+				}
+
+				if (scope.favoriteOptions && scope.favoriteOptions.length) {
+					let selFavOpt = scope.favoriteOptions.find(option => option.id === scope.model);
+					if (selFavOpt) selFavOpt.isActive = true;
+				}
+
+			};
+
+			if (scope.model || scope.model === 0) findSelectedOption();
 
             let originalFavoriteOptsList = JSON.parse(angular.toJson(scope.favoriteOptions));
 
@@ -108,7 +123,15 @@ export default function () {
 				favoriteOptions: scope.favoriteOptions,
                 showDescriptions: false,
                 selectOptionCallback: selectOption
-            }
+            };
+
+			if (scope.eventService) {
+
+				scope.eventService.addEventListener(directivesEvents.MODEL_CHANGED_FROM_OUTSIDE, function () {
+					if (scope.model || scope.model === 0) findSelectedOption();
+				});
+
+			}
 
         }
     }
