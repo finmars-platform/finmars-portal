@@ -41,7 +41,7 @@
             </md-menu-item>
 
             <md-menu-item data-ng-if="vm.entityType == 'price-history' || vm.entityType == 'currency-history' && vm.entityType != 'transaction'">
-                <md-button ng-click="vm.copy('big_drawer')"
+                <md-button ng-click="vm.copy('big-drawer')"
                            data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.hasEditPermission || vm.processing}">
                     <div class="flex-row flex-i-center">
                         <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
