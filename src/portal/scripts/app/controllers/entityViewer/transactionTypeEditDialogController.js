@@ -246,7 +246,7 @@
             console.log('copy entity', entity);
 
             // $mdDialog.hide();
-            if (windowType === 'big_drawer') {
+            if (windowType === 'big-drawer') {
 
                 const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
@@ -500,7 +500,7 @@
 
                 if (isValid) {
 
-                    entityToSave = entityEditorHelper.removeNullFields(entityToSave);
+                    entityToSave = entityEditorHelper.removeNullFields(entityToSave, vm.entityType);
 
                     transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
