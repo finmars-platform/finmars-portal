@@ -492,7 +492,7 @@
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            if (windowType === 'big_drawer') {
+            if (windowType === 'big-drawer') {
 
                 const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
@@ -1160,7 +1160,7 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 result.values = {};
 
@@ -1408,7 +1408,7 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 result.values = {};
 
@@ -1623,7 +1623,7 @@
 
                 // if (hasProhibitNegNums.length === 0) {
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                    var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                     /*result.values = {};
 

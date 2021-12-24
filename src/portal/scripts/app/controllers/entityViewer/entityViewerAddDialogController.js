@@ -1145,7 +1145,7 @@
 
             } else {
 
-                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
                 console.log('resultEntity', resultEntity);
 
@@ -1246,7 +1246,7 @@
 
                 if (hasProhibitNegNums.length === 0) {
 
-                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                     console.log('resultEntity', resultEntity);
 
