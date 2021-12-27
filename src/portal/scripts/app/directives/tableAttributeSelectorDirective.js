@@ -13,10 +13,13 @@
                 dialogTitle: '@',
                 availableAttrs: '<',
                 item: '=',
+				isReport: '@', // whether available attributes are from report ['true', 'false']
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/table-attribute-selector-view.html',
             link: function (scope, elem, attr) {
+
+            	scope.isReport = !!scope.isReport;
 
                 var getInputText = function () {
 
@@ -57,7 +60,8 @@
                         locals: {
                             data: {
                                 availableAttrs: availableAttrs,
-                                title: scope.dialogTitle
+                                title: scope.dialogTitle,
+								isReport: scope.isReport
                             }
                         }
                     }).then(function (res) {
