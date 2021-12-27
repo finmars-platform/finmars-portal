@@ -873,7 +873,12 @@
 
         }).then(function (res) {
 
-            postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, res.data.complex_transaction);
+        	var resultItem = null;
+        	if (res.data) {
+				resultItem = res.data.complex_transaction;
+			}
+
+        	postAdditionActions(evDataService, evEventService, layout, $bigDrawer, res, resultItem);
 
         });
     };
