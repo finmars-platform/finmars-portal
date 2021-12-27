@@ -14,7 +14,7 @@
     var gridHelperService = require('../../services/gridHelperService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    var EntityViewerEditorEventService = require('../../services/eventService');
+    var EventService = require('../../services/eventService');
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
@@ -32,9 +32,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function complexTransactionAddDialogController(
-    	$scope, $mdDialog, $bigDrawer, $state, usersGroupService, entityType, entity, data
-	) {
+    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, globalDataService, entityType, entity, data) {
 
         var vm = this;
 		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
@@ -75,6 +73,7 @@
 
         var notCopiedTransaction = true;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
+		var ttypesList;
         //var tooltipsList = [];
 
         vm.rearrangeMdDialogActions = function () {
@@ -142,7 +141,7 @@
                 Object.keys(vm.contextData).forEach(function (key) {
 
                     if (key.indexOf('_object') === -1) {
-                        result[key] = vm.contextData[key]
+                        result['context_' + key] = vm.contextData[key]
                     }
 
                 })
@@ -524,7 +523,7 @@
 
 			}
             else {
-                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 var resultEntity = vm.entity;
 
@@ -772,12 +771,11 @@
                         }
                     }
                 }) */
-
                 entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
             }
             else {
-                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 var resultEntity = vm.entity;
 
@@ -841,102 +839,102 @@
                             resolve(data);
 
                         })
-                            .catch(function (data) {
+						.catch(function (data) {
 
-                                console.log('here?', data);
+							console.log('here?', data);
 
-                                if (data.hasOwnProperty('message') && data.message.reason == 410) {
+							if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
-                                    vm.processing = false;
+								vm.processing = false;
 
-                                    $mdDialog.show({
-                                        controller: 'BookUniquenessWarningDialogController as vm',
-                                        templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
-                                        targetEvent: $event,
-                                        parent: angular.element(document.body),
-                                        multiple: true,
-                                        locals: {
-                                            data: {
-                                                errorData: data
-                                            }
-                                        }
-                                    }).then(function (response) {
+								$mdDialog.show({
+									controller: 'BookUniquenessWarningDialogController as vm',
+									templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+									targetEvent: $event,
+									parent: angular.element(document.body),
+									multiple: true,
+									locals: {
+										data: {
+											errorData: data
+										}
+									}
+								}).then(function (response) {
 
-                                        console.log('response', response);
+									console.log('response', response);
 
-                                        if(response.reaction === 'cancel') {
-                                            // do nothing
-                                        }
+									if(response.reaction === 'cancel') {
+										// do nothing
+									}
 
-                                        if(response.reaction === 'skip') {
-                                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
-                                        }
+									if(response.reaction === 'skip') {
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
+									}
 
-                                        if(response.reaction === 'book_without_unique_code') {
+									if(response.reaction === 'book_without_unique_code') {
 
-                                            // TODO refactor here
-                                            // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+										// TODO refactor here
+										// 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
 
-                                            res.uniqueness_reaction = 2;
+										res.uniqueness_reaction = 2;
 
-                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+										transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
 
-                                                vm.processing = false;
+											vm.processing = false;
 
-                                                toastNotificationService.success('Transaction was successfully booked');
+											toastNotificationService.success('Transaction was successfully booked');
 
-                                                resolve(data);
+											resolve(data);
 
-                                            })
+										})
 
-                                        }
+									}
 
-                                        if (response.reaction === 'overwrite') {
+									if (response.reaction === 'overwrite') {
 
-                                            // TODO refactor here
-                                            //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+										// TODO refactor here
+										//  3 (OVERWRITE, ugettext_lazy('Overwrite')),
 
-                                            res.uniqueness_reaction = 3;
+										res.uniqueness_reaction = 3;
 
-                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+										transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
 
-                                                vm.processing = false;
+											vm.processing = false;
 
-                                                toastNotificationService.success('Transaction was successfully booked');
+											toastNotificationService.success('Transaction was successfully booked');
 
-                                                resolve(data);
+											resolve(data);
 
-                                            })
+										})
 
-                                        }
+									}
 
-                                    })
+								})
 
 
-                                } else {
+							} else {
 
-                                    vm.processing = false;
+								vm.processing = false;
 
-                                    $mdDialog.show({
-                                        controller: 'ValidationDialogController as vm',
-                                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                        targetEvent: $event,
-                                        parent: angular.element(document.body),
-                                        multiple: true,
-                                        locals: {
-                                            validationData: {
-                                                errorData: data,
-                                                tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                                entityType: 'complex-transaction'
-                                            }
-                                        }
-                                    });
+								$mdDialog.show({
+									controller: 'ValidationDialogController as vm',
+									templateUrl: 'views/dialogs/validation-dialog-view.html',
+									targetEvent: $event,
+									parent: angular.element(document.body),
+									multiple: true,
+									locals: {
+										validationData: {
+											errorData: data,
+											tableColumnsNames: ['Name of fields', 'Error Cause'],
+											entityType: 'complex-transaction'
+										}
+									}
+								});
 
-                                    reject(data);
+								reject(data);
 
-                                }
+							}
 
-                            });
+						});
 
                     });
 
@@ -995,7 +993,7 @@
 
                     // if (hasProhibitNegNums.length === 0) {
 
-                        var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                        var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                         /*resultEntity.values = {};
 
@@ -1179,7 +1177,7 @@
 			return groupsList;
 
 		} */
-		var getTransactionGroups = function (ttypesList) {
+		var getTransactionGroups = function () {
 
 			var groups = {};
 
@@ -1230,6 +1228,58 @@
 
 		};
 
+		var getFavoriteTTypeOptions = function () {
+
+			var favTTypeOpts = [];
+			var member = globalDataService.getMember();
+
+			if (member.data && member.favorites && member.favorites.transaction_type) {
+
+				favTTypeOpts = member.favorites.transaction_type.map(function (ttypeUserCode) {
+
+					var ttype = ttypesList.find(function (ttype) {
+						return ttype.user_code === ttypeUserCode;
+					});
+
+					if (!ttype) {return ttype;}
+
+					return {
+						id: ttype.id,
+						name: ttype.name
+					};
+
+				})
+				.filter(function (fTttype) {
+					return !!fTttype;
+				});
+
+			}
+
+			return favTTypeOpts;
+
+		};
+
+		vm.saveFavoriteTTypeOptions = function () {
+
+			var member = globalDataService.getMember();
+
+			if (!member.data) {
+				member.data = {};
+			}
+
+			if (!member.data.favorites) {
+				member.data.favorites = {};
+			}
+
+			member.data.favorites.transaction_type = vm.favTTypeOpts.map(function (ttypeOpt) {
+				var ttype = ttypesList.find(ttype => ttype.id === ttypeOpt.id);
+				return ttype.user_code;
+			});
+
+			usersService.updateMember(member.id, member);
+
+		};
+
         vm.loadTransactionTypes = function () {
 
             var options = {
@@ -1240,7 +1290,10 @@
             // transactionTypeService.getList(options).then(function (data) {
             transactionTypeService.getListLight(options).then(function (data) {
 
-                vm.transactionGroups = getTransactionGroups(data.results);
+            	ttypesList = data.results;
+                vm.transactionGroups = getTransactionGroups(ttypesList);
+
+				vm.favTTypeOpts = getFavoriteTTypeOptions();
 
                 vm.readyStatus.transactionTypes = true;
 
@@ -1289,7 +1342,7 @@
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
             }, 100);
 
-            vm.evEditorEventService = new EntityViewerEditorEventService();
+            vm.evEditorEventService = new EventService();
             vm.evEditorDataService = new EntityViewerEditorDataService();
 
             vm.evEditorDataService.setRecalculationFunction(vm.recalculate);
@@ -1334,7 +1387,6 @@
 
 
                 }
-
                 /*else if (entity.hasOwnProperty('transaction_type')) {
 
                     vm.transactionTypeId = entity.transaction_type;
@@ -1349,7 +1401,6 @@
                     })
 
                 } */
-
 				else if (data.isCopy) { // if copy
 
                     console.log("Apply from make copy", entity);
