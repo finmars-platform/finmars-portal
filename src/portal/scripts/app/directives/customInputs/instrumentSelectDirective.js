@@ -63,8 +63,8 @@
 
                 var stylePreset;
 
-                var inputContainer = elem[0].querySelector('.dropdownSelectInputContainer');
-                var inputElem = elem[0].querySelector('.dropdownSelectInputElem');
+                var inputContainer = elem[0].querySelector('.instrumentSelectInputContainer');
+                var inputElem = elem[0].querySelector('.instrumentSelectInputElem');
 
                 /*var entityIndicatorIcons = {
                     'type1': {

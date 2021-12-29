@@ -14,7 +14,7 @@
     var gridHelperService = require('../../services/gridHelperService');
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    var EntityViewerEditorEventService = require('../../services/eventService');
+    var EventService = require('../../services/eventService');
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
@@ -771,7 +771,6 @@
                         }
                     }
                 }) */
-
                 entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
             }
@@ -840,102 +839,102 @@
                             resolve(data);
 
                         })
-                            .catch(function (data) {
+						.catch(function (data) {
 
-                                console.log('here?', data);
+							console.log('here?', data);
 
-                                if (data.hasOwnProperty('message') && data.message.reason == 410) {
+							if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
-                                    vm.processing = false;
+								vm.processing = false;
 
-                                    $mdDialog.show({
-                                        controller: 'BookUniquenessWarningDialogController as vm',
-                                        templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
-                                        targetEvent: $event,
-                                        parent: angular.element(document.body),
-                                        multiple: true,
-                                        locals: {
-                                            data: {
-                                                errorData: data
-                                            }
-                                        }
-                                    }).then(function (response) {
+								$mdDialog.show({
+									controller: 'BookUniquenessWarningDialogController as vm',
+									templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+									targetEvent: $event,
+									parent: angular.element(document.body),
+									multiple: true,
+									locals: {
+										data: {
+											errorData: data
+										}
+									}
+								}).then(function (response) {
 
-                                        console.log('response', response);
+									console.log('response', response);
 
-                                        if(response.reaction === 'cancel') {
-                                            // do nothing
-                                        }
+									if(response.reaction === 'cancel') {
+										// do nothing
+									}
 
-                                        if(response.reaction === 'skip') {
-                                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
-                                        }
+									if(response.reaction === 'skip') {
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
+									}
 
-                                        if(response.reaction === 'book_without_unique_code') {
+									if(response.reaction === 'book_without_unique_code') {
 
-                                            // TODO refactor here
-                                            // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+										// TODO refactor here
+										// 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
 
-                                            res.uniqueness_reaction = 2;
+										res.uniqueness_reaction = 2;
 
-                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+										transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
 
-                                                vm.processing = false;
+											vm.processing = false;
 
-                                                toastNotificationService.success('Transaction was successfully booked');
+											toastNotificationService.success('Transaction was successfully booked');
 
-                                                resolve(data);
+											resolve(data);
 
-                                            })
+										})
 
-                                        }
+									}
 
-                                        if (response.reaction === 'overwrite') {
+									if (response.reaction === 'overwrite') {
 
-                                            // TODO refactor here
-                                            //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+										// TODO refactor here
+										//  3 (OVERWRITE, ugettext_lazy('Overwrite')),
 
-                                            res.uniqueness_reaction = 3;
+										res.uniqueness_reaction = 3;
 
-                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+										transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
 
-                                                vm.processing = false;
+											vm.processing = false;
 
-                                                toastNotificationService.success('Transaction was successfully booked');
+											toastNotificationService.success('Transaction was successfully booked');
 
-                                                resolve(data);
+											resolve(data);
 
-                                            })
+										})
 
-                                        }
+									}
 
-                                    })
+								})
 
 
-                                } else {
+							} else {
 
-                                    vm.processing = false;
+								vm.processing = false;
 
-                                    $mdDialog.show({
-                                        controller: 'ValidationDialogController as vm',
-                                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                        targetEvent: $event,
-                                        parent: angular.element(document.body),
-                                        multiple: true,
-                                        locals: {
-                                            validationData: {
-                                                errorData: data,
-                                                tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                                entityType: 'complex-transaction'
-                                            }
-                                        }
-                                    });
+								$mdDialog.show({
+									controller: 'ValidationDialogController as vm',
+									templateUrl: 'views/dialogs/validation-dialog-view.html',
+									targetEvent: $event,
+									parent: angular.element(document.body),
+									multiple: true,
+									locals: {
+										validationData: {
+											errorData: data,
+											tableColumnsNames: ['Name of fields', 'Error Cause'],
+											entityType: 'complex-transaction'
+										}
+									}
+								});
 
-                                    reject(data);
+								reject(data);
 
-                                }
+							}
 
-                            });
+						});
 
                     });
 
@@ -1343,7 +1342,7 @@
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
             }, 100);
 
-            vm.evEditorEventService = new EntityViewerEditorEventService();
+            vm.evEditorEventService = new EventService();
             vm.evEditorDataService = new EntityViewerEditorDataService();
 
             vm.evEditorDataService.setRecalculationFunction(vm.recalculate);
@@ -1388,7 +1387,6 @@
 
 
                 }
-
                 /*else if (entity.hasOwnProperty('transaction_type')) {
 
                     vm.transactionTypeId = entity.transaction_type;
@@ -1403,7 +1401,6 @@
                     })
 
                 } */
-
 				else if (data.isCopy) { // if copy
 
                     console.log("Apply from make copy", entity);
