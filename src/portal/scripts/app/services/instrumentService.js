@@ -366,6 +366,146 @@
 		};
 	};
 
+	const getInstrumentFactorsMultitypeFieldsData = () => {
+		return {
+			'effective_date': {
+				value_type: 40,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'dateInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 40,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'position_factor_value': {
+				value_type: 20,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'factor_value1': {
+				value_type: 20,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'factor_value2': {
+				value_type: 20,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			},
+			'factor_value3': {
+				value_type: 20,
+				fieldTypesList: [
+					{
+						'model': "",
+						'fieldType': 'numberInput',
+						'isDefault': true,
+						'isActive': true,
+						'sign': '<div class="multitype-field-type-letter type-with-constant">D</div>',
+						'value_type': 20,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					},
+					{
+						'model': null,
+						'fieldType': 'dropdownSelect',
+						'isDefault': false,
+						'isActive': false,
+						'sign': '<div class="multitype-field-type-letter">L</div>',
+						'value_type': 70,
+						'fieldData': {
+							'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+						}
+					}
+				]
+			}
+		}
+	}
+
 	const updateMultitypeFieldSelectorOptionsInsideGridTable = function (instrumentAttributeTypes, multitypeFieldsObj, gridTableData) {
 
 		multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttributeTypes, multitypeFieldsObj);
@@ -406,6 +546,8 @@
 		onGtRowDeletion: onGtRowDeletion,
 		getInstrumentAccrualsMultitypeFieldsData: getInstrumentAccrualsMultitypeFieldsData,
 		getInstrumentEventsMultitypeFieldsData: getInstrumentEventsMultitypeFieldsData,
+		getInstrumentFactorsMultitypeFieldsData: getInstrumentFactorsMultitypeFieldsData,
+
 		updateMultitypeFieldSelectorOptionsInsideGridTable: updateMultitypeFieldSelectorOptionsInsideGridTable,
 
 		getEditLayoutBasedOnUserCodes: getEditLayoutBasedOnUserCodes,
