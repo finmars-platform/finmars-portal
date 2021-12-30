@@ -14,9 +14,11 @@
 			scope: {
 				items: "=",
 				model: "=",
+				title: "@",
+
 				customButtons: '=',
 				customStyles: "=",
-				title: "@",
+
 				dialogTitle: "@",
 				nothingSelectedText: "@",
 				selectedItemsIndication: "@",
@@ -25,6 +27,8 @@
 				getDataMethod: "&?", // needed for downloading items on opening multiselector
 				strictOrder: "=",
 				optionsCheckboxes: "=",
+
+				multiselectEventService: "=",
 				onChangeCallback: "&?",
 			},
 			require: "?ngModel",
@@ -48,6 +52,7 @@
 				let items;
 				let selOptionsIdsList = [];
 				let chipElem;
+				let customInputContent;
 
 				// TIPS
 				// scope.smallOptions probable properties
@@ -80,6 +85,8 @@
 				let getSelectedOptionsIds = function () {
 
 					if (scope.model) {
+
+						console.log('# scope.model', scope.model)
 
 						selOptionsIdsList = scope.model.map(function (selOption) {
 
@@ -335,9 +342,20 @@
 
 							});
 
-							return {
-								id: selOptId,
-								text: selOpt[scope.nameProperty]
+							if (selOpt) {
+								return {
+									id: selOptId,
+									text: selOpt[scope.nameProperty]
+								}
+							} else {
+								return {
+									id: selOptId,
+									// text: '<span>&lt;Not found&gt;</span>',
+									text: 'Not found',
+									error_data: {
+										description: ''
+									}
+								}
 							}
 
 						});
@@ -380,6 +398,7 @@
 				let init = function () {
 
 					scope.chipsListEventService = new ChipsListEventService();
+					const parent = elem[0].parentElement;
 
 					if (scope.selectedItemsIndication === 'chips') {
 
@@ -402,10 +421,8 @@
 						}
 
 						scope.getChipsContainerWidth = function () {
-
-							let customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
+							customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
 							scope.chipsContainerWidth = customInputContent.clientWidth - 8; // padding size is '8px'
-
 						};
 
 						scope.addDropdownMenuListeners = function () {
@@ -453,7 +470,7 @@
 
 							getAvailableOptions();
 
-							scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						};
 
@@ -481,7 +498,7 @@
 								{chipsList: scope.chipsList, updateScope: true}
 							);
 
-							scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						};
 
@@ -503,13 +520,21 @@
 						}
 
 					}
-
 					else {
 						$(elem).click(scope.openMultiselectorDialog);
 					}
 
 					if (scope.customStyles) {
 						applyCustomStyles();
+					}
+
+					if (scope.multiselectEventService) {
+
+						scope.multiselectEventService.addEventListener(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED, function () {
+							scope.chipsContainerWidth = customInputContent.clientWidth - 8; // padding size is '8px'
+							scope.chipsListEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
+						});
+
 					}
 
 					scope.$watch('model', function () {

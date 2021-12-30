@@ -4,11 +4,12 @@
                popup-data="popupData"
                popup-event-service="popupEventService"
                position-relative-to="element"
-               relative-popup-x="right"
+               relative-popup-x="left"
                open-on="click"
                close-on-click-outside="true"
                on-save="onPopupSave()"
                on-cancel="onPopupCancel()"
+               on-popup-close="onPopupSave()"
                class="complex-datepicker-popup-btn">
         <span ng-bind="date"></span>
         <span ng-if="rangeOfDates && secondDate">&nbsp;- <span ng-bind="secondDate"></span></span>

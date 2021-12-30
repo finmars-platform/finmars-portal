@@ -20,7 +20,21 @@
             {
                 "key": "status",
                 "name": "Status",
-                "value_type": 10 // actually field
+                "value_type": "field",
+                "value_entity": "complex-transaction-status",
+                "code": "user_code",
+                "value_content_type": "transactions.complextransactionstatus",
+                "allow_null": false
+            },
+            {
+                "key": "is_locked",
+                "name": "Is locked",
+                "value_type": 50
+            },
+            {
+                "key": "is_canceled",
+                "name": "Is canceled",
+                "value_type": 50
             },
             {
                 "key": "transaction_unique_code",
@@ -157,6 +171,65 @@
             {
                 "key": "user_text_20",
                 "name": "User Text 20",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_21",
+                "name": "User Text 21",
+                "value_type": 10
+            },
+            {
+                "key": "user_text_22",
+                "name": "User Text 22",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_23",
+                "name": "User Text 23",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_24",
+                "name": "User Text 24",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_25",
+                "name": "User Text 25",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_26",
+                "name": "User Text 26",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_27",
+                "name": "User Text 27",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_28",
+                "name": "User Text 28",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_29",
+                "name": "User Text 29",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_30",
+                "name": "User Text 30",
                 "value_type": 10
             },
 

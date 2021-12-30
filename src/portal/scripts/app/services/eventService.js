@@ -57,10 +57,15 @@
 
         }
 
+        function getListeners() {
+            return events;
+        }
+
         return {
             addEventListener: addEventListener,
             removeEventListener: removeEventListener,
-            dispatchEvent: dispatchEvent
+            dispatchEvent: dispatchEvent,
+            getListeners: getListeners
         }
     }
 

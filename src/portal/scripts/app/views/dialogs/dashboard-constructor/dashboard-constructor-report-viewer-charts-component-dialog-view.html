@@ -32,7 +32,7 @@
                             </md-input-container>
                         </div>
 
-                        <div layout="row">
+                        <div layout="row" class="m-b-24">
                             <md-input-container class="md-block no-error-spacer dashboard-constructor-field1">
                                 <label for="">Chart Type</label>
                                 <div>
@@ -50,7 +50,7 @@
                             </md-input-container>
                         </div>
 
-                        <div class="m-t-16 m-b-16" layout="row">
+                        <!-- <div class="m-t-16 m-b-16" layout="row">
                             <md-input-container class="dashboard-constructor-field1">
                                 <label for="">Report Type</label>
                                 <md-select data-ng-model="vm.item.settings.entity_type"
@@ -70,9 +70,22 @@
                                                        data-is-disabled="!vm.item.settings.entity_type"
                                                        data-on-change-callback="vm.showLinkingToFilters()"
                                                        class="dashboard-constructor-selector-directive"></expandable-items-selector>
+                        </div> -->
+                        <div style="width: 400px;" class="m-l-10">
+                            <div ng-if="vm.readyStatus.layouts">
+                                <multitype-field label="Select layout"
+                                                 field-types-data="vm.layoutsSelectorsList"
+                                                 type-switch="selector"
+                                                 on-value-change="vm.onLayoutChange()"
+                                                 on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
+                            </div>
+
+                            <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">
+                                <progress-circular diameter="30"></progress-circular>
+                            </div>
                         </div>
 
-                        <div data-ng-if="vm.item.type === 'report_viewer_bars_chart'" layout="row">
+                        <div data-ng-if="vm.item.type === 'report_viewer_bars_chart'" layout="row" class="m-t-24">
                             <table-attribute-selector data-title="Category"
                                                       data-dialog-title="Choose Columns for Category"
                                                       data-available-attrs="vm.attributes"
@@ -88,7 +101,7 @@
                                                       style="margin: 0 10px;"></table-attribute-selector>
                         </div>
 
-                        <div data-ng-if="vm.item.type === 'report_viewer_pie_chart'" layout="row">
+                        <div data-ng-if="vm.item.type === 'report_viewer_pie_chart'" layout="row" class="m-t-24">
 
                             <table-attribute-selector data-title="Separate Chart By"
                                                       data-dialog-title="Separate Chart By"

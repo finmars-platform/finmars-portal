@@ -5,9 +5,12 @@
 
     'use strict';
 
+    var uiService = require('../../services/uiService');
+    var metaService = require('../../services/metaService');
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
     var customFieldService = require('../../services/reports/customFieldService');
+    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     var portfolioService = require('../../services/portfolioService');
     var accountService = require('../../services/accountService');
@@ -94,7 +97,7 @@
             return vm.entityType == 'balance-report' || vm.entityType == 'pl-report' || vm.entityType == 'performance-report';
         };
 
-        vm.getPricingPolicies = function () {
+        vm.getPricingPolicies = async function () {
 
             vm.readyStatus.pricingPolicy = false;
 
@@ -103,7 +106,7 @@
                 page: 1
             };
 
-            pricingPolicyService.getListLight(opitons).then(function (data) {
+            await pricingPolicyService.getListLight(opitons).then(function (data) {
 
                 vm.pricingPolicies = data.results;
                 vm.readyStatus.pricingPolicy = true;
@@ -117,7 +120,7 @@
             $event.stopPropagation();
         };
 
-        vm.getCurrencies = function () {
+        vm.getCurrencies = async function () {
 
             vm.readyStatus.currency = false;
 
@@ -126,7 +129,7 @@
                 pageSize: 1000
             };
 
-            currencyService.getListLight(options).then(function (data) {
+            await currencyService.getListLight(options).then(function (data) {
 
                 vm.currencies = data.results;
                 vm.readyStatus.currency = true;
@@ -284,6 +287,8 @@
 
             vm.reportOptions.table_font_size = vm.tableFontSize;
 
+            vm.reportOptions.complex_transaction_statuses_filter = vm.complex_transaction_statuses_filter.join(',')
+
             $mdDialog.hide({status: 'agree', data: vm.reportOptions});
         };
 
@@ -320,10 +325,61 @@
 
         };
 
-        vm.init = function () {
+        let ecosystemDefaultData = null;
 
-            vm.getPricingPolicies();
-            vm.getCurrencies();
+        const getEcosystemDefaultCurrencies = async () => {
+            if (!ecosystemDefaultData) {
+                ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+            }
+            vm.currencies.push(ecosystemDefaultData.currency_object);
+            vm.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
+        };
+
+        const getEcosystemDefaultPricingPolicies = async () => {
+            if (!ecosystemDefaultData) {
+                ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+            }
+            vm.pricingPolicies.push(ecosystemDefaultData.pricing_policy_object);
+            vm.reportOptions.pricing_policy = ecosystemDefaultData.pricing_policy_object.id;
+        };
+
+        vm.init = async function () {
+
+            await Promise.allSettled([vm.getPricingPolicies(), vm.getCurrencies()]);
+
+            if (vm.entityType === 'transaction-report') {
+
+				vm.transactionsUserDates = [];
+
+				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [{pageSize: 1000}]).then(function (transactionFields) {
+
+					vm.transactionsUserDates = transactionFields.filter(function (field) {
+						return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].includes(field.key);
+
+					}).map(function (dateField) {
+						return {name: dateField.name, id: dateField.key};
+					});
+
+					vm.transactionsUserDates.push({name: "Transaction date", id: null});
+
+				});
+
+			}
+
+			if (!vm.currencies.length) {
+                await getEcosystemDefaultCurrencies();
+            }
+
+            if (!vm.pricingPolicies.length) {
+                await getEcosystemDefaultPricingPolicies();
+            }
+
+            if (vm.reportOptions.complex_transaction_statuses_filter) {
+                vm.complex_transaction_statuses_filter = vm.reportOptions.complex_transaction_statuses_filter.split(',')
+            } else {
+                vm.complex_transaction_statuses_filter = ['booked']
+            }
+
             // vm.getPortfolios();
             // vm.getAccounts();
             vm.getTransactionClasses();

@@ -218,9 +218,10 @@
                                         <div flex="10"
                                              layout="row"
                                              layout-align="end center">
-                                            <g-rv-filter-settings-button data-filter-key="item.key"
-                                                                      data-ev-data-service="vm.entityViewerDataService"
-                                                                      data-ev-event-service="vm.entityViewerEventService"></g-rv-filter-settings-button>
+                                            <g-filter-settings-btn data-filter-key="item.key"
+                                                                   data-ev-data-service="vm.entityViewerDataService"
+                                                                   data-ev-event-service="vm.entityViewerEventService"
+                                                                   data-attribute-data-service="vm.attributeDataService"></g-filter-settings-btn>
                                         </div>
 
                                     </div>
@@ -290,6 +291,33 @@
                                     <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
                                                  class="md-primary"
                                                  data-ng-change="vm.updateAttrs(vm.transactionTypeAttrs)">
+                                    </md-checkbox>
+                                </div>
+                                <div class="g-modal-draggable-card vcDraggableCard">
+                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
+                                        {{item.name}}
+                                        <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}
+                                        </md-tooltip>
+                                    </md-card>
+                                </div>
+                            </div>
+
+                            <div class="g-checkbox-row"
+                                 data-ng-repeat="item in vm.complexTransactionStatusAttrsFiltered | orderBy: 'orderNumber__' |  filter: {name: complexTransactionSearchTerms}"
+                                 layout="row">
+                                <div class="view-constructor-checkboxes-container"
+                                     layout="row"
+                                     layout-align="start center">
+                                    <md-checkbox ng-model="item.columns" aria-label="Columns" aria="columns"
+                                                 data-ng-change="vm.updateAttrs(vm.complexTransactionStatusAttrs)">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.groups" aria-label="Groups" aria="groups"
+                                                 class="md-g-green"
+                                                 data-ng-change="vm.updateAttrs(vm.complexTransactionStatusAttrs)">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.filters" aria-label="Filters" aria="filters"
+                                                 class="md-primary"
+                                                 data-ng-change="vm.updateAttrs(vm.complexTransactionStatusAttrs)">
                                     </md-checkbox>
                                 </div>
                                 <div class="g-modal-draggable-card vcDraggableCard">

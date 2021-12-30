@@ -5,7 +5,7 @@
 
         <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" control="vm.eventsAccordion">
 
-            <v-pane ng-repeat="item in vm.entity.events"
+            <v-pane ng-repeat="item in vm.entity.events | orderBy: 'order'"
                     expanded="item.isPaneExpanded">
 
                 <v-pane-header ng-class="{'m-b-0': !$pane.isExpanded()}">
@@ -45,6 +45,7 @@
                             <md-checkbox ng-model="item.autogenerate"
                                          id="{{'event_autogenerate_' + $index}}"
                                          aria-lable="instrument type events autogenerate"
+                                         ng-change="vm.onAutogenerateToggle($event, item)"
                                          ng-click="$event.stopPropagation();">Auto-generate</md-checkbox>
 
                             <div class="accordion-actions m-l-35">
@@ -131,18 +132,93 @@
                                     gt-event-service="item.eventItemsGridTableEventService"></grid-table>
 
                         <div class="instrument-type-event-block-items-container">
-                            <md-checkbox ng-model="item.data.items_blocked"
-                                         ng-change="vm.toggleEventBlockableItems(item)">Receive the below data from Accruals Schedule</md-checkbox>
+                            <!--<md-checkbox ng-model="item.data.items_blocked"
+                                         ng-change="vm.toggleEventBlockableItems(item)">Receive the below data from Accruals Schedule</md-checkbox>-->
+                            <md-checkbox ng-model="item.data.get_items2_from_accruals" ng-disabled="!item.autogenerate">Receive the below data from Accruals Schedule (in case of autogenerate, for each accrual entry)</md-checkbox>
                         </div>
 
-                        <grid-table gt-data-service="item.eventBlockableItemsGridTableDataService"
+                        <!--<grid-table gt-data-service="item.eventBlockableItemsGridTableDataService"
                                     gt-event-service="item.eventBlockableItemsGridTableEventService"
-                                    ng-class="{'disabled-grid-table': item.data.items_blocked}"></grid-table>
+                                    ng-class="{'disabled-grid-table': item.data.items_blocked}"></grid-table>-->
+                        <grid-table gt-data-service="item.eventItems2GridTableDataService"
+                                    gt-event-service="item.eventItems2GridTableEventService"></grid-table>
                     </div>
 
                     <div class="instrument-type-accordion-grid-table grid-table-bordered-rows m-b-16">
                         <grid-table gt-data-service="item.eventActionsGridTableDataService"
                                     gt-event-service="item.eventActionsGridTableEventService"></grid-table>
+                    </div>
+
+                    <div class="event-parameter-holder">
+
+                        <div class="m-t-16">
+
+                            <div data-ng-repeat="parameter in item.data.parameters" layout="row" data-ng-if="parameter.index != 0">
+
+                                <md-input-container>
+                                    <label>Index</label>
+                                    <input type="text" data-ng-model="parameter.index" class="disabled-btn">
+                                </md-input-container>
+
+                                <md-input-container>
+                                    <label>Name</label>
+                                    <input type="text" data-ng-model="parameter.name">
+                                </md-input-container>
+
+                                <md-input-container class="m-t-16">
+                                    <label>Value Type</label>
+                                    <md-select data-ng-model="parameter.value_type"
+                                               data-ng-change="vm.multipleParameterValueTypeUpdate(item, parameter.index)">
+                                        <md-option value="10">Text</md-option>
+                                        <md-option value="20">Number</md-option>
+                                        <md-option value="40">Date</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <div>
+
+                                    <div layout="row" data-ng-if="parameter.___switch_state == 'default_value'">
+
+                                        <md-input-container>
+                                            <label>Default Value</label>
+                                            <input type="text" data-ng-model="parameter.default_value">
+                                        </md-input-container>
+
+                                        <md-button class="md-raised md-primary"
+                                                   data-ng-click="vm.switchParameter($event, item, parameter)">Switch
+                                        </md-button>
+
+                                    </div>
+
+                                    <div layout="row" data-ng-if="parameter.___switch_state == 'attribute_key'">
+
+                                        <md-input-container class="m-t-16">
+                                            <label>Options</label>
+                                            <md-select data-ng-model="parameter.attribute_key">
+                                                <md-option ng-value="parameter.user_code"
+                                                           data-ng-repeat="parameter in vm.optionsForMultipleParameters[parameter.value_type]">
+                                                    {{parameter.name}} ({{parameter.user_code}})
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+
+                                        <md-button class="md-raised md-primary"
+                                                   data-ng-click="vm.switchParameter($event, item, parameter)">Switch
+                                        </md-button>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <md-button class="md-raised" data-ng-click="vm.addParameter($event, item)">Add Parameter</md-button>
+                        </div>
+
                     </div>
 
                 </v-pane-content>

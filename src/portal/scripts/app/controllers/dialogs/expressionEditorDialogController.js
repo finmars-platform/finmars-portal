@@ -65,7 +65,8 @@
                 locals: {
                     data: {
                         availableAttrs: availableAttrs,
-                        title: "Choose column's key to add it at the end of the expression"
+                        title: "Choose column's key to add it at the end of the expression",
+                        isReport: false
                     }
                 }
             }).then(function (res) {
@@ -76,7 +77,7 @@
                         vm.item.expression = "";
                     }
 
-                    vm.item.expression += res.data.key;
+                    vm.item.expression += res.data.items[0].key;
                 }
 
             });

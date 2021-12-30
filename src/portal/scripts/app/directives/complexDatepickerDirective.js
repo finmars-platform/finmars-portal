@@ -45,6 +45,11 @@
 				let firstDate, secondDate, secondCalendarElem;
 				let useFromAboveEventIndex, attributeKey;
 
+				scope.inputsModels = {
+					date: scope.date,
+					secondDate: null
+				};
+
 				scope.openEditExpressionDialog = function ($event, dateNumber) {
 
 					/* if (scope.datepickerOptions.datepickerMode !== 'expression') {
@@ -250,6 +255,7 @@
 						// firstDate = event.detail.date;
 						firstDate = event.detail.date;
 						scope.date = event.detail.formatted_date;
+						scope.inputsModels.date = scope.date;
 
 						scope.datepickerOptions.datepickerMode = 'datepicker';
 
@@ -426,6 +432,7 @@
 
 						firstDate = event.detail.date;
 						scope.date = event.detail.formatted_date;
+						scope.inputsModels.date = scope.date;
 
 						scope.datepickerOptions.datepickerMode = 'datepicker';
 
@@ -449,6 +456,7 @@
 
 						secondDate = event.detail.date;
 						scope.secondDate = event.detail.formatted_date;
+						scope.inputsModels.secondDate = scope.secondDate;
 
 						scope.secondDatepickerOptions.datepickerMode = 'datepicker';
 
@@ -464,6 +472,7 @@
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
 						scope.date = date;
+						scope.inputsModels.date = scope.date;
 						firstDate = new Date(date);
 
 						pickmeup(firstCalendarElem).set_date(firstDate);
@@ -475,6 +484,7 @@
 					} else if (date === null) {
 
 						scope.date = null;
+						scope.inputsModels.date = scope.date;
 						firstDate = null;
 						pickmeup(firstCalendarElem).set_date();
 
@@ -487,6 +497,7 @@
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
 						scope.secondDate = date;
+						scope.inputsModels.secondDate = scope.secondDate;
 						secondDate = new Date(date);
 
 						pickmeup(firstCalendarElem).update();
@@ -498,6 +509,7 @@
 					} else if (date === null) {
 
 						scope.secondDate = null;
+						scope.inputsModels.secondDate = scope.secondDate;
 						secondDate = null;
 						pickmeup(secondCalendarElem).set_date();
 
@@ -566,12 +578,14 @@
 				const applyFirstDate = function (date) {
 					firstDate = date;
 					scope.date = moment(date).format('YYYY-MM-DD');
+					scope.inputsModels.date = scope.date;
 					pickmeup(firstCalendarElem).set_date(firstDate);
 				};
 
 				const applySecondDate = function (date) {
 					secondDate = date;
 					scope.secondDate = moment(date).format('YYYY-MM-DD');
+					scope.inputsModels.secondDate = scope.secondDate;
 					pickmeup(secondCalendarElem).set_date(secondDate);
 				};
 
@@ -585,7 +599,7 @@
 
 				};
 
-				const resetPmuCalendars = function (calendarElem) {
+				const resetPmuCalendars = function () {
 
 					pickmeup(firstCalendarElem).destroy(); // redraw calendar after mode switch
 
@@ -646,6 +660,8 @@
 							scope.datepickerOptions.expression = 'now()';
 
 							scope.date = moment(new Date()).format('YYYY-MM-DD');
+							scope.inputsModels.date = scope.date;
+
 							pickmeup(firstCalendarElem).set_date(new Date(scope.date));
 
 							scope.dateIsDisabled = true;
@@ -660,6 +676,8 @@
 
 							const yesterdayDate = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
 							scope.date = yesterdayDate;
+							scope.inputsModels.date = scope.date;
+
 							pickmeup(firstCalendarElem).set_date(new Date(scope.date));
 
 							scope.dateIsDisabled = true;
@@ -667,17 +685,19 @@
 
 							break;
 
-						case 'inception':
+						/* case 'inception':
 
 							scope.datepickerOptions.datepickerMode = 'inception';
 
 							scope.date = '0001-01-01';
+							scope.inputsModels.date = scope.date;
+
 							pickmeup(firstCalendarElem).set_date(new Date(scope.date));
 
 							scope.dateIsDisabled = true;
 							firstCalendarElem.classList.add("pmu-calendar-disabled");
 
-							break;
+							break; */
 
 					}
 
@@ -687,21 +707,79 @@
 
 				};
 
-				scope.activateRangeMode = function (mode) {
+				/**
+				 * Update date fields and calendars after range of dates mode switch.
+				 *
+				 * @param firstDate {Date}
+				 * @param firstExpression {string}
+				 * @param secondDate {Date}
+				 * @param secondExpression {string}
+				 * @param mode {string}
+				 */
+				const applyDatesOnRangeModeSwitch = function (firstDate, firstExpression, secondDate, secondExpression, mode) {
+
+					applyFirstDate(firstDate);
+
+					scope.datepickerOptions.datepickerMode = mode;
+					scope.datepickerOptions.expression = firstExpression;
+					//</editor-fold>
+
+					//<editor-fold desc="Second date">
+					applySecondDate(secondDate);
+
+					scope.secondDatepickerOptions.datepickerMode = mode;
+					scope.secondDatepickerOptions.expression = secondExpression;
+					//</editor-fold>
+
+					disableFieldsAndCalendars();
+
+				};
+
+				scope.activateRangeMode = async function (mode) {
 
 					const currentDate = new Date();
+					let updateScope = false;
 
 					switch (mode) {
 
+						case 'week-to-date':
+
+							let prevWeekLastDay;
+
+							try {
+
+								const exprCalcRes = await expressionService.getResultOfExpression({expression: 'get_date_last_week_end_business(now())'});
+								prevWeekLastDay = new Date(exprCalcRes.result);
+
+							} catch (error) {throw new Error(error);}
+
+							applyDatesOnRangeModeSwitch(
+								prevWeekLastDay,
+								'get_date_last_week_end_business(now())',
+								currentDate,
+								'now()',
+								'week-to-date'
+							);
+
+							updateScope = true;
+
+							break;
+
 						case 'month-to-date':
 
-							const firstDayOfCurrentMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+							let prevMonthLastDay;
 
-							//<editor-fold desc="First date">
-							applyFirstDate(firstDayOfCurrentMonth);
+							try {
+
+								const exprCalcRes = await expressionService.getResultOfExpression({expression: 'get_date_last_month_end_business(now())'});
+								prevMonthLastDay = new Date(exprCalcRes.result);
+
+							} catch (error) {throw new Error(error);}
+
+							/* applyFirstDate(lastDayOfPrevMonth);
 
 							scope.datepickerOptions.datepickerMode = 'month-to-date';
-							scope.datepickerOptions.expression = 'now()';
+							scope.datepickerOptions.expression = 'get_date_last_month_end_business(now())';
 							//</editor-fold>
 
 							//<editor-fold desc="Second date">
@@ -711,17 +789,59 @@
 							scope.secondDatepickerOptions.expression = 'now()';
 							//</editor-fold>
 
-							disableFieldsAndCalendars();
+							disableFieldsAndCalendars(); */
+							applyDatesOnRangeModeSwitch(
+								prevMonthLastDay,
+								'get_date_last_month_end_business(now())',
+								currentDate,
+								'now()',
+								'month-to-date'
+							);
+
+							updateScope = true;
 
 							break;
 
 						case 'quarter-to-date':
 
+							let prevQuarterLastDay;
+
+							try {
+
+								const exprCalcRes = await expressionService.getResultOfExpression({expression: 'get_date_last_quarter_end_business(now())'});
+								prevQuarterLastDay = new Date(exprCalcRes.result);
+
+							} catch (error) {throw new Error(error);}
+
+							/* applyFirstDate(lastDayOfCurrentMonth);
+
+							scope.datepickerOptions.datepickerMode = 'month-to-date';
+							scope.datepickerOptions.expression = 'get_date_last_month_end_business(now())';
+							//</editor-fold>
+
+							//<editor-fold desc="Second date">
+							applySecondDate(currentDate);
+
+							scope.secondDatepickerOptions.datepickerMode = 'month-to-date';
+							scope.secondDatepickerOptions.expression = 'now()';
+							//</editor-fold>
+
+							disableFieldsAndCalendars(); */
+							applyDatesOnRangeModeSwitch(
+								prevQuarterLastDay,
+								'get_date_last_quarter_end_business(now())',
+								currentDate,
+								'now()',
+								'quarter-to-date'
+							);
+
+							updateScope = true;
+
 							break;
 
 						case 'year-to-date':
 
-							const firstDayOfCurrentYear = new Date(currentDate.getFullYear(), 0, 1);
+							/* const firstDayOfCurrentYear = new Date(currentDate.getFullYear(), 0, 1);
 
 							//<editor-fold desc="First date">
 							applyFirstDate(firstDayOfCurrentYear);
@@ -737,7 +857,25 @@
 							scope.secondDatepickerOptions.expression = 'now()';
 							//</editor-fold>
 
-							disableFieldsAndCalendars();
+							disableFieldsAndCalendars(); */
+							let prevYearLastDay;
+
+							try {
+
+								const exprCalcRes = await expressionService.getResultOfExpression({expression: 'get_date_last_year_end_business(now())'});
+								prevYearLastDay = new Date(exprCalcRes.result);
+
+							} catch (error) {throw new Error(error);}
+
+							applyDatesOnRangeModeSwitch(
+								prevYearLastDay,
+								'get_date_last_year_end_business(now())',
+								currentDate,
+								'now()',
+								'year-to-date'
+							);
+
+							updateScope = true;
 
 							break;
 
@@ -766,6 +904,8 @@
 					if (mode !== 'link_to_above') disableUseFromAboveMode();
 
 					resetPmuCalendars();
+
+					if (updateScope) scope.$apply();
 
 				};
 
@@ -818,6 +958,8 @@
 					scope.onDateInputChange = onDateInputChange;
 
 					if (scope.rangeOfDates) {
+
+						scope.inputsModels.secondDate = scope.secondDate;
 
 						if (scope.rangeOfDates && moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
 							secondDate = new Date(scope.secondDate);

@@ -6,22 +6,23 @@
     'use strict';
 
     var afterLoginEventsService = require('../services/afterLoginEventsService');
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
     var uiService = require('../services/uiService');
 
     var systemMessageService = require('../services/systemMessageService');
     var baseUrlService = require('../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function ($scope, $state, $mdDialog) {
+    module.exports = function ($scope, $state, $mdDialog, authorizerService, usersService, globalDataService) {
 
         var vm = this;
 
-        vm.masters = [];
         vm.systemMessages = [];
-        vm.currentMasterUser = null;
+        // vm.currentMasterUser = null;
         vm.eventsProcessing = false;
         vm.dashboardsListReady = false;
+
+        var currentMasterUser = globalDataService.getMasterUser();
 
         vm.getFileUrl = function (id) {
 
@@ -32,13 +33,13 @@
 
         };
 
-        vm.getMasterUsersList = function () {
+        /* vm.getMasterUsersList = function () {
 
-            return usersService.getMasterListLight().then(function (data) {
+            return authorizerService.getMasterUsersListLight().then(function (data) {
 
-                vm.masters = data.results;
+                vm.masterUsers = data.results;
 
-                vm.currentMasterUser = vm.masters.filter(function (master) {
+                vm.currentMasterUser = vm.masterUsers.filter(function (master) {
                     return master.is_current;
                 })[0];
 
@@ -46,7 +47,7 @@
 
             });
 
-        };
+        }; */
 
         var processEventsPromise = function () {
 
@@ -64,7 +65,7 @@
                         showEventsDialogs = true;
                     }
 
-                    if (info && info.indexOf(vm.currentMasterUser.id) === -1) {
+                    if (info && info.indexOf(currentMasterUser.id) === -1) {
                         showEventsDialogs = true;
                     }
 
@@ -89,9 +90,9 @@
                         });
 
                         if (info) {
-                            info.push(vm.currentMasterUser.id);
+                            info.push(currentMasterUser.id);
                         } else {
-                            info = [vm.currentMasterUser.id];
+                            info = [currentMasterUser.id];
                         }
 
                         sessionStorage.setItem('afterLoginEvents', JSON.stringify(info));
@@ -209,24 +210,38 @@
 
         };
 
-        vm.init = function () {
+        vm.reactToEvents = function (){
 
-            vm.getMasterUsersList().then(function () {
+            processEventsPromise()
 
-                var promises = [];
+        }
 
-                promises.push(processEventsPromise());
-                promises.push(getDashboardsList());
+        vm.init = async function () {
 
-                Promise.all(promises).then(function () {
-                    $scope.$apply();
-                }).catch(function () {
-                    $scope.$apply();
-                });
+            /* vm.getMasterUsersList().then(function () {
 
-            });
+				var promises = [];
+
+				promises.push(processEventsPromise());
+				promises.push(getDashboardsList());
+
+				Promise.all(promises).then(function () {
+					$scope.$apply();
+				}).catch(function () {
+					$scope.$apply();
+				});
+
+            }); */
 
             vm.getSystemMessages();
+
+			var promises = [];
+
+			// promises.push(processEventsPromise());
+			promises.push(getDashboardsList());
+
+			await Promise.all(promises);
+			$scope.$apply();
 
         };
 

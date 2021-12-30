@@ -16,12 +16,13 @@
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'specific-data/values-for-select?content_type=' + contentType + '&key=' + key + '&value_type=' + valueType,
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'specific-data/values-for-select/?content_type=' + contentType + '&key=' + key + '&value_type=' + valueType,
 			{
 				method: 'GET',
 				credentials: 'include',
 				headers: {
 					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					'X-CSRFToken': cookieService.getCookie('csrftoken'),
 					Accept: 'application/json',
 					'Content-type': 'application/json'
 				}

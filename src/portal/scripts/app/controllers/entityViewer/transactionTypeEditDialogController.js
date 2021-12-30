@@ -7,8 +7,8 @@
 
     var fieldResolverService = require('../../services/fieldResolverService');
 
-    var usersGroupService = require('../../services/usersGroupService');
-    var usersService = require('../../services/usersService');
+    // var usersGroupService = require('../../services/usersGroupService');
+    // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
     var metaService = require('../../services/metaService');
@@ -37,8 +37,7 @@
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController ($scope, $mdDialog, $bigDrawer, $state, entityType, entityId, data)
-    {
+    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data) {
 
         var vm = this;
 
@@ -73,7 +72,7 @@
 
         vm.currentMember = null;
 
-        var ecosystemDefaultData = {};
+        // var ecosystemDefaultData = {};
 
         vm.hasEditPermission = false;
         vm.canManagePermissions = false;
@@ -88,6 +87,7 @@
         vm.inputsForMultiselector = [];
 
         vm.openedIn = data.openedIn;
+
         vm.loadPermissions = function () {
 
             var promises = [];
@@ -220,7 +220,7 @@
             if (vm.fromEntityType) {
                 entityType = {entityType: vm.entityType, from: vm.fromEntityType};
             }
-            $state.go('app.attributesManager', entityType);
+            $state.go('app.portal.attributesManager', entityType);
             $mdDialog.hide();*/
 
             $mdDialog.show({
@@ -245,26 +245,31 @@
 
             console.log('copy entity', entity);
 
-            if (windowType === 'big_drawer') {
+            // $mdDialog.hide();
+            if (windowType === 'big-drawer') {
 
-                const responseObj = {res: 'agree', data: {action: 'copy', entity: entity, entityType: vm.entityType}};
+                const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
+            } else {
+
+                $mdDialog.show({
+                    controller: 'TransactionTypeAddDialogController as vm',
+                    templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
+                    parent: angular.element(document.body),
+                    // targetEvent: $event,
+                    locals: {
+                        entityType: vm.entityType,
+                        entity: entity,
+                        data: {
+                            openedIn: 'dialog'
+                        }
+                    }
+                });
+
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+
             }
-
-            $mdDialog.show({
-                controller: 'TransactionTypeAddDialogController as vm',
-                templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-                parent: angular.element(document.body),
-                // targetEvent: $event,
-                locals: {
-                    entityType: vm.entityType,
-                    entity: entity
-                }
-            });
-
-            // $mdDialog.hide();
-            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {});
 
         };
 
@@ -297,6 +302,7 @@
         vm.range = gridHelperService.range;
 
         vm.transactionUserFields = {};
+        vm.transactionUserFieldsState = {};
 
         vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
 
@@ -336,27 +342,27 @@
 
                     if (vm.entity.inputs) {
 
-                    	vm.entity.inputs.forEach(function (input) {
+                        vm.entity.inputs.forEach(function (input) {
 
-                    		if (!input.settings) {
-								input.settings = {}
-							}
+                            if (!input.settings) {
+                                input.settings = {}
+                            }
 
-							if (input.settings.linked_inputs_names) {
+                            if (input.settings.linked_inputs_names) {
 
-								input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                                input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
 
-							} else {
-								input.settings.linked_inputs_names = []
-							}
+                            } else {
+                                input.settings.linked_inputs_names = []
+                            }
 
-							if (input.settings.recalc_on_change_linked_inputs) {
+                            if (input.settings.recalc_on_change_linked_inputs) {
 
-								input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
+                                input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.split(',')
 
-							} else {
-								input.settings.recalc_on_change_linked_inputs = []
-							}
+                            } else {
+                                input.settings.recalc_on_change_linked_inputs = []
+                            }
 
                             vm.resolveDefaultValue(input)
 
@@ -367,7 +373,7 @@
                     console.log('vm.relationItems', vm.relationItems)
 
                     /*vm.editLayout = function () {
-                        $state.go('app.data-constructor', {
+                        $state.go('app.portal.data-constructor', {
                             entityType: 'complex-transaction',
                             from: vm.entityType,
                             instanceId: data.id
@@ -376,7 +382,7 @@
                     };*/
 
                     /* vm.manageAttrs = function () {
-                        $state.go('app.attributesManager', {
+                        $state.go('app.portal.attributesManager', {
                             entityType: 'transaction-type',
                             from: vm.entityType,
                             instanceId: data.id
@@ -477,8 +483,8 @@
 
             updatedEntity.object_permissions = [];
 
-			// code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
-			return sharedLogic.updateEntityBeforeSave(updatedEntity);
+            // code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
+            return sharedLogic.updateEntityBeforeSave(updatedEntity);
 
         };
 
@@ -494,7 +500,7 @@
 
                 if (isValid) {
 
-                    entityToSave = entityEditorHelper.removeNullFields(entityToSave);
+                    entityToSave = entityEditorHelper.removeNullFields(entityToSave, vm.entityType);
 
                     transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
@@ -738,8 +744,8 @@
                 var entityErrors = vm.checkEntityForEmptyFields(vm.entity); */
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
-				var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
-				actionsErrors = actionsErrors.concat(inputsErrors);
+                var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
+                actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
@@ -812,8 +818,7 @@
         vm.saveAndExit = function () {
 
             vm.save().then(function (data) {
-                // $mdDialog.hide({res: 'agree', data: data});
-                let responseObj = {res: 'agree', data: data};
+                let responseObj = {status: 'agree', data: data};
                 metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
             })
 
@@ -1312,8 +1317,7 @@
                 console.log('here', res);
 
                 if (res.status === 'agree') {
-                    // $mdDialog.hide({res: 'agree', data: {action: 'delete'}});
-                    let responseObj = {res: 'agree', data: {action: 'delete'}};
+                    let responseObj = {status: 'delete'};
                     metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
                 }
 
@@ -1768,7 +1772,7 @@
         };
 
 
-        var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+        /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
             var relationType = '';
             switch (fieldName) {
@@ -1824,7 +1828,7 @@
             actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
             actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
 
-        };
+        }; */
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 
@@ -2243,32 +2247,7 @@
             return result;
         };
 
-        vm.loadRelation = function (field, noScopeUpdate) {
-            console.log("loadrelation2");
-            console.log('field', field);
-
-            field = field.replace(/-/g, "_"); // replace all '_' with '-'
-
-            if (!vm.relationItems.hasOwnProperty(field)) {
-
-                return new Promise(function (resolve, reject) {
-
-                    fieldResolverService.getFields(field).then(function (data) {
-                        vm.relationItems[field] = data.data;
-
-                        if (noScopeUpdate) {
-                            $scope.$apply();
-                        }
-
-                        resolve(vm.relationItems[field]);
-                    })
-
-                });
-
-            }
-
-            return {status: 'item_exist', field: field};
-        };
+        vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
 
@@ -2348,7 +2327,7 @@
 
         };
 
-        vm.appendFromTemplate = function ($event, template) {
+        /* vm.appendFromTemplate = function ($event, template) {
 
             //console.log("Append from Template", template);
 
@@ -2422,11 +2401,11 @@
                                 if (action[key].hasOwnProperty(actionItemKey + '_input')) {
 
                                     if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
-                                        /*if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
+                                        /!*if (action[key][actionItemKey + '_field_type'] === 'relation') { // turn on matching regime for field
                                             action[key][actionItemKey + '_toggle'] = true;
 
                                             setDefaultValueForRelation(action, key, actionItemKey);
-                                        }*/
+                                        }*!/
                                         action[key][actionItemKey + '_toggle'] = true;
 
                                         setDefaultValueForRelation(action, key, actionItemKey);
@@ -2449,7 +2428,8 @@
 
             }
 
-        };
+        }; */
+        vm.appendFromTemplate = sharedLogic.appendFromTemplate;
 
         vm.saveAsTemplate = function ($event, type) {
 
@@ -2647,6 +2627,41 @@
         };*/
 
 
+        vm.recalculateUserFields = function ($event, key) {
+
+            transactionTypeService.recalculateUserFields(vm.entity.id, {
+                transaction_type_id: vm.entity.id,
+                key: key
+            }).then(function (data) {
+
+                toastNotificationService.success("User field " + key + " of Transaction Type " + vm.entity.name + ' was successfully recalculated');
+
+            })
+
+        }
+
+        vm.userTextFields = [];
+        vm.userNumberFields = [];
+        vm.userDateFields = [];
+
+        for (var i = 1; i <= 30; i = i + 1) {
+            vm.userTextFields.push({
+                key: 'user_text_' + i
+            })
+        }
+
+        for (var i = 1; i <= 20; i = i + 1) {
+            vm.userNumberFields.push({
+                key: 'user_number_' + i
+            })
+        }
+
+        for (var i = 1; i <= 5; i = i + 1) {
+            vm.userDateFields.push({
+                key: 'user_date_' + i
+            })
+        }
+
         vm.init = function () {
 
             setTimeout(function () {
@@ -2658,9 +2673,10 @@
 
             sharedLogic.initGridTableEvents();
 
-            ecosystemDefaultService.getList().then(function (data) {
+            /* ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
-            });
+            }); */
+            sharedLogic.loadEcosystemDefaults();
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();
@@ -2687,6 +2703,115 @@
         };
 
         vm.init();
+
+        const some = {
+            "id": 2753,
+            "name": "account_position",
+            "verbose_name": "Account of booking",
+            "value_type": 100,
+            "reference_table": null,
+            "content_type": "accounts.account",
+            "order": 1,
+            "can_recalculate": false,
+            "value_expr": "",
+            "tooltip": "ttyp tooltip here",
+            "is_fill_from_context": false,
+            "context_property": null,
+            "value": "40",
+            "account": null,
+            "instrument_type": null,
+            "instrument": null,
+            "currency": null,
+            "counterparty": null,
+            "responsible": null,
+            "portfolio": null,
+            "strategy1": null,
+            "strategy2": null,
+            "strategy3": null,
+            "daily_pricing_model": null,
+            "payment_size_detail": null,
+            "pricing_policy": null,
+            "periodicity": null,
+            "accrual_calculation_model": null,
+            "settings": {
+                "linked_inputs_names": [
+                    "test_account1",
+                    "test_account2"
+                ],
+                "recalc_on_change_linked_inputs": [
+                    "test_account2"
+                ]
+            },
+            "button_data": null,
+            "account_object": null,
+            "instrument_object": null,
+            "instrument_type_object": null,
+            "daily_pricing_model_object": null,
+            "payment_size_detail_object": null,
+            "currency_object": null,
+            "counterparty_object": null,
+            "portfolio_object": null,
+            "strategy1_object": null,
+            "strategy2_object": null,
+            "strategy3_object": null,
+            "pricing_policy_object": null,
+            "periodicity_object": null,
+            "accrual_calculation_model_object": null
+        };
+        const another = {
+            "id": 2753,
+            "name": "account_position",
+            "verbose_name": "Account of booking",
+            "value_type": 100,
+            "reference_table": null,
+            "content_type": "accounts.account",
+            "order": 1,
+            "can_recalculate": false,
+            "value_expr": "",
+            "tooltip": "ttyp tooltip here",
+            "is_fill_from_context": false,
+            "context_property": null,
+            "value": 40,
+            "account": null,
+            "instrument_type": null,
+            "instrument": null,
+            "currency": null,
+            "counterparty": null,
+            "responsible": null,
+            "portfolio": null,
+            "strategy1": null,
+            "strategy2": null,
+            "strategy3": null,
+            "daily_pricing_model": null,
+            "payment_size_detail": null,
+            "pricing_policy": null,
+            "periodicity": null,
+            "accrual_calculation_model": null,
+            "settings": {
+                "linked_inputs_names": [
+                    "test_account1",
+                    "test_account2"
+                ],
+                "recalc_on_change_linked_inputs": [
+                    "test_account2"
+                ]
+            },
+            "button_data": null,
+            "account_object": null,
+            "instrument_object": null,
+            "instrument_type_object": null,
+            "daily_pricing_model_object": null,
+            "payment_size_detail_object": null,
+            "currency_object": null,
+            "counterparty_object": null,
+            "portfolio_object": null,
+            "strategy1_object": null,
+            "strategy2_object": null,
+            "strategy3_object": null,
+            "pricing_policy_object": null,
+            "periodicity_object": null,
+            "accrual_calculation_model_object": null
+        };
 
     }
 

@@ -12,10 +12,10 @@
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var metaContentTypesService = require('../../services/metaContentTypesService');
-    var middlewareService = require('../../services/middlewareService');
+    // var middlewareService = require('../../services/middlewareService');
 
     var uiService = require('../../services/uiService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
     var convertReportHelper = require('../../helpers/converters/convertReportHelper');
     var reportCopyHelper = require('../../helpers/reportCopyHelper');
@@ -38,7 +38,7 @@
 	//</editor-fold>
 
 
-    module.exports = function ($mdDialog, $state, $bigDrawer) {
+    module.exports = function ($mdDialog, $state, $bigDrawer, usersService) {
         return {
             restrict: 'AE',
             scope: {
@@ -58,7 +58,8 @@
                 //scope.isLayoutDefault = false;
 
                 scope.hasCreatePermission = false;
-                scope.isBaseTransaction = $state.current.name === 'app.data.transaction'; // Victor 2021.01.06 #72 remove ADD TRANSACTION button
+                scope.isBaseTransaction = $state.current.name === 'app.portal.data.transaction'; // Victor 2021.01.06 #72 remove ADD TRANSACTION button
+                scope.isPortfolioRegisterRecord = $state.current.name === 'app.portal.data.portfolio-register-record';
 
                 scope.currentAdditions = scope.evDataService.getAdditions();
                 scope.isNewLayout = false;
@@ -264,67 +265,67 @@
                 scope.getEntityNameByState = function () {
 
                     switch ($state.current.name) {
-                        case 'app.data.portfolio':
+                        case 'app.portal.data.portfolio':
                             return "PORTFOLIO";
                             break;
-                        case 'app.data.account':
+                        case 'app.portal.data.account':
                             return "ACCOUNT";
                             break;
-                        case 'app.data.counterparty':
+                        case 'app.portal.data.counterparty':
                             return "COUNTERPARTY";
                             break;
-                        case 'app.data.counterparty-group':
+                        case 'app.portal.data.counterparty-group':
                             return "COUNTERPARTY GROUP";
                             break;
-                        case 'app.data.responsible':
+                        case 'app.portal.data.responsible':
                             return "RESPONSIBLE";
                             break;
-                        case 'app.data.responsible-group':
+                        case 'app.portal.data.responsible-group':
                             return "RESPONSIBLE GROUP";
                             break;
-                        case 'app.data.instrument':
+                        case 'app.portal.data.instrument':
                             return "INSTRUMENT";
                             break;
-                        case 'app.data.transaction':
+                        case 'app.portal.data.transaction':
                             return "TRANSACTION";
                             break;
-                        case 'app.data.price-history':
+                        case 'app.portal.data.price-history':
                             return "PRICE HISTORY";
                             break;
-                        case 'app.data.currency-history':
+                        case 'app.portal.data.currency-history':
                             return "CURRENCY HISTORY";
                             break;
-                        case 'app.data.strategy':
+                        case 'app.portal.data.strategy':
                             return "STRATEGY";
                             break;
-                        case 'app.data.strategy-subgroup':
+                        case 'app.portal.data.strategy-subgroup':
                             return "STRATEGY SUBGROUP";
                             break;
-                        case 'app.data.strategy-group':
+                        case 'app.portal.data.strategy-group':
                             return "STRATEGY GROUP";
                             break;
-                        case 'app.data.account-type':
+                        case 'app.portal.data.account-type':
                             return "ACCOUNT TYPES";
                             break;
-                        case 'app.data.instrument-type':
+                        case 'app.portal.data.instrument-type':
                             return "INSTRUMENT TYPES";
                             break;
-                        /* case 'app.data.pricing-policy':
+                        /* case 'app.portal.data.pricing-policy':
                             return "PRICING POLICY";
                             break; */
-                        case 'app.data.transaction-type':
+                        case 'app.portal.data.transaction-type':
                             return "TRANSACTION TYPE";
                             break;
-                        case 'app.data.transaction-type-group':
+                        case 'app.portal.data.transaction-type-group':
                             return "TRANSACTION TYPE GROUP";
                             break;
-                        case 'app.data.currency':
+                        case 'app.portal.data.currency':
                             return "CURRENCY";
                             break;
-                        case 'app.data.complex-transaction':
+                        case 'app.portal.data.complex-transaction':
                             return "TRANSACTION";
                             break;
-                        case 'app.data.tag':
+                        case 'app.portal.data.tag':
                             return "TAG";
                             break;
                         default:
@@ -332,6 +333,29 @@
                             break;
                     }
                 };
+
+                scope.calculatePortfolioRegisterRecords = function($event){
+
+                    $mdDialog.show({
+                        controller: "CalculatePortfolioRegisterRecordsDialogController as vm",
+                        templateUrl: "views/dialogs/calculate-portfolio-register-records-dialog-view.html",
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {}
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+                        }
+
+                    })
+
+                }
 
 				scope.addEntity = async function (ev) {
 
@@ -477,7 +501,7 @@
                         interfaceLayout.splitPanel.height = 0;
 
                         scope.evDataService.setInterfaceLayout(interfaceLayout);
-                        middlewareService.setNewSplitPanelLayoutName(false);
+                        // middlewareService.setNewSplitPanelLayoutName(false);
 
                         clearAdditions();
 
@@ -1111,7 +1135,7 @@
 
                                 if (res.data.layoutUserCode) {
 
-                                    middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                    // middlewareService.setNewEntityViewerLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
                                     $state.transitionTo($state.current, {layoutUserCode: res.data.layoutUserCode});
 
                                 } else {
@@ -1120,7 +1144,7 @@
                                 }
 
                             } else {
-                                middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
+                                // middlewareService.setNewSplitPanelLayoutName(res.data.layoutName); // Give signal to update active layout name in the toolbar
 
                                 scope.evDataService.setSplitPanelLayoutToOpen(res.data.layoutId);
                                 scope.evEventService.dispatchEvent(evEvents.LIST_LAYOUT_CHANGE);
@@ -1138,7 +1162,7 @@
                     var rootGroup = scope.evDataService.getRootGroupData();
                     scope.evDataService.setActiveRequestParametersId(rootGroup.___id);
 
-                    var defaultList = uiService.getListLayoutTemplate();
+                    var defaultList = uiService.getListLayoutTemplate(scope.isReport);
 
                     var listLayout = {};
                     listLayout.data = Object.assign({}, defaultList[0].data);
@@ -1176,14 +1200,14 @@
 
                     var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                    interfaceLayout.groupingArea.collapsed = false;
-                    interfaceLayout.groupingArea.height = 98;
+                    // interfaceLayout.groupingArea.collapsed = false;
+                    // interfaceLayout.groupingArea.height = 98;
                     interfaceLayout.columnArea.collapsed = false;
                     interfaceLayout.columnArea.height = 70;
 
                     scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                    middlewareService.setNewSplitPanelLayoutName(false);
+                    // middlewareService.setNewSplitPanelLayoutName(false);
                     clearAdditions();
 
                     if (scope.isReport) {
@@ -1222,7 +1246,7 @@
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                            middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
+                            // middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
                             scope.$apply(); // needed to update Report settings area in right sidebar and layout name
                             scope.isNewLayout = true;
 
@@ -1295,7 +1319,7 @@
                         scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport});
                         scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
+                        // middlewareService.setNewEntityViewerLayoutName(listLayout.name); // Give signal to update active layout name in the toolbar
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
@@ -1608,7 +1632,7 @@
 
                 var applyLayout = function (layout) {
 
-                    if (scope.isRootEntityViewer) {
+                    /*if (scope.isRootEntityViewer) {
 
                         middlewareService.setNewEntityViewerLayoutName(layout.name);
 
@@ -1616,6 +1640,13 @@
                         scope.evDataService.setSplitPanelDefaultLayout(layout.id);
                         scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                         middlewareService.setNewSplitPanelLayoutName(layout.name); // Give signal to update active split panel layout name in the toolbar
+                    }*/
+
+                    if (!scope.isRootEntityViewer) {
+
+						scope.evDataService.setSplitPanelDefaultLayout(layout.id);
+						scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+
                     }
 
                     scope.evDataService.setListLayout(layout);
@@ -1858,13 +1889,13 @@
                     var currentState;
                     switch (scope.entityType) {
                         case 'balance-report':
-                            currentState = 'app.reports.balance-report';
+                            currentState = 'app.portal.reports.balance-report';
                             break;
                         case 'balance-report':
-                            currentState = 'app.reports.pl-report';
+                            currentState = 'app.portal.reports.pl-report';
                             break;
                         case 'balance-report':
-                            currentState = 'app.reports.transaction-report';
+                            currentState = 'app.portal.reports.transaction-report';
                             break;
                     }
 
@@ -1897,7 +1928,7 @@
                                 interfaceLayout.splitPanel.height = 0;
 
                                 scope.evDataService.setInterfaceLayout(interfaceLayout);
-                                middlewareService.setNewSplitPanelLayoutName(false);
+                                // middlewareService.setNewSplitPanelLayoutName(false);
 
                             } else {
 

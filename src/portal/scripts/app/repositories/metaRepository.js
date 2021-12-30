@@ -50,12 +50,14 @@
         return ['price-history', 'currency-history', 'transaction', 'pricing-policy',
             'strategy-1-group', 'strategy-2-group', 'strategy-3-group',
             'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup',
-            'audit-transaction', 'audit-instrument'];
+            'audit-transaction', 'audit-instrument', 'generated-event'];
     };
 
     var getEntityAttrs = function (entity) {
         var entityAttrs = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
+            "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),
@@ -68,6 +70,7 @@
             "pricing-policy": require('../models/pricingPolicyPropsModel').getAttributes(),
             "instrument-type": require('../models/instrumentTypePropsModel').getAttributes(),
             "instrument": require('../models/instrumentPropsModel').getAttributes(),
+            "generated-event": require('../models/generatedEventPropsModel').getAttributes(),
             "transaction": require('../models/transactionPropsModel').getAttributes(),
             "transaction-type-group": require('../models/transactionTypeGroupPropsModel').getAttributes(),
             "transaction-type": require('../models/transactionTypePropsModel').getAttributes(),
@@ -161,6 +164,10 @@
 				"value": 110,
 				"display_name": "Selector"
         	},
+            {
+                "value": 80,
+                "display_name": "Datetime"
+            },
 			{
 				"value": 120,
 				"display_name": "Button"
@@ -178,7 +185,7 @@
 				"display_name": "Multiple choice field"
         	},
 			{
-				"value": "boolean",
+				"value": 50,
 				"display_name": "Boolean"
         	},
 			{
@@ -277,33 +284,26 @@
 						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
                     },
-                    {
-                        label: 'Factors',
-                        type: 'system_tab',
-                        templateUrl: 'views/tabs/instrument-type/factors-view.html'
-                    },
+					{
+						label: 'Factors',
+						type: 'system_tab',
+						templateUrl: 'views/tabs/instrument-type/factors-view.html'
+					},
                     {
                         label: 'Exposure',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/exposure-view.html'
                     },
+					{
+						label: 'User attributes',
+						type: 'system_tab',
+						templateUrl: 'views/tabs/instrument-type/user-attributes-view.html'
+					},
                     {
                         label: 'Layout Settings',
 						type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }
-                ];
-            case 'complex-transaction':
-                return [
-                    // {
-                    //     label: 'Actions',
-                    //     templateUrl: 'views/tabs/complex-transaction/book-transaction-actions-tab-view.html'
-                    // },
-                    // {
-                    //     enabled: ['update'],
-                    //     label: 'Transactions',
-                    //     templateUrl: 'views/tabs/complex-transaction/book-transaction-transactions-tab-view.html'
-                    // }
                 ];
             case 'transaction-type':
                 return [
@@ -321,6 +321,29 @@
                         label: 'Actions',
 						type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
+                    }
+                ];
+            case 'complex-transaction':
+                return [
+                    {
+                        label: 'Fields',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-fields-tab.html'
+                    },
+                    {
+                        label: 'Inputs',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-inputs-tab.html'
+                    },
+                    {
+                        label: 'Base Transactions',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-base-transactions-tab.html'
+                    },
+                    {
+                        label: 'Reconciliation',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-reconciliation-tab.html'
                     }
                 ];
             default:

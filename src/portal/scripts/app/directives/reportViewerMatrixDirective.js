@@ -23,7 +23,6 @@
             	scope.activeItem = null;
 
                 // console.log('Report Viewer Matrix Component', scope);
-
                 scope.processing = true;
                 scope.matrixCreationInProgress = false;
 
@@ -49,8 +48,12 @@
 				scope.canChangeOrdinateAttr = false;
 				scope.canChangeValueAttr = false;
 
-				var cellWidth = 0;
+				// var cellWidth = 0;
+				var nameColWidth = 0;
+				var measuringCanvas;
+				var cellHorPaddings = 16; // based on paddings inside .rv-matrix-cell-mixin() inside report-viewer-matrix.less
 
+				var matrixElem;
                 var matrixWrap, matrixHolder;
                 var bodyScrollElem;
                 var rvmHeaderScrollableRow;
@@ -67,7 +70,8 @@
 
                 var getElemsForScripts = function () {
 
-					matrixWrap = elem[0].querySelector('.rvMatrixWrap');
+					matrixElem = elem[0].querySelector('.rvMatrix');
+                	matrixWrap = elem[0].querySelector('.rvMatrixWrap');
                     matrixHolder = elem[0].querySelector('.rvMatrixHolder');
 
                     bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
@@ -87,13 +91,100 @@
 
                 };
 
+                var getCellWidth = function (columnsCount) {
+
+                	var elemWidth = elem.width();
+                	var cellWidth = 0;
+					var minWidth = scope.matrixSettings.auto_scaling ? 46 : 100;
+					var maxWidth = 300;
+					var result = {cellWidth: 0, nameColWidth: 0};
+
+					var calcCellWidth = function (availableSpace) {
+						cellWidth = Math.floor(availableSpace / columnsCount);
+						cellWidth = Math.max(cellWidth, minWidth);
+						cellWidth = Math.min(cellWidth, maxWidth);
+					};
+
+					calcCellWidth(elemWidth);
+
+					result.nameColWidth = cellWidth;
+
+					if (scope.matrixSettings.calculate_name_column_width) {
+
+						/* const rowNamesList = scope.matrix.map(function (row) {return row.row_name});
+
+						measuringCanvas = measuringCanvas || document.createElement("canvas");
+						var context = measuringCanvas.getContext("2d");
+						var nameColWidth = 0;
+						context.font = "14px 'Roboto'";
+
+						rowNamesList.forEach(function (rowName) {
+							var metrics = context.measureText(rowName);
+							nameColWidth = Math.max(nameColWidth, metrics.width);
+						});
+
+						nameColWidth = Math.floor(nameColWidth) + cellHorPaddings; */
+						var nameColWidth = 0;
+						var rowNamesList = scope.matrix.map(function (row) {return row.row_name;});
+						rowNamesList.push('TOTAL'); // TOTAL cell at the bottom
+
+						var dummyCellElem = document.createElement("div");
+						dummyCellElem.classList.add('position-absolute', 'visibility-hidden');
+
+						var textHolderElem = document.createElement("div");
+						textHolderElem.classList.add('report-viewer-matrix-cell');
+
+						dummyCellElem.appendChild(textHolderElem);
+						matrixElem.appendChild(dummyCellElem);
+
+						var valueAttr = scope.valueSelectorData.options.find(valOption => valOption.isActive);
+
+						var getNameColWidth = function (name) {
+							textHolderElem.innerText = name;
+							var dummyCellWidth = Math.ceil(dummyCellElem.clientWidth);
+
+							nameColWidth = Math.max(nameColWidth, dummyCellWidth);
+						};
+
+						if (valueAttr) {
+
+							textHolderElem.innerText = valueAttr.name;
+							var valueSelectorBtnPadding = 24; // if changing this also change left-padding for .selector-button-popup-btn inside main.less
+
+							nameColWidth = Math.ceil(dummyCellElem.clientWidth) + valueSelectorBtnPadding;
+
+						}
+
+						rowNamesList.forEach(getNameColWidth);
+
+						matrixElem.removeChild(dummyCellElem);
+
+						nameColWidth = Math.min(nameColWidth, maxWidth);
+
+						if (cellWidth < nameColWidth) { // column with names will be stretched
+
+							var availableSpace = elemWidth - nameColWidth;
+
+							calcCellWidth(availableSpace);
+
+						} else {
+							nameColWidth = cellWidth;
+						}
+
+						result.nameColWidth = nameColWidth;
+
+					}
+
+					result.cellWidth = cellWidth;
+
+					return result;
+
+				};
+
                 scope.alignGrid = function () {
 
-                    var elemWidth = elem.width();
-                    /*var elemHeight = elem.height();
-
-                    console.log('elemHeight', elemHeight);
-                    console.log('elemWidth', elemWidth);*/
+					/*var elemWidth = elem.width();
+					var elemHeight = elem.height();*/
 
                     var rowsCount = scope.rows.length + 2; // add header and footer rows
                     var columnsCount = scope.columns.length + 2; // add left and right fixed columns
@@ -102,13 +193,18 @@
 
                     // var matrixHolderMinHeight = elem[0].querySelector('.report-viewer-matrix').clientHeight;
 
-                    cellWidth = Math.floor(elemWidth / columnsCount);
+                    // cellWidth = Math.floor(elemWidth / columnsCount);
+					var cwResult = getCellWidth(columnsCount);
+					var cellWidth = cwResult.cellWidth;
+					nameColWidth = cwResult.nameColWidth;
+
                     var cellHeight = 48;
 
-					var minWidth = 100;
-                    var matrixHolderMinHeight = cellHeight * 3; // equal to 3 rows
+					// var minWidth = 100;
+					// var maxWidth = 300;
+                    // var matrixHolderMinHeight = cellHeight * 3; // equal to 3 rows
 
-                    if (scope.matrixSettings.auto_scaling) {
+                    /* if (scope.matrixSettings.auto_scaling) {
 
                         minWidth = 46;
 
@@ -118,41 +214,56 @@
                         cellHeight = Math.max(cellHeight, 14);
                         cellHeight = Math.min(cellHeight, 48);
 
-                    }
+                    } */
+					if (scope.matrixSettings.auto_scaling) {
 
-                    var items = elem[0].querySelectorAll('.rvMatrixCell');
+						var elemHeight = elem.height();
+						var cellHeight = Math.floor(elemHeight / rowsCount);
+
+						cellHeight = Math.max(cellHeight, 14);
+						cellHeight = Math.min(cellHeight, 48);
+
+					}
 
                     var fontSize = 16;
 
-                    if (cellWidth < minWidth) {
+					// cellWidth = Math.max(cellWidth, minWidth);
+					// cellWidth = Math.min(cellWidth, maxWidth);
+                    /* if (cellWidth < minWidth) {
                         cellWidth = minWidth;
-                    }
+                    } */
 
                     if (scope.matrixView === 'fixed-totals') {
 
-                        rvmBottomRowScrollableElem.style.left = cellWidth + 'px';
+                        rvmBottomRowScrollableElem.style.left = nameColWidth + 'px';
                         rvMatrixRightCol.style.width = cellWidth + 'px';
                         rvMatrixFixedBottomRow.style.height = cellHeight + 'px';
 
                     }
 
                     // because of children with absolute positioning, elem below requires manual width setting
-                    rvMatrixLeftCol.style.width = cellWidth + 'px';
+                    rvMatrixLeftCol.style.width = nameColWidth + 'px';
 
                     var matrixWrapHeight = matrixWrap.clientHeight;
                     var matrixMaxWidth = columnsCount * cellWidth;
+
+                    if (scope.matrixSettings.calculate_name_column_width) {
+						matrixMaxWidth = (columnsCount - 1) * cellWidth + nameColWidth;
+					}
+
                     var matrixMaxHeight = rowsCount * cellHeight;
 
                     if (scope.matrixView === 'fixed-totals') {
                         rvmBottomRowScrollableElem.style.width = matrixMaxWidth + 'px';
                     }
 
-                    var matrixVCContainerWidth = matrixMaxWidth - cellWidth; // subtract width of column with names
+                    // size of .rv-matrix-value-cells-container element
+                    var matrixVCContainerWidth = matrixMaxWidth - nameColWidth; // subtract width of column with names
                     var matrixVCContainerHeight = matrixMaxHeight - cellHeight; // subtract height of matrix header
 
                     var matrixProbableHeight = rowsCount * cellHeight;
 
-                    var matrixVCAvailableWidth = matrixWrap.clientWidth - cellWidth;
+                    var matrixVCAvailableWidth = matrixWrap.clientWidth - nameColWidth;
                     var matrixVCAvailableHeight = matrixWrapHeight - cellHeight;
 
                     // whether matrix has scrolls
@@ -160,6 +271,7 @@
 
                         matrixHolder.classList.add('has-x-scroll');
                         matrixProbableHeight = matrixProbableHeight + 14; // add space for scroll
+						matrixVCAvailableHeight = matrixVCAvailableHeight - 14;
 
                     } else {
                         matrixHolder.classList.remove('has-x-scroll');
@@ -176,10 +288,10 @@
                     }
                     else {
 
-                    	var canFitRowsNumber = matrixWrapHeight / cellHeight;
-                    	var matrixHolderHeight = canFitRowsNumber * cellHeight;
+                    	/*var canFitRowsNumber = matrixWrapHeight / cellHeight;
+                    	var matrixHolderHeight = canFitRowsNumber * cellHeight;*/
 
-						matrixHolder.style.height = matrixHolderHeight + 'px';
+						matrixHolder.style.height = matrixWrapHeight + 'px';
 
                     }
 
@@ -193,13 +305,17 @@
                     rvmHeaderScrollableRow.style.width = matrixMaxWidth + 'px';
 
 					if (scope.viewContext === 'dashboard') {
-						axisAttrsSelectorHolder.style.width = cellWidth + 'px';
+						axisAttrsSelectorHolder.style.width = nameColWidth + 'px';
 						axisAttrsSelectorHolder.style.height = cellHeight + 'px';
 					}
 
+					var items = elem[0].querySelectorAll('.rvMatrixCell');
+
                     for (var i = 0; i < items.length; i = i + 1) {
 
-                        items[i].style.width = cellWidth + 'px';
+                    	var width = items[i].classList.contains('firstColumnCell') ? nameColWidth : cellWidth;
+
+                        items[i].style.width = width + 'px';
                         items[i].style.height = cellHeight + 'px';
                         items[i].style.paddingTop = Math.abs((cellHeight / 2 - fontSize / 2)) + 'px';
 
@@ -210,7 +326,7 @@
                 var scrollHeaderAndColumn = function () {
                     rvmHeaderScrollableRow.style.left = -bodyScrollElem.scrollLeft + 'px';
                     if (rvmBottomRowScrollableElem) {
-                        rvmBottomRowScrollableElem.style.left = (cellWidth - bodyScrollElem.scrollLeft) + 'px';
+                        rvmBottomRowScrollableElem.style.left = (nameColWidth - bodyScrollElem.scrollLeft) + 'px';
                     }
 
                     for (var c = 0; c < bodyScrollableElem.length; c++) {
@@ -687,7 +803,9 @@
 						return attr.attribute_data.key === scope.matrixSettings.value_key;
 					});
 
-					scope.matrixValueAttrName = activeValueAttr.layout_name || activeValueAttr.attribute_data.name;
+					if (activeValueAttr) {
+						scope.matrixValueAttrName = activeValueAttr.layout_name || activeValueAttr.attribute_data.name;
+					}
 
 				};
 				//</editor-fold desc="Popup-selector of attributes for axises">

@@ -17,7 +17,7 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+    var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
@@ -72,6 +72,12 @@
             'item_group_name', 'item_subtype_name', 'pl_first_date', 'report_date', 'total', 'total_fixed', 'total_fx', 'principal', 'principal_fixed', 'principal_fx', 'carry', 'carry_fixed', 'carry_fx',
             'overheads', 'overheads_fixed', 'overheads_fx', 'total_loc', 'total_fixed_loc', 'total_fx_loc', 'principal_loc', 'principal_fixed_loc', 'principal_fx_loc',
             'carry_loc', 'carry_fixed_loc', 'carry_fx_loc', 'overheads_loc', 'overheads_fixed_loc',
+
+            'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
+            'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
+            'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
+            'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
+            'overheads_fx_closed_loc',
 
             'time_invested', 'position_return', 'net_position_return'
         ];
@@ -374,9 +380,9 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                            if (attrs[i].key === item.key) {
-                                attrs[i].columns = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].columns = true;
+                        }
 
                     }
 
@@ -386,9 +392,9 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                            if (attrs[i].key === item.key) {
-                                attrs[i].filters = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].filters = true;
+                        }
 
                     }
 
@@ -398,9 +404,9 @@
 
                     if (attrs[i].entity === item.entity) {
 
-                            if (attrs[i].key === item.key) {
-                                attrs[i].groups = true;
-                            }
+                        if (attrs[i].key === item.key) {
+                            attrs[i].groups = true;
+                        }
 
                     }
 
@@ -616,7 +622,8 @@
                 locals: {
                     data: {
                         availableAttrs: availableAttrs,
-                        title: dialogTitle
+                        title: dialogTitle,
+                        isReport: true
                     }
                 }
             }).then(function (res) {
@@ -625,22 +632,25 @@
 
                     for (var i = 0; i < vm.attrsList.length; i++) {
 
-                        if (vm.attrsList[i].key === res.data.key) {
+                        for (var j = 0; j < res.data.items.length; j++) {
 
-                            switch (selectedGroup) {
-                                case 'group':
-                                    vm.attrsList[i].groups = true;
-                                    break;
-                                case 'column':
-                                    vm.attrsList[i].columns = true;
-                                    break;
-                                case 'filter':
-                                    vm.attrsList[i].filters = true;
-                                    break;
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
+
+                                switch (selectedGroup) {
+                                    case 'group':
+                                        vm.attrsList[i].groups = true;
+                                        break;
+                                    case 'column':
+                                        vm.attrsList[i].columns = true;
+                                        break;
+                                    case 'filter':
+                                        vm.attrsList[i].filters = true;
+                                        break;
+                                }
+
+                                vm.updateAttrs(vm.attrsList);
+                                break;
                             }
-
-                            vm.updateAttrs(vm.attrsList);
-                            break;
                         }
 
                     }

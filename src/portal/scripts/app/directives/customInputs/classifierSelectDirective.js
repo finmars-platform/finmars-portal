@@ -18,11 +18,13 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
-                onChangeCallback: '&?',
+                itemName: '=',
                 // Victor 2020.10.23 Next fields setting up classifiers properties
                 classifierAttr: '=',
                 classifierValue: '=',
-                entityType: '='
+                entityType: '=',
+				// < Victor 2020.10.23 Next fields setting up classifiers properties >
+				onChangeCallback: '&?',
             },
             templateUrl: 'views/directives/customInputs/classifier-select-view.html',
             link: function (scope, elem, attr) {
@@ -37,16 +39,26 @@
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
                 }
 
-
+				/*
+				TIPS
+				scope.smallOptions probable properties
+					tooltipText: custom tooltip text
+					notNull: turn on error mode if field is not filled
+					noIndicatorBtn: whether to show button at the right part of input
+					readonly: making input readonly
+					dialogParent: 'string' - querySelector content for element to insert mdDialog into
+				*/
                 if (scope.smallOptions) {
 
-                    scope.tooltipText = scope.smallOptions.tooltipText
-                    scope.dialogParent = scope.smallOptions.dialogParent
+                	scope.tooltipText = scope.smallOptions.tooltipText;
+                    scope.dialogParent = scope.smallOptions.dialogParent;
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+
                 }
 
                 var stylePreset;
 
-                var inputContainer = elem[0].querySelector('.dropdownSelectInputContainer');
+                var inputContainer = elem[0].querySelector('.classifierInputContainer');
                 var inputElem = elem[0].querySelector('.dropdownSelectInputElem');
 
                 scope.getInputContainerClasses = function () {
@@ -93,7 +105,9 @@
                         scope.model = item.id;
                         scope.valueIsValid = true;
 
-                        scope.itemName = item.name;
+                        if (typeof scope.itemName !== 'undefined') {
+                            scope.itemName = item.name;
+                        }
                         scope.inputText = item.name;
 
                         closeDropdownMenu();
@@ -204,9 +218,25 @@
                         }
                     }).then(function (res) {
                         if (res.status === 'agree') {
-                            scope.model = +res.data.item;
-                            console.log('scope.model', scope.model)
+
+                            scope.model = res.data.item;
+
+                            if (typeof scope.itemName !== 'undefined') {
+                                scope.itemName = res.data.name;
+                            }
+
+                            scope.inputText = res.data.name;
+
                             getTree();
+
+                            setTimeout(function () {
+
+                                if (scope.onChangeCallback) {
+                                    scope.onChangeCallback();
+                                }
+
+                            }, 0);
+
                         }
                     });
                 };
@@ -244,7 +274,8 @@
 
                                 switch (scope.eventSignal.key) {
                                     case 'mark_not_valid_fields':
-                                        if (scope.smallOptions && scope.smallOptions.notNull && !scope.item) {
+
+                                    	if (scope.smallOptions && scope.smallOptions.notNull && !scope.model) {
                                             scope.error = 'Field should not be null'
                                         }
 
@@ -256,20 +287,10 @@
 
                                     case 'set_style_preset1':
                                         stylePreset = 1;
-
-                                        if (scope.item) {
-                                            scope.error = ''
-                                        }
-
                                         break;
 
                                     case 'set_style_preset2':
                                         stylePreset = 2;
-
-                                        if (scope.item) {
-                                            scope.error = ''
-                                        }
-
                                         break;
                                 }
 
@@ -362,7 +383,9 @@
                         for (var i = 0; i < scope.menuOptions.length; i++) {
                             if (scope.menuOptions[i].id === scope.model) {
 
-                                scope.itemName = scope.menuOptions[i].name;
+                                if (typeof scope.itemName !== 'undefined') {
+                                    scope.itemName = scope.menuOptions[i].name;
+                                }
                                 scope.inputText = scope.menuOptions[i].name;
 
                                 break;
@@ -378,7 +401,9 @@
                 }
 
                 var init = function () {
-                    getTree();
+                    if (scope.classifierAttr && scope.classifierAttr.id) {
+                        getTree();
+                    }
 
                     initScopeWatchers();
 

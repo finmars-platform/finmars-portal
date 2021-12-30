@@ -69,7 +69,7 @@
 
         var filters = entityViewerDataService.getFilters();
 
-        var isFilterValid = function (filterItem) {
+        /* var isFilterValid = function (filterItem) {
 
             if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
 
@@ -103,11 +103,11 @@
             }
 
             return false;
-        };
+        }; */
 
         filters.forEach(function (item) {
 
-            if (isFilterValid(item)) {
+            if (evRvCommonHelper.isFilterValid(item)) {
 
                 var key = queryParamsHelper.entityPluralToSingular(item.key);
 
@@ -167,6 +167,8 @@
         entityViewerDataService.setReportOptions(reportOptions);
 
         // console.log('requestReport started');
+
+        entityViewerDataService.setStatusData('loading');
 
         requestData(entityViewerDataService, entityViewerEventService).then(function (data) {
 
@@ -700,6 +702,8 @@
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
         var groups = evDataService.getGroups();
         var activeColumnSort = evDataService.getActiveColumnSort();
+
+        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         if (groups.length) {
             console.log('createDataStructure 1', defaultRootRequestParameters)

@@ -9,11 +9,11 @@
     var importTransactionService = require('../../../services/import/importTransactionService');
 
     var baseUrlService = require('../../../services/baseUrlService');
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function transactionImportDialogController($scope, $mdDialog, data) {
+    module.exports = function transactionImportDialogController($scope, $mdDialog, data, usersService) {
 
         var vm = this;
 
@@ -574,10 +574,8 @@
             vm.getMember();
 
             if (data && data.scheme) {
-
                 vm.config.scheme = data.scheme.id;
             }
-
 
         };
 

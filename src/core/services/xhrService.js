@@ -1,12 +1,17 @@
 /**
  * Created by szhitenev on 15.06.2016.
+ *
+ * Deprecated. Use shell/scripts/app/services/xhrService.js instead
+ *
  */
 
 (function () {
 
     var errorService = require('./errorService');
 
-    var fetch = function (url, params) {
+    var fetch = function (url, params, options) {
+
+    	if (!options) options = {};
 
         var requestId;
 
@@ -75,7 +80,9 @@
                     window.developerConsoleService.rejectRequest(requestId, reason)
                 }
 
-                errorService.notifyError(reason);
+                // if (options.notifyError !== false) errorService.notifyError(reason);
+
+                errorService.recordError(reason)
 
                 console.log('XHR Service catch error', reason);
 
@@ -89,5 +96,4 @@
         fetch: fetch
     }
 
-
-}());
+})();

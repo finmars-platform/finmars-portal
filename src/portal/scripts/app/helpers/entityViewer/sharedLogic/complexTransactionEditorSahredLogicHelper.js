@@ -7,8 +7,38 @@
 	const expressionService = require('../../../services/expression.service');
 
 	const entityEditorHelper = require('../../../helpers/entity-editor.helper');
+	const transactionHelper = require('../../../helpers/transaction.helper');
 
 	module.exports = function (viewModel, $scope, $mdDialog) {
+
+		const entityTabsMenuTplt =
+			'<div class="ev-editor-tabs-popup-content popup-menu">' +
+			'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
+			'class="entity-tabs-menu-option popup-menu-option" ' +
+			'ng-class="popupData.viewModel.sharedLogic.getTabBtnClasses(tab)" ' +
+			'ng-click="popupData.viewModel.activeTab = tab">' +
+			'<span>{{tab.label}}</span>' +
+			'<div ng-if="popupData.viewModel.sharedLogic.isTabWithErrors(tab)" class="tab-option-error-icon">' +
+			'<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
+			'</div>' +
+			'</md-button>' +
+			'</div>';
+
+		const getTabBtnClasses = function (tab) {
+
+			var result = [];
+
+			if (viewModel.activeTab.label === tab.label) {
+				result.push('active-tab-button');
+			}
+
+			// if (isTabWithErrors(tab)) {
+			// 	result.push('error-menu-option');
+			// }
+
+			return result;
+
+		};
 
 		const removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
 
@@ -79,6 +109,9 @@
 
 			recalculationPromise.then(function (data) {
 
+				console.log('data', data);
+				console.log('inputs', inputs);
+
 				inputs.forEach(inputName => {
 
 					viewModel.entity[inputName] = data.values[inputName]
@@ -128,6 +161,89 @@
 
 		};
 
+		const postBookRebookActions = function (cTransactionData, recalculateFn) {
+
+			// ng-repeat with bindFieldControlDirective may not update without this
+			viewModel.tabs = {};
+			viewModel.fixedArea = {};
+			// < ng-repeat with bindFieldControlDirective may not update without this >
+
+			if (Array.isArray(cTransactionData.book_transaction_layout.data)) {
+				viewModel.tabs = cTransactionData.book_transaction_layout.data;
+			} else {
+				viewModel.tabs = cTransactionData.book_transaction_layout.data.tabs;
+				viewModel.fixedArea = cTransactionData.book_transaction_layout.data.fixedArea;
+			}
+
+			const dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
+
+			viewModel.userInputs = transactionHelper.updateTransactionUserInputs(viewModel.userInputs, viewModel.tabs, viewModel.fixedArea, viewModel.transactionType);
+
+			viewModel.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
+
+			if (viewModel.inputsWithCalculations) {
+
+				viewModel.inputsWithCalculations.forEach(function (inputWithCalc) {
+
+					viewModel.userInputs.forEach(function (userInput) {
+
+						if (userInput.name === inputWithCalc.name) {
+
+							if (!userInput.buttons) {
+								userInput.buttons = [];
+							}
+
+							if (inputWithCalc.can_recalculate === true) {
+								userInput.buttons.push({
+									// iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+									iconObj: {type: 'angular-material', icon: 'refresh'},
+									tooltip: 'Recalculate this field',
+									caption: '',
+									classes: '',
+									action: {
+										key: 'input-recalculation',
+										callback: recalculateFn,
+										parameters: {inputs: [inputWithCalc.name], recalculationData: 'input'}
+									}
+								})
+							}
+
+							if (inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
+
+								const linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
+
+								userInput.buttons.push({
+									iconObj: {type: 'angular-material', icon: 'loop'},
+									tooltip: 'Recalculate linked fields',
+									caption: '',
+									classes: '',
+									action: {
+										key: 'linked-inputs-recalculation',
+										callback: recalculateFn,
+										parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
+									}
+								})
+
+							}
+
+						}
+
+					})
+
+				});
+
+			}
+
+			return {
+				tabs: viewModel.tabs,
+				fixedArea: viewModel.fixedArea,
+				dataConstructorLayout: dataConstructorLayout,
+				inputsWithCalculations: viewModel.inputsWithCalculations,
+				userInputs: viewModel.userInputs
+			}
+
+		};
+
 		const fillMissingFieldsByDefaultValues = async function (entity, userInputs, ttype) {
 
 			const formFieldsNames = userInputs.map(input => input.name);
@@ -157,6 +273,50 @@
 				});
 
 			return Promise.allSettled(missingFieldsPromises);
+
+		};
+
+		const bindFlex = function (tab, field) {
+			var flexUnit = 100 / tab.layout.columns;
+			return Math.floor(field.colspan * flexUnit);
+		};
+
+		const checkFieldRender = function (tab, row, field) {
+
+			if (field.row === row) {
+				if (field.type !== 'empty') {
+					return true;
+				} else {
+
+					var spannedCols = [];
+					var itemsInRow = tab.layout.fields.filter(function (item) {
+						return item.row === row;
+					});
+
+
+					itemsInRow.forEach(function (item) {
+
+						if (item.type !== 'empty' && item.colspan > 1) {
+							var columnsToSpan = item.column + item.colspan - 1;
+
+							for (var i = item.column; i <= columnsToSpan; i = i + 1) {
+								spannedCols.push(i);
+							}
+
+						}
+
+					});
+
+
+					if (spannedCols.indexOf(field.column) !== -1) {
+						return false;
+					}
+
+					return true;
+				}
+			}
+
+			return false;
 
 		};
 
@@ -286,7 +446,7 @@
 			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
 			let formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
-			let tabsWithErrors = viewModel.evEditorDataService.getTabsWithErrors();
+			let tabsWithErrors = viewModel.evEditorDataService.getLocationsWithErrors();
 
 			errors.forEach(errorObj => {
 
@@ -339,10 +499,15 @@
 
 			mapUserInputsOnEntityValues: mapUserInputsOnEntityValues,
 
+			postBookRebookActions: postBookRebookActions,
 			fillMissingFieldsByDefaultValues: fillMissingFieldsByDefaultValues,
 
+			bindFlex: bindFlex,
+			checkFieldRender: checkFieldRender,
 			onFieldChange: onFieldChange,
 
+			entityTabsMenuTplt: entityTabsMenuTplt,
+			getTabBtnClasses: getTabBtnClasses
 			// processTabsErrors: processTabsErrors
 		}
 

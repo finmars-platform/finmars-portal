@@ -66,7 +66,7 @@
                         if (res && res.status === "agree") {
 
                             scope.inputText = res.data.name;
-                            scope.item = res.data.key;
+                            scope.item = res.data.items[0].key;
 
                             if (scope.onChangeCallback) {
 

@@ -6,12 +6,13 @@
     'use strict';
 
     var metaService = require('../services/metaService');
-    var usersService = require('../services/usersService');
+    // var usersService = require('../services/usersService');
     var uiService = require('../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, $transition) {
+    module.exports = function ($scope, $mdDialog, $transition, usersService) {
 
         var vm = this;
+
         vm.sections = [];
 
         vm.readyStatus = {
@@ -518,9 +519,46 @@
 
         };
 
+        vm.getWsStatus = function (){
+            if (window.ws && window.ws.readyState === WebSocket.OPEN) {
+                return 'open'
+            }
+            if (window.ws && window.ws.readyState === WebSocket.CLOSED) {
+                return 'closed'
+            }
+        }
+
+        vm.openSystemErrorLogDialog = function ($event) {
+
+            $mdDialog.show({
+                controller: 'SystemErrorLogDialogController as vm',
+                templateUrl: 'views/dialogs/system-error-log-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            })
+
+
+        }
+
+        vm.getErrorCount = function (){
+
+            return window.system_errors.length
+        }
+
         vm.init = function () {
 
+            if (!window.system_errors) {
+                window.system_errors = []
+            }
+
             vm.getMember();
+
+
 
         };
 

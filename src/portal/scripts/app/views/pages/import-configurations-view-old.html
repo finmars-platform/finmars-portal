@@ -1,0 +1,43 @@
+<div style="padding: 20px 20px 0">
+
+    <h2>Import Configuration from File</h2>
+
+    <div ng-class="{'visibility-hidden': !vm.configFileNotes}" class="ie-configuration-file-notes-block">
+        <h3 class="configuration-file-notes">File description</h3>
+        <p ng-bind="vm.configFileNotes"></p>
+    </div>
+
+    <div class="manage-import-export-file-block" layout="row">
+
+        <div class="import-export-input-wra">
+
+            <md-input-container flex="40" class="ng-hide m-0">
+                <input type="file"
+                       accept=".fcfg"
+                       id="configurationFileImport"
+                       input-file-directive
+                       read-file="vm.configurationFile"
+                       read-file-change="vm.onFileLoad(vm.configurationFile, $event)">
+            </md-input-container>
+            <div class="input-upload-file-container">
+                <p class="configurationFileImport">Select file</p>
+                <label for="configurationFileImport" class="md-button md-raised md-primary IFUlabel">
+                    <ng-md-icon icon="file_upload"></ng-md-icon>
+                    <span>BROWSE</span></label>
+            </div>
+
+        </div>
+
+        <div style="width: 300px;">
+
+            <button style="margin-top: 0"
+                    class="md-raised clear-all full-width md-button md-ink-ripple {{vm.configurationFileIsAvailable() ? '' : 'disabled-btn' }}"
+                    type="button"
+                    data-ng-click="vm.openImportConfigurationManager($event)">Import
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

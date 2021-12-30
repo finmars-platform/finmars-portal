@@ -1,18 +1,36 @@
-<div>
+<div ng-if="readyStatus.content">
 
     <div data-ng-if="type === 'id'">
 
         <div data-ng-if="isSpecialSearchRelation()">
-            <entity-search-select item="entity[fieldKey]"
-                                  label="getName()"
-                                  item-name="inputTextObj.value"
-                                  on-change-callback="changeHandler()"
-                                  custom-buttons="item.buttons"
-                                  custom-styles="customStyles"
-                                  event-signal="ciEventObj.event"
-                                  small-options="{notNull: options.notNull, tooltipText: tooltipText}"
-                                  entity-type="modelKeyEntity"
-                                  on-change-callback="changeHandler()"></entity-search-select>
+
+
+            <div data-ng-if="modelKeyEntity == 'instrument'">
+
+                <instrument-select
+                        label="{{getName()}}"
+                        model="entity[fieldKey]"
+                        item-object="entity[fieldKey + '_object']"
+                        on-change-callback="changeHandler()"
+                        item-name="inputTextObj.value"
+                        custom-styles="customStyles"
+                ></instrument-select>
+
+            </div>
+
+            <div data-ng-if="modelKeyEntity != 'instrument'">
+                <entity-search-select item="entity[fieldKey]"
+                                      label="getName()"
+                                      item-name="inputTextObj.value"
+                                      item-object="entity[fieldKey + '_object']"
+                                      on-change-callback="changeHandler()"
+                                      custom-buttons="item.buttons"
+                                      custom-styles="customStyles"
+                                      event-signal="ciEventObj.event"
+                                      small-options="{notNull: options.notNull, tooltipText: tooltipText}"
+                                      entity-type="modelKeyEntity"
+                                      on-change-callback="changeHandler()"></entity-search-select>
+            </div>
         </div>
 
         <div data-ng-if="!isSpecialSearchRelation()">
@@ -118,13 +136,17 @@
                     </div>
 
                     <div data-ng-if="checkForCrudSelects()">
-                        <crud-select
-                                data-label="getName()"
-                                data-item="entity[fieldKey]"
-                                data-entity-type="crudEntityType"
-                                data-options="fields"
-                                data-ng-click="getData()"
-                        ></crud-select>
+
+                        <div>
+                            <crud-select
+                                    data-label="getName()"
+                                    data-item="entity[fieldKey]"
+                                    data-entity-type="crudEntityType"
+                                    data-options="fields"
+                                    data-ng-click="getData()"
+                            ></crud-select>
+                        </div>
+
                     </div>
                 </div>
 
@@ -365,4 +387,5 @@
         </div>
 
     </div>
+
 </div>

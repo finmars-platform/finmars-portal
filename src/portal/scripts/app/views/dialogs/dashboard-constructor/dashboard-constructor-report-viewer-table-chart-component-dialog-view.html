@@ -1,4 +1,4 @@
-<md-dialog aria-label="dashboard matrix constructor dialog"
+<md-dialog aria-label="dashboard table chart constructor dialog"
            class="draggable-dialog width-50 dialog-actions-bottom dcMatrixElemToDrag"
            drag-dialog>
     <md-toolbar>
@@ -27,7 +27,7 @@
                             </md-input-container>
                         </div>
 
-                        <div class="m-t-16 m-b-16">
+                        <!-- <div class="m-t-16 m-b-16">
 
                             <md-input-container style="width: 200px;">
                                 <label for="">Report Type</label>
@@ -53,9 +53,22 @@
                                                        class="dashboard-constructor-selector-directive"></expandable-items-selector>
 
 
+                        </div> -->
+                        <div style="width: 400px;" class="m-l-10">
+                            <div ng-if="vm.readyStatus.layouts">
+                                <multitype-field label="Select layout"
+                                                 field-types-data="vm.layoutsSelectorsList"
+                                                 type-switch="selector"
+                                                 on-value-change="vm.onLayoutChange()"
+                                                 on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
+                            </div>
+
+                            <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">
+                                <progress-circular diameter="30"></progress-circular>
+                            </div>
                         </div>
 
-                        <div class="m-t-16 m-b-16">
+                        <div class="m-t-16 m-b-16 m-l-10">
 
                             <table-attribute-selector title="Title column"
                                                       dialog-title="Title column"

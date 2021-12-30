@@ -7,6 +7,7 @@
 
     var uiService = require('../services/uiService');
     var md5Helper = require('../helpers/md5.helper');
+	var metaHelper = require('../helpers/meta.helper');
 
     var DashboardConstructorDataService = require('../services/dashboard-constructor/dashboardConstructorDataService');
     var DashboardConstructorEventService = require('../services/dashboard-constructor/dashboardConstructorEventService');
@@ -337,7 +338,7 @@
 
         var tabNameInput = null;
 
-        var removeKeydownListener = function () {
+    	var removeKeydownListener = function () {
             document.removeEventListener('keydown', addSpaceIntoTabName);
         };
 
@@ -345,14 +346,7 @@
 
             if (kDownEv.key === ' ') {
 
-                var selStart = tabNameInput.selectionStart;
-                var firstStringPart = tabNameInput.value.substring(0, selStart);
-                var selEnd = tabNameInput.selectionEnd;
-                var lastStringPart = tabNameInput.value.substring(selEnd, tabNameInput.value.length);
-                var tabNewName = firstStringPart + ' ' + lastStringPart;
-
-                tabNameInput.value = tabNewName;
-                tabNameInput.selectionEnd = selStart + 1; // set text cursor after added space
+                var tabNewName = metaHelper.insertSpaceIntoElementText(tabNameInput);
 
                 var tabId = tabNameInput.dataset.tabId;
                 for (var i = 0; i < vm.layout.data.tabs.length; i++) {
@@ -361,6 +355,7 @@
                         break;
                     }
                 }
+
             }
 
         };
@@ -498,7 +493,7 @@
         };
 
         vm.goToDashboard = function () {
-            $state.go('app.dashboard')
+            $state.go('app.portal.dashboard')
         };
 
         var emptySocketInsideTab = function (tabNumber, rowNumber, columnNumber) {
@@ -1185,7 +1180,7 @@
 
             uiService.createDashboardLayout(layout).then(function (data) {
 
-                $state.go('app.dashboard-constructor', {
+                $state.go('app.portal.dashboard-constructor', {
                     id: data.id
                 })
 

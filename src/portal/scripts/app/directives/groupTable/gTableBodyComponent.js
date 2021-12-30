@@ -29,20 +29,20 @@
                 contentWrapElement: '=',
                 workareaWrapElement: '='
             },
-/*            template: '<div>' +
-                '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
-                '            <progress-linear class="ev-progressbar"></progress-linear>\n' +
-                '        </div>' +
-                '<div class="ev-viewport">' +
-                '<div class="ev-content"></div>' +
-                '</div>' +
-                '</div>',*/
+            /*            template: '<div>' +
+                            '<div class="ev-progressbar-holder" layout="row" layout-sm="column">\n' +
+                            '            <progress-linear class="ev-progressbar"></progress-linear>\n' +
+                            '        </div>' +
+                            '<div class="ev-viewport">' +
+                            '<div class="ev-content"></div>' +
+                            '</div>' +
+                            '</div>',*/
             templateUrl: 'views/directives/groupTable/g-table-body-view.html',
             link: function (scope, elem) {
 
                 var contentElem = elem[0].querySelector('.ev-content');
                 var viewportElem = elem[0].querySelector('.ev-viewport');
-                var progressBar = elem[0].querySelector('.ev-progressbar');
+                // var progressBar = elem[0].querySelector('.ev-progressbar');
 
                 var toggleBookmarksBtn = document.querySelector('.toggle-bookmarks-panel-btn');
 
@@ -58,10 +58,14 @@
                 var entityType = scope.evDataService.getEntityType();
                 var viewContext = scope.evDataService.getViewContext();
 
-                var isReport = metaService.isReport(entityType);
+                scope.isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 var activeLayoutConfigIsSet = false;
+
+                if (!scope.isReport) {
+                    elements.leftPanelElem = scope.workareaWrapElement.querySelector('.gEvLeftPanelHolder');
+                }
 
                 const setColorsForSubtotals = function (flatList, coloredSubtotals) {
 
@@ -124,93 +128,68 @@
 
                     rvDomManager.calculateScroll(elements, scope.evDataService);
 
-                    window.requestAnimationFrame(function (){
+                    window.requestAnimationFrame(function () {
 
-                    	rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
-						cellContentOverflow();
+                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        cellContentOverflow();
 
                     });
 
                 }
 
-                var isFilterValid = function (filterItem) {
-
-                    if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
-
-                        var filterType = filterItem.options.filter_type;
-
-                        if (filterType === 'empty' ||
-                            filterItem.options.exclude_empty_cells) { // if filter works for empty cells
-
-                            return true;
-
-                        } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
-
-                            var filterValues = filterItem.options.filter_values;
-
-                            if (filterType === 'from_to') {
-
-                                if ((filterValues.min_value || filterValues.min_value === 0) &&
-                                    (filterValues.max_value || filterValues.max_value === 0)) {
-                                    return true;
-                                }
-
-                            } else if (Array.isArray(filterValues)) {
-
-                                if (filterValues[0] || filterValues[0] === 0) {
-                                    return true;
-                                }
-
-                            }
-                        }
-
-                    }
-
-                    return false;
-                };
-
                 function renderEntityViewer() {
 
-                    var flatList = evDataHelper.getFlatStructure(scope.evDataService);
-                    flatList.shift(); // remove root group
+                    // var flatList = evDataHelper.getFlatStructure(scope.evDataService);
+                    var flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
 
-                    flatList = flatList.map(function (item, i) {
+                    console.log('renderEntityViewer.flatlist', flatList);
+                    /* flatList = flatList.map(function (item, i) {
                         item.___flat_list_index = i;
                         return item
                     });
 
-                    console.log('renderEntityViewer.flatlist', flatList);
-
-                    scope.evDataService.setUnfilteredFlatList(flatList);
+                    scope.evDataService.setUnfilteredFlatList(flatList); */
 
                     var filters = scope.evDataService.getFilters();
+                    var regularFilters = evFilterService.convertIntoRegularFilters(filters.frontend);
 
-                    var frontEndFilters = [];
-
-                    for (var f = 0; f < filters.length; f++) {
-                        var filter = filters[f];
-
-                        if (filter.options &&
-                            filter.options.is_frontend_filter &&
-                            filter.options.enabled &&
-                            isFilterValid(filter)) {
-
-                            var filterOptions = {
-                                key: filter.key,
-                                filter_type: filter.options.filter_type,
-                                exclude_empty_cells: filter.options.exclude_empty_cells,
-                                value_type: filter.value_type,
-                                value: filter.options.filter_values
-                            };
-
-                            frontEndFilters.push(filterOptions);
-
-                        }
+                    if (regularFilters.length) {
+                        var groups = scope.evDataService.getGroups();
+                        flatList = evFilterService.filterTableRows(flatList, regularFilters, groups);
                     }
 
-                    if (frontEndFilters.length > 0) {
-                        var groups = scope.evDataService.getGroups();
-                        flatList = evFilterService.filterTableRows(flatList, frontEndFilters, groups);
+                    var selGroupsList = scope.evDataService.getSelectedGroups();
+
+                    if (selGroupsList.length) {
+
+                        var lastSelGroup = selGroupsList[selGroupsList.length - 1];
+
+                        var controlObj = {
+                            ___parentId: lastSelGroup.___id,
+                            ___type: 'control',
+                            ___level: lastSelGroup.___level + 1
+                        };
+
+                        controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+                        flatList.push(controlObj);
+
+                    } else {
+
+                        if (flatList.length) {
+
+                            var controlObj = {
+                                ___parentId: flatList[0].___parentId,
+                                ___type: 'control',
+                                ___level: 1
+                            };
+
+                            controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+                            flatList.push(controlObj);
+
+                        }
+
                     }
 
                     var index = 0;
@@ -229,6 +208,16 @@
                         return item
                     });
 
+                    /* var controlObj = {
+                        ___parentId: obj.___id,
+                        ___type: 'control',
+                        ___level: obj.___level + 1
+                    };
+
+                    controlObj.___id = evRvCommonHelper.getId(controlObj);
+
+                    obj.results.push(controlObj); */
+
                     scope.evDataService.setFlatList(flatList);
 
                     // evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
@@ -241,102 +230,103 @@
 
                     evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
-                    window.requestAnimationFrame(function (){
+                    window.requestAnimationFrame(function () {
                         evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
                     });
 
 
-                    scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER)
+                    scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER);
 
                 }
 
-				function cellContentOverflow() {
+                function cellContentOverflow() {
 
-					var rows = contentElem.querySelectorAll('.g-row');
-					rows = Array.from(rows);
+                    var rows = contentElem.querySelectorAll('.g-row');
+                    rows = Array.from(rows);
 
-					var subtotalRows = rows.filter(function (row) {
-						return row.dataset.type === 'subtotal';
-					});
+                    var subtotalRows = rows.filter(function (row) {
+                        return row.dataset.type === 'subtotal';
+                    });
 
-					var r, w;
-					for (r = 0; r < subtotalRows.length; r++) {
+                    var r, w;
+                    for (r = 0; r < subtotalRows.length; r++) {
 
-						var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
-						var cells = subtotalRows[r].querySelectorAll('.g-cell');
+                        var cellWraps = subtotalRows[r].querySelectorAll('.g-cell-wrap');
+                        var cells = subtotalRows[r].querySelectorAll('.g-cell');
 
-						for (w = 0; w < cellWraps.length; w++) {
+                        for (w = 0; w < cellWraps.length; w++) {
 
-							var cellWrap = cellWraps[w], cellWrapWidth = cellWrap.clientWidth;
-							var cell = cells[w];
-							var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
-							var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
+                            var cellWrap = cellWraps[w], cellWrapWidth = cellWrap.clientWidth;
+                            var cell = cells[w];
+                            var cellContentWrap = cell.querySelector('.g-cell-content-wrap');
+                            var groupFoldingBtn = cellContentWrap.querySelector('.g-group-fold-button');
 
-							var rowIsGrandTotal = false;
-							var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
+                            var rowIsGrandTotal = false;
+                            var parentGroups = evRvCommonHelper.getParents(subtotalRows[r].dataset.parentGroupHashId, scope.evDataService);
 
-							if (parentGroups[0].___level === 0 && w === 0) {
-								rowIsGrandTotal = true;
-							}
+                            if (parentGroups[0].___level === 0 && w === 0) {
+                                rowIsGrandTotal = true;
+                            }
 
-							if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
+                            if (cellContentWrap.textContent !== undefined && cellContentWrap.textContent !== '' && (groupFoldingBtn || rowIsGrandTotal)) {
 
-								var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
-								var cellSpaceForText = cellContentWrap.clientWidth;
+                                var cellContentHolder = cellContentWrap.querySelector('.g-cell-content');
+                                var cellSpaceForText = cellContentWrap.clientWidth;
 
-								if (!rowIsGrandTotal) {
-									cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
-								}
+                                if (!rowIsGrandTotal) {
+                                    cellSpaceForText = cellContentWrap.clientWidth - groupFoldingBtn.clientWidth;
+                                }
 
-								if (cellContentHolder.offsetWidth > cellSpaceForText) {
+                                if (cellContentHolder.offsetWidth > cellSpaceForText) {
 
-									var cellStretchWidth = cellWrapWidth;
-									var nextCellIndex = w;
-									var overflowedCells = [];
+                                    var cellStretchWidth = cellWrapWidth;
+                                    var nextCellIndex = w;
+                                    var overflowedCells = [];
 
-									// Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
-									while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
+                                    // Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
+                                    while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
 
-										var nextCellIndex = nextCellIndex + 1;
+                                        var nextCellIndex = nextCellIndex + 1;
 
-										var nextCellWrap = cellWraps[nextCellIndex], nextCellWrapWidth = nextCellWrap.clientWidth;
-										var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
-										var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
+                                        var nextCellWrap = cellWraps[nextCellIndex],
+                                            nextCellWrapWidth = nextCellWrap.clientWidth;
+                                        var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
+                                        var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
 
-										if (nexCellContentHolder || nextCellContentWrap.contentText) {
-											break;
-										}
+                                        if (nexCellContentHolder || nextCellContentWrap.contentText) {
+                                            break;
+                                        }
 
-										overflowedCells.push(nextCellWrap);
+                                        overflowedCells.push(nextCellWrap);
 
-										cellSpaceForText = cellSpaceForText + nextCellWrapWidth;
-										cellStretchWidth = cellStretchWidth + nextCellWrapWidth;
+                                        cellSpaceForText = cellSpaceForText + nextCellWrapWidth;
+                                        cellStretchWidth = cellStretchWidth + nextCellWrapWidth;
 
-									}
+                                    }
 
-									if (cellStretchWidth > cellWrapWidth) { // check if there are available cells to be overflowed
+                                    if (cellStretchWidth > cellWrapWidth) { // check if there are available cells to be overflowed
 
-										overflowedCells.pop(); // leaving right border of last overflowed cell
+                                        overflowedCells.pop(); // leaving right border of last overflowed cell
 
-										overflowedCells.forEach(function (overflowedCell) {
-											overflowedCell.classList.add('g-overflowed-cell');
-										});
+                                        overflowedCells.forEach(function (overflowedCell) {
+                                            overflowedCell.classList.add('g-overflowed-cell');
+                                        });
 
-										cellWrap.classList.add('g-overflowing-cell');
-										cell.style.width = cellStretchWidth + 'px';
+                                        cellWrap.classList.add('g-overflowing-cell');
+                                        cell.style.width = cellStretchWidth + 'px';
 
-									}
-								}
+                                    }
+                                }
 
-							}
+                            }
 
-						}
-					}
+                        }
+                    }
 
-				}
+                }
 
                 function updateTableContent() {
-                    if (isReport) {
+                    if (scope.isReport) {
                         renderReportViewer();
 
                     } else {
@@ -378,7 +368,7 @@
 
                     var flatList = scope.evDataService.getFlatList();
 
-                    if (isReport) {
+                    if (scope.isReport) {
 
                         projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
 
@@ -401,31 +391,49 @@
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
 
-                    progressBar.style.display = 'block';
-                    if (isReport) {
+                    console.log("gTableBodyComponent DATA_LOAD_START");
+
+                    // progressBar.style.display = 'block';
+                    /* if (scope.isReport) {
                         contentElem.style.opacity = '0.7';
-                    }
+                    } */
+                    contentElem.style.opacity = '0.7';
 
                     scope.evDataService.setDataLoadStatus(false);
+
+                    scope.dataLoadStatus = false;
+
+                    setTimeout(function () {
+                        scope.$apply();
+
+                    }, 0);
 
                 });
 
                 scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                    progressBar.style.display = 'none';
-                    if (isReport) {
-                        contentElem.style.opacity = '1';
-                    }
+                    console.log("gTableBodyComponent DATA_LOAD_END");
+
+                    // progressBar.style.display = 'none';
+
+                    contentElem.style.opacity = '1';
 
                     updateTableContent();
 
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
                         activeLayoutConfigIsSet = true;
-                        scope.evDataService.setActiveLayoutConfiguration({isReport: isReport}); // saving layout for checking for changes
+                        scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport}); // saving layout for checking for changes
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
                     }
 
-					scope.evDataService.setDataLoadStatus(true);
+                    scope.evDataService.setDataLoadStatus(true);
+
+                    scope.dataLoadStatus = true;
+
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 0)
+
 
                 });
 
@@ -435,7 +443,7 @@
 
                     updateTableContent();
 
-					scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
+                    scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                 });
 
@@ -450,13 +458,13 @@
 
                     calculateElemsWrapsSizes();
 
-                    if (isReport) {
+                    if (scope.isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
                     }
 
-					scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
+                    scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                 });
 
@@ -476,7 +484,7 @@
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                    if (isReport) {
+                    if (scope.isReport) {
 
                         // rvDomManager.calculateScroll(elements, scope.evDataService);
 
@@ -487,7 +495,7 @@
                     } else {
 
                         // evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                        evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
+                        // evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                         if (projection) {
                             evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
@@ -501,45 +509,15 @@
 
                     window.addEventListener('resize', onWindowResize);
 
-                    if (!isReport) {
+                    if (!scope.isReport) {
                         scope.scrollManager = new EvScrollManager();
                     }
-
-					// TO DELETE remove after applying new interface for ev and rv
-                    if (isReport) {
-
-						var components = scope.evDataService.getComponents();
-						var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-						if (components.sidebar) {
-
-							$('body').addClass('filter-side-nav-collapsed'); // TO DELETE after removing sidebar
-
-							interfaceLayout.filterArea.collapsed = true;
-							interfaceLayout.filterArea.width = 0;
-
-						}
-
-						components.groupingArea = false
-
-						if (viewContext !== 'dashboard') {
-							components.topPart = true
-						}
-
-						interfaceLayout.columnArea.height = 50
-						// interfaceLayout.filterArea.height = 50
-
-						scope.evDataService.setInterfaceLayout(interfaceLayout);
-						scope.evDataService.setComponents(components);
-
-					}
-					// < TO DELETE remove after applying new interface for ev and rv >
 
                     setTimeout(function () { // prevents scroll from interfering with sizes of table parts calculation
 
                         calculateElemsWrapsSizes();
 
-                        if (isReport) {
+                        if (scope.isReport) {
 
                             rvDomManager.calculateScroll(elements, scope.evDataService);
 
@@ -563,9 +541,9 @@
 
                             if (flatList.length > 1) {
 
-                                progressBar.style.display = 'none';
+                                // progressBar.style.display = 'none';
 
-                                if (isReport) {
+                                if (scope.isReport) {
                                     contentElem.style.opacity = '1';
                                 }
 
@@ -574,7 +552,6 @@
                             }
 
                             //  If we already have data (e.g. viewType changed) end
-
 
                             /*scope.evEventService.addEventListener(evEvents.START_CELLS_OVERFLOW, function () {
                                 cellContentOverflow();
@@ -591,7 +568,7 @@
 
                         }
 
-						scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
+                        scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                     }, 500);
 
@@ -620,7 +597,7 @@
 
                 /* $(window).on('resize', function () { // TODO what?
 
-                    if (isReport) {
+                    if (scope.isReport) {
                         rvDomManager.calculateScroll(elements, scope.evDataService);
                     } else {
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);

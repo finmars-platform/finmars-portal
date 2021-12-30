@@ -1,6 +1,7 @@
-<div class="custom-input-container classifier-input-container dropdownSelectInputContainer customInputBackgroundColor">
+<div class="custom-input-container classifier-input-container classifierInputContainer customInputBackgroundColor"
+     ng-class="getInputContainerClasses()">
 
-    <div class="custom-input-top-row">
+    <div class="custom-input-top-row" data-ng-if="!!label">
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
@@ -69,12 +70,11 @@
          class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
 
         <div class="custom-input-sel-menu-block">
-            <div
-                    data-ng-repeat="option in menuOptions | filter: inputText"
-                    data-ng-click="selectOption(option)"
-                    data-ng-bind="option.name"
-                    class="custom-input-sel-option"
-                    style="padding-left: {{(option.level + 1) * 10}}px"
+            <div data-ng-repeat="option in menuOptions | filter: inputText"
+                 data-ng-click="selectOption(option)"
+                 data-ng-bind="option.name"
+                 class="custom-input-sel-option"
+                 style="padding-left: {{(option.level + 1) * 10}}px;"
             ></div>
         </div>
 

@@ -34,43 +34,47 @@
           <div class="p-24">
             <div layout="row" style="height: 90px;">
               <div
-                layout="row"
-                flex="50"
-                class="p-t-24"
-                style="border: 1px solid #000; background: #ffeee8;"
-              >
-                <md-input-container style="font-size: 18px;" class="width-100">
-                  <label for="">Transaction type</label>
-                  <md-select
-                    data-ng-model="vm.transactionTypeId"
-                    md-container-class="big-select"
-                    data-ng-change="vm.transactionTypeChange()"
-                    md-on-close="searchTerm = ''"
-                  >
-                    <md-select-header>
-                      <input
-                        data-ng-model="searchTerm"
-                        type="search"
-                        placeholder="Search for a ..."
-                        class="md-text md-select-search-pattern"
-                      />
-                    </md-select-header>
 
-                    <div class="big-select-optgroup-container">
-                      <md-optgroup
-                        label="{{group.name}}"
-                        data-ng-repeat="group in vm.transactionGroups"
-                      >
-                        <md-option
-                          data-ng-repeat="item in group.items | orderBy: 'name' | filter:{name: searchTerm}"
-                          ng-value="item.id"
-                        >
-                          {{item.name}}
-                        </md-option>
-                      </md-optgroup>
-                    </div>
-                  </md-select>
-                </md-input-container>
+                class="flex-1-1-50 p-t-24"
+
+              >
+
+                <complex-dropdown-select label="Transaction type"
+                                         model="vm.transactionTypeId"
+                                         menu-options="vm.transactionGroups"
+                                         on-change="vm.transactionTypeChange()"></complex-dropdown-select>
+<!--                <md-input-container style="font-size: 18px;" class="width-100">-->
+<!--                  <label for="">Transaction type</label>-->
+<!--                  <md-select-->
+<!--                    data-ng-model="vm.transactionTypeId"-->
+<!--                    md-container-class="big-select"-->
+<!--                    data-ng-change="vm.transactionTypeChange()"-->
+<!--                    md-on-close="searchTerm = ''"-->
+<!--                  >-->
+<!--                    <md-select-header>-->
+<!--                      <input-->
+<!--                        data-ng-model="searchTerm"-->
+<!--                        type="search"-->
+<!--                        placeholder="Search for a ..."-->
+<!--                        class="md-text md-select-search-pattern"-->
+<!--                      />-->
+<!--                    </md-select-header>-->
+
+<!--                    <div class="big-select-optgroup-container">-->
+<!--                      <md-optgroup-->
+<!--                        label="{{group.name}}"-->
+<!--                        data-ng-repeat="group in vm.transactionGroups"-->
+<!--                      >-->
+<!--                        <md-option-->
+<!--                          data-ng-repeat="item in group.items | orderBy: 'name' | filter:{name: searchTerm}"-->
+<!--                          ng-value="item.id"-->
+<!--                        >-->
+<!--                          {{item.name}}-->
+<!--                        </md-option>-->
+<!--                      </md-optgroup>-->
+<!--                    </div>-->
+<!--                  </md-select>-->
+<!--                </md-input-container>-->
               </div>
 
               <div flex="50">
@@ -171,6 +175,7 @@
                                         ev-editor-data-service="vm.evEditorDataService"
                                         ev-editor-event-service="vm.evEditorEventService"
                                         item="vm.fixedAreaAttributesLayout[row][field.column]"
+                                        fields-data-store="vm.fieldsDataStore"
                                         entity-change="vm.onEntityChange(fieldKey)"></bind-field-control>
                   </div>
                 </div>
@@ -187,7 +192,7 @@
 
                   <md-tab-body>
                     <md-content class="md-padding p-t-26"
-                                ng-class="{'locked-tab-overlay': vm.entity.is_locked}">
+                                ng-class="{'locked-tab-overlay': vm.entity.is_locked, 'canceled-tab-overlay': vm.entity.is_canceled}">
                       <div
                         data-ng-repeat="row in vm.range(tab.layout.rows)"
                         layout="row"
@@ -209,6 +214,7 @@
                             ev-editor-data-service="vm.evEditorDataService"
                             ev-editor-event-service="vm.evEditorEventService"
                             item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
+                            fields-data-store="vm.fieldsDataStore"
                             entity-change="vm.onEntityChange(fieldKey)"
                           ></bind-field-control>
                         </div>
@@ -299,13 +305,13 @@
       >
         Edit Form
       </md-button>
-      <md-button
-        ng-click="vm.manageAttrs($event)"
-        class="md-raised md-primary"
-        ng-disabled="!vm.checkReadyStatus()"
-      >
-        Manage attributes
-      </md-button>
+<!--      <md-button-->
+<!--        ng-click="vm.manageAttrs($event)"-->
+<!--        class="md-raised md-primary"-->
+<!--        ng-disabled="!vm.checkReadyStatus()"-->
+<!--      >-->
+<!--        Manage attributes-->
+<!--      </md-button>-->
 
       <div ng-if="vm.checkReadyStatus()">
         <!--<md-button ng-click="vm.entity.is_locked = true"-->
@@ -353,6 +359,7 @@
       >
         Book as pending
       </md-button>
+
       <md-button
         class="md-raised"
         data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
