@@ -517,6 +517,7 @@
                 factor.button_position = index;
                 gridTableData.body[index].order = index;
             });
+
         }
 
         const createFactorsGridTable = (factors) => {
