@@ -74,7 +74,7 @@
         var i;
         var keys = Object.keys(item);
         var result = {};
-        var fieldsThatCanBeNullList = fieldsThatCanBeNullData[entityType];
+        var fieldsThatCanBeNullList = fieldsThatCanBeNullData[entityType] || [];
 
         for (i = 0; i < keys.length; i = i + 1) {
 

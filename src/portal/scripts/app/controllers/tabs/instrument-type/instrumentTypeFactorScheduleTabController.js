@@ -1,5 +1,7 @@
 /**
  * Created by szhitenev on 22.12.2021.
+ *
+ * TO DELETE: 2021-12-30 instrumentTypeFactorsTabController.js is used instead
  */
 (function () {
 
