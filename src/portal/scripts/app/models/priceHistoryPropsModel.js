@@ -47,7 +47,20 @@
                 "key": "short_delta",
                 "name": "Short delta",
                 "value_type": 20
-            }
+            },
+            {
+                "key": "nav",
+                "name": "NAV",
+                "value_type": 20
+            },
+
+            {
+                "key": "procedure_modified_datetime",
+                "name": "Modified Date And Time",
+                "value_type": 80,
+                "readonly": true
+            },
+
             //{
             //    "key": "factor",
             //    "name": "Factor",

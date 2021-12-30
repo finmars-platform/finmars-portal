@@ -37,6 +37,7 @@
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
                 var componentData;
+				var componentElem = elem[0].querySelector('.dashboardComponent');
 
                 if (scope.item && scope.item.data) {
                     componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
@@ -54,6 +55,7 @@
                     columnNumber: scope.columnNumber,
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
+					componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
@@ -105,7 +107,7 @@
                             }*/
 
                             if (res.action === 'save') {
-								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                             }
 
                             if (scope.fillInModeData) {
@@ -168,6 +170,8 @@
                         scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
                             var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                            console.log('tableChart.status', status)
 
                             if (status === dashboardComponentStatuses.START) { // Init calculation of a component
 
@@ -253,6 +257,8 @@
                 scope.init = function () {
 
                     scope.initEventListeners();
+
+                    console.log('tableChart.scope.fillInModeData, ', scope.fillInModeData)
 
                     if (!scope.fillInModeData) {
 

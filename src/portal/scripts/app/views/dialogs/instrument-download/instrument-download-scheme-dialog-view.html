@@ -31,7 +31,20 @@
                     </md-card-content>
                 </md-card>
                 <md-card flex="50" class="inm-card-special">
+
+
+
                     <md-card-content>
+
+                        <md-input-container>
+                            <label>Mode</label>
+                            <md-select data-ng-model="vm.scheme.mode">
+                                <md-option value="skip">Skip if exists</md-option>
+                                <md-option value="overwrite">Overwrite</md-option>
+                                <md-option value="overwrite_empty_values">Overwrite empty values</md-option>
+                            </md-select>
+                        </md-input-container>
+
                         <md-input-container class="md-block"
                                             flex-gt-sm
                                             aria-label="select with filter">
@@ -353,7 +366,7 @@
                                             <div data-ng-if="field.complexExpressionEntity != false" layout="row">
 
                                                 <div flex="75">
-                                                    <md-input-container>
+                                                    <md-input-container class="display-block">
                                                         <label for="">Expression</label>
                                                         <input type="text" data-ng-model="field.expression">
                                                     </md-input-container>
@@ -363,7 +376,8 @@
                                                     <expression-editor-button data-item="field.expression"
                                                                               data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
 
-                                                    <md-button class="md-raised md-primary import-mapping-small-btn"
+                                                    <md-button ng-if="!field.value || !vm.checkForClassifierMapping(field.value.id)"
+                                                               class="md-raised md-primary import-mapping-small-btn"
                                                                data-ng-click="vm.openMapping($event, field)">
                                                         <ng-md-icon icon="import_contacts" size="20"></ng-md-icon>
                                                     </md-button>

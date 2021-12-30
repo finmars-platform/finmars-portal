@@ -113,7 +113,8 @@
                 <div layout="row">
                     <md-button class="md-raised" data-ng-click="vm.recalculate()">Recalculate</md-button>
                     <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
-                        Add to database
+                        <span data-ng-if="!vm.config.instrument.id">Add to database</span>
+                        <span data-ng-if="vm.config.instrument.id">Update Instrument</span>
                     </md-button>
                 </div>
             </div>
@@ -285,111 +286,111 @@
                         </div>
                     </div>
 
-                    <div class="instrument-import-field-bg" layout="row">
-                        <div flex="66">
-                            <md-input-container
-                                    class="md-block  {{vm.findError('daily_pricing_model', 'entityAttr', 'class') ? 'error' : ''}}"
-                                    style="min-height: 64px"
-                                    aria-label="select with filter">
-                                <!--<label for="">Pricing model</label>
-                                <md-select data-ng-model="vm.config.instrument.daily_pricing_model">
-                                    <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">
-                                        {{item.name}}
-                                    </md-option>
-                                </md-select>-->
+<!--                    <div class="instrument-import-field-bg" layout="row">-->
+<!--                        <div flex="66">-->
+<!--                            <md-input-container-->
+<!--                                    class="md-block  {{vm.findError('daily_pricing_model', 'entityAttr', 'class') ? 'error' : ''}}"-->
+<!--                                    style="min-height: 64px"-->
+<!--                                    aria-label="select with filter">-->
+<!--                                &lt;!&ndash;<label for="">Pricing model</label>-->
+<!--                                <md-select data-ng-model="vm.config.instrument.daily_pricing_model">-->
+<!--                                    <md-option data-ng-repeat="item in vm.dailyModels" ng-value="item.id">-->
+<!--                                        {{item.name}}-->
+<!--                                    </md-option>-->
+<!--                                </md-select>&ndash;&gt;-->
 
-                                <label>Daily Pricing Model</label>
-                                <md-select ng-model="vm.config.instrument.daily_pricing_model"
-                                           md-container-class="common-select-container"
-                                           md-on-close="searchTerm = ''">
+<!--                                <label>Daily Pricing Model</label>-->
+<!--                                <md-select ng-model="vm.config.instrument.daily_pricing_model"-->
+<!--                                           md-container-class="common-select-container"-->
+<!--                                           md-on-close="searchTerm = ''">-->
 
-                                    <md-select-header>
-                                        <input data-ng-model="searchTerm"
-                                               type="search"
-                                               placeholder="Search for a ..."
-                                               class="md-text md-select-search-pattern select-input-filter"
-                                               ng-keydown="$event.stopPropagation()">
-                                    </md-select-header>
+<!--                                    <md-select-header>-->
+<!--                                        <input data-ng-model="searchTerm"-->
+<!--                                               type="search"-->
+<!--                                               placeholder="Search for a ..."-->
+<!--                                               class="md-text md-select-search-pattern select-input-filter"-->
+<!--                                               ng-keydown="$event.stopPropagation()">-->
+<!--                                    </md-select-header>-->
 
-                                    <div class="select-options-holder">
+<!--                                    <div class="select-options-holder">-->
 
-                                        <md-option
-                                                data-ng-repeat="item in vm.dailyModels | filter: {name: searchTerm}"
-                                                ng-value="item.id"
-                                                ng-bind="item.name">
-                                        </md-option>
+<!--                                        <md-option-->
+<!--                                                data-ng-repeat="item in vm.dailyModels | filter: {name: searchTerm}"-->
+<!--                                                ng-value="item.id"-->
+<!--                                                ng-bind="item.name">-->
+<!--                                        </md-option>-->
 
-                                    </div>
+<!--                                    </div>-->
 
-                                </md-select>
+<!--                                </md-select>-->
 
-                                <div class="md-input-error"
-                                     data-ng-show="vm.findError('daily_pricing_model', 'entityAttr', 'class')">
-                                    {{vm.findError('daily_pricing_model',
-                                    'entityAttr', 'message')}}
-                                </div>
-                            </md-input-container>
-                        </div>
-                        <div flex="33">
-                            <md-button class="md-raised md-primary complex-expr-btn"
-                                       data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'daily_pricing_model'})">
-                                Edit mapping
-                            </md-button>
-                        </div>
-                    </div>
+<!--                                <div class="md-input-error"-->
+<!--                                     data-ng-show="vm.findError('daily_pricing_model', 'entityAttr', 'class')">-->
+<!--                                    {{vm.findError('daily_pricing_model',-->
+<!--                                    'entityAttr', 'message')}}-->
+<!--                                </div>-->
+<!--                            </md-input-container>-->
+<!--                        </div>-->
+<!--                        <div flex="33">-->
+<!--                            <md-button class="md-raised md-primary complex-expr-btn"-->
+<!--                                       data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'daily_pricing_model'})">-->
+<!--                                Edit mapping-->
+<!--                            </md-button>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div class="instrument-import-field-bg" layout="row">
-                        <div flex="66">
-                            <md-input-container
-                                    class="md-block {{vm.findError('price_download_scheme', 'entityAttr', 'class') ? 'error' : ''}}"
-                                    style="min-height: 64px"
-                                    aria-label="select with filter">
-                                <!--<label for="">Price download scheme</label>
-                                <md-select data-ng-model="vm.config.instrument.price_download_scheme">
-                                    <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">
-                                        {{item.user_code}}
-                                    </md-option>
-                                </md-select>-->
+<!--                    <div class="instrument-import-field-bg" layout="row">-->
+<!--                        <div flex="66">-->
+<!--                            <md-input-container-->
+<!--                                    class="md-block {{vm.findError('price_download_scheme', 'entityAttr', 'class') ? 'error' : ''}}"-->
+<!--                                    style="min-height: 64px"-->
+<!--                                    aria-label="select with filter">-->
+<!--                                &lt;!&ndash;<label for="">Price download scheme</label>-->
+<!--                                <md-select data-ng-model="vm.config.instrument.price_download_scheme">-->
+<!--                                    <md-option data-ng-repeat="item in vm.priceDownloadSchemes" ng-value="item.id">-->
+<!--                                        {{item.user_code}}-->
+<!--                                    </md-option>-->
+<!--                                </md-select>&ndash;&gt;-->
 
-                                <label>Price download scheme</label>
-                                <md-select ng-model="vm.config.instrument.price_download_scheme"
-                                           md-container-class="common-select-container"
-                                           md-on-close="searchTerm = ''">
+<!--                                <label>Price download scheme</label>-->
+<!--                                <md-select ng-model="vm.config.instrument.price_download_scheme"-->
+<!--                                           md-container-class="common-select-container"-->
+<!--                                           md-on-close="searchTerm = ''">-->
 
-                                    <md-select-header>
-                                        <input data-ng-model="searchTerm"
-                                               type="search"
-                                               placeholder="Search for a ..."
-                                               class="md-text md-select-search-pattern select-input-filter"
-                                               ng-keydown="$event.stopPropagation()">
-                                    </md-select-header>
+<!--                                    <md-select-header>-->
+<!--                                        <input data-ng-model="searchTerm"-->
+<!--                                               type="search"-->
+<!--                                               placeholder="Search for a ..."-->
+<!--                                               class="md-text md-select-search-pattern select-input-filter"-->
+<!--                                               ng-keydown="$event.stopPropagation()">-->
+<!--                                    </md-select-header>-->
 
-                                    <div class="select-options-holder">
+<!--                                    <div class="select-options-holder">-->
 
-                                        <md-option
-                                                data-ng-repeat="item in vm.priceDownloadSchemes | filter: {user_code: searchTerm}"
-                                                ng-value="item.id"
-                                                ng-bind="item.user_code">
-                                        </md-option>
+<!--                                        <md-option-->
+<!--                                                data-ng-repeat="item in vm.priceDownloadSchemes | filter: {user_code: searchTerm}"-->
+<!--                                                ng-value="item.id"-->
+<!--                                                ng-bind="item.user_code">-->
+<!--                                        </md-option>-->
 
-                                    </div>
+<!--                                    </div>-->
 
-                                </md-select>
+<!--                                </md-select>-->
 
-                                <div class="md-input-error"
-                                     data-ng-show="vm.findError('price_download_scheme', 'entityAttr', 'class')">
-                                    {{vm.findError('price_download_scheme',
-                                    'entityAttr', 'message')}}
-                                </div>
-                            </md-input-container>
-                        </div>
-                        <div flex="33">
-                            <md-button class="md-raised md-primary complex-expr-btn"
-                                       data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'price_download_scheme'})">
-                                Edit mapping
-                            </md-button>
-                        </div>
-                    </div>
+<!--                                <div class="md-input-error"-->
+<!--                                     data-ng-show="vm.findError('price_download_scheme', 'entityAttr', 'class')">-->
+<!--                                    {{vm.findError('price_download_scheme',-->
+<!--                                    'entityAttr', 'message')}}-->
+<!--                                </div>-->
+<!--                            </md-input-container>-->
+<!--                        </div>-->
+<!--                        <div flex="33">-->
+<!--                            <md-button class="md-raised md-primary complex-expr-btn"-->
+<!--                                       data-ng-click="vm.openMapping($event, {complexExpressionEntity: 'price_download_scheme'})">-->
+<!--                                Edit mapping-->
+<!--                            </md-button>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                     <div class="instrument-import-field-bg" layout="row">
                         <div flex="66">

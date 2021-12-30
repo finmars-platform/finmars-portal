@@ -1,5 +1,8 @@
 (function () {
 
+	const fieldResolverService = require('../../../services/fieldResolverService');
+
+	const ecosystemDefaultService = require('../../../services/ecosystemDefaultService');
     const referenceTableService = require('../../../services/referenceTablesService');
 
 	const metaHelper = require('../../meta.helper');
@@ -14,8 +17,9 @@
     module.exports = function (viewModel, $scope, $mdDialog) {
 
     	const gridTableHelperService = new GridTableHelperService();
+		const loadedRelationsList = [];
 
-        var valueTypes = [
+        const valueTypes = [
             {
                 "name": "Number",
                 "id": 20
@@ -41,6 +45,7 @@
                 "id": 120
             },
         ];
+        let ecosystemDefaultData = {};
 
         const getValueTypes = function() {
             return valueTypes;
@@ -140,6 +145,41 @@
             }
 
         };
+
+		const loadRelation = function (field, noScopeUpdate) {
+
+			field = field.replace(/-/g, "_"); // replace all '_' with '-'
+
+			// if (!viewModel.relationItems.hasOwnProperty(field)) {
+			if (!loadedRelationsList.includes(field)) {
+
+				return new Promise(function (resolve, reject) {
+
+					fieldResolverService.getFields(field).then(function (data) {
+
+						viewModel.relationItems[field] = data.data.map(function(item){
+
+                            item._id  = item.id
+                            item.id = item.user_code
+
+						    return item
+                        });
+						loadedRelationsList.push(field);
+
+						if (noScopeUpdate) {
+							$scope.$apply();
+						}
+
+						resolve(viewModel.relationItems[field]);
+					})
+
+				});
+
+			}
+
+			return {status: 'item_exist', field: field};
+
+		};
 
         const resolveRelation = function (contentType) {
 
@@ -291,7 +331,7 @@
 
 		};
 
-		//<editor-fold desc="TRANSACTION VALIDATION">
+		//region desc="TRANSACTION VALIDATION"
 		const hasInputInExprs = function (inputs, expr, namesOnly) {
 
 			var inputsList = [];
@@ -381,6 +421,19 @@
 
         };
 
+        const actionsFieldsMap = {
+			instrument_event_schedule_action: {
+				transaction_type_from_instrument_type: {
+					field_type: 'selector',
+					value_type: 10
+				},
+				event_schedule_phantom: {
+					field_type: 'selector',
+					value_type: 20
+				}
+			}
+		};
+
         const checkActionsForEmptyFields = function (actions) {
 
             var result = [];
@@ -418,7 +471,8 @@
 
                                 }
 
-                            } else {
+                            }
+                            else {
 
                                 if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
 
@@ -454,7 +508,8 @@
                                     }
 
 
-                                } else {
+                                }
+                                else {
 
                                     if (actionItem[actionItemKey] === null ||
                                         actionItem[actionItemKey] === undefined ||
@@ -466,12 +521,19 @@
                                             value: actionItem[actionItemKey]
                                         })
 
-                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // deleted inputs use
+                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // field with expression
 
-                                        fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
-                                                                                             actionItem[actionItemKey],
-                                                                                             actionItemKey,
-                                                                                             action.action_notes);
+                                    	var actionFieldsMap = actionsFieldsMap[actionKey];
+                                    	if (actionFieldsMap) var actionFieldData = actionFieldsMap[actionItemKey];
+
+                                    	if (!actionFieldData || actionFieldData.field_type === 'expression') {
+
+                                    		fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
+												actionItem[actionItemKey],
+												actionItemKey,
+												action.action_notes);
+
+										}
 
                                     }
 
@@ -602,6 +664,8 @@
 
 					var inputsList = hasInputInExprs(viewModel.entity.inputs, input.value);
 
+                    inputsList = [] // why forbbiden?
+
 					if (inputsList.length) {
 
 						defaultExprError = {
@@ -641,9 +705,9 @@
         	return errors;
 
 		};
-		//</editor-fold>
+		//endregion
 
-		//<editor-fold desc="INPUTS GRID TABLE">
+		//region desc="INPUTS GRID TABLE"
 		const onInputsGridTableRowAddition = function () {
 
             var newRow = viewModel.inputsGridTableData.body[0];
@@ -692,6 +756,7 @@
 
             getInputsForLinking();
             updateLinkedInputsOptionsInsideGridTable();
+			updateInputFunctions();
 
         };
 
@@ -748,7 +813,7 @@
         }
 
 		const relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
-            return viewModel.loadRelation(resolveRelation(contentType), true);
+            return loadRelation(resolveRelation(contentType), true);
         }
 
 		const onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
@@ -761,13 +826,13 @@
             var loadRelationRes = relationItemsResolver(contentTypeCell.settings.value);
 
             if (loadRelationRes && loadRelationRes.status === 'item_exist') {
-                changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field]
+                changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field];
 
             } else {
 
                 loadRelationRes.then(function (relItem) {
 
-                    changedCell.settings.selectorOptions = relItem
+                    changedCell.settings.selectorOptions = relItem;
                     $scope.$apply();
 
                 });
@@ -824,7 +889,7 @@
                         onInit: onRelationDefaultValueSelInit
                     }
 
-                    defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)] // TODO Victor: this is bug. viewModel.newItem always undefined
+                    // defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)] // TODO Victor: this is bug. viewModel.newItem always undefined
 
                     break;
 
@@ -1198,11 +1263,13 @@
             }
         }
 
-		const createDataForInputsTableGrid = function () {
+		const createDataForInputsGridTable = function () {
+
+			viewModel.inputsGridTableData.body = [];
 
             var rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
-			//<editor-fold desc="Assemble header columns">
+			//region desc="Assemble header columns">
 			var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
 
             viewModel.inputsGridTableData.header.columns = rowObj.columns.map(function (column) {
@@ -1218,9 +1285,9 @@
                 }
 
             });
-			//</editor-fold>
+			//endregion
 
-            // assemble body rows
+            //region assemble body rows
             viewModel.entity.inputs.forEach(function (input, index) {
 
                 rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
@@ -1294,11 +1361,19 @@
                 viewModel.inputsGridTableData.body.push(rowObj)
 
             });
-            // < assemble body rows >
+            //endregion assemble body rows >
             viewModel.inputsGridTableDataService.setTableData(viewModel.inputsGridTableData);
 
         }
-		//</editor-fold>
+		//endregion
+
+		const loadEcosystemDefaults = function () {
+
+        	ecosystemDefaultService.getList().then(function (data) {
+				ecosystemDefaultData = data.results[0];
+			});
+
+		};
 
 		const getTransactionUserFields = function () {
 
@@ -1319,6 +1394,9 @@
 					data.results.forEach(function (field) {
 
 						viewModel.transactionUserFields[field.key] = field.name;
+						viewModel.transactionUserFieldsState[field.key] = field.is_active;
+
+						console.log('transactionUserFieldsState', viewModel.transactionUserFieldsState);
 
 					})
 
@@ -1338,9 +1416,179 @@
                 return {id: cType.key, name: cType.name};
             });
 
-            createDataForInputsTableGrid();
+            createDataForInputsGridTable();
 
-        }
+        };
+
+		const setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+
+			var relationType = '';
+			switch (fieldName) {
+				case 'linked_instrument':
+				case 'allocation_pl':
+				case 'allocation_balance':
+					relationType = 'instrument';
+					break;
+				default:
+					relationType = fieldName;
+			}
+
+			var nameProperty = 'name';
+			if (fieldName === 'price_download_scheme') {
+				nameProperty = 'user_code';
+			}
+
+			var defaultValueKey = '';
+			switch (relationType) {
+				case 'account_position':
+				case 'account_cash':
+				case 'account_interim':
+					defaultValueKey = 'account';
+					break;
+				case 'settlement_currency':
+				case 'transaction_currency':
+				case 'accrued_currency':
+				case 'pricing_currency':
+					defaultValueKey = 'currency';
+					break;
+				case 'strategy1_position':
+				case 'strategy1_cash':
+					defaultValueKey = 'strategy1';
+					break;
+				case 'strategy2_position':
+				case 'strategy2_cash':
+					defaultValueKey = 'strategy2';
+					break;
+				case 'strategy3_position':
+				case 'strategy3_cash':
+					defaultValueKey = 'strategy3';
+					break;
+				default:
+					defaultValueKey = relationType;
+			}
+
+			if (ecosystemDefaultData.hasOwnProperty(defaultValueKey)) {
+
+				var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
+
+				actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
+
+				// needed for displaying default value after turning on 'relation' field
+				actionData[propertyName][fieldName + '_object'] = {};
+				actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
+				actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+
+			}
+
+		};
+
+        const appendFromTemplate = function ($event, template) {
+
+			console.log("Append from Template", template);
+
+			if (template.type === 'input_template') {
+
+				$mdDialog.show({
+					controller: 'InputTemplateLayoutViewerDialogController as vm',
+					templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+					targetEvent: $event,
+					locals: {
+						data: {
+							template: template
+						}
+					},
+					preserveScope: true,
+					autoWrap: true,
+					skipHide: true,
+					multiple: true
+				}).then(function (res) {
+
+					if (res.status === 'agree') {
+
+						var template = res.data.template;
+
+						template.data.inputs.forEach(function (input) {
+
+							if (!input.settings) input.settings = {};
+							if (!input.settings.linked_inputs_names) input.settings.linked_inputs_names = [];
+							if (!input.settings.recalc_on_change_linked_inputs) input.settings.recalc_on_change_linked_inputs = [];
+
+							viewModel.entity.inputs.push(input);
+
+						});
+
+						getInputsForLinking();
+						createDataForInputsGridTable();
+
+						viewModel.inputsGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
+
+					}
+
+				})
+
+			}
+			else if (template.type === 'field_template') {
+
+				Object.keys(viewModel.entity).forEach(function (key) {
+
+					if (key.indexOf('user_text_') !== -1) {
+						viewModel.entity[key] = '';
+					}
+
+					if (key.indexOf('user_number_') !== -1) {
+						viewModel.entity[key] = '';
+					}
+
+					if (key.indexOf('user_date_') !== -1) {
+						viewModel.entity[key] = '';
+					}
+
+				});
+
+				Object.keys(template.data.fields).forEach(function (key) {
+
+					viewModel.entity[key] = template.data.fields[key];
+
+				})
+
+			}
+			else if (template.type === 'action_template') {
+
+				var actionsToAdd = template.data.actions.map(function (action) {
+
+					Object.keys(action).forEach(function (key) {
+
+						if (typeof action[key] === 'object' && action[key] !== null) {
+
+							Object.keys(action[key]).forEach(function (actionItemKey) {
+
+								if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+
+									if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
+
+										action[key][actionItemKey + '_toggle'] = true;
+
+										setDefaultValueForRelation(action, key, actionItemKey);
+
+										delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
+									}
+
+								}
+
+							})
+
+						}
+
+					});
+
+					return action;
+				});
+
+				viewModel.entity.actions = viewModel.entity.actions.concat(actionsToAdd);
+
+			}
+
+		};
 
         return {
             getValueTypes: getValueTypes,
@@ -1351,15 +1599,18 @@
             getInputTemplates: getInputTemplates,
 
 			updateEntityBeforeSave: updateEntityBeforeSave,
-            resolveRelation: resolveRelation,
+			loadRelation: loadRelation,
+			resolveRelation: resolveRelation,
             checkActionsForEmptyFields: checkActionsForEmptyFields,
             checkEntityForEmptyFields: checkEntityForEmptyFields,
 			validateInputs: validateInputs,
 
             initGridTableEvents: initGridTableEvents,
-            createDataForInputsTableGrid: createDataForInputsTableGrid,
 
+			loadEcosystemDefaults: loadEcosystemDefaults,
 			getTransactionUserFields: getTransactionUserFields,
+
+			appendFromTemplate: appendFromTemplate,
             initAfterMainDataLoaded: initAfterMainDataLoaded
         }
 

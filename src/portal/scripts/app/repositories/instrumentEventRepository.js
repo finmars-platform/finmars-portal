@@ -10,9 +10,9 @@
     var getList = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -27,7 +27,7 @@ var apiVersion = baseUrlService.getApiVersion();
     // var eventAction = function (eventId, options) {
     // 	
     // var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+    var apiVersion = baseUrlService.getApiVersion();
     //
     // return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + eventId + '/',
     // 	{
@@ -47,9 +47,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var getEventAction = function (eventId, actionId) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId,
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -64,9 +64,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var putEventAction = function (eventId, actionId, data, status) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId + '&event_status=' + status,
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + eventId + '/book/?action=' + actionId + '&event_status=' + status,
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -84,9 +84,9 @@ var apiVersion = baseUrlService.getApiVersion();
 
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + id + '/informed/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + id + '/informed/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -104,9 +104,9 @@ var apiVersion = baseUrlService.getApiVersion();
 
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + id + '/error/?action=' + actionId,
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + id + '/error/?action=' + actionId,
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -124,9 +124,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var generateEvents = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/generate-events/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/generate-events/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -142,9 +142,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var generateEventsRange = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/generate-events-range/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/generate-events-range/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -161,9 +161,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var generateAndProcessAsSystem = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/system-generate-and-process/'),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/system-generate-and-process/'),
             {
                 method: 'POST',
                 credentials: 'include',
@@ -179,9 +179,9 @@ var apiVersion = baseUrlService.getApiVersion();
     var generateEventsRangeForSingleInstrument = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/generate-events-range-for-single-instrument/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/generate-events-range-for-single-instrument/',
             {
                 method: 'POST',
                 credentials: 'include',

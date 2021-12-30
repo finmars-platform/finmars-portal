@@ -2,19 +2,12 @@
  * Module contains different useful functions
  * @module UtilsHelper
  */
-
 (function () {
 
-    var metaHelper = require('./meta.helper');
+	'use strict';
 
-    /**
-     * Get list of expressions for Expression Builder.
-     * @callback - The first color, in hexadecimal format.
-     * @param {number} wait - The second color, in hexadecimal format.
-     * @param {any} immediate - ?
-     * @return {number} The blended color.
-     * @memberof module:UtilsHelper
-     */
+    // var metaHelper = require('./meta.helper');
+
     function debounce(func, wait, immediate) {
 
         var timeout;
@@ -32,7 +25,7 @@
 
     }
 
-    function throttle(fn, wait) {
+    /* function throttle(fn, wait) {
         var time = Date.now();
         return function () {
             if ((time + wait - Date.now()) < 0) {
@@ -40,7 +33,39 @@
                 time = Date.now();
             }
         }
-    }
+    } */
+	/**
+	 *
+	 * @param fn {Function}
+	 * @param wait {number} - milliseconds to wait
+	 * @param [options] {Object}
+	 * @param {boolean} [options.trailing=true] - execute fn on its last call after wait time
+	 * @returns {(function(): void)|*}
+	 */
+    function throttle(fn, wait, options) {
+
+    	var time = Date.now();
+		var timeout = null;
+		options = options || {};
+
+		return function () {
+			var waitRemains = time + wait - Date.now();
+
+			if (waitRemains < 0) {
+				if (timeout) {
+					clearTimeout(timeout);
+					timeout = null;
+				}
+				fn();
+				time = Date.now();
+			} else if (options.trailing !== false && !timeout && waitRemains > 0) {
+				timeout = setTimeout(function () {
+					timeout = null;
+					fn();
+				}, waitRemains);
+			}
+		};
+	}
 
     function floor10(value, exp) {
         return decimalAdjust('floor', value, exp);
@@ -66,10 +91,6 @@
     }
 
     function insertItemInNode(list, map, node, data) {
-// Victor 2021.02.09 filter by row color get error
-/*        if (!data[node.___parentId]) {
-            return
-        }*/
 
         var index = 0;
 
@@ -268,7 +289,7 @@
 
     }
 
-    var sortItems = function (items, property) {
+    const sortItems = function (items, property) {
 
         var sortOrder = 1;
         if (property[0] === "-") {
@@ -280,6 +301,25 @@
 
     };
 
+    // comparator for orderBy which set empty item last
+    const emptyLastComparator = (v1, v2) => {
+
+        // If we don't get strings, just compare by index
+        if (v1.type !== 'string' || v2.type !== 'string') {
+            return (v1.index < v2.index) ? -1 : 1;
+        }
+
+        if (v1.value === '') {
+            return 1
+        }
+
+        if (v2.value === '') {
+            return -1;
+        }
+
+        return v1.value.toLowerCase() < v2.value.toLowerCase() ? -1 : 1;
+    };
+
 
     module.exports = {
         floor10: floor10,
@@ -289,7 +329,8 @@
         convertTreeToList: convertTreeToList,
         convertTreeToTreeList: convertTreeToTreeList,
 
-        sortItems: sortItems
+        sortItems: sortItems,
+        emptyLastComparator: emptyLastComparator
     }
 
 

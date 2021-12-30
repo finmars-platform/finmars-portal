@@ -4,6 +4,13 @@
 
         <h1>Run Pricing</h1>
 
+        <div class="m-t-16 m-b-16">
+
+            <div>Mediator Service status: {{vm.mediatorStatus}}</div>
+            <div>Bloomberg Data Provider Service status: {{vm.brokerBloombergStatus}}</div>
+
+        </div>
+
         <table>
 
             <thead>
@@ -84,7 +91,7 @@
         </table>
 
         <div>
-            <md-button ui-sref="app.pricing-parent-procedure" class="md-raised">Check Procedure Status</md-button>
+            <md-button ui-sref="app.portal.pricing-parent-procedure" class="md-raised">Check Procedure Status</md-button>
         </div>
 
     </div>

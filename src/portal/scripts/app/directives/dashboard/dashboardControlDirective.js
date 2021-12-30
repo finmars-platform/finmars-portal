@@ -6,8 +6,10 @@
     var metaContentTypeService = require('../../services/metaContentTypesService');
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+	var directivesEvents = require('../../services/events/directivesEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
+    var EventService = require('../../services/eventService');
     var uiService = require('../../services/uiService');
 
 
@@ -27,10 +29,16 @@
 
                 scope.fields = [];
                 scope.entityType = null;
+                scope.readyStatus = {
+                	componentWidthCalculated: false
+				};
 
                 scope.attribute = {
                     key: 'value'
                 }
+
+				var dashboardControlElem = elem[0].querySelector(".dashboardControl");
+				var cellWidth;
 
                 scope.getEntityTypeByContentType = function (contentType) {
 
@@ -173,12 +181,26 @@
 
                     });
 
+                    if (scope.componentData.settings.multiple) {
+
+                    	scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENTS_SIZES_CHANGED, function () {
+
+							var componentUIData = scope.dashboardDataService.getComponentUIData(scope.item.data.id);
+
+							if (componentUIData && componentUIData.width !== undefined && componentUIData.width !== null) {
+								dashboardControlElem.style.width = componentUIData.width;
+								scope.readyStatus.componentWidthCalculated = true; // needed so that multiselector chips can get actual component width
+							}
+
+							scope.multiselectEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
+
+						});
+
+					}
+
                 };
 
                 var getItemDataStore = function (componentData) {
-
-                    console.log('getItemDataStore.item', scope.item)
-                    console.log('getItemDataStore.componentData', scope.componentData)
 
                     if (scope.componentData.custom_component_name) {
                         scope.customName = scope.componentData.custom_component_name;
@@ -190,8 +212,11 @@
                         });
                     };
 
-                    if (scope.item.data.store && scope.item.data.store.value) { // Value already exist, default value don't need
-                        return promisify(scope.item.data.store);
+                    if (scope.item.data.store && scope.item.data.store.value) {
+                        const isArray = Array.isArray(scope.item.data.store.value);
+                        if (!isArray || scope.item.data.store.value.length > 0) {
+                            return promisify(scope.item.data.store); // Value already exist, default value don't need
+                        }
                     }
 
                     if (!componentData.settings.defaultValue) {
@@ -203,36 +228,46 @@
                     if (mode === 1) { // Set default value
 
                         var value = componentData.settings.defaultValue.setValue;
+                        const values = componentData.settings.multiple ? value : [value];
                         var name = componentData.settings.defaultValue.setValueName;
                         var label = componentData.settings.defaultValue.setValueLabel;
 
-                        console.log("Setting default value", componentData)
-
                         if (componentData.settings.value_type === 100) {
 
-                            return entityResolverService.getListLight(scope.entityType, {
+                            return entityResolverService.getListLight(scope.entityType, /*{ // fix bug multiple select
                                 filters: {
                                     user_code: value
                                 }
-                            }).then(function (data){
+                            }*/).then(function (data){
 
                                 var result;
 
                                 if(data.results) {
+                                    if (componentData.settings.multiple) { // fix bug multiple select
 
-                                    result = data.results.find(function(item){
-                                        return item.user_code === value;
-                                    })
+                                        result = data.results.filter(item => values.includes(item.id));
+
+                                        if (result.length > 0) {
+                                            return promisify({value: result.map(({id}) => id), name: name, label: label});
+                                        } else {
+                                            return promisify([]);
+                                        }
+
+                                    } else {
+
+                                        result = data.results.find(function(item){
+                                            return item.user_code === value;
+                                        })
+
+                                        if (result) {
+                                            return promisify({value: result.id, name: name, label: label});
+                                        } else {
+                                            return promisify({});
+                                        }
+
+                                    }
 
                                 }
-
-                                if (result) {
-                                    return promisify({value: result.id, name: name, label: label});
-                                } else {
-
-                                    return promisify({});
-                                }
-
                             })
 
                         } else {
@@ -244,8 +279,9 @@
                     else if (mode === 0) { // Get default value from report
 
                         var user_code = componentData.settings.defaultValue.layout;
+                        var entityType = componentData.settings.defaultValue.entity_type;
 
-                        return uiService.getListLayout(scope.entityType, {
+                        return uiService.getListLayout(entityType, {
                             filters: {
                                 user_code: user_code
                             }
@@ -347,7 +383,6 @@
                         .format("YYYY-MM-DD");
                 };
 
-
                 scope.init = function () {
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
@@ -391,7 +426,6 @@
                         });
 
                     }
-
                     else {
 
                         scope.item.data.store = {};
@@ -412,6 +446,18 @@
 							scope.item.data.store.value = [];
 						}
 
+                    	scope.multiselectEventService = new EventService();
+
+						var componentUIData = scope.dashboardDataService.getComponentUIData(scope.item.data.id);
+						var componentSizeCalculated = componentUIData && componentUIData.width;
+
+						if (componentSizeCalculated) {
+							dashboardControlElem.style.width = componentUIData.width; // needed so that multiselector chips can get actual component width
+							scope.readyStatus.componentWidthCalculated = true;
+						}
+
+					} else {
+						scope.readyStatus.componentWidthCalculated = true;
 					}
 
                     if (scope.componentData.custom_component_name) {

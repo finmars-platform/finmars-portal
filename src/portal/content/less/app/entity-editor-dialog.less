@@ -1,3 +1,5 @@
+@evTabsMenuBtnWidth: 40px;
+
 .entity-editor-dialog {
   padding-bottom: 52px;
   width: 100%;
@@ -19,8 +21,23 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255,255,255, .6);
+      background: rgba(255, 255, 255, .6);
       z-index: 1;
+    }
+  }
+
+  .canceled-tab-overlay {
+    &:after {
+      content: ' ';
+
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .2);
+      z-index: 20;
     }
   }
 
@@ -57,6 +74,17 @@
   }
 }
 
+.entity-editor-tabs {
+
+  md-tabs-canvas.md-paginated {
+    margin-right: 72px;
+  }
+
+  md-tabs-wrapper md-next-button {
+    right: @evTabsMenuBtnWidth;
+  }
+}
+
 .entity-editor-row {
   min-height: 40px;
 
@@ -85,82 +113,84 @@
 }
 
 // .universal-editor {
-  .tabs-colored {
-    md-tabs-wrapper {
-      background-color: #f5f5f5;
-    }
+.tabs-colored {
+  md-tabs-wrapper {
+    background-color: #f5f5f5;
+  }
 
-    md-tab-item {
-      padding: 0;
+  md-tab-item {
+    padding: 0;
 
-      span {
-        display: inline-block;
-        padding: 12px 24px;
-      }
-    }
-
-    .md-tab.md-active {
-      color: #f05a22;
-      font-weight: bold;
-    }
-
-    md-ink-bar {
-      color: #f05a22;
-      background-color: #f05a22;
+    span {
+      display: inline-block;
+      padding: 12px 24px;
     }
   }
 
-
-  .entity-tabs-menu {
-    position: absolute;
-    min-height: 48px;
-    top: 0;
-    right: 0;
-
-    button.entity-tabs-menu-btn {
-      margin-top: 5px;
-
-      &.error-tab {
-        fill: #fa393e;
-      }
-    }
-
-    &.active {
-      color: #f05a22;
-      border-bottom: 2px solid #f05a22;
-      box-sizing:border-box;
-
-      ng-md-icon svg {
-        fill: #f05a22;
-      }
-    }
-
-    .tabs-menu-error-icon {
-      display: none;
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      color: @orange;
-
-      .material-icons {
-        font-size: 16px;
-      }
-
-    }
-
+  .md-tab.md-active {
+    color: #f05a22;
+    font-weight: bold;
   }
 
-  .entity-tabs-menu.error-tab {
+  md-ink-bar {
+    color: #f05a22;
+    background-color: #f05a22;
+  }
+}
 
-    button.entity-tabs-menu-btn {
+
+.entity-tabs-menu {
+  position: absolute;
+  min-height: 48px;
+  top: 0;
+  right: 0;
+
+  button.entity-tabs-menu-btn {
+    width: @evTabsMenuBtnWidth;
+    margin-top: 5px;
+
+    &.error-tab {
       fill: #fa393e;
     }
+  }
 
-    .tabs-menu-error-icon {
-      display: block;
+  &.active {
+    color: #f05a22;
+    border-bottom: 2px solid #f05a22;
+    box-sizing: border-box;
+
+    ng-md-icon svg {
+      fill: #f05a22;
+    }
+  }
+
+  .tabs-menu-error-icon {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: @orange;
+
+    .material-icons {
+      font-size: 16px;
     }
 
   }
+
+}
+
+.entity-tabs-menu.error-tab {
+
+  button.entity-tabs-menu-btn {
+    fill: #fa393e;
+  }
+
+  .tabs-menu-error-icon {
+    display: block;
+  }
+
+}
+
 // }
 
 .universal-editor-menu-content .active-tab-button {
@@ -186,7 +216,7 @@
 .ev-editor-tabs-popup-content {
   width: 192px;
 
-  .popup-menu-option {
+  button.popup-menu-option {
     padding-left: 32px;
 
     &.active-tab-button {
@@ -277,6 +307,7 @@
   md-checkbox {
     margin: 0 20px 13px 0;
   }
+
   &.header {
     h4 {
       text-align: center;
@@ -285,6 +316,7 @@
       &:first-child {
         width: 30%;
       }
+
       &:last-child {
         width: 70%;
       }
@@ -383,6 +415,76 @@
 .popup-area-backdrop.back-drop-z-index {
   z-index: 55;
 }
+
 .popup-container.popup-z-index {
   z-index: 56;
+}
+
+
+.user-attributes {
+  color: @gray;
+
+  .user-attributes-list {
+    width: 50%;
+  }
+
+  .instrument-type-attrs {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+  }
+
+  .instrument-type-header {
+    padding-left: 20px;
+  }
+
+  .instrument-type-attr {
+    width: 50%;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+  }
+
+  table {
+    thead {
+      border-bottom: none;
+    }
+
+    tbody {
+
+      tr:first-child {
+        border-top: none;
+      }
+
+    }
+
+    tr {
+      height: 48px;
+      border: 1px solid #e0e0e0;
+
+      td.attribute-name {
+        width: 250px;
+        padding-left: 12px;
+        box-sizing: border-box;
+        border-right: 1px solid #e0e0e0;
+      }
+
+      td.default-value {
+        width: 200px;
+        padding: 0 0 0 8px;
+        box-sizing: border-box;
+      }
+    }
+  }
+
+  button {
+    .material-icons {
+      color: @gray;
+    }
+  }
+
+  button.classifier:disabled {
+    opacity: 0.7;
+  }
 }

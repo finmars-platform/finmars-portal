@@ -5,8 +5,10 @@
 
     'use strict';
 
+    const metaService = require('./metaService');
 	const metaContentTypesService = require('./metaContentTypesService');
-	const localStorageService = require('../../../../core/services/localStorageService');
+	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+    const ecosystemDefaultService = require('./ecosystemDefaultService');
 
 	const uiRepository = require('../repositories/uiRepository');
 
@@ -166,7 +168,7 @@
 
             const cachedLayout = localStorageService.getCachedLayout(key);
 
-            const fetchDefaultLayout = function () {
+            const fetchLayout = function () {
 
                 uiRepository.getListLayoutByKey(key).then(function (layoutData) {
 
@@ -182,7 +184,7 @@
 
             };
 
-            resolveLayoutByKey(cachedLayout, fetchDefaultLayout, resolve, reject);
+            resolveLayoutByKey(cachedLayout, fetchLayout, resolve, reject);
 
         });
 
@@ -224,6 +226,8 @@
 				if (data.is_default) {
 					localStorageService.cacheDefaultLayout(data);
 				}
+
+				resolve(data);
 
 			}).catch(function (error) {
 				reject(error);
@@ -274,9 +278,18 @@
 		});
 
     };
+	/**
+	 *
+	 * @param id {number} - layout id
+	 * @param xhrOptions {=Object}
+	 * @returns {Promise<Object>}
+	 */
+	const pingListLayoutByKey = (id, xhrOptions) => {
+		return uiRepository.pingListLayoutByKey(id, xhrOptions);
+	}
 
-	const getListLayoutTemplate = function () {
-        return uiRepository.getListLayoutTemplate();
+	const getListLayoutTemplate = function (isReport) {
+        return uiRepository.getListLayoutTemplate(isReport);
     };
 
 	/**
@@ -311,6 +324,28 @@
 
 	};
 
+
+	const applyDefaultSettingsToLayoutTemplate = async function (layoutTemplate) {
+        const ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+
+	    const reportOptions = {
+            "account_mode": 1,
+            "calculationGroup": "portfolio",
+            "cost_method": 1,
+            "report_date" : new Date().toISOString().slice(0, 10),
+            "portfolio_mode": 1,
+            "strategy1_mode": 0,
+            "strategy2_mode": 0,
+            "strategy3_mode": 0,
+            "table_font_size": "small",
+            "pricing_policy": ecosystemDefaultData.pricing_policy,
+        };
+
+	    layoutTemplate[0].data.reportOptions = reportOptions;
+
+	    return layoutTemplate;
+    }
+
 	const getDefaultListLayout = function (entityType) {
 
         return new Promise (function (resolve, reject) {
@@ -328,7 +363,7 @@
 			});*/
 			const fetchDefaultListLayout = function () {
 
-				uiRepository.getDefaultListLayout(entityType).then(function (defaultLayoutData) {
+				uiRepository.getDefaultListLayout(entityType).then(async function (defaultLayoutData) {
 
 					let defaultLayout = defaultLayoutData.results[0];
 
@@ -337,7 +372,10 @@
 
 					} else {
 
-						defaultLayout = uiRepository.getListLayoutTemplate();
+						const isReport = metaService.isReport(entityType);
+
+						defaultLayout = uiRepository.getListLayoutTemplate(isReport);
+						defaultLayout = await applyDefaultSettingsToLayoutTemplate(defaultLayout);
 						defaultLayoutData = {results: defaultLayout};
 
 					}
@@ -672,7 +710,6 @@
     };
 
 	const createColumnSortData = function (item) {
-
         return uiRepository.createColumnSortData(item);
     };
 
@@ -714,9 +751,10 @@
 
         deleteListLayoutByKey: deleteListLayoutByKey,
 
-        // Input Form Layouts
+		pingListLayoutByKey: pingListLayoutByKey,
 
-        getListEditLayout: getListEditLayout,
+		//<editor-fold desc="Input form editor layout management">
+		getListEditLayout: getListEditLayout,
         getDefaultEditLayout: getDefaultEditLayout,
         getEditLayoutByKey: getEditLayoutByKey,
 		getEditLayoutByUserCode: getEditLayoutByUserCode,
@@ -724,6 +762,7 @@
         updateEditLayout: updateEditLayout,
 
         deleteEditLayoutByKey: deleteEditLayoutByKey,
+		//</editor-fold>
 
         getConfigurationList: getConfigurationList,
         createConfiguration: createConfiguration,

@@ -1,4 +1,4 @@
-<div flex="50" data-ng-if="vm.readyStatus.user">
+<div flex="50">
     <md-input-container class="md-block">
         <label>First name</label>
         <input data-ng-model="vm.user['first_name']">
@@ -29,8 +29,9 @@
     </md-input-container>
     <md-button class="md-raised" data-ng-click="vm.save()">Save</md-button>
 </div>
+<!--
 <div data-ng-if="!vm.readyStatus.user">
     <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
         <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
     </div>
-</div>
+</div>-->

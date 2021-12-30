@@ -12,6 +12,7 @@
     var DashboardComponentEventService = require('../../services/eventService');
 
 	var dashboardHelper = require('../../helpers/dashboard.helper');
+    const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
 	module.exports = function ($mdDialog) {
         return {
@@ -37,6 +38,7 @@
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
                 var componentData;
+				var componentElem = elem[0].querySelector('.dashboardComponent');
 
                 if (scope.item && scope.item.data) {
 
@@ -64,6 +66,7 @@
                     columnNumber: scope.columnNumber,
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
+					componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
@@ -115,7 +118,7 @@
                             }*/
 
                             if (res.action === 'save') {
-								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData);
+								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                             }
 
                             if (scope.fillInModeData) {
@@ -245,9 +248,9 @@
 
                     });
 
-					scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
+					/* scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
 
-					});
+					}); */
 					//</editor-fold>
 
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
@@ -285,8 +288,62 @@
 
                 };
 
+                // Victor 2021.05.27 #113 number format from report layout
+                const getLayoutById = async function (layoutId) {
 
-                scope.init = function () {
+                    return new Promise(function (resolve, reject) {
+
+                        let actualLayoutsIds = scope.dashboardDataService.getActualRvLayoutsInCache();
+
+                        if (actualLayoutsIds.includes(layoutId)) {
+
+                            let cachedLayout = localStorageService.getCachedLayout(layoutId);
+                            resolve(cachedLayout);
+
+                        } else {
+
+                            uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
+
+                                scope.dashboardDataService.pushToActualRvLayoutsInCache(layoutId);
+                                resolve(layoutData);
+
+                            }).catch(function (error) {
+                                reject(error);
+                            });
+
+                        }
+
+                    });
+
+                };
+
+                const getNumberFormatFromLayoutByValueKey = async (layoutId, valueKey) => {
+
+                    const defaultNumberFormat = {
+                        negative_color_format_id: 0,
+                        negative_format_id: 0,
+                        percentage_format_id: 0,
+                        round_format_id: 0,
+                        thousands_separator_format_id: 0,
+                        zero_format_id: 0,
+                    };
+
+                    const layoutData = await getLayoutById(layoutId);
+                    const columns = layoutData.data.columns;
+                    const matrixValue = columns.find(column => column.key === valueKey)
+
+                    return matrixValue ? matrixValue.report_settings : defaultNumberFormat;
+
+                }
+                // <Victor 2021.05.27 #113 number format from report layout>
+
+                scope.init = async function () {
+
+                    // Victor 2021.05.27 #113 number format from report layout
+                    const layoutId = componentData.settings.layout;
+                    const valueKey = componentData.settings.value_key;
+                    componentData.settings.number_format = await getNumberFormatFromLayoutByValueKey(layoutId, valueKey);
+                    // <Victor 2021.05.27 #113 number format from report layout>
 
                     scope.initEventListeners();
 

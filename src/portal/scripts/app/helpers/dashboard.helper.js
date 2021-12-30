@@ -2,11 +2,11 @@
 
     'use strict';
 
-	var dashboardEvents = require('../services/dashboard/dashboardEvents');
+    var dashboardEvents = require('../services/dashboard/dashboardEvents');
 
-	const uiService = require('../services/uiService');
+    const uiService = require('../services/uiService');
 
-	const toastNotificationService = require('../../../../core/services/toastNotificationService');
+    const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
     let componentsForLinking = [
         'report_viewer', 'report_viewer_split_panel', 'report_viewer_matrix',
@@ -14,9 +14,9 @@
         'report_viewer_table_chart'
     ];
 
-	const getLinkingToFilters = function (layout) {
+    const getLinkingToFilters = function (layout) {
 
-    	var linkingToFilters = [];
+        var linkingToFilters = [];
 
         layout.data.filters.forEach(function (filter) {
 
@@ -65,7 +65,7 @@
 
     };
 
-	const getDataForLayoutSelectorWithFilters = function (layouts) {
+    const getDataForLayoutSelectorWithFilters = function (layouts) {
 
         var result = [];
 
@@ -73,6 +73,7 @@
 
             var layoutObj = {
                 id: layout.id,
+				user_code: layout.user_code,
                 name: layout.name,
                 content: []
             };
@@ -87,69 +88,70 @@
 
     };
 
-	const getComponentsForLinking = function () {
+    const getComponentsForLinking = function () {
         return componentsForLinking;
     };
 
-	const saveComponentSettingsFromDashboard = function (dashboardDataService, componentData) {
+    const saveComponentSettingsFromDashboard = function (dashboardDataService, componentData, showNotification) {
 
-		var listLayout = dashboardDataService.getListLayout();
+        var listLayout = dashboardDataService.getListLayout();
 
-		if (listLayout) {
+        if (listLayout) {
 
-			var layoutData = listLayout.data;
+            var layoutData = listLayout.data;
 
-			for (var i = 0; i < layoutData.components_types.length; i++) {
+            for (var i = 0; i < layoutData.components_types.length; i++) {
 
-				if (layoutData.components_types[i].id === componentData.id) {
+                if (layoutData.components_types[i].id === componentData.id) {
 
-					layoutData.components_types[i] = JSON.parse(JSON.stringify(componentData));
-					dashboardDataService.setListLayout(listLayout);
+                    layoutData.components_types[i] = JSON.parse(JSON.stringify(componentData));
+                    dashboardDataService.setListLayout(listLayout);
 
-					uiService.updateDashboardLayout(listLayout.id, listLayout).then(function (data) {
+                    uiService.updateDashboardLayout(listLayout.id, listLayout).then(function (data) {
 
-						listLayout.modified = data.modified
-						dashboardDataService.setListLayout(listLayout);
+                        listLayout.modified = data.modified
+                        dashboardDataService.setListLayout(listLayout);
 
-						toastNotificationService.success('Dashboard component settings saved.');
+                        if (showNotification) {
+                            toastNotificationService.success('Dashboard component settings saved.');
+                        }
+                    }).catch(function () {
+                        dashboardDataService.setListLayout(listLayout);
+                    });
 
-					}).catch(function () {
-						dashboardDataService.setListLayout(listLayout);
-					});
+                    break;
 
-					break;
+                }
 
-				}
+            }
 
-			}
+        }
 
-		}
-
-	};
+    };
 
     const initEventListeners = function (scope) {
 
-		scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
+        scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
 
-			scope.readyStatus.disabled = true;
+            scope.readyStatus.disabled = true;
 
-			setTimeout(function () {
-				scope.$apply();
-			}, 100);
+            setTimeout(function () {
+                scope.$apply();
+            }, 100);
 
-		});
+        });
 
-		scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
+        scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
 
-			scope.readyStatus.disabled = false;
+            scope.readyStatus.disabled = false;
 
-			setTimeout(function () {
-				scope.$apply();
-			}, 100);
+            setTimeout(function () {
+                scope.$apply();
+            }, 100);
 
-		});
+        });
 
-	};
+    };
 
     const toggleFilterBlock = function (scope) {
 
@@ -172,9 +174,9 @@
         getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
         getComponentsForLinking: getComponentsForLinking,
 
-		saveComponentSettingsFromDashboard: saveComponentSettingsFromDashboard,
+        saveComponentSettingsFromDashboard: saveComponentSettingsFromDashboard,
 
-		initEventListeners: initEventListeners,
+        initEventListeners: initEventListeners,
         toggleFilterBlock: toggleFilterBlock
     };
 

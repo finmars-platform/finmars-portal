@@ -73,15 +73,15 @@
                                                 </md-checkbox>
                                             </div>
 
-                                            <div class="g-modal-draggable-card">
+                                            <div class="g-modal-draggable-card cursor-default">
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
-                                                <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
-                                                <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
-                                                    <span class="material-icons tooltip-error-icon">error</span>
-                                                    <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
-                                                </span>
                                             </div>
                                         </div>
 
@@ -134,12 +134,12 @@
                                             <div class="g-modal-draggable-card">
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
-                                                <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
-                                                <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
-                                                    <span class="material-icons tooltip-error-icon">error</span>
-                                                    <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
-                                                </span>
                                             </div>
                                         </div>
 
@@ -199,21 +199,22 @@
                                             <div class="g-modal-draggable-card">
                                                 <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">
                                                     {{item.name}}
+                                                    <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
+                                                    <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
+                                                        <span class="material-icons tooltip-error-icon">error</span>
+                                                        <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
+                                                    </span>
                                                 </md-card>
-                                                <md-tooltip ng-if="item.key" class="tooltip_1" md-direction="top">{{item.key}}</md-tooltip>
-                                                <span ng-if="item.error_data" class="flex-column fc-flex-end p-l-8">
-                                                    <span class="material-icons tooltip-error-icon">error</span>
-                                                    <md-tooltip ng-if="item.error_data.description" class="error-tooltip">{{item.error_data.description}}</md-tooltip>
-                                                </span>
                                             </div>
                                         </div>
 
                                         <div flex="10"
                                              layout="row"
                                              layout-align="end center">
-                                            <g-ev-filter-settings-button data-filter-key="item.key"
-                                                                         data-ev-data-service="vm.entityViewerDataService"
-                                                                         data-ev-event-service="vm.entityViewerEventService"></g-ev-filter-settings-button>
+                                            <g-filter-settings-btn data-filter-key="item.key"
+                                                                   data-ev-data-service="vm.entityViewerDataService"
+                                                                   data-ev-event-service="vm.entityViewerEventService"
+                                                                   shown-filters-type="vm.shownFiltersType"></g-filter-settings-btn>
                                         </div>
 
                                     </div>
@@ -441,6 +442,46 @@
                                     </md-checkbox>
                                     <md-checkbox ng-model="item.filters" aria="filters"
                                                  class="md-primary" data-ng-change="vm.updateAttrs(vm.attrs)"
+                                                 aria-label="user attributes for filters">
+                                    </md-checkbox>
+                                </div>
+                                <div class="g-modal-draggable-card vcDraggableCard">
+                                    <md-card class="modal-dialog-card" data-key-identifier="{{item.key}}">{{item.name}}</md-card>
+                                </div>
+                            </div>
+                        </md-content>
+                    </md-tab>
+
+                    <md-tab label="Pricing Attributes" data-ng-if="vm.entityType == 'instrument'">
+                        <md-content class="md-padding">
+
+                            <input type="text"
+                                   ng-model="pricingUserAttrSearchTerms"
+                                   placeholder="Search for a ..."
+                                   class="view-constructor-card-search">
+
+                            <div class="g-th-checkbox-row">
+                                <span class="g-meta-circle red">C</span>
+                                <span class="g-meta-circle green">G</span>
+                                <span class="g-meta-circle blue">F</span>
+                            </div>
+                            <div class="g-checkbox-row" data-ng-repeat="item in vm.pricingAttrs | filter: {name: pricingUserAttrSearchTerms}" layout="row">
+                                <div class="view-constructor-checkboxes-container"
+                                     layout="row"
+                                     layout-align="start center">
+                                    <md-checkbox ng-model="item.columns"
+                                                 aria="columns"
+                                                 data-ng-change="vm.updateAttrs(vm.pricingAttrs)"
+                                                 aria-label="user attributes for columns">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.groups"
+                                                 aria="groups"
+                                                 class="md-g-green"
+                                                 data-ng-change="vm.updateAttrs(vm.pricingAttrs)"
+                                                 aria-label="user attributes for groups">
+                                    </md-checkbox>
+                                    <md-checkbox ng-model="item.filters" aria="filters"
+                                                 class="md-primary" data-ng-change="vm.updateAttrs(vm.pricingAttrs)"
                                                  aria-label="user attributes for filters">
                                     </md-checkbox>
                                 </div>

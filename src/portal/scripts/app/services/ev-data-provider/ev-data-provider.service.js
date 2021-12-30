@@ -14,73 +14,116 @@
         entityViewerDataService.setRequestParameters(requestParameters);
     };
 
+    var injectGlobalTableSearch = function (entityViewerDataService) {
+        var requestParameters = entityViewerDataService.getActiveRequestParameters();
+
+        requestParameters.body['global_table_search'] = ''
+
+        var query = entityViewerDataService.getGlobalTableSearch();
+
+        if (query) {
+            requestParameters.body['global_table_search'] = query
+        }
+
+        entityViewerDataService.setRequestParameters(requestParameters);
+    };
+
     var injectRegularFilters = function (entityViewerDataService) {
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
         var newRequestParametersBody = Object.assign({}, requestParameters.body);
-        newRequestParametersBody['filter_settings'] = [];
+        // newRequestParametersBody['filter_settings'] = [];
+		newRequestParametersBody['filter_settings'] = {frontend: [], backend: []};
 
-        var filters = entityViewerDataService.getFilters();
+        var filtersData = entityViewerDataService.getFilters();
 
-        var isFilterValid = function (filterItem) {
+		/* var isFilterValid = function (filterItem) {
 
-            if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
+			if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
 
-                var filterType = filterItem.options.filter_type;
+				var filterType = filterItem.options.filter_type;
 
-                if (filterType === 'empty' ||
-                    filterItem.options.exclude_empty_cells) { // if filter works for empty cells
+				if (filterType === 'empty' ||
+					filterItem.options.exclude_empty_cells) { // if filter works for empty cells
 
-                    return true;
+					return true;
 
-                } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
+				} else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
 
-                    var filterValues = filterItem.options.filter_values;
+					var filterValues = filterItem.options.filter_values;
 
-                    if (filterType === 'from_to') {
+					if (filterType === 'from_to') {
 
-                        if ((filterValues.min_value || filterValues.min_value === 0) &&
-                            (filterValues.max_value || filterValues.max_value === 0)) {
-                            return true;
-                        }
+						if ((filterValues.min_value || filterValues.min_value === 0) &&
+							(filterValues.max_value || filterValues.max_value === 0)) {
+							return true;
+						}
 
-                    } else if (Array.isArray(filterValues)) {
+					} else if (Array.isArray(filterValues)) {
 
-                        if (filterValues[0] || filterValues[0] === 0) {
-                            return true;
-                        }
+						if (filterValues[0] || filterValues[0] === 0) {
+							return true;
+						}
 
-                    }
-                }
+					}
+				}
 
-            }
+			}
 
-            return false;
-        };
+			return false;
+		};
 
-        filters.forEach(function (item) {
+		filters.forEach(function (item) {
 
-            if (isFilterValid(item)) {
+			if (isFilterValid(item)) {
 
-                var filterSettings = {
-                    key: item.key,
-                    filter_type: item.options.filter_type,
-                    exclude_empty_cells: item.options.exclude_empty_cells,
-                    value_type: item.value_type,
-                    value: item.options.filter_values
-                };
+				var filterSettings = {
+					key: item.key,
+					filter_type: item.options.filter_type,
+					exclude_empty_cells: item.options.exclude_empty_cells,
+					value_type: item.value_type,
+					value: item.options.filter_values
+				};
 
-                if (item.options.is_frontend_filter) {
-                    filterSettings.is_frontend_filter = true;
-                }
+				if (item.options.is_frontend_filter) {
+					filterSettings.is_frontend_filter = true;
+				}
 
-                //newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
-                newRequestParametersBody['filter_settings'].push(filterSettings);
+				//newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
+				newRequestParametersBody['filter_settings'].push(filterSettings);
 
-            }
+			}
 
-        });
+		}); */
+
+		var formatFilter = function (filter, filterType) {
+
+			if (evRvCommonHelper.isFilterValid(filter)) {
+
+				var filterSettings = {
+					key: filter.key,
+					filter_type: filter.options.filter_type,
+					exclude_empty_cells: filter.options.exclude_empty_cells,
+					value_type: filter.value_type,
+					value: filter.options.filter_values
+				};
+				//newRequestParametersBody = Object.assign(newRequestParametersBody, filterSettings);
+				newRequestParametersBody['filter_settings'][filterType].push(filterSettings);
+
+			}
+
+		};
+
+		/* TO DELETE: if frontend filters will be applied outside of ev-data-provider files
+		filtersData.frontend.forEach(function (filter) {
+			formatFilter(filter, 'frontend');
+		});
+		*/
+
+		filtersData.backend.forEach(function (filter) {
+			formatFilter(filter, 'backend');
+		});
 
         requestParameters.body = newRequestParametersBody;
 
@@ -103,6 +146,8 @@
 
             obj = Object.assign({}, rootGroupData);
 
+            obj.___items_count = data.count;
+
             obj.count = data.count;
             obj.next = data.next;
             obj.previous = data.previous;
@@ -113,7 +158,8 @@
                 }
             }
 
-        } else {
+        }
+        else {
 
             var groupData = entityViewerDataService.getData(event.___id);
 
@@ -126,6 +172,8 @@
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+                // obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                obj.___items_count = data.count;
 
                 obj.count = data.count;
                 obj.next = data.next;
@@ -137,12 +185,15 @@
                     }
                 }
 
-            } else {
+            }
+            else {
 
                 obj = Object.assign({}, data);
                 obj.___group_name = event.groupName ? event.groupName : '-';
                 obj.___group_id = event.groupId ? event.groupId : '-';
                 obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                // obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                obj.___items_count = data.count;
                 obj.___is_open = true;
                 obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -170,6 +221,7 @@
 
                 item.___group_name = item.___group_name ? item.___group_name : '-';
                 item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                item.___items_count = item.___items_count ? item.___items_count : 0;
                 item.___group_id = item.___group_id ? item.___group_id : '-';
                 item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
@@ -185,7 +237,7 @@
             return item
         });
 
-        var controlObj = {
+    	/*var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
             ___level: obj.___level + 1
@@ -193,7 +245,7 @@
 
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results.push(controlObj);
+        obj.results.push(controlObj);*/
 
         console.log('attributeDataService', attributeDataService);
 
@@ -245,6 +297,8 @@
 
             obj = Object.assign({}, rootGroupData);
 
+            obj.___items_count = data.count;
+
             obj.count = data.count;
             obj.next = data.next;
             obj.previous = data.previous;
@@ -258,7 +312,8 @@
             console.log('obj', obj);
 
 
-        } else {
+        }
+        else {
 
             var groupData = entityViewerDataService.getData(event.___id);
 
@@ -268,6 +323,8 @@
 
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+                // obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                obj.___items_count = data.count;
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                 obj.count = data.count;
@@ -287,6 +344,8 @@
                 obj = Object.assign({}, data);
                 obj.___group_name = event.groupName ? event.groupName : '-';
                 obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                // obj.___items_count = event.itemsCount ? event.itemsCount : 0;
+                obj.___items_count = data.count;
                 obj.___group_id = event.groupId ? event.groupId : '-';
                 // obj.___group_identifier = event.groupId;
                 obj.___is_open = true;
@@ -300,13 +359,13 @@
             }
         }
 
-        obj.results = obj.results.filter(function (item) {
+        /* obj.results = obj.results.filter(function (item) {
             if (item && item.___type !== 'control') {
                 return true;
             }
 
             return false;
-        });
+        }); */
 
         var groups = entityViewerDataService.getGroups();
         var parents = [];
@@ -319,7 +378,7 @@
 
         // evDataHelper.setDefaultGroups(obj);
         obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
+            return item.___type !== 'control';
         });
 
         obj.results = obj.results.map(function (item, index) {
@@ -329,6 +388,7 @@
                 item.___parentId = obj.___id;
                 item.___group_name = item.___group_name ? item.___group_name : '-';
                 item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                item.___items_count = item.___items_count ? item.___items_count : 0;
                 item.___group_id = item.___group_id ? item.___group_id : '-';
 
 
@@ -344,14 +404,14 @@
                 }
 
                 item.___id = evRvCommonHelper.getId(item);
-                item.___index = index
+                item.___index = index;
 
             }
 
-            return item
+            return item;
         });
 
-        var controlObj = {
+        /* var controlObj = {
             ___parentId: obj.___id,
             ___type: 'control',
             ___level: obj.___level + 1
@@ -359,7 +419,7 @@
 
         controlObj.___id = evRvCommonHelper.getId(controlObj);
 
-        obj.results.push(controlObj);
+        obj.results.push(controlObj); */
 
         console.log('DESERIALIZE GROUPS', obj.results);
 
@@ -389,20 +449,20 @@
             });
 
             //if (requestParameters.body.frontend_filter_changed) {
-
             pagesToRequest.forEach(function (pageToRequest) {
 
                 promises.push(new Promise(function (resolveLocal) {
 
                     var options = Object.assign({}, requestParameters.body);
 
-                    options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
+                    /* options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
                         if (!optionsFilter.is_frontend_filter) {
                             return true;
                         }
 
                         return false;
-                    });
+                    }); */
+					options.filter_settings = options.filter_settings.backend;
 
                     options.page = pageToRequest;
                     options.page_size = itemsPerPage;
@@ -432,7 +492,7 @@
                     requestParameters.pagination.page = pageToRequest;
                     entityViewerDataService.setRequestParameters(requestParameters);
 
-                    entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                     objectsService.getFilteredList(entityType, options).then(function (data) {
 
@@ -461,7 +521,7 @@
 
                                 evDataHelper.deleteDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
 
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                             } else {
 
@@ -478,7 +538,8 @@
 
                         }
 
-                    }).catch(function (data) {
+                    })
+					.catch(function (data) {
 
                         console.log('data', data);
 
@@ -496,7 +557,7 @@
 
                         evDataHelper.deleteDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
 
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         resolveLocal()
 
@@ -510,9 +571,8 @@
 
             Promise.all(promises).then(function () {
 
+				entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                 resolve();
-
-                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
             })
             //};
@@ -547,15 +607,15 @@
 
                     var options = Object.assign({}, requestParameters.body);
 
-                    options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
+                    /* options.filter_settings = options.filter_settings.filter(function (optionsFilter) {
                         if (!optionsFilter.is_frontend_filter) {
                             return true;
                         }
 
 
                         return false;
-                    });
-                    console.log('getGroups.options', options);
+                    }); */
+					options.filter_settings = options.filter_settings.backend;
 
                     options.page = pageToRequest;
                     options.page_size = itemsPerPage;
@@ -571,12 +631,12 @@
 
                     }
 
-                    evDataHelper.setDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+                    // evDataHelper.setDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
                     requestParameters.pagination.page = pageToRequest;
                     entityViewerDataService.setRequestParameters(requestParameters);
 
-                    entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                     groupsService.getFilteredList(entityType, options).then(function (data) {
 
@@ -594,13 +654,14 @@
 
                             result.___group_name = item.group_name;
                             result.___group_identifier = item.group_identifier;
+                            result.___items_count = item.items_count;
 
                             return result
                         });
 
                         deserializeGroups(entityViewerDataService, entityViewerEventService, data, requestParameters, pageToRequest);
 
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         resolveLocal();
 
@@ -617,7 +678,8 @@
 
                         }
 
-                    }).catch(function (data) {
+                    })
+					.catch(function (data) {
 
                         console.log('error request requestParameters', requestParameters);
 
@@ -633,7 +695,7 @@
 
                         evDataHelper.deleteDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, errorMessage);
 
-                        entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        // entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                         resolveLocal()
 
@@ -644,7 +706,8 @@
             });
 
             Promise.all(promises).then(function () {
-                resolve();
+				entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            	resolve();
             })
 
         })
@@ -656,6 +719,7 @@
         console.time('Updating data structure');
         injectEntityViewerOptions(entityViewerDataService);
         injectRegularFilters(entityViewerDataService);
+        injectGlobalTableSearch(entityViewerDataService)
 
         var requestParameters = entityViewerDataService.getActiveRequestParameters();
 
@@ -686,65 +750,66 @@
 
     var sortObjects = function (entityViewerDataService, entityViewerEventService, attributeDataService) {
 
-        var level = entityViewerDataService.getGroups().length;
+    	var level = entityViewerDataService.getGroups().length;
 
-        var unfoldedGroups = evDataHelper.getUnfoldedGroupsByLevel(level, entityViewerDataService);
-
-        var activeColumnSort = entityViewerDataService.getActiveColumnSort();
-
-        console.log('activeColumnSort.sortObjects', activeColumnSort);
+        // var unfoldedGroups = evDataHelper.getUnfoldedGroupsByLevel(level, entityViewerDataService);
+		var lastGroups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
+        // var activeColumnSort = entityViewerDataService.getActiveColumnSort();
 
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
 
-        var requestParametersForUnfoldedGroups = [];
+		// var requestParametersForUnfoldedGroups = [];
+		var requestParametersForLastGroups = [];
+		// Get request parameters for last groups
+		Object.keys(requestsParameters).forEach(function (key) {
 
-        Object.keys(requestsParameters).forEach(function (key) {
+			// unfoldedGroups.forEach(function (group) {
+			lastGroups.forEach(function (group) {
 
-            unfoldedGroups.forEach(function (group) {
+				if (group.___id === requestsParameters[key].id) {
 
-                if (group.___id === requestsParameters[key].id) {
+					// requestsParameters[key].event.___id = group.___id;
+					// requestsParameters[key].event.groupName = group.___group_name;
+					// requestsParameters[key].event.groupIdentifier = group.___group_identifier;
+					// requestsParameters[key].event.groupId = group.___group_id;
+					// requestsParameters[key].event.parentGroupId = group.___parentId;
 
-                    // requestsParameters[key].event.___id = group.___id;
-                    // requestsParameters[key].event.groupName = group.___group_name;
-                    // requestsParameters[key].event.groupIdentifier = group.___group_identifier;
-                    // requestsParameters[key].event.groupId = group.___group_id;
-                    // requestsParameters[key].event.parentGroupId = group.___parentId;
-
-                    requestParametersForUnfoldedGroups.push(requestsParameters[key]);
-                }
+					requestParametersForLastGroups.push(requestsParameters[key]);
+				}
 
 
-            })
+			})
 
-        });
+		});
 
-        requestParametersForUnfoldedGroups.forEach(function (item) {
+		requestParametersForLastGroups.forEach(function (item) {
 
-            item.body.page = 1;
+			item.body.page = 1;
 
-            if (activeColumnSort.options.sort === 'ASC') {
-                item.body.ordering = activeColumnSort.key
-            } else {
-                item.body.ordering = '-' + activeColumnSort.key
-            }
+			/* if (activeColumnSort.options.sort === 'ASC') {
+				item.body.ordering = activeColumnSort.key
+			} else {
+				item.body.ordering = '-' + activeColumnSort.key
+			} */
 
-            item.processedPages = [];
+			item.processedPages = [];
 
-            entityViewerDataService.setRequestParameters(item);
+			entityViewerDataService.setRequestParameters(item);
 
-        });
+		});
 
-        unfoldedGroups.forEach(function (group) {
+		// unfoldedGroups.forEach(function (group) {
+		lastGroups.forEach(function (group) {
 
-            group.results = [];
+			group.results = [];
 
-            entityViewerDataService.setData(group)
+			entityViewerDataService.setData(group)
 
-        });
+		});
 
         var promises = [];
 
-        requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
+		requestParametersForLastGroups.forEach(function (requestParameters) {
 
             promises.push(getObjects(requestParameters, entityViewerDataService, entityViewerEventService, attributeDataService))
 

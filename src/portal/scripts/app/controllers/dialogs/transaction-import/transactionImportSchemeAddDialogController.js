@@ -21,6 +21,11 @@
 
         vm.readyStatus = {dataProviders: false, scheme: true, transactionTypes: false};
 
+        vm.defaultRuleScenario = {
+            name: '-',
+            is_default_rule_scenario: true
+        };
+
         vm.inputsGroup = {
             "name": "<b>Imported</b>",
             "key": 'input'
@@ -34,11 +39,11 @@
         };
 
         vm.mapFields = [
-            {
-                value: '',
-                transaction_type: null,
-                fields: []
-            }
+            // {
+            //     value: '',
+            //     transaction_type: null,
+            //     fields: []
+            // }
         ];
 
         vm.providerFields = [
@@ -50,21 +55,21 @@
         ];
 
         vm.calculatedFields = [
-            {
-                name: '',
-                column: '',
-                name_expr: ''
-            }
+            // {
+            //     name: '',
+            //     column: '',
+            //     name_expr: ''
+            // }
         ];
 
         vm.reconFields = [
-            {
-                name: '',
-                selector_values: [],
-                line_reference_id: '',
-                reference_date: '',
-                fields: []
-            }
+            // {
+            //     name: '',
+            //     selector_values: [],
+            //     line_reference_id: '',
+            //     reference_date: '',
+            //     fields: []
+            // }
         ];
 
         vm.openSelectorManager = function ($event) {
@@ -166,6 +171,12 @@
         };
 
         vm.openInputs = function (item, $event) {
+
+
+            if (!item.fields) {
+                item.fields = []
+            }
+
             $mdDialog.show({
                 controller: 'TransactionImportSchemeInputsDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-inputs-dialog-view.html',
@@ -173,8 +184,8 @@
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
-                multiple: true,
                 skipHide: true,
+                multiple: true,
                 locals: {
                     data: {
                         fields: vm.providerFields,
@@ -183,9 +194,7 @@
                 }
             }).then(function (res) {
                 if (res.status === 'agree') {
-                    console.log("res", res.data);
-
-                    item = res.data.item;
+                    item.fields = res.data.item.fields;
                 }
             });
         };
@@ -249,6 +258,7 @@
             vm.mapFields.push({
                 value: '',
                 transaction_type: null,
+                is_default_rule_scenario: false,
                 fields: []
             })
         };
@@ -380,6 +390,9 @@
             vm.scheme.calculated_inputs = vm.calculatedFields;
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rule_scenarios = vm.mapFields;
+
+            vm.scheme.rule_scenarios.push(vm.defaultRuleScenario);
+
             vm.scheme.recon_scenarios = vm.reconFields;
 
             var warningMessage = '';
@@ -471,7 +484,11 @@
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                         targetEvent: $event,
                         locals: {
-                            validationData: reason.message
+                            validationData: {
+                                errorData: {
+                                    message: reason.message
+                                }
+                            }
                         },
                         preserveScope: true,
                         autoWrap: true,
@@ -516,7 +533,10 @@
                 multiple: true,
                 locals: {
                     entityType: 'transaction-type',
-                    entityId: ttypeId
+                    entityId: ttypeId,
+                    data: {
+                        openedIn: 'dialog'
+                    }
                 }
             })
 
@@ -554,26 +574,63 @@
 
                 }
 
-                if (vm.scheme.rule_scenarios.length) {
+                if (vm.scheme.calculated_inputs && vm.scheme.calculated_inputs.length) {
 
+                    vm.calculatedFields = [];
+
+                    vm.scheme.calculated_inputs.forEach(function (input) {
+                        vm.calculatedFields.push(input);
+                    });
+
+                    vm.calculatedFields = vm.calculatedFields.sort(function (a, b) {
+                        if (a.column > b.column) {
+                            return 1;
+                        }
+                        if (a.column < b.column) {
+                            return -1;
+                        }
+
+                        return 0;
+                    });
+
+                    vm.inputsFunctions = vm.getFunctions();
+
+                }
+
+                if (vm.scheme.rule_scenarios.length) {
                     vm.mapFields = [];
 
-                    vm.scheme.rule_scenarios.forEach(function (rule) {
-                        vm.mapFields.push(rule);
+                    vm.scheme.rule_scenarios.forEach(function (item) {
+
+                        if (item.is_default_rule_scenario) {
+                            vm.defaultRuleScenario = item
+                        } else {
+                            vm.mapFields.push(item);
+                        }
+
                     })
+
+
+
 
                 }
 
                 if (vm.scheme.recon_scenarios.length) {
-
                     vm.reconFields = [];
 
-                    vm.scheme.recon_scenarios.forEach(function (rule) {
-                        vm.reconFields.push(rule);
+                    vm.scheme.recon_scenarios.forEach(function (item) {
+                        vm.reconFields.push(item)
                     })
-
                 }
 
+
+
+                vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                    return {
+                        id: item.value,
+                        value: item.value
+                    }
+                });
             }
 
         };

@@ -41,18 +41,21 @@
 
         vm.getAttributeTypes = function () {
 
-            var entityType = 'instrument';
+            return new Promise(function (resolve, reject) {
 
-            attributeTypeService.getList(entityType, {pageSize: 1000}).then(function (data) {
+                var entityType = 'instrument';
 
-                vm.attributeTypes = data.results;
+                attributeTypeService.getList(entityType, {pageSize: 1000}).then(function (data) {
 
-                vm.readyStatus.attributeTypes = true;
+                    vm.attributeTypes = data.results;
 
-                vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
+                    vm.readyStatus.attributeTypes = true;
 
-                $scope.$apply();
+                    vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
 
+                    resolve()
+
+                })
             })
 
         };
@@ -147,11 +150,33 @@
 
                 vm.readyStatus.item = true;
 
-                vm.getAttributeTypes();
 
                 console.log('data', data);
 
-                $scope.$apply();
+                vm.getAttributeTypes().then(function () {
+
+                    if (vm.item.type_settings.data) {
+                        if (vm.item.type_settings.data.parameters) {
+
+                            vm.item.type_settings.data.parameters.forEach(function (item, index) {
+
+                                if (item.attribute_key) {
+                                    item.___switch_state = 'attribute_key'
+                                }
+
+                                vm.optionsForMultipleParameters[index] = vm.getOptionsForAttributeKey(item.value_type);
+
+                            })
+
+                        }
+                    }
+
+                    console.log('vm.optionsForMultipleParameters', vm.optionsForMultipleParameters);
+
+                    $scope.$apply();
+
+                })
+
 
             })
 
@@ -202,6 +227,8 @@
 
             var index = vm.item.type_settings.data.parameters.length;
 
+            index = index + 1
+
             vm.item.type_settings.data.parameters.push({index: index, ___switch_state: 'default_value'})
 
         };
@@ -220,7 +247,7 @@
         };
 
 
-        vm.removeTenor = function($event, item) {
+        vm.removeTenor = function ($event, item) {
 
             vm.item.type_settings.data.tenors.splice(item.index - 1, 1);
 
@@ -228,7 +255,7 @@
 
         };
 
-        vm.addTenor = function(){
+        vm.addTenor = function () {
 
             if (!vm.item.type_settings.data) {
                 vm.item.type_settings.data = {
@@ -249,7 +276,7 @@
 
         };
 
-        vm.refreshTenorIndexes = function(){
+        vm.refreshTenorIndexes = function () {
             vm.item.type_settings.data.tenors = vm.item.type_settings.data.tenors.map(function (item, index) {
 
                 item.index = index + 1;

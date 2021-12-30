@@ -9,7 +9,7 @@
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 10;
     background-color: #fff;
   }
 
@@ -55,9 +55,10 @@
   .dashboard-top-row {
     position: relative;
     height: 31px;
-    -webkit-box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.0470588235294118);
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.0470588235294118);
-    z-index: 1;
+    // -webkit-box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.0470588235294118);
+    // box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.0470588235294118);
+    // z-index: 1;
+    border-bottom: 1px solid @borderPale;
   }
 
   .dashboard-title {
@@ -139,7 +140,7 @@
   }
 
 
-
+  @dashboardCellPaddingRight: 8px; // if changed also change var domElemHorizontalPaddings inside dashboardGridAlignerDirective.js
   .dashboard-cell {
 
     //padding: 10px;
@@ -149,7 +150,7 @@
     overflow: auto;
 
     padding-bottom: 8px;
-    padding-right: 8px;
+    padding-right: @dashboardCellPaddingRight;
 
     &.bordered::after {
 
@@ -679,4 +680,22 @@ dashboard-report-viewer-grand-total {
   min-height: 30px;
   min-width: auto;
 
+}
+
+// dashboard fix
+
+.dashboard-rows-holder.ng-scope {
+  .z-index-2 {
+    z-index: 2;
+  }
+}
+
+.rv-table-chart-table-cell-resize-slider {
+  position: absolute;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: #7d7d7d;
+  top: 0;
+  cursor: ew-resize;
 }

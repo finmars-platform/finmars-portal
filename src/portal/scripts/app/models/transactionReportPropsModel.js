@@ -8,6 +8,11 @@
     var getAttributes = function () {
         return [
             {
+                "key": "notes",
+                "name": "Notes",
+                "value_type": 10
+            },
+            {
                 "key": "transaction_code",
                 "name": "Transaction Code",
                 "value_type": 20
@@ -15,10 +20,11 @@
             {
                 "key": "transaction_class",
                 "name": "Transaction class",
-                "value_content_type": "transactions.transactionclass",
-                "value_entity": "transaction_class",
+                "value_type": "field",
+                "value_entity": "transaction-class",
                 "code": "user_code",
-                "value_type": "field"
+                "value_content_type": "transactions.transactionclass",
+                "allow_null": false
             },
             {
                 "key": "position_size_with_sign",
@@ -63,42 +69,42 @@
             {
                 "key": "reference_fx_rate",
                 "name": "Reference fx rate",
-                "value_type": 'float'
+                "value_type": 20
             },
             {
                 "key": "is_locked",
                 "name": "Is locked",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "is_canceled",
                 "name": "Is canceled",
-                "value_type": 'boolean'
+                "value_type": 50
             },
             {
                 "key": "factor",
                 "name": "Factor",
-                "value_type": 'float'
+                "value_type": 20
             },
-            {
-                "key": "principal_amount",
-                "name": "Principal amount",
-                "value_type": 'float'
-            },
-            {
-                "key": "carry_amount",
-                "name": "Carry amount",
-                "value_type": 'float'
-            },
-            {
-                "key": "overheads",
-                "name": "overheads",
-                "value_type": 'float'
-            },
+            // {
+            //     "key": "principal_amount",
+            //     "name": "Principal amount",
+            //     "value_type": 20
+            // },
+            // {
+            //     "key": "carry_amount",
+            //     "name": "Carry amount",
+            //     "value_type": 20
+            // },
+            // {
+            //     "key": "overheads",
+            //     "name": "overheads",
+            //     "value_type": 20
+            // },
             {
                 "key": "trade_price",
                 "name": "Trade price",
-                "value_type": 'float'
+                "value_type": 20
             }
         ]
     };

@@ -33,13 +33,13 @@
                     layoutToOpen.is_default = true;
                     promises.push(uiService.updateListLayout(layoutToOpen.id, layoutToOpen));
                     Promise.all(promises).then(function () {
-                        var state = 'app.data.' + entityType;
+                        var state = 'app.portal.data.' + entityType;
                         $state.go(state);
                     })
 
                 });
             } else {
-                var state = 'app.data.' + entityType;
+                var state = 'app.portal.data.' + entityType;
                 $state.go(state);
             }
 

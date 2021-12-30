@@ -22,6 +22,7 @@
             var regularFilters = filterService.getRegularFilters(options);
 
             var reportOptions = entityViewerDataService.getReportOptions();
+            var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
 
             if (reportOptions.hasOwnProperty("items") && reportOptions.items.length > 0) {
 
@@ -43,9 +44,15 @@
 
                 var groupTypes = entityViewerDataService.getGroups();
 
-                items = filterService.filterTableRows(items, regularFilters);
+                console.log('globalTableSearch', globalTableSearch);
+
+                items = filterService.filterTableRows(items, regularFilters, entityType);
 
                 items = filterService.filterByGroupsFilters(items, options, groupTypes);
+
+                if (globalTableSearch) {
+                    items = filterService.filterByGlobalTableSearch(items, globalTableSearch)
+                }
 
                 // Victor 2021.02.08 filter by rows colors removed to rv-data.helper.js and filter flatList
                 /*                const rowTypeFilters = entityViewerDataService.getRowTypeFilters();

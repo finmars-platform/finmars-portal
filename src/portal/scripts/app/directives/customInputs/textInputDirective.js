@@ -49,13 +49,12 @@
                     	parameters: parameter object for callback function
 
 				scope.smallOptions probable properties
-				  tooltipText: custom tolltip text
-				  notNull: turn on error mode if field is not filled
-				  noIndicatorBtn: whether to show button at the right part of input
-				  readonly: making input readonly
-				  dialogParent: 'string' - querySelector content for element to insert mdDialog into
-				 */
-
+					tooltipText: custom tooltip text
+					notNull: turn on error mode if field is not filled
+					noIndicatorBtn: whether to show button at the right part of input
+					readonly: making input readonly
+					dialogParent: 'string' - querySelector content for element to insert mdDialog into
+				*/
 				if (scope.smallOptions) {
 
 					scope.tooltipText = scope.smallOptions.tooltipText;
@@ -252,7 +251,15 @@
 									case "set_style_preset2":
 										stylePreset = 2;
 										break;
-									}
+
+									case "reset": // should not reset scope.model, in case of need reset scope.model manually from outside
+
+										scope.error = "";
+										stylePreset = "";
+
+										break;
+
+								}
 
 								scope.eventSignal = {};
 							}
@@ -315,18 +322,19 @@
 						fullTextWrapper.addEventListener("mouseleave", closeFulltext);
 						fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab);
 
-					} else {
+					}
+					else {
 
 						inputElem.addEventListener("focus", function () {
 
 							inputContainer.classList.add("custom-input-full-text-focused");
 							fullTextElem.focus();
 
-							fullTextWrapper.addEventListener("mouseleave", function () {
+							/* fullTextWrapper.addEventListener("mouseleave", function () {
 
 								fullTextElem.blur();
 
-							}, {once: true});
+							}, {once: true}); */
 
 						});
 

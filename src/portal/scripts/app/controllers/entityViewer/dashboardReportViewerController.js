@@ -6,10 +6,10 @@
 
         'use strict';
 
-        var localStorageService = require('../../../../../core/services/localStorageService');
+        var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
         var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
-        var usersService = require('../../services/usersService');
+        // var usersService = require('../../services/usersService');
         var objectComparison = require('../../helpers/objectsComparisonHelper');
 
         var priceHistoryService = require('../../services/priceHistoryService');
@@ -23,7 +23,7 @@
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
 
         var expressionService = require('../../services/expression.service');
-        var middlewareService = require('../../services/middlewareService');
+        // var middlewareService = require('../../services/middlewareService');
 
         var rvDataHelper = require('../../helpers/rv-data.helper');
 
@@ -33,11 +33,11 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, $transitions) {
+        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, gFiltersHelper) {
 
             var vm = this;
 
-            var rvSharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
 
             vm.readyStatus = {
                 attributes: false,
@@ -67,14 +67,14 @@
                 fillInModeEnabled = true;
             }
 
-            // Functions for context menu
+			//region Functions for context menu
+			var updateTableAfterEntityChanges = function (res) {
 
-            var updateTableAfterEntityChanges = function (res) {
+                /*vm.entityViewerDataService.setActiveObjectAction(null);
+                vm.entityViewerDataService.setActiveObjectActionData(null);*/
+				vm.entityViewerDataService.setRowsActionData(null);
 
-                vm.entityViewerDataService.setActiveObjectAction(null);
-                vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                if (res && res.res === 'agree') {
+                if (res && res.status === 'agree') {
 
                     vm.entityViewerDataService.resetData();
                     vm.entityViewerDataService.resetRequestParameters();
@@ -329,8 +329,11 @@
                 });
 
             };
+			//endregion
 
-            // < Functions for context menu >
+			vm.hasFiltersArea = function () {
+				return ['report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_matrix', 'report_viewer_table_chart'].includes(vm.componentData.type);
+			};
 
             vm.updateGrandTotalComponent = function () {
 
@@ -379,7 +382,7 @@
                     });
 
                 } else {
-                    vm.grandTotalValue = val
+                    vm.grandTotalValue = val;
                 }
 
                 // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
@@ -512,7 +515,7 @@
                             noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
                         }
 
-                        await rvSharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
+                        await sharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
 
                         var activeColumnSortProm = new Promise(function (resolve, reject) {
 
@@ -1142,6 +1145,11 @@
 				});
 
 				switch (vm.componentData.type) {
+
+					case 'report_viewer':
+						vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
+						break;
+
 					case 'report_viewer_grand_total':
 
 						vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
@@ -1163,11 +1171,27 @@
 					case 'report_viewer_table_chart':
 
 						vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
+
 							vm.componentData.settings.title_column = vm.tableChartSettings.title_column;
 							vm.componentData.settings.value_column = vm.tableChartSettings.value_column;
+
 						});
 
+                        vm.entityViewerEventService.addEventListener(evEvents.TABLE_CHART_COLUMN_RESIZE_END, function () {
+
+                            vm.componentData.settings.column_1_width = vm.tableChartSettings.column_1_width;
+                            vm.componentData.settings.column_2_width = vm.tableChartSettings.column_2_width;
+                            vm.componentData.settings.column_3_width = vm.tableChartSettings.column_3_width;
+
+                            var showNotification = false
+                            dashboardHelper.saveComponentSettingsFromDashboard(vm.dashboardDataService, vm.componentData, showNotification);
+                        });
+
+
+
+
 						break;
+
 				}
 
 				if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
@@ -1220,7 +1244,10 @@
 						}
 
 						if (vm.componentData.type === 'report_viewer_grand_total') {
+
+							gFiltersHelper.insertActiveObjectDataIntoFilters(vm.entityViewerDataService, vm.entityViewerEventService);
 							vm.updateGrandTotalComponent();
+
 						}
 
 					});
@@ -1265,7 +1292,7 @@
 					});
 				}
 
-				vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+				/* vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
 					var activeObject = vm.entityViewerDataService.getActiveObject();
 					var action = vm.entityViewerDataService.getActiveObjectAction();
@@ -1644,7 +1671,7 @@
 						}
 					}
 
-				});
+				}); */
 
                 vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
                     vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
@@ -1840,7 +1867,9 @@
                 vm.entityType = $scope.$parent.vm.entityType;
                 vm.componentData = $scope.$parent.vm.componentData;
                 vm.userSettings = vm.componentData.user_settings;
-                vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
+                vm.dashboardComponentElement = $scope.$parent.vm.componentElement;
+
+				vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
                 vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
                 vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
                 vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
@@ -1878,6 +1907,7 @@
 
 						styles: vm.componentData.settings.styles,
                         auto_scaling: vm.componentData.settings.auto_scaling,
+						calculate_name_column_width: vm.componentData.settings.calculate_name_column_width,
                         hide_empty_lines: vm.componentData.settings.hide_empty_lines
 
                     };
@@ -1890,6 +1920,10 @@
                     vm.tableChartSettings = {
                         title_column: vm.componentData.settings.title_column,
                         value_column: vm.componentData.settings.value_column,
+
+                        column_1_width: vm.componentData.settings.column_1_width,
+                        column_2_width: vm.componentData.settings.column_2_width,
+                        column_3_width: vm.componentData.settings.column_3_width,
 
                         title_column_name: vm.componentData.settings.title_column_name,
                         value_column_name: vm.componentData.settings.value_column_name,
@@ -1975,7 +2009,7 @@
 
             vm.getView = function () {
 
-                //middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+                // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
                 vm.readyStatus.layout = false;
 
@@ -1989,21 +2023,23 @@
 
                 vm.entityViewerDataService.setViewContext('dashboard');
 
-                var downloadAttrsPromise = rvSharedLogicHelper.downloadAttributes();
+                var downloadAttrsPromise = sharedLogicHelper.downloadAttributes();
                 vm.setEventListeners();
 
                 console.log('$scope.$parent.vm.contentType', $scope.$parent.vm.contentType)
 
-                vm.entityViewerDataService.setEntityType(vm.entityType);
+                /* vm.entityViewerDataService.setEntityType(vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
                 vm.entityViewerDataService.setRootEntityViewer(true);
 				vm.entityViewerDataService.setRowHeight(36);
 				vm.entityViewerDataService.setVirtualScrollStep(500);
 				vm.entityViewerDataService.setCurrentMember(vm.currentMember);
 
-                /* if (vm.componentData.type === 'report_viewer_split_panel') {
+                if (vm.componentData.type === 'report_viewer_split_panel') {
                     vm.entityViewerDataService.setUseFromAbove(true);
                 } */
+				sharedLogicHelper.setLayoutDataForView();
+				vm.entityViewerDataService.setRootEntityViewer(true);
                 vm.entityViewerDataService.setUseFromAbove(true);
 
                 var layoutId = vm.componentData.settings.layout;
@@ -2038,7 +2074,7 @@
                                 vm.entityViewerDataService.setComponents(evComponents);
 
 								//<editor-fold desc="Set dashboard columns list for small rv table">
-								if (vm.userSettings && vm.userSettings.columns) {
+								if (vm.userSettings && vm.userSettings.columns && vm.userSettings.columns.length) {
 
                                     if (fillInModeEnabled) {
 
@@ -2049,6 +2085,7 @@
                                     else {
 
                                         var columns = JSON.parse(JSON.stringify(vm.userSettings.columns));
+
                                         var listLayout = vm.entityViewerDataService.getListLayout();
                                         var layoutColumns = listLayout.data.columns;
                                         var layoutGroups = listLayout.data.grouping;
@@ -2100,7 +2137,7 @@
                             /* vm.readyStatus.layout = true;
 
                             $scope.$apply(); */
-							rvSharedLogicHelper.onSetLayoutEnd();
+							sharedLogicHelper.onSetLayoutEnd();
 
                             resolve();
 

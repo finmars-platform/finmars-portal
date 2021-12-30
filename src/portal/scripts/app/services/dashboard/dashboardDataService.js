@@ -19,7 +19,8 @@
             componentsStatuses: {},
             componentsRefreshRestriction: {},
             componentsErrors: {},
-            actualRvLayouts: [] // id of layouts stored in cache that are actual
+            actualRvLayouts: [], // id of layouts stored in cache that are actual
+			componentsUIData: {}, // e.g. height, width of cell of component
         };
 
         function setData(data) {
@@ -107,6 +108,14 @@
         function getAllComponentsRefreshRestriction () {
             return tmpData.componentsRefreshRestriction;
         }
+
+		function setComponentUIData(componentId, uiData) {
+			tmpData.componentsUIData[componentId] = uiData;
+		}
+
+		function getComponentUIData(componentId) {
+			return tmpData.componentsUIData[componentId];
+		}
 
         function getComponentStatusesAll() {
             return tmpData.componentsStatuses
@@ -201,6 +210,8 @@
             /* getComponentRefreshRestriction: getComponentRefreshRestriction,
             setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction, */
             getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
+			setComponentUIData: setComponentUIData,
+			getComponentUIData: getComponentUIData,
             getComponents: getComponents,
             setComponents: setComponents,
             updateComponent: updateComponent,
@@ -217,7 +228,8 @@
 
             // REFACTOR change layout from popup
             setLayoutToOpen: setLayoutToOpen,
-            getLayoutToOpen: getLayoutToOpen
+            getLayoutToOpen: getLayoutToOpen,
+
         }
 
     }

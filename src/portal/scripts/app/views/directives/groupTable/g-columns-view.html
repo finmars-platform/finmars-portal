@@ -1,799 +1,14 @@
-<div ng-if="!isReport" class="g-columns-component g-thead"
-     columns="columns">
+<div class="g-scrollable-area">
 
-    <div class="g-column-title-row"
-         layout="row"
-         data-ng-if="components.columnAreaHeader">
-
-        <p class="g-column-title"><span class="g-meta-circle red">C</span>OLUMN AREA
-            <ng-md-icon class="tooltips-sign"
-                        icon="info"
-                        size="20"
-                        style="fill: #777777">
-                <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
-            </ng-md-icon>
-        </p>
-
-        <md-button class="md-raised g-add-column-btn" data-ng-click="addColumn()">Add Column</md-button>
-
-        <div ng-if="!isReport && downloadedItemsCount"
-             class="g-downloaded-items-count">Objects Loaded: {{downloadedItemsCount}}</div>
-    </div>
-
-    <div class="g-column-bottom-row">
-        <div class="g-cell-select all {{isAllSelected ? 'active' : ''}}" data-ng-click="selectAllRows()">
-            <ng-md-icon icon="signal_cellular_0_bar"></ng-md-icon>
-        </div>
-
-        <div class="g-scroll-wrapper">
-            <div class="g-scrollable-area-old">
-            <!-- <div data-ng-class="{'g-scrollable-area': isReport}"> -->
-                <!--<div dragula="'columns-bag'" dragula-model="columns" class="g-columns-holder">-->
-                <div class="g-columns-holder">
-                    <!--<div data-ng-init="initDragula()" class="g-columns-holder">-->
-                    <md-card class="g-cell g-column column-status-{{column.status}}"
-                             data-ng-repeat="column in columns track by column.key"
-                             on-finish-render
-                             data-ng-style="column.style"
-                             data-callback="triggerResizeTableHeadColumns()"
-                             data-column-key="{{column.key}}"
-                             data-column-id="{{column.___column_id}}">
-                        <div class="g-column-content">
-                            <div class="column-left-content">
-                                <div class="sort"
-                                     data-ng-if="isSortable(column) && checkReportSortButton(column, $index)">
-                                    <md-button class="column-sort column-btns"
-                                               data-ng-show="column.options.sort === 'ASC'"
-                                               aria-label="open settings"
-                                               data-ng-click="sortHandler(column, 'DESC')">
-                                        <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
-                                    </md-button>
-                                    <md-button class="column-sort-up column-btns"
-                                               data-ng-show="column.options.sort === 'DESC'"
-                                               aria-label="open settings"
-                                               data-ng-click="sortHandler(column, 'ASC')">
-                                        <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
-                                    </md-button>
-                                    <md-button class="column-sort column-both-sorted column-btns"
-                                               data-ng-show="!column.options.sort"
-                                               aria-label="open settings"
-                                               data-ng-click="sortHandler(column, 'DESC')">
-                                        <ng-md-icon class="c-up" icon="keyboard_arrow_up"></ng-md-icon>
-                                        <ng-md-icon class="c-down" icon="keyboard_arrow_down"></ng-md-icon>
-                                    </md-button>
-                                </div>
-
-                                <div class="sort"
-                                     data-ng-if="!checkReportSortButton(column, $index) && viewContext === 'dashboard'">
-                                    <md-button class="column-sort column-btns"
-                                               data-ng-show="groups[$index].options.sort === 'ASC'"
-                                               aria-label="open settings"
-                                               data-ng-click="groupsSortHandler($index, 'DESC')">
-                                        <ng-md-icon icon="keyboard_arrow_down"></ng-md-icon>
-                                    </md-button>
-                                    <md-button class="column-sort-up column-btns"
-                                               data-ng-show="groups[$index].options.sort === 'DESC'"
-                                               aria-label="open settings"
-                                               data-ng-click="groupsSortHandler($index, 'ASC')">
-                                        <ng-md-icon icon="keyboard_arrow_up"></ng-md-icon>
-                                    </md-button>
-                                    <md-button class="column-sort column-both-sorted column-btns"
-                                               data-ng-show="!groups[$index].options.sort"
-                                               aria-label="open settings"
-                                               data-ng-click="groupsSortHandler($index, 'DESC')">
-                                        <ng-md-icon class="c-up" icon="keyboard_arrow_up"></ng-md-icon>
-                                        <ng-md-icon class="c-down" icon="keyboard_arrow_down"></ng-md-icon>
-                                    </md-button>
-                                </div>
-
-                                <!-- if inside .caption will be two <span> with ng-if, firefox will add white space to column name -->
-                                <!-- IMPORTANT .column-name-span class needed for converting table into file -->
-                                <div ng-if="!column.layout_name" class="caption">
-                                    <span ng-bind="column.name" class="column-name-span"></span>
-                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                                </div>
-
-                                <div ng-if="column.layout_name" class="caption">
-                                    <span ng-bind="column.layout_name" class="column-name-span"></span>
-                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                                </div>
-
-
-                            </div>
-
-                            <div data-ng-if="viewContext === 'dashboard' && hasFoldingBtn($index)"
-                                 class="dashboard-fold-btns-container">
-                                <div class="overflow-hidden">
-                                    <div data-ng-hide="!groupLevelIsFolded($index)"
-                                         class="ev-fold-button"
-                                         data-ng-click="unfoldLevel(column.key, $index)">+
-                                    </div>
-                                    <div data-ng-hide="groupLevelIsFolded($index)"
-                                         class="ev-fold-button"
-                                         data-ng-click="foldLevel(column.key, $index)">-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div data-ng-if="viewContext !== 'dashboard' || !columnHasCorrespondingGroup(column.key)" class="settings-btn">
-
-                                <div data-ng-if="isReport && column.value_type == 20"
-                                     data-ng-include="'views/entity-viewer/g-report-viewer-numeric-column-settings-menu.html'"></div>
-                                <!--<md-menu data-ng-if="isReport && column.value_type == 20">
-                                    <md-button aria-label="report viewer numeric column settings"
-                                               class="md-icon-button column-btns column-settings-menu"
-                                               ng-click="$mdOpenMenu($event)">
-                                        <ng-md-icon icon="settings"></ng-md-icon>
-                                    </md-button>
-                                    <md-menu-content width="4">
-
-                                        <md-menu-item>
-                                            <md-button ng-click="renameColumn(column, $mdMenu, $event)"
-                                                       class="g-settings-option-btn"
-                                                       aria-label="open rename column dialog">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Rename</span>
-                                            </md-button>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key)">
-                                            <md-button data-ng-click="addColumnEntityToGrouping(column)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Add to grouping</span>
-                                            </md-button>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="checkForFilteringBySameAttr(column.key) && viewContext !== 'dashboard'">
-                                            <md-button data-ng-click="addFiltersWithColAttr(column)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Add to Filters</span>
-                                            </md-button>
-                                            <md-menu-content style="display: none"></md-menu-content>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-menu  md-offset="20px 0">
-
-                                                <md-button aria-label="show number formatting menu"
-                                                           ng-click="$mdOpenMenu($event)">
-                                                    <ng-md-icon icon="done"
-                                                                class="z-menu-icon"
-                                                                style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Number Format</span>
-                                                    <ng-md-icon icon="arrow_drop_up"
-                                                                class="z-dropdown-icon"></ng-md-icon>
-                                                </md-button>
-
-                                                <md-menu-content width="4">
-
-                                                    <md-menu-item>
-                                                        <md-button ng-click="activateColumnNumberRenderingPreset(column, 'price')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="visibility_off"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <span>Price (0)</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button ng-click="activateColumnNumberRenderingPreset(column, 'market_value')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="visibility_off"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <span>Market Value (000'000)</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button class="g-settings-option-btn"
-                                                                   ng-click="activateColumnNumberRenderingPreset(column, 'amount')">
-                                                            <ng-md-icon icon="visibility_off"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <span>Amount (000'000.00)</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button class="g-settings-option-btn"
-                                                                   ng-click="activateColumnNumberRenderingPreset(column, 'exposure')">
-                                                            <ng-md-icon icon="visibility_off"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <span>Exposure (0.0%)</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button class="g-settings-option-btn"
-                                                                   ng-click="activateColumnNumberRenderingPreset(column, 'return')">
-                                                            <ng-md-icon icon="visibility_off"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <span>Return (0.00%)</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button class="g-settings-option-btn"
-                                                                   ng-click="openColumnNumbersRenderingSettings(column, $event)">
-                                                            <ng-md-icon icon="visibility_off"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <span>Custom</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                </md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="$index !== 0">
-                                            <md-button ng-click="selectSubtotalType(column, 1)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="done"
-                                                            data-ng-show="!checkSubtotalFormula(column, 1)"
-                                                            class="z-menu-icon"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <ng-md-icon icon="done"
-                                                            data-ng-show="checkSubtotalFormula(column, 1)"
-                                                            class="z-menu-icon"></ng-md-icon>
-                                                <span>Subtotal SUM</span>
-                                            </md-button>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="$index !== 0">
-                                            <md-menu md-offset="18px 0">
-                                                <md-button aria-label="Open phone interactions menu"
-                                                           class=""
-                                                           ng-click="$mdOpenMenu($event)">
-                                                    <ng-md-icon icon="done"
-                                                                class="z-menu-icon"
-                                                                style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Subtotal Weighted</span>
-                                                    <ng-md-icon icon="arrow_drop_up"
-                                                                class="z-dropdown-icon"></ng-md-icon>
-                                                </md-button>
-                                                <md-menu-content width="3">
-                                                    <md-menu-item>
-                                                        <md-button ng-click="selectSubtotalType(column, 2)"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkSubtotalFormula(column, 2)"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkSubtotalFormula(column, 2)"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Market Value</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item>
-                                                        <md-button ng-click="selectSubtotalType(column, 3)"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkSubtotalFormula(column, 3)"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkSubtotalFormula(column, 3)"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Market Value %</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item>
-                                                        <md-button ng-click="selectSubtotalType(column, 4)"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkSubtotalFormula(column, 4)"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkSubtotalFormula(column, 4)"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Exposure</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item>
-                                                        <md-button ng-click="selectSubtotalType(column, 5)"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkSubtotalFormula(column, 5)"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkSubtotalFormula(column, 5)"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Exposure %</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="$index !== 0">
-                                            <md-menu md-offset="18px 0">
-                                                <md-button aria-label="Open phone interactions menu"
-                                                           class=""
-                                                           ng-click="$mdOpenMenu($event)">
-                                                    <ng-md-icon icon="done"
-                                                                class="z-menu-icon"
-                                                                style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Subtotal Avg. Weighted</span>
-                                                    <ng-md-icon icon="arrow_drop_up"
-                                                                class="z-dropdown-icon"></ng-md-icon>
-                                                </md-button>
-                                                <md-menu-content width="3">
-                                                    <md-menu-item>
-                                                        <md-button ng-click="selectSubtotalType(column, 6)"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkSubtotalFormula(column, 6)"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkSubtotalFormula(column, 6)"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Market Value</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item>
-                                                        <md-button ng-click="selectSubtotalType(column, 7)"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkSubtotalFormula(column, 7)"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkSubtotalFormula(column, 7)"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Market Value %</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item>
-                                                        <md-button ng-click="selectSubtotalType(column, 8)"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkSubtotalFormula(column, 8)"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkSubtotalFormula(column, 8)"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Exposure</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                    <md-menu-item>
-                                                        <md-button ng-click="selectSubtotalType(column, 9)"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkSubtotalFormula(column, 9)"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkSubtotalFormula(column, 9)"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Exposure %</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-button ng-click="reportHideSubtotal(column)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="done" style="visibility: hidden;"></ng-md-icon>
-                                                <span data-ng-show="!column.report_settings.hide_subtotal">Hide subtotal</span><span
-                                                    data-ng-show="column.report_settings.hide_subtotal">Show subtotal</span>
-                                            </md-button>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-button ng-click="resizeColumn(column, $mdMenu, $event)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Resize</span>
-                                            </md-button>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-menu md-offset="18px 0">
-                                                <md-button aria-label="Open phone interactions menu"
-                                                           ng-click="$mdOpenMenu($event)">
-                                                    <ng-md-icon icon="done"
-                                                                class="z-menu-icon"
-                                                                style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Text aligning</span>
-                                                    <ng-md-icon icon="arrow_drop_up"
-                                                                class="z-dropdown-icon"></ng-md-icon>
-                                                </md-button>
-
-                                                <md-menu-content width="3">
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'left')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'left')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'left')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Left</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'center')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'center')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'center')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Center</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'right')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'right')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'right')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Right</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="!isReport || !columnHasCorrespondingGroup(column.key)">
-                                            <md-button ng-click="removeColumn(column)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                                <span>Remove</span>
-                                            </md-button>
-                                        </md-menu-item>
-
-                                    </md-menu-content>
-                                </md-menu>-->
-
-                                <div data-ng-include="'views/entity-viewer/g-entity-viewer-column-settings-menu.html'"
-                                     class="data-layer-wrapper"></div>
-                                <!--<md-menu data-ng-if="isReport && column.value_type != 20">
-                                    <md-button aria-label="report viewer non numeric column settings"
-                                               class="md-icon-button column-btns column-settings-menu"
-                                               ng-click="$mdOpenMenu($event)">
-                                        <ng-md-icon icon="settings"></ng-md-icon>
-                                        {{column.value_type}}
-                                    </md-button>
-                                    <md-menu-content>
-
-                                        <md-menu-item>
-                                            <md-button ng-click="renameColumn(column, $mdMenu, $event)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Rename</span>
-                                            </md-button>
-                                            <md-menu-content style="display: none"></md-menu-content>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key)">
-                                            <md-button data-ng-click="addColumnEntityToGrouping(column)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Add to grouping</span>
-                                            </md-button>
-                                            <md-menu-content style="display: none"></md-menu-content>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="checkForFilteringBySameAttr(column.key) && viewContext !== 'dashboard'">
-                                            <md-button data-ng-click="addFiltersWithColAttr(column)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Add to Filters</span>
-                                            </md-button>
-                                            <md-menu-content style="display: none"></md-menu-content>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-button ng-click="resizeColumn(column, $mdMenu, $event)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Resize</span>
-                                            </md-button>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-menu md-offset="18px 0">
-                                                <md-button aria-label="Open phone interactions menu"
-                                                           ng-click="$mdOpenMenu($event)">
-                                                    <ng-md-icon icon="done"
-                                                                class="z-menu-icon"
-                                                                style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Text aligning</span>
-                                                    <ng-md-icon icon="arrow_drop_up"
-                                                                class="z-dropdown-icon"></ng-md-icon>
-                                                </md-button>
-
-                                                <md-menu-content width="3">
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'left')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'left')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'left')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Left</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'center')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'center')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'center')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Center</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'right')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'right')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'right')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Right</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="columnHasCorrespondingGroup(column.key)">
-                                            <md-menu>
-                                                <md-button data-ng-click="removeGroup(column.___column_id)"
-                                                           class="g-settings-option-btn">
-                                                    <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                                    <span>Remove</span>
-                                                </md-button>
-                                                <md-menu-content style="display: none"></md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="!isReport || !columnHasCorrespondingGroup(column.key)">
-                                            <md-menu>
-                                                <md-button ng-click="removeColumn(column)"
-                                                           class="g-settings-option-btn">
-                                                    <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                                    <span>Remove</span>
-                                                </md-button>
-                                                <md-menu-content style="display: none"></md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                    </md-menu-content>
-                                </md-menu>-->
-
-                                <!--<md-menu data-ng-if="!isReport">
-
-                                    <md-button aria-label="entity viewer column settings"
-                                               class="md-icon-button column-btns column-settings-menu"
-                                               ng-click="$mdOpenMenu($event)">
-                                        <ng-md-icon icon="settings"></ng-md-icon>
-                                    </md-button>
-
-                                    <md-menu-content width="4">
-                                        <md-menu-item>
-                                            <md-menu>
-                                                <md-button ng-click="renameColumn(column, $mdMenu, $event)"
-                                                           class="g-settings-option-btn">
-                                                    <ng-md-icon icon="visibility_off"
-                                                                style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Rename</span>
-                                                </md-button>
-                                                <md-menu-content style="display: none"></md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="!columnHasCorrespondingGroup(column.key)">
-                                            <md-button data-ng-click="addColumnEntityToGrouping(column)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Add to grouping</span>
-                                            </md-button>
-                                            <md-menu-content style="display: none"></md-menu-content>
-                                        </md-menu-item>
-
-                                        <md-menu-item data-ng-if="checkForFilteringBySameAttr(column.key)">
-                                                <md-button data-ng-click="addFiltersWithColAttr(column)"
-                                                           class="g-settings-option-btn">
-                                                    <ng-md-icon icon="visibility_off"
-                                                                style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Add to Filters</span>
-                                                </md-button>
-                                                <md-menu-content style="display: none"></md-menu-content>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-button ng-click="resizeColumn(column, $mdMenu, $event)"
-                                                       class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"
-                                                            style="visibility: hidden;"></ng-md-icon>
-                                                <span>Resize</span>
-                                            </md-button>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-menu>
-                                                <md-button aria-label="Open phone interactions menu"
-                                                           ng-click="$mdOpenMenu($event)">
-                                                    <ng-md-icon icon="done"
-                                                                class="z-menu-icon"
-                                                                style="visibility: hidden;"></ng-md-icon>
-                                                    <span>Text aligning</span>
-                                                    <ng-md-icon icon="arrow_drop_up"
-                                                                class="z-dropdown-icon"></ng-md-icon>
-                                                </md-button>
-
-                                                <md-menu-content width="3">
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'left')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'left')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'left')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Left</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'center')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'center')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'center')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Center</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-
-                                                    <md-menu-item>
-                                                        <md-button ng-click="changeColumnTextAlign(column, 'right')"
-                                                                   class="g-settings-option-btn">
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="!checkColTextAlign(column, 'right')"
-                                                                        class="z-menu-icon"
-                                                                        style="visibility: hidden;"></ng-md-icon>
-                                                            <ng-md-icon icon="done"
-                                                                        data-ng-show="checkColTextAlign(column, 'right')"
-                                                                        class="z-menu-icon"></ng-md-icon>
-                                                            <span>Right</span>
-                                                        </md-button>
-                                                    </md-menu-item>
-                                                </md-menu-content>
-                                            </md-menu>
-                                        </md-menu-item>
-
-                                        <md-menu-item>
-                                            <md-button ng-click="removeColumn(column)" class="g-settings-option-btn">
-                                                <ng-md-icon icon="visibility_off"></ng-md-icon>
-                                                <span>Remove</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                    </md-menu-content>
-                                </md-menu>-->
-                            </div>
-
-                            <md-tooltip ng-if="!column.layout_name"
-                                        class="tooltip_1"
-                                        md-direction="top">
-                                {{column.name}}
-                            </md-tooltip>
-                            <md-tooltip ng-if="column.layout_name"
-                                        class="tooltip_1"
-                                        md-direction="top">
-                                {{column.layout_name}}
-                            </md-tooltip>
-                            <!--<div class="column-name-tooltip-wrap">
-                                <div class="column-name-tooltip-content">
-                                    <span ng-if="!column.layout_name" data-ng-bind="column.name"></span>
-                                    <span ng-if="column.layout_name" data-ng-bind="column.layout_name"></span>
-                                </div>
-                            </div>-->
-                        </div>
-
-                        <div class="resize-slider" data-group-column-resizer
-                             ev-data-service="evDataService"
-                             ev-event-service="evEventService"></div>
-                    </md-card>
-                </div>
-
-                <div data-ng-if="viewContext === 'dashboard'" class="g-add-column-btn2-container">
-                    <div data-ng-if="!colsAvailableForAdditions.length" class="gac-btn2-tooltip-wrapper">
-                        <md-tooltip class="tooltip_1"
-                                    md-direction="top">
-                            Please set up columns to add in dashboard constructor.
-                        </md-tooltip>
-                    </div>
-
-                    <md-menu class="add-column-menu">
-                        <md-button class="md-raised"
-                                   data-ng-click="$mdOpenMenu($event)"
-                                   data-ng-disabled="!colsAvailableForAdditions.length">
-                            Add Column
-                        </md-button>
-
-                        <md-menu-content>
-                            <md-menu-item data-ng-repeat="column in colsAvailableForAdditions | orderBy: 'order'">
-                                <md-button class="md-button"
-                                           data-ng-click="addColumnToDashboardReport(column)">
-                                    <span data-ng-if="column.layout_name">{{column.layout_name}}</span>
-                                    <span data-ng-if="!column.layout_name">{{column.attribute_data.name}}</span>
-                                </md-button>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
-                </div>
-
-                <div data-ng-if="viewContext !== 'dashboard'"
-                     class="drop-new-field"
-                     id="columnsbag">
-                    Drop New Column
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Victor #69 New report viewer interface-->
-<div ng-if="isReport" class="g-scrollable-area">
-<!--    <div>{{ notGroupingColumns }}</div>-->
-<!--<div class="g-scrollable-area">-->
     <div class="g-column-bottom-row g-table-header flex-row">
         <div class="g-cell g-cell-select-all">
             <md-checkbox data-ng-click="selectAllRows()" data-ng-checked="isAllSelected"></md-checkbox>
         </div>
 
-        <div data-ng-if="isReport" class="g-cell-rows-settings">
+        <div class="g-cell-rows-settings">
 
-            <div class="g-cell g-row-settings">
-                <md-button ng-if="!isReport"
+            <div class="g-row-settings height-100">
+                <!--<md-button ng-if="!isReport"
                            class="g-cell-button"
                            data-ng-class="{'selected': isAllStarsSelected}"
                            data-ng-Click="isAllStarsSelected = !isAllStarsSelected">
@@ -801,10 +16,18 @@
                         <ng-md-icon data-ng-if="!isAllStarsSelected" icon="star_border" size="25" class="flex-row"></ng-md-icon>
                         <ng-md-icon data-ng-if="isAllStarsSelected" icon="star" size="25" class="flex-row"></ng-md-icon>
                     </div>
-                </md-button>
+                </md-button>-->
+                <div class="context-menu-btn-wrapper"></div>
+
+                <button ng-if="!isReport"
+                        class="g-row-settings-btn visibility-hidden"
+                        data-click-action-type="open_row_status_picker">
+                    <span ng-bind-html="rowStatusFilterIcon" style="height: 24px;"></span>
+                    <span class="material-icons arrow-icon">arrow_drop_down</span>
+                </button>
 
                 <md-menu>
-                    <md-button class="g-cell-button g-row-color-picker-btn"
+                    <md-button class="g-cell-button g-row-settings-btn g-row-color-picker-btn"
                                data-ng-class="rowFilterColor"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons label-icon" data-ng-if="rowFilterColor === 'none'">label_outline</span>
@@ -843,16 +66,16 @@
                 </md-menu>
             </div>
 
-            <md-button class="favorite-toggle" data-ng-click="rowFiltersToggle()">
+            <md-button class="g-row-settings-toggle" data-ng-click="rowFiltersToggle()">
                 <div class="flex-row flex-i-center height-100">
-<!--                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>-->
+                    <!--                    <ng-md-icon icon="keyboard_arrow_left" size="16" class="flex-row"></ng-md-icon>-->
                     <span ng-hide="hideRowSettings" class="material-icons f-s-16">keyboard_arrow_left</span>
                     <span ng-hide="!hideRowSettings" class="material-icons f-s-16">keyboard_arrow_right</span>
                 </div>
             </md-button>
         </div>
 
-        <div class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
+        <div ng-if="isReport" class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
 
             <div class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"
                  ng-repeat="column in groups track by column.key"
@@ -876,7 +99,7 @@
                  offset-y="-10"
                  popup-classes="getPopupMenuClasses(column)"
                  backdrop-classes="'low-z-index-backdrop'"
-                 on-popup-close="onSubtotalTypeSelectCancel()"
+                 on-cancel="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
@@ -885,7 +108,23 @@
                     <span data-ng-if="column.error_data">{{column.error_data.description}}</span>
                 </md-tooltip>
 
-                <div class="g-cell g-table-header-cell g-table-header-group-cell">
+                <div class="g-cell g-table-header-cell g-table-header-group-cell position-relative">
+
+                    <div data-ng-click="showArrowDown($event)"
+
+                         popup
+                         popup-id="{{column.key}}"
+                         popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
+                         popup-data="{column: column, changeSortMode: changeSortMode}"
+                         position-relative-to="element"
+                         relative-popup-x="left"
+                         open-on="click"
+                         close-on-click-outside="true"
+                         popup-classes="'column-sort-popup'"
+                         on-cancel="hideArrowDown()"
+                         popup-event-service="evEventService"
+
+                         class="g-column-sort-settings-opener"></div>
 
                     <div ng-if="column.report_settings.is_level_folded"
                          class="g-cell-button"
@@ -901,25 +140,13 @@
 
                     <span data-ng-if="column.error_data" class="material-icons error">error</span>
 
-                    <div class="g-group-button">
-                    <!--<div class="g-group-button flex-row"
-                               data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">-->
+                    <div class="g-table-header-button">
+                        <!--<div class="g-table-header-button flex-row"
+                                   data-ng-click="groupsSortHandler($index, column.options.sort === 'DESC'? 'ASC' : 'DESC')">-->
 
-                        <div  class="column-name-wrapper">
+                        <div class="column-name-wrapper">
 
-                            <div class="flex-row flex-i-center name-block"
-                                 data-ng-click="showArrowDown($event)"
-                                 popup
-                                 popup-id="{{column.key}}"
-                                 popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
-                                 popup-data="{column: column, changeSortMode: changeSortMode}"
-                                 position-relative-to="element"
-                                 relative-popup-x="left"
-                                 open-on="click"
-                                 close-on-click-outside="true"
-                                 popup-classes="'column-sort-popup'"
-                                 on-popup-close="hideArrowDown()"
-                                 popup-event-service="evEventService">
+                            <div class="flex-row flex-i-center name-block">
 
                                 <div ng-if="!column.layout_name">
                                     <span ng-bind="column.name"></span>
@@ -959,7 +186,7 @@
                      data-group-column-resizer
                      ev-data-service="evDataService"
                      ev-event-service="evEventService"></div>
-
+                <!-- gDraggableHeadArea used to prevent call of event "dragleave" by children of gcAreaDnD -->
                 <div class="g-table-header-drop gDraggableHeadArea"
                      data-attr-key="{{column.key}}"></div>
 
@@ -970,7 +197,7 @@
         <div class="flex-row width-100 g-cols-holder gColumnsHolder gcAreaDnD">
 
             <div class="g-table-header-cell-wrapper gColumnElem gDraggableHead gcAreaDnD"
-                 ng-repeat="column in notGroupingColumns track by column.key"
+                 ng-repeat="column in columnsToShow track by column.key"
                  ng-hide="column.isHidden"
                  ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
                  ng-style="column.style"
@@ -990,49 +217,52 @@
                  offset-y="-10"
                  popup-classes="getPopupMenuClasses(column)"
                  backdrop-classes="'low-z-index-backdrop'"
-                 on-popup-close="onSubtotalTypeSelectCancel()"
+                 on-cancel="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
                     <span ng-bind="column.name"></span>
-                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
+<!--                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>-->
                     <span data-ng-if="column.error_data">{{column.error_data.description}}</span>
                 </md-tooltip>
 
-                <div class="g-cell g-table-header-cell">
+                <div class="g-cell g-table-header-cell position-relative">
 
-                        <span data-ng-if="column.error_data" class="material-icons error">error</span>
+                    <div ng-if="isReport"
+                         data-ng-click="showArrowDown($event)"
 
-                    <div class="g-group-button" >
+                         popup
+                         popup-id="{{column.key}}"
+                         popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
+                         popup-data="{column: column, changeSortMode: changeSortMode}"
+                         position-relative-to="element"
+                         relative-popup-x="left"
+                         open-on="click"
+                         close-on-click-outside="true"
+                         popup-classes="'column-sort-popup'"
+                         on-cancel="hideArrowDown()"
+                         popup-event-service="evEventService"
+                         class="g-column-sort-settings-opener"></div>
 
-                        <div  class="column-name-wrapper">
+                    <div ng-if="!isReport"
+                         data-ng-click="sortHandler(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')"
+                         class="g-column-sort-settings-opener"></div>
 
-                            <div class="flex-row flex-i-center name-block"
-                                 data-ng-click="showArrowDown($event)"
-                                 popup
-                                 popup-id="{{column.key}}"
-                                 popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
-                                 popup-data="{column: column, changeSortMode: changeSortMode}"
-                                 position-relative-to="element"
-                                 relative-popup-x="left"
-                                 open-on="click"
-                                 close-on-click-outside="true"
-                                 popup-classes="'column-sort-popup'"
-                                 on-popup-Close="hideArrowDown()"
-                                 popup-event-service="evEventService">
+                    <span data-ng-if="column.error_data" class="material-icons error">error</span>
 
-                                <div ng-if="!column.layout_name">
-                                    <span ng-bind="column.name"></span>
+                    <div class="g-table-header-button">
+
+                        <div class="column-name-wrapper">
+
+                            <div class="flex-row flex-i-center name-block">
+
+                                <div>
+                                    <span ng-if="!column.layout_name" ng-bind="column.name"></span>
+                                    <span ng-if="column.layout_name" ng-bind="column.layout_name"></span>
                                     <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-
                                 </div>
 
-                                <div ng-if="column.layout_name">
-                                    <span ng-bind="column.layout_name"></span>
-                                    <span data-ng-if="column.status == 'missing'">(Deleted)</span>
-                                </div>
-
-                                <span class="material-icons arrow-down">arrow_drop_down</span>
+                                <span ng-if="isReport" class="material-icons arrow-down">arrow_drop_down</span>
 
                                 <!--                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">-->
                                 <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
@@ -1050,7 +280,6 @@
                                 <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
                             </div>
 
-
                         </div>
 
                     </div>
@@ -1065,18 +294,23 @@
                      data-attr-key="{{column.key}}"></div>
             </div>
 
-            <div class="g-table-header-cell-wrapper">
+            <!--<div class="g-table-header-cell-wrapper">
                 <button class="g-cell g-add-column-button" data-ng-click="addColumn($event)">
                     <md-tooltip md-direction="top">
                         Add new column
                     </md-tooltip>
                     <span class="material-icons">add_circle</span>
                 </button>
-            </div>
+            </div>-->
+            <button class="g-cell g-add-column-button" data-ng-click="addColumn($event)">
+                <md-tooltip md-direction="top">
+                    Add new column
+                </md-tooltip>
+                <span class="material-icons">add_circle</span>
+            </button>
 
         </div>
 
     </div>
 
 </div>
-<!-- <Victor #69 New report viewer interface> -->

@@ -3,15 +3,11 @@
  */
 (function () {
 
-    var logService = require('../../../../../../core/services/logService');
-
     var timeZonesService = require('../../../services/timeZonesService');
 
-    var usersService = require('../../../services/usersService');
+    // var usersService = require('../../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog) {
-
-        logService.controller('SettingsGeneralChangePassowrdController', 'initialized');
+    module.exports = function ($scope, $mdDialog, authorizerService) {
 
         var vm = this;
 
@@ -22,7 +18,7 @@
         vm.save = function ($event) {
             vm.readyStatus.processing = true;
             vm.readyStatus.finished = false;
-            usersService.changePassword(0, vm.data).then(function (data) {
+			authorizerService.changePassword(0, vm.data).then(function (data) {
 
                 vm.readyStatus.processing = false;
 

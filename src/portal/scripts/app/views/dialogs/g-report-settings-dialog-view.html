@@ -270,12 +270,44 @@
 
                             </md-input-container>
 
+                            <!-- <md-input-container style="margin-bottom: 24px;">
+                                <label class="uncut-text-on-focus-label" for="transaction-report-date-type">Filter by</label>
+                                <md-select ng-model="reportOptions.date_field"
+                                           md-container-class="common-select-container"
+                                           md-on-close="searchTerm = ''"
+                                           ng-change="updateReportOptions()" id="transaction-report-date-type">
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               data-ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
+
+                                    <div class="select-options-holder">
+                                        <md-option ng-hide="filterItemsOutsideNgrepeat('Report date', searchTerm)" ng-value="null">Transaction date</md-option>
+                                        <md-option ng-repeat="userDate in transactionsUserDates | orderBy: userDate.name | filter:{name: searchTerm}"
+                                                   ng-value="userDate.key">
+                                            {{userDate.name}}
+                                        </md-option>
+                                    </div>
+
+                                </md-select>
+                            </md-input-container> -->
+                            <dropdown-select label="Filter by"
+                                             model="vm.reportOptions.date_field"
+                                             placeholder-text="Filter by"
+                                             menu-options="vm.transactionsUserDates"
+                                             small-options="{tooltipText: 'Date to filter by'}"
+                                             style="width: 200px; margin: 0 10px;">
+                            </dropdown-select>
+
                             <dropdown-select label="Table font size"
                                              model="vm.tableFontSize"
                                              placeholder-text="Table font size"
                                              menu-options="vm.tableFontSizeOptions"
                                              small-options="{tooltipText: 'Table font size'}"
-                                             style="width: 200px;">
+                                             style="width: 200px; margin: 0 10px;">
                             </dropdown-select>
 
                         </div>
@@ -544,6 +576,21 @@
                                                 nothing-selected-text="Nothing Selected"
                                                 on-change-callback="vm.selectedCustomFieldsChanged()"
                                                 name-property="name"></two-fields-multiselect>
+                    </div>
+
+
+                    <div class="m-t-16" data-ng-if="vm.entityType == 'transaction-report'">
+
+                        <div layout="row"  class="m-t-16">
+                            <md-input-container flex="100">
+                                <label>Filter transactions by statuses</label>
+                                <md-select data-ng-model="vm.complex_transaction_statuses_filter" multiple>
+                                    <md-option value="booked">Booked</md-option>
+                                    <md-option value="ignored">Ignored</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+
                     </div>
                 </div>
 

@@ -18,6 +18,8 @@
 
         var entityAttributesData = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
+            "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),
@@ -30,6 +32,7 @@
             "pricing-policy": require('../models/pricingPolicyPropsModel').getAttributes(),
             "instrument-type": require('../models/instrumentTypePropsModel').getAttributes(),
             "instrument": require('../models/instrumentPropsModel').getAttributes(),
+            "generated-event": require('../models/generatedEventPropsModel').getAttributes(),
             "transaction": require('../models/transactionPropsModel').getAttributes(),
             "transaction-type-group": require('../models/transactionTypeGroupPropsModel').getAttributes(),
             "transaction-type": require('../models/transactionTypePropsModel').getAttributes(),
@@ -60,6 +63,9 @@
 
             "currency-history-error": require('../models/currencyHistoryErrorPropsModel').getAttributes(),
             "price-history-error": require('../models/priceHistoryErrorPropsModel').getAttributes(),
+
+            "transaction-class": require('../models/transactionClassPropsModel').getAttributes(),
+            "complex-transaction-status": require('../models/complextransactionStatusPropsModel').getAttributes(),
 
         };
 
@@ -125,6 +131,11 @@
             var instrumentDynamicAttrsFormatted = formatAttributeTypes(instrumentDynamicAttrs, 'instruments.instrument', 'instrument', 'Instrument');
             var allocationDynamicAttrsFormatted = formatAttributeTypes(allocationDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             var linkedInstrumentDynamicAttrsFormatted = formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
+
+			// remove attributes that area already inside currency from balance
+			balanceAttrs = balanceAttrs.filter(function (bAttr) {
+				return !!!currencyAttrs.find(function (cAttr) {return cAttr.key === bAttr.key});
+			});
 
             result = result.concat(balanceAttrs);
             result = result.concat(balanceMismatchAttrs);

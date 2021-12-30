@@ -47,6 +47,21 @@
                 ></dashboard-report-viewer-matrix>
             </div>
 
+
+            <div data-ng-if="vm.componentFillInModeData.item.data.type == 'report_viewer_table_chart'"
+                 class="height-100">
+                <dashboard-report-viewer-table-chart
+                        class="height-100 display-block"
+                        tab-number="vm.componentFillInModeData.tab_number"
+                        row-number="vm.componentFillInModeData.row_number"
+                        column-number="vm.componentFillInModeData.column_number"
+                        item="vm.componentFillInModeData.item"
+                        dashboard-data-service="vm.dashboardDataService"
+                        dashboard-event-service="vm.dashboardEventService"
+                        fill-in-mode-data="vm.componentFillInModeData"
+                ></dashboard-report-viewer-table-chart>
+            </div>
+
         </div>
 
         <div data-ng-if="vm.layout" class="dashboard-main-area">
@@ -63,7 +78,6 @@
                                offset-x="-30"
                                popup-classes="'rounded-border'"
                                close-on-click-outside="true"
-                               backdrop-classes="'low-z-index-backdrop'"
                                popup-event-service="vm.dashboardEventService">
 
                         <span class="material-icons">view_quilt</span>
@@ -142,7 +156,7 @@
 <!--                                </md-button>-->
 <!--                            </md-menu-item>-->
 <!--                            <md-menu-item>-->
-<!--                                <md-button data-ui-sref="app.dashboard-constructor({id: vm.layout.id})"-->
+<!--                                <md-button data-ui-sref="app.portal.dashboard-constructor({id: vm.layout.id})"-->
 <!--                                           class="g-settings-option-btn">-->
 <!--                                    <span>Edit Layout</span>-->
 <!--                                </md-button>-->
@@ -168,10 +182,10 @@
                      tab-number="'fixed_area'">
 
 
-                    <div class="dashboard-rows-holder"  data-row="{{row.row_number}}" data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
+                    <div class="dashboard-rows-holder" data-row="{{row.row_number}}" data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
 
                         <div data-ng-repeat="item in row.columns"
-                             class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}"
+                             class="dashboard-cell dashboardCell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}} {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
                              data-tab="fixed_area"
                              data-row="{{row.row_number}}"
                              data-column="{{item.column_number}}"
@@ -331,20 +345,27 @@
 
             </div>
 
-            <div class="dashboard-tabs-holder">
-                <md-tabs md-border-bottom md-dynamic-height class="dashboard-tabs">
+            <div class="dashboard-tab-headers-holder">
 
-                    <md-tab data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number"
-                            md-on-select="vm.setActiveTab(tab)">
-                        <md-tab-label>
-                            <span>
+                <div class="tab-header {{tab.active ? 'active' : ''}} " data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number"
+                        data-ng-click="vm.setActiveTab(tab)">
+                   <span>
                                 {{tab.name}}
                             </span>
-                        </md-tab-label>
 
-                        <md-tab-body>
+                </div>
 
-                            <div class="dashboard-layout position-relative height-100"
+            </div>
+
+            <div class="dashboard-tabs-holder">
+                <div class="dashboard-tabs height-100 width-100">
+
+                    <div data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number" data-ng-show="tab.active" class="height-100 width-100 display-block">
+
+
+                        <div class="tab-body height-100 width-100">
+
+                            <div class="dashboard-layout position-relative height-100 width-100"
                                  dashboard-grid-aligner
                                  dashboard-data-service="vm.dashboardDataService"
                                  dashboard-event-service="vm.dashboardEventService"
@@ -354,7 +375,7 @@
                                 <div class="dashboard-rows-holder" data-row="{{row.row_number}}"  data-ng-repeat="row in tab.layout.rows">
 
                                     <div data-ng-repeat="item in row.columns"
-                                         class="dashboard-cell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}"
+                                         class="dashboard-cell dashboardCell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}  {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
                                          data-tab="{{tab.tab_number}}"
                                          data-row="{{row.row_number}}"
                                          data-column="{{item.column_number}}"
@@ -522,15 +543,15 @@
 
                                 </div>
 
-                                <div class="dashboard-empty-space"></div>
+                                <div class="dashboard-empty-space dashboardEmptySpace"></div>
 
 
                             </div>
 
-                        </md-tab-body>
-                    </md-tab>
+                        </divmd-tab-body>
+                    </div>
 
-                </md-tabs>
+                </div>
             </div>
 
         </div>
@@ -542,7 +563,7 @@
                 <h2>No Default Layout Found</h2>
 
                 Please,
-                <md-button class="md-raised md-primary" data-ui-sref="app.dashboard-constructor({id: 'new'})">Create new
+                <md-button class="md-raised md-primary" data-ui-sref="app.portal.dashboard-constructor({id: 'new'})">Create new
                     Layout
                 </md-button>
                 or select

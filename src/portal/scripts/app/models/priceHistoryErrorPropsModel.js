@@ -73,7 +73,20 @@
                 "key": "status",
                 "name": "Status",
                 "value_type": 10
+            },
+
+            {
+                "key": "created",
+                "name": "Created",
+                "value_type": 40
+            },
+
+            {
+                "key": "modified",
+                "name": "Modified",
+                "value_type": 40
             }
+
 
         ]
     };

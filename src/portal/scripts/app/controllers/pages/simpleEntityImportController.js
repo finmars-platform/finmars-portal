@@ -1,6 +1,8 @@
 /**
  * Created by mevstratov on 24.06.2019.
  */
+import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
+
 (function () {
 
     'use strict';
@@ -12,14 +14,14 @@
 
 
     var baseUrlService = require('../../services/baseUrlService');
-    var usersService = require('../../services/usersService');
+    // var usersService = require('../../services/usersService');
 
-    var websocketService = require('../../services/websocketService');
+    // var websocketService = require('../../services/websocketService');
 
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function simpleEntityImportController($scope, $mdDialog) {
+    module.exports = function simpleEntityImportController($scope, $mdDialog, usersService) {
 
         var vm = this;
 
@@ -31,7 +33,9 @@
         vm.dataIsImported = false;
         vm.activeContentType = null;
 
-        vm.config = {};
+        vm.config = {
+            scheme: null
+        };
         vm.validateConfig = {};
 
         vm.processing = false;
@@ -40,13 +44,18 @@
         vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
-            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
+            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.processing === false) {
                 return true;
             }
             return false;
         };
 
-        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
+        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
+
+            item.id = item.key;
+
+            return item
+        })
 
         vm.getSchemeList = function () {
 

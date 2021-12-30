@@ -15,25 +15,34 @@
 
 	var baseUrl = baseUrlService.resolve();
 
-	var getRequestParams = {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	};
+	var getRequestParams = function (method, bodyData) { // TODO: move to xhrService
 
-	var getRequestParams2 = {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
+		if (!['GET', 'POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) {
+			throw new Error("Invalid request method");
 		}
+
+		var reqestParamsObj = {
+			method: method,
+			credentials: 'include',
+			headers: {
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		};
+
+		reqestParamsObj.headers['Authorization'] = 'Token ' + cookieService.getCookie('authtoken');
+
+		if (['POST', 'PATCH', 'PUT'].includes(method)) {
+
+			reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
+			reqestParamsObj.body = JSON.stringify(bodyData);
+
+		} else if (method === 'DELETE') {
+			reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
+		}
+
+		return reqestParamsObj;
+
 	};
 
 	var getPortalInterfaceAccess = function (uiLayoutId) {
@@ -42,7 +51,7 @@
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/portal-interface-access/',
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var getListLayout = function (entity, options) {
@@ -54,7 +63,7 @@ var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-				getRequestParams)
+				getRequestParams('GET'))
 
 		} else {
 
@@ -71,7 +80,7 @@ var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-				getRequestParams);
+				getRequestParams('GET'));
 		} */
 
 		if (!options) {
@@ -93,7 +102,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
 			var apiVersion = baseUrlService.getApiVersion();
 
 			return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-				getRequestParams);
+				getRequestParams('GET'));
 
 		}
 
@@ -102,7 +111,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-			getRequestParams);
+			getRequestParams('GET'));
 
 	};
 
@@ -127,7 +136,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
 			var apiVersion = baseUrlService.getApiVersion();
 
 			return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
-				getRequestParams);
+				getRequestParams('GET'));
 
 		}
 
@@ -136,7 +145,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
-			getRequestParams);
+			getRequestParams('GET'));
 
 	};
 
@@ -146,7 +155,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + uiLayoutId + '/',
-			getRequestParams2);
+			getRequestParams('GET'));
 	};
 
 	/* var getListLayoutDefault = function (options) {
@@ -155,7 +164,7 @@ var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-			getRequestParams);
+			getRequestParams('GET'));
 	}; */
 
 	/* var getActiveListLayout = function (entity) {
@@ -167,7 +176,7 @@ var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_active=2&content_type=' + contentType,
-			getRequestParams2)
+			getRequestParams('GET'))
 	}; */
 
 	var getDefaultListLayout = function (entityType) {
@@ -179,7 +188,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_default=2&content_type=' + contentType,
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var createListLayout = function (ui) {
@@ -189,17 +198,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(ui)
-			})
+			getRequestParams('POST', ui));
 	};
 
 	var updateListLayout = function (id, ui) {
@@ -208,17 +207,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(ui)
-			})
+			getRequestParams('PUT', ui));
 	};
 
 	var deleteListLayoutByKey = function (id) {
@@ -228,32 +217,29 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
-		})
+		});
 	};
-
-	var pingListLayoutByKey = function (layoutId) {
+	/**
+	 *
+	 * @param layoutId {number}
+	 * @param xhrOptions {=Object} - options for xhrService
+	 * @returns {Promise<Object>}
+	 */
+	var pingListLayoutByKey = function (layoutId, xhrOptions) {
 
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + layoutId + '/ping/',
-			getRequestParams2)
+			getRequestParams('GET'), xhrOptions);
+
 	};
 
-	var getListLayoutTemplate = function () {
-		return [{
+	var getListLayoutTemplate = function (isReport) {
+		const template = {
 			"name": "default",
 			"data": {
 				"entityType": null,
@@ -272,10 +258,14 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 				},
 				"grouping": [],
 				"columns": [],
-				"filters": [],
+				"filters": {backend: [], frontend: []},
 				"additions": {}
 			}
-		}]
+		};
+
+		if (isReport) template.data.filters = [];
+
+		return [template];
 	};
 
 	// Input Form Layout
@@ -303,7 +293,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 			var apiVersion = baseUrlService.getApiVersion();
 
 			return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/', options),
-				getRequestParams);
+				getRequestParams('GET'));
 
 		}
 
@@ -312,7 +302,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/', options),
-			getRequestParams);
+			getRequestParams('GET'));
 
 	};
 
@@ -323,7 +313,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?is_default=2&content_type=' + contentType,
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var getEditLayoutByKey = function (id) {
@@ -332,7 +322,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var getEditLayoutByUserCode = function (entityType, userCode) {
@@ -342,28 +332,17 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?content_type=' + contentType + '&user_code=' + userCode,
-			getRequestParams2);
+			getRequestParams('GET'));
 
 	};
 
 	var createEditLayout = function (ui) {
 
-
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(ui)
-			})
+			getRequestParams('POST', ui));
 	};
 
 	var updateEditLayout = function (id, ui) {
@@ -372,17 +351,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(ui)
-			})
+			getRequestParams('PUT', ui));
 	};
 
 	var deleteEditLayoutByKey = function (id) {
@@ -392,19 +361,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
-		})
+		});
 	};
 
 
@@ -417,27 +377,16 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/',
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var createConfiguration = function (data) {
-
 
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateConfiguration = function (id, data) {
@@ -446,17 +395,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var deleteConfigurationByKey = function (id) {
@@ -466,19 +405,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
-		})
+		});
 	};
 
 	var getConfigurationExportLayoutList = function () {
@@ -488,7 +418,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/',
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var createConfigurationExportLayout = function (data) {
@@ -498,17 +428,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateConfigurationExportLayout = function (id, data) {
@@ -517,17 +437,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var deleteConfigurationExportLayoutByKey = function (id) {
@@ -537,16 +447,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
 		})
@@ -561,7 +462,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/', options),
-			getRequestParams)
+			getRequestParams('GET'))
 
 	};
 
@@ -572,17 +473,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateTransactionField = function (id, data) {
@@ -591,17 +482,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var getInstrumentFieldList = function (options) {
@@ -610,7 +491,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/', options),
-			getRequestParams)
+			getRequestParams('GET'))
 
 	};
 
@@ -621,17 +502,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateInstrumentField = function (id, data) {
@@ -640,17 +511,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var getDashboardLayoutList = function (entity, options) {
@@ -660,7 +521,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/', options),
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var getDashboardLayoutByKey = function (id) {
@@ -669,7 +530,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var getActiveDashboardLayout = function () {
@@ -679,7 +540,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_active=2',
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var getDefaultDashboardLayout = function () {
@@ -689,7 +550,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_default=2',
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var createDashboardLayout = function (data) {
@@ -699,17 +560,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateDashboardLayout = function (id, data) {
@@ -718,17 +569,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var deleteDashboardLayoutByKey = function (id) {
@@ -738,16 +579,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
 		})
@@ -763,7 +595,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/', options),
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var getTemplateLayoutByKey = function (id) {
@@ -772,7 +604,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var getDefaultTemplateLayout = function () {
@@ -782,7 +614,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/?is_default=2',
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var createTemplateLayout = function (data) {
@@ -792,17 +624,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateTemplateLayout = function (id, data) {
@@ -811,17 +633,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var deleteTemplateLayoutByKey = function (id) {
@@ -831,16 +643,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
 		})
@@ -855,7 +658,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/', options),
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var getContextMenuLayoutByKey = function (id) {
@@ -864,7 +667,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
-			getRequestParams2)
+			getRequestParams('GET'))
 	};
 
 	var createContextMenuLayout = function (data) {
@@ -874,17 +677,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateContextMenuLayout = function (id, data) {
@@ -893,17 +686,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var deleteContextMenuLayoutByKey = function (id) {
@@ -913,16 +696,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
 		})
@@ -938,7 +712,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/', options),
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var createEntityTooltip = function (data) {
@@ -948,17 +722,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateEntityTooltip = function (id, data) {
@@ -967,17 +731,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	// Cross Entity Attribute Extension
@@ -991,7 +745,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/', options),
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var getCrossEntityAttributeExtension = function (id) {
@@ -1000,16 +754,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			})
+			getRequestParams('GET'));
 	};
 
 	var createCrossEntityAttributeExtension = function (data) {
@@ -1019,17 +764,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateCrossEntityAttributeExtension = function (id, data) {
@@ -1038,17 +773,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var deleteCrossEntityAttributeExtension = function (id) {
@@ -1058,16 +783,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
 		})
@@ -1084,7 +800,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/', options),
-			getRequestParams)
+			getRequestParams('GET'))
 	};
 
 	var getColumnSortData = function (id) {
@@ -1093,16 +809,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
-			{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			})
+			getRequestParams('GET'));
 	};
 
 	var createColumnSortData = function (data) {
@@ -1112,17 +819,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/',
-			{
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('POST', data));
 	};
 
 	var updateColumnSortData = function (id, data) {
@@ -1131,17 +828,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 		var apiVersion = baseUrlService.getApiVersion();
 
 		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: {
-					'X-CSRFToken': cookieService.getCookie('csrftoken'),
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			})
+			getRequestParams('PUT', data));
 	};
 
 	var deleteColumnSortData = function (id) {
@@ -1151,16 +838,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
 		return new Promise(function (resolve, reject) {
 			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
-				{
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'X-CSRFToken': cookieService.getCookie('csrftoken'),
-						'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-						Accept: 'application/json',
-						'Content-type': 'application/json'
-					}
-				}).then(function (data) {
+				getRequestParams('DELETE')).then(function (data) {
 				resolve(undefined);
 			})
 		})

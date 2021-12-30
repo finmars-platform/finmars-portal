@@ -52,62 +52,62 @@
                 case 'portfolios.portfolio':
                     layoutsArrayPropertyName = 'portfolioLayouts';
                     layoutsEntityType = 'portfolio';
-                    layoutState = 'app.data.portfolio';
+                    layoutState = 'app.portal.data.portfolio';
                     break;
                 case 'accounts.account':
                     layoutsArrayPropertyName = 'accountLayouts';
                     layoutsEntityType = 'account';
-                    layoutState = 'app.data.account';
+                    layoutState = 'app.portal.data.account';
                     break;
                 case 'instruments.instrument':
                     layoutsArrayPropertyName = 'instrumentLayouts';
                     layoutsEntityType = 'instrument';
-                    layoutState = 'app.data.instrument';
+                    layoutState = 'app.portal.data.instrument';
                     break;
                 case 'counterparties.responsible':
                     layoutsArrayPropertyName = 'responsibleLayouts';
                     layoutsEntityType = 'responsible';
-                    layoutState = 'app.data.responsible';
+                    layoutState = 'app.portal.data.responsible';
                     break;
                 case 'counterparties.counterparty':
                     layoutsArrayPropertyName = 'counterpartyLayouts';
                     layoutsEntityType = 'counterparty';
-                    layoutState = 'app.data.counterparty';
+                    layoutState = 'app.portal.data.counterparty';
                     break;
                 case 'currencies.currency':
                     layoutsArrayPropertyName = 'currencyLayouts';
                     layoutsEntityType = 'currency';
-                    layoutState = 'app.data.currency';
+                    layoutState = 'app.portal.data.currency';
                     break;
                 case 'strategies.strategy1':
                     layoutsArrayPropertyName = 'strategy1Layouts';
                     layoutsEntityType = 'strategy-1';
-                    layoutState = 'app.data.strategy({strategyNumber: 1})';
+                    layoutState = 'app.portal.data.strategy({strategyNumber: 1})';
                     break;
                 case 'strategies.strategy2':
                     layoutsArrayPropertyName = 'strategy2Layouts';
                     layoutsEntityType = 'strategy-2';
-                    layoutState = 'app.data.strategy({strategyNumber: 2})';
+                    layoutState = 'app.portal.data.strategy({strategyNumber: 2})';
                     break;
                 case 'strategies.strategy3':
                     layoutsArrayPropertyName = 'strategy3Layouts';
                     layoutsEntityType = 'strategy-3';
-                    layoutState = 'app.data.strategy({strategyNumber: 3})';
+                    layoutState = 'app.portal.data.strategy({strategyNumber: 3})';
                     break;
                 case 'accounts.accounttype':
                     layoutsArrayPropertyName = 'accountTypeLayouts';
                     layoutsEntityType = 'account-type';
-                    layoutState = 'app.data.account-type';
+                    layoutState = 'app.portal.data.account-type';
                     break;
                 case 'instruments.instrumenttype':
                     layoutsArrayPropertyName = 'instrumentTypeLayouts';
                     layoutsEntityType = 'instrument-type';
-                    layoutState = 'app.data.instrument-type';
+                    layoutState = 'app.portal.data.instrument-type';
                     break;
                 case 'transactions.transactiontype':
                     layoutsArrayPropertyName = 'transactionTypeLayouts';
                     layoutsEntityType = 'transaction-type';
-                    layoutState = 'app.data.transaction-type';
+                    layoutState = 'app.portal.data.transaction-type';
                     break;
             }
 
@@ -378,6 +378,8 @@
 
         vm.createLayout = function ($event, entityType) {
 
+			$event.stopPropagation();
+
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
@@ -387,7 +389,6 @@
                     data: {
                         entityType: entityType,
                         isCreateNew: true
-
                     }
                 }
             }).then(function (res) {

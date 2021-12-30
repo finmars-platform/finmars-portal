@@ -8,6 +8,9 @@
     var metaHelper = require('../../helpers/meta.helper');
     var evEvents = require('../../services/entityViewerEvents');
 
+    var EvRvDomManagerService = require('../evRvDomManagerService');
+    var evRvDomManagerService = new EvRvDomManagerService();
+
     var metaService = require('../../services/metaService');
 
     var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
@@ -106,7 +109,7 @@
 
     };
 
-    var foldChildGroups = function (parentGroupId, evDataService) {
+    /* var foldChildGroups = function (parentGroupId, evDataService) {
 
         var childrens = evDataHelper.getAllChildrenGroups(parentGroupId, evDataService);
 
@@ -131,7 +134,7 @@
 
         })
 
-    };
+    }; */
 
     /* var clearObjectActiveState = function (evDataService, evEventService) {
 
@@ -139,14 +142,14 @@
 
         objects.forEach(function (item) {
             item.___is_activated = false;
-            item.___is_last_activated = false;
+            item.___is_active_object = false;
 
             evDataService.setObject(item);
         });
 
     }; */
 
-    var clearGroupActiveState = function (evDataService, evEventService) {
+    /* var clearGroupActiveState = function (evDataService, evEventService) {
 
         var groups = evDataService.getDataAsList();
 
@@ -155,11 +158,11 @@
             evDataService.setData(item);
         });
 
-    };
+    }; */
 
     var handleShiftSelection = function (evDataService, evEventService, clickData) {
 
-        var lastActiveRow = evDataService.getLastActivatedRow();
+        var lastActiveRow = evDataService.getActiveObjectRow();
 
         console.log('lastActiveRow', lastActiveRow);
 
@@ -171,7 +174,7 @@
 
                 obj.___is_activated = !obj.___is_activated;
                 evDataService.setObject(obj);
-                evDataService.setLastActivatedRow(obj);
+                evDataService.setActiveObjectRow(obj);
 
             } else if (clickData.___type === 'group') {
 
@@ -181,7 +184,7 @@
 
                     group.___is_activated = !group.___is_activated;
 
-                    evDataService.setLastActivatedRow({
+                    evDataService.setActiveObjectRow({
                         ___id: clickData.___id,
                         ___parentId: clickData.___parentId
                     });
@@ -249,7 +252,7 @@
 
             console.log('activated_ids', activated_ids);
 
-            clearGroupActiveState(evDataService, evEventService);
+            // clearGroupActiveState(evDataService, evEventService);
             evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
             list.forEach(function (object) {
@@ -276,7 +279,27 @@
 
     };
 
-    var handleGroupClick = function (clickData, evDataService, evEventService) {
+    var areAllRowsActive = function (evDataService) {
+
+        var selGroups = evDataService.getSelectedGroups();
+        var allItemsCount = 0;
+
+        selGroups.forEach(function (group) {
+            allItemsCount += group.___items_count;
+        });
+
+        var flatList = evDataService.getFlatList();
+        var loadedObjects = flatList.length - 1; // -1 because of control at the end
+
+        if (loadedObjects !== allItemsCount) return false;
+
+        var inactiveRowDoesNotExist = !!!flatList.find(item => item.___type === "object" && !item.___is_activated);
+
+        return inactiveRowDoesNotExist;
+
+    };
+
+    /* var handleGroupClick = function (clickData, evDataService, evEventService) {
 
         var group = evDataService.getData(clickData.___id);
         var obj;
@@ -336,13 +359,13 @@
                 if (group) {
                     group.___is_activated = true;
                     evDataService.setData(group);
-                    evDataService.setLastActivatedRow(group);
+                    evDataService.setActiveObjectRow(group);
                 } else {
 
                     var obj = evDataHelper.getObject(clickData.___id, clickData.___parentId, evDataService);
                     obj.___is_activated = true;
                     evDataService.setObject(obj);
-                    evDataService.setLastActivatedRow(obj);
+                    evDataService.setActiveObjectRow(obj);
 
                 }
 
@@ -360,16 +383,16 @@
                 }
 
                 clearGroupActiveState(evDataService, evEventService);
-				evDataHelper.clearObjectActiveState(evDataService, evEventService);
+                evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
                 if (group) {
                     group.___is_activated = !state;
                     evDataService.setData(group);
-                    evDataService.setLastActivatedRow(group);
+                    evDataService.setActiveObjectRow(group);
                 } else {
                     obj.___is_activated = !state;
                     evDataService.setObject(obj);
-                    evDataService.setLastActivatedRow(obj);
+                    evDataService.setActiveObjectRow(obj);
                 }
 
 
@@ -380,7 +403,7 @@
         }
 
 
-    };
+    }; */
 
     var handleObjectClick = function (clickData, evDataService, evEventService) {
 
@@ -391,89 +414,196 @@
             obj.___is_activated = !obj.___is_activated;
 
             if (!obj.___is_activated) {
-                obj.___is_last_activated = false;
+                obj.___is_active_object = false;
             }
 
             evDataService.setObject(obj);
-            evDataService.setLastActivatedRow(obj);
+            evDataService.setActiveObjectRow(obj);
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
         } else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
-
             handleShiftSelection(evDataService, evEventService, clickData);
-
         } else if (!clickData.isShiftPressed && !clickData.isCtrlPressed) {
 
             evDataHelper.clearObjectActiveState(evDataService, evEventService);
 
             obj.___is_activated = !obj.___is_activated;
-            obj.___is_last_activated = !obj.___is_last_activated;
+            obj.___is_active_object = !obj.___is_active_object;
 
             evDataService.setObject(obj);
 
-            if (obj.___is_last_activated || obj.___is_activated) {
+            if (obj.___is_active_object || obj.___is_activated) {
 
                 obj.___is_activated = true; // in case of click on highlighted by ctrl or shift row
 
                 evDataService.setActiveObject(obj);
 
-                evDataService.setLastActivatedRow(obj);
+                evDataService.setActiveObjectRow(obj);
                 evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
             } else {
 
                 evDataService.setActiveObject(null);
-                evDataService.setLastActivatedRow(null);
+                evDataService.setActiveObjectRow(null);
 
             }
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
         }
 
+        var allRowsAreActive = areAllRowsActive(evDataService);
+        evDataService.setSelectAllRowsState(allRowsAreActive);
+
+        evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
     };
+
+    // DEPRECATED OLD VERSION
+    // var handleControlClick = function (clickData, evDataService, evEventService) {
+    //
+    //     var groupHashId = clickData.___parentId;
+    //
+    //     var requestParameters = evDataService.getRequestParameters(groupHashId);
+    //
+    //     if (!requestParameters.body.page) {
+    //         requestParameters.body.page = 1;
+    //         requestParameters.requestedPages = [1]
+    //     }
+    //
+    //     var isLoadMoreButtonPressed = clickData.target.classList.contains('load-more');
+    //     var isLoadAllButtonPressed = clickData.target.classList.contains('load-all');
+    //
+    //     if (isLoadMoreButtonPressed) {
+    //
+    //         requestParameters.body.page = requestParameters.body.page + 1;
+    //         requestParameters.pagination.page = requestParameters.pagination.page + 1;
+    //         requestParameters.requestedPages.push(requestParameters.body.page);
+    //
+    //         evDataService.setRequestParameters(requestParameters);
+    //         evDataService.setActiveRequestParametersId(requestParameters.id);
+    //
+    //     }
+    //
+    //     if (isLoadAllButtonPressed) {
+    //
+    //         requestParameters.loadAll = true;
+    //
+    //         requestParameters.body.page = requestParameters.body.page + 1;
+    //         requestParameters.pagination.page = requestParameters.pagination.page + 1;
+    //         requestParameters.requestedPages.push(requestParameters.body.page);
+    //
+    //         evDataService.setRequestParameters(requestParameters);
+    //
+    //     }
+    //
+    //     evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+    //
+    // };
 
     var handleControlClick = function (clickData, evDataService, evEventService) {
 
-        var groupHashId = clickData.___parentId;
+        var selectedGroups = evDataService.getSelectedGroups();
 
-        var requestParameters = evDataService.getRequestParameters(groupHashId);
+        if (selectedGroups && selectedGroups.length) {
+            selectedGroups.forEach(function (selectedGroup) {
 
-        if (!requestParameters.body.page) {
-            requestParameters.body.page = 1;
-            requestParameters.requestedPages = [1]
+                console.log('selectedGroup', selectedGroup);
+
+                var groupHashId = selectedGroup.___id;
+
+
+                var requestParameters = evDataService.getRequestParameters(groupHashId);
+
+
+                var total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
+
+                if (requestParameters.body.page < total_pages) {
+
+                    if (!requestParameters.body.page) {
+                        requestParameters.body.page = 1;
+                        requestParameters.requestedPages = [1]
+                    }
+
+                    var isLoadMoreButtonPressed = clickData.target.classList.contains('load-more');
+                    var isLoadAllButtonPressed = clickData.target.classList.contains('load-all');
+
+                    if (isLoadMoreButtonPressed) {
+
+                        requestParameters.body.page = requestParameters.body.page + 1;
+                        requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                        requestParameters.requestedPages.push(requestParameters.body.page);
+
+                        evDataService.setRequestParameters(requestParameters);
+                        evDataService.setActiveRequestParametersId(requestParameters.id);
+
+                    }
+
+                    if (isLoadAllButtonPressed) {
+
+                        requestParameters.loadAll = true;
+
+                        requestParameters.body.page = requestParameters.body.page + 1;
+                        requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                        requestParameters.requestedPages.push(requestParameters.body.page);
+
+                        evDataService.setRequestParameters(requestParameters);
+
+                    }
+
+                }
+
+            })
+        } else {
+
+            var groupHashId = clickData.___parentId;
+
+
+            var requestParameters = evDataService.getRequestParameters(groupHashId);
+
+
+            var total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
+
+            if (requestParameters.body.page < total_pages) {
+
+                if (!requestParameters.body.page) {
+                    requestParameters.body.page = 1;
+                    requestParameters.requestedPages = [1]
+                }
+
+                var isLoadMoreButtonPressed = clickData.target.classList.contains('load-more');
+                var isLoadAllButtonPressed = clickData.target.classList.contains('load-all');
+
+                if (isLoadMoreButtonPressed) {
+
+                    requestParameters.body.page = requestParameters.body.page + 1;
+                    requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                    requestParameters.requestedPages.push(requestParameters.body.page);
+
+                    evDataService.setRequestParameters(requestParameters);
+                    evDataService.setActiveRequestParametersId(requestParameters.id);
+
+                }
+
+                if (isLoadAllButtonPressed) {
+
+                    requestParameters.loadAll = true;
+
+                    requestParameters.body.page = requestParameters.body.page + 1;
+                    requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                    requestParameters.requestedPages.push(requestParameters.body.page);
+
+                    evDataService.setRequestParameters(requestParameters);
+
+                }
+
+            }
+
         }
-
-        var isLoadMoreButtonPressed = clickData.target.classList.contains('load-more');
-        var isLoadAllButtonPressed = clickData.target.classList.contains('load-all');
-
-        if (isLoadMoreButtonPressed) {
-
-            requestParameters.body.page = requestParameters.body.page + 1;
-            requestParameters.pagination.page = requestParameters.pagination.page + 1;
-            requestParameters.requestedPages.push(requestParameters.body.page);
-
-            evDataService.setRequestParameters(requestParameters);
-            evDataService.setActiveRequestParametersId(requestParameters.id);
-
-        }
-
-        if (isLoadAllButtonPressed) {
-
-            requestParameters.loadAll = true;
-
-            requestParameters.body.page = requestParameters.body.page + 1;
-            requestParameters.pagination.page = requestParameters.pagination.page + 1;
-            requestParameters.requestedPages.push(requestParameters.body.page);
-
-            evDataService.setRequestParameters(requestParameters);
-
-        }
-
         evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
     };
+
 
     var getClickData = function (event) {
 
@@ -494,11 +624,10 @@
 
                 clickData.___type = rowElem.dataset.type;
                 clickData.___id = rowElem.dataset.objectId;
-
                 clickData.___parentId = rowElem.dataset.parentGroupHashId;
 
 
-                if (event.target.classList.contains('ev-fold-button')) {
+                /* if (event.target.classList.contains('ev-fold-button')) {
                     clickData.isFoldButtonPressed = true;
                 }
 
@@ -508,8 +637,13 @@
 
                 if (rowElem.dataset.subtotalSubtype) {
                     clickData.___subtotal_subtype = rowElem.dataset.subtotalSubtype;
-                }
+                } */
 
+            }
+
+            if (clickData.target.classList.contains('gTableActionBtn')) {
+                // clickData.actionElem = clickedActionBtn;
+                clickData.actionType = clickData.target.dataset.clickActionType;
             }
 
         }
@@ -545,12 +679,19 @@
 
                     var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-                    var dropdownAction = 'edit';
+                    // var dropdownAction = 'edit';
 
                     evDataService.setActiveObject(obj);
-                    evDataService.setActiveObjectAction(dropdownAction);
+                    // evDataService.setActiveObjectAction(dropdownAction);
+                    evDataService.setRowsActionData({actionKey: 'edit', object: obj});
 
                     evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                    evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
+
+                    var allRowsAreActive = areAllRowsActive(evDataService);
+                    evDataService.setSelectAllRowsState(allRowsAreActive);
+
+                    evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
                 }
 
@@ -558,29 +699,60 @@
 
                 if (event.detail === 1) {
 
-                    if (clickData.___type === 'group') {
+                    /* if (clickData.___type === 'group') {
 
                         handleGroupClick(clickData, evDataService, evEventService);
 
-                    }
+                    } */
 
                     if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
                     }
 
                     if (clickData.___type === 'object') {
-
                         handleObjectClick(clickData, evDataService, evEventService);
-
                     }
+
                 }
 
             } else if (!selection.length) {
 
                 if (event.detail === 1) {
 
-                    if (clickData.___type === 'group') {
+                    /*if (clickData.___type === 'group') {
                         handleGroupClick(clickData, evDataService, evEventService);
+                    } else*/
+                    if (clickData.actionType) {
+
+                        switch (clickData.actionType) {
+
+                            case 'open_row_color_picker':
+
+                                event.stopPropagation();
+                                evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns);
+
+                                break;
+
+                            case 'open_context_menu':
+
+                                const gRowElem = event.target.closest('.g-row');
+
+                                if (gRowElem) {
+
+                                    const objectId = clickData.___id;
+                                    const parentGroupHashId = clickData.___parentId;
+                                    const contextMenuPosition = {positionX: event.pageX, positionY: event.pageY};
+
+                                    event.stopPropagation();
+
+                                    createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+
+                                }
+
+                                break;
+
+                        }
+
                     } else if (clickData.___type === 'control') {
                         handleControlClick(clickData, evDataService, evEventService);
                     } else if (clickData.___type === 'object') {
@@ -589,325 +761,344 @@
 
                 }
 
-
             }
+
         });
 
     };
 
-	var clearContextMenuRow = function (evDataService) {
+    var clearContextMenuRow = function (evDataService) {
 
-		var objects = evDataService.getObjects();
+        var objects = evDataService.getObjects();
 
-		var contextMenuItem = objects.find(obj => obj.___context_menu_is_opened);
+        var contextMenuItem = objects.find(obj => obj.___context_menu_is_opened);
 
-		if (contextMenuItem) {
+        if (contextMenuItem) {
 
-			contextMenuItem.___context_menu_is_opened = false;
-			evDataService.setObject(contextMenuItem);
+            contextMenuItem.___context_menu_is_opened = false;
+            evDataService.setObject(contextMenuItem);
 
-		}
+        }
 
-	};
+    };
 
-	var clearRowWithContextMenu = function (evDataService, evEventService, redrawTable) {
+    var clearRowWithContextMenu = function (evDataService, evEventService, redrawTable) {
 
-		clearContextMenuRow(evDataService);
-		if (redrawTable) evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        clearContextMenuRow(evDataService);
+        if (redrawTable) evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-	};
+    };
 
-	var popupsToClear = [];
+    /*  var popupsToClear = [];
 
     var clearDropdowns = function () {
 
         var dropdowns = document.querySelectorAll('.ev-dropdown');
 
-        /* for (var i = 0; i < dropdowns.length; i = i + 1) {
-            dropdowns[i].remove();
-        } */
-		dropdowns.forEach(dropdown => {
-			// remove popup after animation
-			if (!popupsToClear.includes(dropdown.id)) {
+        dropdowns.forEach(dropdown => {
+            // remove popup after animation
+            if (!popupsToClear.includes(dropdown.id)) {
 
-				dropdown.classList.add("fade-out");
+                dropdown.classList.add("fade-out");
 
-				popupsToClear.push(dropdown.id);
-				var dropdownIndex = popupsToClear.length - 1;
+                popupsToClear.push(dropdown.id);
+                var dropdownIndex = popupsToClear.length - 1;
 
-				setTimeout(function () {
+                setTimeout(function () {
 
-					dropdown.parentElement.removeChild(dropdown);
-					popupsToClear.splice(dropdownIndex, 1);
+                    dropdown.parentElement.removeChild(dropdown);
+                    popupsToClear.splice(dropdownIndex, 1);
 
-				}, 200); // duration of animation
+                }, 200); // duration of animation
 
-			}
+            }
 
-		});
+        });
 
-		//<editor-fold desc="Remove dropdown related listeners">
-		for (const prop in eventListenerFn2Args) {
-			eventListenerFn2Args[prop] = null;
-		}
-		window.removeEventListener('click', executeContextMenuAction);
+        //<editor-fold desc="Remove dropdown related listeners">
+        for (const prop in eventListenerFn2Args) {
+            eventListenerFn2Args[prop] = null;
+        }
+        window.removeEventListener('click', executeContextMenuAction);
 
-		clearDropdownsAndRowsArgs.evDataService = null;
-		clearDropdownsAndRowsArgs.evEventService = null;
-		window.removeEventListener('contextmenu', callClearDropdownsAndRows);
-		//</editor-fold>
-		/*window.removeEventListener('click', executeContextMenuAction);
-		window.removeEventListener('click', executeSubtotalContextMenuAction);
+        clearDropdownsAndRowsArgs.evDataService = null;
+        clearDropdownsAndRowsArgs.evEventService = null;
+        window.removeEventListener('contextmenu', callClearDropdownsAndRows);
+        //</editor-fold>
 
-		clearDropdownsAndRowsArgs.evDataService = null;
-		clearDropdownsAndRowsArgs.evEventService = null;
-		window.removeEventListener('contextmenu', callClearDropdownsAndRows);*/
 
+    }; */
+    var clearDropdowns = function () {
+        [eventListenerFn2Args, clearDropdownsAndRowsArgs] = evRvDomManagerService.clearDropdowns(eventListenerFn2Args, clearDropdownsAndRowsArgs, executeContextMenuAction, callClearDropdownsAndRows);
+    };
+
+    var clearDropdownsAndRows = function (evDataService, evEventService, redrawTable) {
+
+        clearRowWithContextMenu(evDataService, evEventService, redrawTable);
+        clearDropdowns();
 
     };
 
-	var clearDropdownsAndRows = function (evDataService, evEventService, redrawTable) {
+    /** Used to pass data into callClearDropdownsAndRows inside event listener */
+    var clearDropdownsAndRowsArgs = {
+        evDataService: null,
+        evEventService: null
+    }
+    /**
+     * Used to call clearDropdownsAndRows() with arguments inside event listeners
+     */
+    var callClearDropdownsAndRows = function () {
+        clearDropdownsAndRows(clearDropdownsAndRowsArgs.evDataService, clearDropdownsAndRowsArgs.evEventService, true);
+    };
 
-		clearRowWithContextMenu(evDataService, evEventService, redrawTable);
-		clearDropdowns();
+    /**
+     * transfer data into event listener callback executeContextMenuAction() or executeSubtotalContextMenuAction()
+     *
+     * @type {Object} eventListenerFn2Args
+     * eventListenerFn2Args.evDataService {Object|null}
+     * eventListenerFn2Args.evEventService {Object|null}
+     */
+    var eventListenerFn2Args = {
+        evDataService: null,
+        evEventService: null
+    }
 
-	};
+    function executeContextMenuAction(event) {
 
-	/** Used to pass data into callClearDropdownsAndRows inside event listener */
-	var clearDropdownsAndRowsArgs = {
-		evDataService: null,
-		evEventService: null
-	}
-	/**
-	 * Used to call clearDropdownsAndRows() with arguments inside event listeners
-	 */
-	var callClearDropdownsAndRows = function () {
-		clearDropdownsAndRows(clearDropdownsAndRowsArgs.evDataService, clearDropdownsAndRowsArgs.evEventService, true);
-	};
+        var objectId = event.target.dataset.objectId;
+        var parentGroupHashId = event.target.dataset.parentGroupHashId;
+        var dropdownAction = event.target.dataset.evDropdownAction;
 
-	/**
-	 * transfer data into event listener callback executeContextMenuAction() or executeSubtotalContextMenuAction()
-	 *
-	 * @type {Object} eventListenerFn2Args
-	 * eventListenerFn2Args.evDataService {Object|null}
-	 * eventListenerFn2Args.evEventService {Object|null}
-	 */
-	var eventListenerFn2Args = {
-		evDataService: null,
-		evEventService: null
-	}
+        var evDataService = eventListenerFn2Args.evDataService;
+        var evEventService = eventListenerFn2Args.evEventService;
 
-	function executeContextMenuAction(event) {
+        var dropdownActionData = {};
 
-		var objectId = event.target.dataset.objectId;
-		var parentGroupHashId = event.target.dataset.parentGroupHashId;
-		var dropdownAction = event.target.dataset.evDropdownAction;
+        if (dropdownAction === 'mark_row') {
 
-		var evDataService = eventListenerFn2Args.evDataService;
-		var evEventService = eventListenerFn2Args.evEventService;
+            var color = event.target.dataset.evDropdownActionDataColor;
 
-		var dropdownActionData = {};
+            if (objectId && color && parentGroupHashId) {
+                evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+            }
 
-		if (dropdownAction === 'toggle_row') {
+            clearDropdownsAndRows(evDataService, evEventService, true);
 
-			var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+        } else if (dropdownAction === 'toggle_row') {
 
-			if (obj.___is_activated) {
+            var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+            var activeObjChanged = false;
 
-				obj.___is_activated = false;
-				obj.___is_last_activated = false;
+            if (obj.___is_activated) {
 
-				evDataService.setActiveObject(null);
-				evDataService.setLastActivatedRow(null);
+                if (obj.___is_active_object) {
 
-			} else {
+                    evDataService.setActiveObjectRow(null);
+                    evDataService.setActiveObject(null);
+                    activeObjChanged = true;
 
-				// clearObjectActiveState(evDataService);
-				evDataHelper.clearLastActiveObject(evDataService);
+                }
 
-				obj.___is_activated = true;
-				obj.___is_last_activated = true;
+                obj.___is_activated = false;
+                obj.___is_active_object = false;
 
-				evDataService.setActiveObject(obj);
-				evDataService.setLastActivatedRow(obj);
+                // evDataService.setActiveObject(null);
 
-			}
+            } else {
 
-			evDataService.setObject(obj);
+                // clearObjectActiveState(evDataService);
+                // evDataHelper.clearLastActiveObject(evDataService);
 
-			clearDropdownsAndRows(evDataService, evEventService, true);
+                obj.___is_activated = true;
 
-		}
+                // evDataService.setActiveObject(obj);
+                // evDataService.setActiveObjectRow(obj);
 
-		else {
+            }
 
-			if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
-				dropdownActionData.id = event.target.dataset.evDropdownActionDataId
-			}
+            evDataService.setObject(obj);
 
-			if (objectId && dropdownAction && parentGroupHashId) {
+            clearDropdownsAndRows(evDataService, evEventService, true);
 
-				var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
+            if (activeObjChanged) evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
 
-				if (!obj) {
-					obj = {}
-				}
+            var allRowsAreActive = areAllRowsActive(evDataService);
+            evDataService.setSelectAllRowsState(allRowsAreActive);
 
-				obj.event = event;
+            evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
-				console.log('dropdownActionData', dropdownActionData);
+        } else {
 
-				evDataService.setActiveObject(obj);
-				evDataService.setActiveObjectAction(dropdownAction);
-				evDataService.setActiveObjectActionData(dropdownActionData);
+            if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
+                dropdownActionData.id = event.target.dataset.evDropdownActionDataId
+            }
 
-				evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+            if (objectId && dropdownAction && parentGroupHashId) {
+                dropdownActionData.actionKey = dropdownAction;
+                /* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
-				clearDropdownsAndRows(evDataService, evEventService, true);
+                if (!obj) {
+                    obj = {}
+                } */
+                dropdownActionData.object = evDataHelper.getObject(objectId, parentGroupHashId, evDataService) || {};
 
-			}
+                // obj.event = event;
+                dropdownActionData.event = event;
 
-		}
+                console.log('dropdownActionData', dropdownActionData);
 
-		if (!event.target.classList.contains('ev-dropdown-option')) {
-			clearDropdownsAndRows(evDataService, evEventService, true);
-		}
+                // evDataService.setActiveObject(obj);
+                /* evDataService.setActiveObjectAction(dropdownAction);
+                evDataService.setActiveObjectActionData(dropdownActionData); */
+                evDataService.setRowsActionData(dropdownActionData);
 
-		for (const prop in eventListenerFn2Args) {
-			eventListenerFn2Args[prop] = null;
-		}
+                // evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
 
-	}
+                clearDropdownsAndRows(evDataService, evEventService, true);
+
+            }
+
+        }
+
+        if (!event.target.classList.contains('ev-dropdown-option')) {
+            clearDropdownsAndRows(evDataService, evEventService, true);
+        }
+
+        for (const prop in eventListenerFn2Args) {
+            eventListenerFn2Args[prop] = null;
+        }
+
+    }
 
     var addEventListenerForContextMenu = function (evDataService, evEventService) {
 
-		eventListenerFn2Args.evDataService = evDataService;
-		eventListenerFn2Args.evEventService = evEventService;
+        eventListenerFn2Args.evDataService = evDataService;
+        eventListenerFn2Args.evEventService = evEventService;
         window.addEventListener('click', executeContextMenuAction);
 
-		clearDropdownsAndRowsArgs.evDataService = evDataService;
-		clearDropdownsAndRowsArgs.evEventService = evEventService;
-		window.addEventListener('contextmenu', callClearDropdownsAndRows);
+        clearDropdownsAndRowsArgs.evDataService = evDataService;
+        clearDropdownsAndRowsArgs.evEventService = evEventService;
+        window.addEventListener('contextmenu', callClearDropdownsAndRows);
 
     };
 
-	var generateContextMenu = function (obj, objectId, parentGroupHashId, evDataService) {
+    var generateContextMenu = function (obj, objectId, parentGroupHashId, evDataService) {
 
-		var viewContext = evDataService.getViewContext();
-		var entityType = evDataService.getEntityType();
+        var viewContext = evDataService.getViewContext();
+        var entityType = evDataService.getEntityType();
 
-		var innerHTMLString = '<div class="ev-dropdown-container">';
+        var innerHTMLString = '<div class="ev-dropdown-container">';
 
-		var toggleRowName = obj.___is_activated ? 'Unselect row' : 'Select row';
+        var toggleRowName = obj.___is_activated ? 'Unselect row' : 'Select row';
 
-		innerHTMLString = innerHTMLString +
-			'<div class="ev-dropdown-option"' +
-			' data-ev-dropdown-action="toggle_row"' +
-			' data-object-id="' + objectId + '"' +
-			' data-parent-group-hash-id="' + parentGroupHashId + '">' + toggleRowName + '</div>';
+        innerHTMLString = innerHTMLString +
+            '<div class="ev-dropdown-option"' +
+            ' data-ev-dropdown-action="toggle_row"' +
+            ' data-object-id="' + objectId + '"' +
+            ' data-parent-group-hash-id="' + parentGroupHashId + '">' + toggleRowName + '</div>';
 
-		if (viewContext === 'reconciliation_viewer') {
+        if (viewContext === 'reconciliation_viewer') {
 
-			innerHTMLString = innerHTMLString +
-				'<div class="ev-dropdown-option"' +
-				' data-ev-dropdown-action="recon_view_bank_file_line"' +
-				' data-object-id="' + objectId + '"' +
-				' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>';
+            innerHTMLString = innerHTMLString +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="recon_view_bank_file_line"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>';
 
-			innerHTMLString = innerHTMLString +
-				'<div class="ev-dropdown-option"' +
-				' data-ev-dropdown-action="recon_book_selected"' +
-				' data-object-id="' + objectId + '"' +
-				' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>';
+            innerHTMLString = innerHTMLString +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="recon_book_selected"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>';
 
-			innerHTMLString = innerHTMLString +
-				'<div class="ev-dropdown-option"' +
-				' data-ev-dropdown-action="recon_hide"' +
-				' data-object-id="' + objectId + '"' +
-				' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>';
+            innerHTMLString = innerHTMLString +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="recon_hide"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>';
 
-		}
-		else {
+        } else {
 
-			innerHTMLString = innerHTMLString +
-				'<div class="ev-dropdown-option"' +
-				' data-ev-dropdown-action="edit"' +
-				' data-object-id="' + objectId + '"' +
-				' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>';
+            innerHTMLString = innerHTMLString +
+                '<div class="ev-dropdown-option"' +
+                ' data-ev-dropdown-action="edit"' +
+                ' data-object-id="' + objectId + '"' +
+                ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>';
 
-			if(!obj.is_deleted) {
-				innerHTMLString = innerHTMLString +
-					'<div class="ev-dropdown-option"' +
-					' data-ev-dropdown-action="delete"' +
-					' data-object-id="' + objectId + '"' +
-					' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
-			}
-
-
-			if (entityType === 'price-history') {
-
-				innerHTMLString = innerHTMLString +
-					'<div class="ev-dropdown-option"' +
-					' data-ev-dropdown-action="edit_instrument"' +
-					' data-object-id="' + objectId + '"' +
-					' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>';
-
-			}
-
-			if (entityType === 'complex-transaction') {
-
-				innerHTMLString = innerHTMLString +
-					'<div class="ev-dropdown-option"' +
-					' data-ev-dropdown-action="lock_transaction"' +
-					' data-object-id="' + objectId + '"' +
-					' data-parent-group-hash-id="' + parentGroupHashId + '">Lock Transaction</div>' +
-					'<div class="ev-dropdown-option"' +
-					' data-ev-dropdown-action="unlock_transaction"' +
-					' data-object-id="' + objectId + '"' +
-					' data-parent-group-hash-id="' + parentGroupHashId + '">Unlock Transaction</div>' +
-					'<div class="ev-dropdown-option"' +
-					' data-ev-dropdown-action="ignore_transaction"' +
-					' data-object-id="' + objectId + '"' +
-					' data-parent-group-hash-id="' + parentGroupHashId + '">Ignore Transaction</div>' +
-					'<div class="ev-dropdown-option"' +
-					' data-ev-dropdown-action="activate_transaction"' +
-					' data-object-id="' + objectId + '"' +
-					' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
-			}
-
-			if (entityType === 'instrument') {
-
-				innerHTMLString = innerHTMLString +
-					'<div class="ev-dropdown-option"' +
-					' data-ev-dropdown-action="deactivate_instrument"' +
-					' data-object-id="' + objectId + '"' +
-					' data-parent-group-hash-id="' + parentGroupHashId + '">Deactivate</div>' +
-					'<div class="ev-dropdown-option"' +
-					' data-ev-dropdown-action="activate_instrument"' +
-					' data-object-id="' + objectId + '"' +
-					' data-parent-group-hash-id="' + parentGroupHashId + '">Activate</div>';
-			}
+            if (!obj.is_deleted) {
+                innerHTMLString = innerHTMLString +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="delete"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+            }
 
 
-			if (['complex-transaction', 'price-history', 'currency-history'].indexOf(entityType) === -1) {
+            if (entityType === 'price-history') {
 
-				if (obj.is_deleted) {
+                innerHTMLString = innerHTMLString +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="edit_instrument"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>';
 
-					innerHTMLString = innerHTMLString +
-						'<div class="ev-dropdown-option"' +
-						' data-ev-dropdown-action="restore_deleted"' +
-						' data-object-id="' + objectId + '"' +
-						' data-parent-group-hash-id="' + parentGroupHashId + '">Restore</div>';
-				}
-			}
+            }
 
-		}
+            if (entityType === 'complex-transaction') {
 
-		innerHTMLString = innerHTMLString + '</div>';
+                innerHTMLString = innerHTMLString +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="lock_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Lock Transaction</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="unlock_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Unlock Transaction</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="ignore_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Ignore Transaction</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="activate_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
+            }
 
-		return innerHTMLString;
+            if (entityType === 'instrument') {
 
-	};
+                innerHTMLString = innerHTMLString +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="deactivate_instrument"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Deactivate</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="activate_instrument"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate</div>';
+            }
+
+
+            if (['complex-transaction', 'price-history', 'currency-history'].indexOf(entityType) === -1) {
+
+                if (obj.is_deleted) {
+
+                    innerHTMLString = innerHTMLString +
+                        '<div class="ev-dropdown-option"' +
+                        ' data-ev-dropdown-action="restore_deleted"' +
+                        ' data-object-id="' + objectId + '"' +
+                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Restore</div>';
+                }
+            }
+
+        }
+
+        innerHTMLString = innerHTMLString + '</div>';
+
+        return innerHTMLString;
+
+    };
 
     var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
@@ -934,25 +1125,25 @@
         popup.style.cssText = menuPosition;
         popup.style.position = 'absolute';*/
 
-        var popup = evDataHelper.prepareRowAndGetPopupMenu(objectId, parentGroupHashId, evDataService, false);
+        var popup = evRvDomManagerService.prepareRowAndGetPopupMenu(objectId, parentGroupHashId, evDataService, false);
         var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 
         // var innerHTMLString = '';
         // var viewContext = evDataService.getViewContext();
 
-		if (obj) {
+        if (obj) {
 
-			popup.innerHTML = generateContextMenu(obj, objectId, parentGroupHashId, evDataService);
+            popup.innerHTML = generateContextMenu(obj, objectId, parentGroupHashId, evDataService);
 
-			evDataHelper.calculateMenuPosition(popup, menuPosition);
+            evRvDomManagerService.calculateMenuPosition(popup, menuPosition);
 
-			document.body.appendChild(popup);
+            document.body.appendChild(popup);
 
-			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+            evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-			addEventListenerForContextMenu(evDataService, evEventService);
+            addEventListenerForContextMenu(evDataService, evEventService);
 
-		}
+        }
 
 
     };
@@ -1133,10 +1324,11 @@
 
     var calculateScroll = function (elements, evDataService, evScrollManager) {
 
-        evScrollManager.setViewportElem(elements.viewportElem);
-        evScrollManager.setContentElem(elements.contentElem);
+        evScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
+        evScrollManager.setContentElem(elements.contentElem); // .ev-content
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
         evScrollManager.setRootWrapElem(elements.rootWrapElem);
+        evScrollManager.setLeftPanelElem(elements.leftPanelElem);
 
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
@@ -1151,21 +1343,39 @@
 
         var viewportHeight;
 
-        if (components.sidebar) {
-            viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
-        } else {
-            viewportWidth = contentWrapElemWidth;
+        // if (components.sidebar) {
+        //     viewportWidth = contentWrapElemWidth - interfaceLayout.filterArea.width;
+        // } else {
+        //     viewportWidth = contentWrapElemWidth;
+        // }
+
+        // console.log("Calculate scroll", interfaceLayout.evLeftPanel.width);
+
+        viewportWidth = contentWrapElemWidth;
+
+        viewportWidth = viewportWidth - interfaceLayout.evLeftPanel.width;
+
+        // viewportTop = interfaceLayout.progressBar.height;
+        viewportTop = 0;
+
+        if (components.topPart) {
+            viewportTop = viewportTop + interfaceLayout.topPart.height
         }
 
-        viewportTop = interfaceLayout.progressBar.height;
+        if (components.filterArea) {
+            viewportTop = viewportTop + interfaceLayout.filterArea.height
+        }
+
+        var leftPanelHeight = Math.floor(contentWrapElemHeight - viewportTop); // should be calculated before adding column area height to viewportTop
+        evScrollManager.setLeftPanelElemHeight(leftPanelHeight);
 
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height
         }
 
-        if (components.groupingArea) {
+        /* if (components.groupingArea) {
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
-        }
+        } */
 
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
@@ -1205,30 +1415,46 @@
     var calculateVirtualStep = function (elements, evDataService, evScrollManager) {
 
         var viewportHeight;
-        var isRootEntityViewer = evDataService.isRootEntityViewer();
+        // var isRootEntityViewer = evDataService.isRootEntityViewer();
+        var components = evDataService.getComponents();
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var rowHeight = evDataService.getRowHeight();
         var interfaceLayout = evDataService.getInterfaceLayout();
+        var viewportTop;
 
-        var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+        /*if (isRootEntityViewer) {
+			viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height;
+			viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
 
-
-        if (!isRootEntityViewer) {
-            viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
-            viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
         } else {
-            viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height);
+			// viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
+			viewportTop = interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height;
+			viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
         }
 
+		viewportHeight = Math.floor(document.body.clientHeight - viewportTop - interfaceLayout.splitPanel.height); */
+        viewportTop = 0;
+
+        if (components.topPart) {
+            viewportTop = viewportTop + interfaceLayout.topPart.height;
+        }
+
+        if (components.filterArea) {
+            viewportTop = viewportTop + interfaceLayout.filterArea.height;
+        }
+
+        if (components.columnArea) {
+            viewportTop = viewportTop + interfaceLayout.columnArea.height;
+        }
+
+        viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         console.log("View context: " + evDataService.getViewContext() + ". viewportHeight", viewportHeight);
         console.log("View context: " + evDataService.getViewContext() + ". contentWrapElemHeight", contentWrapElemHeight);
 
-
         var step = Math.round(viewportHeight / rowHeight);
 
         evDataService.setVirtualScrollStep(step);
-
 
     };
 
@@ -1303,6 +1529,10 @@
     };
 
     module.exports = {
+
+        requestGroups: requestGroups,
+        requestObjects: requestObjects,
+
         initEventDelegation: initEventDelegation,
         initContextMenuEventDelegation: initContextMenuEventDelegation,
         createPopupMenu: createPopupMenu,

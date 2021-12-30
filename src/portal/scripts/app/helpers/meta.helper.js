@@ -61,6 +61,24 @@
 
         return objPlace;
 
+    };
+
+    const deletePropertyByPath = function (obj, pathToProp) {
+
+        if(pathToProp.length === 1) {
+            if (Array.isArray(obj)) {
+                const index = pathToProp[0];
+                obj.splice(index, 1);
+                return true;
+            }
+            return delete obj[pathToProp[0]];
+        } else {
+            if(obj[pathToProp[0]])
+                return deletePropertyByPath(obj[pathToProp[0]], pathToProp.slice(1));
+            else
+                return false;
+        }
+
     }
 
     // sorts array alphabetically but puts text that starts with '-' at the beginning
@@ -182,7 +200,22 @@
 		const defaultTextFilterType = "contains";
 		const defaultNumberAndDateFilterType = "equal";
 
-		return valueType === 10 ? defaultTextFilterType: defaultNumberAndDateFilterType;
+		return ([10, 30, 'field'].includes(valueType)) ? defaultTextFilterType: defaultNumberAndDateFilterType;
+
+	};
+
+	const insertSpaceIntoElementText = function (elem) {
+
+		var selStart = elem.selectionStart;
+		var firstStringPart = elem.value.substring(0, selStart);
+		var selEnd = elem.selectionEnd;
+		var lastStringPart = elem.value.substring(selEnd, elem.value.length);
+		var tabNewName = firstStringPart + ' ' + lastStringPart;
+
+		elem.value = tabNewName;
+		elem.selectionEnd = selStart + 1; // set text cursor after added space
+
+		return tabNewName;
 
 	};
 
@@ -192,17 +225,34 @@
 		return md5Helper.md5(currentDate, key);
 	}
 
+	const clearFrontendOptions = function (object) {
+
+		delete object.frontOptions;
+
+		for (const prop in object) {
+
+			if (object[prop] && typeof object[prop] === 'object') clearFrontendOptions(object[prop]);
+
+		}
+
+	};
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
+        deletePropertyByPath: deletePropertyByPath,
         textWithDashSort: textWithDashSort,
 		openLinkInNewTab: openLinkInNewTab,
 
         closeComponent: closeComponent,
 		getDefaultFilterType: getDefaultFilterType,
 
-		generateUniqueId: generateUniqueId
+		insertSpaceIntoElementText: insertSpaceIntoElementText,
+
+		generateUniqueId: generateUniqueId,
+
+		clearFrontendOptions: clearFrontendOptions,
     }
 
 }());

@@ -1,3 +1,5 @@
+import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents";
+
 /**
  * Created by sergey on 30.07.16.
  */
@@ -5,16 +7,15 @@
 
     'use strict';
 
-    var usersService = require('../services/usersService');
-    var authorizerService = require('../services/authorizerService');
+    // var usersService = require('../services/usersService');
+    // var authorizerService = require('../services/authorizerService');
 
     var baseUrlService = require('../services/baseUrlService');
-    var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
+    // var portalBaseUrlService = require('../../../scripts/app/services/baseUrlService');
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
-
-    module.exports = function ($scope, $state, $mdDialog) {
+    module.exports = function ($scope, $state, $mdDialog, profileAuthorizerService, broadcastChannelService, commonDialogsService, globalDataService) {
 
         var vm = this;
 
@@ -26,8 +27,8 @@
 
             vm.readyStatus.masterUsers = false;
 
-            authorizerService.getMasterList().then(function (data) {
-                vm.masters = data.results;
+            profileAuthorizerService.getMasterUsersList().then(function (data) {
+                vm.masterUsers = data.results;
                 vm.readyStatus.masterUsers = true;
                 $scope.$apply();
             });
@@ -40,7 +41,7 @@
 
             var status = 0; // 0 - SENT, 1 - ACCEPTED, 2 - DECLINED
 
-            authorizerService.getInviteFromMasterUserList(status).then(function (data) {
+            profileAuthorizerService.getInviteFromMasterUserList(status).then(function (data) {
 
                 vm.invites = data.results;
                 vm.readyStatus.invites = true;
@@ -98,15 +99,33 @@
 
             // console.log('item', item);
 
-            authorizerService.setMasterUser(item.id).then(function (data) {
+            profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
 
-                console.log('vm.activateDatabase.data', data);
+                if (data.base_api_url) {
+
+                    globalDataService.setMasterUser(item);
+
+                    baseUrlService.setMasterUserPrefix(data.base_api_url);
+                    // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+
+                    // if (broadcastChannelService.isAvailable) {
+                    //     broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
+                    // }
+
+                    $state.go('app.portal.home');
+
+                } else {
+
+                    console.log("Error activate", data)
+
+                    toastNotificationService.error("Something went wrong. Please, try again later")
+
+                }
 
 
-                baseUrlService.setMasterUserPrefix(data.base_api_url);
-                portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
-
-                $state.go('app.home');
+            }).catch(function (error){
+                console.log("Error activate catch", error)
+                toastNotificationService.error("Something went wrong. Please, try again later")
             })
 
         };
@@ -119,8 +138,7 @@
                 templateUrl: 'views/dialogs/create-master-user-from-dump-dialog-view.html',
                 parent: angular.element(document.body),
                 locals: {
-                    data: {
-                    }
+                    data: {}
                 },
                 targetEvent: $event
             }).then(function (res) {
@@ -133,43 +151,50 @@
         }
 
         vm.exportMasterUserBackup = function ($event, item) {
-            authorizerService.exportToBackup(item.id).then(function (data) {
 
-                if (data.status !== 200) {
-                    throw Error("Something went wrong")
-                }
+            profileAuthorizerService.exportToBackup(item.id).then(function (data) {
 
-                return data.blob()
-            }).then(function (blob) {
 
-                console.log('blob ', blob);
+                toastNotificationService.info(data.message)
 
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                // the filename you want
+                // if (data.status !== 200) {
+                //     throw Error("Something went wrong")
+                // }
+                //
+                // return data.blob()
 
-                var name = item.name.split(' ').join('_');
-                var date = new Date().toISOString().split('T')[0];
-                date = date.split('-').join('_');
-
-                a.download = name + '_' + date + '_backup.sql';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                a.parentNode.removeChild(a);
-
-            }).catch(function (data) {
-                console.log("data?", data);
-
-                toastNotificationService.error("Something went wrong. Please, try again later")
             })
-        }
+            // }).then(function (blob) {
+            //
+            //     console.log('blob ', blob);
+            //
+            //     const url = window.URL.createObjectURL(blob);
+            //     const a = document.createElement('a');
+            //     a.style.display = 'none';
+            //     a.href = url;
+            //     // the filename you want
+            //
+            //     var name = item.name.split(' ').join('_');
+            //     var date = new Date().toISOString().split('T')[0];
+            //     date = date.split('-').join('_');
+            //
+            //     a.download = name + '_' + date + '_backup.sql';
+            //     document.body.appendChild(a);
+            //     a.click();
+            //     window.URL.revokeObjectURL(url);
+            //     a.parentNode.removeChild(a);
+            //
+            // }).catch(function (data) {
+            //     console.log("data?", data);
+            //
+            //     toastNotificationService.error("Something went wrong. Please, try again later")
+            // });
+
+        };
 
         vm.leaveMasterUser = function ($event, item) {
 
-            $mdDialog.show({
+            /* $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
@@ -180,11 +205,19 @@
                     }
                 },
                 targetEvent: $event
-            }).then(function (res) {
+            }) */
+            const locals = {
+                warning: {
+                    title: 'Warning!',
+                    description: "Are you sure to leave from " + item.name + ' database?'
+                }
+            };
+
+            commonDialogsService.warning(locals, {targetEvent: $event}).then(res => {
 
                 if (res.status === 'agree') {
 
-                    authorizerService.leaveMasterUser(item.id).then(function () {
+                    profileAuthorizerService.leaveMasterUser(item.id).then(function () {
 
                         vm.getMasterUsersList();
 
@@ -209,11 +242,14 @@
                     }
                 },
                 targetEvent: $event
-            }).then(function (value) {
 
-                $state.go('app.profile', {}, {reload: 'app'})
+            }).then(res => {
 
-            })
+                if (res.status === 'agree') {
+                    $state.go('app.profile', {}, {reload: 'app'})
+                }
+
+            });
 
 
         };
@@ -230,7 +266,9 @@
                     }
                 },
                 targetEvent: $event
-            }).then(function (res) {
+            });
+            /* Master user copy starts inside CopyMasterUserDialogController
+            .then(function (res) {
 
                 if (res.status === 'agree') {
 
@@ -245,7 +283,7 @@
 
                 }
 
-            })
+            }) */
 
         };
 
@@ -253,12 +291,11 @@
 
             vm.getTaskInfo()
 
-
         };
 
         vm.getTaskInfo = function () {
 
-            usersService.copyMasterUser(vm.copyMasterUserTask).then(function (data) {
+            profileAuthorizerService.copyMasterUser(vm.copyMasterUserTask).then(function (data) {
 
                 vm.copyMasterUserTask = data;
 
@@ -288,7 +325,7 @@
 
             item.description = item.description_tmp;
 
-            usersService.updateMaster(item.id, item).then(function (data) {
+            profileAuthorizerService.updateMasterUser(item.id, item).then(function (data) {
 
                 item.description_tmp = '';
                 item.descriptionEdit = false;
@@ -303,7 +340,7 @@
 
             item.status = 2; // Decline code
 
-            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 vm.getInvites();
 
@@ -315,18 +352,20 @@
 
             item.status = 1; // Accept code
 
-            authorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
+            profileAuthorizerService.updateInviteFromMasterUserByKey(item.id, item).then(function () {
 
                 // vm.getMasterUsersList();
                 // vm.getInvites();
 
-                authorizerService.setMasterUser(item.to_master_user).then(function (data) {
+                localStorage.setItem('goToSetup', 'true')
+
+                profileAuthorizerService.setCurrentMasterUser(item.to_master_user).then(function (data) {
 
                     console.log('vm.activateDatabase.data', data);
 
 
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
-                    portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
+                    // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
                     $state.go('app.setup');
                 })
@@ -338,6 +377,8 @@
         vm.init = function () {
             vm.getMasterUsersList();
             vm.getInvites();
+
+
             // vm.readyStatus.invites = true;
         };
 

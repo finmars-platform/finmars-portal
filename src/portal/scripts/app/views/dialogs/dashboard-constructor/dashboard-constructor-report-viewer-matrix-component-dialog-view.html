@@ -27,7 +27,7 @@
                             </md-input-container>
                         </div>
 
-                        <div class="m-t-16 m-b-16">
+                        <!-- <div class="m-t-16 m-b-16">
 
                             <md-input-container style="width: 200px;">
                                 <label for="">Report Type</label>
@@ -44,7 +44,7 @@
 
                         <div class="m-t-16 m-b-16">
 
-                            <!--<md-input-container class="dashboard-constructor-field1">
+                            &lt;!&ndash;<md-input-container class="dashboard-constructor-field1">
                                 <label for="">Layout</label>
                                 <md-select ng-model="vm.item.settings.layout"
                                            md-container-class="common-select-container"
@@ -71,7 +71,7 @@
                                         </div>
                                     </div>
                                 </md-select>
-                            </md-input-container>-->
+                            </md-input-container>&ndash;&gt;
                             <expandable-items-selector data-model="vm.item.settings.layout"
                                                        data-title="Layout"
                                                        data-dialog-title="Choose layout"
@@ -80,7 +80,19 @@
                                                        data-on-change-callback="vm.showLinkingToFilters()"
                                                        class="dashboard-constructor-selector-directive"></expandable-items-selector>
 
+                        </div> -->
+                        <div style="width: 400px;" class="m-l-10">
+                            <div ng-if="vm.readyStatus.layouts">
+                                <multitype-field label="Select layout"
+                                                 field-types-data="vm.layoutsSelectorsList"
+                                                 type-switch="selector"
+                                                 on-value-change="vm.onLayoutChange()"
+                                                 on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
+                            </div>
 
+                            <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">
+                                <progress-circular diameter="30"></progress-circular>
+                            </div>
                         </div>
 
                         <div layout="row">
@@ -139,9 +151,9 @@
 
                             </div>
 
-                            <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
+<!--                            <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
                                 Format Settings
-                            </md-button>
+                            </md-button>-->
 
 
                         </div>
@@ -227,12 +239,23 @@
 
                     </div>
 
-                    <md-input-container style="height: 58px">
-                        <md-checkbox data-ng-model="vm.item.settings.auto_scaling"
-                                     aria-label="matrix autoscaling">
-                            Scale matrix
-                        </md-checkbox>
-                    </md-input-container>
+                    <div>
+                        <md-input-container style="height: 58px">
+                            <md-checkbox data-ng-model="vm.item.settings.auto_scaling"
+                                         aria-label="matrix autoscaling">
+                                Scale matrix
+                            </md-checkbox>
+                        </md-input-container>
+                    </div>
+
+                    <div>
+                        <md-input-container style="height: 58px">
+                            <md-checkbox data-ng-model="vm.item.settings.calculate_name_column_width"
+                                         aria-label="matrix autoscaling">
+                                Calculate width for column with names
+                            </md-checkbox>
+                        </md-input-container>
+                    </div>
 
                 </md-content>
             </md-tab>

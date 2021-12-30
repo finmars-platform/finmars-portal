@@ -2,38 +2,37 @@
  * Created by szhitenev on 04.05.2016.
  */
 
-(function () {
+'use strict';
 
-    'use strict';
+const baseUrlService = require('./baseUrlService');
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var baseUrlService = require('./baseUrlService');
+export default function (cookieService) {
 
-    var baseUrl = baseUrlService.resolve();
+	// var cookieService = require('../../../../core/services/cookieService');
+	var baseUrl = baseUrlService.resolve();
 
-    var importConfigurationAsJson = function (data) {
+	const importConfigurationAsJson = function (data) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
-return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/configuration-json/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-               'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(function (data) {
-            return data.json();
-        })
-    };
+		return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/configuration-json/', {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		}).then(function (data) {
+			return data.json();
+		})
+	};
 
+	return {
+		importConfigurationAsJson: importConfigurationAsJson,
+	}
 
-    module.exports = {
-        importConfigurationAsJson: importConfigurationAsJson,
-    }
-
-}());
+};

@@ -12,7 +12,7 @@
 
             <md-input-container>
                 <label>Username</label>
-                <textarea data-ng-model="vm.username" data-ng-blur="vm.checkUniqueness($event)"></textarea>
+                <textarea data-ng-model="vm.username" ng-change="vm.usernameError = false"></textarea>
             </md-input-container>
 
 
@@ -39,7 +39,7 @@
 
         <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
 
-        <md-button class="md-raised md-primary" data-ng-click="vm.agree()" data-ng-class="{'disabled-btn': !vm.username && !vm.usernameError}">Send Invite</md-button>
+        <md-button class="md-raised md-primary" data-ng-click="vm.agree()" data-ng-class="{'disabled-btn': !vm.username}">Send Invite</md-button>
 
     </md-dialog-actions>
 </md-dialog>

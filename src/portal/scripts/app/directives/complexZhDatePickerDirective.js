@@ -5,8 +5,8 @@
 
     'use strict';
 
-    const metaService = require('../services/metaService');
-	const expressionService = require('../services/expression.service');
+    /* const metaService = require('../services/metaService');
+	const expressionService = require('../services/expression.service'); */
 	const evEvents = require('../services/entityViewerEvents');
 
 	const EventService = require('../services/eventService');
@@ -405,7 +405,7 @@
 
 				if (scope.rangeOfDates) {
 					scope.popupData.secondDate = scope.secondDate;
-					scope.popupData.secondDatepickerOptions = scope.secondDatepickerOptions;
+					scope.popupData.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.secondDatepickerOptions));
 				}
 
 				const applyPopupDataToFirstDate = function (date) {
@@ -473,7 +473,8 @@
 						applyPopupDataToSecondDate(secondDate);
 
 
-					} else {
+					}
+					else {
 
 						/* scope.date = scope.popupData.date;
 
@@ -503,10 +504,29 @@
 						scope.popupData.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.secondDatepickerOptions));
 
 					}
+					setTimeout(() => {
+						if (scope.callbackMethod) scope.callbackMethod();
+					}, 0);
 
 				};
 
 				const init = function () {
+
+					scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+
+						setTimeout(() => {
+
+							scope.popupData.date = scope.date;
+							scope.popupData.datepickerOptions = JSON.parse(JSON.stringify(scope.datepickerOptions));
+
+							if (scope.rangeOfDates) {
+								scope.popupData.secondDate = scope.secondDate;
+								scope.popupData.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.secondDatepickerOptions));
+							}
+
+						}, 100);
+
+					});
 
 					scope.popupEventService = new EventService();
 

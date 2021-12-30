@@ -1,6 +1,8 @@
 /**
  * Created by szhitenev on 16.06.2016.
  *
+ * Deprecated. Use shell/scripts/app/services/cookieService instead.
+ *
  */
 (function () {
 
@@ -24,6 +26,10 @@
 
     var setCookie = function (name, value, options) {
         options = options || {};
+
+        if (!options.path) {
+            options.path = '/'
+        }
 
         var expires = options.expires;
 

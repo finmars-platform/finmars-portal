@@ -148,6 +148,11 @@
                 key: "instruments.instrument"
             },
             {
+                name: "Generated Event",
+                entity: 'generated-event',
+                key: "instruments.generatedevent"
+            },
+            {
                 name: 'Price History',
                 entity: 'price-history',
                 key: 'instruments.pricehistory'
@@ -156,6 +161,16 @@
                 name: "Portfolio",
                 entity: 'portfolio',
                 key: "portfolios.portfolio"
+            },
+            {
+                name: "Portfolio Register",
+                entity: 'portfolio-register',
+                key: "portfolios.portfolioregister"
+            },
+            {
+                name: "Portfolio Register Record",
+                entity: 'portfolio-register-record',
+                key: "portfolios.portfolioregisterrecord"
             },
             {
                 name: "Instrument Type",
@@ -338,6 +353,30 @@
                 entity: 'performance-report',
                 key: "reports.performancereport"
             },
+
+            {
+                name: 'Transaction Class',
+                entity: 'transaction-class',
+                key: 'transactions.transactionclass'
+            },
+
+            {
+                name: 'Status',
+                entity: 'complex-transaction-status',
+                key: 'transactions.complextransactionstatus'
+            },
+
+            {
+                name: 'Audit transaction',
+                entity: 'audit-transaction',
+                key: 'audit.objecthistory4entry'
+            },
+
+            {
+                name: 'Audit instrument',
+                entity: 'audit-instrument',
+                key: 'audit.objecthistory4entry'
+            },
         ]
     };
 
@@ -511,6 +550,11 @@
                 key: "instruments.instrument"
             },
             {
+                name: "Generated Event",
+                entity: 'generated-event',
+                key: "instruments.generatedevent"
+            },
+            {
                 name: 'Pricing Policy',
                 entity: 'pricing-policy',
                 key: 'instruments.pricingpolicy'
@@ -524,6 +568,16 @@
                 name: "Portfolio",
                 entity: 'portfolio',
                 key: "portfolios.portfolio"
+            },
+            {
+                name: "Portfolio Register",
+                entity: 'portfolio-register',
+                key: "portfolios.portfolioregister"
+            },
+            {
+                name: "Portfolio Register Record",
+                entity: 'portfolio-register-record',
+                key: "portfolios.portfolioregisterrecord"
             },
             {
                 name: "Instrument Type",
@@ -659,22 +713,33 @@
                 name: "Currency History Error",
                 entity: 'currency-history-error',
                 key: "pricing.currencyhistoryerror"
+            },
+            {
+                name: 'Audit transaction',
+                entity: 'audit-transaction',
+                key: 'audit.objecthistory4entry'
+            },
+
+            {
+                name: 'Audit instrument',
+                entity: 'audit-instrument',
+                key: 'audit.objecthistory4entry'
             }
         ]
     };
 
     var getContentTypeList = function () {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/content_type/',
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/content_type/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
