@@ -1,6 +1,7 @@
 (function () {
 
     const gtEvents = require('../../services/gridTableEvents');
+    const metaHelper = require('../../helpers/meta.helper');
 
     'use strict';
 
@@ -89,10 +90,10 @@
 
                 		const row = scope.gtDataService.getRow(rowOrder);
 
-						scope.gridTableData.body[rowOrder] = JSON.parse(angular.toJson(anotherRow));
+						scope.gridTableData.body[rowOrder] = metaHelper.recursiveDeepCopy(anotherRow, true); // save functions need to save methods
 						scope.gridTableData.body[rowOrder].order = rowOrder;
 
-						scope.gridTableData.body[anotherRowOrder] = JSON.parse(angular.toJson(row));
+						scope.gridTableData.body[anotherRowOrder] = metaHelper.recursiveDeepCopy(row, true);
 						scope.gridTableData.body[anotherRowOrder].order = anotherRowOrder;
 
 						if (row.methods && row.methods.onOrderChange) {

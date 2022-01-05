@@ -391,7 +391,7 @@ export default (function () {
 	portal.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
 	portal.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
 	portal.controller('InstrumentTypeUserAttributesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeUserAttributesTabController')]);
-	portal.controller('InstrumentTypeFactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument-type/instrumentTypeFactorScheduleTabController')]);
+	portal.controller('InstrumentTypeFactorsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', 'gridTableHelperService' , require('./app/controllers/tabs/instrument-type/instrumentTypeFactorsTabController')]);
 
 	// Currency form - tabs
 
@@ -586,6 +586,9 @@ export default (function () {
 	portal.controller('SingleInstrumentGenerateEventDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/singleInstrumentGenerateEventDialogController')]);
 	portal.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
 	portal.controller('AddRowToTableInsideEvUserTabDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/addRowToTableInsideEvUserTabDialogController')]);
+
+	portal.controller('InstrumentEventParameterDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrumentEventParameterDialogController')]);
+	portal.controller('InstrumentEventActionParameterDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrumentEventActionParameterDialogController')]);
 
 
 	portal.controller('CurrencyPricingSchemeAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/currencyPricingSchemeAddDialogController')]);
@@ -810,8 +813,8 @@ export default (function () {
 	String.prototype.capitalizeFirstLetter = function () {
 		return this.charAt(0).toUpperCase() + this.slice(1);
 	};
-	
-	
+
+
 	window.onerror = function(error){
 
 		if (!window.system_errors) {

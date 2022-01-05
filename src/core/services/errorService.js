@@ -116,28 +116,39 @@
 
     };
 
-    var notifyError = function (reason) {
-
-        var message = reason.statusText + ' (' + reason.status + ')';
-
-        if (reason.hasOwnProperty('message')) {
-
-            if (typeof reason.message === 'object') {
-
-                message = getFullErrorAsHtml(reason.message, message)
-
-            }
+    var notifyError = function (data) {
 
 
+
+        // if (reason.hasOwnProperty('message')) {
+        //
+        //     if (typeof reason.message === 'object') {
+        //
+        //         message = getFullErrorAsHtml(reason.message, message)
+        //
+        //     }
+        //
+        //
+        // }
+
+        var message = '';
+
+        if (data.message) {
+            message = data.status + ' ' + data.statusText + '<br>' + data.message.message
+
+            toastNotificationService.error(message);
+        } else {
+            message = data.statusText + ' (' + data.status + ')';
+            toastNotificationService.error(message);
         }
 
-        toastNotificationService.error(message);
+
 
         // return reason
 
         // throw new Error("Error processing request", reason);
 
-        return Promise.reject(reason)
+        return Promise.reject(data)
 
     };
 
@@ -150,6 +161,7 @@
         window.system_errors.push({
             created: new Date().toISOString(),
             location: window.location.href,
+            data: data,
             text: JSON.stringify(data)
         })
 
