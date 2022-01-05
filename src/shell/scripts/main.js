@@ -38,89 +38,112 @@ import dndFilesOnPageDirective from "./app/directives/dndFilesOnPageDirective.js
 const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
 const app = angular.module('finmars', [
-	'ngAria',
-	'ngMaterial',
-	'ngMessages',
-	'ngMdIcons',
-	'ngResource',
-	'ngSanitize',
-	'ui.router',
+    'ngAria',
+    'ngMaterial',
+    'ngMessages',
+    'ngMdIcons',
+    'ngResource',
+    'ngSanitize',
+    'ui.router',
 
-	'finmars.profile',
-	'finmars.database',
-	'finmars.portal',
-	// 'finmars.forum'
+    'finmars.profile',
+    'finmars.database',
+    'finmars.portal',
+    // 'finmars.forum'
 ]);
 
 // app.config(['$stateProvider', '$urlServiceProvider', require('./app/router.js')]);
 app.config(['$stateProvider', '$urlServiceProvider', router]);
 app.config(['$mdDateLocaleProvider', function ($mdDateLocaleProvider) {
-	$mdDateLocaleProvider.formatDate = date => {
-		return moment(date).format('YYYY-MM-DD');
-	};
+    $mdDateLocaleProvider.formatDate = date => {
+        return moment(date).format('YYYY-MM-DD');
+    };
+}]);
+
+app.factory('$exceptionHandler', [function () {
+    return function myExceptionHandler(exception, cause) {
+
+        if (!window.system_errors) {
+            window.system_errors = []
+        }
+        
+        console.log('exception', exception);
+        console.log('cause', cause);
+
+        window.system_errors.push({
+            created: new Date().toISOString(),
+            location: window.location.href,
+            data: {
+                exception: exception,
+                cause: cause
+            },
+            text: exception.toString()
+        })
+
+
+    };
 }]);
 
 //<editor-fold desc="Websocket initialization">
 app.run([function () {
 
-	console.log('Project environment: ' + '__PROJECT_ENV__');
-	console.log('Project build date: ' + '__BUILD_DATE__');
+    console.log('Project environment: ' + '__PROJECT_ENV__');
+    console.log('Project build date: ' + '__BUILD_DATE__');
 
-	let controllersCount = 0;
-	let directivesCount = 0;
+    let controllersCount = 0;
+    let directivesCount = 0;
 
-	app._invokeQueue.forEach(function (item) {
+    app._invokeQueue.forEach(function (item) {
 
-		if (item[0] === '$controllerProvider') {
-			controllersCount = controllersCount + 1;
-		}
+        if (item[0] === '$controllerProvider') {
+            controllersCount = controllersCount + 1;
+        }
 
-		if (item[0] === '$compileProvider' && item[1] === 'directive') {
-			directivesCount = directivesCount + 1;
-		}
+        if (item[0] === '$compileProvider' && item[1] === 'directive') {
+            directivesCount = directivesCount + 1;
+        }
 
-	});
+    });
 
-	console.log("angular.js info: " + controllersCount + ' controllers registered');
-	console.log("angular.js info: " + directivesCount + ' directives registered');
+    console.log("angular.js info: " + controllersCount + ' controllers registered');
+    console.log("angular.js info: " + directivesCount + ' directives registered');
 
-	// const developerConsoleService = require('../../portal/scripts/app/services/developerConsoleService');
-	// const websocketService = require('./app/services/websocketService');
-	const toastNotificationService = require('../../core/services/toastNotificationService');
+    // const developerConsoleService = require('../../portal/scripts/app/services/developerConsoleService');
+    // const websocketService = require('./app/services/websocketService');
+    const toastNotificationService = require('../../core/services/toastNotificationService');
 
 
-	// window.developerConsoleService = developerConsoleService;
+    // window.developerConsoleService = developerConsoleService;
 
-	// developerConsoleService.init();
+    // developerConsoleService.init();
 
-	// try {
+    // try {
 
-		// window.ws = new WebSocket("__WS_HOST__");
+    // window.ws = new WebSocket("__WS_HOST__");
 
-	if (PROJECT_ENV !== 'local') {
+    if (PROJECT_ENV !== 'local') {
 
-		websocketService.connect();
-		websocketService.reconnectIfError();
+        websocketService.connect();
+        websocketService.reconnectIfError();
 
-		websocketService.addEventListener('simple_message', function (data) {
-			toastNotificationService.info(data.message)
-		})
+        websocketService.addEventListener('simple_message', function (data) {
+            toastNotificationService.info(data.message)
+        })
 
-	}
+    }
 
-		// window.ws.onopen = function () {
-		// 	console.log("Websocket. Initial Auth");
-		// 	window.ws.send(JSON.stringify({action: "initial_auth"}));
-		// }
+    // window.ws.onopen = function () {
+    // 	console.log("Websocket. Initial Auth");
+    // 	window.ws.send(JSON.stringify({action: "initial_auth"}));
+    // }
 
-	// } catch (error) {
-	//
-	// 	console.error("Can't connect to Websocket server. Error ", error);
-	//
-	// 	window.ws = null;
-	//
-	// }
-
+    // } catch (error) {
+    //
+    // 	console.error("Can't connect to Websocket server. Error ", error);
+    //
+    // 	window.ws = null;
+    //
+    // }
 
 
 }]);

@@ -32,11 +32,11 @@
                             <b>Status</b>: {{item.data.status}} {{item.data.statusText}}
                         </div>
 
-                        <div>
+                        <div data-ng-if="item.data.message.url">
                             <b>API URL</b>: {{item.data.message.url}}
                         </div>
 
-                        <div class="m-t-16">
+                        <div class="m-t-16" data-ng-if="item.data.message.message">
 
                             <b>Message</b>:
                             <p>
@@ -44,13 +44,18 @@
                             </p>
                         </div>
 
-                        <div class="p-b-16">
+                        <div class="p-b-16" data-ng-if="item.data.message.trace">
 
                             <div><b >Traceback</b>:</div>
 
                             <code data-ng-bind-html="item.data.message.trace" style="white-space: pre;">
                             </code>
 
+                        </div>
+
+                        <div data-ng-if="item.textMessage">
+                            <code data-ng-bind-html="item.textMessage" style="white-space: pre;">
+                            </code>
                         </div>
 
 
