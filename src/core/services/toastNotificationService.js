@@ -7,7 +7,6 @@
 
 (function () {
 
-
     var success = function (message) {
         toastr.success(message);
     };
