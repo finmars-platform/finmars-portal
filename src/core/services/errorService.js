@@ -20,60 +20,7 @@
     ErrorObject.prototype.constructor = ErrorObject;
 
     'use strict';
-
-    // DEPRECATED
-    var handleXhrErrors = function (response) {
-
-        // console.log('handleXhrErrors.response', response);
-
-        return new Promise(function (resolve, reject) {
-
-            if (response.status === 500) {
-
-                if (!response.ok) {
-
-                    var errorObj = {
-                        status: response.status,
-                        statusText: response.statusText,
-                        message: response.statusText
-                    };
-
-                    reject(new ErrorObject(errorObj.message, errorObj.status, response.statusText))
-                }
-
-                reject(response)
-
-            } else {
-
-                if (response.status !== 204) {
-
-                    response.json().then(function (data) {
-
-                        if (!response.ok) {
-
-                            var errorObj = {
-                                status: response.status,
-                                statusText: response.statusText,
-                                message: data
-                            };
-
-                            reject(new ErrorObject(errorObj.message, errorObj.status, response.statusText));
-
-                        }
-
-                        resolve(data)
-
-                    })
-
-                } else {
-                    resolve({});
-                }
-
-            }
-
-        })
-    };
-
+    
     var getFullErrorAsHtml = function (obj, message) {
 
         // console.log('getFullErrorAsHtml.obj', obj);
@@ -134,7 +81,14 @@
         var message = '';
 
         if (data.message) {
-            message = data.status + ' ' + data.statusText + '<br>' + data.message.message
+            message = data.status + ' ' + data.statusText + '<br>'
+
+            if (data.message.message) {
+                message = message + data.message.message
+            } else {
+                var htmlMessage = '';
+                message = message + getFullErrorAsHtml(data.message, htmlMessage)
+            }
 
             toastNotificationService.error(message);
         } else {
@@ -170,7 +124,6 @@
     }
 
     module.exports = {
-        handleXhrErrors: handleXhrErrors,
         notifyError: notifyError,
         recordError: recordError
     }
