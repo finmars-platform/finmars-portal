@@ -293,16 +293,16 @@
             }
 
             if (item.market_value) {
-
-                item.market_value_percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
+				var percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
+                item.market_value_percent = parseFloat(percent);
 
             } else {
                 item.market_value_percent = 0;
             }
 
             if (item.exposure) {
-
-                item.exposure_percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
+				var percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
+                item.exposure_percent = parseFloat(percent);
 
             } else {
                 item.exposure_percent = 0;

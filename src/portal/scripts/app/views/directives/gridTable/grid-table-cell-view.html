@@ -81,6 +81,11 @@
                      ng-class="{'readonly': column.settings.readonly}"></md-checkbox>
     </div>
 
+    <div ng-if="column.cellType === 'button'" class="gt-cell-content flex-i-center gt-cell-checkbox-holder">
+        <md-button   data-ng-click="column.settings.callback($event, row, column)"
+                     class="link-button">{{column.settings.buttonText}}</md-button>
+    </div>
+
     <div ng-if="column.cellType === 'multiselector'" class="gt-cell-content">
 
         <!-- <div class="gt-cell-text-container">
