@@ -188,7 +188,8 @@
 
                     resolveLayout();
 
-                } else {
+                }
+                else {
 
                     // for complex transaction edit layout stored inside transaction type object
                     if (vm.entityType === "complex-transaction") {
@@ -215,7 +216,8 @@
 
                         }
 
-                    } else { // For not complex-transaction entities
+                    }
+                    else { // For not complex-transaction entities
 
                         if (vm.layoutId || vm.layoutId === 0) {
 
@@ -1062,7 +1064,8 @@
                             }
                         }
 
-                    } else if (field.attribute_class === 'userInput') {
+                    }
+                    else if (field.attribute_class === 'userInput') {
 
                         for (u = 0; u < vm.userInputs.length; u = u + 1) {
 
@@ -1108,6 +1111,51 @@
 
         };
 
+        var fixTabSockets = function (tab) {
+
+			tab.layout.fields.forEach(function (field, fieldIndex) {
+
+				if (field.type === 'table') {
+
+					var rowsKeys = field.options.tableData.map(function (row) {
+						return row.key;
+					});
+
+					var defaultTableSettings = vm.getTableDefaultSettings(field.attribute.key);
+					defaultTableSettings.tableData.forEach(function (row, index) {
+
+						if (rowsKeys.indexOf(row.key) < 0) {
+							row.to_show = false;
+							field.options.tableData.splice(index, 0, row);
+						}
+
+					});
+
+				}
+
+			});
+
+			return tab;
+
+		};
+
+        var fixSocketsInsideLayout = function () {
+
+        	vm.tabs.forEach(function (tab, index) {
+				vm.tabs[index] = fixTabSockets(tab);
+			});
+
+			if (vm.fixedArea.isActive) {
+				vm.fixedArea = fixTabSockets(vm.fixedArea);
+			}
+
+		};
+
+        /**
+		 * Get items for sockets of form's layout
+		 *
+		 * @returns {Promise<undefined>}
+		 */
         vm.getItems = function () {
 
             return new Promise((resolve, reject) => {
@@ -1480,14 +1528,20 @@
             }
 
         };
-
+		/**
+		 *
+		 * @param attrKey {string}
+		 * @returns {Object|null}
+		 */
         vm.getTableDefaultSettings = function (attrKey) {
 
             const entityTablesData = entityDataConstructorService.dataOfAttributes[vm.entityType];
 
             if (entityTablesData && entityTablesData.hasOwnProperty(attrKey)) {
-                return entityTablesData[attrKey];
+                return JSON.parse(JSON.stringify(entityTablesData[attrKey]));
             }
+
+            return null;
 
         }
 
@@ -2020,6 +2074,7 @@
 
                 Promise.all([vm.getItems(), palettesPromise]).then(function () {
 
+					fixSocketsInsideLayout();
                     vm.createFieldsTree();
 
                     if (vm.fixedArea.isActive) {

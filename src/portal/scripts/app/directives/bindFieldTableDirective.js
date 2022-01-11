@@ -53,14 +53,17 @@
 				const minTableColWidth = 50;
 				const maxTableColWidth = 400;
 				let columnsNumber = 0;
+				const generalCellTypes = [];
 				const useIdForOptions = ['periodicity', 'accrual_calculation_model', 'event_class', 'notification_class'];
 				/** Helps to determine which of multiple tables changed */
 				let thisTableChanged = false;
 				// let thisTableChanged = {value: false}
 				let entitySpecificData;
 				let tableColumnsList;
+				/** Assembles header and templateRow */
+				let assembleGridTable;
 				/**
-				 * Fill each grid table row's cell with data from entity
+				 * Fill each grid table row's cell with data from entity. Used inside function convertDataForGridTable.
 				 *
 				 * @param item {Object} - matching to row data from entity
 				 * @param row {Object} - grid table row data
@@ -254,6 +257,33 @@
 				//endregion
 
 				//region Instrument events
+				const openInstrumentEventActionParametersManager = function ($event, row, column) {
+
+					const event = scope.entity[bfcVm.fieldKey][row.order];
+
+					$mdDialog.show({
+						controller: 'InstrumentEventActionParameterDialogController as vm',
+						templateUrl: 'views/dialogs/instrument-event-action-parameter-dialog-view.html',
+						parent: angular.element(document.body),
+						targetEvent: $event,
+						multiple: true,
+						locals: {
+							data: {
+								eventParameters: event.data.parameters,
+								item: event
+							}
+						}
+
+					}).then(res => {
+
+						if (res.status === 'agree') {
+							scope.entity[bfcVm.fieldKey][row.order] = res.data.item
+						}
+
+					});
+
+				};
+
 				const instrumentEventsColumns = {
 					'name' :{
 						key: 'name',
@@ -333,6 +363,16 @@
 							value: null
 						}
 					},
+					'parameters': {
+						key: 'parameters',
+						objPath: ['data', 'parameters'],
+						cellType: 'button',
+						settings: {
+							buttonContent: '<span class="material-icons">more_vert</span>',
+							callback: openInstrumentEventActionParametersManager
+						},
+						classList: ['gt-3dots-btn']
+					},
 				};
 
 				const loadDataForInstrumentEvents = function () {
@@ -392,7 +432,8 @@
 										actions: scheme.data.actions,
 										form_message: scheme.data.form_message,
 										event_class: scheme.data.event_class,
-										items: fields
+										items: fields,
+										parameters: scheme.data.parameters
 									}
 								}
 
@@ -480,8 +521,9 @@
 					const newRowKey = metaHelper.generateUniqueId('user_tabs_' + tableKey);
 
 					rowData.frontOptions = {newRow: true, gtKey: newRowKey};
-
+					// console.log("testing.addNewRow templateRow", gridTableData.templateRow);
 					const rowObj = metaHelper.recursiveDeepCopy(gridTableData.templateRow);
+					// console.log("testing.addNewRow rowObj", rowObj);
 					rowObj.key = newRowKey;
 					rowObj.newRow = true;
 
@@ -520,12 +562,12 @@
 
 					scope.entity[bfcVm.fieldKey].unshift(rowData);
 					gridTableData.body.unshift(rowObj);
-
+					// console.log("testing.addNewRow rowObj", rowObj);
 					// Update rows in grid table
 					scope.entity[bfcVm.fieldKey].forEach(function (item, itemIndex) {
 						gridTableData.body[itemIndex].order = itemIndex;
 					});
-
+					// console.log("testing.addNewRow entity", scope.entity);
 					thisTableChanged = true;
 					bfcVm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
 
@@ -553,8 +595,9 @@
 					}
 
 				} */
-				/** Assembles header and templateRow */
-				const assembleGridTable = function () {
+
+				/** Assembles common parts of header and templateRow */
+				const assembleGridTableCommonData = function () {
 
 					const tableData = scope.item.options.tableData;
 					if (scope.item.options.label) gridTableData.name = scope.item.options.label;
@@ -650,6 +693,8 @@
 
 				};
 
+				assembleGridTable = assembleGridTableCommonData;
+
 				/* if (scope.entityType === 'instrument' && scope.item.key === "event_schedules") {
 
 					fillGridTableRowCells = function (item, row) {
@@ -743,7 +788,12 @@
 					};
 
 				} */
-				fillGridTableRowCells = function (item, row) {
+				/**
+				 *
+				 * @param item {Object} - data of event or accrual
+				 * @param row {Object} - grid table row
+				 */
+				const fillGridTableRowCellsMethod1 = function (item, row) {
 
 					row.columns.forEach((cell, index) => {
 
@@ -810,6 +860,8 @@
 					});
 
 				};
+
+				fillGridTableRowCells = fillGridTableRowCellsMethod1;
 
 				const convertDataForGridTable = function () {
 
@@ -903,6 +955,7 @@
 									if (res.status === 'agree') {
 
 										const accrual = res.data.item;
+
 										addNewRow(accrual);
 
 									}
@@ -916,9 +969,38 @@
 							tableColumnsList = instrumentEventsColumns;
 							multitypeFieldsForRows = instrumentService.getInstrumentEventsMultitypeFieldsData();
 
+							assembleGridTable = function () {
+
+								assembleGridTableCommonData();
+
+								gridTableData.templateRow.columns.find()
+
+							};
+
 							await loadDataForInstrumentEvents();
 
 							let buttonsList = [];
+
+							const parametersBtn = scope.item.options.tableData.find(item => item.key === 'parameters_btn');
+
+							if (parametersBtn && parametersBtn.to_show) {
+
+								fillGridTableRowCells = function (item, row) {
+
+									fillGridTableRowCellsMethod1(item, row);
+
+									const parametersCell = row.columns.find(cell => cell.key === 'parameters_btn');
+
+									const eventHasParameters = item.data && item.data.parameters && item.data.parameters.length;
+
+									if (eventHasParameters) {
+										parametersCell
+									}
+
+								};
+
+							}
+
 							const buildBtn = scope.item.options.tableData.find(item => item.key === 'build_events_btn');
 
 							if (buildBtn.to_show) {
@@ -944,6 +1026,9 @@
 									if (res.status === 'agree') {
 
 										const event = res.data.item;
+										event.data = {
+											parameters: item.data.parameters
+										};
 										event.event_class = item.data.event_class;
 										event.actions = item.data.actions || [];
 
