@@ -244,7 +244,7 @@
                         order: 3,
                         cellType: 'button',
                         settings: {
-                            buttonText: 'Open Manager',
+                            buttonContent: 'Open Manager',
                             callback: openEventActionParametersManager
                         },
                         styles: {
@@ -432,7 +432,8 @@
 
                 if (res.status === 'agree') {
 
-                    vm.event = res.data.item
+                    vm.event = res.data.item;
+					// console.log("testing.openParametersManager parameters added", vm.event);
                 }
 
             });

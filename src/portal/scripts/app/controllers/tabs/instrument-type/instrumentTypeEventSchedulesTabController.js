@@ -304,7 +304,7 @@
                 settings: {
                     value: null,
                     closeOnMouseOut: false,
-                    cellText: '...',
+                    // cellText: '<span class="material-icons three-dots-btn">more_horiz</span>',
                     popupSettings: {
                         contentHtml: {
                             main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"

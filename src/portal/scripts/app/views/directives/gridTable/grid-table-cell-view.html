@@ -82,8 +82,9 @@
     </div>
 
     <div ng-if="column.cellType === 'button'" class="gt-cell-content flex-i-center gt-cell-checkbox-holder">
-        <md-button   data-ng-click="column.settings.callback($event, row, column)"
-                     class="link-button">{{column.settings.buttonText}}</md-button>
+        <md-button ng-bind-html="column.settings.buttonContent"
+                   class="link-button"
+                   ng-click="column.settings.callback($event, row, column)"></md-button>
     </div>
 
     <div ng-if="column.cellType === 'multiselector'" class="gt-cell-content">
