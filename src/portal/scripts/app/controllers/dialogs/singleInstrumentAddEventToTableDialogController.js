@@ -111,6 +111,15 @@
 
 		    console.log('openEventActionParametersManager vm.event.data', vm.event.data);
 
+            if (!vm.event.data) {
+                vm.event.data = {}
+            }
+
+            if (!vm.event.data.parameters) {
+                vm.event.data.parameters = []
+            }
+
+
             $mdDialog.show({
                 controller: 'InstrumentEventActionParameterDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-event-action-parameter-dialog-view.html',
