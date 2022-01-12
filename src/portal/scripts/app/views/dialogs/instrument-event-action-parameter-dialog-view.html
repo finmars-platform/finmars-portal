@@ -5,32 +5,31 @@
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
 
-            <h2>Instrument Event Action Parameter Dialog</h2>
+            <h2>{{vm.title}}</h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content>
+    <md-dialog-content class="p-16">
 
-        <div class="event-parameter-holder">
+        <div class="event-parameter-holder" data-ng-if="!vm.processsing">
 
             <div class="m-t-16">
 
-                <div data-ng-repeat="parameter in vm.action.data.parameters" layout="row" data-ng-if="parameter.index != 0">
+                <div data-ng-repeat="parameter in vm.transactionType.context_parameters" layout="row" >
 
                     <md-input-container>
                         <label>Index</label>
-                        <input type="text" data-ng-model="parameter.index" class="disabled-btn">
+                        <input type="text" data-ng-model="parameter.order" class="disabled-btn">
                     </md-input-container>
 
                     <md-input-container>
                         <label>Name</label>
-                        <input type="text" data-ng-model="parameter.name">
+                        <input type="text" data-ng-model="parameter.name" disabled>
                     </md-input-container>
 
                     <md-input-container class="m-t-16">
                         <label>Value Type</label>
-                        <md-select data-ng-model="parameter.value_type"
-                                   data-ng-change="vm.multipleParameterValueTypeUpdate(vm.action, parameter.index)">
+                        <md-select data-ng-model="parameter.value_type" disabled="">
                             <md-option value="10">Text</md-option>
                             <md-option value="20">Number</md-option>
                             <md-option value="40">Date</md-option>
@@ -39,36 +38,15 @@
 
                     <div>
 
-                        <div layout="row" data-ng-if="parameter.___switch_state == 'default_value'">
-
-                            <md-input-container>
-                                <label>Default Value</label>
-                                <input type="text" data-ng-model="parameter.default_value">
-                            </md-input-container>
-
-                            <md-button class="md-raised md-primary"
-                                       data-ng-click="vm.switchParameter($event, vm.action, parameter)">Switch
-                            </md-button>
-
-                        </div>
-
-                        <div layout="row" data-ng-if="parameter.___switch_state == 'attribute_key'">
-
-                            <md-input-container class="m-t-16">
-                                <label>Options</label>
-                                <md-select data-ng-model="parameter.attribute_key">
-                                    <md-option ng-value="parameter.name"
-                                               data-ng-repeat="parameter in vm.optionsForMultipleParameters[parameter.value_type]">
-                                        {{parameter.name}}
-                                    </md-option>
-                                </md-select>
-                            </md-input-container>
-
-                            <md-button class="md-raised md-primary"
-                                       data-ng-click="vm.switchParameter($event, vm.action, parameter)">Switch
-                            </md-button>
-
-                        </div>
+                        <md-input-container class="m-t-16">
+                            <label>Options</label>
+                            <md-select data-ng-model="parameter.event_parameter_name">
+                                <md-option ng-value="parameter.name"
+                                           data-ng-repeat="parameter in vm.optionsForMultipleParameters[parameter.value_type]">
+                                    {{parameter.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
 
                     </div>
 
@@ -77,12 +55,13 @@
 
             </div>
 
-            <div>
-                <md-button class="md-raised" data-ng-click="vm.addParameter($event, vm.action)">Add Parameter</md-button>
-            </div>
-
         </div>
 
+        <div data-ng-if="vm.processsing">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="50"></progress-circular>
+            </div>
+        </div>
 
     </md-dialog-content>
 
