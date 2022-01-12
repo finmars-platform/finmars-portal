@@ -5,9 +5,13 @@
 
     'use strict';
 
+    var transactionTypeService = require('../../services/transactionTypeService')
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
+
+        vm.title = 'Instrument Event Action Parameter Dialog';
 
         // MULTIPLE PARAMETER LOGIC START
 
@@ -35,47 +39,6 @@
 
         };
 
-        vm.multipleParameterValueTypeUpdate = function (item, num) {
-
-            var index = num - 1;
-
-            var value_type = item.data.parameters[index].value_type;
-
-            vm.optionsForMultipleParameters[value_type] = vm.getOptionsForAttributeKey(value_type);
-
-        };
-
-        vm.addParameter = function ($event, item) {
-
-            if (!item.data) {
-                item.data = {}
-            }
-
-            if (!item.data.parameters) {
-                item.data.parameters = []
-            }
-
-            var index = item.data.parameters.length;
-
-            index = index + 1
-
-            item.data.parameters.push({index: index, ___switch_state: 'default_value'})
-
-        };
-
-        vm.switchParameter = function ($event, item, parameter) {
-
-            if (parameter.___switch_state === 'default_value') {
-                parameter.___switch_state = 'attribute_key'
-            } else {
-                parameter.___switch_state = 'default_value'
-            }
-
-            parameter.default_value = null;
-            parameter.attribute_key = null;
-
-        };
-
         // MULTIPLE PARAMETER LOGIC END
 
         vm.cancel = function () {
@@ -83,6 +46,23 @@
         };
 
         vm.agree = function (responseData) {
+
+            if (!vm.action.data) {
+                vm.action.data = {}
+            }
+
+            if (!vm.action.data.parameters) {
+                vm.action.data.parameters = []
+            }
+
+            vm.transactionType.context_parameters.forEach(function (parameter) {
+                vm.action.data.parameters.push({
+                    order: parameter.order,
+                    name: parameter.name,
+                    value_type: parameter.value_type,
+                    event_parameter_name: parameter.event_parameter_name
+                })
+            })
 
             $mdDialog.hide({
                 status: 'agree', data: {
@@ -95,16 +75,55 @@
 
         vm.init = function () {
 
-            vm.eventParameters = data.eventParameters
-            vm.action = data.item;
+            if (!data.item.transaction_type) {
+                throw "Transaction type required"
+            }
 
-            console.log('eventParameters', vm.eventParameters);
+            vm.processsing = true;
 
-            vm.optionsForMultipleParameters[10] = vm.getOptionsForAttributeKey(10);
-            vm.optionsForMultipleParameters[20] = vm.getOptionsForAttributeKey(20);
-            vm.optionsForMultipleParameters[40] = vm.getOptionsForAttributeKey(40);
+            transactionTypeService.getListLightWithInputs({
+                filters: {
+                    user_code: data.item.transaction_type
+                }
+            }).then(function (res) {
 
-            console.log('vm.optionsForMultipleParameters', vm.optionsForMultipleParameters);
+                vm.processsing = false;
+
+                if (res.results.length) {
+                    vm.transactionType = res.results[0];
+                } else {
+                    $mdDialog.hide({status: 'disagree'});
+                    throw "Transaction type is not exist"
+                }
+
+                vm.eventParameters = data.eventParameters
+                vm.action = data.item;
+
+                if (vm.transactionType.context_parameters_notes) {
+                    vm.title = vm.transactionType.context_parameters_notes
+                }
+                
+                console.log('eventParameters', vm.eventParameters);
+
+                vm.optionsForMultipleParameters[10] = vm.getOptionsForAttributeKey(10);
+                vm.optionsForMultipleParameters[20] = vm.getOptionsForAttributeKey(20);
+                vm.optionsForMultipleParameters[40] = vm.getOptionsForAttributeKey(40);
+
+                console.log('vm.optionsForMultipleParameters', vm.optionsForMultipleParameters);
+
+                if (vm.action.data && vm.action.data.parameters) {
+                    vm.transactionType.context_parameters.forEach(function (parameter) {
+
+                        vm.action.data.parameters.forEach(function (action_parameter) {
+                            if (parameter.order === action_parameter.order) {
+                                parameter.event_parameter_name = action_parameter.event_parameter_name
+                            }
+                        })
+                    })
+                }
+
+                $scope.$apply();
+            })
 
         }
 

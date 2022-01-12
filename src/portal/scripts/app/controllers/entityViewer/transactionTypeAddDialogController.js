@@ -2358,6 +2358,29 @@
 
         // Transaction type actions controller end
 
+        // Context Parameters tab start
+
+        vm.deleteContextParameter = function ($event, $index) {
+            vm.entity.context_parameters.splice($index, 1);
+        }
+
+        vm.addContextParameter = function ($event) {
+
+            var order = 1;
+
+            if (vm.entity.context_parameters && vm.entity.context_parameters.length) {
+                order = vm.entity.context_parameters[vm.entity.context_parameters.length - 1].order + 1
+            }
+
+            vm.entity.context_parameters.push({
+                order:order
+            });
+
+
+        }
+
+        // Context Parameters tab end
+
         vm.init = function () {
 
             setTimeout(function () {
