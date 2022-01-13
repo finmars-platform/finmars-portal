@@ -9,7 +9,9 @@
 
         var vm = this;
 
-        // MULTIPLE PARAMETER LOGIC START
+		vm.changeOnlyValue = !!data.changeOnlyValue;
+
+        //region MULTIPLE PARAMETER LOGIC
 
         vm.optionsForMultipleParameters = {};
 
@@ -76,7 +78,7 @@
 
         };
 
-        // MULTIPLE PARAMETER LOGIC END
+        //endregion MULTIPLE PARAMETER LOGIC
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

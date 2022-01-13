@@ -81,9 +81,10 @@
                      ng-class="{'readonly': column.settings.readonly}"></md-checkbox>
     </div>
 
-    <div ng-if="column.cellType === 'button'" class="gt-cell-content flex-i-center gt-cell-checkbox-holder">
+    <div ng-if="column.cellType === 'button'" class="gt-cell-content flex-i-center gt-cell-button-holder">
         <md-button ng-bind-html="column.settings.buttonContent"
-                   class="link-button"
+                   ng-disabled="column.settings.isDisabled"
+                   class="flex-i-center"
                    ng-click="column.settings.callback($event, row, column)"></md-button>
     </div>
 

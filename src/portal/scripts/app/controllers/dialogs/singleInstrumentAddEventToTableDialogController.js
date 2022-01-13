@@ -431,9 +431,7 @@
                 console.log('openEventParametersManager.res', res);
 
                 if (res.status === 'agree') {
-
                     vm.event = res.data.item;
-					// console.log("testing.openParametersManager parameters added", vm.event);
                 }
 
             });
