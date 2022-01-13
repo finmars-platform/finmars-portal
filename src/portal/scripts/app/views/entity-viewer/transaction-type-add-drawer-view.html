@@ -3,7 +3,7 @@
         <div>
 
             <h2 class="big-drawer-header-h">Add Transaction type</h2>
-            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16 big-drawer-header-processing">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
                     <progress-circular diameter="20"></progress-circular>
                 </div>
@@ -86,6 +86,17 @@
                         <md-tab-body>
                             <md-content class="md-padding p-t-26">
                                 <div data-ng-include="'views/tabs/transaction-type/transaction-type-fields-tab-view.html'"></div>
+                            </md-content>
+                        </md-tab-body>
+                    </md-tab>
+
+                    <md-tab>
+                        <md-tab-lable>
+                            <span class="grey-tab">Context Parameters</span>
+                        </md-tab-lable>
+                        <md-tab-body>
+                            <md-content class="md-padding p-t-26">
+                                <div data-ng-include="'views/tabs/transaction-type/transaction-type-context-parameters-tab-view.html'"></div>
                             </md-content>
                         </md-tab-body>
                     </md-tab>

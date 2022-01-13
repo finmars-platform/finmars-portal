@@ -5,6 +5,11 @@
          data-ng-if="vm.checkReadyStatus()"
          layout="column">
 
+        <div>
+            <md-button class="md-raised md-primary" style="margin-top: 2px;"  data-ng-click="vm.recalculateUserFields($event, null)">Recalculate</md-button>
+
+        </div>
+
         <div layout="row">
 
             <div class="ttype-fields-group-container"
