@@ -143,7 +143,7 @@
 							override_name: "",
 						},
 						{
-							key: "parameters_btn",
+							key: "parameters",
 							name: '"Parameters" Button',
 							to_show: true
 						},

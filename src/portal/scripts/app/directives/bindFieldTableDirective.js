@@ -259,7 +259,7 @@
 				//region Instrument events
 				const openInstrumentEventActionParametersManager = function ($event, row, column) {
 
-					const event = scope.entity[bfcVm.fieldKey][row.order];
+					const event = JSON.parse(angular.toJson(scope.entity[bfcVm.fieldKey][row.order]));
 
 					$mdDialog.show({
 						controller: 'InstrumentEventActionParameterDialogController as vm',
@@ -270,14 +270,15 @@
 						locals: {
 							data: {
 								eventParameters: event.data.parameters,
-								item: event
+								item: event,
+								changeOnlyValue: true
 							}
 						}
 
 					}).then(res => {
 
 						if (res.status === 'agree') {
-							scope.entity[bfcVm.fieldKey][row.order] = res.data.item
+							scope.entity[bfcVm.fieldKey][row.order] = res.data.item;
 						}
 
 					});
@@ -368,10 +369,10 @@
 						objPath: ['data', 'parameters'],
 						cellType: 'button',
 						settings: {
-							buttonContent: '<span class="material-icons">more_vert</span>',
+							buttonContent: '<span class="material-icons">more_horiz</span>',
 							callback: openInstrumentEventActionParametersManager
 						},
-						classList: ['gt-3dots-btn']
+						classes: ['gt-3dots-btn']
 					},
 				};
 
@@ -521,9 +522,9 @@
 					const newRowKey = metaHelper.generateUniqueId('user_tabs_' + tableKey);
 
 					rowData.frontOptions = {newRow: true, gtKey: newRowKey};
-					// console.log("testing.addNewRow templateRow", gridTableData.templateRow);
+
 					const rowObj = metaHelper.recursiveDeepCopy(gridTableData.templateRow);
-					// console.log("testing.addNewRow rowObj", rowObj);
+
 					rowObj.key = newRowKey;
 					rowObj.newRow = true;
 
@@ -562,12 +563,12 @@
 
 					scope.entity[bfcVm.fieldKey].unshift(rowData);
 					gridTableData.body.unshift(rowObj);
-					// console.log("testing.addNewRow rowObj", rowObj);
+
 					// Update rows in grid table
 					scope.entity[bfcVm.fieldKey].forEach(function (item, itemIndex) {
 						gridTableData.body[itemIndex].order = itemIndex;
 					});
-					// console.log("testing.addNewRow entity", scope.entity);
+
 					thisTableChanged = true;
 					bfcVm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
 
@@ -596,8 +597,7 @@
 
 				} */
 
-				/** Assembles common parts of header and templateRow */
-				const assembleGridTableCommonData = function () {
+				assembleGridTable = function () {
 
 					const tableData = scope.item.options.tableData;
 					if (scope.item.options.label) gridTableData.name = scope.item.options.label;
@@ -692,8 +692,6 @@
 					gridTableData.components.rowCheckboxes = !!rowsDeletion.to_show;
 
 				};
-
-				assembleGridTable = assembleGridTableCommonData;
 
 				/* if (scope.entityType === 'instrument' && scope.item.key === "event_schedules") {
 
@@ -829,7 +827,7 @@
 							}
 
 						}
-						else {
+						else if (cell.cellType !== 'button') {
 
 							cell.settings.value = metaHelper.getObjectNestedPropVal(item, cell.objPath);
 
@@ -969,19 +967,11 @@
 							tableColumnsList = instrumentEventsColumns;
 							multitypeFieldsForRows = instrumentService.getInstrumentEventsMultitypeFieldsData();
 
-							assembleGridTable = function () {
-
-								assembleGridTableCommonData();
-
-								gridTableData.templateRow.columns.find()
-
-							};
-
 							await loadDataForInstrumentEvents();
 
 							let buttonsList = [];
 
-							const parametersBtn = scope.item.options.tableData.find(item => item.key === 'parameters_btn');
+							const parametersBtn = scope.item.options.tableData.find(item => item.key === 'parameters');
 
 							if (parametersBtn && parametersBtn.to_show) {
 
@@ -989,12 +979,13 @@
 
 									fillGridTableRowCellsMethod1(item, row);
 
-									const parametersCell = row.columns.find(cell => cell.key === 'parameters_btn');
+									const parametersCell = row.columns.find(cell => cell.key === 'parameters');
 
-									const eventHasParameters = item.data && item.data.parameters && item.data.parameters.length;
+									const eventHasNoParameters = !item.data || !item.data.parameters || item.data.parameters.length === 0;
 
-									if (eventHasParameters) {
-										parametersCell
+									if (eventHasNoParameters) {
+										parametersCell.cellType = 'empty';
+										delete parametersCell.settings;
 									}
 
 								};

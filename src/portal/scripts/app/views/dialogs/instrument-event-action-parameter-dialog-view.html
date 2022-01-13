@@ -19,18 +19,19 @@
 
                     <md-input-container>
                         <label>Index</label>
-                        <input type="text" data-ng-model="parameter.index" class="disabled-btn">
+                        <input type="text" data-ng-model="parameter.index" disabled>
                     </md-input-container>
 
                     <md-input-container>
                         <label>Name</label>
-                        <input type="text" data-ng-model="parameter.name">
+                        <input type="text" data-ng-model="parameter.name" data-ng-disabled="vm.changeOnlyValue">
                     </md-input-container>
 
                     <md-input-container class="m-t-16">
                         <label>Value Type</label>
                         <md-select data-ng-model="parameter.value_type"
-                                   data-ng-change="vm.multipleParameterValueTypeUpdate(vm.action, parameter.index)">
+                                   data-ng-change="vm.multipleParameterValueTypeUpdate(vm.action, parameter.index)"
+                                   data-ng-disabled="vm.changeOnlyValue">
                             <md-option value="10">Text</md-option>
                             <md-option value="20">Number</md-option>
                             <md-option value="40">Date</md-option>
@@ -78,7 +79,9 @@
             </div>
 
             <div>
-                <md-button class="md-raised" data-ng-click="vm.addParameter($event, vm.action)">Add Parameter</md-button>
+                <md-button ng-if="!vm.changeOnlyValue"
+                           class="md-raised"
+                           data-ng-click="vm.addParameter($event, vm.action)">Add Parameter</md-button>
             </div>
 
         </div>
