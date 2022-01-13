@@ -103,6 +103,52 @@
 
         };
 
+		const openEventActionParametersManager = function ($event, row, column) {
+
+		    console.log('openEventActionParametersManager row, column', row, column);
+
+		    var action = vm.event.actions[row.order];
+
+		    console.log('openEventActionParametersManager vm.event.data', vm.event.data);
+
+            if (!vm.event.data) {
+                vm.event.data = {}
+            }
+
+            if (!vm.event.data.parameters) {
+                vm.event.data.parameters = []
+            }
+
+
+            $mdDialog.show({
+                controller: 'InstrumentEventActionParameterDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-action-parameter-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        eventParameters: vm.event.data['parameters'],
+                        item: action
+                    }
+                }
+
+            }).then(res => {
+
+                console.log('openEventParametersManager.res', res);
+
+                if (res.status === 'agree') {
+
+                    action = res.data.item
+                }
+
+            });
+
+        }
+
         const onActionsOrderChange = function (rowData, gtDataService, gtEventService) {
 
             const tableData = gtDataService.getTableData();
@@ -195,6 +241,20 @@
                         cellType: 'checkbox',
                         settings: {
                             value: null
+                        },
+                        styles: {
+                            'grid-table-cell': {'width': '130px'},
+                        }
+                    },
+                    {
+                        key: null,
+                        objPath: [],
+                        columnName: '-',
+                        order: 3,
+                        cellType: 'button',
+                        settings: {
+                            buttonText: 'Open Manager',
+                            callback: openEventActionParametersManager
                         },
                         styles: {
                             'grid-table-cell': {'width': '130px'},
@@ -357,108 +417,40 @@
 
 		}
 
-        // MULTIPLE PARAMETER LOGIC START
+        vm.openParametersManager = function ($event) {
 
-        vm.optionsForMultipleParameters = {};
-
-        vm.getOptionsForAttributeKey = function (valueType) {
-
-            var valueTypeInt = parseInt(valueType, 10);
-
-            var result = [];
-
-            if (valueTypeInt === 10) {
-                result.push({
-                    name: 'Reference for pricing',
-                    user_code: 'reference_for_pricing'
-                })
-            }
-
-            if (valueTypeInt === 20) {
-                result.push({
-                    name: 'Default Price',
-                    user_code: 'default_price'
-                })
-            }
-
-            if (valueTypeInt === 40) {
-                result.push({
-                    name: 'Maturity Date',
-                    user_code: 'maturity_date'
-                })
-            }
-
-            var attrs = instrAttrTypes.filter(function (item) {
-
-                if (item.value_type === valueTypeInt) {
-                    return true;
+            $mdDialog.show({
+                controller: 'InstrumentEventParameterDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-parameter-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        instrumentAttrTypes: instrAttrTypes,
+                        item: vm.event
+                    }
                 }
 
-                return false;
+            }).then(res => {
 
-            }).map(function (item) {
+                console.log('openEventParametersManager.res', res);
 
-                return {
-                    name: item.name,
-                    user_code: 'attributes.' + item.user_code
+                if (res.status === 'agree') {
+
+                    vm.event = res.data.item
                 }
 
             });
 
-            result = result.concat(attrs);
+        }
 
-            return result
 
-        };
-
-        vm.multipleParameterValueTypeUpdate = function (item, num) {
-
-            var index = num -1;
-
-            var value_type = item.data.parameters[index].value_type;
-
-            vm.optionsForMultipleParameters[value_type] = vm.getOptionsForAttributeKey(value_type);
-
-        };
-
-        vm.addParameter = function ($event, item) {
-
-            if (!item.data) {
-                item.data = {};
-            }
-
-            if (!item.data.parameters) {
-                item.data.parameters = []
-            }
-
-            var index = item.data.parameters.length;
-
-            index = index + 1
-
-            item.data.parameters.push({index: index, ___switch_state: 'default_value'})
-
-        };
-
-        vm.switchParameter = function ($event, item, parameter) {
-
-            if (parameter.___switch_state === 'default_value') {
-                parameter.___switch_state = 'attribute_key'
-            } else {
-                parameter.___switch_state = 'default_value'
-            }
-
-            parameter.default_value = null;
-            parameter.attribute_key = null;
-
-        };
-
-        // MULTIPLE PARAMETER LOGIC END
 
         vm.init = function () {
-
-            vm.optionsForMultipleParameters[10] = vm.getOptionsForAttributeKey(10);
-            vm.optionsForMultipleParameters[20] = vm.getOptionsForAttributeKey(20);
-            vm.optionsForMultipleParameters[40] = vm.getOptionsForAttributeKey(40);
 
 			multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrAttrTypes, multitypeFieldsData);
 

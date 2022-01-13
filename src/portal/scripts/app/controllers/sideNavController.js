@@ -286,7 +286,7 @@
 
         };
 
-        vm.syncInterfaceSectionsAccess = function(){
+        vm.syncInterfaceSectionsAccess = function () {
 
             vm.accessSectionTable.history =
                 vm.accessTable.data_transaction ||
@@ -344,7 +344,7 @@
 
                 vm.currentMember.groups_object.forEach(function (group) {
 
-                    console.log(' group.permission_table',  group.permission_table);
+                    console.log(' group.permission_table', group.permission_table);
 
                     if (group.permission_table) {
 
@@ -519,7 +519,7 @@
 
         };
 
-        vm.getWsStatus = function (){
+        vm.getWsStatus = function () {
             if (window.ws && window.ws.readyState === WebSocket.OPEN) {
                 return 'open'
             }
@@ -545,7 +545,7 @@
 
         }
 
-        vm.getErrorCount = function (){
+        vm.getErrorCount = function () {
 
             return window.system_errors.length
         }
@@ -559,10 +559,33 @@
             vm.getMember();
 
 
+            if (toastr) {
+                toastr.options.onclick = function (event) {
 
-        };
+                    if (event.currentTarget && event.currentTarget.classList.contains('toast-error')) {
 
-        vm.init();
-    }
+                        $mdDialog.show({
+                            controller: 'SystemErrorLogDialogController as vm',
+                            templateUrl: 'views/dialogs/system-error-log-dialog-view.html',
+                            targetEvent: event,
+                            locals: {
+                                data: {}
+                            },
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
 
-}());
+                    }
+
+                }
+
+
+            }
+        }
+
+            vm.init();
+        }
+
+    }()
+);
