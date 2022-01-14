@@ -2105,7 +2105,10 @@
                     var availableAttrs;
 
                     availableAttrs = allAttrsList.filter(function (attr) {
-                        for (var i = 0; i < scope.columns.length; i++) {
+
+						if (attr.value_type === "mc_field") return false;
+
+                    	for (var i = 0; i < scope.columns.length; i++) {
                             if (scope.columns[i].key === attr.key) {
                                 return false;
                             }
@@ -2123,7 +2126,8 @@
                             data: {
                                 availableAttrs: availableAttrs,
                                 title: 'Choose column to add',
-                                isReport: scope.isReport
+                                isReport: scope.isReport,
+								multiselector: true
                             }
                         }
                     }).then(function (res) {

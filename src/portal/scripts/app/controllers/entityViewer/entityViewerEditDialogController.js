@@ -1983,6 +1983,21 @@
 
         };
 
+        vm.bookInstrument = function () {
+
+            return new Promise(function (resolve, reject) {
+                instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
+
+                    vm.entity = data.instrument
+
+                    resolve()
+
+                })
+
+            })
+
+        }
+
         vm.init = function () {
 
             if (vm.entityType === 'instrument-type') {
@@ -2047,14 +2062,18 @@
 
                 vm.typeSelectorChange = function () {
 
-					vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+                    vm.bookInstrument().then(function () {
 
-						vm.tabs = data.tabs;
-						vm.attributesLayout = data.attributesLayout;
+                        vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
-						$scope.$apply();
+                            vm.tabs = data.tabs;
+                            vm.attributesLayout = data.attributesLayout;
 
-					});
+                            $scope.$apply();
+
+                        });
+
+                    })
 
 				};
 
