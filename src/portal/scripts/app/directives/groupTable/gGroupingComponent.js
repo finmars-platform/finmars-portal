@@ -494,6 +494,8 @@
                             return false;
                         }
 
+						if (attr.value_type === "mc_field") return false;
+
                         return true;
                     });
 
@@ -506,7 +508,8 @@
                             data: {
                                 availableAttrs: availableAttrs,
                                 title: 'Choose column to add',
-                                isReport: scope.isReport
+                                isReport: scope.isReport,
+								multiselector: true
                             }
                         }
                     }).then(function (res) {
