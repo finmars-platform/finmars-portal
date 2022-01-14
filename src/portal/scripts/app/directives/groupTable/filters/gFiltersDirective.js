@@ -533,7 +533,7 @@
 
                     const allAttrsList = getAttributes();
 
-                    const availableAttrs = allAttrsList.filter(attr => {
+                    let availableAttrs = allAttrsList.filter(attr => {
 
                         for (let i = 0; i < filtersList.length; i++) {
                             if (filtersList[i].key === attr.key) {
@@ -549,6 +549,14 @@
 
                     });
 
+					if (!$scope.isReport) {
+
+						availableAttrs = availableAttrs.filter(attr => {
+							return attr.value_type !== "mc_field" && attr.key !== "notes";
+						});
+
+					}
+
                     return availableAttrs;
 
                 }
@@ -561,18 +569,6 @@
                         try {
 
                             let availableAttrs = getAttrsForFilterAddition(filters);
-
-                            if (!$scope.isReport) {
-
-                            	availableAttrs = availableAttrs.filter(attr => {
-                            		if (attr.value_type !== "mc_field" && attr.key !== "notes") {
-										return false;
-									}
-
-                            		return true;
-								});
-
-							}
 
                             $mdDialog.show({
                                 controller: "TableAttributeSelectorDialogController as vm",
