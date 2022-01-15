@@ -59,8 +59,8 @@
                                                 <md-checkbox ng-model="item.groups"
                                                              aria="groups"
                                                              class="md-g-green"
+                                                             ng-class="{'visibility-hidden': vm.checkAreaAccessibility(item, 'group')}"
                                                              ng-disabled="item.error_data"
-                                                             ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              aria-label="user attributes for groups">
                                                 </md-checkbox>
@@ -68,6 +68,7 @@
                                                              aria="filters"
                                                              ng-disabled="item.error_data"
                                                              class="md-primary"
+                                                             ng-class="{'visibility-hidden': vm.checkAreaAccessibility(item, 'filter')}"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              aria-label="user attributes for filters">
                                                 </md-checkbox>
@@ -117,9 +118,9 @@
                                                 <md-checkbox ng-model="item.groups"
                                                              aria="groups"
                                                              ng-disabled="item.error_data"
-                                                             ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
                                                              ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              class="md-g-green"
+                                                             ng-class="{'visibility-hidden': vm.checkAreaAccessibility(item, 'group')}"
                                                              aria-label="user attributes for groups">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.filters"
@@ -127,6 +128,7 @@
                                                              ng-disabled="item.error_data"
                                                              ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              class="md-primary"
+                                                             ng-class="{'visibility-hidden': vm.checkAreaAccessibility(item, 'filter')}"
                                                              aria-label="user attributes for filters">
                                                 </md-checkbox>
                                             </div>
@@ -184,13 +186,14 @@
                                                 <md-checkbox ng-model="item.groups"
                                                              aria="groups"
                                                              class="md-g-green"
-                                                             ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
+                                                             ng-class="{'visibility-hidden': vm.checkAreaAccessibility(item, 'group')}"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              aria-label="user attributes for groups">
                                                 </md-checkbox>
                                                 <md-checkbox ng-model="item.filters"
                                                              aria="filters"
                                                              class="md-primary"
+                                                             ng-class="{'visibility-hidden': vm.checkAreaAccessibility(item, 'filter')}"
                                                              data-ng-change="vm.onSelectedAttrsChange(vm['{{item.attrsVmKey}}'], item)"
                                                              aria-label="user attributes for filters">
                                                 </md-checkbox>
@@ -254,7 +257,7 @@
                                     <md-checkbox
                                             ng-model="item.groups" aria="groups" class="md-g-green"
                                             data-ng-change="vm.updateAttrs(vm.entityAttrs)"
-                                            ng-style="vm.checkAreaAccessibility(item, 'group') ? {'visibility': 'hidden'} : {}"
+                                            ng-class="{'visibility-hidden': vm.checkAreaAccessibility(item, 'group')}"
                                             aria-label="system attributes for groups">
                                     </md-checkbox>
                                     <md-checkbox
@@ -262,7 +265,7 @@
                                             aria="filters"
                                             class="md-primary"
                                             data-ng-change="vm.updateAttrs(vm.entityAttrs)"
-                                            ng-style="vm.checkAreaAccessibility(item, 'filter') ? {'visibility': 'hidden'} : {}"
+                                            ng-class="{'visibility-hidden': vm.checkAreaAccessibility(item, 'filter')}"
                                             aria-label="system attributes for filters">
                                     </md-checkbox>
                                 </div>

@@ -260,16 +260,17 @@
 				const openInstrumentEventActionParametersManager = function ($event, row, column) {
 
 					const event = JSON.parse(angular.toJson(scope.entity[bfcVm.fieldKey][row.order]));
+					const instrAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
 
 					$mdDialog.show({
-						controller: 'InstrumentEventActionParameterDialogController as vm',
-						templateUrl: 'views/dialogs/instrument-event-action-parameter-dialog-view.html',
+						controller: 'InstrumentEventParameterDialogController as vm',
+						templateUrl: 'views/dialogs/instrument-event-parameter-dialog-view.html',
 						parent: angular.element(document.body),
 						targetEvent: $event,
 						multiple: true,
 						locals: {
 							data: {
-								eventParameters: event.data.parameters,
+								instrumentAttrTypes: instrAttrTypes,
 								item: event,
 								changeOnlyValue: true
 							}
@@ -1040,8 +1041,12 @@
 
 						}
 
-						const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
-						multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
+						if (multitypeFieldsForRows) {
+
+							const instrumentAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
+							multitypeFieldService.fillSelectorOptionsBasedOnValueType(instrumentAttrTypes, multitypeFieldsForRows);
+
+						}
 
 						// Update selector options after dynamic attributes change
 						bfcVm.evEditorEventService.addEventListener(evEditorEvents.DYNAMIC_ATTRIBUTES_CHANGE, () => {

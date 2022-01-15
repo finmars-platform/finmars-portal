@@ -2927,10 +2927,23 @@ md-dialog.two-rows-dialog-actions {
       margin: 0;
       padding-left: 16px;
 
+      display: inline-block;
+
       color: rgba(255, 255, 255, 0.87);
 
       font-size: 16px;
       line-height: @header-height;
+    }
+
+    .big-drawer-header-processing {
+      display: inline-block;
+      color: #fff;
+
+      div {
+        display: inline-block;
+        position: relative;
+        top: 4px;
+      }
     }
 
   }
@@ -3103,6 +3116,13 @@ button.md-raised.md-warn.md-button {
     text-overflow: ellipsis;
   }
 
+  span.error {
+    color: #f05a22;
+    margin-right: 8px;
+    margin-bottom: 2px;
+    font-size: 16px;
+  }
+
 }
 
 .add-chip-wrap {
@@ -3122,13 +3142,6 @@ button.md-raised.md-warn.md-button {
       display: flex;
       align-items: center;
       padding-right: 28px;
-
-      span.error {
-        color: #f05a22;
-        margin-right: 8px;
-        margin-bottom: 2px;
-        font-size: 16px;
-      }
     }
   }
 

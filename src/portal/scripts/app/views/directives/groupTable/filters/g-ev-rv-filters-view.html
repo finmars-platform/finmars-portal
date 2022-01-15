@@ -1,8 +1,10 @@
-<div class="g-filters-holder width-100 flex-row fc-space-between flex-i-start">
+<div class="g-filters-holder width-100 flex-row fc-space-between flex-i-start"
+     ng-class="{'hide-ev-front-filters': !isReport && thereAreFrontendFilters && shownFiltersType === 'frontend'}">
 
     <div class="flex-row flex-i-start">
 
-        <div class="g-filter-left-part gFiltersLeftPart">
+        <div class="g-filter-left-part gFiltersLeftPart"
+             ng-class="{'no-ev-g-filter-switch': !thereAreFrontendFilters}">
 
             <div data-ng-if="isReport" layout="row">
 
@@ -11,7 +13,6 @@
                     <span class="material-icons">refresh</span>
                     <md-tooltip md-direction="top">Calculate</md-tooltip>
                 </md-button>-->
-
                 <md-menu>
                     <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
                                ng-click="$mdOpenMenu($event)">
@@ -44,7 +45,8 @@
                     <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
                 </md-button>
 
-                <md-button class="g-toggle-filters-btn md-icon-button"
+                <md-button ng-if="thereAreFrontendFilters"
+                           class="g-toggle-filters-btn md-icon-button"
                            ng-click="toggleFiltersToShow()">
                     <span ng-show="shownFiltersType === 'frontend'" class="material-icons">laptop_mac</span>
                     <span ng-show="shownFiltersType === 'backend'" class="material-icons">dns</span>

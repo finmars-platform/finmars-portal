@@ -618,7 +618,8 @@
                             data: {
                                 availableAttrs: availableAttrs,
                                 title: 'Choose column to add',
-                                isReport: scope.isReport
+                                isReport: scope.isReport,
+								multiselector: true
                             }
                         }
                     }).then(function (res) {
