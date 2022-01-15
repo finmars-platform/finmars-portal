@@ -111,6 +111,14 @@
 
 		    console.log('openEventActionParametersManager vm.event.data', vm.event.data);
 
+            if (!vm.event.data) {
+                vm.event.data = {}
+            }
+
+            if (!vm.event.data.parameters) {
+                vm.event.data.parameters = []
+            }
+
             $mdDialog.show({
                 controller: 'InstrumentEventActionParameterDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-event-action-parameter-dialog-view.html',
@@ -129,11 +137,8 @@
 
             }).then(res => {
 
-                console.log('openEventParametersManager.res', res);
-
                 if (res.status === 'agree') {
-
-                    action = res.data.item
+					vm.event.actions[row.order] = res.data.item;
                 }
 
             });
@@ -193,7 +198,7 @@
                             selectorOptions: [],
                         },
                         styles: {
-                            'grid-table-cell': {'width': '260px'}
+                            'grid-table-cell': {'width': '342px'}
                         }
                     },
                     {
@@ -208,7 +213,7 @@
 							closeOnMouseOut: false
                         },
                         styles: {
-                            'grid-table-cell': {'width': '220px'}
+                            'grid-table-cell': {'width': '280px'}
                         }
                     },
                     {
@@ -238,17 +243,15 @@
                         }
                     },
                     {
-                        key: null,
-                        objPath: [],
-                        columnName: '-',
+                        key: 'parameters',
                         order: 3,
                         cellType: 'button',
                         settings: {
-                            buttonContent: 'Open Manager',
+                            buttonContent: 'OPEN MANAGER',
                             callback: openEventActionParametersManager
                         },
                         styles: {
-                            'grid-table-cell': {'width': '130px'},
+                            'grid-table-cell': {'width': '158px'},
                         }
                     },
                 ],
@@ -428,17 +431,13 @@
 
             }).then(res => {
 
-                console.log('openEventParametersManager.res', res);
-
                 if (res.status === 'agree') {
                     vm.event = res.data.item;
                 }
 
             });
 
-        }
-
-
+        };
 
         vm.init = function () {
 

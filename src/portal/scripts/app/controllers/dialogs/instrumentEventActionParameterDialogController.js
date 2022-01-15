@@ -5,11 +5,15 @@
 
     'use strict';
 
+    var transactionTypeService = require('../../services/transactionTypeService')
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
-		vm.changeOnlyValue = !!data.changeOnlyValue;
+		vm.title = 'Instrument Event Action Parameter Dialog';
+
+		var eventParameters = [];
 
         //region MULTIPLE PARAMETER LOGIC
 
@@ -21,7 +25,7 @@
 
             var result = [];
 
-            var attrs = vm.eventParameters.filter(function (item) {
+            var attrs = eventParameters.filter(function (item) {
 
                 if (parseInt(item.value_type, 10) === valueTypeInt) {
                     return true;
@@ -37,47 +41,6 @@
 
         };
 
-        vm.multipleParameterValueTypeUpdate = function (item, num) {
-
-            var index = num - 1;
-
-            var value_type = item.data.parameters[index].value_type;
-
-            vm.optionsForMultipleParameters[value_type] = vm.getOptionsForAttributeKey(value_type);
-
-        };
-
-        vm.addParameter = function ($event, item) {
-
-            if (!item.data) {
-                item.data = {}
-            }
-
-            if (!item.data.parameters) {
-                item.data.parameters = []
-            }
-
-            var index = item.data.parameters.length;
-
-            index = index + 1
-
-            item.data.parameters.push({index: index, ___switch_state: 'default_value'})
-
-        };
-
-        vm.switchParameter = function ($event, item, parameter) {
-
-            if (parameter.___switch_state === 'default_value') {
-                parameter.___switch_state = 'attribute_key'
-            } else {
-                parameter.___switch_state = 'default_value'
-            }
-
-            parameter.default_value = null;
-            parameter.attribute_key = null;
-
-        };
-
         //endregion MULTIPLE PARAMETER LOGIC
 
         vm.cancel = function () {
@@ -85,6 +48,23 @@
         };
 
         vm.agree = function (responseData) {
+
+            if (!vm.action.data) {
+                vm.action.data = {}
+            }
+
+            if (!vm.action.data.parameters) {
+                vm.action.data.parameters = []
+            }
+
+            vm.transactionType.context_parameters.forEach(function (parameter) {
+                vm.action.data.parameters.push({
+                    order: parameter.order,
+                    name: parameter.name,
+                    value_type: parameter.value_type,
+                    event_parameter_name: parameter.event_parameter_name
+                })
+            })
 
             $mdDialog.hide({
                 status: 'agree', data: {
@@ -97,16 +77,61 @@
 
         vm.init = function () {
 
-            vm.eventParameters = data.eventParameters
-            vm.action = data.item;
+			if (!data.item) {
+				console.error("Invalid event action");
+				throw data.item;
+			}
 
-            console.log('eventParameters', vm.eventParameters);
+            if (!data.item.transaction_type) {
+                throw "Transaction type required";
+            }
 
-            vm.optionsForMultipleParameters[10] = vm.getOptionsForAttributeKey(10);
-            vm.optionsForMultipleParameters[20] = vm.getOptionsForAttributeKey(20);
-            vm.optionsForMultipleParameters[40] = vm.getOptionsForAttributeKey(40);
+            vm.processsing = true;
 
-            console.log('vm.optionsForMultipleParameters', vm.optionsForMultipleParameters);
+            transactionTypeService.getListLightWithInputs({
+                filters: {
+                    user_code: data.item.transaction_type
+                }
+            }).then(function (res) {
+
+                vm.processsing = false;
+
+                if (res.results.length) {
+                    vm.transactionType = res.results[0];
+                } else {
+					console.error("Transaction type with user code '" + data.item.transaction_type + "' does not exist")
+                    $mdDialog.hide({status: 'disagree'});
+                }
+
+				if (Array.isArray(data.eventParameters)) {
+					eventParameters = JSON.parse(angular.toJson(data.eventParameters));
+				}
+
+                vm.action = JSON.parse(angular.toJson(data.item));
+
+                if (vm.transactionType.context_parameters_notes) {
+                    vm.title = vm.transactionType.context_parameters_notes;
+                }
+
+                vm.optionsForMultipleParameters[10] = vm.getOptionsForAttributeKey(10);
+                vm.optionsForMultipleParameters[20] = vm.getOptionsForAttributeKey(20);
+                vm.optionsForMultipleParameters[40] = vm.getOptionsForAttributeKey(40);
+
+                console.log('vm.optionsForMultipleParameters', vm.optionsForMultipleParameters);
+
+                if (vm.action.data && vm.action.data.parameters) {
+                    vm.transactionType.context_parameters.forEach(function (parameter) {
+
+                        vm.action.data.parameters.forEach(function (action_parameter) {
+                            if (parameter.order === action_parameter.order) {
+                                parameter.event_parameter_name = action_parameter.event_parameter_name
+                            }
+                        })
+                    })
+                }
+
+                $scope.$apply();
+            })
 
         }
 
