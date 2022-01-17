@@ -246,13 +246,26 @@
 }
 
 .instrument-type-event-block-items-container {
-  height: 60px;
+  // height: 60px;
+  height: 75px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   padding-left: 19px;
   border-top: 1px solid @borderPale;
+
+  .instrument-type-event-params-btn-holder {
+    margin-bottom: 16px;
+
+    button.md-button {
+      min-height: 0;
+      height: 20px;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+    }
+  }
 
   md-checkbox {
     margin-bottom: 0;
