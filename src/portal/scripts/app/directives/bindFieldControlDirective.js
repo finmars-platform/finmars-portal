@@ -727,7 +727,7 @@
                 };
 
                 $scope.onDateChange = function () {
-                	console.log("testing bindField change", $scope.entity[vm.fieldKey]);
+
                     if ($scope.entity[vm.fieldKey] === "") {
                         $scope.entity[vm.fieldKey] = null;
                     }
