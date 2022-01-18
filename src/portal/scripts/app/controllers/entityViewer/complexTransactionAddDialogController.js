@@ -1233,9 +1233,9 @@
 			var favTTypeOpts = [];
 			var member = globalDataService.getMember();
 
-			if (member.data && member.favorites && member.favorites.transaction_type) {
+			if (member.data && member.data.favorites && member.data.favorites.transaction_type) {
 
-				favTTypeOpts = member.favorites.transaction_type.map(function (ttypeUserCode) {
+				favTTypeOpts = member.data.favorites.transaction_type.map(function (ttypeUserCode) {
 
 					var ttype = ttypesList.find(function (ttype) {
 						return ttype.user_code === ttypeUserCode;
@@ -1294,7 +1294,7 @@
                 vm.transactionGroups = getTransactionGroups(ttypesList);
 
 				vm.favTTypeOpts = getFavoriteTTypeOptions();
-
+				console.log("testing favTTypeOpts", vm.favTTypeOpts);
                 vm.readyStatus.transactionTypes = true;
 
                 $scope.$apply(function () {
