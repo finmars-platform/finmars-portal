@@ -110,7 +110,7 @@
 				 * @param dateText {string}
 				 */
 				var formatDateValue = function (dateText) {
-					console.log("testing formatDateValue", dateText);
+
 					if (/\D\/$/.test(dateText)) dateText = dateText.substr(0, dateText.length - 3);
 
 					var values = dateText.split('-').map(function (v) { // prevent writing of non digits
@@ -131,8 +131,6 @@
 							return v
 						}
 					});
-
-					console.log("testing formatDateValue output", output);
 
 					// this.value = output.join('').substr(0, 14);
 					scope.dateValue = output.join('').substr(0, 14);
@@ -169,10 +167,11 @@
                         }, onChangeDelay);
 
                     };
-					console.log("testing onDateChange", dateValue, prevDateValue);
+
                     if (dateValue) {
+
 						var characterAdded = !!!prevDateValue || dateValue.length > prevDateValue.length;
-						console.log("testing onDateChange1", characterAdded);
+
 						if (characterAdded) dateValue = formatDateValue(dateValue);
 
                         if (dateValue !== scope.model) {
@@ -415,7 +414,7 @@
                             if (!isNaN(dateVal)) {
                                 // var dates = [dateVal.getMonth() + 1, dateVal.getDate(), dateVal.getFullYear()];
 								var dates = [dateVal.getFullYear(), dateVal.getMonth() + 1, dateVal.getDate()];
-								console.log("testing dates ", dates);
+
                                 output = dates.map(function (v) {
                                     v = v.toString();
                                     return v.length == 1 ? '0' + v : v;
@@ -424,7 +423,6 @@
                         }
 
                         // this.value = output;
-						console.log("testing blur", scope.model, output);
 						if (output && scope.model !== output) {
 
 							scope.model = output;
