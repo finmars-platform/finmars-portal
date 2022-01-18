@@ -13,7 +13,7 @@
                 </ng-md-icon>
             </span>
 
-            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16 big-drawer-header-processing">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
                     <progress-circular diameter="20"></progress-circular>
                 </div>
@@ -81,6 +81,17 @@
                         <md-tab-body>
                             <md-content class="md-padding p-t-26">
                                 <div data-ng-include="'views/tabs/transaction-type/transaction-type-fields-tab-view.html'"></div>
+                            </md-content>
+                        </md-tab-body>
+                    </md-tab>
+
+                    <md-tab>
+                        <md-tab-lable>
+                            <span class="grey-tab">Context Parameters</span>
+                        </md-tab-lable>
+                        <md-tab-body>
+                            <md-content class="md-padding p-t-26">
+                                <div data-ng-include="'views/tabs/transaction-type/transaction-type-context-parameters-tab-view.html'"></div>
                             </md-content>
                         </md-tab-body>
                     </md-tab>
@@ -240,8 +251,8 @@
                 <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
 
                     <md-menu-item>
-                        <md-button ng-click="vm.copy('big_drawer')"
-                                   data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing}">
+                        <md-button ng-click="vm.copy('big-drawer')"
+                                   data-ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing">
                             <div class="flex-row flex-i-center">
                                 <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
                                 <span class="m-l-16">Duplicate</span>

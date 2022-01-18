@@ -1145,7 +1145,7 @@
 
             } else {
 
-                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
                 console.log('resultEntity', resultEntity);
 
@@ -1246,7 +1246,7 @@
 
                 if (hasProhibitNegNums.length === 0) {
 
-                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                     console.log('resultEntity', resultEntity);
 
@@ -1316,6 +1316,24 @@
 
         var instrumentPricingCurrencyChanged = false; // only once
 
+        vm.bookInstrument = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
+
+                    vm.entity = data.instrument
+
+                    console.log('vm.bookInstrument.entity', vm.entity)
+
+                    resolve()
+
+                })
+
+            })
+
+        }
+
         vm.onEntityChange = function (fieldKey) {
 
             if (vm.lastAccountType !== vm.entity.type) {
@@ -1330,11 +1348,13 @@
 
                 vm.lastInstrumentType = vm.entity.instrument_type;
 
-                if (vm.isInheritRights && vm.entity.instrument_type) {
-                    vm.setInheritedPermissions();
-                }
+                vm.bookInstrument();
 
-                vm.setInheritedPricing();
+                // if (vm.isInheritRights && vm.entity.instrument_type) {
+                //     vm.setInheritedPermissions();
+                // }
+                //
+                // vm.setInheritedPricing();
 
             }
 
@@ -1879,14 +1899,18 @@
 
                     vm.typeSelectorChange = function () {
 
-                        vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+                        vm.bookInstrument().then(function () {
 
-                            vm.tabs = data.tabs;
-                            vm.attributesLayout = data.attributesLayout;
+                            vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
-                            $scope.$apply();
+                                vm.tabs = data.tabs;
+                                vm.attributesLayout = data.attributesLayout;
 
-                        });
+                                $scope.$apply();
+
+                            });
+                        })
+
 
                     };
 
