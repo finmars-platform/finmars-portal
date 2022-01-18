@@ -15,6 +15,8 @@
             vm.title = data.title;
         }
 
+		vm.multiselector = !!data.multiselector;
+
         vm.activeGroup = [];
 
         vm.selectedAttributes = [];
@@ -109,7 +111,7 @@
 
             return groupToLook;
 
-        }
+        };
 
         var divideTableAttrsInGroups = function () {
 
@@ -167,7 +169,8 @@
                 })
 
 
-            } else {
+            }
+            else {
 
                 var userAttributesFolder = {
                     name: 'User Attributes',
@@ -229,8 +232,8 @@
 
                 })
 
-                vm.tableAttrsTree.items.unshift(pricingFolder)
-                vm.tableAttrsTree.items.unshift(userAttributesFolder)
+                vm.tableAttrsTree.items.unshift(pricingFolder);
+                vm.tableAttrsTree.items.unshift(userAttributesFolder);
 
 
             }
@@ -288,19 +291,49 @@
 
         };
 
-        vm.selectAttr = function (item) {
+        if (vm.multiselector) {
 
-            item._active = !item._active;
+			vm.onAttrClick = function (item) {
 
-            vm.selectedAttributes.push(item);
+				item._active = !item._active;
 
-            vm.selectedAttributes = vm.selectedAttributes.filter(function (attr){
-                return attr._active;
-            })
+				if (item._active) {
+					vm.selectedAttributes.push(item);
 
-            console.log('vm.selectedAttributes', vm.selectedAttributes);
+				} else {
+					const clickedAttrIndex = vm.selectedAttributes.findIndex(attr => attr.key === item.key);
+					vm.selectedAttributes.splice(clickedAttrIndex, 1);
+				}
 
-        }
+				console.log('vm.selectedAttributes', vm.selectedAttributes);
+
+			};
+
+		} else {
+
+			vm.onAttrClick = function (item) {
+
+				if (!item._active) {
+
+					if (vm.selectedAttributes.length) vm.selectedAttributes[0]._active = false;
+
+					// item._active = !item._active;
+					item._active = true;
+
+					vm.selectedAttributes = [item];
+
+				}
+
+				console.log('vm.selectedAttributes', vm.selectedAttributes);
+
+			};
+
+		}
+
+        vm.onAttrDblClick = function (item) {
+			vm.onAttrClick(item);
+			vm.agree();
+		};
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -313,11 +346,17 @@
                 return item.attributeObject
             })
 
-            $mdDialog.hide({
-                status: 'agree', data: {
-                    items: attributes
-                }
-            });
+			if (attributes.length) {
+
+				$mdDialog.hide({
+					status: 'agree', data: {
+						items: attributes
+					}
+				});
+
+			} else {
+				$mdDialog.hide({status: 'disagree'});
+			}
 
         }
 
@@ -364,10 +403,10 @@
         vm.generateProjection = function () {
 
             vm.processing = true;
-
+			// Using Promise to add loader animation, while html reflowing when filtering options.
             new Promise(function (resolve, reject) {
 
-                if (vm.searchTerms) {
+                if (vm.searchTerms) { // when filtering options
 
                     var items = vm.treeAsList.filter(function (item) {
                         return item.name.toLowerCase().indexOf(vm.searchTerms.toLowerCase()) !== -1
@@ -375,7 +414,7 @@
 
                     items = items.map(function (item) {
 
-                        item.fullPathNameWithHighlight = vm.getHighlighted(item.fullPathName)
+                        item.fullPathNameWithHighlight = vm.getHighlighted(item.fullPathName);
 
                         return item
                     })
@@ -418,8 +457,9 @@
             }).then(function () {
                 vm.processing = false;
                 $scope.$apply()
-            })
-        }
+            });
+
+        };
 
         var init = function () {
             setTimeout(function () {
