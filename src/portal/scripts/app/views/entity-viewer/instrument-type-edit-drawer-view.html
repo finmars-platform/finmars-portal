@@ -3,7 +3,7 @@
         <div>
 
             <h2 class="big-drawer-header-h">Add Instrument type</h2>
-            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16 big-drawer-header-processing">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
                     <progress-circular diameter="20"></progress-circular>
                 </div>
@@ -86,13 +86,26 @@
 
                 <md-tab>
                     <md-tab-lable>
-                        <div class="tab-name-elem evFormSystemTabName" data-tab-name="events">
-                            <span class="grey-tab">Events</span>
+                        <div class="tab-name-elem evFormSystemTabName" data-tab-name="Exposure">
+                            <span class="grey-tab">Exposure</span>
                         </div>
                     </md-tab-lable>
                     <md-tab-body>
                         <md-content class="md-padding p-t-26">
                             <div data-ng-include="'views/tabs/instrument-type/exposure-view.html'"></div>
+                        </md-content>
+                    </md-tab-body>
+                </md-tab>
+
+                <md-tab>
+                    <md-tab-lable>
+                        <div class="tab-name-elem evFormSystemTabName" data-tab-name="Factors">
+                            <span class="grey-tab">Factors</span>
+                        </div>
+                    </md-tab-lable>
+                    <md-tab-body>
+                        <md-content class="md-padding p-t-26">
+                            <div data-ng-include="'views/tabs/instrument-type/factors-view.html'"></div>
                         </md-content>
                     </md-tab-body>
                 </md-tab>
@@ -255,10 +268,34 @@
                 <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
 
                     <md-menu-item>
+                        <md-button ng-click="vm.copy('big-drawer')"
+                                   data-ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Duplicate</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-divider></md-menu-divider>
+
+                    <md-menu-item>
                         <md-button ng-click="vm.manageAttrs($event)">
                             <div class="flex-row flex-i-center">
                                 <ng-md-icon icon="list" class="flex-row"></ng-md-icon>
                                 <span class="m-l-16">Manage Attributes</span>
+                            </div>
+
+                        </md-button>
+                    </md-menu-item>
+
+                    <md-menu-item>
+                        <md-button ng-click="vm.copy('big_drawer')"
+                                   data-ng-class="{'disabled-btn': !vm.checkReadyStatus() || !vm.hasEditPermission || vm.processing}">
+                            <div class="flex-row flex-i-center">
+                                <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
+                                <span class="m-l-16">Duplicate</span>
                             </div>
 
                         </md-button>

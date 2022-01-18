@@ -323,12 +323,12 @@
 
         };
 
-        vm.createOrUpdateGlobalConfigurationFile = function () {
+        vm.createOrUpdateGlobalConfigurationFile = function (force) {
 
             return new Promise(function (resolve, reject) {
 
                 if (vm.globalConfigurationFile.id) {
-                    shareConfigurationFileService.update(vm.globalConfigurationFile.id, vm.globalConfigurationFile).then(function (data) {
+                    shareConfigurationFileService.update(vm.globalConfigurationFile.id, vm.globalConfigurationFile, force).then(function (data) {
 
                         resolve(data);
 
@@ -416,6 +416,54 @@
             })
 
         };
+
+        vm.agreeForce = function (){
+
+            console.log("vm.globalConfigurationFile", vm.globalConfigurationFile);
+            console.log("vm.layout", vm.layout);
+            console.log("vm.assignedMembersList", vm.assignedMembersList);
+
+            vm.createConfigurationFile().then(function (configuration) {
+
+                vm.globalConfigurationFile.data = configuration;
+
+                var force = true;
+
+                vm.createOrUpdateGlobalConfigurationFile(force).then(function (globalConfigurationFile) {
+
+                    vm.layout.origin_for_global_layout = globalConfigurationFile.id;
+                    vm.layout.sourced_from_global_layout = globalConfigurationFile.id;
+
+                    vm.updateLayout(vm.layout.id, vm.layout).then(function (data) {
+
+                        vm.layout = data;
+
+                        vm.globalConfigurationFile = globalConfigurationFile;
+
+                        var promises = [];
+
+                        vm.assignedMembersList.forEach(function (member) {
+
+                            promises.push(vm.sendInvite(member))
+
+                        });
+
+                        Promise.all(promises).then(function (data) {
+
+                            console.log("Sent Invites data", data);
+
+                            console.log("Saved Configuration File", vm.globalConfigurationFile);
+
+                            $mdDialog.hide({status: 'agree', data: {layout: vm.layout}});
+                        })
+
+                    })
+
+                })
+
+            })
+
+        }
 
         vm.init = function () {
 

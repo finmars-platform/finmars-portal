@@ -99,7 +99,7 @@
                  offset-y="-10"
                  popup-classes="getPopupMenuClasses(column)"
                  backdrop-classes="'low-z-index-backdrop'"
-                 on-popup-close="onSubtotalTypeSelectCancel()"
+                 on-cancel="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
@@ -121,7 +121,7 @@
                          open-on="click"
                          close-on-click-outside="true"
                          popup-classes="'column-sort-popup'"
-                         on-popup-close="hideArrowDown()"
+                         on-cancel="hideArrowDown()"
                          popup-event-service="evEventService"
 
                          class="g-column-sort-settings-opener"></div>
@@ -217,7 +217,7 @@
                  offset-y="-10"
                  popup-classes="getPopupMenuClasses(column)"
                  backdrop-classes="'low-z-index-backdrop'"
-                 on-popup-close="onSubtotalTypeSelectCancel()"
+                 on-cancel="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
@@ -240,7 +240,7 @@
                          open-on="click"
                          close-on-click-outside="true"
                          popup-classes="'column-sort-popup'"
-                         on-popup-Close="hideArrowDown()"
+                         on-cancel="hideArrowDown()"
                          popup-event-service="evEventService"
                          class="g-column-sort-settings-opener"></div>
 

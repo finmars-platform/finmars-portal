@@ -60,13 +60,14 @@
             $mdDialog.show({
                 controller: "TableAttributeSelectorDialogController as vm",
                 templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+				parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
                     data: {
                         availableAttrs: availableAttrs,
                         title: "Choose column's key to add it at the end of the expression",
-                        isReport: false
+                        isReport: vm.insideReport
                     }
                 }
             }).then(function (res) {

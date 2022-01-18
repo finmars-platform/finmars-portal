@@ -65,21 +65,37 @@
 
     };
 
+    var fieldsThatCanBeNullData = {
+    	'instrument': ['maturity_date']
+	};
 
-    var removeNullFields = function (item) {
+    var removeNullFields = function (item, entityType) {
 
         var i;
         var keys = Object.keys(item);
         var result = {};
+        var fieldsThatCanBeNullList = fieldsThatCanBeNullData[entityType] || [];
 
         for (i = 0; i < keys.length; i = i + 1) {
-            if (item[keys[i]] && item[keys[i]].length) {
-                result[keys[i]] = item[keys[i]];
-            } else {
-                if (item[keys[i]] != null && !isNaN(item[keys[i]])) {
-                    result[keys[i]] = item[keys[i]];
-                }
-            }
+
+			/* if (item[keys[i]] && item[keys[i]].length) {
+				result[keys[i]] = item[keys[i]];
+			} else {
+				if (item[keys[i]] != null && !isNaN(item[keys[i]])) {
+					result[keys[i]] = item[keys[i]];
+				}
+			} */
+
+            var fieldCanBeNull = fieldsThatCanBeNullList.indexOf(keys[i]) > -1;
+
+            if (item[keys[i]] && item[keys[i]].length ||
+				item[keys[i]] != null && !isNaN(item[keys[i]]) ||
+				fieldCanBeNull) {
+
+            	result[keys[i]] = item[keys[i]];
+
+			}
+
         }
 
         return result;
@@ -111,7 +127,7 @@
 
         let clearedEntity = JSON.parse(JSON.stringify(entity));
 
-        clearedEntity = removeNullFields(clearedEntity);
+        clearedEntity = removeNullFields(clearedEntity, entityType);
 
         // clearFrontProperties(clearedEntity, entityType);
 		metaHelper.clearFrontendOptions(clearedEntity);
@@ -806,7 +822,7 @@
 
             } else {
 
-                if (['procedure_modified_datetime'].indexOf(key) === -1) {
+                if (['procedure_modified_datetime', 'maturity_date'].indexOf(key) === -1) {
                     validateEvField(key, fieldValue, entityAttr, tabs, fixedFieldsAttrs, entityType, errors);
                 }
             }
