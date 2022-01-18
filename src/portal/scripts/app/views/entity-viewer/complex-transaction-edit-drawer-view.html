@@ -41,7 +41,7 @@
 
             <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
-                <md-tab data-ng-repeat="tab in vm.tabs track by tab.name">
+                <md-tab data-ng-repeat="tab in vm.tabs track by tab.name" md-on-select="vm.activeTab = tab">
                     <md-tab-label>
                         <div class="tab-name-elem evFormUserTabName" data-tab-name="{{tab.name | lowercase}}">
                             <span>{{tab.name}}</span>
@@ -72,51 +72,92 @@
                     </md-tab-body>
                 </md-tab>
 
-                <md-tab>
-                    <md-tab-lable>
-                        <span class="grey-tab">Fields</span>
-                    </md-tab-lable>
+                <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)" md-active="vm.activeTab === tab">
+                    <!-- Victor 2020.10.28 EntityTabs labels move to md-menu-->
+                    <!--                         <md-tab-label>
+                                                <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">
+                                                    <span class="grey-tab">{{tab.label}}</span>
+                                                </div>
+                                            </md-tab-label>-->
+
                     <md-tab-body>
-                        <md-content class="md-padding p-t-26">
-                            <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-fields-tab.html'"></div>
+                        <md-content class="md-padding p-t-26"
+                                    ng-class="{'locked-tab-overlay': !vm.entity.is_enabled && vm.hasEnabledStatus}">
+                            <div data-ng-include="tab.templateUrl"></div>
                         </md-content>
                     </md-tab-body>
                 </md-tab>
 
-                <md-tab>
-                    <md-tab-lable>
-                        <span class="grey-tab">Inputs</span>
-                    </md-tab-lable>
-                    <md-tab-body>
-                        <md-content class="md-padding p-t-26">
-                            <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-inputs-tab.html'"></div>
-                        </md-content>
-                    </md-tab-body>
-                </md-tab>
+<!--                <md-tab>-->
+<!--                    <md-tab-lable>-->
+<!--                        <span class="grey-tab">Fields</span>-->
+<!--                    </md-tab-lable>-->
+<!--                    <md-tab-body>-->
+<!--                        <md-content class="md-padding p-t-26">-->
+<!--                            <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-fields-tab.html'"></div>-->
+<!--                        </md-content>-->
+<!--                    </md-tab-body>-->
+<!--                </md-tab>-->
 
-                <md-tab>
-                    <md-tab-lable>
-                        <span class="grey-tab">Base Transactions</span>
-                    </md-tab-lable>
-                    <md-tab-body>
-                        <md-content class="md-padding p-t-26">
-                            <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-base-transactions-tab.html'"></div>
-                        </md-content>
-                    </md-tab-body>
-                </md-tab>
+<!--                <md-tab>-->
+<!--                    <md-tab-lable>-->
+<!--                        <span class="grey-tab">Inputs</span>-->
+<!--                    </md-tab-lable>-->
+<!--                    <md-tab-body>-->
+<!--                        <md-content class="md-padding p-t-26">-->
+<!--                            <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-inputs-tab.html'"></div>-->
+<!--                        </md-content>-->
+<!--                    </md-tab-body>-->
+<!--                </md-tab>-->
 
-                <md-tab>
-                    <md-tab-lable>
-                        <span class="grey-tab">Reconciliation</span>
-                    </md-tab-lable>
-                    <md-tab-body>
-                        <md-content class="md-padding p-t-26">
-                            <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-reconciliation-tab.html'"></div>
-                        </md-content>
-                    </md-tab-body>
-                </md-tab>
+<!--                <md-tab>-->
+<!--                    <md-tab-lable>-->
+<!--                        <span class="grey-tab">Base Transactions</span>-->
+<!--                    </md-tab-lable>-->
+<!--                    <md-tab-body>-->
+<!--                        <md-content class="md-padding p-t-26">-->
+<!--                            <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-base-transactions-tab.html'"></div>-->
+<!--                        </md-content>-->
+<!--                    </md-tab-body>-->
+<!--                </md-tab>-->
+
+<!--                <md-tab>-->
+<!--                    <md-tab-lable>-->
+<!--                        <span class="grey-tab">Reconciliation</span>-->
+<!--                    </md-tab-lable>-->
+<!--                    <md-tab-body>-->
+<!--                        <md-content class="md-padding p-t-26">-->
+<!--                            <div data-ng-include="'views/tabs/complex-transaction/complex-transaction-reconciliation-tab.html'"></div>-->
+<!--                        </md-content>-->
+<!--                    </md-tab-body>-->
+<!--                </md-tab>-->
 
             </md-tabs>
+
+            <div class="entity-tabs-menu entityTabsMenu complex-transaction-entity-tabs-menu"
+                 data-ng-class="{'active': vm.isEntityTabActive()}"
+
+                 popup
+                 popup-template="{{vm.entityTabsMenuTplt}}"
+                 popup-data="vm.entityTabsMenuPopupData"
+                 position-relative-to="element"
+                 relative-popup-x="left"
+                 open-on="click"
+                 close-on-click-outside="true"
+                 popup-classes="vm.entityTablePopupClasses">
+
+                <md-button
+                           aria-label="open entity tabs"
+                           class="md-icon-button entity-tabs-menu-btn">
+                    <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
+                </md-button>
+
+                <div class="tabs-menu-error-icon">
+                    <span class="material-icons">info</span>
+                    <md-tooltip class="error-tooltip" md-direction="top">Tabs with error</md-tooltip>
+                </div>
+
+            </div>
 
             <div class="transaction-recalculating-overlay" data-ng-show="vm.processing">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
@@ -189,7 +230,7 @@
         </div>
 
         <div>
-            <md-button class="md-raised m-r-24" ng-click="vm.copy('big_drawer')"
+            <md-button class="md-raised m-r-24" ng-click="vm.copy('big-drawer')"
                        ng-disabled="!vm.checkReadyStatus() || vm.entity.is_canceled || !vm.hasEditPermission || vm.processing" >
                 Make a copy
             </md-button>

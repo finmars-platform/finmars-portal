@@ -154,6 +154,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -167,6 +168,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -207,6 +209,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -220,6 +223,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -282,7 +286,7 @@
 
                 <div class="m-t-16">
 
-                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row">
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row" data-ng-if="item.index != 0">
 
                         <md-input-container>
                             <label>Index</label>
@@ -368,7 +372,7 @@
                         <b>parameter</b>
                     </div>
 
-                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters">
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" data-ng-if="item.index != 0">
                         <b>parameter{{item.index}}</b>
                     </div>
 
@@ -393,6 +397,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -406,6 +411,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -446,6 +452,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -459,6 +466,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -623,6 +631,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -636,6 +645,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -676,6 +686,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -689,6 +700,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -783,6 +795,26 @@
                         <b>volume</b>
                     </div>
 
+                    <div>
+                        <b>open_error</b>
+                    </div>
+
+                    <div>
+                        <b>close_error</b>
+                    </div>
+
+                    <div>
+                        <b>low_error</b>
+                    </div>
+
+                    <div>
+                        <b>high_error</b>
+                    </div>
+
+                    <div>
+                        <b>volume_error</b>
+                    </div>
+
                 </div>
 
                 <md-tabs md-dynamic-height md-border-bottom class="m-t-16 tabs-colored">
@@ -804,6 +836,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -817,6 +850,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -857,6 +891,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -870,6 +905,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -952,6 +988,10 @@
                         <b>close</b>
                     </div>
 
+                    <div>
+                        <b>close_error</b>
+                    </div>
+
                     <!--<div>-->
                     <!--<b>low</b>-->
                     <!--</div>-->
@@ -985,6 +1025,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -998,6 +1039,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1038,6 +1080,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1051,6 +1094,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1212,6 +1256,10 @@
                     </div>
 
                     <div>
+                        <b>price_error</b>
+                    </div>
+
+                    <div>
                         <b>parameter</b>
                     </div>
 
@@ -1315,6 +1363,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1328,6 +1377,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1368,6 +1418,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1381,6 +1432,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1492,6 +1544,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1505,6 +1558,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1545,6 +1599,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1558,6 +1613,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>

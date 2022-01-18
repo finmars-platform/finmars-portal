@@ -372,7 +372,7 @@ export default (function () {
 
 	// Complex transaction form
 
-	portal.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersGroupService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
+	portal.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'globalDataService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
 	portal.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
 	portal.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/complex-transaction/bookTransactionTransactionsTabController')]);
 	portal.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', '$mdDialog', 'entityId', require('./app/controllers/entityViewer/complexTransactionsTransactionEditDialogController')]);
@@ -392,6 +392,7 @@ export default (function () {
 	portal.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
 	portal.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
 	portal.controller('InstrumentTypeUserAttributesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeUserAttributesTabController')]);
+	portal.controller('InstrumentTypeFactorsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', 'gridTableHelperService' , require('./app/controllers/tabs/instrument-type/instrumentTypeFactorsTabController')]);
 
 	// Currency form - tabs
 
@@ -587,6 +588,9 @@ export default (function () {
 	portal.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
 	portal.controller('AddRowToTableInsideEvUserTabDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/addRowToTableInsideEvUserTabDialogController')]);
 
+	portal.controller('InstrumentEventParameterDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrumentEventParameterDialogController')]);
+	portal.controller('InstrumentEventActionParameterDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrumentEventActionParameterDialogController')]);
+
 
 	portal.controller('CurrencyPricingSchemeAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/currencyPricingSchemeAddDialogController')]);
 	portal.controller('CurrencyPricingSchemeEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/currencyPricingSchemeEditDialogController')]);
@@ -680,7 +684,7 @@ export default (function () {
 	portal.directive('gEvRowsBulkActions', ['$mdDialog', require('./app/directives/groupTable/gEvRowsBulkActionsDirective')]);
 
 	portal.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
-	portal.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]);
+	portal.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]); //2021-12-17 DEPRECATED
 	portal.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);
 	portal.directive('groupActionsBlock', ['$mdDialog', '$state', '$bigDrawer', 'usersService', require('./app/directives/groupTable/gActionsBlockComponent')]);
 	// portal.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
@@ -810,8 +814,8 @@ export default (function () {
 	String.prototype.capitalizeFirstLetter = function () {
 		return this.charAt(0).toUpperCase() + this.slice(1);
 	};
-	
-	
+
+
 	window.onerror = function(error){
 
 		if (!window.system_errors) {

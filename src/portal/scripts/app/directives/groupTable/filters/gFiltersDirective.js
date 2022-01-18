@@ -111,10 +111,13 @@
                                 entityAttrs = $scope.attributeDataService.getEntityAttributesByEntityType(vm.entityType);
 
                                 entityAttrs.forEach(function (item) {
-                                    if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+
+                                	if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
                                         item.name = 'Group';
                                     }
-                                    item.entity = vm.entityType;
+
+                                	item.entity = vm.entityType;
+
                                 });
 
                                 let instrumentUserFields = $scope.attributeDataService.getInstrumentUserFields();
@@ -530,7 +533,7 @@
 
                     const allAttrsList = getAttributes();
 
-                    const availableAttrs = allAttrsList.filter(attr => {
+                    let availableAttrs = allAttrsList.filter(attr => {
 
                         for (let i = 0; i < filtersList.length; i++) {
                             if (filtersList[i].key === attr.key) {
@@ -546,6 +549,14 @@
 
                     });
 
+					if (!$scope.isReport) {
+
+						availableAttrs = availableAttrs.filter(attr => {
+							return attr.value_type !== "mc_field" && attr.key !== "notes";
+						});
+
+					}
+
                     return availableAttrs;
 
                 }
@@ -557,7 +568,7 @@
 
                         try {
 
-                            const availableAttrs = getAttrsForFilterAddition(filters);
+                            let availableAttrs = getAttrsForFilterAddition(filters);
 
                             $mdDialog.show({
                                 controller: "TableAttributeSelectorDialogController as vm",
@@ -568,45 +579,46 @@
                                     data: {
                                         availableAttrs: availableAttrs,
                                         title: 'Choose filter to add',
-                                        isReport: $scope.isReport
+                                        isReport: $scope.isReport,
+										multiselector: true
                                     }
                                 }
 
                             })
-                                .then(function (res) {
+							.then(function (res) {
 
-                                    if (res && res.status === "agree") {
+								if (res && res.status === "agree") {
 
-                                        // res.data.groups = true;
-                                        /* if (!res.data.options) {
-                                            res.data.options = {};
-                                        }
+									// res.data.groups = true;
+									/* if (!res.data.options) {
+										res.data.options = {};
+									}
 
-                                        if (!res.data.options.filter_type) {
-                                            res.data.options.filter_type = metaHelper.getDefaultFilterType(res.data.value_type);
-                                        }
+									if (!res.data.options.filter_type) {
+										res.data.options.filter_type = metaHelper.getDefaultFilterType(res.data.value_type);
+									}
 
-                                        if (!res.data.options.filter_values) {
-                                            res.data.options.filter_values = [];
-                                        }
+									if (!res.data.options.filter_values) {
+										res.data.options.filter_values = [];
+									}
 
-                                        if (!res.data.options.hasOwnProperty('exclude_empty_cells')) {
-                                            res.data.options.exclude_empty_cells = false;
-                                        } */
+									if (!res.data.options.hasOwnProperty('exclude_empty_cells')) {
+										res.data.options.exclude_empty_cells = false;
+									} */
 
-                                        for (var i = 0; i < res.data.items.length; i = i + 1) {
-                                            res.data.items[i] = gFiltersHelper.setFilterDefaultOptions(res.data.items[i]);
-                                        }
+									for (var i = 0; i < res.data.items.length; i = i + 1) {
+										res.data.items[i] = gFiltersHelper.setFilterDefaultOptions(res.data.items[i]);
+									}
 
-                                        console.log('openAddFilterDialog res.data.items', res.data.items)
+									console.log('openAddFilterDialog res.data.items', res.data.items)
 
-                                        resolve({status: res.status, data: res.data});
+									resolve({status: res.status, data: res.data});
 
-                                    }
+								}
 
-                                    resolve({status: res.status});
+								resolve({status: res.status});
 
-                                }).catch(error => reject(error));
+							}).catch(error => reject(error));
 
                         } catch (error) {
                             reject(error);

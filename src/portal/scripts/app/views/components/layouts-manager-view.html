@@ -13,8 +13,12 @@
             <div data-ng-repeat="layout in layouts" class="layout-menu-item">
 
                 <span class="material-icons default-icons"
+                      data-ng-if="!layout.origin_for_global_layout && !layout.sourced_from_global_layout"
                       ng-class="{'default-layout': layout.is_default}"
                       ng-click="setAsDefault(layout)">home</span>
+
+                <span class="material-icons default-icons" data-ng-if="layout.origin_for_global_layout" style="color: #747474;">share</span>
+                <span class="material-icons default-icons" data-ng-if="!layout.origin_for_global_layout && layout.sourced_from_global_layout" style="color: #747474;">update</span>
 
                 <a href="{{getLinkToLayout(layout.user_code)}}"
                    ng-click="onLayoutLinkClick($event, layout)"

@@ -454,8 +454,8 @@
 			} else {
 
 				$mdDialog.show({
-					controller: 'EntityViewerAddDialogController as vm',
-					templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+					controller: 'InstrumentTypeAddDialogController as vm',
+					templateUrl: 'views/entity-viewer/instrument-type-add-drawer-view.html',
 					parent: angular.element(document.body),
 					locals: {
 						entityType: vm.entityType,
@@ -742,7 +742,7 @@
 
                 vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
@@ -970,7 +970,7 @@
             }
         	else {
 
-                // var result = entityEditorHelper.removeNullFields(vm.entity);
+                // var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
                 var result = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
 
                 if (vm.dcLayoutHasBeenFixed) {
