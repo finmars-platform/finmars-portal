@@ -55,13 +55,28 @@
 
                 }
 
+				/**
+				 * Prevents entering number that is more than max number
+				 *
+				 * @param str {string}
+				 * @param max {number} - maximum number allowed
+				 * @returns {string}
+				 */
                 function checkValue(str, max) {
                     if (str.charAt(0) !== '0' || str == '00') {
                         var num = parseInt(str);
-                        if (isNaN(num) || num <= 0 || num > max) num = 1;
-                        str = num > parseInt(max.toString().charAt(0)) && num.toString().length == 1 ? '0' + num : num.toString();
+                        var numIsInvalid = isNaN(num) || num <= 0 || num > max;
+                        if (numIsInvalid) num = 1;
+
+						str = num.toString();
+
+						var tensMoreThanMax = num > parseInt(max.toString().charAt(0)) && num.toString().length == 1;
+                        if (tensMoreThanMax) {
+							str = '0' + num;
+						}
+
                     }
-                    ;
+
                     return str;
                 };
 
@@ -90,9 +105,43 @@
                     return classes;
 
                 };
+				/**
+				 * Change date to YYYY-MM-DD format
+				 * @param dateText {string}
+				 */
+				var formatDateValue = function (dateText) {
+
+					if (/\D\/$/.test(dateText)) dateText = dateText.substr(0, dateText.length - 3);
+
+					var values = dateText.split('-').map(function (v) { // prevent writing of non digits
+						return v.replace(/\D/g, '');
+					});
+
+					if (values[1]) values[1] = checkValue(values[1], 12);
+					if (values[2]) values[2] = checkValue(values[2], 31);
+
+					var output = values.map(function (v, i) {
+						if (v.length == 4 && i == 0) {
+							return v + '-'
+						}
+						else if (v.length == 2 && i == 1) {
+							return v + '-'
+						}
+						else {
+							return v
+						}
+					});
+
+					// this.value = output.join('').substr(0, 14);
+					scope.dateValue = output.join('').substr(0, 14);
+
+					return scope.dateValue;
+
+				};
 
                 var onChangeIndex;
-
+                var prevDateValue = '';
+				/** @param dateValue {string} - entered by user */
                 scope.onDateChange = function (dateValue) {
                     // scope.error = "";
                     var error = "",
@@ -103,6 +152,7 @@
                     var onChangeEnd = function () {
 
                         dateChangedFromOutside = false;
+
                         clearTimeout(onChangeIndex);
 
                         onChangeIndex = setTimeout(() => {
@@ -119,6 +169,10 @@
                     };
 
                     if (dateValue) {
+
+						var characterAdded = !!!prevDateValue || dateValue.length > prevDateValue.length;
+
+						if (characterAdded) dateValue = formatDateValue(dateValue);
 
                         if (dateValue !== scope.model) {
 
@@ -151,7 +205,8 @@
 
                         }
 
-                    } else if (scope.model !== null) {
+                    }
+                    else if (scope.model !== null) { // if dateValue === null || dateValue === undefined || dateValue === ''
 
                         valueIsValid = false;
                         scope.model = null;
@@ -170,6 +225,8 @@
                         } */
 
                     }
+
+					prevDateValue = dateValue;
 
                 };
 
@@ -297,7 +354,7 @@
                         inputContainer.classList.add("custom-input-focused");
                     });
 
-                    inputElem.addEventListener('input', function (e) {
+                    /* inputElem.addEventListener('input', function (e) {
                         this.type = 'text';
                         var input = this.value;
                         if (/\D\/$/.test(input)) input = input.substr(0, input.length - 3);
@@ -322,7 +379,7 @@
 
 
                         this.value = output.join('').substr(0, 14);
-                    });
+                    }); */
 
                     inputElem.addEventListener("blur", function () {
 
@@ -335,29 +392,45 @@
 
                         }, 250);
 
-                        this.type = 'text';
+                        /*this.type = 'text';
                         var input = this.value;
-                        var values = input.split('-').map(function (v, i) {
+                        var values = input.split('-').map(function (v, i) { // parse
                             return v.replace(/\D/g, '')
-                        });
+                        });*/
+
+
+						var values = scope.dateValue.split('-').map(function (v, i) { // parse
+							return v.replace(/\D/g, '')
+						});
                         var output = '';
 
-                        if (values.length == 3) {
-                            var year = values[0].length !== 4 ? parseInt(values[0]) + 2000 : parseInt(values[0]);
+                        if (values.length === 3) {
+
+                        	var year = values[0].length !== 4 ? parseInt(values[0]) + 2000 : parseInt(values[0]);
                             var month = parseInt(values[1]) - 1;
                             var day = parseInt(values[2]);
-                            var d = new Date(year, month, day);
-                            if (!isNaN(d)) {
-                                var dates = [d.getMonth() + 1, d.getDate(), d.getFullYear()];
+                            var dateVal = new Date(year, month, day);
+
+                            if (!isNaN(dateVal)) {
+                                // var dates = [dateVal.getMonth() + 1, dateVal.getDate(), dateVal.getFullYear()];
+								var dates = [dateVal.getFullYear(), dateVal.getMonth() + 1, dateVal.getDate()];
+
                                 output = dates.map(function (v) {
                                     v = v.toString();
                                     return v.length == 1 ? '0' + v : v;
                                 }).join('-');
                             }
-                            ;
                         }
-                        ;
-                        this.value = output;
+
+                        // this.value = output;
+						if (output && scope.model !== output) {
+
+							scope.model = output;
+							scope.$apply();
+
+							if (scope.onChangeCallback) scope.onChangeCallback();
+
+						}
 
                     });
 
@@ -397,6 +470,7 @@
 
                                     scope.error = "";
                                     scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+                                    prevDateValue = scope.dateValue;
 
                                     if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
 
@@ -414,6 +488,7 @@
 
                                     if (!scope.error) {
                                         scope.dateValue = "";
+										prevDateValue = scope.dateValue;
                                     }
 
                                 } else if (scope.smallOptions && scope.smallOptions.notNull && inputLoaded) {
