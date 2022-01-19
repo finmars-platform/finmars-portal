@@ -181,7 +181,7 @@
 
                     var config = {
                         user_code: item.user_code,
-                        entityType: scope.entityType
+                        entity_type: scope.entityType
                     };
 
                     scope.itemName = item.user_code;
@@ -414,7 +414,6 @@
                         entityResolverService.getListLight(scope.entityType, {
                             pageSize: 500,
                             filters: {
-                                query: scope.inputText,
                                 user_code: scope.inputText
                             }
                         }).then(function (data) {
